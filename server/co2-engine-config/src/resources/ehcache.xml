@@ -1,0 +1,67 @@
+<!DOCTYPE ehcache-xml [
+        <!ENTITY net-dgen-amee SYSTEM "../conf/net-dgen-amee.ehcache.xml">
+        <!ENTITY com-jellymold-kiwi SYSTEM "../conf/com-jellymold-kiwi.ehcache.xml">
+        <!ENTITY com-jellymold-plum SYSTEM "../conf/com-jellymold-plum.ehcache.xml">
+        ]>
+<ehcache>
+
+    <diskStore path="java.io.tmp"/>
+
+    <!-- **** Cluster **** -->
+
+    <!--cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+            properties="peerDiscovery=automatic, multicastGroupAddress=230.0.0.1, multicastGroupPort=4446, timeToLive=32"/-->
+
+    <!--cacheManagerPeerListenerFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"/-->
+
+    <!-- **** Default cache configuration **** -->
+
+    <!-- NOTE: this should not get used because caches are explicitly defined below -->
+    <defaultCache maxElementsInMemory="4000"
+                  eternal="false"
+                  timeToIdleSeconds="1800"
+                  timeToLiveSeconds="3600"
+                  overflowToDisk="false">
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
+                                   <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
+    </defaultCache>
+
+    <!-- JavaDoc: Tracks the timestamps of the most recent updates to particular tables.
+    It is important that the cache timeout of the underlying cache implementation
+    be set to a higher value than the timeouts of any of the query caches. In fact,
+    we recommend that the the underlying cache not be configured for expiry at all.
+    Note, in particular, that an LRU cache expiry policy is never appropriate. -->
+    <!-- Set to two days: 172,800 -->
+    <cache name="org.hibernate.cache.UpdateTimestampsCache"
+           maxElementsInMemory="50000"
+           eternal="false"
+           timeToIdleSeconds="172800"
+           timeToLiveSeconds="172800"
+           overflowToDisk="false">
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
+                                   <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
+    </cache>
+
+    <!-- JavaDoc: The standard implementation of the Hibernate QueryCache interface.
+    This implementation is very good at recognizing stale query results and
+    re-running queries when it detects this condition, recaching the new results.
+    NOTE: this should not get used because query caches are explicitly defined below -->
+    <cache name="org.hibernate.cache.StandardQueryCache"
+           maxElementsInMemory="1000"
+           eternal="false"
+           timeToIdleSeconds="1800"
+           timeToLiveSeconds="3600"
+           overflowToDisk="false">
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
+                                   <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
+    </cache>
+
+    <!-- **** Includes **** -->
+
+    &net-dgen-amee;
+    &com-jellymold-kiwi;
+    &com-jellymold-plum;
+
+</ehcache>

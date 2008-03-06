@@ -1,0 +1,1 @@
+mysql --force -h localhost -u  --password= amee < after-install.sql

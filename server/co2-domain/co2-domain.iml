@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4" relativePaths="true" type="J2EE_EJB_MODULE">
+  <component name="AppServerSpecificValidatorsManager" />
+  <component name="EjbModuleBuildComponent">
+    <setting name="EXPLODED_URL" value="file://" />
+    <setting name="EXPLODED_ENABLED" value="false" />
+    <setting name="JAR_URL" value="file://$MODULE_DIR$/co2-domain.jar" />
+    <setting name="JAR_ENABLED" value="true" />
+    <setting name="SYNC_EXPLODED_DIR" value="true" />
+    <setting name="BUILD_MODULE_ON_FRAME_DEACTIVATION" value="false" />
+    <setting name="BUILD_EXTERNAL_DEPENDENCIES" value="false" />
+    <setting name="RUN_EJB_VALIDATION" value="false" />
+  </component>
+  <component name="EjbModuleProperties">
+    <containerElement type="module" name="kiwi-domain">
+      <attribute name="method" value="0" />
+      <attribute name="URI" value="&lt;N/A&gt;" />
+    </containerElement>
+    <containerElement type="module" name="sheet-domain">
+      <attribute name="method" value="0" />
+      <attribute name="URI" value="&lt;N/A&gt;" />
+    </containerElement>
+    <containerElement type="module" name="utils">
+      <attribute name="method" value="0" />
+      <attribute name="URI" value="&lt;N/A&gt;" />
+    </containerElement>
+    <containerElement type="library" name="ehcache" level="project">
+      <attribute name="method" value="0" />
+      <attribute name="URI" value="/" />
+    </containerElement>
+    <containerElement type="library" name="freemarker" level="project">
+      <attribute name="method" value="0" />
+      <attribute name="URI" value="/" />
+    </containerElement>
+    <containerElement type="library" name="jboss-seam" level="project">
+      <attribute name="method" value="0" />
+      <attribute name="URI" value="&lt;N/A&gt;" />
+    </containerElement>
+    <containerElement type="library" name="jboss-seam-dependencies" level="project">
+      <attribute name="method" value="0" />
+      <attribute name="URI" value="&lt;N/A&gt;" />
+    </containerElement>
+    <containerElement type="library" name="json" level="project">
+      <attribute name="method" value="0" />
+      <attribute name="URI" value="&lt;N/A&gt;" />
+    </containerElement>
+    <containerElement type="library" name="oscache" level="project">
+      <attribute name="method" value="0" />
+      <attribute name="URI" value="/" />
+    </containerElement>
+    <containerElement type="library" name="restlet" level="project">
+      <attribute name="method" value="0" />
+      <attribute name="URI" value="/" />
+    </containerElement>
+    <deploymentDescriptor name="ejb-jar.xml" url="file://$MODULE_DIR$/src/resources/META-INF/ejb-jar.xml" optional="false" version="3.0" />
+  </component>
+  <component name="ModuleRootManager" />
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/domain" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/resources" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="kiwi-domain" />
+    <orderEntry type="module" module-name="sheet-domain" />
+    <orderEntry type="module" module-name="utils" />
+    <orderEntry type="library" name="jboss-seam" level="project" />
+    <orderEntry type="library" name="jboss-seam-dependencies" level="project" />
+    <orderEntry type="library" name="json" level="project" />
+    <orderEntryProperties />
+  </component>
+  <component name="WLEjbModuleProperties" />
+</module>
+

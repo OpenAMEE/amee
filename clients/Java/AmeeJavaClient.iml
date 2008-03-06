@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4" relativePaths="true" type="JAVA_MODULE">
+  <component name="BuildJarSettings">
+    <containerInfo>
+      <containerElement type="module" name="AmeeJavaClient">
+        <attribute name="method" value="1" />
+        <attribute name="URI" value="/" />
+      </containerElement>
+    </containerInfo>
+    <setting name="jarUrl" value="file://$MODULE_DIR$/AmeeJavaClient.jar" />
+    <setting name="buildJar" value="true" />
+    <setting name="mainClass" value="net.dgen.amee.client.AmeeTest" />
+  </component>
+  <component name="ModuleRootManager" />
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="commons-httpclient" level="project" />
+    <orderEntry type="library" name="org.json" level="project" />
+    <orderEntry type="library" name="commons-logging" level="project" />
+    <orderEntry type="library" name="commons-codec" level="project" />
+    <orderEntryProperties />
+  </component>
+</module>
+
