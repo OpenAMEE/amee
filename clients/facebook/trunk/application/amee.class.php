@@ -17,24 +17,79 @@
 * @package amee
 * @author Marcus Bointon for d::gen network <facebook@amee.cc>
 * @author Andrew Conway for d::gen network <andrew@dgen.net>
-* @version $Id: amee.class.php 1809 2008-04-28 15:26:41Z marcus $
+* @version $Id: amee.class.php 1805 2008-04-11 13:15:48Z marcus $
 */
  
 class AMEE {
-	
-	private $db;
-	private $authToken = '';
-	private $authexpires = 0;
-	private $responses = array();
+	 /**
+	 * @var Zend_Db $db An instance of a Zend database instance, used for caching
+	 * @access protected
+	 */
+	protected $db;
+	 /**
+	 * @var string $authtoken The current authentication token value
+	 * @access protected
+	 */
+	protected $authtoken = '';
+	 /**
+	 * @var integer $authexpires The timestamp for when the current authtoken expires
+	 * @access protected
+	 */
+	protected $authexpires = 0;
+	 /**
+	 * @var array $responses A history of requests and reponses by this instance
+	 * @access protected
+	 */
+	protected $responses = array();
+	 /**
+	 * @var Zend_Config $config A Zend_Config instance holding all config info
+	 * @access protected
+	 */
 	protected $config;
+	 /**
+	 * @var Zend_Session_Namespace $AMEESESSION A Zend Session Namespace for session storage
+	 * @access protected
+	 */
 	protected $AMEESESSION;
-	protected $lastresult = '';
+	 /**
+	 * @var string $lastresponse The last XML response string received from AMEE
+	 * @access protected
+	 */
+	protected $lastresponse = '';
+	 /**
+	 * @var string $lastrequesttype The type (GET/POST/PUT/DELETE) of the last request sent to AMEE
+	 * @access protected
+	 */
+	protected $lastrequesttype = '';
+	 /**
+	 * @var array $cookies Cookies relating to the AMEE session
+	 * @access protected
+	 */
 	protected $cookies = array();
-	public $useCache = false;
-	public $debugOn = false;
+	 /**
+	 * @var boolean $usecache Whether to use a local cache for AMEE GET requests
+	 * @access public
+	 */
+	public $usecache = false;
+	 /**
+	 * @var boolean $debugon Whether to log interesting events to amee.log
+	 * @access public
+	 */
+	public $debugon = false;
+	 /**
+	 * @var string $authmode Can be 'session' (i.e. each client session gets their own auth) or 'global', where same auth key is shared for all sesions (via files or APC vars). The latter is more efficient, will make fewer login requests. Normally set from config.
+	 * @access public
+	 */
+	public $authmode = 'global';
+	 /**
+	 * @var string $appname If more than 1 app uses this class and you have authmode == global, set the app name to keep their auth tokens separate. Normally set from config.
+	 * @access public
+	 */
+	public $appname = '';
 	
 	/**
 	* Initialise this AMEE instance
+	* @param Zend_Config $config A Zend_Config instance containing the config elements we want, so config is integrated with host app
 	*/
 	public function __construct(Zend_Config $config) {
 		$this->config = $config;
@@ -49,46 +104,103 @@ class AMEE {
 			'port' => $this->config->amee->database->port
 		));
 		$this->db->setFetchMode(Zend_Db::FETCH_ASSOC);
+		
+		//Check for optional config items
+		if (isset($this->config->amee->usecache)) {
+			$this->usecache = ($this->config->amee->usecache == true or $this->config->amee->usecache == 'true');
+		}
+		if (isset($this->config->amee->debugon)) {
+			$this->debugon = ($this->config->amee->debugon == true or $this->config->amee->debugon == 'true');
+		}
+		if (isset($this->config->amee->authmode) and ($this->config->amee->authmode == 'global' or $this->config->amee->authmode == 'session')) {
+			$this->authmode = $this->config->amee->authmode;
+		}
+		if (isset($this->config->amee->appname)) {
+			$this->appname = $this->config->amee->appname;
+		}
 
-		//Create a session namespace just for us
+		//Create a session namespace just for us, but note that we don't start a session, that's up to the host app
 		require_once 'Zend/Session/Namespace.php';
 		$this->AMEESESSION = new Zend_Session_Namespace('AMEE');
 	}
 	
 	/**
-	* This function authenticates with AMEE - this needs to be done just once per session and
-	* returns an authToken which is passed back to AMEE in all subsequent requests.
+	* This function authenticates with AMEE - this needs to be done  once per session and
+	* returns an authtoken which is passed back to AMEE in all subsequent requests.
 	* Throws an exception if authenticaton fails
-	* Connection parameters come from the amee.ini file
+	* Connection parameters come from the config submitted to the constructor
 	* @return boolean
 	*/
 	public function connect() {
 		//Are we already authenticated with an unexpired key?
-		if (!empty($this->authToken) and $this->authexpires > time()) {
+		if (!empty($this->authtoken) and $this->authexpires > time()) {
 			return true;
 		}
 		//Did we already connect in an earlier request and store it in the session?
-		if (isset($this->AMEESESSION->authToken) and !empty($this->AMEESESSION->authToken) and $this->AMEESESSION->authexpires > time()) {
-			$this->authToken = $this->AMEESESSION->authToken;
-			$this->authexpire = $this->AMEESESSION->authexpires;
+		if (isset($this->AMEESESSION->authtoken) and !empty($this->AMEESESSION->authtoken) and $this->AMEESESSION->authexpires > time()) {
+			$this->authtoken = $this->AMEESESSION->authtoken;
+			$this->authexpires = $this->AMEESESSION->authexpires;
 			return true;
 		}
+		//We don't have an auth key in the session
+		if ($this->authmode == 'global') {
+			if (extension_loaded('apc')) { //We have APC, so look up auth in there first
+				$cachedauth = apc_fetch(array('AMEE_authtoken_'.$this->appname, 'AMEE_authexpires_'.$this->appname));
+				if (!empty($cachedauth)) {
+					if (array_key_exists('AMEE_authtoken_'.$this->appname, $cachedauth) and !empty($cachedauth['AMEE_authtoken_'.$this->appname])) {
+						$this->authtoken = $cachedauth['AMEE_authtoken_'.$this->appname];
+						if (array_key_exists('AMEE_authexpires_'.$this->appname, $cachedauth)) {
+							$this->authexpires = $cachedauth['AMEE_authexpires_'.$this->appname];
+						}
+						if ($this->authexpires > time()) { //It's still valid, so no further action needed
+							return true;
+						} else { //Expired, so clear auth and cache
+							$this->authtoken = '';
+							apc_delete('AMEE_authtoken_'.$this->appname);
+							apc_delete('AMEE_authexpires_'.$this->appname);
+						}
+					}
+				}
+			} else { //Fall back to files
+				$filedir = dirname(__FILE__).DIRECTORY_SEPARATOR;
+				if (file_exists($filedir.'AMEE_auth_cache_'.$this->appname)) {
+					$cachedauth = file_get_contents($filedir.'AMEE_auth_cache_'.$this->appname);
+					list($token, $expires) = split($cachedauth, ',');
+					if (!empty($token) and $expires > time()) {
+						$this->authtoken = $token;
+						$this->authexpires = $expires;
+						return true;
+					} else {
+						if (is_writable($filedir.'AMEE_auth_cache_'.$this->appname)) {
+							unlink($filedir.'AMEE_auth_cache_'.$this->appname);
+						}
+					}
+				}
+			}
+		}
 		//Explicitly call sendRequest as we want to get our hands on the headers
-		$lines = $this->sendRequest('POST /auth', $this->makeQueryString(array('username' => $this->config->amee->username, 'password' => $this->config->amee->password)), false, false);
+		$lines = $this->sendRequest('POST /auth', http_build_query(array('username' => $this->config->amee->username, 'password' => $this->config->amee->password), NULL, '&'), false, false);
 	
 		foreach ($lines as $line) {
 			$matches = array();
 			if (preg_match('/^authToken: (.*)$/', $line, $matches)) {
-				$this->authToken = trim($matches[1]);
-				$this->AMEESESSION->authToken = $this->authToken;
+				$this->authtoken = trim($matches[1]);
+				$this->AMEESESSION->authtoken = $this->authtoken;
 				//AMEE sessions time out after 30 mins idle, so preemptively expire our auth before that
 				$this->authexpires = strtotime('+29 minutes', time());
-				$this->AMEESESSION->authToken = $this->authexpires;
-				//var_dump($this);
+				$this->AMEESESSION->authexpires = $this->authexpires;
+				if ($this->authmode == 'global') {
+					if (extension_loaded('apc')) { //Store in global cache for allowed expiry time
+						apc_store('AMEE_authtoken_'.$this->appname, $this->authtoken, 29 * 60);
+						apc_store('AMEE_authexpires_'.$this->appname, $this->authexpires, 29 * 60);
+					} else {
+						file_put_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'AMEE_auth_cache_'.$this->appname, $this->authtoken.','.$this->authexpires);
+					}
+				}
 				return true; //Don't bother looking at any other headers
 			}
 		}
-		if(empty($this->authToken)) {
+		if(empty($this->authtoken)) {
 			$this->debug('AMEE authentication failed');
 		}
 		throw new Exception('AMEE authentication failed');
@@ -99,10 +211,21 @@ class AMEE {
 	* Trash auth token and session
 	*/
 	public function disconnect() {
-		$this->authToken = '';
+		$this->authtoken = '';
 		$this->authexpires = 0;
-		$this->AMEESESSION->authToken = '';
+		$this->AMEESESSION->authtoken = '';
 		$this->AMEESESSION->authexpires = 0;
+		if ($this->authmode == 'global') {
+			if (extension_loaded('apc')) { //Trash auth from cache too
+				apc_delete('AMEE_authtoken_'.$this->appname);
+				apc_delete('AMEE_authexpires_'.$this->appname);
+			} else {
+				$filedir = dirname(__FILE__).DIRECTORY_SEPARATOR;
+				if (file_exists($filedir.'AMEE_auth_cache_'.$this->appname) and is_writable($filedir.'AMEE_auth_cache_'.$this->appname)) {
+					unlink($filedir.'AMEE_auth_cache_'.$this->appname);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -143,7 +266,7 @@ class AMEE {
 	* @param array $params Associative array of parameters
 	*/
 	public function post($path, $params = array()) {
-		return $this->sendRequest("POST $path", $this->makeQueryString($params));
+		return $this->sendRequest("POST $path", http_build_query($params, NULL, '&'));
 	}
 
 	/**
@@ -152,7 +275,7 @@ class AMEE {
 	* @param array $params Associative array of parameters
 	*/
 	public function put($path, $params = array()) {
-		return $this->sendRequest("PUT $path", $this->makeQueryString($params));
+		return $this->sendRequest("PUT $path", http_build_query($params, NULL, '&'));
 	}
 
 	/**
@@ -162,9 +285,9 @@ class AMEE {
 	*/
 	public function get($path, $params = array()) {
 		if (count($params) > 0) {
-			return $this->sendRequest("GET $path?".$this->makeQueryString($params), '');
+			return $this->sendRequestCached("GET $path?".http_build_query($params, NULL, '&'));
 		} else {
-			return $this->sendRequest("GET $path", '');
+			return $this->sendRequestCached("GET $path");
 		}
 	}
 	
@@ -188,14 +311,20 @@ class AMEE {
 	* @access protected
 	*/
 	protected function sendRequest($path, $body, $xml_only = true, $repeat = true) {
-		if(!empty($this->authToken) && strpos($path, 'POST /auth') === false){
+		if(!empty($this->authtoken) && strpos($path, 'POST /auth') === false){
 			$this->connect();
+		}
+		$matches = array();
+		if (preg_match('/^(GET|POST|PUT|DELETE)/', $path, $matches)) {
+			$this->lastrequesttype = $matches[1];
+		} else {
+			$this->debug('Invalid path requested: '.$path);
 		}
 		$header = $path." HTTP/1.0\n"
 			.$this->getCookieLines() //insert cookies
 			."Accept: application/xml\n";
-		if(!empty($this->authToken)) {
-			$header.="authToken: ".$this->authToken."\n";
+		if(!empty($this->authtoken)) {
+			$header.="authToken: ".$this->authtoken."\n";
 		}
 		$header .= "Host: ".$this->config->amee->host."\n"
 		."Content-Type: application/x-www-form-urlencoded\n"
@@ -233,16 +362,16 @@ class AMEE {
 		
 		socket_close($s);
 		
-		if(strpos($lines[0], '401 UNAUTH') !== false){//auth failed, try again, try ONCE at getting new authToken then trying again
+		if(strpos($lines[0], '401 UNAUTH') !== false){ //Auth failed, try again, try ONCE at getting new authtoken then trying again
 			if($repeat){
 				$this->debug('Authentication failure - get a new token and try again.');
 				$this->reconnect();
-				return $this->sendRequest($path, $body, $xml_only, false); //try just one more time!
+				return $this->sendRequest($path, $body, $xml_only, false); //Try one more time!
 			} else {
 				$this->debug('Authentication failure on second attempt.');
 			}
 		}
-		if($this->debugOn) {
+		if($this->debugon) {
 			$this->responses[] = array('request' => $header, 'response' => $lines);
 			$this->debug($header);
 			$this->debug(implode("\n", $lines));
@@ -261,57 +390,58 @@ class AMEE {
 	* @return string
 	*/
 	public function createNewProfile(){
-		//It's meaningless to cache this request
-		$caching = $this->useCache;
-		$this->useCache = false;
 		$xmlstr = $this->post('/profiles', array('profile' => 'true'));
 		$profileUID = (string)$this->getXmlElement($xmlstr, '/Resources/ProfilesResource/Profile/@uid');
-		$this->useCache = $caching; //Restore cache state
 		return $profileUID;
 	}
 	
 	/**
-	* Clear the cache - call if a profileItem creation fails, also see display_db_cache.php
-	* @access protected
+	* Clear the cache
+	* @access public
 	*/
-	protected function dbCacheClear() {
+	public function clearCache() {
 		return $this->db->query('DELETE FROM cache');
 	}
 	
 	/**
-	* Use the db cache-
-	* tries to fetch result from cache first, if not present then sends request and saves xml to cache
+	* Do an AMEE request but check the cache first
+	* Tries to fetch result from cache first, if not present then sends request and saves xml to cache
+	* Stores a hash of the request rather than the whole request
+	* Uses a 1-week timeout, purges old items on average every 100 requests
 	* NOTE: only works with GET requests with no body
-	* e.g. $path is /e.g. GET /data/transport/car/generic/drill?, response is the xml
+	* e.g. $path is e.g. GET /data/transport/car/generic/drill?, response is the xml
 	* @param string $path the path to fetch
 	* @return string
 	*/
-	protected function dbCacheRequest($path) {
-		if(!$this->useCache or substr($path, 0, 3) != 'GET') {
+	protected function sendRequestCached($path) {
+		//Don't cache if debug is on or cache is off or it's not a GET request
+		if(!$this->usecache or substr($path, 0, 3) != 'GET') {
 			return $this->sendRequest($path, '');
 		}
+		
+		//TODO implement APC caching
+		
+		$response = $this->db->fetchOne("SELECT response FROM cache WHERE request = ?", md5($path));
 	
-		$result = $this->db->fetchOne("SELECT response FROM cache WHERE request = ?", $this->db->quote($path));
-	
-		if(empty($result)) {
-			$ret = $this->sendRequest($path, ''); //Not in cache, so go fetch it from AMEE
-			if(!empty($ret)) {
-				$query = "INSERT INTO cache SET request = ".$this->db->quote($path1).", response = ".$this->db->quote($ret1, $db).", timestamp = '".gmdate('Y-m-d H:i:s')."'";
-				$query .= " ON DUPLICATE KEY UPDATE response = ".$this->db->quote($ret1, $db);
+		if(empty($response)) {
+			$response = $this->sendRequest($path, ''); //Not in cache, so go fetch it from AMEE
+			if(!empty($response)) {
+				$query = "INSERT INTO cache SET request = '".md5($path)."', response = ".$this->db->quote($response).", timestamp = '".gmdate('Y-m-d H:i:s')."'";
+				$query .= " ON DUPLICATE KEY UPDATE response = ".$this->db->quote($response).", timestamp = '".gmdate('Y-m-d H:i:s')."'";
 				$this->db->query($query);
 				$this->debug("Adding to cache: $path");
 			} else {
-				$this->debug("Blank response in dbCacheRequest -  not caching.");
+				$this->debug("Blank response in sendRequestCached -  not caching.");
 			}
 		} else {
 			$this->debug("Cache hit: $path");
-			$ret = $result['response'];
 		}
 		//Occasionally clear old stuff out of the cache
 		if (rand(1,100) == 42) {
 			$this->db->delete('cache', 'timestamp < \''.gmdate('Y-m-d H:i:s', strtotime(gmdate('Y-m-d H:i:s').' -1 week'))."'");
 		}
-		return $ret;
+		$this->lastresponse = $response;
+		return $response;
 	}
 	
 	/**
@@ -323,7 +453,7 @@ class AMEE {
 	* @todo This does not use the AMEE wrapper functions like {@link get()} yet
 	*/
 	public function createDropDown($path, $body){
-		$xmlstr = $this->dbCacheRequest($path, $body);
+		$xmlstr = $this->sendRequestCached($path, $body);
 		$optionArray = array();
 		$optionArray = $this->getXmlElement($xmlstr,"/Resources/DrillDownResource/Choices/Name", true);
 		$name = $optionArray[0];
@@ -419,19 +549,24 @@ class AMEE {
 	
 	/**
 	* A simplifying wrapper to extract the kgco2value out of the last response
+	* Only use when you expec the previous request to return an AmountPerMonth value!
 	* @return float
 	*/
 	public function getKgCo2() {
 		if (!empty($this->lastresponse)) {
-//			return (float)$this->searchResponse('/Resources/ProfileItemResource/ProfileItem/AmountPerMonth');
-			return (float)$this->searchResponse('/Resources/ProfileCategoryResource/ProfileItem/AmountPerMonth');
+			if ($this->lastrequesttype == 'POST') {
+				return (float)$this->searchResponse('/Resources/ProfileCategoryResource/ProfileItem/AmountPerMonth');
+			} else {
+				return (float)$this->searchResponse('/Resources/ProfileItemResource/ProfileItem/AmountPerMonth');
+			}
 		} else {
 			return 0.0;
 		}
 	}
 
 	/**
-	* A simplifying wrapper to extract the profileitem UID out of the last response
+	* A simplifying wrapper to extract a new profileitem UID out of the last POST response
+	* Only use when you expec the previous request to return a profileItem UID!
 	* @return float
 	*/
 	public function getProfileItemUID() {
@@ -444,6 +579,7 @@ class AMEE {
 
 	/**
 	* A simplifying wrapper to extract the dataitem UID out of the last drill response
+	* Only use when you expec the previous request to return a dataItem UID!
 	* @return float
 	*/
 	public function getDataItemUID() {
@@ -455,40 +591,10 @@ class AMEE {
 	}
 
 	/**
-	* Reverse of {@link parse_str()}
-	* Converts an associative array into a URL query string, adding URL encoding where necessary
-	* For example array('a' => 'a b c') would return: a=a%20b%20c
-	* @param array $params An array of key/value pairs to convert
-	* @return string
-	*/
-	public function makeQueryString($params) {
-		$str = '';
-		if (count($params) > 0) {
-			foreach ($params as $key => $value) {
-				$str .= ($str == '')?'':'&'; //Don't start string with an &
-				if (rawurlencode($value) != $value) { //Does the param contain url-unsafe chars?
-					if (rawurlencode($key) != $key) { //Does the key contain url-unsafe chars?
-						$str .= rawurlencode($key).'='.rawurlencode($value);
-					} else {
-						$str .= $key.'='.rawurlencode($value);
-					}
-				} else {
-					if (rawurlencode($key) != $key) { //Does the key contain url-unsafe chars?
-						$str .= rawurlencode($key).'='.$value;
-					} else {
-						$str .= $key.'='.$value;
-					}
-				}
-			}
-		}
-		return $str;
-	}
-	
-	/**
 	* Log a timestamped message to the debug log
 	*/
 	protected function debug($msg) {
-		if ($this->debugOn) {
+		if ($this->debugon) {
 			file_put_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'amee.log', date('Y-m-d H:i:s')."\t$msg\n", FILE_APPEND | LOCK_EX);
 		}
 	}
