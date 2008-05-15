@@ -59,9 +59,9 @@ public class AmeeTest {
     public static void main(String[] args) throws AmeeException {
         long start = Calendar.getInstance().getTimeInMillis();
         System.out.println("Start: " + start);
-        AmeeContext.getInstance().setUsername("load");
-        AmeeContext.getInstance().setPassword("l04d");
-        AmeeContext.getInstance().setBaseUrl("http://local.stage.co2.dgen.net");
+        AmeeContext.getInstance().setUsername("USER");
+        AmeeContext.getInstance().setPassword("PASS");
+        AmeeContext.getInstance().setBaseUrl("http://stage.co2.dgen.net");
         // AmeeObjectFactory.getInstance().setCache(null);
         // testObjectReference();
         testDataCategoryA();
@@ -211,7 +211,7 @@ public class AmeeTest {
     }
 
     public static void testProfileCategoryPagination(AmeeProfileCategory profileCategory, AmeeDrillDown drillDown) throws AmeeException {
-        String dataItemUid = drillDown.getDataItemUid();
+        String dataItemUid = drillDown.getDataItemPathSegment();
         AmeeDrillDown newDrillDown;
         if (dataItemUid == null) {
             // drill further

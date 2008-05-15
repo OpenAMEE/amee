@@ -53,9 +53,9 @@ public abstract class AmeeExample extends JFrame {
     
     public static void setLoginDetails(){
         //NOTE: Please replace the following with your login details
-        AmeeContext.getInstance().setUsername("load");
-        AmeeContext.getInstance().setPassword("l04d");
-        AmeeContext.getInstance().setBaseUrl("http://local.stage.co2.dgen.net");        
+        AmeeContext.getInstance().setUsername("USER");
+        AmeeContext.getInstance().setPassword("PASS");
+        AmeeContext.getInstance().setBaseUrl("http://stage.co2.dgen.net");        
     }
     
     /**
