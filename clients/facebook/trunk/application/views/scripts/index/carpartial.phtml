@@ -1,0 +1,7 @@
+<div class="question car" id="car<?php echo $this->car['id']; ?>">
+	Name: <input name="cars[<?php echo $this->car['id']; ?>][label]" type="text" size="20" maxlength="64" value="<?php echo $this->car['label']; ?>" /><a href="#" onclick="delcar('car<?php echo $this->car['id']; ?>');">Delete this car</a><br />
+	Fuel: <?php //echo $this->partial('index/carfuelspartial.phtml', array('selected' => $this->car['fuel'])); ?><br />
+	Size: <?php //echo $this->partial('index/carsizespartial.phtml', array('selected' => $this->car['size'])); ?><br />
+	Distance per month<input name="cars[<?php echo $this->car['id']; ?>][distancepermonth]" type="text" size="5" maxlength="6" value="<?php echo $this->car['distancepermonth']; ?>" />&nbsp;<input name="cars[<?php echo $this->car['id']; ?>][units]" type="radio" value="miles"<?php if($this->car['units'] == 'miles') echo ' checked="checked"';?> />&nbsp;Miles&nbsp;<input name="cars[<?php echo $this->car['id']; ?>][units]" type="radio" value="km"<?php if($this->car['units'] == 'km') echo ' checked="checked"';?> />&nbsp;Km<br />
+<hr />
+</div>

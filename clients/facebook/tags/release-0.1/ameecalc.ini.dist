@@ -1,0 +1,15 @@
+; Production site configuration data
+[production]
+database.adapter   = Mysqli
+database.host      = localhost
+database.username  = ameecalc
+database.password  = ameecalc
+database.name      = ameecalc
+facebook.appapikey = yourfacebookappapikeygoeshere
+facebook.appsecret = yourfacebookappsecretgoeshere
+facebook.appcallbackurl = "http://www.example.com/ameecalc/"
+
+; Staging site configuration data inherits from production and
+; overrides values as necessary
+[dev : production]
+database.host     = localhost
