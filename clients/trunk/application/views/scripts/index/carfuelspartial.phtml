@@ -1,0 +1,11 @@
+<select name="cars[<?echo $this->carid; ?>][fuel]">
+<?php 
+foreach($this->fuels as $fuelvalue => $fuelname) {
+	if ($fuelvalue == $this->selected) {
+		echo "\t<option value=\"$fuelvalue\" selected=\"selected\">".htmlspecialchars($fuelname)."</option>\n";
+	} else {
+		echo "\t<option value=\"$fuelvalue\">".htmlspecialchars($fuelname)."</option>\n";
+	}
+}
+?>
+</select>

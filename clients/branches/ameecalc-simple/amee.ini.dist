@@ -1,0 +1,16 @@
+; Production site configuration data
+[production]
+database.adapter   = Mysqli
+database.host      = localhost
+database.username  = ameecalc
+database.password  = ameecalc
+database.name      = ameecalc
+amee.host          = stage.co2.dgen.net
+amee.port          = 80
+amee.username      = yourameeusername
+amee.password      = yourameepassword
+
+; Staging site configuration data inherits from production and
+; overrides values as necessary
+[dev : production]
+database.host     = localhost

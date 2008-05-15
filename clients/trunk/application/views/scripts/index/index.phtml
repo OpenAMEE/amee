@@ -1,0 +1,87 @@
+<?php //http://wiki.developers.facebook.com/index.php/Validation_Examples ?>
+<div id="ameeapp">
+<div class="fbbox">
+<div class="boxHeader">Calculate your carbon profile</div>
+<div class="boxBottom">
+<form id="calcform" action="index.php" method="post" onsubmit="return checkForm(this);">
+<fieldset id="location">
+<legend>Location</legend>
+<div class="question">
+<label for="country">What country do you live in?</label>
+<select name="ameecalc[country]" id="country">
+<?php
+foreach($this->iso3166 as $countrycode => $countryname) {
+	echo "\t<option label=\"$countryname\" value=\"$countrycode\"";
+	if($this->ameecalc['country'] == $countrycode) {
+		echo ' selected="selected"';
+	}
+	echo ">$countryname</option>\n";
+}
+unset($countryname);
+unset($countrycode);
+?>
+</select>
+</div>
+</fieldset>
+<fieldset id="flights">
+<legend>Flights</legend>
+<div class="question">
+<label for="flightsdom">How many one way/return domestic flights do you take per year?</label>
+<input name="flightsdom" id="flightsdom" type="text" size="5" maxlength="6" value="<?php echo $this->ameecalc['flightsdom']; ?>" />
+(<a href="http://wiki.co2.dgen.net/index.php/Plane_generic">Flight lengths defined</a>)
+</div>
+<div class="question">
+<label for="flightsshort">How many one way/return short haul flights do you take per year?</label>
+<input name="flightsshort" id="flightsshort" type="text" size="5" maxlength="6" value="<?php echo $this->ameecalc['flightsshort']; ?>" />
+</div>
+<div class="question">
+<label for="flightslong">How many one way/return long haul flights do you take per year?</label>
+<input name="flightslong" id="flightslong" type="text" size="5" maxlength="6" value="<?php echo $this->ameecalc['flightslong']; ?>" />
+</div>
+</fieldset>
+<fieldset id="cars">
+<legend>Car use</legend>
+<?php foreach($this->ameecalc['cars'] as $car) {
+	echo $this->partial('index/carpartial.phtml', array('id' => $car['id'], 'car' => $car));
+} ?>
+<div id="new_car">
+<a clickrewriteurl="http://mac.synchromedia.co.uk/ameecalc/html/index/addcar" clickrewriteform="calcform" clickrewriteid="new_car">Add a car</a></div>
+</fieldset>
+<fieldset id="heating">
+<legend>Heating</legend>
+<div class="question">
+<label for="fueluse">Do you heat your home using a fuel (not electricity)?</label>
+<input name="fueluse" id="fueluseyes" type="radio" value="yes"<?php if($this->ameecalc['fueluse'] == 'yes') echo ' checked="checked"';?> />&nbsp;Yes&nbsp;<input name="fueluse" id="fueluseyes" type="radio" value="no"<?php if($this->ameecalc['fueluse'] == 'no') echo ' checked="checked"'; ?> />&nbsp;No
+</div>
+<div class="question">
+<label for="elec">What type of fuel do you use?</label>
+<select name="fueltype" onchange="changedfuel();">
+	<option value="gas"<?php if ($this->ameecalc['fueltype'] == 'gas') echo ' selected="selected"'; ?>>Gas</option>
+	<option value="oil"<?php if ($this->ameecalc['fueltype'] == 'oil') echo ' selected="selected"'; ?>>Oil</option>
+	<option value="lpg"<?php if ($this->ameecalc['fueltype'] == 'lpg') echo ' selected="selected"'; ?>>LPG</option>
+	<option value="coal"<?php if ($this->ameecalc['fueltype'] == 'coal') echo ' selected="selected"'; ?>>Coal</option>
+	<option value="diesel"<?php if ($this->ameecalc['fueltype'] == 'diesel') echo ' selected="selected"'; ?>>Diesel</option>
+	<option value="kerosene"<?php if ($this->ameecalc['fueltype'] == 'kerosene') echo ' selected="selected"'; ?>>Kerosene</option>
+	<option value="biodiesel"<?php if ($this->ameecalc['fueltype'] == 'biodiesel') echo ' selected="selected"'; ?>>Biodiesel</option>
+	<option value="biomass"<?php if ($this->ameecalc['fueltype'] == 'biomass') echo ' selected="selected"'; ?>>Biomass</option>
+</select>
+</div>
+<div class="question">
+<label for="fuelquantity">What quantity do you use per year?</label>
+<input name="fuelquantity" id="fuelquantity" type="text" size="5" maxlength="6" value="<?php echo $this->ameecalc['fuelquantity']; ?>" /><span id="fuelunits">kWh</span>
+</div>
+</fieldset>
+<fieldset id="electricity">
+<legend>Electricity</legend>
+<div class="question">
+<label for="elec">How much electricity do you use per year?</label>
+<input name="elec" id="elec" type="text" size="5" maxlength="6" value="<?php echo $this->ameecalc['elec']; ?>" />kWh
+</div>
+</fieldset>
+<div class="question">
+<input type="hidden" name="action" value="calc" />
+<input id="calc" type="submit" value="Calculate my profile" />
+</div>
+</form>
+</div>
+</div>
