@@ -32,6 +32,9 @@ Address balance between error codes and throwing exceptions.
 Ensure values in Profile Items are correctly loaded and formatted (amountPerMonth, end, validFrom).
 Replace all getCache().remove() calls with exhaustive invalidate methods.
 
+=== Version 0.5 ===
+Fixed bug preventing creation of profile item in /metadata.
+
 === Version 0.4 ===
 
 Delete Profiles.
