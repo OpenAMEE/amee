@@ -1,22 +1,22 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 /**
  * This file is part of AMEE Java Client Library.
  *
@@ -50,9 +50,9 @@ import java.io.Serializable;
 import java.util.List;
 
 public class AmeeInterface implements Serializable {
-
+    
     private final static Log log = LogFactory.getLog(AmeeInterface.class);
-
+    
     public final static int RETRIES = 3;
     public final static int SUCCESS_OK = 200;
     public final static int CLIENT_ERROR_BAD_REQUEST = 400;
@@ -61,28 +61,29 @@ public class AmeeInterface implements Serializable {
     public final static int CLIENT_ERROR_NOT_FOUND = 404;
     public final static int CLIENT_ERROR_METHOD_NOT_ALLOWED = 405;
     public final static int SERVER_ERROR_INTERNAL = 500;
-
+    
     // TODO: inject
     private static AmeeContext ameeContext = AmeeContext.getInstance();
-
+    
     private static AmeeInterface instance = new AmeeInterface();
-
+    
     public static AmeeInterface getInstance() {
         return instance;
     }
-
+    
     private AmeeInterface() {
         super();
     }
-
+    
     // *** Authentication ***
-
+    
     public boolean signIn() throws AmeeException {
         ameeContext.setAuthToken(null);
         if (ameeContext.isValid()) {
             PostMethod post = ameeContext.getPostMethod("/auth/signIn");
             post.addParameter("username", ameeContext.getUsername());
             post.addParameter("password", ameeContext.getPassword());
+
             try {
                 ameeContext.getClient().executeMethod(post);
                 Header headers[] = post.getResponseHeaders("authToken");
@@ -97,7 +98,7 @@ public class AmeeInterface implements Serializable {
         }
         return ameeContext.getAuthToken() != null;
     }
-
+    
     private void checkAuthenticated() throws AmeeException {
         if ((ameeContext.getAuthToken() == null)) {
             if (!signIn()) {
@@ -105,9 +106,9 @@ public class AmeeInterface implements Serializable {
             }
         }
     }
-
+    
     // *** API Calls ***
-
+    
     public String getAmeeResource(String url) throws AmeeException {
         GetMethod get = null;
         checkAuthenticated();
@@ -125,15 +126,15 @@ public class AmeeInterface implements Serializable {
             }
         }
     }
-
+    
     public String getAmeeResourceByPost(String url, List<Choice> parameters) throws AmeeException {
         return getAmeeResource(url, parameters, false);
     }
-
+    
     public String getAmeeResourceByPut(String url, List<Choice> parameters) throws AmeeException {
         return getAmeeResource(url, parameters, true);
     }
-
+    
     public String getAmeeResource(String url, List<Choice> parameters, boolean tunnelPut) throws AmeeException {
         PostMethod post = null;
         checkAuthenticated();
@@ -162,7 +163,7 @@ public class AmeeInterface implements Serializable {
             }
         }
     }
-
+    
     public void deleteAmeeResource(String url) throws AmeeException {
         DeleteMethod delete = null;
         checkAuthenticated();
@@ -179,9 +180,9 @@ public class AmeeInterface implements Serializable {
             }
         }
     }
-
+    
     // *** Utility ***
-
+    
     private void execute(HttpMethodBase method) throws IOException, AmeeException {
         for (int i = 1; i < RETRIES; i++) {
             ameeContext.getClient().executeMethod(method);
@@ -206,6 +207,7 @@ public class AmeeInterface implements Serializable {
                     if (!signIn()) {
                         throw new AmeeException("Could not authenticate (" + method.getURI() + ").");
                     }
+                    ameeContext.prepareHttpMethod(method);//re-auth fix
                     // allow retries
                     break;
                 default:

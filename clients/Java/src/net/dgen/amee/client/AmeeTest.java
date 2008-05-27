@@ -1,22 +1,22 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 /**
  * This file is part of AMEE Java Client Library.
  *
@@ -35,6 +35,9 @@
  */
 package net.dgen.amee.client;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import net.dgen.amee.client.model.base.AmeeCategory;
 import net.dgen.amee.client.model.base.AmeeItem;
 import net.dgen.amee.client.model.base.AmeeObjectReference;
@@ -53,9 +56,13 @@ import net.dgen.amee.client.util.Choice;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class AmeeTest {
-
+    
     public static void main(String[] args) throws AmeeException {
         long start = Calendar.getInstance().getTimeInMillis();
         System.out.println("Start: " + start);
@@ -64,18 +71,57 @@ public class AmeeTest {
         AmeeContext.getInstance().setBaseUrl("http://stage.co2.dgen.net");
         // AmeeObjectFactory.getInstance().setCache(null);
         // testObjectReference();
-        testDataCategoryA();
+        // testDataCategoryA();
         // testDataCategoryPagination();
         // testDataCategoryTree();
         // testDrillDown();
-        // testExistingProfile();
+        // testAuthRenewal(null);
         // testNewProfile();
         // testProfileCategoryPagination();
         long end = Calendar.getInstance().getTimeInMillis();
         System.out.println("End: " + end);
         System.out.println("Duration: " + (end - start));
     }
-
+    
+    private static long startAR=-1;
+    public static void testAuthRenewal(final String puid){
+        JFrame jf = new JFrame();
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        final JButton idleTimeButton = new JButton("Print idle time");
+        final JTextArea jta = new JTextArea();
+        final JButton sendButton = new JButton("Send request");
+        jf.getContentPane().add(idleTimeButton,BorderLayout.NORTH);
+        jf.getContentPane().add(sendButton,BorderLayout.SOUTH);
+        ActionListener al = new ActionListener(){
+            public void actionPerformed(ActionEvent evt){
+                AmeeObjectFactory objectFactory=null;
+                long currentTime = Calendar.getInstance().getTimeInMillis();
+                long diff = currentTime-startAR;
+                System.err.println("Idle time (sec) = "+diff/1000);
+                if(evt.getSource().equals(sendButton)){
+                    startAR = currentTime;
+                    System.err.println("======= "+startAR);
+                    if(objectFactory==null)
+                        objectFactory = AmeeObjectFactory.getInstance();
+                    try {
+                        AmeeProfile profile = null;
+                        if(puid!=null)
+                            profile = objectFactory.getProfile(puid);
+                        else
+                            profile = objectFactory.getProfile();
+                        System.err.println("profile UID = "+profile.getUid());
+                    } catch (AmeeException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        };
+        idleTimeButton.addActionListener(al);
+        sendButton.addActionListener(al);
+        jf.pack();
+        jf.setVisible(true);
+    }
+    
     public static void testDataCategoryA() throws AmeeException {
         AmeeObjectFactory ameeObjectFactory = AmeeObjectFactory.getInstance();
         AmeeDataCategory dataCategory = ameeObjectFactory.getDataCategory("home/appliances/computers/generic");
@@ -84,7 +130,7 @@ public class AmeeTest {
             dataCategory = (AmeeDataCategory) dataCategory.getParent();
         }
     }
-
+    
     public static void testDataCategoryPagination() throws AmeeException {
         AmeeObjectFactory ameeObjectFactory = AmeeObjectFactory.getInstance();
         AmeeDataCategory dataCategory = ameeObjectFactory.getDataCategory("home/appliances/kitchen/generic");
@@ -95,12 +141,12 @@ public class AmeeTest {
             printCategory(dataCategory);
         }
     }
-
+    
     public static void testDataCategoryTree() throws AmeeException {
         AmeeObjectFactory ameeObjectFactory = AmeeObjectFactory.getInstance();
         printCategoryTree(ameeObjectFactory.getDataCategoryRoot());
     }
-
+    
     public static void printCategoryTree(AmeeCategory category) throws AmeeException {
         String out;
         AmeeProfileCategory profileCategory;
@@ -121,7 +167,7 @@ public class AmeeTest {
             }
         }
     }
-
+    
     public static void printCategory(AmeeCategory category) throws AmeeException {
         System.out.println(category.getUri());
         for (AmeeCategory childCategory : category.getCategories()) {
@@ -136,7 +182,7 @@ public class AmeeTest {
             childItem.fetch();
         }
     }
-
+    
     public static void testDrillDown() throws AmeeException {
         AmeeObjectFactory objectFactory = AmeeObjectFactory.getInstance();
         AmeeDrillDown ameeDrillDown = objectFactory.getDrillDown("home/appliances/computers/generic/drill");
@@ -150,13 +196,13 @@ public class AmeeTest {
             System.out.println("DataItem UID: " + ameeDataItem.getUid());
         }
     }
-
-    public static void testExistingProfile() throws AmeeException {
+    
+    public static void testExistingProfile(String profileUid) throws AmeeException {
         AmeeObjectFactory objectFactory = AmeeObjectFactory.getInstance();
-        AmeeProfile profile = objectFactory.getProfile("D59DC87DD84C");
-        printCategoryTree(profile);
+        AmeeProfile profile = objectFactory.getProfile(profileUid);
+        //printCategoryTree(profile);
     }
-
+    
     public static void testNewProfile() throws AmeeException {
         List<Choice> values;
         AmeeObjectFactory objectFactory = AmeeObjectFactory.getInstance();
@@ -195,7 +241,7 @@ public class AmeeTest {
         profile.delete();
         System.out.println("*** done ***");
     }
-
+    
     public static void testProfileCategoryPagination() throws AmeeException {
         AmeeObjectFactory objectFactory = AmeeObjectFactory.getInstance();
         AmeeProfile profile = objectFactory.getProfile();
@@ -209,7 +255,7 @@ public class AmeeTest {
             printCategoryTree(profileCategory);
         }
     }
-
+    
     public static void testProfileCategoryPagination(AmeeProfileCategory profileCategory, AmeeDrillDown drillDown) throws AmeeException {
         String dataItemUid = drillDown.getDataItemPathSegment();
         AmeeDrillDown newDrillDown;
@@ -227,7 +273,7 @@ public class AmeeTest {
             profileCategory.addProfileItem(dataItemUid);
         }
     }
-
+    
     public static void testObjectReference() throws AmeeException {
         printObjectReference(new AmeeObjectReference("", AmeeObjectType.UNKNOWN));
         printObjectReference(new AmeeObjectReference("/", AmeeObjectType.UNKNOWN));
@@ -240,7 +286,7 @@ public class AmeeTest {
         printObjectReference(new AmeeObjectReference("very", AmeeObjectType.UNKNOWN));
         printObjectReference(new AmeeObjectReference("very/big", AmeeObjectType.UNKNOWN));
     }
-
+    
     public static void printObjectReference(AmeeObjectReference ref) {
         System.out.println("Path: " + ref.getUri());
         System.out.println("  LocalPath: " + ref.getLocalPart());

@@ -95,6 +95,7 @@ public class AmeeContext implements Serializable {
         method.setFollowRedirects(false);
         method.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
         if (getAuthToken() != null) {
+            method.removeRequestHeader("authToken");//re-auth fix
             method.addRequestHeader("authToken", getAuthToken());
         }
         return method;
