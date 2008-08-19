@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module version="4" relativePaths="true" type="JAVA_MODULE">
+<module relativePaths="true" type="JAVA_MODULE" version="4">
   <component name="BuildJarSettings">
     <containerInfo>
       <containerElement type="module" name="co2-engine">
@@ -11,7 +11,76 @@
     <setting name="buildJar" value="true" />
     <setting name="mainClass" value="gc.engine.GCEngine" />
   </component>
-  <component name="ModuleRootManager" />
+  <component name="FacetManager">
+    <facet type="ejb" name="co2-engine">
+      <configuration>
+        <descriptors>
+          <deploymentDescriptor name="ejb-jar.xml" url="file://$MODULE_DIR$/src/resources/META-INF/ejb-jar.xml" optional="false" version="3.0" />
+        </descriptors>
+        <ejbRoots>
+          <root url="file://$MODULE_DIR$/src/resources" />
+          <root url="file://$MODULE_DIR$/src/service" />
+        </ejbRoots>
+        <building>
+          <setting name="EXPLODED_URL" value="file://" />
+          <setting name="EXPLODED_ENABLED" value="false" />
+          <setting name="JAR_URL" value="file://$MODULE_DIR$/../output/dist/co2-engine.jar" />
+          <setting name="JAR_ENABLED" value="true" />
+          <setting name="BUILD_MODULE_ON_FRAME_DEACTIVATION" value="false" />
+          <setting name="BUILD_EXTERNAL_DEPENDENCIES" value="false" />
+          <setting name="EXCLUDE_EXPLODED_DIRECTORY" value="true" />
+          <setting name="RUN_EJB_VALIDATION" value="false" />
+        </building>
+        <packaging>
+          <containerElement type="facet" facetId="co2-domain/ejb/co2-domain">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/" />
+          </containerElement>
+          <containerElement type="facet" facetId="co2-engine-config/ejb/co2-engine-config">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/" />
+          </containerElement>
+          <containerElement type="facet" facetId="co2-restlet/ejb/co2-restlet">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/" />
+          </containerElement>
+          <containerElement type="facet" facetId="co2-service/ejb/co2-service">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/" />
+          </containerElement>
+          <containerElement type="module" name="co2-domain">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/co2-domain.jar" />
+          </containerElement>
+          <containerElement type="module" name="co2-engine-config">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/co2-engine-config.jar" />
+          </containerElement>
+          <containerElement type="module" name="co2-restlet">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/co2-restlet.jar" />
+          </containerElement>
+          <containerElement type="module" name="co2-service">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/co2-service.jar" />
+          </containerElement>
+          <containerElement type="library" name="jm" level="project">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="/" />
+          </containerElement>
+          <containerElement type="library" name="libs" level="project">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="&lt;N/A&gt;" />
+          </containerElement>
+          <containerElement type="library" level="module">
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="&lt;N/A&gt;" />
+            <url>jar://$APPLICATION_HOME_DIR$/lib/javaee.jar!/</url>
+          </containerElement>
+        </packaging>
+      </configuration>
+    </facet>
+  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -20,38 +89,21 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="cache-restlet" />
-    <orderEntry type="module" module-name="cache-service" />
     <orderEntry type="module" module-name="co2-domain" />
     <orderEntry type="module" module-name="co2-engine-config" />
     <orderEntry type="module" module-name="co2-restlet" />
     <orderEntry type="module" module-name="co2-service" />
-    <orderEntry type="module" module-name="engine-service" />
-    <orderEntry type="module" module-name="kiwi-domain" />
-    <orderEntry type="module" module-name="kiwi-restlet" />
-    <orderEntry type="module" module-name="kiwi-service" />
-    <orderEntry type="module" module-name="org.restlet.ext.seam" />
-    <orderEntry type="module" module-name="plum-domain" />
-    <orderEntry type="module" module-name="plum-restlet" />
-    <orderEntry type="module" module-name="plum-service" />
-    <orderEntry type="module" module-name="sheet-domain" />
-    <orderEntry type="module" module-name="utils" />
-    <orderEntry type="library" name="backport-util-concurrent" level="project" />
-    <orderEntry type="library" name="commons-fileupload" level="project" />
-    <orderEntry type="library" name="commons-io-1.2" level="project" />
-    <orderEntry type="library" name="ehcache" level="project" />
-    <orderEntry type="library" name="freemarker" level="project" />
-    <orderEntry type="library" name="javacsv" level="project" />
-    <orderEntry type="library" name="jboss-seam" level="project" />
-    <orderEntry type="library" name="jboss-seam-dependencies" level="project" />
-    <orderEntry type="library" name="jetty-6" level="project" />
-    <orderEntry type="library" name="json" level="project" />
-    <orderEntry type="library" name="mysql-connector-java" level="project" />
-    <orderEntry type="library" name="restlet" level="project" />
-    <orderEntry type="library" name="rhino" level="project" />
-    <orderEntry type="library" name="svnkit" level="project" />
-    <orderEntry type="library" name="wrapper" level="project" />
-    <orderEntry type="library" name="commons-cli" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/javaee.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="jm" level="project" />
+    <orderEntry type="library" name="libs" level="project" />
     <orderEntryProperties />
   </component>
 </module>

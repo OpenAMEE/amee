@@ -88,9 +88,9 @@
     <!-- 1000 * 60 * 4 = 4 minutes = 240,000 -->
     <bean name="EngineDSBootstrap" class="org.jboss.resource.adapter.jdbc.local.LocalTxDataSource">
         <property name="driverClass">com.mysql.jdbc.Driver</property>
-        <property name="connectionURL">jdbc:mysql://localhost/carbon?validationQuery=SELECT+1&amp;minEvictableIdleTimeMillis=240000&amp;timeBetweenEvictionRunsMillis=1000&amp;testOnBorrow=true&amp;testWhileIdle=true&amp;autoReconnectForPools=true&amp;useCompression=true</property>
-        <property name="userName">carbon</property>
-        <property name="password">carbon</property>
+        <property name="connectionURL">jdbc:mysql://localhost/amee?validationQuery=SELECT+1&amp;minEvictableIdleTimeMillis=240000&amp;timeBetweenEvictionRunsMillis=1000&amp;testOnBorrow=true&amp;testWhileIdle=true&amp;autoReconnectForPools=true&amp;useCompression=true</property>
+        <property name="userName">amee</property>
+        <property name="password">amee</property>
         <property name="jndiName">java:/EngineDS</property>
         <property name="minSize">20</property>
         <property name="maxSize">200</property>
