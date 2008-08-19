@@ -1,22 +1,22 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package gc.carbon.profile;
 
 import com.jellymold.kiwi.Environment;
@@ -25,23 +25,22 @@ import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.EngineUtils;
-import gc.carbon.data.Calculator;
-import gc.carbon.data.DataCategory;
-import gc.carbon.data.DataItem;
-import gc.carbon.data.DataService;
-import gc.carbon.data.ItemValue;
+import gc.carbon.data.*;
 import gc.carbon.path.PathItem;
 import gc.carbon.path.PathItemService;
 import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.util.XML;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.Form;
+import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
@@ -49,7 +48,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.EntityManager;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Name("profileCategoryResource")
@@ -86,6 +88,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
     private PathItem pathItem;
 
     private ProfileItem newProfileItem;
+    private List<ProfileItem> newProfileItems;
 
     public ProfileCategoryResource() {
         super();
@@ -185,6 +188,12 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
         } else if (isPost()) {
             if (newProfileItem != null) {
                 obj.put("profileItem", newProfileItem.getJSONObject());
+            } else if (newProfileItems != null) {
+                JSONArray profileItems = new JSONArray();
+                obj.put("profileItems", profileItems);
+                for (ProfileItem profileItem : newProfileItems) {
+                    profileItems.put(profileItem.getJSONObject(false));
+                }
             }
         }
         return obj;
@@ -249,6 +258,12 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
         } else if (isPost()) {
             if (newProfileItem != null) {
                 element.appendChild(newProfileItem.getElement(document, detailed));
+            } else if (newProfileItems != null) {
+                Element profileItemsElement = document.createElement("ProfileItems");
+                element.appendChild(profileItemsElement);
+                for (ProfileItem profileItem : newProfileItems) {
+                    profileItemsElement.appendChild(profileItem.getElement(document, false));
+                }
             }
         }
 
@@ -274,65 +289,112 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
     public void post(Representation entity) {
         log.debug("post");
         if (profileBrowser.getProfileItemActions().isAllowCreate()) {
-            Form form = getForm();
-            // are we creating a new ProfileItem?
-            String dateItemUid = form.getFirstValue("dataItemUid");
-            if (dateItemUid != null) {
-                // find the DataItem
-                DataCategory dataCategory = profileBrowser.getDataCategory();
-                DataItem dataItem =
-                        dataService.getDataItem(dataCategory, dateItemUid);
-                if (dataItem != null) {
-                    // create new ProfileItem
-                    newProfileItem =
-                            new ProfileItem(profileBrowser.getProfile(), dataCategory, dataItem);
-                    // determine name for new ProfileItem
-                    newProfileItem.setName(form.getFirstValue("name"));
-                    // determine date for new ProfileItem
-                    newProfileItem.setValidFrom(form.getFirstValue("validFrom"));
-                    // determine if new ProfileItem is an end marker
-                    newProfileItem.setEnd(form.getFirstValue("end"));
-                    // see if ProfileItem already exists
-                    if (!profileService.isEquivilentProfileItemExists(newProfileItem)) {
-                        // save newProfileItem and do calculations
-                        entityManager.persist(newProfileItem);
-                        profileService.checkProfileItem(newProfileItem);
-                        // update item values if supplied
-                        Map<String, ItemValue> itemValues = newProfileItem.getItemValuesMap();
-                        for (String name : form.getNames()) {
-                            ItemValue itemValue = itemValues.get(name);
-                            if (itemValue != null) {
-                                itemValue.setValue(form.getFirstValue(name));
-                            }
-                        }
-                        calculator.calculate(newProfileItem);
-                        // clear caches
-                        pathItemService.removePathItemGroup(profileBrowser.getProfile());
-                        profileSheetService.removeSheets(profileBrowser.getProfile());
-                        if (isStandardWebBrowser()) {
-                            success(profileBrowser.getFullPath());
-                        } else {
-                            // return a response for API calls
-                            super.handleGet();
-                        }
-                    } else {
-                        log.warn("ProfileItem already exists");
-                        // TODO: return nicer error code
-                        badRequest();
-                    }
+            MediaType mediaType = entity.getMediaType();
+            if (MediaType.APPLICATION_XML.includes(mediaType)) {
+                postXML(entity);
+            } else {
+                newProfileItem = postForm(getForm());
+            }
+            if ((newProfileItem != null) || ((newProfileItems != null) && !newProfileItems.isEmpty())) {
+                // clear caches
+                pathItemService.removePathItemGroup(profileBrowser.getProfile());
+                profileSheetService.removeSheets(profileBrowser.getProfile());
+                if (isStandardWebBrowser()) {
+                    success(profileBrowser.getFullPath());
                 } else {
-                    log.warn("DataItem not found");
-                    // TODO: return nicer error code
-                    badRequest();
+                    // return a response for API calls
+                    super.handleGet();
                 }
             } else {
-                log.warn("dataItemUid not supplied");
-                // TODO: return nicer error code
                 badRequest();
             }
         } else {
             notAuthorized();
         }
+    }
+
+    protected void postXML(Representation entity) {
+        ProfileItem profileItem;
+        Form form;
+        org.dom4j.Element profileCategoryElem;
+        org.dom4j.Element profileItemsElem;
+        org.dom4j.Element profileItemElem;
+        org.dom4j.Element profileItemValueElem;
+        try {
+            profileCategoryElem = XML.getRootElement(entity.getStream());
+            profileItemsElem = profileCategoryElem.element("ProfileItems");
+            if (profileCategoryElem.getName().equalsIgnoreCase("ProfileCategory") &&
+                    (profileItemsElem != null)) {
+                newProfileItems = new ArrayList<ProfileItem>();
+                for (Object o1 : profileItemsElem.elements("ProfileItem")) {
+                    profileItemElem = (org.dom4j.Element) o1;
+                    form = new Form();
+                    for (Object o2 : profileItemElem.elements()) {
+                        profileItemValueElem = (org.dom4j.Element) o2;
+                        form.add(profileItemValueElem.getName(), profileItemValueElem.getText());
+                    }
+                    profileItem = postForm(form);
+                    if (profileItem != null) {
+                        newProfileItems.add(profileItem);
+                    } else {
+                        log.warn("Profile Item not added");
+                    }
+                }
+            } else {
+                log.warn("ProfileCategory not found");
+            }
+        } catch (DocumentException e) {
+            log.warn("Caught DocumentException: " + e.getMessage(), e);
+        } catch (IOException e) {
+            log.warn("Caught IOException: " + e.getMessage(), e);
+        }
+    }
+
+    protected ProfileItem postForm(Form form) {
+        ProfileItem profileItem;
+        String dataItemUid = form.getFirstValue("dataItemUid");
+        if (dataItemUid != null) {
+            // find the DataItem
+            DataCategory dataCategory = profileBrowser.getDataCategory();
+            DataItem dataItem =
+                    dataService.getDataItem(dataCategory, dataItemUid);
+            if (dataItem != null) {
+                // create new ProfileItem
+                profileItem =
+                        new ProfileItem(profileBrowser.getProfile(), dataCategory, dataItem);
+                // determine name for new ProfileItem
+                profileItem.setName(form.getFirstValue("name"));
+                // determine date for new ProfileItem
+                profileItem.setValidFrom(form.getFirstValue("validFrom"));
+                // determine if new ProfileItem is an end marker
+                profileItem.setEnd(form.getFirstValue("end"));
+                // see if ProfileItem already exists
+                if (!profileService.isEquivilentProfileItemExists(profileItem)) {
+                    // save newProfileItem and do calculations
+                    entityManager.persist(profileItem);
+                    profileService.checkProfileItem(profileItem);
+                    // update item values if supplied
+                    Map<String, ItemValue> itemValues = profileItem.getItemValuesMap();
+                    for (String name : form.getNames()) {
+                        ItemValue itemValue = itemValues.get(name);
+                        if (itemValue != null) {
+                            itemValue.setValue(form.getFirstValue(name));
+                        }
+                    }
+                    calculator.calculate(profileItem);
+                } else {
+                    log.warn("ProfileItem already exists");
+                    profileItem = null;
+                }
+            } else {
+                log.warn("DataItem not found");
+                profileItem = null;
+            }
+        } else {
+            log.warn("dataItemUid not supplied");
+            profileItem = null;
+        }
+        return profileItem;
     }
 
     @Override
