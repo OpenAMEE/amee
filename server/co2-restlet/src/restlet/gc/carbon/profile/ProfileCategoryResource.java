@@ -122,7 +122,6 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
     public Map<String, Object> getTemplateValues() {
         Profile profile = profileBrowser.getProfile();
         DataCategory dataCategory = profileBrowser.getDataCategory();
-        // Map<String, Sheet> sheets = profileSheetService.getSheets(profile, pathItem.findChildUidsByType("DC"));
         Sheet sheet = profileSheetService.getSheet(profile, dataCategory, profileBrowser.getProfileDate());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", profileBrowser);
@@ -172,7 +171,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
             // add Sheet containing Profile Items & totalAmountPerMonth
             Sheet sheet = profileSheetService.getSheet(profile, dataCategory, profileBrowser.getProfileDate());
             if (sheet != null) {
-                Pager pager = getPager(environment.getItemsPerPage());
+                Pager pager = getPager(profileBrowser.getItemsPerPage(getRequest()));
                 sheet = Sheet.getCopy(sheet, pager);
                 pager.setCurrentPage(getPage());
                 children.put("profileItems", sheet.getJSONObject());
@@ -246,7 +245,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
             // get Sheet containing Profile Items
             Sheet sheet = profileSheetService.getSheet(profile, dataCategory, profileBrowser.getProfileDate());
             if (sheet != null) {
-                Pager pager = getPager(environment.getItemsPerPage());
+                Pager pager = getPager(profileBrowser.getItemsPerPage(getRequest()));
                 sheet = Sheet.getCopy(sheet, pager);
                 pager.setCurrentPage(getPage());
                 // list child Profile Items via sheet

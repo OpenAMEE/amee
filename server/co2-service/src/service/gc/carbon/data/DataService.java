@@ -20,7 +20,6 @@
 package gc.carbon.data;
 
 import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
 import gc.carbon.path.PathItemService;
@@ -51,9 +50,6 @@ public class DataService implements Serializable {
 
     @In(create = true)
     private EntityManager entityManager;
-
-    @In(create = true)
-    private SiteService siteService;
 
     @In(create = true)
     private DataSheetService dataSheetService;

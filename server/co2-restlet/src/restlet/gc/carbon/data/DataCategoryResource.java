@@ -19,7 +19,6 @@
 */
 package gc.carbon.data;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
@@ -69,13 +68,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     private DataSheetService dataSheetService;
 
     @In(create = true)
-    private CarbonDataLoader carbonDataLoader;
-
-    @In(create = true)
     private PathItemService pathItemService;
-
-    @In
-    private Environment environment;
 
     @In
     private PathItem pathItem;
@@ -118,7 +111,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         values.put("itemDefinition", dataCategory.getItemDefinition());
         values.put("node", dataCategory);
         if (sheet != null) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(dataBrowser.getItemsPerPage(getRequest()));
             sheet = Sheet.getCopy(sheet, pager);
             pager.setCurrentPage(getPage());
             values.put("sheet", sheet);
@@ -154,7 +147,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             // add Sheet containing Data Items
             Sheet sheet = dataSheetService.getSheet(dataCategory);
             if (sheet != null) {
-                Pager pager = getPager(environment.getItemsPerPage());
+                Pager pager = getPager(dataBrowser.getItemsPerPage(getRequest()));
                 sheet = Sheet.getCopy(sheet, pager);
                 pager.setCurrentPage(getPage());
                 children.put("dataItems", sheet.getJSONObject());
@@ -208,7 +201,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             // list child Data Items via sheet
             Sheet sheet = dataSheetService.getSheet(dataCategory);
             if (sheet != null) {
-                Pager pager = getPager(environment.getItemsPerPage());
+                Pager pager = getPager(dataBrowser.getItemsPerPage(getRequest()));
                 sheet = Sheet.getCopy(sheet, pager);
                 pager.setCurrentPage(getPage());
                 childrenElement.appendChild(sheet.getElement(document, false));

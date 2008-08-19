@@ -1,31 +1,28 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.ResourceActions;
-import com.jellymold.utils.BaseBrowser;
+import gc.carbon.BaseBrowser;
 import gc.carbon.data.DataCategory;
-import gc.carbon.data.DataService;
 import gc.carbon.data.ItemValue;
-import gc.carbon.path.PathItem;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -46,21 +43,12 @@ public class ProfileBrowser extends BaseBrowser {
     private final static Logger log = Logger.getLogger(ProfileBrowser.class);
 
     @In(create = true)
-    private DataService dataService;
-
-    @In(create = true)
     private ProfileService profileService;
-
-    @In(required = false)
-    private Environment environment;
 
     @In(scope = ScopeType.EVENT, required = false)
     private Profile profile;
 
     private ResourceActions profileActions = new ResourceActions("profile");
-
-    @In(scope = ScopeType.EVENT, required = false)
-    private PathItem pathItem;
 
     // ProfileCategories
 
@@ -93,9 +81,7 @@ public class ProfileBrowser extends BaseBrowser {
     private Date profileDate = Calendar.getInstance().getTime();
     // TODO: private int profileDatePrecision = Calendar.MONTH;
 
-    public PathItem getPathItem() {
-        return pathItem;
-    }
+    // General
 
     public String getFullPath() {
         if ((getProfile() != null) && (getPathItem() != null)) {

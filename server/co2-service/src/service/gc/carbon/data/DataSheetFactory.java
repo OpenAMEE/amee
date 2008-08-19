@@ -19,14 +19,9 @@
 */
 package gc.carbon.data;
 
-import com.jellymold.sheet.Cell;
-import com.jellymold.sheet.Column;
-import com.jellymold.sheet.Row;
-import com.jellymold.sheet.Sheet;
-import com.jellymold.sheet.ValueType;
+import com.jellymold.sheet.*;
 import com.jellymold.utils.cache.Cacheable;
 import com.jellymold.utils.cache.CacheableFactory;
-import gc.carbon.definition.DefinitionService;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -41,9 +36,6 @@ import java.util.Map;
 public class DataSheetFactory implements CacheableFactory {
 
     private final static Logger log = Logger.getLogger(DataSheetFactory.class);
-
-    @In(create = true)
-    private DefinitionService definitionService;
 
     @In(create = true)
     private DataService dataService;
