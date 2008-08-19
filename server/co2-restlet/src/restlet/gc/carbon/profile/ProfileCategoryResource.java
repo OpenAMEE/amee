@@ -60,6 +60,8 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
 
     private final static Logger log = Logger.getLogger(ProfileCategoryResource.class);
 
+    // TODO: may be a more elegant way to handle incoming representations of different media types
+
     @In(create = true)
     private EntityManager entityManager;
 
@@ -316,15 +318,12 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
     protected void postXML(Representation entity) {
         ProfileItem profileItem;
         Form form;
-        org.dom4j.Element profileCategoryElem;
         org.dom4j.Element profileItemsElem;
         org.dom4j.Element profileItemElem;
         org.dom4j.Element profileItemValueElem;
         try {
-            profileCategoryElem = XML.getRootElement(entity.getStream());
-            profileItemsElem = profileCategoryElem.element("ProfileItems");
-            if (profileCategoryElem.getName().equalsIgnoreCase("ProfileCategory") &&
-                    (profileItemsElem != null)) {
+            profileItemsElem = XML.getRootElement(entity.getStream());
+            if (profileItemsElem.getName().equalsIgnoreCase("ProfileItems")) {
                 newProfileItems = new ArrayList<ProfileItem>();
                 for (Object o1 : profileItemsElem.elements("ProfileItem")) {
                     profileItemElem = (org.dom4j.Element) o1;
@@ -351,17 +350,24 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
     }
 
     protected ProfileItem postForm(Form form) {
+        DataCategory dataCategory;
+        DataItem dataItem;
         ProfileItem profileItem;
         String dataItemUid = form.getFirstValue("dataItemUid");
         if (dataItemUid != null) {
-            // find the DataItem
-            DataCategory dataCategory = profileBrowser.getDataCategory();
-            DataItem dataItem =
-                    dataService.getDataItem(dataCategory, dataItemUid);
+            // find the DataCategory & DataItem
+            dataCategory = profileBrowser.getDataCategory();
+            // the root DataCategory has an empty path
+            if (dataCategory.getPath().length() == 0) {
+                // allow any DataItem for any DataCategory
+                dataItem = dataService.getDataItem(environment, dataItemUid);
+            } else {
+                // only allow DataItems for specific DataCategory (not root)
+                dataItem = dataService.getDataItem(dataCategory, dataItemUid);
+            }
             if (dataItem != null) {
                 // create new ProfileItem
-                profileItem =
-                        new ProfileItem(profileBrowser.getProfile(), dataCategory, dataItem);
+                profileItem = new ProfileItem(profileBrowser.getProfile(), dataItem);
                 // determine name for new ProfileItem
                 profileItem.setName(form.getFirstValue("name"));
                 // determine date for new ProfileItem

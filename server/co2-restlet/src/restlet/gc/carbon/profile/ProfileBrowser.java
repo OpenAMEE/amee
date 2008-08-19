@@ -19,8 +19,8 @@
 */
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.ResourceActions;
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.ResourceActions;
 import com.jellymold.utils.BaseBrowser;
 import gc.carbon.data.DataCategory;
 import gc.carbon.data.DataService;
@@ -33,7 +33,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.restlet.data.Form;
 
-import javax.persistence.EntityManager;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,9 +44,6 @@ import java.util.Date;
 public class ProfileBrowser extends BaseBrowser {
 
     private final static Logger log = Logger.getLogger(ProfileBrowser.class);
-
-    @In(create = true)
-    private EntityManager entityManager;
 
     @In(create = true)
     private DataService dataService;

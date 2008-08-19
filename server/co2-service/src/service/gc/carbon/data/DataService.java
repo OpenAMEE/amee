@@ -23,6 +23,7 @@ import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
+import gc.carbon.path.PathItemService;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -37,8 +38,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import gc.carbon.path.PathItemService;
 
 /**
  * TODO: Clear caches after entity removal.
@@ -239,6 +238,30 @@ public class DataService implements Serializable {
                         "WHERE di.dataCategory = :dataCategory " +
                         "AND di.uid = :uid")
                 .setParameter("dataCategory", dataCategory)
+                .setParameter("uid", uid)
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", "query.dataService")
+                .getResultList();
+        if (dataItems.size() == 1) {
+            log.debug("found DataItem");
+            dataItem = dataItems.get(0);
+            checkDataItem(dataItem);
+        } else {
+            log.debug("DataItem NOT found");
+        }
+        return dataItem;
+    }
+
+    public DataItem getDataItem(Environment environment, String uid) {
+        DataItem dataItem = null;
+        List<DataItem> dataItems;
+        dataItems = entityManager.createQuery(
+                "SELECT DISTINCT di " +
+                        "FROM DataItem di " +
+                        "LEFT JOIN FETCH di.itemValues " +
+                        "WHERE di.environment.id = :environmentId " +
+                        "AND di.uid = :uid")
+                .setParameter("environmentId", environment.getId())
                 .setParameter("uid", uid)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.dataService")

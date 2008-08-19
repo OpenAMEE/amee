@@ -32,13 +32,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
@@ -75,6 +69,12 @@ public class ProfileItem extends Item {
 
     public ProfileItem() {
         super();
+    }
+
+    public ProfileItem(Profile profile, DataItem dataItem) {
+        super(dataItem.getDataCategory(), dataItem.getItemDefinition());
+        setProfile(profile);
+        setDataItem(dataItem);
     }
 
     public ProfileItem(Profile profile, DataCategory dataCategory, DataItem dataItem) {
@@ -118,9 +118,9 @@ public class ProfileItem extends Item {
         obj.put("amountPerMonth", getAmountPerMonth());
         obj.put("validFrom", getValidFromFormatted());
         obj.put("end", Boolean.toString(isEnd()));
+        obj.put("dataItem", getDataItem().getIdentityJSONObject());
         if (detailed) {
             obj.put("profile", getProfile().getIdentityJSONObject());
-            obj.put("dataItem", getDataItem().getIdentityJSONObject());
         }
         return obj;
     }
@@ -132,9 +132,9 @@ public class ProfileItem extends Item {
         element.appendChild(APIUtils.getElement(document, "AmountPerMonth", getAmountPerMonth().toString()));
         element.appendChild(APIUtils.getElement(document, "ValidFrom", getValidFromFormatted()));
         element.appendChild(APIUtils.getElement(document, "End", Boolean.toString(isEnd())));
+        element.appendChild(getDataItem().getIdentityElement(document));
         if (detailed) {
             element.appendChild(getProfile().getIdentityElement(document));
-            element.appendChild(getDataItem().getIdentityElement(document));
         }
         return element;
     }
