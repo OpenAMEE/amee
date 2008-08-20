@@ -187,7 +187,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
             // add chilren
             obj.put("children", children);
 
-        } else if (getRequest().getMethod().equals(Method.POST) && getRequest().getMethod().equals(Method.PUT)) {
+        } else if (getRequest().getMethod().equals(Method.POST) || getRequest().getMethod().equals(Method.PUT)) {
             if (profileItem != null) {
                 obj.put("profileItem", profileItem.getJSONObject());
             } else if (profileItems != null) {
