@@ -40,7 +40,6 @@ import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +50,6 @@ import java.util.Map;
 public class DataItemResource extends BaseResource implements Serializable {
 
     private final static Logger log = Logger.getLogger(DataItemResource.class);
-
-    @In(create = true)
-    private EntityManager entityManager;
 
     @In(create = true)
     private DataService dataService;

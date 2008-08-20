@@ -51,6 +51,7 @@ import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -59,8 +60,6 @@ import java.util.Map;
 public class ProfileCategoryResource extends BaseResource implements Serializable {
 
     private final static Logger log = Logger.getLogger(ProfileCategoryResource.class);
-
-    // TODO: may be a more elegant way to handle incoming representations of different media types
 
     @In(create = true)
     private EntityManager entityManager;
@@ -291,8 +290,11 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
         log.debug("post");
         if (profileBrowser.getProfileItemActions().isAllowCreate()) {
             MediaType mediaType = entity.getMediaType();
+            // TODO: may be a more elegant way to handle incoming representations of different media types
             if (MediaType.APPLICATION_XML.includes(mediaType)) {
                 postXML(entity);
+            } else if (MediaType.APPLICATION_JSON.includes(mediaType)) {
+                postJSON(entity);
             } else {
                 newProfileItem = postForm(getForm());
             }
@@ -311,6 +313,36 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
             }
         } else {
             notAuthorized();
+        }
+    }
+
+    protected void postJSON(Representation entity) {
+        ProfileItem profileItem;
+        Form form;
+        String key;
+        JSONArray profileItemsJSON;
+        JSONObject profileItemJSON;
+        try {
+            newProfileItems = new ArrayList<ProfileItem>();
+            profileItemsJSON = new JSONArray(entity.getText());
+            for (int i = 0; i < profileItemsJSON.length(); i++) {
+                profileItemJSON = profileItemsJSON.getJSONObject(i);
+                form = new Form();
+                for (Iterator iterator = profileItemJSON.keys(); iterator.hasNext();) {
+                    key = (String) iterator.next();
+                    form.add(key, profileItemJSON.getString(key));
+                }
+                profileItem = postForm(form);
+                if (profileItem != null) {
+                    newProfileItems.add(profileItem);
+                } else {
+                    log.warn("Profile Item not added");
+                }
+            }
+        } catch (JSONException e) {
+            log.warn("Caught JSONException: " + e.getMessage(), e);
+        } catch (IOException e) {
+            log.warn("Caught JSONException: " + e.getMessage(), e);
         }
     }
 
