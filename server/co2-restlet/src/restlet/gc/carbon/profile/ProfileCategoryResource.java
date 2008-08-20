@@ -200,12 +200,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
     }
 
     @Override
-    public JSONObject getJSONObject(boolean detailed) throws JSONException {
-        return getJSONObject();
-    }
-
-    @Override
-    public Element getElement(Document document, boolean detailed) {
+    public Element getElement(Document document) {
         Profile profile = profileBrowser.getProfile();
         DataCategory dataCategory = profileBrowser.getDataCategory();
 
@@ -257,7 +252,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
 
         } else if (isPost()) {
             if (newProfileItem != null) {
-                element.appendChild(newProfileItem.getElement(document, detailed));
+                element.appendChild(newProfileItem.getElement(document, false));
             } else if (newProfileItems != null) {
                 Element profileItemsElement = document.createElement("ProfileItems");
                 element.appendChild(profileItemsElement);
@@ -289,8 +284,9 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
     public void post(Representation entity) {
         log.debug("post");
         if (profileBrowser.getProfileItemActions().isAllowCreate()) {
-            MediaType mediaType = entity.getMediaType();
+            newProfileItems = new ArrayList<ProfileItem>();
             // TODO: may be a more elegant way to handle incoming representations of different media types
+            MediaType mediaType = entity.getMediaType();
             if (MediaType.APPLICATION_XML.includes(mediaType)) {
                 postXML(entity);
             } else if (MediaType.APPLICATION_JSON.includes(mediaType)) {
@@ -298,7 +294,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
             } else {
                 newProfileItem = postForm(getForm());
             }
-            if ((newProfileItem != null) || ((newProfileItems != null) && !newProfileItems.isEmpty())) {
+            if ((newProfileItem != null) || !newProfileItems.isEmpty()) {
                 // clear caches
                 pathItemService.removePathItemGroup(profileBrowser.getProfile());
                 profileSheetService.removeSheets(profileBrowser.getProfile());
@@ -317,26 +313,30 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
     }
 
     protected void postJSON(Representation entity) {
+        log.debug("postJSON");
         ProfileItem profileItem;
         Form form;
         String key;
+        JSONObject rootJSON;
         JSONArray profileItemsJSON;
         JSONObject profileItemJSON;
         try {
-            newProfileItems = new ArrayList<ProfileItem>();
-            profileItemsJSON = new JSONArray(entity.getText());
-            for (int i = 0; i < profileItemsJSON.length(); i++) {
-                profileItemJSON = profileItemsJSON.getJSONObject(i);
-                form = new Form();
-                for (Iterator iterator = profileItemJSON.keys(); iterator.hasNext();) {
-                    key = (String) iterator.next();
-                    form.add(key, profileItemJSON.getString(key));
-                }
-                profileItem = postForm(form);
-                if (profileItem != null) {
-                    newProfileItems.add(profileItem);
-                } else {
-                    log.warn("Profile Item not added");
+            rootJSON = new JSONObject(entity.getText());
+            if (rootJSON.has("profileItems")) {
+                profileItemsJSON = rootJSON.getJSONArray("profileItems");
+                for (int i = 0; i < profileItemsJSON.length(); i++) {
+                    profileItemJSON = profileItemsJSON.getJSONObject(i);
+                    form = new Form();
+                    for (Iterator iterator = profileItemJSON.keys(); iterator.hasNext();) {
+                        key = (String) iterator.next();
+                        form.add(key, profileItemJSON.getString(key));
+                    }
+                    profileItem = postForm(form);
+                    if (profileItem != null) {
+                        newProfileItems.add(profileItem);
+                    } else {
+                        log.warn("Profile Item not added");
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -347,27 +347,31 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
     }
 
     protected void postXML(Representation entity) {
+        log.debug("postXML");
         ProfileItem profileItem;
         Form form;
+        org.dom4j.Element rootElem;
         org.dom4j.Element profileItemsElem;
         org.dom4j.Element profileItemElem;
         org.dom4j.Element profileItemValueElem;
         try {
-            profileItemsElem = XML.getRootElement(entity.getStream());
-            if (profileItemsElem.getName().equalsIgnoreCase("ProfileItems")) {
-                newProfileItems = new ArrayList<ProfileItem>();
-                for (Object o1 : profileItemsElem.elements("ProfileItem")) {
-                    profileItemElem = (org.dom4j.Element) o1;
-                    form = new Form();
-                    for (Object o2 : profileItemElem.elements()) {
-                        profileItemValueElem = (org.dom4j.Element) o2;
-                        form.add(profileItemValueElem.getName(), profileItemValueElem.getText());
-                    }
-                    profileItem = postForm(form);
-                    if (profileItem != null) {
-                        newProfileItems.add(profileItem);
-                    } else {
-                        log.warn("Profile Item not added");
+            rootElem = XML.getRootElement(entity.getStream());
+            if (rootElem.getName().equalsIgnoreCase("ProfileCategory")) {
+                profileItemsElem = rootElem.element("ProfileItems");
+                if (profileItemsElem != null) {
+                    for (Object o1 : profileItemsElem.elements("ProfileItem")) {
+                        profileItemElem = (org.dom4j.Element) o1;
+                        form = new Form();
+                        for (Object o2 : profileItemElem.elements()) {
+                            profileItemValueElem = (org.dom4j.Element) o2;
+                            form.add(profileItemValueElem.getName(), profileItemValueElem.getText());
+                        }
+                        profileItem = postForm(form);
+                        if (profileItem != null) {
+                            newProfileItems.add(profileItem);
+                        } else {
+                            log.warn("Profile Item not added");
+                        }
                     }
                 }
             } else {
