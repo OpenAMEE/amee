@@ -19,13 +19,13 @@
 */
 package gc.carbon.environment;
 
+import com.jellymold.kiwi.Environment;
 import com.jellymold.sheet.ValueType;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
-import com.jellymold.kiwi.Environment;
 import gc.carbon.ValueDefinition;
-import gc.carbon.definition.DefinitionService;
 import gc.carbon.data.DataConstants;
+import gc.carbon.definition.DefinitionService;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -36,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.Form;
+import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
@@ -118,7 +119,7 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
             obj.put("valueDefinitions", valueDefinitionsJSONArray);
             obj.put("valueTypes", ValueType.getJSONObject());
             obj.put("pager", pager.getJSONObject());
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
             obj.put("valueDefinition", newValueDefinition.getJSONObject());
         }
         return obj;
@@ -139,7 +140,7 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
             element.appendChild(valueDefinitionsElement);
             element.appendChild(ValueType.getElement(document));
             element.appendChild(pager.getElement(document));
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
             element.appendChild(newValueDefinition.getElement(document));
         }
         return element;

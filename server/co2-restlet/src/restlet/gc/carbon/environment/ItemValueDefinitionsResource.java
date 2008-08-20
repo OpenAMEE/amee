@@ -21,9 +21,9 @@ package gc.carbon.environment;
 
 import com.jellymold.utils.BaseResource;
 import gc.carbon.ValueDefinition;
-import gc.carbon.definition.DefinitionService;
 import gc.carbon.data.DataConstants;
 import gc.carbon.data.ItemValueDefinition;
+import gc.carbon.definition.DefinitionService;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -34,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.Form;
+import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
@@ -106,7 +107,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
                 itemValueDefinitions.put(itemValueDefinition.getJSONObject(false));
             }
             obj.put("itemValueDefinitions", itemValueDefinitions);
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
             obj.put("itemValueDefinition", newItemValueDefinition.getJSONObject());
         }
         return obj;
@@ -123,7 +124,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
                 itemValueDefinitionsElement.appendChild(itemValueDefinition.getElement(document, false));
             }
             element.appendChild(itemValueDefinitionsElement);
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
             element.appendChild(newItemValueDefinition.getElement(document));
         }
         return element;

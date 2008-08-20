@@ -22,7 +22,6 @@ package gc.carbon.profile;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.data.Calculator;
-import gc.carbon.data.DataService;
 import gc.carbon.data.ItemValue;
 import gc.carbon.path.PathItem;
 import gc.carbon.path.PathItemService;
@@ -41,7 +40,6 @@ import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
@@ -51,12 +49,6 @@ import java.util.Set;
 public class ProfileItemResource extends BaseResource implements Serializable {
 
     private final static Logger log = Logger.getLogger(ProfileItemResource.class);
-
-    @In(create = true)
-    private EntityManager entityManager;
-
-    @In(create = true)
-    private DataService dataService;
 
     @In(create = true)
     private ProfileService profileService;

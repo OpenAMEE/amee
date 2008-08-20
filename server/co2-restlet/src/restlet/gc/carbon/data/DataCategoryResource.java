@@ -37,10 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
-import org.restlet.data.Form;
-import org.restlet.data.MediaType;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
+import org.restlet.data.*;
 import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -169,7 +166,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             // add children
             obj.put("children", children);
 
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
 
             // Data Categories
             if (newDataCategory != null) {
@@ -231,7 +228,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
                 childrenElement.appendChild(pager.getElement(document));
             }
 
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
 
             // Data Categories
             if (newDataCategory != null) {
@@ -283,11 +280,11 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         // TODO: may be a more elegant way to handle incoming representations of different media types
         MediaType mediaType = entity.getMediaType();
         if (MediaType.APPLICATION_XML.includes(mediaType)) {
-            postXML(entity);
+            acceptXML(entity);
         } else if (MediaType.APPLICATION_JSON.includes(mediaType)) {
-            postJSON(entity);
+            acceptJSON(entity);
         } else {
-            postForm(getForm());
+            acceptForm(getForm());
         }
         if ((newDataCategory != null) || (newDataItem != null) || !newDataCategories.isEmpty() || !newDataItems.isEmpty()) {
             // clear caches
@@ -304,8 +301,8 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         }
     }
 
-    protected void postJSON(Representation entity) {
-        log.debug("postJSON");
+    protected void acceptJSON(Representation entity) {
+        log.debug("acceptJSON");
         DataCategory dataCategory;
         DataItem dataItem;
         Form form;
@@ -357,8 +354,8 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         }
     }
 
-    protected void postXML(Representation entity) {
-        log.debug("postXML");
+    protected void acceptXML(Representation entity) {
+        log.debug("acceptXML");
         DataCategory dataCategory;
         DataItem dataItem;
         Form form;
@@ -416,8 +413,8 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         }
     }
 
-    protected void postForm(Form form) {
-        log.debug("postForm");
+    protected void acceptForm(Form form) {
+        log.debug("acceptForm");
         String type = form.getFirstValue("newObjectType");
         if (type != null) {
             if (type.equalsIgnoreCase("DC")) {

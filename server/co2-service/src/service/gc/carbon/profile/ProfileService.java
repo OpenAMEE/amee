@@ -1,34 +1,29 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package gc.carbon.profile;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Group;
 import com.jellymold.kiwi.User;
 import com.jellymold.utils.Pager;
-import gc.carbon.data.DataCategory;
-import gc.carbon.data.DataItem;
-import gc.carbon.data.DataService;
-import gc.carbon.data.ItemDefinition;
-import gc.carbon.data.ItemValue;
-import gc.carbon.data.ItemValueDefinition;
+import gc.carbon.data.*;
 import gc.carbon.path.PathItemService;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
@@ -39,6 +34,7 @@ import org.jboss.seam.annotations.Scope;
 import org.restlet.ext.seam.SeamController;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -307,20 +303,29 @@ public class ProfileService implements Serializable {
 
     // ProfileItems
 
+    public ProfileItem getProfileItem(String profileUid, String uid) {
+        return getProfileItem(profileUid, null, uid);
+    }
+
     public ProfileItem getProfileItem(String profileUid, String dataCategoryUid, String uid) {
         ProfileItem profileItem = null;
         List<ProfileItem> profileItems;
-        profileItems = entityManager.createQuery(
-                "SELECT DISTINCT pi " +
-                        "FROM ProfileItem pi " +
-                        "LEFT JOIN FETCH pi.itemValues " +
-                        "WHERE pi.profile.uid = :profileUid " +
-                        "AND pi.dataCategory.uid = :dataCategoryUid " +
-                        "AND pi.uid = :uid")
-                .setParameter("profileUid", profileUid)
-                .setParameter("dataCategoryUid", dataCategoryUid)
-                .setParameter("uid", uid.toUpperCase())
-                .getResultList();
+        Query query;
+        String hql = "SELECT DISTINCT pi " +
+                "FROM ProfileItem pi " +
+                "LEFT JOIN FETCH pi.itemValues " +
+                "WHERE pi.profile.uid = :profileUid " +
+                "AND pi.uid = :uid";
+        if (dataCategoryUid != null) {
+            hql += " AND pi.dataCategory.uid = :dataCategoryUid";
+        }
+        query = entityManager.createQuery(hql);
+        query.setParameter("profileUid", profileUid);
+        query.setParameter("uid", uid.toUpperCase());
+        if (dataCategoryUid != null) {
+            query.setParameter("dataCategoryUid", dataCategoryUid);
+        }
+        profileItems = query.getResultList();
         if (profileItems.size() == 1) {
             log.debug("found ProfileItem");
             profileItem = profileItems.get(0);

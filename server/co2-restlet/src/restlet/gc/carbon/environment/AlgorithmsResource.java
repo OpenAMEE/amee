@@ -32,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.Form;
+import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
@@ -98,7 +99,7 @@ public class AlgorithmsResource extends BaseResource implements Serializable {
                 algorithms.put(algorithm.getJSONObject(false));
             }
             obj.put("algorithms", algorithms);
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
             obj.put("algorithm", newAlgorithm.getJSONObject());
         }
         return obj;
@@ -115,7 +116,7 @@ public class AlgorithmsResource extends BaseResource implements Serializable {
                 algorithmsElement.appendChild(algorithm.getElement(document, false));
             }
             element.appendChild(algorithmsElement);
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
             element.appendChild(newAlgorithm.getElement(document));
         }
         return element;

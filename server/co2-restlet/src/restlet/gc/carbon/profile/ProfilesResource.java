@@ -19,11 +19,7 @@
 */
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.Group;
-import com.jellymold.kiwi.Permission;
-import com.jellymold.kiwi.Site;
-import com.jellymold.kiwi.User;
-import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.*;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import org.apache.log4j.Logger;
@@ -36,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.Form;
+import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
@@ -120,7 +117,7 @@ public class ProfilesResource extends BaseResource implements Serializable {
             }
             obj.put("profiles", profilesJSONArray);
             obj.put("pager", pager.getJSONObject());
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
             obj.put("profile", newProfile.getJSONObject());
         }
         return obj;
@@ -139,7 +136,7 @@ public class ProfilesResource extends BaseResource implements Serializable {
             }
             element.appendChild(profilesElement);
             element.appendChild(pager.getElement(document));
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
             element.appendChild(newProfile.getElement(document));
         }
         return element;

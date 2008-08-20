@@ -39,10 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
-import org.restlet.data.Form;
-import org.restlet.data.MediaType;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
+import org.restlet.data.*;
 import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -185,7 +182,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
             // add chilren
             obj.put("children", children);
 
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST) && getRequest().getMethod().equals(Method.PUT)) {
             if (newProfileItem != null) {
                 obj.put("profileItem", newProfileItem.getJSONObject());
             } else if (newProfileItems != null) {
@@ -250,7 +247,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
                         profileSheetService.getTotalAmountPerMonth(sheet).toString()));
             }
 
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST) || getRequest().getMethod().equals(Method.PUT)) {
             if (newProfileItem != null) {
                 element.appendChild(newProfileItem.getElement(document, false));
             } else if (newProfileItems != null) {
@@ -281,18 +278,34 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
     }
 
     @Override
+    public boolean allowPut() {
+        return true;
+    }
+
+    @Override
     public void post(Representation entity) {
         log.debug("post");
+        postOrPut(entity);
+    }
+
+    @Override
+    public void put(Representation entity) {
+        log.debug("put");
+        postOrPut(entity);
+    }
+
+    protected void postOrPut(Representation entity) {
+        log.debug("postOrPut");
         if (profileBrowser.getProfileItemActions().isAllowCreate()) {
             newProfileItems = new ArrayList<ProfileItem>();
             // TODO: may be a more elegant way to handle incoming representations of different media types
             MediaType mediaType = entity.getMediaType();
             if (MediaType.APPLICATION_XML.includes(mediaType)) {
-                postXML(entity);
+                acceptXML(entity);
             } else if (MediaType.APPLICATION_JSON.includes(mediaType)) {
-                postJSON(entity);
+                acceptJSON(entity);
             } else {
-                newProfileItem = postForm(getForm());
+                newProfileItem = acceptForm(getForm());
             }
             if ((newProfileItem != null) || !newProfileItems.isEmpty()) {
                 // clear caches
@@ -312,8 +325,8 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
         }
     }
 
-    protected void postJSON(Representation entity) {
-        log.debug("postJSON");
+    protected void acceptJSON(Representation entity) {
+        log.debug("acceptJSON");
         ProfileItem profileItem;
         Form form;
         String key;
@@ -331,7 +344,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
                         key = (String) iterator.next();
                         form.add(key, profileItemJSON.getString(key));
                     }
-                    profileItem = postForm(form);
+                    profileItem = acceptForm(form);
                     if (profileItem != null) {
                         newProfileItems.add(profileItem);
                     } else {
@@ -346,8 +359,8 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
         }
     }
 
-    protected void postXML(Representation entity) {
-        log.debug("postXML");
+    protected void acceptXML(Representation entity) {
+        log.debug("acceptXML");
         ProfileItem profileItem;
         Form form;
         org.dom4j.Element rootElem;
@@ -366,7 +379,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
                             profileItemValueElem = (org.dom4j.Element) o2;
                             form.add(profileItemValueElem.getName(), profileItemValueElem.getText());
                         }
-                        profileItem = postForm(form);
+                        profileItem = acceptForm(form);
                         if (profileItem != null) {
                             newProfileItems.add(profileItem);
                         } else {
@@ -375,7 +388,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
                     }
                 }
             } else {
-                log.warn("ProfileCategory not found");
+                log.warn("Profile Category not found");
             }
         } catch (DocumentException e) {
             log.warn("Caught DocumentException: " + e.getMessage(), e);
@@ -384,55 +397,85 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
         }
     }
 
-    protected ProfileItem postForm(Form form) {
+    protected ProfileItem acceptForm(Form form) {
         DataCategory dataCategory;
         DataItem dataItem;
-        ProfileItem profileItem;
-        String dataItemUid = form.getFirstValue("dataItemUid");
-        if (dataItemUid != null) {
-            // find the DataCategory & DataItem
-            dataCategory = profileBrowser.getDataCategory();
-            // the root DataCategory has an empty path
-            if (dataCategory.getPath().length() == 0) {
-                // allow any DataItem for any DataCategory
-                dataItem = dataService.getDataItem(environment, dataItemUid);
-            } else {
-                // only allow DataItems for specific DataCategory (not root)
-                dataItem = dataService.getDataItem(dataCategory, dataItemUid);
-            }
-            if (dataItem != null) {
-                // create new ProfileItem
-                profileItem = new ProfileItem(profileBrowser.getProfile(), dataItem);
-                // determine name for new ProfileItem
-                profileItem.setName(form.getFirstValue("name"));
-                // determine date for new ProfileItem
-                profileItem.setValidFrom(form.getFirstValue("validFrom"));
-                // determine if new ProfileItem is an end marker
-                profileItem.setEnd(form.getFirstValue("end"));
-                // see if ProfileItem already exists
-                if (!profileService.isEquivilentProfileItemExists(profileItem)) {
-                    // save newProfileItem and do calculations
-                    entityManager.persist(profileItem);
-                    profileService.checkProfileItem(profileItem);
-                    // update item values if supplied
-                    Map<String, ItemValue> itemValues = profileItem.getItemValuesMap();
-                    for (String name : form.getNames()) {
-                        ItemValue itemValue = itemValues.get(name);
-                        if (itemValue != null) {
-                            itemValue.setValue(form.getFirstValue(name));
-                        }
-                    }
-                    calculator.calculate(profileItem);
+        ProfileItem profileItem = null;
+        String uid;
+        dataCategory = profileBrowser.getDataCategory();
+        if (getRequest().getMethod().equals(Method.POST)) {
+            uid = form.getFirstValue("dataItemUid");
+            if (uid != null) {
+                // the root DataCategory has an empty path
+                if (dataCategory.getPath().length() == 0) {
+                    // allow any DataItem for any DataCategory
+                    dataItem = dataService.getDataItem(environment, uid);
                 } else {
-                    log.warn("ProfileItem already exists");
+                    // only allow DataItems for specific DataCategory (not root)
+                    dataItem = dataService.getDataItem(dataCategory, uid);
+                }
+                if (dataItem != null) {
+                    // create new ProfileItem
+                    profileItem = new ProfileItem(profileBrowser.getProfile(), dataItem);
+                    profileItem = acceptProfileItem(form, profileItem);
+                } else {
+                    log.warn("Data Item not found");
                     profileItem = null;
                 }
             } else {
-                log.warn("DataItem not found");
+                log.warn("dataItemUid not supplied");
                 profileItem = null;
             }
+        } else if (getRequest().getMethod().equals(Method.PUT)) {
+            uid = form.getFirstValue("profileItemUid");
+            if (uid != null) {
+                // find existing Profile Item
+                // the root DataCategory has an empty path
+                if (dataCategory.getPath().length() == 0) {
+                    // allow any ProfileItem for any DataCategory
+                    profileItem = profileService.getProfileItem(profileBrowser.getProfile().getUid(), uid);
+                } else {
+                    // only allow ProfileItems for specific DataCategory (not root)
+                    profileItem = profileService.getProfileItem(profileBrowser.getProfile().getUid(), dataCategory.getUid(), uid);
+                }
+                if (profileItem != null) {
+                    // update existing Profile Item
+                    profileItem = acceptProfileItem(form, profileItem);
+                } else {
+                    log.warn("Profile Item not found");
+                    profileItem = null;
+                }
+            } else {
+                log.warn("profileItemUid not supplied");
+                profileItem = null;
+            }
+        }
+        return profileItem;
+    }
+
+    protected ProfileItem acceptProfileItem(Form form, ProfileItem profileItem) {
+        // determine name for new ProfileItem
+        profileItem.setName(form.getFirstValue("name"));
+        // determine date for new ProfileItem
+        profileItem.setValidFrom(form.getFirstValue("validFrom"));
+        // determine if new ProfileItem is an end marker
+        profileItem.setEnd(form.getFirstValue("end"));
+        // see if ProfileItem already exists
+        if (!profileService.isEquivilentProfileItemExists(profileItem)) {
+            // save newProfileItem and do calculations
+            entityManager.persist(profileItem);
+            profileService.checkProfileItem(profileItem);
+            // update item values if supplied
+            Map<String, ItemValue> itemValues = profileItem.getItemValuesMap();
+            for (String name : form.getNames()) {
+                ItemValue itemValue = itemValues.get(name);
+                if (itemValue != null) {
+                    itemValue.setValue(form.getFirstValue(name));
+                }
+            }
+            calculator.calculate(profileItem);
         } else {
-            log.warn("dataItemUid not supplied");
+            log.warn("Profile Item already exists");
             profileItem = null;
         }
         return profileItem;

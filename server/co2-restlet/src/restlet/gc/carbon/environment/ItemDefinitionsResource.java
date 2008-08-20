@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.Form;
+import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
@@ -115,7 +116,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
             }
             obj.put("itemDefinitions", itemDefinitionsJSONArray);
             obj.put("pager", pager.getJSONObject());
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
             obj.put("itemDefinition", newItemDefinition.getJSONObject());
         }
         return obj;
@@ -135,7 +136,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
             }
             element.appendChild(itemDefinitionsElement);
             element.appendChild(pager.getElement(document));
-        } else if (isPost()) {
+        } else if (getRequest().getMethod().equals(Method.POST)) {
             element.appendChild(newItemDefinition.getElement(document));
         }
         return element;
