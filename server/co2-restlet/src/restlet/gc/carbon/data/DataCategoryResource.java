@@ -50,6 +50,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * TODO: may be a more elegant way to handle incoming representations of different media types
+ * TODO: may be better to break this class down into components that handle post/put and json/xml individually
+ */
 @Name("dataCategoryResource")
 @Scope(ScopeType.EVENT)
 public class DataCategoryResource extends BaseResource implements Serializable {
@@ -77,10 +81,10 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     @In
     private PathItem pathItem;
 
-    private DataCategory newDataCategory;
-    private List<DataCategory> newDataCategories;
-    private DataItem newDataItem;
-    private List<DataItem> newDataItems;
+    private DataCategory dataCategory;
+    private List<DataCategory> dataCategories;
+    private DataItem dataItem;
+    private List<DataItem> dataItems;
 
     public DataCategoryResource() {
         super();
@@ -129,7 +133,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     @Override
     public JSONObject getJSONObject() throws JSONException {
 
-        DataCategory dataCategory = dataBrowser.getDataCategory();
+        DataCategory thisDataCategory = dataBrowser.getDataCategory();
 
         // create JSON object
         JSONObject obj = new JSONObject();
@@ -138,7 +142,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         if (isGet()) {
 
             // add DataCategory
-            obj.put("dataCategory", dataCategory.getJSONObject());
+            obj.put("dataCategory", thisDataCategory.getJSONObject());
 
             // list child Data Categories and child Data Items
             JSONObject children = new JSONObject();
@@ -151,7 +155,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             children.put("dataCategories", dataCategories);
 
             // add Sheet containing Data Items
-            Sheet sheet = dataSheetService.getSheet(dataCategory);
+            Sheet sheet = dataSheetService.getSheet(thisDataCategory);
             if (sheet != null) {
                 Pager pager = getPager(dataBrowser.getItemsPerPage(getRequest()));
                 sheet = Sheet.getCopy(sheet, pager);
@@ -166,26 +170,26 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             // add children
             obj.put("children", children);
 
-        } else if (getRequest().getMethod().equals(Method.POST)) {
+        } else if (getRequest().getMethod().equals(Method.POST) || getRequest().getMethod().equals(Method.PUT)) {
 
-            // Data Categories
-            if (newDataCategory != null) {
-                obj.put("dataCategory", newDataCategory.getJSONObject());
-            } else if (newDataCategories != null) {
+            // DataCategories
+            if (dataCategory != null) {
+                obj.put("dataCategory", dataCategory.getJSONObject());
+            } else if (dataCategories != null) {
                 JSONArray dataCategories = new JSONArray();
                 obj.put("dataCategories", dataCategories);
-                for (DataCategory dc : newDataCategories) {
+                for (DataCategory dc : this.dataCategories) {
                     dataCategories.put(dc.getJSONObject(false));
                 }
             }
 
-            // Data Items
-            if (newDataItem != null) {
-                obj.put("dataItem", newDataItem.getJSONObject());
-            } else if (newDataItems != null) {
+            // DataItems
+            if (dataItem != null) {
+                obj.put("dataItem", dataItem.getJSONObject());
+            } else if (dataItems != null) {
                 JSONArray dataItems = new JSONArray();
                 obj.put("dataItems", dataItems);
-                for (DataItem di : newDataItems) {
+                for (DataItem di : this.dataItems) {
                     dataItems.put(di.getJSONObject(false));
                 }
             }
@@ -196,7 +200,8 @@ public class DataCategoryResource extends BaseResource implements Serializable {
 
     @Override
     public Element getElement(Document document) {
-        DataCategory dataCategory = dataBrowser.getDataCategory();
+
+        DataCategory thisDataCategory = dataBrowser.getDataCategory();
 
         // create Element
         Element element = document.createElement("DataCategoryResource");
@@ -205,7 +210,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         if (isGet()) {
 
             // add DataCategory
-            element.appendChild(dataCategory.getElement(document));
+            element.appendChild(thisDataCategory.getElement(document));
 
             // list child Data Categories and child Data Items
             Element childrenElement = document.createElement("Children");
@@ -219,7 +224,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             childrenElement.appendChild(dataCategoriesElement);
 
             // list child Data Items via sheet
-            Sheet sheet = dataSheetService.getSheet(dataCategory);
+            Sheet sheet = dataSheetService.getSheet(thisDataCategory);
             if (sheet != null) {
                 Pager pager = getPager(dataBrowser.getItemsPerPage(getRequest()));
                 sheet = Sheet.getCopy(sheet, pager);
@@ -228,26 +233,26 @@ public class DataCategoryResource extends BaseResource implements Serializable {
                 childrenElement.appendChild(pager.getElement(document));
             }
 
-        } else if (getRequest().getMethod().equals(Method.POST)) {
+        } else if (getRequest().getMethod().equals(Method.POST) || getRequest().getMethod().equals(Method.PUT)) {
 
-            // Data Categories
-            if (newDataCategory != null) {
-                element.appendChild(newDataCategory.getElement(document, false));
-            } else if (newDataCategories != null) {
+            // DataCategories
+            if (dataCategory != null) {
+                element.appendChild(dataCategory.getElement(document, false));
+            } else if (dataCategories != null) {
                 Element dataItemsElement = document.createElement("DataCategories");
                 element.appendChild(dataItemsElement);
-                for (DataCategory dc : newDataCategories) {
+                for (DataCategory dc : dataCategories) {
                     dataItemsElement.appendChild(dc.getElement(document, false));
                 }
             }
 
-            // Data Items
-            if (newDataItem != null) {
-                element.appendChild(newDataItem.getElement(document, false));
-            } else if (newDataItems != null) {
+            // DataItems
+            if (dataItem != null) {
+                element.appendChild(dataItem.getElement(document, false));
+            } else if (dataItems != null) {
                 Element dataItemsElement = document.createElement("DataItems");
                 element.appendChild(dataItemsElement);
-                for (DataItem di : newDataItems) {
+                for (DataItem di : dataItems) {
                     dataItemsElement.appendChild(di.getElement(document, false));
                 }
             }
@@ -272,24 +277,44 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     }
 
     @Override
+    public boolean allowPut() {
+        return true;
+    }
+
+    @Override
     public void post(Representation entity) {
         log.debug("post");
-        DataCategory dataCategory = dataBrowser.getDataCategory();
-        newDataItems = new ArrayList<DataItem>();
-        newDataCategories = new ArrayList<DataCategory>();
-        // TODO: may be a more elegant way to handle incoming representations of different media types
+        postOrPut(entity);
+    }
+
+    @Override
+    public void put(Representation entity) {
+        log.debug("put");
+        postOrPut(entity);
+    }
+
+    // TODO: may be a more elegant way to handle incoming representations of different media types
+    public void postOrPut(Representation entity) {
+        log.debug("postOrPut");
+        DataCategory thisDataCategory = dataBrowser.getDataCategory();
+        dataItems = new ArrayList<DataItem>();
+        dataCategories = new ArrayList<DataCategory>();
         MediaType mediaType = entity.getMediaType();
         if (MediaType.APPLICATION_XML.includes(mediaType)) {
             acceptXML(entity);
         } else if (MediaType.APPLICATION_JSON.includes(mediaType)) {
             acceptJSON(entity);
         } else {
-            acceptForm(getForm());
+            if (getRequest().getMethod().equals(Method.POST)) {
+                acceptFormPost(getForm());
+            } else if (getRequest().getMethod().equals(Method.PUT)) {
+                acceptFormPut(getForm());
+            }
         }
-        if ((newDataCategory != null) || (newDataItem != null) || !newDataCategories.isEmpty() || !newDataItems.isEmpty()) {
+        if ((dataCategory != null) || (dataItem != null) || !dataCategories.isEmpty() || !dataItems.isEmpty()) {
             // clear caches
-            pathItemService.removePathItemGroup(dataCategory.getEnvironment());
-            dataSheetService.removeSheet(dataCategory);
+            pathItemService.removePathItemGroup(thisDataCategory.getEnvironment());
+            dataSheetService.removeSheet(thisDataCategory);
             if (isStandardWebBrowser()) {
                 success(dataBrowser.getFullPath());
             } else {
@@ -322,11 +347,12 @@ public class DataCategoryResource extends BaseResource implements Serializable {
                         key = (String) iterator.next();
                         form.add(key, itemJSON.getString(key));
                     }
-                    dataCategory = postFormForNewDataCategory(form);
+                    dataCategory = acceptFormForDataCategory(form);
                     if (dataCategory != null) {
-                        newDataCategories.add(dataCategory);
+                        dataCategories.add(dataCategory);
                     } else {
-                        log.warn("Data Category not added");
+                        log.warn("Data Category not added/modified");
+                        return;
                     }
                 }
             }
@@ -339,11 +365,12 @@ public class DataCategoryResource extends BaseResource implements Serializable {
                         key = (String) iterator.next();
                         form.add(key, itemJSON.getString(key));
                     }
-                    dataItem = postFormForNewDataItem(form);
+                    dataItem = acceptFormForDataItem(form);
                     if (dataItem != null) {
-                        newDataItems.add(dataItem);
+                        dataItems.add(dataItem);
                     } else {
-                        log.warn("Data Item not added");
+                        log.warn("Data Item not added/modified");
+                        return;
                     }
                 }
             }
@@ -377,11 +404,12 @@ public class DataCategoryResource extends BaseResource implements Serializable {
                             valueElem = (org.dom4j.Element) o2;
                             form.add(valueElem.getName(), valueElem.getText());
                         }
-                        dataCategory = postFormForNewDataCategory(form);
+                        dataCategory = acceptFormForDataCategory(form);
                         if (dataCategory != null) {
-                            newDataCategories.add(dataCategory);
+                            dataCategories.add(dataCategory);
                         } else {
                             log.warn("Data Category not added");
+                            return;
                         }
                     }
                 }
@@ -395,11 +423,12 @@ public class DataCategoryResource extends BaseResource implements Serializable {
                             valueElem = (org.dom4j.Element) o2;
                             form.add(valueElem.getName(), valueElem.getText());
                         }
-                        dataItem = postFormForNewDataItem(form);
+                        dataItem = acceptFormForDataItem(form);
                         if (dataItem != null) {
-                            newDataItems.add(dataItem);
+                            dataItems.add(dataItem);
                         } else {
                             log.warn("Data Item not added");
+                            return;
                         }
                     }
                 }
@@ -413,19 +442,19 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         }
     }
 
-    protected void acceptForm(Form form) {
-        log.debug("acceptForm");
+    protected void acceptFormPost(Form form) {
+        log.debug("acceptFormPost");
         String type = form.getFirstValue("newObjectType");
         if (type != null) {
             if (type.equalsIgnoreCase("DC")) {
                 if (dataBrowser.getDataCategoryActions().isAllowCreate()) {
-                    newDataCategory = postFormForNewDataCategory(form);
+                    dataCategory = acceptFormForDataCategory(form);
                 } else {
                     notAuthorized();
                 }
             } else if (type.equalsIgnoreCase("DI")) {
                 if (dataBrowser.getDataItemActions().isAllowCreate()) {
-                    newDataItem = postFormForNewDataItem(form);
+                    dataItem = acceptFormForDataItem(form);
                 } else {
                     notAuthorized();
                 }
@@ -437,78 +466,134 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         }
     }
 
-    protected DataCategory postFormForNewDataCategory(Form form) {
-        log.debug("postFormForNewDataCategory");
-        DataCategory dataCategory;
-        DataCategory parentDataCategory = dataBrowser.getDataCategory();
-        dataCategory = new DataCategory(parentDataCategory);
-        dataCategory.setName(form.getFirstValue("name"));
-        dataCategory.setPath(form.getFirstValue("path"));
-        if (form.getNames().contains("itemDefinitionUid")) {
-            ItemDefinition itemDefinition =
-                    definitionService.getItemDefinition(dataBrowser.getDataCategory().getEnvironment(), form.getFirstValue("itemDefinitionUid"));
-            if (itemDefinition != null) {
-                dataCategory.setItemDefinition(itemDefinition);
+    protected DataCategory acceptFormForDataCategory(Form form) {
+
+        log.debug("acceptFormForDataCategory");
+
+        String uid;
+        DataCategory dataCategory = null;
+        DataCategory thisDataCategory;
+
+        thisDataCategory = dataBrowser.getDataCategory();
+        if (getRequest().getMethod().equals(Method.POST)) {
+            if (dataBrowser.getDataCategoryActions().isAllowCreate()) {
+                // new DataCategory
+                dataCategory = new DataCategory(thisDataCategory);
+                if (form.getNames().contains("itemDefinitionUid")) {
+                    ItemDefinition itemDefinition =
+                            definitionService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
+                    if (itemDefinition != null) {
+                        dataCategory.setItemDefinition(itemDefinition);
+                    }
+                }
+                dataCategory = acceptDataCategory(form, dataCategory);
+            } else {
+                notAuthorized();
+            }
+        } else if (getRequest().getMethod().equals(Method.PUT)) {
+            if (dataBrowser.getDataCategoryActions().isAllowModify()) {
+                // update DataCategory
+                uid = form.getFirstValue("dataCategoryUid");
+                if (uid != null) {
+                    dataCategory = dataService.getDataCategory(thisDataCategory, uid);
+                    if (dataCategory != null) {
+                        dataCategory = acceptDataCategory(form, dataCategory);
+                    }
+                }
+            } else {
+                notAuthorized();
             }
         }
+        return dataCategory;
+    }
+
+    private DataCategory acceptDataCategory(Form form, DataCategory dataCategory) {
+        dataCategory.setName(form.getFirstValue("name"));
+        dataCategory.setPath(form.getFirstValue("path"));
         entityManager.persist(dataCategory);
         return dataCategory;
     }
 
-    protected DataItem postFormForNewDataItem(Form form) {
-        log.debug("postFormForNewDataItem");
+    protected DataItem acceptFormForDataItem(Form form) {
+
+        log.debug("acceptFormForDataItem");
+
+        String uid;
         DataItem dataItem = null;
-        DataCategory dataCategory = dataBrowser.getDataCategory();
-        ItemDefinition itemDefinition = dataCategory.getItemDefinition();
-        if (itemDefinition != null) {
-            dataItem = new DataItem(dataCategory, itemDefinition);
-            dataItem.setName(form.getFirstValue("name"));
-            dataItem.setPath(form.getFirstValue("path"));
-            entityManager.persist(dataItem);
-            dataService.checkDataItem(dataItem);
-            // update item values if supplied
-            Map<String, ItemValue> itemValues = dataItem.getItemValuesMap();
-            for (String name : form.getNames()) {
-                ItemValue itemValue = itemValues.get(name);
-                if (itemValue != null) {
-                    itemValue.setValue(form.getFirstValue(name));
+        ItemDefinition itemDefinition;
+        DataCategory thisDataCategory;
+
+        thisDataCategory = dataBrowser.getDataCategory();
+        if (getRequest().getMethod().equals(Method.POST)) {
+            if (dataBrowser.getDataItemActions().isAllowCreate()) {
+                // new DataItem
+                itemDefinition = thisDataCategory.getItemDefinition();
+                if (itemDefinition != null) {
+                    dataItem = new DataItem(thisDataCategory, itemDefinition);
+                    dataItem = acceptDataItem(form, dataItem);
+                } else {
+                    badRequest();
                 }
+            } else {
+                notAuthorized();
             }
-        } else {
-            badRequest();
+        } else if (getRequest().getMethod().equals(Method.PUT)) {
+            if (dataBrowser.getDataItemActions().isAllowCreate()) {
+                // update DataItem
+                uid = form.getFirstValue("dataItemUid");
+                if (uid != null) {
+                    dataItem = dataService.getDataItem(thisDataCategory, uid);
+                    if (dataItem != null) {
+                        dataItem = acceptDataItem(form, dataItem);
+                    }
+                }
+            } else {
+                notAuthorized();
+            }
         }
         return dataItem;
     }
 
-    @Override
-    public boolean allowPut() {
-        return true;
+    protected DataItem acceptDataItem(Form form, DataItem dataItem) {
+        dataItem.setName(form.getFirstValue("name"));
+        dataItem.setPath(form.getFirstValue("path"));
+        entityManager.persist(dataItem);
+        dataService.checkDataItem(dataItem);
+        // update item values if supplied
+        Map<String, ItemValue> itemValues = dataItem.getItemValuesMap();
+        for (String name : form.getNames()) {
+            ItemValue itemValue = itemValues.get(name);
+            if (itemValue != null) {
+                itemValue.setValue(form.getFirstValue(name));
+            }
+        }
+        return dataItem;
     }
 
-    @Override
-    public void put(Representation entity) {
+    public void acceptFormPut(Form form) {
         log.debug("put");
+        DataCategory thisDataCategory;
         if (dataBrowser.getDataCategoryActions().isAllowModify()) {
-            Form form = getForm();
-            DataCategory dataCategory = dataBrowser.getDataCategory();
+            thisDataCategory = dataBrowser.getDataCategory();
             if (form.getNames().contains("name")) {
-                dataCategory.setName(form.getFirstValue("name"));
+                thisDataCategory.setName(form.getFirstValue("name"));
             }
             if (form.getNames().contains("path")) {
-                dataCategory.setPath(form.getFirstValue("path"));
+                thisDataCategory.setPath(form.getFirstValue("path"));
             }
             if (form.getNames().contains("itemDefinitionUid")) {
                 ItemDefinition itemDefinition =
-                        definitionService.getItemDefinition(dataBrowser.getDataCategory().getEnvironment(), form.getFirstValue("itemDefinitionUid"));
+                        definitionService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
                 if (itemDefinition != null) {
-                    dataCategory.setItemDefinition(itemDefinition);
+                    thisDataCategory.setItemDefinition(itemDefinition);
                 } else {
-                    dataCategory.setItemDefinition(null);
+                    thisDataCategory.setItemDefinition(null);
                 }
             }
-            pathItemService.removePathItemGroup(dataCategory.getEnvironment());
-            dataSheetService.removeSheet(dataCategory);
+            pathItemService.removePathItemGroup(thisDataCategory.getEnvironment());
+            dataSheetService.removeSheet(thisDataCategory);
             success(dataBrowser.getFullPath());
+            dataCategory = thisDataCategory;
         } else {
             notAuthorized();
         }

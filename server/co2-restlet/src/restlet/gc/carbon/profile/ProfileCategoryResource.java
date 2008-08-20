@@ -52,6 +52,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * TODO: may be a more elegant way to handle incoming representations of different media types
+ * TODO: may be better to break this class down into components that handle post/put and json/xml individually
+ */
 @Name("profileCategoryResource")
 @Scope(ScopeType.EVENT)
 public class ProfileCategoryResource extends BaseResource implements Serializable {
@@ -85,8 +89,8 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
     @In
     private PathItem pathItem;
 
-    private ProfileItem newProfileItem;
-    private List<ProfileItem> newProfileItems;
+    private ProfileItem profileItem;
+    private List<ProfileItem> profileItems;
 
     public ProfileCategoryResource() {
         super();
@@ -133,6 +137,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
+
         JSONObject obj = new JSONObject();
 
         Profile profile = profileBrowser.getProfile();
@@ -183,13 +188,13 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
             obj.put("children", children);
 
         } else if (getRequest().getMethod().equals(Method.POST) && getRequest().getMethod().equals(Method.PUT)) {
-            if (newProfileItem != null) {
-                obj.put("profileItem", newProfileItem.getJSONObject());
-            } else if (newProfileItems != null) {
+            if (profileItem != null) {
+                obj.put("profileItem", profileItem.getJSONObject());
+            } else if (profileItems != null) {
                 JSONArray profileItems = new JSONArray();
                 obj.put("profileItems", profileItems);
-                for (ProfileItem profileItem : newProfileItems) {
-                    profileItems.put(profileItem.getJSONObject(false));
+                for (ProfileItem pi : this.profileItems) {
+                    profileItems.put(pi.getJSONObject(false));
                 }
             }
         }
@@ -248,13 +253,13 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
             }
 
         } else if (getRequest().getMethod().equals(Method.POST) || getRequest().getMethod().equals(Method.PUT)) {
-            if (newProfileItem != null) {
-                element.appendChild(newProfileItem.getElement(document, false));
-            } else if (newProfileItems != null) {
+            if (profileItem != null) {
+                element.appendChild(profileItem.getElement(document, false));
+            } else if (profileItems != null) {
                 Element profileItemsElement = document.createElement("ProfileItems");
                 element.appendChild(profileItemsElement);
-                for (ProfileItem profileItem : newProfileItems) {
-                    profileItemsElement.appendChild(profileItem.getElement(document, false));
+                for (ProfileItem pi : profileItems) {
+                    profileItemsElement.appendChild(pi.getElement(document, false));
                 }
             }
         }
@@ -296,18 +301,18 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
 
     protected void postOrPut(Representation entity) {
         log.debug("postOrPut");
-        if (profileBrowser.getProfileItemActions().isAllowCreate()) {
-            newProfileItems = new ArrayList<ProfileItem>();
-            // TODO: may be a more elegant way to handle incoming representations of different media types
+        if ((getRequest().getMethod().equals(Method.POST) && (profileBrowser.getProfileItemActions().isAllowCreate())) ||
+                (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()))) {
+            profileItems = new ArrayList<ProfileItem>();
             MediaType mediaType = entity.getMediaType();
             if (MediaType.APPLICATION_XML.includes(mediaType)) {
                 acceptXML(entity);
             } else if (MediaType.APPLICATION_JSON.includes(mediaType)) {
                 acceptJSON(entity);
             } else {
-                newProfileItem = acceptForm(getForm());
+                profileItem = acceptForm(getForm());
             }
-            if ((newProfileItem != null) || !newProfileItems.isEmpty()) {
+            if ((profileItem != null) || !profileItems.isEmpty()) {
                 // clear caches
                 pathItemService.removePathItemGroup(profileBrowser.getProfile());
                 profileSheetService.removeSheets(profileBrowser.getProfile());
@@ -346,9 +351,10 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
                     }
                     profileItem = acceptForm(form);
                     if (profileItem != null) {
-                        newProfileItems.add(profileItem);
+                        profileItems.add(profileItem);
                     } else {
-                        log.warn("Profile Item not added");
+                        log.warn("Profile Item not added/modified");
+                        return;
                     }
                 }
             }
@@ -381,9 +387,10 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
                         }
                         profileItem = acceptForm(form);
                         if (profileItem != null) {
-                            newProfileItems.add(profileItem);
+                            profileItems.add(profileItem);
                         } else {
                             log.warn("Profile Item not added");
+                            return;
                         }
                     }
                 }
@@ -404,6 +411,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
         String uid;
         dataCategory = profileBrowser.getDataCategory();
         if (getRequest().getMethod().equals(Method.POST)) {
+            // new ProfileItem
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
                 // the root DataCategory has an empty path
@@ -427,6 +435,7 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
                 profileItem = null;
             }
         } else if (getRequest().getMethod().equals(Method.PUT)) {
+            // update ProfileItem
             uid = form.getFirstValue("profileItemUid");
             if (uid != null) {
                 // find existing Profile Item

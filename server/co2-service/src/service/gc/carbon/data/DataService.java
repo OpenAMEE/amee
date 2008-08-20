@@ -110,12 +110,6 @@ public class DataService implements Serializable {
 
     // DataCategories
 
-    /**
-     * Get DataCategory for given uid. We don't fetch all items as there could be thousands.
-     *
-     * @param uid
-     * @return DataCategory
-     */
     public DataCategory getDataCategory(Environment environment, String uid) {
         DataCategory dataCategory = null;
         List<DataCategory> dataCategories = entityManager.createQuery(
@@ -124,6 +118,27 @@ public class DataService implements Serializable {
                         "AND dc.environment = :environment")
                 .setParameter("uid", uid)
                 .setParameter("environment", environment)
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", "query.dataService")
+                .getResultList();
+        if (dataCategories.size() == 1) {
+            log.debug("found DataCategory");
+            dataCategory = dataCategories.get(0);
+        } else {
+            log.debug("DataCategory NOT found");
+        }
+        return dataCategory;
+    }
+
+    public DataCategory getDataCategory(DataCategory parentDataCategory, String uid) {
+        DataCategory dataCategory = null;
+        List<DataCategory> dataCategories = entityManager.createQuery(
+                "SELECT DISTINCT dc " +
+                        "FROM DataCategory dc " +
+                        "WHERE dc.dataCategory = :parentDataCategory " +
+                        "AND dc.uid = :uid")
+                .setParameter("parentDataCategory", parentDataCategory)
+                .setParameter("uid", uid)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.dataService")
                 .getResultList();
