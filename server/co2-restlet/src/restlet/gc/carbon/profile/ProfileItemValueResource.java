@@ -23,8 +23,8 @@ import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.data.Calculator;
 import gc.carbon.data.ItemValue;
-import gc.carbon.path.PathItemService;
 import gc.carbon.path.PathItem;
+import gc.carbon.path.PathItemService;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -48,9 +48,6 @@ import java.util.Map;
 public class ProfileItemValueResource extends BaseResource implements Serializable {
 
     private final static Logger log = Logger.getLogger(ProfileItemValueResource.class);
-
-    @In(create = true)
-    private ProfileService profileService;
 
     @In(create = true)
     private ProfileBrowser profileBrowser;

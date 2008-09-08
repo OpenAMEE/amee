@@ -36,7 +36,7 @@
         </packaging>
       </configuration>
     </facet>
-    <facet type="jpa" name="JPA" implicit="true">
+    <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="" />

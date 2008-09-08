@@ -173,7 +173,6 @@ public class Calculator implements Serializable {
         return getValues(profileItem.getDataItem(), profileItem, null);
     }
 
-
     public Map<String, Object> getValues(DataItem dataItem, Choices userValueChoices) {
         return getValues(dataItem, null, userValueChoices);
     }

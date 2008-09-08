@@ -19,7 +19,10 @@
 */
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.*;
+import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.Group;
+import com.jellymold.kiwi.Permission;
+import com.jellymold.kiwi.User;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import org.apache.log4j.Logger;
@@ -61,9 +64,6 @@ public class ProfilesResource extends BaseResource implements Serializable {
 
     @In
     private Environment environment;
-
-    @In
-    private Site site;
 
     @In
     private User user;
