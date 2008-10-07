@@ -96,7 +96,7 @@ public class ProfileFinder implements Serializable {
             profileItems = profileService.getProfileItems(
                     profileItem.getProfile(),
                     profileItem.getDataCategory(),
-                    profileItem.getValidFrom());
+                    profileItem.getStartDate());
         }
         return profileItems;
     }
@@ -109,7 +109,7 @@ public class ProfileFinder implements Serializable {
                 profileItems = profileService.getProfileItems(
                         profileItem.getProfile(),
                         dataCategory,
-                        profileItem.getValidFrom());
+                        profileItem.getStartDate());
             }
         }
         return profileItems;

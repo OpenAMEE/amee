@@ -351,7 +351,7 @@ public class ProfileService implements Serializable {
                 .setParameter("uid", profileItem.getUid())
                 .setParameter("dataCategory", profileItem.getDataCategory())
                 .setParameter("dataItem", profileItem.getDataItem())
-                .setParameter("validFrom", profileItem.getValidFrom())
+                .setParameter("validFrom", profileItem.getStartDate())
                 .setParameter("name", profileItem.getName())
                 .getResultList();
         if (profileItems.size() > 0) {

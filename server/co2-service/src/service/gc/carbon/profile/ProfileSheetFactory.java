@@ -107,7 +107,7 @@ public class ProfileSheetFactory implements CacheableFactory {
                 for (ProfileItem innerProfileItem : profileItems) {
                     if (outerProfileItem.getDataItem().equals(innerProfileItem.getDataItem()) &&
                             outerProfileItem.getName().equalsIgnoreCase(innerProfileItem.getName()) &&
-                            outerProfileItem.getValidFrom().before(innerProfileItem.getValidFrom())) {
+                            outerProfileItem.getStartDate().before(innerProfileItem.getStartDate())) {
                         iterator.remove();
                         break;
                     }

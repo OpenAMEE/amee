@@ -59,7 +59,7 @@ public class ProfileItem extends Item {
 
     @Column(name = "VALID_FROM")
     @Index(name = "VALID_FROM_IND")
-    private Date validFrom = Calendar.getInstance().getTime();
+    private Date startDate = Calendar.getInstance().getTime();
 
     @Column(name = "END")
     private Boolean end = false;
@@ -90,7 +90,7 @@ public class ProfileItem extends Item {
     @Transient
     public ProfileItem getCopy() {
         ProfileItem profileItem = new ProfileItem(getProfile(), getDataCategory(), getDataItem());
-        profileItem.setValidFrom(getValidFrom());
+        profileItem.setStartDate(getStartDate());
         profileItem.setEnd(isEnd());
         profileItem.setAmountPerMonth(getAmountPerMonth());
         profileItem.setName(getName());
@@ -140,30 +140,23 @@ public class ProfileItem extends Item {
     }
 
     @Transient
-    public void setValidFrom(String validFromStr) {
-        // TODO: logic to use profileDatePrecision (MONTH, DATE, etc)
-        setValidFrom(EngineUtils.getFullDate(validFromStr));
+    public void setStartDate(String startDateStr) {
+        setStartDate(EngineUtils.getFullDate(startDateStr));
     }
 
-    /**
-     * Set validFrom to *now* but with MONTH precision (1st of the month)
-     * <p/>
-     * TODO: logic to use profileDatePrecision (MONTH, DATE, etc)
-     * TODO: hard coded to MONTH for now
-     */
     @Transient
-    public void setValidFrom() {
-        Calendar validFromCal = Calendar.getInstance();
-        int year = validFromCal.get(Calendar.YEAR);
-        int month = validFromCal.get(Calendar.MONTH);
-        validFromCal.clear();
-        validFromCal.set(year, month, 1); // first of the month
-        setValidFrom(validFromCal.getTime());
+    public void setStartDate() {
+        Calendar startDateCal = Calendar.getInstance();
+        int year = startDateCal.get(Calendar.YEAR);
+        int month = startDateCal.get(Calendar.MONTH);
+        startDateCal.clear();
+        startDateCal.set(year, month, 1); // first of the month
+        setStartDate(startDateCal.getTime());
     }
 
     @Transient
     public String getValidFromFormatted() {
-        return EngineUtils.getFullDate(getValidFrom());
+        return EngineUtils.getFullDate(getStartDate());
     }
 
     @Transient
@@ -204,15 +197,15 @@ public class ProfileItem extends Item {
         }
     }
 
-    public Date getValidFrom() {
-        return validFrom;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setValidFrom(Date validFrom) {
+    public void setStartDate(Date validFrom) {
         if (validFrom != null) {
-            this.validFrom = validFrom;
+            this.startDate = validFrom;
         } else {
-            setValidFrom();
+            setStartDate();
         }
     }
 

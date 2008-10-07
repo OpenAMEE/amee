@@ -188,7 +188,7 @@ public class ProfileItemResource extends BaseResource implements Serializable {
         }
         // update 'validFrom' value
         if (names.contains("validFrom")) {
-            profileItem.setValidFrom(form.getFirstValue("validFrom"));
+            profileItem.setStartDate(form.getFirstValue("validFrom"));
         }
         // update 'end' value
         if (names.contains("end")) {
