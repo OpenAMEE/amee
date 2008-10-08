@@ -1,14 +1,19 @@
 package gc.carbon.profile;
 
 import gc.carbon.path.PathItem;
+import gc.carbon.data.DataService;
+import gc.carbon.data.Calculator;
 
 import java.util.List;
 
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
+import com.jellymold.kiwi.Environment;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+
+import javax.persistence.EntityManager;
 
 /**
  * This file is part of AMEE.
@@ -41,8 +46,6 @@ public abstract class BaseProfileResource extends BaseResource {
 
     public abstract List<ProfileItem> getProfileItems();
 
-    public abstract ProfileItem getProfileItem();
-
     public abstract ProfileSheetService getProfileSheetService();
 
     public abstract ProfileBrowser getProfileBrowser();
@@ -50,4 +53,14 @@ public abstract class BaseProfileResource extends BaseResource {
     public abstract PathItem getPathItem();
 
     public abstract Pager getPager();
+
+    public abstract ProfileService getProfileService();
+
+    public abstract DataService getDataService();
+
+    public abstract Environment getEnvironment();
+
+    public abstract Calculator getCalculator();
+    
+    public abstract EntityManager getEntityManager();
 }

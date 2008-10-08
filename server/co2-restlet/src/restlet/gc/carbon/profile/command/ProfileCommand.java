@@ -1,10 +1,13 @@
-package gc.carbon;
+package gc.carbon.profile.command;
 
-import org.json.JSONObject;
-import org.json.JSONException;
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
-import gc.carbon.profile.BaseProfileResource;
+import gc.carbon.profile.ProfileItem;
+import gc.carbon.profile.ProfileCategoryResource;
+
+import java.util.List;
+
+import org.restlet.resource.Representation;
+import org.restlet.data.Form;
+import org.apache.log4j.Logger;
 
 /**
  * This file is part of AMEE.
@@ -25,8 +28,13 @@ import gc.carbon.profile.BaseProfileResource;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public interface IRepresentationStrategy {
-    JSONObject getJSONObject(BaseProfileResource resource)  throws JSONException;
+public abstract class ProfileCommand {
 
-    Element getElement(BaseProfileResource resource, Document document);
+    protected ProfileCategoryResource resource;
+
+    public ProfileCommand(ProfileCategoryResource resource) {
+        this.resource = resource;
+    }
+
+    public abstract List<ProfileItem> accept(Representation entity, Form form);
 }

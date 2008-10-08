@@ -8,15 +8,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import gc.carbon.profile.Profile;
 import gc.carbon.profile.ProfileItem;
-import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.BaseProfileResource;
 import gc.carbon.data.DataCategory;
 import gc.carbon.path.PathItem;
-import gc.carbon.IRepresentationStrategy;
+import gc.carbon.profile.representation.Representation;
 import gc.carbon.EngineUtils;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.domain.APIUtils;
 
 /**
@@ -38,7 +36,7 @@ import com.jellymold.utils.domain.APIUtils;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryRepresentation implements IRepresentationStrategy {
+public class ProfileCategoryRepresentation implements Representation {
 
 
     public JSONObject getJSONObject(BaseProfileResource resource)  throws JSONException {
@@ -93,18 +91,21 @@ public class ProfileCategoryRepresentation implements IRepresentationStrategy {
             obj.put("children", children);
 
         } else if (resource.getRequest().getMethod().equals(Method.POST) || resource.getRequest().getMethod().equals(Method.PUT)) {
-            if (resource.getProfileItem() != null) {
-                obj.put("profileItem", resource.getProfileItem().getJSONObject());
-            } else if (resource.getProfileItems() != null) {
-                JSONArray profileItems = new JSONArray();
-                obj.put("profileItems", profileItems);
-                for (ProfileItem pi : resource.getProfileItems()) {
-                    profileItems.put(pi.getJSONObject(false));
+
+            if (!resource.getProfileItems().isEmpty()) {
+                if (resource.getProfileItems().size() == 1) {
+                    obj.put("profileItem", resource.getProfileItems().get(0).getJSONObject());
+                } else {
+                    JSONArray profileItems = new JSONArray();
+                    obj.put("profileItems", profileItems);
+                    for (ProfileItem pi : resource.getProfileItems()) {
+                        profileItems.put(pi.getJSONObject(false));
+                    }
                 }
             }
         }
-        return obj;
 
+        return obj;
     }
 
     public Element getElement(BaseProfileResource resource, Document document) {
@@ -158,13 +159,16 @@ public class ProfileCategoryRepresentation implements IRepresentationStrategy {
             }
 
         } else if (resource.getRequest().getMethod().equals(Method.POST) || resource.getRequest().getMethod().equals(Method.PUT)) {
-            if (resource.getProfileItem() != null) {
-                element.appendChild(resource.getProfileItem().getElement(document, false));
-            } else if (resource.getProfileItems() != null) {
-                org.w3c.dom.Element profileItemsElement = document.createElement("ProfileItems");
-                element.appendChild(profileItemsElement);
-                for (ProfileItem pi : resource.getProfileItems()) {
-                    profileItemsElement.appendChild(pi.getElement(document, false));
+
+            if (!resource.getProfileItems().isEmpty()) {
+                if (resource.getProfileItems().size() == 1) {
+                    element.appendChild(resource.getProfileItems().get(0).getElement(document, false));
+                } else {
+                    org.w3c.dom.Element profileItemsElement = document.createElement("ProfileItems");
+                    element.appendChild(profileItemsElement);
+                    for (ProfileItem pi : resource.getProfileItems()) {
+                        profileItemsElement.appendChild(pi.getElement(document, false));
+                    }
                 }
             }
         }
