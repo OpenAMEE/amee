@@ -345,13 +345,13 @@ public class ProfileService implements Serializable {
                         "AND pi.uid != :uid " +
                         "AND pi.dataCategory = :dataCategory " +
                         "AND pi.dataItem = :dataItem " +
-                        "AND pi.validFrom = :validFrom " +
+                        "AND pi.startDate = :startDate " +
                         "AND pi.name = :name")
                 .setParameter("profile", profileItem.getProfile())
                 .setParameter("uid", profileItem.getUid())
                 .setParameter("dataCategory", profileItem.getDataCategory())
                 .setParameter("dataItem", profileItem.getDataItem())
-                .setParameter("validFrom", profileItem.getStartDate())
+                .setParameter("startDate", profileItem.getStartDate())
                 .setParameter("name", profileItem.getName())
                 .getResultList();
         if (profileItems.size() > 0) {
@@ -392,7 +392,7 @@ public class ProfileService implements Serializable {
                             "WHERE pi.itemDefinition.id = :itemDefinitionId " +
                             "AND pi.dataCategory = :dataCategory " +
                             "AND pi.profile = :profile " +
-                            "AND pi.validFrom < :profileDate")
+                            "AND pi.startDate < :profileDate")
                     .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
                     .setParameter("dataCategory", dataCategory)
                     .setParameter("profile", profile)

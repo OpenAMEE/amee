@@ -464,15 +464,19 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
 
     protected ProfileItem acceptProfileItem(Form form, ProfileItem profileItem) {
 
+        
         // alias deprecated params
         String startDate = form.getFirstValue("validFrom",form.getFirstValue("startDate"));
 
-        // determine name for new ProfileItem
-        profileItem.setName(form.getFirstValue("name"));
         // determine date for new ProfileItem
         profileItem.setStartDate(startDate);
+
+        // determine name for new ProfileItem
+        profileItem.setName(form.getFirstValue("name"));
+
         // determine if new ProfileItem is an end marker
         profileItem.setEnd(form.getFirstValue("end"));
+
         // see if ProfileItem already exists
         if (!profileService.isEquivilentProfileItemExists(profileItem)) {
             // save newProfileItem and do calculations

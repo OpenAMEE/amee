@@ -249,6 +249,7 @@
       <module fileurl="file://$PROJECT_DIR$/co2-engine-config/co2-engine-config.iml" filepath="$PROJECT_DIR$/co2-engine-config/co2-engine-config.iml" />
       <module fileurl="file://$PROJECT_DIR$/co2-restlet/co2-restlet.iml" filepath="$PROJECT_DIR$/co2-restlet/co2-restlet.iml" />
       <module fileurl="file://$PROJECT_DIR$/co2-service/co2-service.iml" filepath="$PROJECT_DIR$/co2-service/co2-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/co2-tests/co2-tests.iml" filepath="$PROJECT_DIR$/co2-tests/co2-tests.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
@@ -343,6 +344,9 @@
         <root url="jar://$PROJECT_DIR$/../amee/lib/javassist/javassist-3.4.ga.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/restlet/lib/org.restlet.ext.freemarker_2.3.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/jboss-seam/lib/hibernate-all.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/jodatime/joda-time-1.5.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/commons-lang/commons-lang-2.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/testng/testng-5.8-jdk15.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

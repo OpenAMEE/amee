@@ -129,7 +129,7 @@ public class ProfileSheetFactory implements CacheableFactory {
                     } else if ("amountPerMonth".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.getAmountPerMonth(), ValueType.DECIMAL);
                     } else if ("validFrom".equalsIgnoreCase(column.getName())) {
-                        new Cell(column, row, profileItem.getValidFromFormatted(), ValueType.TEXT);
+                        new Cell(column, row, profileItem.getStartDateFormatted(), ValueType.TEXT);
                     } else if ("end".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.isEnd(), ValueType.BOOLEAN);
                     } else if ("path".equalsIgnoreCase(column.getName())) {

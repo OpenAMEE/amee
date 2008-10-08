@@ -116,7 +116,7 @@ public class ProfileItem extends Item {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);
         obj.put("amountPerMonth", getAmountPerMonth());
-        obj.put("validFrom", getValidFromFormatted());
+        obj.put("validFrom", getStartDateFormatted());
         obj.put("end", Boolean.toString(isEnd()));
         obj.put("dataItem", getDataItem().getIdentityJSONObject());
         if (detailed) {
@@ -130,7 +130,7 @@ public class ProfileItem extends Item {
         Element element = document.createElement("ProfileItem");
         buildElement(document, element, detailed);
         element.appendChild(APIUtils.getElement(document, "AmountPerMonth", getAmountPerMonth().toString()));
-        element.appendChild(APIUtils.getElement(document, "ValidFrom", getValidFromFormatted()));
+        element.appendChild(APIUtils.getElement(document, "ValidFrom", getStartDateFormatted()));
         element.appendChild(APIUtils.getElement(document, "End", Boolean.toString(isEnd())));
         element.appendChild(getDataItem().getIdentityElement(document));
         if (detailed) {
@@ -145,18 +145,13 @@ public class ProfileItem extends Item {
     }
 
     @Transient
-    public void setStartDate() {
-        Calendar startDateCal = Calendar.getInstance();
-        int year = startDateCal.get(Calendar.YEAR);
-        int month = startDateCal.get(Calendar.MONTH);
-        startDateCal.clear();
-        startDateCal.set(year, month, 1); // first of the month
-        setStartDate(startDateCal.getTime());
+    public String getStartDateFormatted() {
+        return EngineUtils.getFullDate(getStartDate());
     }
 
     @Transient
-    public String getValidFromFormatted() {
-        return EngineUtils.getFullDate(getStartDate());
+    public String getStartDateISOFormatted() {
+        return EngineUtils.getISODate(getStartDate());
     }
 
     @Transient
@@ -201,12 +196,8 @@ public class ProfileItem extends Item {
         return startDate;
     }
 
-    public void setStartDate(Date validFrom) {
-        if (validFrom != null) {
-            this.startDate = validFrom;
-        } else {
-            setStartDate();
-        }
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
     public boolean isEnd() {

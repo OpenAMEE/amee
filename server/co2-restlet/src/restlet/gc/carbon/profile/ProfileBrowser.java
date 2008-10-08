@@ -21,6 +21,7 @@ package gc.carbon.profile;
 
 import com.jellymold.kiwi.ResourceActions;
 import gc.carbon.BaseBrowser;
+import gc.carbon.EngineUtils;
 import gc.carbon.data.DataCategory;
 import gc.carbon.data.ItemValue;
 import org.apache.log4j.Logger;
@@ -179,34 +180,8 @@ public class ProfileBrowser extends BaseBrowser {
      */
     public void setProfileDate(Form form) {
         String profileDateStr = form.getFirstValue("profileDate");
-        if (profileDateStr != null) {
-            try {
-                DateFormat profileDateFormat = new SimpleDateFormat("yyyyMM");
-                setProfileDate(profileDateFormat.parse(profileDateStr));
-            } catch (ParseException e) {
-                // swallow
-                log.warn("bad date");
-                setProfileDate();
-            }
-        } else {
-            setProfileDate();
-        }
+        setProfileDate(EngineUtils.getFullDate(profileDateStr));
         log.debug("profileDate: " + getProfileDate());
-    }
-
-    /**
-     * Set profileDate to *now* but with MONTH precision (1st of the month)
-     * <p/>
-     * TODO: logic to use profileDatePrecision (MONTH, DATE, etc)
-     * TODO: hard coded to MONTH for now
-     */
-    public void setProfileDate() {
-        Calendar profileDateCal = Calendar.getInstance();
-        int year = profileDateCal.get(Calendar.YEAR);
-        int month = profileDateCal.get(Calendar.MONTH);
-        profileDateCal.clear();
-        profileDateCal.set(year, month, 1); // first of the month
-        setProfileDate(profileDateCal.getTime());
     }
 
     public Date getProfileDate() {
