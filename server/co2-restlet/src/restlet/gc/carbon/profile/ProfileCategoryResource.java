@@ -21,10 +21,9 @@ package gc.carbon.profile;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.sheet.Sheet;
-import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.EngineUtils;
+import gc.carbon.profile.representation.ProfileCategoryRepresentation;
+import gc.carbon.IRepresentationStrategy;
 import gc.carbon.data.*;
 import gc.carbon.path.PathItem;
 import gc.carbon.path.PathItemService;
@@ -52,13 +51,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * TODO: may be a more elegant way to handle incoming representations of different media types
- * TODO: may be better to break this class down into components that handle post/put and json/xml individually
- */
 @Name("profileCategoryResource")
 @Scope(ScopeType.EVENT)
-public class ProfileCategoryResource extends BaseResource implements Serializable {
+public class ProfileCategoryResource extends BaseProfileResource implements Serializable {
 
     private final static Logger log = Logger.getLogger(ProfileCategoryResource.class);
 
@@ -91,6 +86,9 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
 
     private ProfileItem profileItem;
     private List<ProfileItem> profileItems;
+
+    //TODO - Use IOC container to wire-up with correct concrete implementation
+    private IRepresentationStrategy representation = new ProfileCategoryRepresentation();
 
     public ProfileCategoryResource() {
         super();
@@ -137,134 +135,12 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-
-        JSONObject obj = new JSONObject();
-
-        Profile profile = profileBrowser.getProfile();
-        DataCategory dataCategory = profileBrowser.getDataCategory();
-
-        // add objects
-        obj.put("path", pathItem.getFullPath());
-        obj.put("profileDate", EngineUtils.getMonthlyDate(profileBrowser.getProfileDate()));
-
-        // add relevant Profile info depending on whether we are at root
-        if (pathItem.getParent() == null) {
-            obj.put("profile", profile.getJSONObject());
-        } else {
-            obj.put("profile", profile.getIdentityJSONObject());
-        }
-
-        // add Data Category
-        obj.put("dataCategory", dataCategory.getIdentityJSONObject());
-
-        if (isGet()) {
-
-            // create children JSON
-            JSONObject children = new JSONObject();
-
-            // add Data Categories via pathItem to children
-            JSONArray dataCategories = new JSONArray();
-            for (PathItem pi : pathItem.getChildrenByType("DC")) {
-                dataCategories.put(pi.getJSONObject());
-            }
-            children.put("dataCategories", dataCategories);
-
-            // add Sheet containing Profile Items & totalAmountPerMonth
-            Sheet sheet = profileSheetService.getSheet(profile, dataCategory, profileBrowser.getProfileDate());
-            if (sheet != null) {
-                Pager pager = getPager(profileBrowser.getItemsPerPage(getRequest()));
-                sheet = Sheet.getCopy(sheet, pager);
-                pager.setCurrentPage(getPage());
-                children.put("profileItems", sheet.getJSONObject());
-                children.put("pager", pager.getJSONObject());
-                obj.put("totalAmountPerMonth", profileSheetService.getTotalAmountPerMonth(sheet));
-            } else {
-                children.put("profileItems", new JSONObject());
-                children.put("pager", new JSONObject());
-                obj.put("totalAmountPerMonth", "0");
-            }
-
-            // add chilren
-            obj.put("children", children);
-
-        } else if (getRequest().getMethod().equals(Method.POST) || getRequest().getMethod().equals(Method.PUT)) {
-            if (profileItem != null) {
-                obj.put("profileItem", profileItem.getJSONObject());
-            } else if (profileItems != null) {
-                JSONArray profileItems = new JSONArray();
-                obj.put("profileItems", profileItems);
-                for (ProfileItem pi : this.profileItems) {
-                    profileItems.put(pi.getJSONObject(false));
-                }
-            }
-        }
-        return obj;
+        return representation.getJSONObject(this);
     }
 
     @Override
     public Element getElement(Document document) {
-        Profile profile = profileBrowser.getProfile();
-        DataCategory dataCategory = profileBrowser.getDataCategory();
-
-        // create element
-        Element element = document.createElement("ProfileCategoryResource");
-
-        // add objects
-        element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
-        // add profile date
-        element.appendChild(APIUtils.getElement(document, "ProfileDate",
-                EngineUtils.getMonthlyDate(profileBrowser.getProfileDate())));
-
-        // add relevant Profile info depending on whether we are at root
-        if (pathItem.getParent() == null) {
-            element.appendChild(profile.getElement(document));
-        } else {
-            element.appendChild(profile.getIdentityElement(document));
-        }
-
-        // add DataCategory and Profile elements
-        element.appendChild(dataCategory.getIdentityElement(document));
-
-        if (isGet()) {
-
-            // list child Profile Categories and child Profile Items
-            Element childrenElement = document.createElement("Children");
-            element.appendChild(childrenElement);
-
-            // add Profile Categories via pathItem
-            Element dataCategoriesElement = document.createElement("ProfileCategories");
-            for (PathItem pi : pathItem.getChildrenByType("DC")) {
-                dataCategoriesElement.appendChild(pi.getElement(document));
-            }
-            childrenElement.appendChild(dataCategoriesElement);
-
-            // get Sheet containing Profile Items
-            Sheet sheet = profileSheetService.getSheet(profile, dataCategory, profileBrowser.getProfileDate());
-            if (sheet != null) {
-                Pager pager = getPager(profileBrowser.getItemsPerPage(getRequest()));
-                sheet = Sheet.getCopy(sheet, pager);
-                pager.setCurrentPage(getPage());
-                // list child Profile Items via sheet
-                childrenElement.appendChild(sheet.getElement(document, false));
-                childrenElement.appendChild(pager.getElement(document));
-                // add CO2 amount
-                element.appendChild(APIUtils.getElement(document, "TotalAmountPerMonth",
-                        profileSheetService.getTotalAmountPerMonth(sheet).toString()));
-            }
-
-        } else if (getRequest().getMethod().equals(Method.POST) || getRequest().getMethod().equals(Method.PUT)) {
-            if (profileItem != null) {
-                element.appendChild(profileItem.getElement(document, false));
-            } else if (profileItems != null) {
-                Element profileItemsElement = document.createElement("ProfileItems");
-                element.appendChild(profileItemsElement);
-                for (ProfileItem pi : profileItems) {
-                    profileItemsElement.appendChild(pi.getElement(document, false));
-                }
-            }
-        }
-
-        return element;
+        return representation.getElement(this, document);
     }
 
     @Override
@@ -516,5 +392,29 @@ public class ProfileCategoryResource extends BaseResource implements Serializabl
         } else {
             notAuthorized();
         }
+    }
+
+    public List<ProfileItem> getProfileItems() {
+        return profileItems;
+    }
+
+    public ProfileItem getProfileItem() {
+        return profileItem;
+    }
+
+    public ProfileSheetService getProfileSheetService() {
+        return profileSheetService;
+    }
+
+    public ProfileBrowser getProfileBrowser() {
+        return profileBrowser;
+    }
+
+    public PathItem getPathItem() {
+        return pathItem;
+    }
+
+    public Pager getPager() {
+        return getPager(profileBrowser.getItemsPerPage(getRequest()));
     }
 }
