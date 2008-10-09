@@ -21,7 +21,6 @@ package gc.carbon.profile;
 
 import com.jellymold.kiwi.ResourceActions;
 import gc.carbon.BaseBrowser;
-import gc.carbon.EngineUtils;
 import gc.carbon.data.DataCategory;
 import gc.carbon.data.ItemValue;
 import org.apache.log4j.Logger;
@@ -29,13 +28,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.restlet.data.Form;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 @Name("profileBrowser")
 @Scope(ScopeType.EVENT)
@@ -77,10 +70,6 @@ public class ProfileBrowser extends BaseBrowser {
     private String profileItemValueUid = null;
 
     private ResourceActions profileItemValueActions = new ResourceActions("profileItemValue");
-
-    // profile date
-    private Date profileDate = Calendar.getInstance().getTime();
-    // TODO: private int profileDatePrecision = Calendar.MONTH;
 
     // General
 
@@ -171,24 +160,4 @@ public class ProfileBrowser extends BaseBrowser {
         return profileItemValueActions;
     }
 
-    // misc.
-
-    /**
-     * Set profileDate based on query string
-     *
-     * @param form
-     */
-    public void setProfileDate(Form form) {
-        String profileDateStr = form.getFirstValue("profileDate");
-        setProfileDate(EngineUtils.getFullDate(profileDateStr));
-        log.debug("profileDate: " + getProfileDate());
-    }
-
-    public Date getProfileDate() {
-        return profileDate;
-    }
-
-    public void setProfileDate(Date profileDate) {
-        this.profileDate = profileDate;
-    }
 }

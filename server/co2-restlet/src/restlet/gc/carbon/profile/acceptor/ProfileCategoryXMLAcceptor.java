@@ -1,4 +1,4 @@
-package gc.carbon.profile.command;
+package gc.carbon.profile.acceptor;
 
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileItem;
@@ -32,11 +32,11 @@ import java.util.List;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryXMLCommand extends ProfileCommand {
+public class ProfileCategoryXMLAcceptor extends Acceptor {
 
-    private final static Logger log = Logger.getLogger(ProfileCategoryXMLCommand.class);
+    private final static Logger log = Logger.getLogger(ProfileCategoryXMLAcceptor.class);
 
-    public ProfileCategoryXMLCommand(ProfileCategoryResource resource) {
+    public ProfileCategoryXMLAcceptor(ProfileCategoryResource resource) {
         super(resource);    }
 
     public List<ProfileItem> accept(Representation entity, Form form) {

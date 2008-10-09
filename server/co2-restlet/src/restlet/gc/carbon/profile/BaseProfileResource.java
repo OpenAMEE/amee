@@ -63,4 +63,6 @@ public abstract class BaseProfileResource extends BaseResource {
     public abstract Calculator getCalculator();
     
     public abstract EntityManager getEntityManager();
+
+    public abstract DateTimeBrowser getDateTimeBrowser();
 }

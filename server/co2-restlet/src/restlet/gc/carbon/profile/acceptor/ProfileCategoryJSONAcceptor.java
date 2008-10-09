@@ -1,12 +1,10 @@
-package gc.carbon.profile.command;
+package gc.carbon.profile.acceptor;
 
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileItem;
 import org.restlet.resource.Representation;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
-import org.jboss.seam.util.XML;
-import org.dom4j.DocumentException;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -36,11 +34,11 @@ import java.util.ArrayList;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryJSONCommand extends ProfileCommand {
+public class ProfileCategoryJSONAcceptor extends Acceptor {
 
-    private final static Logger log = Logger.getLogger(ProfileCategoryJSONCommand.class);
+    private final static Logger log = Logger.getLogger(ProfileCategoryJSONAcceptor.class);
 
-    public ProfileCategoryJSONCommand(ProfileCategoryResource resource) {
+    public ProfileCategoryJSONAcceptor(ProfileCategoryResource resource) {
         super(resource);
     }
 

@@ -1,4 +1,4 @@
-package gc.carbon.profile.command;
+package gc.carbon.profile.acceptor;
 
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileItem;
@@ -8,15 +8,8 @@ import gc.carbon.data.ItemValue;
 import org.restlet.resource.Representation;
 import org.restlet.data.Form;
 import org.restlet.data.Method;
-import org.jboss.seam.util.XML;
-import org.dom4j.DocumentException;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
 
-import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -40,11 +33,11 @@ import java.util.Map;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryFormCommand extends ProfileCommand {
+public class ProfileCategoryFormAcceptor extends Acceptor {
 
-    private final static Logger log = Logger.getLogger(ProfileCategoryFormCommand.class);
+    private final static Logger log = Logger.getLogger(ProfileCategoryFormAcceptor.class);
 
-    public ProfileCategoryFormCommand(ProfileCategoryResource resource) {
+    public ProfileCategoryFormAcceptor(ProfileCategoryResource resource) {
         super(resource);
     }
 

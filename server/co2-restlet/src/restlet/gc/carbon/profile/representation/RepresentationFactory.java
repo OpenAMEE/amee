@@ -1,13 +1,11 @@
-package gc.carbon.profile.command;
+package gc.carbon.profile.representation;
 
-import gc.carbon.profile.ProfileItem;
+import gc.carbon.profile.BaseProfileResource;
 import gc.carbon.profile.ProfileCategoryResource;
-
-import java.util.List;
-
-import org.restlet.resource.Representation;
-import org.restlet.data.Form;
-import org.apache.log4j.Logger;
+import org.json.JSONObject;
+import org.json.JSONException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Document;
 
 /**
  * This file is part of AMEE.
@@ -28,13 +26,14 @@ import org.apache.log4j.Logger;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public abstract class ProfileCommand {
+public class RepresentationFactory {
 
-    protected ProfileCategoryResource resource;
+    public static Representation createProfileCategoryRepresentation(ProfileCategoryResource resource) {
 
-    public ProfileCommand(ProfileCategoryResource resource) {
-        this.resource = resource;
+        if (resource.getDateTimeBrowser().isCalendar()) {
+            return new ProfileCategoryCalendarRepresentation(resource);
+        }  else {
+           return new ProfileCategoryRepresentation(resource);
+        }
     }
-
-    public abstract List<ProfileItem> accept(Representation entity, Form form);
 }

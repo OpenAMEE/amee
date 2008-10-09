@@ -61,6 +61,10 @@ public class ProfileItem extends Item {
     @Index(name = "VALID_FROM_IND")
     private Date startDate = Calendar.getInstance().getTime();
 
+    //TODO - Add to schema
+    @Transient
+    private Date endDate;
+
     @Column(name = "END")
     private Boolean end = false;
 
@@ -198,6 +202,14 @@ public class ProfileItem extends Item {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public boolean isEnd() {

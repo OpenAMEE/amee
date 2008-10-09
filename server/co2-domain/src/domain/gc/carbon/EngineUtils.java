@@ -33,7 +33,7 @@ import org.joda.time.DateTime;
 public class EngineUtils {
 
     private static final String MONTHLY_DATE = "yyyyMM";
-    private static final String FULL_DATE = "yyyyMMDD";
+    private static final String FULL_DATE = "yyyyMMdd";
     private static final String ISO_DATE = "yyyyMMdd'T'HHmm";
     private static final String[] ALLOWABLE_DATE_FORMATS = new String[]{ISO_DATE, FULL_DATE};
 
@@ -51,11 +51,6 @@ public class EngineUtils {
         } else {
             return p.getDisplayPath();
         }
-    }
-
-    @Transient
-    public static String getMonthlyDate(Date date) {
-        return DateFormatUtils.format(date, MONTHLY_DATE);
     }
 
     @Transient

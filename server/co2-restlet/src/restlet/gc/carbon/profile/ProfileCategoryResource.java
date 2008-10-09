@@ -22,12 +22,12 @@ package gc.carbon.profile;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
-import gc.carbon.profile.representation.ProfileCategoryRepresentation;
 import gc.carbon.profile.representation.Representation;
-import gc.carbon.profile.command.ProfileCategoryXMLCommand;
-import gc.carbon.profile.command.ProfileCategoryJSONCommand;
-import gc.carbon.profile.command.ProfileCategoryFormCommand;
-import gc.carbon.profile.command.ProfileCommand;
+import gc.carbon.profile.representation.RepresentationFactory;
+import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
+import gc.carbon.profile.acceptor.ProfileCategoryFormAcceptor;
+import gc.carbon.profile.acceptor.Acceptor;
+import gc.carbon.profile.acceptor.ProfileCategoryXMLAcceptor;
 import gc.carbon.data.*;
 import gc.carbon.path.PathItem;
 import gc.carbon.path.PathItemService;
@@ -85,9 +85,11 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
 
-    private Representation representation = new ProfileCategoryRepresentation();
+    private Representation representation;
 
-    private Map<MediaType, ProfileCommand> commands;
+    private Map<MediaType, Acceptor> acceptors;
+
+    private DateTimeBrowser dateTimeBrowser;
 
     public ProfileCategoryResource() {
         super();
@@ -101,16 +103,21 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
-        profileBrowser.setProfileDate(request.getResourceRef().getQueryAsForm());
+        dateTimeBrowser = new DateTimeBrowser(request);
         setPage(request);
-        createCommands();
+        setAcceptors();
+        setRepresentation();
     }
 
-    private void createCommands() {
-        commands = new HashMap<MediaType, ProfileCommand>();
-        commands.put(MediaType.APPLICATION_XML, new ProfileCategoryXMLCommand(this));
-        commands.put(MediaType.APPLICATION_JSON, new ProfileCategoryJSONCommand(this));
-        commands.put(MediaType.APPLICATION_WWW_FORM, new ProfileCategoryFormCommand(this));
+    private void setRepresentation() {
+        representation = RepresentationFactory.createProfileCategoryRepresentation(this);    
+    }
+
+    private void setAcceptors() {
+        acceptors = new HashMap<MediaType, Acceptor>();
+        acceptors.put(MediaType.APPLICATION_XML, new ProfileCategoryXMLAcceptor(this));
+        acceptors.put(MediaType.APPLICATION_JSON, new ProfileCategoryJSONAcceptor(this));
+        acceptors.put(MediaType.APPLICATION_WWW_FORM, new ProfileCategoryFormAcceptor(this));
     }
 
     @Override
@@ -127,7 +134,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     public Map<String, Object> getTemplateValues() {
         Profile profile = profileBrowser.getProfile();
         DataCategory dataCategory = profileBrowser.getDataCategory();
-        Sheet sheet = profileSheetService.getSheet(profile, dataCategory, profileBrowser.getProfileDate());
+        Sheet sheet = profileSheetService.getSheet(profile, dataCategory, dateTimeBrowser.getStartDate().toDate());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", profileBrowser);
         values.put("profile", profile);
@@ -142,12 +149,12 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        return representation.getJSONObject(this);
+        return representation.getJSONObject();
     }
 
     @Override
     public Element getElement(Document document) {
-        return representation.getElement(this, document);
+        return representation.getElement(document);
     }
 
     @Override
@@ -218,13 +225,13 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     }
 
 
-    private ProfileCommand lookupCommand(MediaType type) {
+    private Acceptor lookupCommand(MediaType type) {
         if (MediaType.APPLICATION_JSON.includes(type)) {
-            return commands.get(MediaType.APPLICATION_JSON);
+            return acceptors.get(MediaType.APPLICATION_JSON);
         } else if (MediaType.APPLICATION_XML.includes(type)) {
-            return commands.get(MediaType.APPLICATION_XML);
+            return acceptors.get(MediaType.APPLICATION_XML);
         } else {
-           return commands.get(MediaType.APPLICATION_WWW_FORM);            
+           return acceptors.get(MediaType.APPLICATION_WWW_FORM);
         }
     }
 
@@ -286,5 +293,9 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    public DateTimeBrowser getDateTimeBrowser() {
+        return dateTimeBrowser;
     }
 }
