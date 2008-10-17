@@ -1,11 +1,10 @@
-package gc.carbon.profile.representation;
+package gc.carbon.profile.renderer;
 
-import gc.carbon.profile.BaseProfileResource;
-import gc.carbon.profile.ProfileCategoryResource;
 import org.json.JSONObject;
 import org.json.JSONException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
+import gc.carbon.profile.BaseProfileResource;
 
 /**
  * This file is part of AMEE.
@@ -26,14 +25,16 @@ import org.w3c.dom.Document;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class RepresentationFactory {
+public abstract class Renderer {
 
-    public static Representation createProfileCategoryRepresentation(ProfileCategoryResource resource) {
 
-        if (resource.getDateTimeBrowser().isCalendar()) {
-            return new ProfileCategoryCalendarRepresentation(resource);
-        }  else {
-           return new ProfileCategoryRepresentation(resource);
-        }
+    protected BaseProfileResource resource;
+
+    public Renderer(BaseProfileResource resource) {
+        this.resource = resource;
     }
+
+    public abstract JSONObject getJSONObject()  throws JSONException;
+
+    public abstract Element getElement(Document document);
 }

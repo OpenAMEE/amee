@@ -22,8 +22,8 @@ package gc.carbon.profile;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
-import gc.carbon.profile.representation.Representation;
-import gc.carbon.profile.representation.RepresentationFactory;
+import gc.carbon.profile.renderer.Renderer;
+import gc.carbon.profile.renderer.RendererFactory;
 import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
 import gc.carbon.profile.acceptor.ProfileCategoryFormAcceptor;
 import gc.carbon.profile.acceptor.Acceptor;
@@ -85,7 +85,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
 
-    private Representation representation;
+    private Renderer representation;
 
     private Map<MediaType, Acceptor> acceptors;
 
@@ -110,7 +110,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     }
 
     private void setRepresentation() {
-        representation = RepresentationFactory.createProfileCategoryRepresentation(this);    
+        representation = RendererFactory.createProfileCategoryRepresentation(this);
     }
 
     private void setAcceptors() {

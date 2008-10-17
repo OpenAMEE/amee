@@ -1,46 +1,42 @@
-package gc.carbon.profile.representation;
+package gc.carbon.profile.renderer;
 
-import gc.carbon.profile.ProfileCategoryResource;
-import gc.carbon.profile.BaseProfileResource;
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.restlet.data.Method;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import gc.carbon.profile.Profile;
 import gc.carbon.profile.ProfileItem;
+import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.data.DataCategory;
 import gc.carbon.path.PathItem;
-import org.json.JSONObject;
-import org.json.JSONException;
-import org.json.JSONArray;
-import org.restlet.data.Method;
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
 
-import java.util.List;
-import java.util.Date;
-
 /**
  * This file is part of AMEE.
- * <p/>
+ *
  * AMEE is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * AMEE is free software and is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * <p/>
+ *
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryCalendarRepresentation extends Representation {
+public class ProfileCategoryRenderer extends Renderer {
 
-    public ProfileCategoryCalendarRepresentation(ProfileCategoryResource resource) {
+    public ProfileCategoryRenderer(ProfileCategoryResource resource) {
         super(resource);
     }
 
@@ -53,7 +49,7 @@ public class ProfileCategoryCalendarRepresentation extends Representation {
 
         // add objects
         obj.put("path", resource.getPathItem().getFullPath());
-        obj.put(resource.getDateTimeBrowser().getStartDate().getName(), resource.getDateTimeBrowser().getStartDate().toString());
+        obj.put(resource.getDateTimeBrowser().getProfileDate().getName(), resource.getDateTimeBrowser().getProfileDate().toString());
 
         // add relevant Profile info depending on whether we are at root
         if (resource.getPathItem().getParent() == null) {
@@ -77,17 +73,19 @@ public class ProfileCategoryCalendarRepresentation extends Representation {
             }
             children.put("dataCategories", dataCategories);
 
-            List<ProfileItem> items = getProfileItems(profile, dataCategory);
-            // TODO - Add Paging
-            if (!items.isEmpty()) {
-                for (ProfileItem pi : items) {
-                    children.put("profileItems", pi.getJSONObject());
-                }
-                obj.put("totalAmount", "XXXXXXXXXXXXXXXXXXXXX");
+            // add Sheet containing Profile Items & totalAmountPerMonth
+            Sheet sheet = resource.getProfileSheetService().getSheet(profile, dataCategory, resource.getDateTimeBrowser().getProfileDate().toDate());
+            if (sheet != null) {
+                Pager pager = resource.getPager();
+                sheet = Sheet.getCopy(sheet, pager);
+                pager.setCurrentPage(resource.getPage());
+                children.put("profileItems", sheet.getJSONObject());
+                children.put("pager", pager.getJSONObject());
+                obj.put("totalAmountPerMonth", resource.getProfileSheetService().getTotalAmountPerMonth(sheet));
             } else {
                 children.put("profileItems", new JSONObject());
                 children.put("pager", new JSONObject());
-                obj.put("totalAmount", "0");
+                obj.put("totalAmountPerMonth", "0");
             }
 
             // add chilren
@@ -124,7 +122,7 @@ public class ProfileCategoryCalendarRepresentation extends Representation {
         element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
 
         // add profile date
-        element.appendChild(resource.getDateTimeBrowser().getStartDate().toXML(document));
+        element.appendChild(resource.getDateTimeBrowser().getProfileDate().toXML(document));
 
         // add relevant Profile info depending on whether we are at root
         if (resource.getPathItem().getParent() == null) {
@@ -149,16 +147,19 @@ public class ProfileCategoryCalendarRepresentation extends Representation {
             }
             childrenElement.appendChild(dataCategoriesElement);
 
-            List<ProfileItem> items = getProfileItems(profile, dataCategory);
-            // TODO - Add Paging
-            if (!items.isEmpty()) {
-                for (ProfileItem pi : items) {
-                    childrenElement.appendChild(pi.getElement(document));
-                }
+            // get Sheet containing Profile Items
+            Sheet sheet = resource.getProfileSheetService().getSheet(profile, dataCategory, resource.getDateTimeBrowser().getProfileDate().toDate());
+            if (sheet != null) {
+                Pager pager = resource.getPager();
+                sheet = Sheet.getCopy(sheet, pager);
+                pager.setCurrentPage(resource.getPage());
+                // list child Profile Items via sheet
+                childrenElement.appendChild(sheet.getElement(document, false));
+                childrenElement.appendChild(pager.getElement(document));
+                // add CO2 amount
+                element.appendChild(APIUtils.getElement(document, "TotalAmountPerMonth",
+                        resource.getProfileSheetService().getTotalAmountPerMonth(sheet).toString()));
             }
-
-            // add CO2 amount
-            element.appendChild(APIUtils.getElement(document, "AmountPerMonth","XXXXXXXXXXXXXXXX"));
 
         } else if (resource.getRequest().getMethod().equals(Method.POST) || resource.getRequest().getMethod().equals(Method.PUT)) {
 
@@ -178,11 +179,4 @@ public class ProfileCategoryCalendarRepresentation extends Representation {
         return element;
     }
 
-    //TODO - Refactor optional date params to Null Object pattern.
-    private List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory) {
-        Date startDate = resource.getDateTimeBrowser().getStartDate().toDate();
-        Date endDate = (resource.getDateTimeBrowser().getEndDate() != null) ? resource.getDateTimeBrowser().getEndDate().toDate() : null;
-        return resource.getProfileService().getProfileItems(profile, dataCategory, startDate, endDate);
-    }
 }
-

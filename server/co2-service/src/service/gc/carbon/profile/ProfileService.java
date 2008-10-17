@@ -373,40 +373,6 @@ public class ProfileService implements Serializable {
         return profileItems;
     }
 
-    public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, Date startDate, Date endDate) {
-        List<ProfileItem> items = null;
-        if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
-
-
-            String hql = "SELECT DISTINCT pi " +
-                            "FROM ProfileItem pi " +
-                            "LEFT JOIN FETCH pi.itemValues " +
-                            "WHERE pi.itemDefinition.id = :itemDefinitionId " +
-                            "AND pi.dataCategory = :dataCategory " +
-                            "AND pi.profile = :profile " +
-                            "AND pi.startDate >= ( " +
-                            "SELECT MAX(pi.startDate) " +
-                            "FROM ( " +
-                            "SELECT pi.startDate FROM ProfileItem pi " +
-                            "WHERE pi.itemDefinition.id = :itemDefinitionId " +
-                            "AND pi.dataCategory = :dataCategory " +
-                            "AND pi.profile = :profile " +
-                            "AND pi.startDate <= :startDate)" +
-                            ")";
-
-            Query query = entityManager.createQuery(hql)
-                .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
-                .setParameter("dataCategory", dataCategory)
-                .setParameter("profile", profile)
-                .setParameter("startDate", startDate);
-
-            query.setHint("org.hibernate.cacheable", true).setHint("org.hibernate.cacheRegion", "query.profileService");
-
-            items = query.getResultList();
-        }
-        return items;
-    }
-
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, Date profileDate) {
         if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
             // need to roll the date forward
@@ -433,7 +399,7 @@ public class ProfileService implements Serializable {
                     .getResultList();
 
             
-            // only include most recent ProfileItem per ProfileItem name per DataItem
+            // only include most recent ProfileItem per ProfileItem name per DataItem                                                                                               
             Iterator<ProfileItem> iterator = profileItems.iterator();
             while (iterator.hasNext()) {
                 ProfileItem outerProfileItem = iterator.next();
@@ -447,8 +413,7 @@ public class ProfileService implements Serializable {
                 }
             }
 
-            return profileItems;
-
+            return profileItems;    
         } else {
             return null;
         }
