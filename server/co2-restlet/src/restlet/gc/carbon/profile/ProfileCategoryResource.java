@@ -85,7 +85,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
 
-    private Renderer representation;
+    private Renderer renderer;
 
     private Map<MediaType, Acceptor> acceptors;
 
@@ -106,11 +106,11 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
         dateTimeBrowser = new DateTimeBrowser(request);
         setPage(request);
         setAcceptors();
-        setRepresentation();
+        setRenderStrategy();
     }
 
-    private void setRepresentation() {
-        representation = RendererFactory.createProfileCategoryRepresentation(this);
+    private void setRenderStrategy() {
+        renderer = RendererFactory.createProfileCategoryRenderer(this);
     }
 
     private void setAcceptors() {
@@ -149,12 +149,12 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        return representation.getJSONObject();
+        return renderer.getJSONObject();
     }
 
     @Override
     public Element getElement(Document document) {
-        return representation.getElement(document);
+        return renderer.getElement(document);
     }
 
     @Override
@@ -221,11 +221,11 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
 
     public List<ProfileItem> doPostOrPut(org.restlet.resource.Representation entity, Form form) {
-        return lookupCommand(entity.getMediaType()).accept(entity, form);
+        return lookupAcceptor(entity.getMediaType()).accept(entity, form);
     }
 
 
-    private Acceptor lookupCommand(MediaType type) {
+    private Acceptor lookupAcceptor(MediaType type) {
         if (MediaType.APPLICATION_JSON.includes(type)) {
             return acceptors.get(MediaType.APPLICATION_JSON);
         } else if (MediaType.APPLICATION_XML.includes(type)) {

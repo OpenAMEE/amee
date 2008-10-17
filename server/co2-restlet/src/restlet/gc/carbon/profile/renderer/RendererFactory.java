@@ -23,7 +23,7 @@ import gc.carbon.profile.ProfileCategoryResource;
  */
 public class RendererFactory {
 
-    public static Renderer createProfileCategoryRepresentation(ProfileCategoryResource resource) {
+    public static Renderer createProfileCategoryRenderer(ProfileCategoryResource resource) {
 
         if (resource.getDateTimeBrowser().isCalendar()) {
             return new ProfileCategoryCalendarRenderer(resource);
