@@ -2,6 +2,7 @@ package gc.carbon.profile.acceptor;
 
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileItem;
+import gc.carbon.profile.StartEndDate;
 import gc.carbon.data.DataCategory;
 import gc.carbon.data.DataItem;
 import gc.carbon.data.ItemValue;
@@ -107,33 +108,43 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
 
     private ProfileItem acceptProfileItem(Form form, ProfileItem profileItem) {
 
+        // determine startdate for new ProfileItem
+        profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
 
-        // alias deprecated params
-        String startDate = form.getFirstValue("validFrom",form.getFirstValue("startDate"));
+        // determine if the new ProfileItem is an end marker
+        profileItem.setEnd(Boolean.valueOf(form.getFirstValue("end")));
 
-        // determine date for new ProfileItem
-        profileItem.setStartDate(startDate);
+        if (form.getNames().contains("endDate"))
+            profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
 
         // determine name for new ProfileItem
         profileItem.setName(form.getFirstValue("name"));
-
-        // determine if new ProfileItem is an end marker
-        profileItem.setEnd(form.getFirstValue("end"));
 
         // see if ProfileItem already exists
         if (!resource.getProfileService().isEquivilentProfileItemExists(profileItem)) {
             // save newProfileItem and do calculations
             resource.getEntityManager().persist(profileItem);
             resource.getProfileService().checkProfileItem(profileItem);
-            // update item values if supplied
-            Map<String, ItemValue> itemValues = profileItem.getItemValuesMap();
-            for (String name : form.getNames()) {
-                ItemValue itemValue = itemValues.get(name);
-                if (itemValue != null) {
-                    itemValue.setValue(form.getFirstValue(name));
+
+            try {
+                // update item values if supplied
+                Map<String, ItemValue> itemValues = profileItem.getItemValuesMap();
+                for (String name : form.getNames()) {
+                    ItemValue itemValue = itemValues.get(name);
+                    if (itemValue != null) {
+                        itemValue.setValue(form.getFirstValue(name));
+                        if (itemValue.hasUnits())
+                            itemValue.setUnit(form.getFirstValue(name + "Unit"));
+                        if (itemValue.hasPerUnits())
+                        itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
+                    }
                 }
+                resource.getCalculator().calculate(profileItem);
+            } catch (IllegalArgumentException ex) {
+                log.warn("Bad parameter received");
+                resource.getEntityManager().remove(profileItem);
+                profileItem = null;
             }
-            resource.getCalculator().calculate(profileItem);
         } else {
             log.warn("Profile Item already exists");
             profileItem = null;

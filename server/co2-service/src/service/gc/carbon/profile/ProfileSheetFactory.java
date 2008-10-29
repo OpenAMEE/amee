@@ -42,12 +42,17 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @Name("profileSheetFactory")
 @Scope(ScopeType.EVENT)
 public class ProfileSheetFactory implements CacheableFactory {
 
     private final static Logger log = Logger.getLogger(ProfileSheetFactory.class);
+
+    private static final String DAY_DATE = "yyyyMMdd";
+    private static DateFormat DAY_DATE_FMT = new SimpleDateFormat(DAY_DATE);
 
     @In(create = true)
     private DefinitionService definitionService;
@@ -129,7 +134,7 @@ public class ProfileSheetFactory implements CacheableFactory {
                     } else if ("amountPerMonth".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.getAmountPerMonth(), ValueType.DECIMAL);
                     } else if ("validFrom".equalsIgnoreCase(column.getName())) {
-                        new Cell(column, row, profileItem.getStartDateFormatted(), ValueType.TEXT);
+                        new Cell(column, row, DAY_DATE_FMT.format(profileItem.getStartDate()), ValueType.TEXT);
                     } else if ("end".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.isEnd(), ValueType.BOOLEAN);
                     } else if ("path".equalsIgnoreCase(column.getName())) {

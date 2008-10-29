@@ -37,82 +37,27 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @Entity
 @Name("profileItem")
 @DiscriminatorValue("PI")
-public class ProfileItem extends Item {
+public class ProfileItem extends BaseProfileItem {
 
-    // 999,999,999,999,999,999.999
-    public final static int PRECISION = 18;
-    public final static int SCALE = 3;
-    public final static RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
-    public final static BigDecimal ZERO = BigDecimal.valueOf(0, SCALE);
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "PROFILE_ID")
-    private Profile profile;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "DATA_ITEM_ID")
-    private DataItem dataItem;
-
-    @Column(name = "VALID_FROM")
-    @Index(name = "VALID_FROM_IND")
-    private Date startDate = Calendar.getInstance().getTime();
-
-    //TODO - Add to schema
-    @Transient
-    private Date endDate;
-
-    @Column(name = "END")
-    private Boolean end = false;
-
-    @Column(name = "AMOUNT_PER_MONTH", precision = PRECISION, scale = SCALE)
-    private BigDecimal amountPerMonth = ZERO;
+    private static final String DAY_DATE = "yyyyMMdd";
+    private static DateFormat DAY_DATE_FMT = new SimpleDateFormat(DAY_DATE);
 
     public ProfileItem() {
         super();
     }
 
     public ProfileItem(Profile profile, DataItem dataItem) {
-        super(dataItem.getDataCategory(), dataItem.getItemDefinition());
-        setProfile(profile);
-        setDataItem(dataItem);
+        super(profile, dataItem);
     }
 
     public ProfileItem(Profile profile, DataCategory dataCategory, DataItem dataItem) {
-        super(dataCategory, dataItem.getItemDefinition());
-        setProfile(profile);
-        setDataItem(dataItem);
-    }
-
-    public String toString() {
-        return "ProfileItem_" + getUid();
-    }
-
-    @Transient
-    public ProfileItem getCopy() {
-        ProfileItem profileItem = new ProfileItem(getProfile(), getDataCategory(), getDataItem());
-        profileItem.setStartDate(getStartDate());
-        profileItem.setEnd(isEnd());
-        profileItem.setAmountPerMonth(getAmountPerMonth());
-        profileItem.setName(getName());
-        profileItem.setCreated(getCreated());
-        profileItem.setModified(getModified());
-        profileItem.setUid(getUid());
-        profileItem.setId(getId());
-        return profileItem;
-    }
-
-    @Transient
-    public void updateAmountPerMonth(BigDecimal newAmountPerMonth) {
-        setAmountPerMonth(newAmountPerMonth);
-    }
-
-    @Transient
-    public void addToAmountPerMonth(BigDecimal difference) {
-        updateAmountPerMonth(getAmountPerMonth().add(difference));
+        super(profile, dataCategory, dataItem);
     }
 
     @Transient
@@ -120,7 +65,7 @@ public class ProfileItem extends Item {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);
         obj.put("amountPerMonth", getAmountPerMonth());
-        obj.put("validFrom", getStartDateFormatted());
+        obj.put("validFrom", DAY_DATE_FMT.format(getStartDate()));
         obj.put("end", Boolean.toString(isEnd()));
         obj.put("dataItem", getDataItem().getIdentityJSONObject());
         if (detailed) {
@@ -134,7 +79,7 @@ public class ProfileItem extends Item {
         Element element = document.createElement("ProfileItem");
         buildElement(document, element, detailed);
         element.appendChild(APIUtils.getElement(document, "AmountPerMonth", getAmountPerMonth().toString()));
-        element.appendChild(APIUtils.getElement(document, "ValidFrom", getStartDateFormatted()));
+        element.appendChild(APIUtils.getElement(document, "ValidFrom", DAY_DATE_FMT.format(getStartDate())));
         element.appendChild(APIUtils.getElement(document, "End", Boolean.toString(isEnd())));
         element.appendChild(getDataItem().getIdentityElement(document));
         if (detailed) {
@@ -142,95 +87,7 @@ public class ProfileItem extends Item {
         }
         return element;
     }
-
-    @Transient
-    public void setStartDate(String startDateStr) {
-        setStartDate(EngineUtils.getFullDate(startDateStr));
-    }
-
-    @Transient
-    public String getStartDateFormatted() {
-        return EngineUtils.getFullDate(getStartDate());
-    }
-
-    @Transient
-    public String getStartDateISOFormatted() {
-        return EngineUtils.getISODate(getStartDate());
-    }
-
-    @Transient
-    public void setEnd(String endStr) {
-        setEnd(Boolean.valueOf(endStr));
-    }
-
-    @Transient
-    public String getPath() {
-        return getUid();
-    }
-
-    @Transient
-    public String getDisplayPath() {
-        return EngineUtils.getDisplayPath(this);
-    }
-
-    @Transient
-    public String getDisplayName() {
-        return EngineUtils.getDisplayName(this);
-    }
-
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
-    public DataItem getDataItem() {
-        return dataItem;
-    }
-
-    public void setDataItem(DataItem dataItem) {
-        if (dataItem != null) {
-            this.dataItem = dataItem;
-        }
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public boolean isEnd() {
-        return end;
-    }
-
-    public void setEnd(boolean end) {
-        this.end = end;
-    }
-
-    public BigDecimal getAmountPerMonth() {
-        return amountPerMonth;
-    }
-
-    public void setAmountPerMonth(BigDecimal amountPerMonth) {
-        if (amountPerMonth == null) {
-            amountPerMonth = ZERO;
-        }
-        this.amountPerMonth = amountPerMonth;
-    }
-
+    
     @Transient
     public String getType() {
         return ObjectType.PI.toString();

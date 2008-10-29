@@ -27,13 +27,12 @@ import gc.carbon.profile.BaseProfileResource;
  */
 public abstract class Renderer {
 
-
     protected BaseProfileResource resource;
 
     public Renderer(BaseProfileResource resource) {
         this.resource = resource;
     }
-
+    
     public abstract JSONObject getJSONObject()  throws JSONException;
 
     public abstract Element getElement(Document document);

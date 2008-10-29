@@ -20,11 +20,16 @@
 package gc.carbon.profile;
 
 import com.jellymold.utils.BaseResource;
+import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
+import com.jellymold.kiwi.Environment;
 import gc.carbon.data.Calculator;
 import gc.carbon.data.ItemValue;
+import gc.carbon.data.DataService;
 import gc.carbon.path.PathItem;
 import gc.carbon.path.PathItemService;
+import gc.carbon.profile.renderer.RendererFactory;
+import gc.carbon.profile.renderer.Renderer;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -40,13 +45,15 @@ import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 
 @Name("profileItemResource")
 @Scope(ScopeType.EVENT)
-public class ProfileItemResource extends BaseResource implements Serializable {
+public class ProfileItemResource extends BaseProfileResource implements Serializable {
 
     private final static Logger log = Logger.getLogger(ProfileItemResource.class);
 
@@ -68,6 +75,17 @@ public class ProfileItemResource extends BaseResource implements Serializable {
     @In
     private PathItem pathItem;
 
+    @In
+    private Environment environment;
+
+    @In(create = true)
+    private EntityManager entityManager;
+
+    @In(create = true)
+    private DataService dataService;
+
+    private Renderer renderer;
+
     public ProfileItemResource() {
         super();
     }
@@ -81,6 +99,7 @@ public class ProfileItemResource extends BaseResource implements Serializable {
         super.init(context, request, response);
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
+        renderer = RendererFactory.createProfileItemRenderer(this);
     }
 
     @Override
@@ -106,22 +125,12 @@ public class ProfileItemResource extends BaseResource implements Serializable {
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        JSONObject obj = new JSONObject();
-        ProfileItem profileItem = profileBrowser.getProfileItem();
-        obj.put("profileItem", profileItem.getJSONObject());
-        obj.put("path", pathItem.getFullPath());
-        obj.put("profile", profileBrowser.getProfile().getIdentityJSONObject());
-        return obj;
+        return renderer.getJSONObject();
     }
 
     @Override
     public Element getElement(Document document) {
-        ProfileItem profileItem = profileBrowser.getProfileItem();
-        Element element = document.createElement("ProfileItemResource");
-        element.appendChild(profileItem.getElement(document));
-        element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
-        element.appendChild(profileBrowser.getProfile().getIdentityElement(document));
-        return element;
+        return renderer.getElement(document);
     }
 
     @Override
@@ -181,18 +190,25 @@ public class ProfileItemResource extends BaseResource implements Serializable {
     }
 
     protected void updateProfileItem(ProfileItem profileItem, Form form) {
-        // update 'name' value
         Set<String> names = form.getNames();
+
+        // update 'name' value
         if (names.contains("name")) {
             profileItem.setName(form.getFirstValue("name"));
         }
-        // update 'validFrom' value
-        if (names.contains("validFrom")) {
-            profileItem.setStartDate(form.getFirstValue("validFrom"));
+        // update 'startDate' value
+        if (names.contains("startDate")) {
+            profileItem.setStartDate(new StartEndDate(form.getFirstValue("validFrom")));
         }
+
         // update 'end' value
         if (names.contains("end")) {
-            profileItem.setEnd(form.getFirstValue("end"));
+            profileItem.setEnd(Boolean.valueOf(form.getFirstValue("end")));
+        }
+
+        // update 'endDate' value
+        if (names.contains("endDate")) {
+            profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
         }
     }
 
@@ -213,5 +229,45 @@ public class ProfileItemResource extends BaseResource implements Serializable {
         } else {
             notAuthorized();
         }
+    }
+
+    public List<ProfileItem> getProfileItems() {
+        return null;
+    }
+
+    public ProfileSheetService getProfileSheetService() {
+        return profileSheetService;
+    }
+
+    public ProfileBrowser getProfileBrowser() {
+        return profileBrowser;
+    }
+
+    public PathItem getPathItem() {
+        return pathItem;
+    }
+
+    public Pager getPager() {
+        return getPager(profileBrowser.getItemsPerPage(getRequest()));
+    }
+
+    public ProfileService getProfileService() {
+        return profileService;
+    }
+
+    public DataService getDataService() {
+        return dataService;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public Calculator getCalculator() {
+        return calculator;
+    }
+
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 }

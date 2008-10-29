@@ -71,6 +71,12 @@ public class ItemValue implements PersistentObject, Pathable {
     @Column(name = "MODIFIED")
     private Date modified = Calendar.getInstance().getTime();
 
+    @Column(name = "UNIT")
+    private String unit;
+
+    @Column(name = "PER_UNIT")
+    private String perUnit;
+
     public ItemValue() {
         super();
         setUid(UidGen.getUid());
@@ -255,5 +261,34 @@ public class ItemValue implements PersistentObject, Pathable {
     @Transient
     public ObjectType getObjectType() {
         return ObjectType.IV;
+    }
+
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) throws IllegalArgumentException {
+        if (!itemValueDefinition.getUnitDefinition().has(unit))
+            throw new IllegalArgumentException();
+        this.unit = unit;
+    }
+
+    public String getPerUnit() {
+        return perUnit;
+    }
+
+    public void setPerUnit(String perUnit) throws IllegalArgumentException {
+        if (!itemValueDefinition.getPerUnitDefinition().has(perUnit))
+            throw new IllegalArgumentException();
+        this.perUnit = perUnit;
+    }
+
+    public boolean hasUnits() {
+        return itemValueDefinition.getUnitDefinition() != null;
+    }
+
+    public boolean hasPerUnits() {
+        return itemValueDefinition.getPerUnitDefinition() != null;
     }
 }

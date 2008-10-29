@@ -89,8 +89,6 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     private Map<MediaType, Acceptor> acceptors;
 
-    private DateTimeBrowser dateTimeBrowser;
-
     public ProfileCategoryResource() {
         super();
     }
@@ -103,7 +101,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
-        dateTimeBrowser = new DateTimeBrowser(request);
+        profileBrowser.setProfileDate(request.getResourceRef().getQueryAsForm());
         setPage(request);
         setAcceptors();
         setRenderStrategy();
@@ -134,7 +132,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     public Map<String, Object> getTemplateValues() {
         Profile profile = profileBrowser.getProfile();
         DataCategory dataCategory = profileBrowser.getDataCategory();
-        Sheet sheet = profileSheetService.getSheet(profile, dataCategory, dateTimeBrowser.getStartDate().toDate());
+        Sheet sheet = profileSheetService.getSheet(profile, dataCategory, profileBrowser.getProfileDate());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", profileBrowser);
         values.put("profile", profile);
@@ -295,7 +293,4 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
         return entityManager;
     }
 
-    public DateTimeBrowser getDateTimeBrowser() {
-        return dateTimeBrowser;
-    }
 }

@@ -26,6 +26,7 @@ import com.jellymold.utils.domain.UidGen;
 import com.jellymold.kiwi.Environment;
 import gc.carbon.ObjectType;
 import gc.carbon.ValueDefinition;
+import gc.carbon.UnitDefinition;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -81,6 +82,14 @@ public class ItemValueDefinition implements PersistentObject {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "VALUE_DEFINITION_ID")
     private ValueDefinition valueDefinition;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "UNIT_DEFINITION_ID")
+    private UnitDefinition unitDefinition;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "PER_UNIT_DEFINITION_ID")
+    private UnitDefinition perUnitDefinition;
 
     @Column(name = "NAME")
     private String name = "";
@@ -365,4 +374,22 @@ public class ItemValueDefinition implements PersistentObject {
     public ObjectType getObjectType() {
         return ObjectType.IVD;
     }
+
+
+    public UnitDefinition getPerUnitDefinition() {
+        return perUnitDefinition;
+    }
+
+    public void setPerUnitDefinition(UnitDefinition perUnitDefinition) {
+        this.perUnitDefinition = perUnitDefinition;
+    }
+
+    public UnitDefinition getUnitDefinition() {
+        return unitDefinition;
+    }
+
+    public void setUnitDefinition(UnitDefinition unitDefinition) {
+        this.unitDefinition = unitDefinition;
+    }
+
 }

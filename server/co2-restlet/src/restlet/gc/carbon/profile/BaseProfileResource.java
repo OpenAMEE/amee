@@ -12,6 +12,7 @@ import com.jellymold.kiwi.Environment;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Form;
 
 import javax.persistence.EntityManager;
 
@@ -64,5 +65,7 @@ public abstract class BaseProfileResource extends BaseResource {
     
     public abstract EntityManager getEntityManager();
 
-    public abstract DateTimeBrowser getDateTimeBrowser();
+    public Form getForm() {
+        return new ProfileForm(super.getForm());
+    }
 }

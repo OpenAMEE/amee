@@ -6,11 +6,10 @@ import org.json.JSONException;
 import org.restlet.data.Method;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import gc.carbon.profile.Profile;
-import gc.carbon.profile.ProfileItem;
-import gc.carbon.profile.ProfileCategoryResource;
+import gc.carbon.profile.*;
 import gc.carbon.data.DataCategory;
 import gc.carbon.path.PathItem;
+import gc.carbon.EngineUtils;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
@@ -49,7 +48,7 @@ public class ProfileCategoryRenderer extends Renderer {
 
         // add objects
         obj.put("path", resource.getPathItem().getFullPath());
-        obj.put(resource.getDateTimeBrowser().getProfileDate().getName(), resource.getDateTimeBrowser().getProfileDate().toString());
+        obj.put("profileDate", resource.getProfileBrowser().getProfileDate());
 
         // add relevant Profile info depending on whether we are at root
         if (resource.getPathItem().getParent() == null) {
@@ -74,7 +73,7 @@ public class ProfileCategoryRenderer extends Renderer {
             children.put("dataCategories", dataCategories);
 
             // add Sheet containing Profile Items & totalAmountPerMonth
-            Sheet sheet = resource.getProfileSheetService().getSheet(profile, dataCategory, resource.getDateTimeBrowser().getProfileDate().toDate());
+            Sheet sheet = resource.getProfileSheetService().getSheet(profile, dataCategory, resource.getProfileBrowser().getProfileDate());
             if (sheet != null) {
                 Pager pager = resource.getPager();
                 sheet = Sheet.getCopy(sheet, pager);
@@ -122,7 +121,9 @@ public class ProfileCategoryRenderer extends Renderer {
         element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
 
         // add profile date
-        element.appendChild(resource.getDateTimeBrowser().getProfileDate().toXML(document));
+        //element.appendChild(resource.getDateTimeBrowser().getProfileDate().toXML(document));
+                // add profile date
+        element.appendChild(APIUtils.getElement(document, "ProfileDate",resource.getProfileBrowser().getProfileDate().toString()));
 
         // add relevant Profile info depending on whether we are at root
         if (resource.getPathItem().getParent() == null) {
@@ -148,7 +149,7 @@ public class ProfileCategoryRenderer extends Renderer {
             childrenElement.appendChild(dataCategoriesElement);
 
             // get Sheet containing Profile Items
-            Sheet sheet = resource.getProfileSheetService().getSheet(profile, dataCategory, resource.getDateTimeBrowser().getProfileDate().toDate());
+            Sheet sheet = resource.getProfileSheetService().getSheet(profile, dataCategory, resource.getProfileBrowser().getProfileDate());
             if (sheet != null) {
                 Pager pager = resource.getPager();
                 sheet = Sheet.getCopy(sheet, pager);

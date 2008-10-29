@@ -24,6 +24,7 @@
         <class>com.jellymold.plum.SkinFileVersion</class>
         <class>com.jellymold.utils.domain.ClassAlias</class>        
         <class>gc.carbon.ValueDefinition</class>
+        <class>gc.carbon.UnitDefinition</class>
         <class>gc.carbon.data.Algorithm</class>
         <class>gc.carbon.data.DataCategory</class>
         <class>gc.carbon.data.DataItem</class>

@@ -28,7 +28,9 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.restlet.data.Form;
 
+import java.util.Calendar;
 
 @Name("profileBrowser")
 @Scope(ScopeType.EVENT)
@@ -70,6 +72,10 @@ public class ProfileBrowser extends BaseBrowser {
     private String profileItemValueUid = null;
 
     private ResourceActions profileItemValueActions = new ResourceActions("profileItemValue");
+
+    // profile date
+    private java.util.Date profileDate = Calendar.getInstance().getTime();
+    // TODO: private int profileDatePrecision = Calendar.MONTH;
 
     // General
 
@@ -158,6 +164,22 @@ public class ProfileBrowser extends BaseBrowser {
 
     public ResourceActions getProfileItemValueActions() {
         return profileItemValueActions;
+    }
+
+    // misc.
+
+    /**
+     * Set profileDate based on query string
+     *
+     * @param form
+     */
+    public void setProfileDate(Form form) {
+        String profileDateStr = form.getFirstValue("profileDate");
+        profileDate = new ProfileDate(profileDateStr);
+    }
+
+    public java.util.Date getProfileDate() {
+        return profileDate;
     }
 
 }

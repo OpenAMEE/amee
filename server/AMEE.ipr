@@ -474,7 +474,6 @@
         <root url="jar://$PROJECT_DIR$/../amee/lib/restlet/lib/org.restlet.ext.fileupload_1.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/jboss-seam/lib/servlet-api.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/jetty-6.1/lib/jetty-6.1.2rc4.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../amee/lib/ehcache/ehcache-1.3.0.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/backport-util-concurrent/backport-util-concurrent.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/restlet/lib/org.json_2.0/org.json.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/mysql/mysql-connector-java-5.1.0-bin.jar!/" />
@@ -505,6 +504,9 @@
         <root url="jar://$PROJECT_DIR$/../amee/lib/jodatime/joda-time-1.5.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/commons-lang/commons-lang-2.4.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/testng/testng-5.8-jdk15.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/spring/spring-2.5.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/ehcache/ehcache-1.4.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/jboss-seam/jboss-seam-ioc.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

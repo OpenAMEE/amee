@@ -1,6 +1,7 @@
 package gc.carbon.profile.renderer;
 
 import gc.carbon.profile.ProfileCategoryResource;
+import gc.carbon.profile.ProfileItemResource;
 
 /**
  * This file is part of AMEE.
@@ -24,11 +25,10 @@ import gc.carbon.profile.ProfileCategoryResource;
 public class RendererFactory {
 
     public static Renderer createProfileCategoryRenderer(ProfileCategoryResource resource) {
-
-        if (resource.getDateTimeBrowser().isCalendar()) {
-            return new ProfileCategoryCalendarRenderer(resource);
-        }  else {
            return new ProfileCategoryRenderer(resource);
-        }
+    }
+
+    public static Renderer createProfileItemRenderer(ProfileItemResource resource) {
+        return new ProfileItemRenderer(resource);    
     }
 }
