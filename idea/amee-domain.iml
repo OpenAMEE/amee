@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="BuildJarSettings">
+    <containerInfo />
+    <setting name="jarUrl" value="file://$MODULE_DIR$/../server/co2-domain/amee-domain.jar" />
+    <setting name="buildJar" value="true" />
+    <setting name="mainClass" value="" />
+  </component>
+  <component name="DBNavigator.Module.ConnectionManager">
+    <connections />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../server/co2-domain">
+      <sourceFolder url="file://$MODULE_DIR$/../server/co2-domain/src/domain" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../server/co2-domain/src/resources" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="kiwi-domain" />
+    <orderEntry type="module" module-name="sheet-domain" />
+    <orderEntry type="module" module-name="utils" />
+    <orderEntry type="library" name="spring" level="project" />
+    <orderEntry type="library" name="global" level="project" />
+    <orderEntry type="library" name="jee" level="project" />
+    <orderEntry type="library" name="hibernate" level="project" />
+    <orderEntry type="library" name="joda" level="project" />
+    <orderEntryProperties />
+  </component>
+</module>
+

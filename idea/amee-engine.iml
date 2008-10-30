@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="BuildJarSettings">
+    <containerInfo />
+    <setting name="jarUrl" value="file://$MODULE_DIR$/../server/co2-engine/amee-engine.jar" />
+    <setting name="buildJar" value="true" />
+    <setting name="mainClass" value="" />
+  </component>
+  <component name="DBNavigator.Module.ConnectionManager">
+    <connections />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../server/co2-engine">
+      <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/src/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/src/service" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="amee-bootstrap" />
+    <orderEntry type="module" module-name="amee-domain" />
+    <orderEntry type="module" module-name="amee-restlet" />
+    <orderEntry type="module" module-name="amee-service" />
+    <orderEntry type="module" module-name="cache-restlet" />
+    <orderEntry type="module" module-name="cache-service" />
+    <orderEntry type="module" module-name="engine-service" />
+    <orderEntry type="module" module-name="idea" />
+    <orderEntry type="module" module-name="kiwi-domain" />
+    <orderEntry type="module" module-name="kiwi-restlet" />
+    <orderEntry type="module" module-name="kiwi-service" />
+    <orderEntry type="module" module-name="org.restlet.ext.seam" />
+    <orderEntry type="module" module-name="plum-domain" />
+    <orderEntry type="module" module-name="plum-restlet" />
+    <orderEntry type="module" module-name="plum-service" />
+    <orderEntry type="module" module-name="sheet-domain" />
+    <orderEntry type="module" module-name="utils" />
+    <orderEntry type="library" name="antlr" level="project" />
+    <orderEntry type="library" name="commons-cli" level="project" />
+    <orderEntry type="library" name="ehcache" level="project" />
+    <orderEntry type="library" name="freemarker" level="project" />
+    <orderEntry type="library" name="global" level="project" />
+    <orderEntry type="library" name="hibernate" level="project" />
+    <orderEntry type="library" name="janino" level="project" />
+    <orderEntry type="library" name="javacsv" level="project" />
+    <orderEntry type="library" name="jdom" level="project" />
+    <orderEntry type="library" name="jee" level="project" />
+    <orderEntry type="library" name="jetty" level="project" />
+    <orderEntry type="library" name="jscience" level="project" />
+    <orderEntry type="library" name="json" level="project" />
+    <orderEntry type="library" name="jts" level="project" />
+    <orderEntry type="library" name="memcached" level="project" />
+    <orderEntry type="library" name="mvel" level="project" />
+    <orderEntry type="library" name="mysql-connector-java" level="project" />
+    <orderEntry type="library" name="restlet" level="project" />
+    <orderEntry type="library" name="spring" level="project" />
+    <orderEntry type="library" name="spring-runtime" level="project" />
+    <orderEntry type="library" name="svnkit" level="project" />
+    <orderEntry type="library" name="wrapper" level="project" />
+    <orderEntryProperties />
+  </component>
+</module>
+

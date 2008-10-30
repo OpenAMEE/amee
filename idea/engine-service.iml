@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="BuildJarSettings">
+    <containerInfo />
+    <setting name="jarUrl" value="file://$MODULE_DIR$/../../lib/pp/jm/engine-service.jar" />
+    <setting name="buildJar" value="true" />
+    <setting name="mainClass" value="" />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../projects/engine/service">
+      <sourceFolder url="file://$MODULE_DIR$/../projects/engine/service/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../projects/engine/service/java_seam_2" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../projects/engine/service/resources" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="cache-restlet" />
+    <orderEntry type="module" module-name="kiwi-domain" />
+    <orderEntry type="module" module-name="kiwi-service" />
+    <orderEntry type="module" module-name="kiwi-restlet" />
+    <orderEntry type="module" module-name="plum-restlet" />
+    <orderEntry type="module" module-name="plum-domain" />
+    <orderEntry type="module" module-name="utils" />
+    <orderEntry type="module" module-name="org.restlet.ext.seam" />
+    <orderEntry type="library" name="spring" level="project" />
+    <orderEntry type="library" name="global" level="project" />
+    <orderEntry type="library" name="jee" level="project" />
+    <orderEntry type="library" name="hibernate" level="project" />
+    <orderEntry type="library" name="restlet" level="project" />
+    <orderEntry type="library" name="freemarker" level="project" />
+    <orderEntry type="library" name="ehcache" level="project" />
+    <orderEntry type="library" name="wrapper" level="project" />
+    <orderEntryProperties />
+  </component>
+</module>
+

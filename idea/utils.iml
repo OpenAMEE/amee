@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="BuildJarSettings">
+    <containerInfo />
+    <setting name="jarUrl" value="file://$MODULE_DIR$/../lib/amee/utils.jar" />
+    <setting name="buildJar" value="true" />
+    <setting name="mainClass" value="" />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../projects/utils">
+      <sourceFolder url="file://$MODULE_DIR$/../projects/utils/src/domain" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../projects/utils/src/ehcache" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../projects/utils/src/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../projects/utils/src/restlet" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../projects/utils/src/search" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../projects/utils/src/service" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/../projects/utils/src/memcached" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="spring" level="project" />
+    <orderEntry type="library" name="global" level="project" />
+    <orderEntry type="library" name="jee" level="project" />
+    <orderEntry type="library" name="hibernate" level="project" />
+    <orderEntry type="library" name="restlet" level="project" />
+    <orderEntry type="library" name="ehcache" level="project" />
+    <orderEntry type="library" name="freemarker" level="project" />
+    <orderEntryProperties />
+  </component>
+</module>
+

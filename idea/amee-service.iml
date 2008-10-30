@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="BuildJarSettings">
+    <containerInfo />
+    <setting name="jarUrl" value="file://$MODULE_DIR$/../server/co2-service/amee-service.jar" />
+    <setting name="buildJar" value="true" />
+    <setting name="mainClass" value="" />
+  </component>
+  <component name="DBNavigator.Module.ConnectionManager">
+    <connections />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../server/co2-service">
+      <sourceFolder url="file://$MODULE_DIR$/../server/co2-service/src/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../server/co2-service/src/service" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="amee-domain" />
+    <orderEntry type="module" module-name="kiwi-domain" />
+    <orderEntry type="module" module-name="sheet-domain" />
+    <orderEntry type="module" module-name="utils" />
+    <orderEntry type="library" name="spring" level="project" />
+    <orderEntry type="library" name="global" level="project" />
+    <orderEntry type="library" name="jee" level="project" />
+    <orderEntry type="library" name="hibernate" level="project" />
+    <orderEntry type="library" name="jscience" level="project" />
+    <orderEntry type="library" name="json" level="project" />
+    <orderEntry type="library" name="javacsv" level="project" />
+    <orderEntry type="library" name="rhino" level="project" />
+    <orderEntryProperties />
+  </component>
+</module>
+
