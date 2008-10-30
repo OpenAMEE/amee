@@ -1,0 +1,552 @@
+<ehcache>
+
+    <!--
+        **** CO2 Profile capacity assumptions (estimates) ****
+        50 concurrent Profiles (P)
+        50 Profile Items (PI) per P
+        2500 total PIs (Ps * PIs per P)
+        3 Profile Item Values (PIV) per PI
+        7,500 total PIVs (total PIs * PIVs per PI)
+
+        **** CO2 Data capacity (collected from DB) ****
+        5 Environments
+        20 Data Categories
+        20 Item Definitions
+        20 Algorithms
+        20 Value Types
+        100 Item Value Definitions
+        4000 Data Items (DI)
+        26,000 Data Item Values (DIV)
+
+        **** Aggregates ****
+        6,500 Items (DIs + PIs)
+        33,500 Item Values (PIVs + DIVs)
+
+        **** Queries?? ****
+
+        **** Application objects ****
+        20 Data Sheets (= Data Categories)
+        2000 Profile Sheets (Profiles * DCs * 2 dates)
+        50 Profile PIGs (= Profiles)
+
+        -->
+
+    <diskStore path="java.io.tmp"/>
+
+    <!-- **** Cluster **** -->
+
+    <cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+            properties="peerDiscovery=automatic, multicastGroupAddress=230.0.0.1, multicastGroupPort=4446, timeToLive=32"/>
+
+    <cacheManagerPeerListenerFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"/>
+
+    <!-- **** Default cache **** -->
+
+    <defaultCache maxElementsInMemory="4000"
+                  eternal="false"
+                  timeToIdleSeconds="300"
+                  timeToLiveSeconds="600"
+                  overflowToDisk="false">
+    </defaultCache>
+
+    <!-- **** Domain caches **** -->
+
+    <!-- Environment -->
+    <cache name="gc.carbon.Environment"
+           maxElementsInMemory="5"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="gc.carbon.Environment.itemDefinitions"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="gc.carbon.Environment.dataCategories"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="gc.carbon.Environment.valueTypes"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- ValueType -->
+    <cache name="gc.carbon.ValueType"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Algorithm -->
+    <cache name="gc.carbon.data.Algorithm"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- DataCategory -->
+    <cache name="gc.carbon.data.DataCategory"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Item -->
+    <cache name="gc.carbon.data.Item"
+           maxElementsInMemory="6500"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                                   properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>
+    </cache>
+    <cache name="gc.carbon.data.Item.itemValues"
+           maxElementsInMemory="33500"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                                   properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>
+    </cache>
+
+    <!-- ItemDefinition -->
+    <cache name="gc.carbon.data.ItemDefinition"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="gc.carbon.data.ItemDefinition.dataCategories"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="gc.carbon.data.ItemDefinition.algorithms"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="gc.carbon.data.ItemDefinition.itemValueDefinitions"
+           maxElementsInMemory="100"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- ItemValue -->
+    <cache name="gc.carbon.data.ItemValue"
+           maxElementsInMemory="33500"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                                   properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>
+    </cache>
+
+    <!-- ItemValueDefinition -->
+    <cache name="gc.carbon.data.ItemValueDefinition"
+           maxElementsInMemory="100"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Profile -->
+    <cache name="gc.carbon.profile.Profile"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                                   properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>
+    </cache>
+
+    <!-- Action -->
+    <cache name="com.jellymold.kiwi.Action"
+           maxElementsInMemory="100"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Group -->
+    <cache name="com.jellymold.kiwi.Group"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.kiwi.Group.groupMembers"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.kiwi.Group.roles"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- GroupMember -->
+    <cache name="com.jellymold.kiwi.GroupMember"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.kiwi.GroupMember.roles"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Role -->
+    <cache name="com.jellymold.kiwi.Role"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.kiwi.Role.actions"
+           maxElementsInMemory="100"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Site -->
+    <cache name="com.jellymold.kiwi.Site"
+           maxElementsInMemory="5"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.kiwi.Site.siteAliases"
+           maxElementsInMemory="25"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.kiwi.Site.groups"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.kiwi.Site.users"
+           maxElementsInMemory="10"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.kiwi.Site.siteApplications"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- SiteAlias -->
+    <cache name="com.jellymold.kiwi.SiteAlias"
+           maxElementsInMemory="25"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- SiteApplication -->
+    <cache name="com.jellymold.kiwi.SiteApplication"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.kiwi.SiteApplication.actions"
+           maxElementsInMemory="100"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- User -->
+    <cache name="com.jellymold.kiwi.User"
+           maxElementsInMemory="10"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.kiwi.User.groupMembers"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Skin -->
+    <cache name="com.jellymold.plum.Skin"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.plum.Skin.children"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.plum.Skin.skinFiles"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.plum.Skin.importedSkins"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- SkinFile -->
+    <cache name="com.jellymold.plum.SkinFile"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache name="com.jellymold.plum.SkinFile.skinFileVersions"
+           maxElementsInMemory="400"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- SkinFileVersion -->
+    <cache name="com.jellymold.plum.SkinFileVersion"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- **** Queries **** -->
+
+    <!-- Query Cache for DataService -->
+    <cache name="queries.dataService"
+           maxElementsInMemory="1000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Query Cache for ProfileService -->
+    <cache name="queries.profileService"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                                   properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>
+    </cache>
+
+    <!-- Query Cache for AuthService -->
+    <cache name="queries.authService"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Query Cache for GroupService -->
+    <cache name="queries.groupService"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Query Cache for SiteService -->
+    <cache name="queries.siteService"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Query Cache for SkinService -->
+    <cache name="queries.skinService"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- **** Application caches **** -->
+
+    <!-- Cache for Profile Path Item Groups -->
+    <cache name="ProfilePIGs"
+           maxElementsInMemory="50"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                                   properties="replicateAsynchronously=true, replicatePuts=false, replicateUpdates=false, replicateUpdatesViaCopy=false, replicateRemovals=true"/>
+    </cache>
+
+    <!-- Cache for Data Sheets -->
+    <cache name="DataSheets"
+           maxElementsInMemory="20"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Cache for Environment Path Item Groups -->
+    <cache name="EnvironmentPIGs"
+           maxElementsInMemory="5"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Cache for Profile Sheets -->
+    <cache name="ProfileSheets"
+           maxElementsInMemory="2000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                                   properties="replicateAsynchronously=true, replicatePuts=false, replicateUpdates=false, replicateUpdatesViaCopy=false, replicateRemovals=true"/>
+    </cache>
+
+    <!-- Cache for Skin File Wrappers -->
+    <cache name="SkinFileWrappers"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+</ehcache>

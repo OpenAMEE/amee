@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+             version="1.0">
+    <persistence-unit name="entityManager">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <jta-data-source>java:/GlobalCoolDS</jta-data-source>
+        <class>com.jellymold.kiwi.Action</class>
+        <class>com.jellymold.kiwi.Group</class>
+        <class>com.jellymold.kiwi.GroupMember</class>
+        <class>com.jellymold.kiwi.Role</class>
+        <class>com.jellymold.kiwi.SiteApplication</class>
+        <class>com.jellymold.kiwi.SiteApplicationTarget</class>
+        <class>com.jellymold.kiwi.Site</class>
+        <class>com.jellymold.kiwi.SiteAlias</class>
+        <class>com.jellymold.plum.Skin</class>
+        <class>com.jellymold.plum.SkinFile</class>
+        <class>com.jellymold.plum.SkinFileVersion</class>
+        <class>com.jellymold.kiwi.User</class>
+        <properties>
+            <property name="jboss.entity.manager.factory.jndi.name" value="java:/EntityManagerFactory"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="hibernate.transaction.manager_lookup_class"
+                      value="org.hibernate.transaction.JBossTransactionManagerLookup"/>
+            <property name="hibernate.transaction.flush_before_completion" value="true"/>
+            <!--<property name="hibernate.hbm2ddl.auto" value="create"/>-->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <!--<property name="hibernate.hbm2ddl.auto" value="create-drop"/>-->
+            <property name="hibernate.max_fetch_depth" value="3"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.cache.provider_class" value="net.sf.ehcache.hibernate.SingletonEhCacheProvider"/>
+            <property name="hibernate.cache.use_query_cache" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
