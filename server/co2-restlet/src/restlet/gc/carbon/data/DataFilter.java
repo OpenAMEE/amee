@@ -25,9 +25,8 @@ import gc.carbon.CarbonBeans;
 import gc.carbon.path.PathItem;
 import gc.carbon.path.PathItemGroup;
 import gc.carbon.path.PathItemService;
-import org.apache.log4j.Logger;
-import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.Component;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
@@ -37,7 +36,7 @@ import java.util.List;
 
 public class DataFilter extends BaseFilter {
 
-    private final static Logger log = Logger.getLogger(DataFilter.class);
+    private final Log log = LogFactory.getLog(getClass());
 
     public DataFilter() {
         super();
@@ -47,23 +46,24 @@ public class DataFilter extends BaseFilter {
         super(application);
     }
 
-    protected void beforeHandle(Request request, Response response) {
+    protected int beforeHandle(Request request, Response response) {
         log.debug("before handle");
-
-        rewrite(request);
+        return rewrite(request);
     }
 
     protected void afterHandle(Request request, Response response) {
         log.debug("after handle");
     }
 
-    protected void rewrite(Request request) {
+    protected int rewrite(Request request) {
         log.debug("start data path rewrite");
         String path = null;
-        Environment environment = (Environment) Component.getInstance("environment");
+        // TODO: Springify
+        Environment environment = null; // (Environment) Component.getInstance("environment");
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
-        removeEmptySegmentAtEnd(segments);
+        // TODO: Springify
+        // removeEmptySegmentAtEnd(segments);
         segments.remove(0); // remove '/data'
         if (!skipRewrite(segments)) {
             // handle suffixes
@@ -74,7 +74,8 @@ public class DataFilter extends BaseFilter {
             PathItem pathItem = pathItemGroup.findBySegments(segments);
             if (pathItem != null) {
                 // found matching path, rewrite
-                Contexts.getEventContext().set("pathItem", pathItem);
+                // TODO: Springify
+                // Contexts.getEventContext().set("pathItem", pathItem);
                 path = pathItem.getInternalPath() + suffix;
             }
         }
@@ -84,6 +85,7 @@ public class DataFilter extends BaseFilter {
             reference.setPath("/data" + path);
         }
         log.debug("end data path rewrite");
+        return CONTINUE;
     }
 
     protected boolean skipRewrite(List<String> segments) {

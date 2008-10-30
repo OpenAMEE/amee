@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GroupUsers>
+    <GroupUser>
+        <Group>
+            <Name>Administrators</Name>
+        </Group>
+        <User>
+            <Username>admin</Username>
+        </User>
+    </GroupUser>
+    <GroupUser>
+        <Group>
+            <Name>Moderators</Name>
+        </Group>
+        <User>
+            <Username>moderator</Username>
+        </User>
+        <Roles>
+            <Role>
+                <Name>Moderator</Name>
+            </Role>
+        </Roles>
+    </GroupUser>
+    <GroupUser>
+        <Group>
+            <Name>Editors</Name>
+        </Group>
+        <User>
+            <Username>editor</Username>
+        </User>
+        <Roles>
+            <Role>
+                <Name>Editor</Name>
+            </Role>
+        </Roles>
+    </GroupUser>
+</GroupUsers>

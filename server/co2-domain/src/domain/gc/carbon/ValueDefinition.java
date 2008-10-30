@@ -19,14 +19,13 @@
 */
 package gc.carbon;
 
-import com.jellymold.sheet.ValueType;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
+import com.jellymold.utils.ValueType;
 import com.jellymold.kiwi.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.jboss.seam.annotations.Name;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -48,7 +47,6 @@ import java.util.Date;
 
 @Entity
 @Table(name = "VALUE_DEFINITION")
-@Name("valueDefinition")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ValueDefinition implements PersistentObject {
 

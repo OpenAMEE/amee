@@ -25,16 +25,15 @@ import com.jellymold.kiwi.User;
 import com.jellymold.utils.Pager;
 import gc.carbon.data.*;
 import gc.carbon.path.PathItemService;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.Scope;
-import org.restlet.ext.seam.SeamController;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.*;
 
@@ -50,31 +49,31 @@ import java.util.*;
  * TODO: Any other cache operations to put here?
  * TODO: Remove site and group injection and make method calls explicit.
  */
-@Name("profileService")
-@Scope(ScopeType.EVENT)
+@Service
+@Scope("prototype")
 public class ProfileService implements Serializable {
 
-    private final static Logger log = Logger.getLogger(ProfileService.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @PersistenceContext
     private EntityManager entityManager;
 
-    @In(create = true)
+    @Autowired
     private DataService dataService;
 
-    @In(create = true)
+    @Autowired
     private PathItemService pathItemService;
 
-    @In(create = true)
+    @Autowired
     private ProfileSheetService profileSheetService;
 
-    @In(required = false)
+    @Autowired(required = false)
     private Environment environment;
 
-    @In(required = false)
+    @Autowired(required = false)
     private Group group;
 
-    @In(required = false)
+    @Autowired(required = false)
     private User user;
 
     public ProfileService() {
@@ -83,7 +82,8 @@ public class ProfileService implements Serializable {
 
     // Handle events
 
-    @Observer("beforeDataItemDelete")
+    // TODO: Springify
+    // @Observer("beforeDataItemDelete")
     public void beforeDataItemDelete(DataItem dataItem) {
         log.debug("beforeDataItemDelete");
         // remove ItemValues for ProfileItems
@@ -101,7 +101,8 @@ public class ProfileService implements Serializable {
                 .executeUpdate();
     }
 
-    @Observer("beforeDataItemsDelete")
+    // TODO: Springify
+    // @Observer("beforeDataItemsDelete")
     public void beforeDataItemsDelete(ItemDefinition itemDefinition) {
         log.debug("beforeDataItemsDelete");
         // remove ItemValues for ProfileItems
@@ -119,7 +120,8 @@ public class ProfileService implements Serializable {
                 .executeUpdate();
     }
 
-    @Observer("beforeDataCategoryDelete")
+    // TODO: Springify
+    // @Observer("beforeDataCategoryDelete")
     public void beforeDataCategoryDelete(DataCategory dataCategory) {
         log.debug("beforeDataCategoryDelete");
         // remove ItemValues for ProfileItems
@@ -137,7 +139,8 @@ public class ProfileService implements Serializable {
                 .executeUpdate();
     }
 
-    @Observer("beforeUserDelete")
+    // TODO: Springify
+    // @Observer("beforeUserDelete")
     public void beforeUserDelete(User user) {
         log.debug("beforeUserDelete");
         List<Profile> profiles = entityManager.createQuery(
@@ -154,7 +157,8 @@ public class ProfileService implements Serializable {
 
     }
 
-    @Observer("beforeGroupDelete")
+    // TODO: Springify
+    // @Observer("beforeGroupDelete")
     public void beforeGroupDelete(Group group) {
         log.debug("beforeGroupDelete");
         List<Profile> profiles = entityManager.createQuery(
@@ -170,7 +174,8 @@ public class ProfileService implements Serializable {
         }
     }
 
-    @Observer("beforeEnvironmentDelete")
+    // TODO: Springify
+    // @Observer("beforeEnvironmentDelete")
     public void beforeEnvironmentDelete(Environment environment) {
         log.debug("beforeEnvironmentDelete");
         List<Profile> profiles = entityManager.createQuery(
@@ -467,7 +472,8 @@ public class ProfileService implements Serializable {
                 .getResultList();
         if (itemValueDefinitions.size() > 0) {
             // ensure transaction has been started
-            SeamController.getInstance().beginTransaction();
+            // TODO: Springify
+            // SeamController.getInstance().beginTransaction();
             // create missing ItemValues
             for (ItemValueDefinition ivd : itemValueDefinitions) {
                 // start default value with value from ItemValueDefinition

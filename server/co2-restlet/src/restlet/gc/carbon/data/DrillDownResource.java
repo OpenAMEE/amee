@@ -23,11 +23,8 @@ import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
 import com.jellymold.utils.BaseResource;
 import gc.carbon.definition.DefinitionService;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +34,9 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -46,22 +46,22 @@ import java.util.Set;
 
 // TODO: need to define actions for this resource
 
-@Name("drillDownResource")
-@Scope(ScopeType.EVENT)
+@Component
+@Scope("prototype")
 public class DrillDownResource extends BaseResource implements Serializable {
 
-    private final static Logger log = Logger.getLogger(DrillDownResource.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     private DefinitionService definitionService;
 
-    @In(create = true)
+    @Autowired
     private DataService dataService;
 
-    @In(create = true)
+    @Autowired
     private DataBrowser dataBrowser;
 
-    @In(create = true)
+    @Autowired
     private DrillDownService drillDownService;
 
     public DrillDownResource() {

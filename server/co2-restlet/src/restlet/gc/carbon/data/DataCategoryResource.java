@@ -26,13 +26,9 @@ import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.definition.DefinitionService;
 import gc.carbon.path.PathItem;
 import gc.carbon.path.PathItemService;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.util.XML;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,8 +37,12 @@ import org.restlet.data.*;
 import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -54,31 +54,32 @@ import java.util.Map;
  * TODO: may be a more elegant way to handle incoming representations of different media types
  * TODO: may be better to break this class down into components that handle post/put and json/xml individually
  */
-@Name("dataCategoryResource")
-@Scope(ScopeType.EVENT)
+@Component
+@Scope("prototype")
 public class DataCategoryResource extends BaseResource implements Serializable {
 
-    private final static Logger log = Logger.getLogger(DataCategoryResource.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @PersistenceContext
     private EntityManager entityManager;
 
-    @In(create = true)
+    @Autowired
     private DefinitionService definitionService;
 
-    @In(create = true)
+    @Autowired
     private DataService dataService;
 
-    @In(create = true)
+    @Autowired
     private DataBrowser dataBrowser;
 
-    @In(create = true)
+    @Autowired
     private DataSheetService dataSheetService;
 
-    @In(create = true)
+    @Autowired
     private PathItemService pathItemService;
 
-    @In
+    // TODO: Springify
+    // @In
     private PathItem pathItem;
 
     private DataCategory dataCategory;
@@ -392,7 +393,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         org.dom4j.Element itemElem;
         org.dom4j.Element valueElem;
         try {
-            rootElem = XML.getRootElement(entity.getStream());
+            rootElem = APIUtils.getRootElement(entity.getStream());
             if (rootElem.getName().equalsIgnoreCase("DataCategory")) {
                 // handle Data Categories
                 dataCategoriesElem = rootElem.element("DataCategories");

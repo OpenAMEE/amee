@@ -19,7 +19,6 @@
 */
 package gc.carbon.path;
 
-import com.jellymold.utils.cache.Cacheable;
 import com.jellymold.utils.cache.CacheableFactory;
 import com.jellymold.kiwi.Environment;
 import gc.carbon.definition.DefinitionService;
@@ -29,26 +28,26 @@ import gc.carbon.data.ItemValue;
 import gc.carbon.profile.Profile;
 import gc.carbon.profile.ProfileItem;
 import gc.carbon.profile.ProfileService;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-@Name("profilePIGFactory")
-@Scope(ScopeType.EVENT)
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+
+@Service
+@Scope("prototype")
 public class ProfilePIGFactory extends BasePIGFactory implements CacheableFactory {
 
-    @In(create = true)
+    @Autowired
     private DefinitionService definitionService;
 
-    @In(create = true)
+    @Autowired
     private DataService dataService;
 
-    @In(create = true)
+    @Autowired
     private ProfileService profileService;
 
     private Environment environment;
@@ -59,7 +58,7 @@ public class ProfilePIGFactory extends BasePIGFactory implements CacheableFactor
         super();
     }
 
-    public Cacheable createCacheable() {
+    public Object create() {
         PathItemGroup pathItemGroup = null;
         List<DataCategory> dataCategories = dataService.getDataCategories(environment);
         DataCategory rootDataCategory = findRootDataCategory(dataCategories);

@@ -5,7 +5,8 @@ import gc.carbon.profile.ProfileItem;
 import org.restlet.resource.Representation;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
  */
 public class ProfileCategoryJSONAcceptor extends Acceptor {
 
-    private final static Logger log = Logger.getLogger(ProfileCategoryJSONAcceptor.class);
+    private final Log log = LogFactory.getLog(getClass());
 
     public ProfileCategoryJSONAcceptor(ProfileCategoryResource resource) {
         super(resource);

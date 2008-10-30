@@ -20,27 +20,26 @@
 package gc.carbon.path;
 
 import com.jellymold.kiwi.Environment;
-import com.jellymold.utils.cache.Cacheable;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.data.DataCategory;
 import gc.carbon.data.DataItem;
 import gc.carbon.data.DataService;
 import gc.carbon.definition.DefinitionService;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import java.util.List;
 
-@Name("environmentPIGFactory")
-@Scope(ScopeType.EVENT)
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+
+@Service
+@Scope("prototype")
 public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFactory {
 
-    @In(create = true)
+    @Autowired
     private DefinitionService definitionService;
 
-    @In(create = true)
+    @Autowired
     private DataService dataService;
 
     private Environment environment;
@@ -50,7 +49,7 @@ public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFa
     }
 
     // TODO: This uses up lots of memory, so what?
-    public Cacheable createCacheable() {
+    public Object create() {
         PathItemGroup pathItemGroup = null;
         List<DataCategory> dataCategories = dataService.getDataCategories(environment);
         DataCategory rootDataCategory = findRootDataCategory(dataCategories);

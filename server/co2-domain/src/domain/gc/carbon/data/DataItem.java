@@ -19,12 +19,11 @@
 */
 package gc.carbon.data;
 
-import com.jellymold.sheet.Choice;
 import com.jellymold.utils.domain.APIUtils;
+import com.jellymold.sheet.Choice;
 import gc.carbon.EngineUtils;
 import gc.carbon.ObjectType;
 import org.hibernate.annotations.Index;
-import org.jboss.seam.annotations.Name;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -37,7 +36,6 @@ import javax.persistence.Transient;
 import java.util.Map;
 
 @Entity
-@Name("dataItem")
 @DiscriminatorValue("DI")
 public class DataItem extends Item {
 

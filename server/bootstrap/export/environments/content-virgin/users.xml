@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Users>
+    <User>
+        <Username>root</Username>
+        <Password>dummy</Password>
+        <Name>Root</Name>
+        <NickName>root</NickName>
+        <Type>SUPER</Type>
+        <Location>Virgin Media</Location>
+    </User>
+    <User>
+        <Username>admin</Username>
+        <Password>dummy</Password>
+        <Name>Admin</Name>
+        <NickName>admin</NickName>
+        <Type>STANDARD</Type>
+        <Location>Virgin Media</Location>
+    </User>
+    <User>
+        <Username>editor</Username>
+        <Password>dummy</Password>
+        <Name>Editor</Name>
+        <NickName>editor</NickName>
+        <Type>STANDARD</Type>
+        <Location>Virgin Media</Location>
+    </User>
+    <User>
+        <Username>moderator</Username>
+        <Password>dummy</Password>
+        <Name>Moderator</Name>
+        <NickName>moderator</NickName>
+        <Type>STANDARD</Type>
+        <Location>Virgin Media</Location>
+    </User>
+    <User>
+        <Username>user</Username>
+        <Password>dummy</Password>
+        <Name>User</Name>
+        <NickName>user</NickName>
+        <Type>STANDARD</Type>
+    </User>
+    <User>
+        <Username>guest</Username>
+        <Name>Guest</Name>
+        <NickName>guest</NickName>
+        <Type>GUEST</Type>
+    </User>
+</Users>

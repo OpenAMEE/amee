@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Skin>
+    <SkinType>DATABASE</SkinType>
+    <Name>Auth Admin Skin</Name>
+    <Path>auth-admin</Path>
+    <Parent>
+        <Path>auth</Path>
+    </Parent>
+    <ImportedSkins>
+        <Skin>
+            <Path>admin-import</Path>
+        </Skin>
+    </ImportedSkins>
+</Skin>

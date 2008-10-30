@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.Calendar;
 
 import org.hibernate.annotations.Index;
-import org.jboss.seam.annotations.Name;
 
 /**
  * This file is part of AMEE.

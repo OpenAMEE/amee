@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Targets>
+    <Target>
+        <Type>SEAM_COMPONENT_RESOURCE</Type>
+        <Name>Cache Resource</Name>
+        <Description/>
+        <UriPattern>/{cacheName}</UriPattern>
+        <Target>cacheResource</Target>
+        <DefaultTarget>false</DefaultTarget>
+        <Enabled>true</Enabled>
+    </Target>
+    <Target>
+        <Type>SEAM_COMPONENT_RESOURCE</Type>
+        <Name>Caches Resource</Name>
+        <Description/>
+        <UriPattern/>
+        <Target>cachesResource</Target>
+        <DefaultTarget>false</DefaultTarget>
+        <Enabled>true</Enabled>
+    </Target>
+</Targets>

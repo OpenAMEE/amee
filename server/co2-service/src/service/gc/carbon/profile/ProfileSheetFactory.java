@@ -23,20 +23,19 @@ import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Column;
 import com.jellymold.sheet.Row;
 import com.jellymold.sheet.Sheet;
-import com.jellymold.sheet.ValueType;
-import com.jellymold.utils.cache.Cacheable;
 import com.jellymold.utils.cache.CacheableFactory;
+import com.jellymold.utils.ValueType;
 import gc.carbon.data.DataCategory;
 import gc.carbon.data.DataService;
 import gc.carbon.data.ItemDefinition;
 import gc.carbon.data.ItemValue;
 import gc.carbon.data.ItemValueDefinition;
 import gc.carbon.definition.DefinitionService;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -45,22 +44,22 @@ import java.util.Map;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-@Name("profileSheetFactory")
-@Scope(ScopeType.EVENT)
+@Service
+@Scope("prototype")
 public class ProfileSheetFactory implements CacheableFactory {
 
-    private final static Logger log = Logger.getLogger(ProfileSheetFactory.class);
+    private final Log log = LogFactory.getLog(getClass());
 
     private static final String DAY_DATE = "yyyyMMdd";
     private static DateFormat DAY_DATE_FMT = new SimpleDateFormat(DAY_DATE);
 
-    @In(create = true)
+    @Autowired
     private DefinitionService definitionService;
 
-    @In(create = true)
+    @Autowired
     private DataService dataService;
 
-    @In(create = true)
+    @Autowired
     private ProfileService profileService;
 
     private Profile profile;
@@ -71,7 +70,7 @@ public class ProfileSheetFactory implements CacheableFactory {
         super();
     }
 
-    public Cacheable createCacheable() {
+    public Object create() {
 
         List<Column> columns;
         Row row;

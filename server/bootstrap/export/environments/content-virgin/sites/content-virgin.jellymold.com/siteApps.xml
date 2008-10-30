@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SiteApps>
+    <SiteApp>
+        <UriPattern/>
+        <SkinPath>virgin-content</SkinPath>
+        <DefaultApp>true</DefaultApp>
+        <Enabled>true</Enabled>
+        <App>
+            <Name>Content App</Name>
+        </App>
+    </SiteApp>
+    <SiteApp>
+        <UriPattern>/auth</UriPattern>
+        <SkinPath>virgin-content</SkinPath>
+        <DefaultApp>false</DefaultApp>
+        <Enabled>true</Enabled>
+        <App>
+            <Name>Auth</Name>
+        </App>
+    </SiteApp>
+</SiteApps>

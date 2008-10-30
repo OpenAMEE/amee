@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import org.json.JSONException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
-import org.jboss.seam.annotations.Name;
 
 import javax.persistence.*;
 
@@ -14,7 +13,6 @@ import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.kiwi.Environment;
-import com.jellymold.sheet.ValueType;
 
 import java.util.*;
 
@@ -40,7 +38,6 @@ import java.util.*;
 
 @Entity
 @Table(name = "UNIT_DEFINITION")
-@Name("unitDefinition")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class UnitDefinition implements PersistentObject {
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Actions>
+    <Action>
+        <Name>List Caches</Name>
+        <Description/>
+        <Key>cache.list</Key>
+    </Action>
+    <Action>
+        <Name>Modify Cache</Name>
+        <Description/>
+        <Key>cache.modify</Key>
+    </Action>
+    <Action>
+        <Name>View Cache</Name>
+        <Description/>
+        <Key>cache.view</Key>
+    </Action>
+</Actions>

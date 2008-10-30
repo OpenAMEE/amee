@@ -20,24 +20,24 @@
 package gc.carbon.data;
 
 import com.jellymold.sheet.*;
-import com.jellymold.utils.cache.Cacheable;
 import com.jellymold.utils.cache.CacheableFactory;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import com.jellymold.utils.ValueType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 import java.util.Map;
 
-@Name("dataSheetFactory")
-@Scope(ScopeType.EVENT)
+@Service
+@Scope("prototype")
 public class DataSheetFactory implements CacheableFactory {
 
-    private final static Logger log = Logger.getLogger(DataSheetFactory.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     private DataService dataService;
 
     private DataCategory dataCategory;
@@ -46,7 +46,7 @@ public class DataSheetFactory implements CacheableFactory {
         super();
     }
 
-    public Cacheable createCacheable() {
+    public Object create() {
 
         List<Column> columns;
         Row row;

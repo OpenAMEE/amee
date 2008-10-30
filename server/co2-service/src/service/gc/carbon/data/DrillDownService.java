@@ -22,27 +22,27 @@ package gc.carbon.data;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
 import com.jellymold.sheet.Sheet;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@Name("drillDownService")
-@Scope(ScopeType.EVENT)
+@Service
+@Scope("prototype")
 public class DrillDownService implements Serializable {
 
-    private final static Logger log = Logger.getLogger(DrillDownService.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     private DataService dataService;
 
-    @In(create = true)
+    @Autowired
     private DataSheetService dataSheetService;
 
     public Choices getChoices(DataCategory dataCategory) {

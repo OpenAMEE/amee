@@ -24,11 +24,8 @@ import gc.carbon.ValueDefinition;
 import gc.carbon.definition.DefinitionService;
 import gc.carbon.data.DataConstants;
 import gc.carbon.data.ItemDefinition;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -38,22 +35,25 @@ import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Name("itemDefinitionResource")
-@Scope(ScopeType.EVENT)
+@Component
+@Scope("prototype")
 public class ItemDefinitionResource extends BaseResource implements Serializable {
 
-    private final static Logger log = Logger.getLogger(ItemDefinitionResource.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     private DefinitionService definitionService;
 
-    @In(create = true)
+    @Autowired
     private DefinitionBrowser definitionBrowser;
 
     public ItemDefinitionResource() {

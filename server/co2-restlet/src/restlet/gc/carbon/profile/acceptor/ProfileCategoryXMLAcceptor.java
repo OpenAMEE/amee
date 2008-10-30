@@ -5,13 +5,15 @@ import gc.carbon.profile.ProfileItem;
 import org.restlet.resource.Representation;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
-import org.jboss.seam.util.XML;
 import org.dom4j.DocumentException;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.jellymold.utils.domain.APIUtils;
 
 /**
  * This file is part of AMEE.
@@ -34,7 +36,7 @@ import java.util.List;
  */
 public class ProfileCategoryXMLAcceptor extends Acceptor {
 
-    private final static Logger log = Logger.getLogger(ProfileCategoryXMLAcceptor.class);
+    private final Log log = LogFactory.getLog(getClass());
 
     public ProfileCategoryXMLAcceptor(ProfileCategoryResource resource) {
         super(resource);    }
@@ -46,7 +48,7 @@ public class ProfileCategoryXMLAcceptor extends Acceptor {
         org.dom4j.Element profileItemElem;
         org.dom4j.Element profileItemValueElem;
         try {
-            rootElem = XML.getRootElement(entity.getStream());
+            rootElem = APIUtils.getRootElement(entity.getStream());
             if (rootElem.getName().equalsIgnoreCase("ProfileCategory")) {
                 profileItemsElem = rootElem.element("ProfileItems");
                 if (profileItemsElem != null) {

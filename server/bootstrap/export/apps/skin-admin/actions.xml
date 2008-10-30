@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Actions>
+    <Action>
+        <Name>Create Skin</Name>
+        <Description/>
+        <Key>skin.create</Key>
+    </Action>
+    <Action>
+        <Name>Delete Skin</Name>
+        <Description/>
+        <Key>skin.delete</Key>
+    </Action>
+    <Action>
+        <Name>View Skins</Name>
+        <Description/>
+        <Key>skin.list</Key>
+    </Action>
+    <Action>
+        <Name>Modify Skin</Name>
+        <Description/>
+        <Key>skin.modify</Key>
+    </Action>
+    <Action>
+        <Name>View Skin</Name>
+        <Description/>
+        <Key>skin.view</Key>
+    </Action>
+</Actions>

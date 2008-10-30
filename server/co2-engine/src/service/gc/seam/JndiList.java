@@ -19,11 +19,7 @@
 */
 package gc.seam;
 
-import org.jboss.ejb3.Container;
-import org.jboss.ejb3.Ejb3Registry;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.springframework.stereotype.Service;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -36,8 +32,7 @@ import java.lang.reflect.Proxy;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-@Name("jndiList")
-@Scope(ScopeType.APPLICATION)
+@Service
 public class JndiList implements Serializable {
 
     private void list(Context ctx, String indent, StringBuffer buffer, boolean verbose) {
@@ -161,24 +156,26 @@ public class JndiList implements Serializable {
 
     public String getList() {
 
-        StringBuffer buf = new StringBuffer();
-        try {
-            buf.append("GLOBAL JNDI\n");
-            list(getInitialContext(), "    ", buf, true);
-            buf.append("\n\n-------------\n");
-            buf.append("java:/ Namespace\n");
-            list((Context) (getInitialContext().lookup("java:/")), "    ", buf, true);
-            buf.append("\n\n-------------\n");
-            buf.append("EJB ENCs");
-            Iterator it = Ejb3Registry.getContainers().iterator();
-            while (it.hasNext()) {
-                Container container = (Container) it.next();
-                buf.append("\n   " + container.getObjectName().getCanonicalName() + "\n");
-                list(container.getEnc(), "        ", buf, true);
-            }
-        } catch (Exception e) {
-            buf.append(e.getMessage());
-        }
-        return buf.toString();
+        // TODO: Springify
+//        StringBuffer buf = new StringBuffer();
+//        try {
+//            buf.append("GLOBAL JNDI\n");
+//            list(getInitialContext(), "    ", buf, true);
+//            buf.append("\n\n-------------\n");
+//            buf.append("java:/ Namespace\n");
+//            list((Context) (getInitialContext().lookup("java:/")), "    ", buf, true);
+//            buf.append("\n\n-------------\n");
+//            buf.append("EJB ENCs");
+//            Iterator it = Ejb3Registry.getContainers().iterator();
+//            while (it.hasNext()) {
+//                Container container = (Container) it.next();
+//                buf.append("\n   " + container.getObjectName().getCanonicalName() + "\n");
+//                list(container.getEnc(), "        ", buf, true);
+//            }
+//        } catch (Exception e) {
+//            buf.append(e.getMessage());
+//        }
+//        return buf.toString();
+        return "";
     }
 }

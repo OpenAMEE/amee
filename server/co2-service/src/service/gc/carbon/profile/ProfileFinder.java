@@ -22,23 +22,23 @@ package gc.carbon.profile;
 import gc.carbon.data.DataCategory;
 import gc.carbon.data.DataFinder;
 import gc.carbon.data.ItemValue;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("profileFinder")
-@Scope(ScopeType.EVENT)
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+
+@Service
+@Scope("prototype")
 public class ProfileFinder implements Serializable {
 
-    @In(create = true)
+    @Autowired
     private ProfileService profileService;
 
-    @In(create = true)
+    @Autowired
     private DataFinder dataFinder;
 
     private ProfileItem profileItem;

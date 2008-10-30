@@ -20,17 +20,14 @@
 package gc.carbon.environment;
 
 import com.jellymold.kiwi.Environment;
-import com.jellymold.sheet.ValueType;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
+import com.jellymold.utils.ValueType;
 import gc.carbon.ValueDefinition;
 import gc.carbon.data.DataConstants;
 import gc.carbon.definition.DefinitionService;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,24 +39,28 @@ import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-@Name("valueDefinitionsResource")
-@Scope(ScopeType.EVENT)
+@Component
+@Scope("prototype")
 public class ValueDefinitionsResource extends BaseResource implements Serializable {
 
-    private final static Logger log = Logger.getLogger(ValueDefinitionsResource.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     private DefinitionService definitionService;
 
-    @In(create = true)
+    @Autowired
     private DefinitionBrowser definitionBrowser;
 
-    @In
+    // TODO: Springify
+    @Autowired
     private Environment environment;
 
     private ValueDefinition newValueDefinition;

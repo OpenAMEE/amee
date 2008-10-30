@@ -9,7 +9,8 @@ import gc.carbon.data.ItemValue;
 import org.restlet.resource.Representation;
 import org.restlet.data.Form;
 import org.restlet.data.Method;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import java.util.Map;
  */
 public class ProfileCategoryFormAcceptor extends Acceptor {
 
-    private final static Logger log = Logger.getLogger(ProfileCategoryFormAcceptor.class);
+    private final Log log = LogFactory.getLog(getClass());
 
     public ProfileCategoryFormAcceptor(ProfileCategoryResource resource) {
         super(resource);

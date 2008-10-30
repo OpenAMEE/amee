@@ -23,32 +23,34 @@ import com.jellymold.kiwi.ResourceActions;
 import gc.carbon.BaseBrowser;
 import gc.carbon.data.DataCategory;
 import gc.carbon.data.ItemValue;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
+import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Calendar;
 
-@Name("profileBrowser")
-@Scope(ScopeType.EVENT)
+@Component
+@Scope("prototype")
 public class ProfileBrowser extends BaseBrowser {
 
-    private final static Logger log = Logger.getLogger(ProfileBrowser.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     private ProfileService profileService;
 
-    @In(scope = ScopeType.EVENT, required = false)
+    // TODO: Springify
+    // @In(scope = ScopeType.EVENT, required = false)
     private Profile profile;
 
     private ResourceActions profileActions = new ResourceActions("profile");
 
     // ProfileCategories
 
-    @In(scope = ScopeType.EVENT, required = false)
+    // TODO: Springify
+    // @In(scope = ScopeType.EVENT, required = false)
     private DataCategory dataCategory = null;
 
     private String dataCategoryUid = null;
@@ -57,7 +59,8 @@ public class ProfileBrowser extends BaseBrowser {
 
     // ProfileItems
 
-    @In(scope = ScopeType.EVENT, required = false)
+    // TODO: Springify
+    // @In(scope = ScopeType.EVENT, required = false)
     private ProfileItem profileItem = null;
 
     private String profileItemUid = null;
@@ -66,7 +69,8 @@ public class ProfileBrowser extends BaseBrowser {
 
     // ProfileItemValues
 
-    @In(scope = ScopeType.EVENT, required = false)
+    // TODO: Springify
+    // @In(scope = ScopeType.EVENT, required = false)
     private ItemValue profileItemValue = null;
 
     private String profileItemValueUid = null;

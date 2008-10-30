@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Skin>
+    <SkinType>DATABASE_AND_SUBVERSION</SkinType>
+    <Name>Client Import Skin</Name>
+    <Path>client-import</Path>
+    <Parent>
+        <Path>base-import</Path>
+    </Parent>
+    <SvnUrl>http://closed.jellymold.com/svn/skins/client-import</SvnUrl>
+    <SvnUsername>skins</SvnUsername>
+    <SvnPassword>5k1n5</SvnPassword>
+</Skin>

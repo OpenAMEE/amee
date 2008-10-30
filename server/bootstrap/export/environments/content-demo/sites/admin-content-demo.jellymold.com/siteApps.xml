@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SiteApps>
+    <SiteApp>
+        <UriPattern>/auth</UriPattern>
+        <SkinPath>auth-admin-content</SkinPath>
+        <DefaultApp>false</DefaultApp>
+        <Enabled>true</Enabled>
+        <App>
+            <Name>Auth</Name>
+        </App>
+    </SiteApp>
+    <SiteApp>
+        <UriPattern/>
+        <SkinPath>content-admin</SkinPath>
+        <DefaultApp>false</DefaultApp>
+        <Enabled>true</Enabled>
+        <App>
+            <Name>Content Admin App</Name>
+        </App>
+    </SiteApp>
+</SiteApps>

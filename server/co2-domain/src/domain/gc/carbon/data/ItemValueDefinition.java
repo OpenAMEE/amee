@@ -30,7 +30,6 @@ import gc.carbon.UnitDefinition;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
-import org.jboss.seam.annotations.Name;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -59,7 +58,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
-@Name("itemValueDefinition")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemValueDefinition implements PersistentObject {
 

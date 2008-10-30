@@ -1,38 +1,36 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package gc.carbon.data;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
 import gc.carbon.path.PathItemService;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.core.Events;
-import org.restlet.ext.seam.SeamController;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,19 +40,19 @@ import java.util.Map;
  * TODO: Clear caches after entity removal.
  * TODO: Any other cache operations to put here?
  */
-@Name("dataService")
-@Scope(ScopeType.EVENT)
+@Service
+@Scope("prototype")
 public class DataService implements Serializable {
 
-    private final static Logger log = Logger.getLogger(DataService.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @PersistenceContext
     private EntityManager entityManager;
 
-    @In(create = true)
+    @Autowired
     private DataSheetService dataSheetService;
 
-    @In(create = true)
+    @Autowired
     private PathItemService pathItemService;
 
     public DataService() {
@@ -63,7 +61,9 @@ public class DataService implements Serializable {
 
     // Handle events
 
-    @Observer("beforeEnvironmentDelete")
+    // TODO: Springify
+    // @Observer("beforeEnvironmentDelete")
+
     public void beforeEnvironmentDelete(Environment environment) {
         log.debug("beforeEnvironmentDelete");
         // delete root DataCategories
@@ -78,10 +78,12 @@ public class DataService implements Serializable {
         }
     }
 
-    @Observer("beforeItemDefinitionDelete")
+    // TODO: Springify
+    // @Observer("beforeItemDefinitionDelete")
     public void beforeItemDefinitionDelete(ItemDefinition itemDefinition) {
         log.debug("beforeItemDefinitionDelete");
-        Events.instance().raiseEvent("beforeDataItemsDelete", itemDefinition);
+        // TODO: Springify
+        // Events.instance().raiseEvent("beforeDataItemsDelete", itemDefinition);
         // remove ItemValues for DataItems
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
@@ -97,7 +99,8 @@ public class DataService implements Serializable {
                 .executeUpdate();
     }
 
-    @Observer("beforeItemValueDefinitionDelete")
+    // TODO: Springify
+    // @Observer("beforeItemValueDefinitionDelete")
     public void beforeItemValueDefinitionDelete(ItemValueDefinition itemValueDefinition) {
         log.debug("beforeItemValueDefinitionDelete");
         // remove ItemValues (from DataItems and ProfileItems)
@@ -164,7 +167,8 @@ public class DataService implements Serializable {
 
     public void remove(DataCategory dataCategory) {
         log.debug("remove: " + dataCategory.getName());
-        Events.instance().raiseEvent("beforeDataCategoryDelete", dataCategory);
+        // TODO: Springify
+        // Events.instance().raiseEvent("beforeDataCategoryDelete", dataCategory);
         // remove ItemValues for DataItems
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
@@ -342,7 +346,8 @@ public class DataService implements Serializable {
     }
 
     public void remove(DataItem dataItem) {
-        Events.instance().raiseEvent("beforeDataItemDelete", dataItem);
+        // TODO: Springify
+        // Events.instance().raiseEvent("beforeDataItemDelete", dataItem);
         entityManager.remove(dataItem);
     }
 
@@ -364,7 +369,8 @@ public class DataService implements Serializable {
                 .getResultList();
         if (itemValueDefinitions.size() > 0) {
             // ensure transaction has been started
-            SeamController.getInstance().beginTransaction();
+            // TODO: Springify
+            // SeamController.getInstance().beginTransaction();
             // create missing ItemValues
             for (ItemValueDefinition ivd : itemValueDefinitions) {
                 entityManager.persist(new ItemValue(ivd, dataItem, ""));

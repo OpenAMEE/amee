@@ -26,11 +26,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -40,42 +37,47 @@ import org.restlet.ext.fileupload.RestletFileUpload;
 import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-@Name("dataUploadResource")
-@Scope(ScopeType.EVENT)
+@Component
+@Scope("prototype")
 public class DataUploadResource extends BaseResource implements Serializable {
 
-    private final static Logger log = Logger.getLogger(DataUploadResource.class);
+    private final Log log = LogFactory.getLog(getClass());
 
     // threshold above which temporary files will go to disk
     public static final int SIZE_THRESHOLD = 100000; // TODO: what should this be?
     // max uploaded file size
     public static final long SIZE_MAX = 800000; // TODO: what should this be?
 
-    @In(create = true)
+    @PersistenceContext
     private EntityManager entityManager;
 
-    @In(create = true)
+    @Autowired
     private DataService dataService;
 
-    @In(create = true)
+    @Autowired
     private DataBrowser dataBrowser;
 
-    @In(create = true)
+    @Autowired
     private CarbonDataLoader carbonDataLoader;
 
-    @In(create = true)
+    @Autowired
     private DataSheetService dataSheetService;
 
-    @In(create = true)
+    @Autowired
     private PathItemService pathItemService;
 
-    @In
+    // TODO: Springify
+    @Autowired
     private Environment environment;
 
     FileItemFactory fileItemFactory;

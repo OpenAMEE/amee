@@ -25,11 +25,8 @@ import com.jellymold.kiwi.Permission;
 import com.jellymold.kiwi.User;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,34 +38,41 @@ import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-@Name("profilesResource")
-@Scope(ScopeType.EVENT)
+@Component
+@Scope("prototype")
 public class ProfilesResource extends BaseResource implements Serializable {
 
-    private final static Logger log = Logger.getLogger(ProfilesResource.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @PersistenceContext
     private EntityManager entityManager;
 
-    @In(create = true)
+    @Autowired
     private ProfileService profileService;
 
-    @In(create = true)
+    @Autowired
     private ProfileBrowser profileBrowser;
 
-    @In
+    // TODO: Springify
+    // @In
     private Environment environment;
 
-    @In
+    // TODO: Springify
+    // @In
     private User user;
 
-    @In(required = false)
+    // TODO: Springify
+    @Autowired(required = false)
     private Group group;
 
     private Profile newProfile = null;

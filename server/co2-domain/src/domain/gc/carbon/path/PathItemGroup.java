@@ -19,8 +19,6 @@
 */
 package gc.carbon.path;
 
-import com.jellymold.utils.cache.Cacheable;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PathItemGroup implements Serializable, Cacheable {
+public class PathItemGroup implements Serializable {
 
     private Map<String, PathItem> pathItems = new HashMap<String, PathItem>();
     private PathItem rootPathItem = null;

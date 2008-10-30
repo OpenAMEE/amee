@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Targets>
+    <Target>
+        <Type>SEAM_COMPONENT_RESOURCE</Type>
+        <Name>Skin Archive Resource</Name>
+        <Description/>
+        <UriPattern>/{skinUid}/archive</UriPattern>
+        <Target>skinArchiveResource</Target>
+        <DefaultTarget>false</DefaultTarget>
+        <Enabled>true</Enabled>
+    </Target>
+    <Target>
+        <Type>SEAM_COMPONENT_RESOURCE</Type>
+        <Name>Skin Render Resource</Name>
+        <Description/>
+        <UriPattern>/js</UriPattern>
+        <Target>skinRenderResource</Target>
+        <DefaultTarget>false</DefaultTarget>
+        <Enabled>true</Enabled>
+    </Target>
+    <Target>
+        <Type>SEAM_COMPONENT_RESOURCE</Type>
+        <Name>Skin Resource</Name>
+        <Description/>
+        <UriPattern>/{skinUid}</UriPattern>
+        <Target>skinResource</Target>
+        <DefaultTarget>false</DefaultTarget>
+        <Enabled>true</Enabled>
+    </Target>
+    <Target>
+        <Type>SEAM_COMPONENT_RESOURCE</Type>
+        <Name>Skins Resource</Name>
+        <Description/>
+        <UriPattern/>
+        <Target>skinsResource</Target>
+        <DefaultTarget>false</DefaultTarget>
+        <Enabled>true</Enabled>
+    </Target>
+</Targets>

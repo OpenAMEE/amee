@@ -26,7 +26,6 @@ import gc.carbon.ObjectType;
 import gc.carbon.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.jboss.seam.annotations.Name;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -40,7 +39,6 @@ import java.util.Date;
 
 @Entity
 @Table(name = "ITEM_VALUE")
-@Name("itemValue")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemValue implements PersistentObject, Pathable {
 

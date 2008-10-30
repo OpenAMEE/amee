@@ -25,11 +25,8 @@ import gc.carbon.data.Calculator;
 import gc.carbon.data.ItemValue;
 import gc.carbon.path.PathItem;
 import gc.carbon.path.PathItemService;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -39,29 +36,33 @@ import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import java.io.Serializable;
 import java.util.Map;
 
-@Name("profileItemValueResource")
-@Scope(ScopeType.EVENT)
+@Component
+@Scope("prototype")
 public class ProfileItemValueResource extends BaseResource implements Serializable {
 
-    private final static Logger log = Logger.getLogger(ProfileItemValueResource.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     private ProfileBrowser profileBrowser;
 
-    @In(create = true)
+    @Autowired
     private PathItemService pathItemService;
 
-    @In(create = true)
+    @Autowired
     private ProfileSheetService profileSheetService;
 
-    @In(create = true)
+    @Autowired
     private Calculator calculator;
 
-    @In
+    // TODO: Springify
+    // @In
     private PathItem pathItem;
 
     public ProfileItemValueResource() {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Skin>
+    <SkinType>DATABASE</SkinType>
+    <Name>Auth Client Skin</Name>
+    <Path>auth-client</Path>
+    <Parent>
+        <Path>auth</Path>
+    </Parent>
+    <ImportedSkins>
+        <Skin>
+            <Path>client-import</Path>
+        </Skin>
+    </ImportedSkins>
+</Skin>

@@ -20,7 +20,6 @@
 package gc.engine;
 
 import gc.seam.JndiList;
-import org.jboss.seam.Component;
 import org.restlet.Context;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
@@ -39,7 +38,8 @@ public class JndiHandler extends Restlet {
     }
 
     public void handle(Request request, Response response) {
-        JndiList jndiList = (JndiList) Component.getInstance("jndiList", true);
-        response.setEntity(new StringRepresentation(jndiList.getList(), MediaType.TEXT_HTML));
+        // TODO: Springify
+//        JndiList jndiList = (JndiList) Component.getInstance("jndiList", true);
+//        response.setEntity(new StringRepresentation(jndiList.getList(), MediaType.TEXT_HTML));
     }
 }

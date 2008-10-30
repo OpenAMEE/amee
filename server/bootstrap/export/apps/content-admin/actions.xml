@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Actions>
+    <!-- Content Definition -->
+    <Action>
+        <Name>Create Content Definition</Name>
+        <Description/>
+        <Key>contentDefinition.create</Key>
+    </Action>
+    <Action>
+        <Name>Delete Content Definition</Name>
+        <Description/>
+        <Key>contentDefinition.delete</Key>
+    </Action>
+    <Action>
+        <Name>List Content Definitions</Name>
+        <Description/>
+        <Key>contentDefinition.list</Key>
+    </Action>
+    <Action>
+        <Name>View Content Definition</Name>
+        <Description/>
+        <Key>contentDefinition.view</Key>
+    </Action>
+    <Action>
+        <Name>Modify Content Definition</Name>
+        <Description/>
+        <Key>contentDefinition.modify</Key>
+    </Action>
+    <!-- Relationship Definition -->
+    <Action>
+        <Name>Create Relationship Definition</Name>
+        <Description/>
+        <Key>relationshipDefinition.create</Key>
+    </Action>
+    <Action>
+        <Name>Delete relationship Definition</Name>
+        <Description/>
+        <Key>relationshipDefinition.delete</Key>
+    </Action>
+    <Action>
+        <Name>List relationship Definitions</Name>
+        <Description/>
+        <Key>relationshipDefinition.list</Key>
+    </Action>
+    <Action>
+        <Name>View relationship Definition</Name>
+        <Description/>
+        <Key>relationshipDefinition.view</Key>
+    </Action>
+    <Action>
+        <Name>Modify relationship Definition</Name>
+        <Description/>
+        <Key>relationshipDefinition.modify</Key>
+    </Action>
+    <!-- Relationhip Kind -->
+    <Action>
+        <Name>Create Relationship Kind</Name>
+        <Description/>
+        <Key>relationshipKind.create</Key>
+    </Action>
+    <Action>
+        <Name>Delete relationship Kind</Name>
+        <Description/>
+        <Key>relationshipKind.delete</Key>
+    </Action>
+    <Action>
+        <Name>List relationship Kind</Name>
+        <Description/>
+        <Key>relationshipKind.list</Key>
+    </Action>
+    <Action>
+        <Name>View relationship Kind</Name>
+        <Description/>
+        <Key>relationshipKind.view</Key>
+    </Action>
+    <Action>
+        <Name>Modify relationship Kind</Name>
+        <Description/>
+        <Key>relationshipKind.modify</Key>
+    </Action>
+    <!-- Relationhip -->
+    <Action>
+        <Name>Create Relationship</Name>
+        <Description/>
+        <Key>relationship.create</Key>
+    </Action>
+    <Action>
+        <Name>Delete relationship</Name>
+        <Description/>
+        <Key>relationship.delete</Key>
+    </Action>
+    <Action>
+        <Name>List relationship</Name>
+        <Description/>
+        <Key>relationship.list</Key>
+    </Action>
+    <Action>
+        <Name>View relationship</Name>
+        <Description/>
+        <Key>relationship.view</Key>
+    </Action>
+    <Action>
+        <Name>Modify relationship</Name>
+        <Description/>
+        <Key>relationship.modify</Key>
+    </Action>
+    <!-- Property Sheet -->
+    <Action>
+        <Name>Create Property Sheet</Name>
+        <Description/>
+        <Key>propertySheet.create</Key>
+    </Action>
+    <Action>
+        <Name>Delete property Sheet</Name>
+        <Description/>
+        <Key>propertySheet.delete</Key>
+    </Action>
+    <Action>
+        <Name>List property Sheet</Name>
+        <Description/>
+        <Key>propertySheet.list</Key>
+    </Action>
+    <Action>
+        <Name>View property Sheet</Name>
+        <Description/>
+        <Key>propertySheet.view</Key>
+    </Action>
+    <Action>
+        <Name>Modify property Sheet</Name>
+        <Description/>
+        <Key>propertySheet.modify</Key>
+    </Action>
+</Actions>

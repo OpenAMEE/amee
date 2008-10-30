@@ -26,30 +26,31 @@ import gc.carbon.ObjectType;
 import gc.carbon.path.PathItem;
 import gc.carbon.path.PathItemGroup;
 import gc.carbon.path.PathItemService;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 
-@Name("dataFinder")
-@Scope(ScopeType.EVENT)
+@Service
+@Scope("prototype")
 public class DataFinder implements Serializable {
 
-    private final static Logger log = Logger.getLogger(DataFinder.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     private PathItemService pathItemService;
 
-    @In(create = true)
+    @Autowired
     private DataService dataService;
 
-    @In(create = true)
+    @Autowired
     private DrillDownService drillDownService;
 
-    @In
+    // TODO: Springify
+    // @In
     private Environment environment;
 
     public DataFinder() {

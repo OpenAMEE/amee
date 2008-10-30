@@ -23,24 +23,24 @@ import com.jellymold.kiwi.ResourceActions;
 import com.jellymold.kiwi.auth.AuthService;
 import gc.carbon.BaseBrowser;
 import gc.carbon.definition.DefinitionService;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Name("dataBrowser")
-@Scope(ScopeType.EVENT)
+@Service
+@Scope("prototype")
 public class DataBrowser extends BaseBrowser {
 
-    private final static Logger log = Logger.getLogger(DataBrowser.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     private AuthService authService;
 
-    @In(create = true)
+    @Autowired
     private DefinitionService definitionService;
 
     // DataCategories

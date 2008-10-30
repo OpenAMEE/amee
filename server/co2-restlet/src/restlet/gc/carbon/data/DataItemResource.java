@@ -25,11 +25,8 @@ import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.path.PathItem;
 import gc.carbon.path.PathItemService;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -39,34 +36,38 @@ import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Name("dataItemResource")
-@Scope(ScopeType.EVENT)
+@Component
+@Scope("prototype")
 public class DataItemResource extends BaseResource implements Serializable {
 
-    private final static Logger log = Logger.getLogger(DataItemResource.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     private DataService dataService;
 
-    @In(create = true)
+    @Autowired
     private Calculator calculator;
 
-    @In(create = true)
+    @Autowired
     private DataBrowser dataBrowser;
 
-    @In(create = true)
+    @Autowired
     private DataSheetService dataSheetService;
 
-    @In(create = true)
+    @Autowired
     private PathItemService pathItemService;
 
-    @In
+    // TODO: Springify
+    @Autowired
     private PathItem pathItem;
 
     private List<Choice> parameters = new ArrayList<Choice>();

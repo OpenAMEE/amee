@@ -20,14 +20,6 @@
 //$Id: Ejb.java,v 1.15 2006/04/15 22:28:06 gavin Exp $
 package gc.seam;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jboss.ejb3.embedded.EJB3StandaloneBootstrap;
-import org.jboss.ejb3.embedded.EJB3StandaloneDeployer;
-import static org.jboss.seam.InterceptionType.NEVER;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.*;
-import org.jboss.seam.util.Naming;
 
 /**
  * A seam component that bootstraps the embedded EJB container
@@ -38,43 +30,43 @@ import org.jboss.seam.util.Naming;
 //@Intercept(NEVER)
 //@Startup
 //@Name("org.jboss.seam.core.ejb")
-public class Ejb {
-    private static final Log log = LogFactory.getLog(Ejb.class);
-
-    private EJB3StandaloneDeployer deployer;
-
-    @Create
-    public void startup() throws Exception {
-        log.info("starting the embedded EJB container");
-        EJB3StandaloneBootstrap.boot(null);
-        deploy("META-INF/jboss-beans.xml");
-        deploy("jboss-beans.xml");
-
-        deployer = EJB3StandaloneBootstrap.createDeployer();
-        //deployer.getArchivesByResource().add("seam.properties");
-
-        // need to set the InitialContext properties that deployer will use
-        // to initial EJB containers
-        deployer.setJndiProperties(Naming.getInitialContextProperties());
-
-        deployer.create();
-        deployer.start();
-        EJB3StandaloneBootstrap.scanClasspath();
-    }
-
-    private void deploy(String name) {
-        if (Thread.currentThread().getContextClassLoader().getResource(name) != null) {
-            EJB3StandaloneBootstrap.deployXmlResource(name);
-        }
-    }
-
-    @Destroy
-    public void shutdown() throws Exception {
-        log.info("stopping the embedded EJB container");
-        deployer.stop();
-        deployer.destroy();
-        deployer = null;
-        EJB3StandaloneBootstrap.shutdown();
-    }
-
-}
+//public class Ejb {
+//    private static final Log log = LogFactory.getLog(Ejb.class);
+//
+//    private EJB3StandaloneDeployer deployer;
+//
+//    @Create
+//    public void startup() throws Exception {
+//        log.info("starting the embedded EJB container");
+//        EJB3StandaloneBootstrap.boot(null);
+//        deploy("META-INF/jboss-beans.xml");
+//        deploy("jboss-beans.xml");
+//
+//        deployer = EJB3StandaloneBootstrap.createDeployer();
+//        //deployer.getArchivesByResource().add("seam.properties");
+//
+//        // need to set the InitialContext properties that deployer will use
+//        // to initial EJB containers
+//        deployer.setJndiProperties(Naming.getInitialContextProperties());
+//
+//        deployer.create();
+//        deployer.start();
+//        EJB3StandaloneBootstrap.scanClasspath();
+//    }
+//
+//    private void deploy(String name) {
+//        if (Thread.currentThread().getContextClassLoader().getResource(name) != null) {
+//            EJB3StandaloneBootstrap.deployXmlResource(name);
+//        }
+//    }
+//
+//    @Destroy
+//    public void shutdown() throws Exception {
+//        log.info("stopping the embedded EJB container");
+//        deployer.stop();
+//        deployer.destroy();
+//        deployer = null;
+//        EJB3StandaloneBootstrap.shutdown();
+//    }
+//
+//}

@@ -21,21 +21,21 @@ package gc.carbon.data;
 
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.cache.CacheHelper;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 
-@Name("dataSheetService")
-@Scope(ScopeType.EVENT)
+@Service
+@Scope("prototype")
 public class DataSheetService implements Serializable {
 
-    private final static Logger log = Logger.getLogger(DataSheetService.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     private DataSheetFactory dataSheetFactory;
 
     private CacheHelper cacheHelper = CacheHelper.getInstance();

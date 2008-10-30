@@ -20,18 +20,18 @@
 package gc.carbon.data;
 
 import com.jellymold.sheet.Choices;
-import com.jellymold.sheet.ValueType;
+import com.jellymold.utils.ValueType;
 import gc.carbon.profile.ProfileFinder;
 import gc.carbon.profile.ProfileItem;
-import org.apache.log4j.Logger;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -42,19 +42,19 @@ import java.util.Set;
 
 // TODO: 'perMonth' is hard-coding - how should this be made more dynamic?
 
-@Name("calculator")
-@Scope(ScopeType.EVENT)
+@Service
+@Scope("prototype")
 public class Calculator implements Serializable {
 
-    private final static Logger log = Logger.getLogger(Calculator.class);
+    private final Log log = LogFactory.getLog(getClass());
 
-    @In(create = true)
+    @Autowired
     DataService dataService;
 
-    @In(create = true)
+    @Autowired
     DataFinder dataFinder;
 
-    @In(create = true)
+    @Autowired
     ProfileFinder profileFinder;
 
     public BigDecimal calculate(ProfileItem profileItem) {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site>
+    <Name>Content Demo Admin</Name>
+    <Description/>
+    <ServerName>admin-content-demo.jellymold.com</ServerName>
+    <ServerAddress/>
+    <ServerPort/>
+    <ServerScheme>http</ServerScheme>
+    <SecureAvailable>false</SecureAvailable>
+    <CheckRemoteAddress>false</CheckRemoteAddress>
+    <MaxAuthDuration>-1</MaxAuthDuration>
+    <MaxAuthIdle>18000000</MaxAuthIdle>
+</Site>

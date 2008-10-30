@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Targets>
+    <Target>
+        <Type>DIRECTORY_RESOURCE</Type>
+        <Name>Images</Name>
+        <Description/>
+        <UriPattern>/images</UriPattern>
+        <Target>file:///var/www/boards/htdocs/images</Target>
+        <DefaultTarget>false</DefaultTarget>
+        <Enabled>true</Enabled>
+    </Target>
+    <Target>
+        <Type>DIRECTORY_RESOURCE</Type>
+        <Name>Scripts</Name>
+        <Description/>
+        <UriPattern>/scripts</UriPattern>
+        <Target>file:///var/www/boards/htdocs/scripts</Target>
+        <DefaultTarget>false</DefaultTarget>
+        <Enabled>true</Enabled>
+    </Target>
+    <Target>
+        <Type>SEAM_COMPONENT_RESOURCE</Type>
+        <Name>Skin Render Resource</Name>
+        <Description/>
+        <UriPattern/>
+        <Target>skinRenderResource</Target>
+        <DefaultTarget>true</DefaultTarget>
+        <Enabled>true</Enabled>
+    </Target>
+</Targets>

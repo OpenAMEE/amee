@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Actions>
+    <Action>
+        <Name>Create App</Name>
+        <Description/>
+        <Key>app.create</Key>
+    </Action>
+    <Action>
+        <Name>Delete App</Name>
+        <Description/>
+        <Key>app.delete</Key>
+    </Action>
+    <Action>
+        <Name>List Apps</Name>
+        <Description/>
+        <Key>app.list</Key>
+    </Action>
+    <Action>
+        <Name>Modify App</Name>
+        <Description/>
+        <Key>app.modify</Key>
+    </Action>
+    <Action>
+        <Name>View App</Name>
+        <Description/>
+        <Key>app.view</Key>
+    </Action>
+</Actions>

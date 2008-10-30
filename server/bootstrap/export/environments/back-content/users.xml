@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Users>
+    <User>
+        <Username>admin</Username>
+        <Password>dummy</Password>
+        <Name>Administrator</Name>
+        <Email>admin@jellymold.com</Email>
+    </User>
+    <User>
+        <Type>GUEST</Type>
+        <Username>guest</Username>
+        <Password>dummy</Password>
+        <Name>Guest</Name>
+        <Email>guest@jellymold.com</Email>
+    </User>
+    <User>
+        <Type>SUPER</Type>
+        <Username>root</Username>
+        <Password>dummy</Password>
+        <Name>Root</Name>
+        <Email>root@jellymold.com</Email>
+    </User>
+</Users>

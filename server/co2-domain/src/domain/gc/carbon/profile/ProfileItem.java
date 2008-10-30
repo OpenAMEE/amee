@@ -26,7 +26,6 @@ import gc.carbon.data.DataCategory;
 import gc.carbon.data.DataItem;
 import gc.carbon.data.Item;
 import org.hibernate.annotations.Index;
-import org.jboss.seam.annotations.Name;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -41,7 +40,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 @Entity
-@Name("profileItem")
 @DiscriminatorValue("PI")
 public class ProfileItem extends BaseProfileItem {
 

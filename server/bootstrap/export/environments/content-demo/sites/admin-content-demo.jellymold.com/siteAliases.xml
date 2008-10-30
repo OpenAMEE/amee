@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SiteAliases>
+    <SiteAlias>
+        <Name>local-admin-content-demo.jellymold.com</Name>
+        <Description/>
+        <ServerAlias>local-admin-content-demo.jellymold.com</ServerAlias>
+    </SiteAlias>
+</SiteAliases>

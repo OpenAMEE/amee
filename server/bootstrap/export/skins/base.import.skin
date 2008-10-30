@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Skin>
+    <SkinType>DATABASE_AND_SUBVERSION</SkinType>
+    <Name>Base Import Skin</Name>
+    <Path>base-import</Path>
+    <SvnUrl>http://closed.jellymold.com/svn/skins/base-import</SvnUrl>
+    <SvnUsername>skins</SvnUsername>
+    <SvnPassword>5k1n5</SvnPassword>
+</Skin>

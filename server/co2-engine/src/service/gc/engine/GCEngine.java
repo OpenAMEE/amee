@@ -21,9 +21,7 @@ package gc.engine;
 
 import com.jellymold.engine.Engine;
 import com.jellymold.kiwi.environment.ScheduledTaskManager;
-import com.jellymold.plum.SkinSvnInitialisation;
 import org.apache.commons.cli.*;
-import org.jboss.seam.Component;
 
 public class GCEngine extends Engine {
 
@@ -93,26 +91,18 @@ public class GCEngine extends Engine {
 
     @Override
     public void onStart() {
-        // some init stuff
-        if (initialiseSkinsFromSvn) {
-            initialiseSkinsFromSvn();
-        }
+        // TODO: Springify
         // start scheduled tasks
-        ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) Component.getInstance("scheduledTaskManager", true);
-        scheduledTaskManager.setServerName(serverName);
-        scheduledTaskManager.onStart();
+//        ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) Component.getInstance("scheduledTaskManager", true);
+//        scheduledTaskManager.setServerName(serverName);
+//        scheduledTaskManager.onStart();
     }
 
     @Override
     public void onShutdown() {
         // shutdown scheduled tasks
-        ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) Component.getInstance("scheduledTaskManager", true);
-        scheduledTaskManager.onShutdown();
-    }
-
-    private void initialiseSkinsFromSvn() {
-        SkinSvnInitialisation skinSvnInitialisation =
-                (SkinSvnInitialisation) Component.getInstance("skinSvnInitialisation", true);
-        skinSvnInitialisation.initialise();
+        // TODO: Springify
+//        ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) Component.getInstance("scheduledTaskManager", true);
+//        scheduledTaskManager.onShutdown();
     }
 }

@@ -4,21 +4,21 @@ import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.HeaderUtils;
 import gc.carbon.data.DataService;
 import gc.carbon.path.PathItem;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.restlet.data.Request;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 
 public abstract class BaseBrowser implements Serializable {
 
-    @In(create = true)
+    @Autowired
     protected DataService dataService;
 
-    @In(required = false)
+    @Autowired(required = false)
     protected Environment environment;
 
-    @In(scope = ScopeType.EVENT, required = false)
+    // TODO: Springify
+    // @In(scope = ScopeType.EVENT, required = false)
     protected PathItem pathItem;
 
     public PathItem getPathItem() {

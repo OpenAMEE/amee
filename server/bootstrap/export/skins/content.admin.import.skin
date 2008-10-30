@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Skin>
+    <SkinType>DATABASE_AND_SUBVERSION</SkinType>
+    <Name>Content Admin Import Skin</Name>
+    <Path>content-admin-import</Path>
+    <Parent>
+        <Path>base-import</Path>
+    </Parent>
+    <SvnUrl>http://closed.jellymold.com/svn/skins/content-admin-import</SvnUrl>
+    <SvnUsername>skins</SvnUsername>
+    <SvnPassword>5k1n5</SvnPassword>
+</Skin>

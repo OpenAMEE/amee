@@ -27,7 +27,6 @@ import gc.carbon.ObjectType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
-import org.jboss.seam.annotations.Name;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -50,7 +49,6 @@ import java.util.Date;
 
 @Entity
 @Table(name = "ALGORITHM")
-@Name("algorithm")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Algorithm implements PersistentObject {
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Targets>
+    <Target>
+        <Type>SEAM_COMPONENT_RESOURCE</Type>
+        <Name>accountDetailsResource</Name>
+        <Description/>
+        <UriPattern/>
+        <Target>/details</Target>
+        <DefaultTarget>false</DefaultTarget>
+        <Enabled>true</Enabled>
+    </Target>
+</Targets>

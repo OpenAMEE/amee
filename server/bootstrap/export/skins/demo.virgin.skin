@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Skin>
+    <SkinType>DATABASE_AND_SUBVERSION</SkinType>
+    <Name>Content Virgin Skin</Name>
+    <Path>virgin-content</Path>
+    <Parent>
+        <Path>demo-content</Path>
+    </Parent>
+    <SvnUrl>http://closed.jellymold.com/svn/skins/virgin-content</SvnUrl>
+    <SvnUsername>skins</SvnUsername>
+    <SvnPassword>5k1n5</SvnPassword>
+</Skin>
