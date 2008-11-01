@@ -1,20 +1,17 @@
 package gc.carbon.profile;
 
-import gc.carbon.data.Item;
-import gc.carbon.data.DataCategory;
-import gc.carbon.data.ItemDefinition;
-import gc.carbon.data.DataItem;
+import gc.carbon.data.*;
 import gc.carbon.EngineUtils;
-import gc.carbon.ObjectType;
+import gc.carbon.path.InternalItemValue;
 
 import javax.persistence.*;
 import java.math.RoundingMode;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.Map;
 
 import org.hibernate.annotations.Index;
-import org.jboss.seam.annotations.Name;
 
 /**
  * This file is part of AMEE.

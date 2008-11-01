@@ -507,6 +507,7 @@
         <root url="jar://$PROJECT_DIR$/../amee/lib/spring/spring-2.5.5.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/ehcache/ehcache-1.4.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/jboss-seam/jboss-seam-ioc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/jsr275/jsr-275.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

@@ -24,6 +24,7 @@ import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import com.jellymold.kiwi.Environment;
 import gc.carbon.path.Pathable;
+import gc.carbon.path.InternalItemValue;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
@@ -273,5 +274,12 @@ public abstract class Item implements PersistentObject, Pathable {
 
     public void setModified(Date modified) {
         this.modified = modified;
+    }
+
+    public void appendInternalValues(Map<ItemValueDefinition, InternalItemValue> values) {
+        for (ItemValue iv : getItemValues()) {
+            if (iv.getUsableValue() != null)
+                values.put(iv.getItemValueDefinition(), new InternalItemValue(iv));
+        }
     }
 }

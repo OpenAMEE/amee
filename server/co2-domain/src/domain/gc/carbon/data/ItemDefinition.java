@@ -25,6 +25,7 @@ import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import com.jellymold.kiwi.Environment;
 import gc.carbon.ObjectType;
+import gc.carbon.path.InternalItemValue;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jboss.seam.annotations.Name;
@@ -47,11 +48,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "ITEM_DEFINITION")
@@ -295,4 +292,12 @@ public class ItemDefinition implements PersistentObject {
     public ObjectType getObjectType() {
         return ObjectType.ID;
     }
+
+    public void appendInternalValues(Map<ItemValueDefinition, InternalItemValue> values) {
+        for (ItemValueDefinition ivd : getItemValueDefinitions()) {
+            if (ivd.getUsableValue() != null)
+                values.put(ivd, new InternalItemValue(ivd));
+        }
+    }
+
 }

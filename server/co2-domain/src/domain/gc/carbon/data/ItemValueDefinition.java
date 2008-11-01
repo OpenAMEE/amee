@@ -47,6 +47,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.measure.quantity.Quantity;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -375,21 +376,35 @@ public class ItemValueDefinition implements PersistentObject {
         return ObjectType.IVD;
     }
 
-
-    public UnitDefinition getPerUnitDefinition() {
-        return perUnitDefinition;
-    }
-
     public void setPerUnitDefinition(UnitDefinition perUnitDefinition) {
         this.perUnitDefinition = perUnitDefinition;
-    }
-
-    public UnitDefinition getUnitDefinition() {
-        return unitDefinition;
     }
 
     public void setUnitDefinition(UnitDefinition unitDefinition) {
         this.unitDefinition = unitDefinition;
     }
 
+    public String getInternalUnit() {
+        return (unitDefinition != null) ? unitDefinition.getInternalUnit() : null;
+    }
+
+    public String getInternalPerUnit() {
+        return (perUnitDefinition != null) ? perUnitDefinition.getInternalUnit() : null;
+    }
+
+    public boolean hasUnits() {
+        return unitDefinition != null;
+    }
+
+    public boolean hasPerUnits() {
+        return perUnitDefinition != null;
+    }
+
+    public boolean isValidUnit(String unit) {
+        return unitDefinition.has(unit);
+    }
+
+    public boolean isValidPerUnit(String perUnit) {
+        return perUnitDefinition.has(perUnit);
+    }
 }

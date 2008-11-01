@@ -2,14 +2,10 @@
     
 import org.restlet.data.Form;
 
-import java.util.Date;
-import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
-/**
+ /**
  * This file is part of AMEE.
  * <p/>
  * AMEE is free software; you can redistribute it and/or modify
@@ -30,24 +26,24 @@ import java.text.SimpleDateFormat;
  */
 public class ProfileForm extends Form {
 
-    private static Map<String, String[]> legacyItemValues;
+    private static final Map<String, String[]> LEGACY_ITEM_VALUES;
     static {
-      legacyItemValues = new HashMap<String, String[]>();
-      legacyItemValues.put("currencyGBPPerMonth", new String[]{"currency","GBP","month"});
-      legacyItemValues.put("currencyUSDPerMonth", new String[]{"currency","USD","month"});
-      legacyItemValues.put("cyclesPerMonth", new String[]{"cycles","","month"});
-      legacyItemValues.put("distanceKmPerMonth", new String[]{"distance","km","month"});
-      legacyItemValues.put("distanceKmPerYear", new String[]{"distance","km","year"});
-      legacyItemValues.put("hoursPerMonth", new String[]{"hours","","Month"});
-      legacyItemValues.put("journeysPerYear", new String[]{"journeys","","year"});
-      legacyItemValues.put("kgPerMonth", new String[]{"kg","","month"});
-      legacyItemValues.put("kmPerLitre", new String[]{"km","","litre"});
-      legacyItemValues.put("kmPerLitreOwn", new String[]{"km","","litre"});
-      legacyItemValues.put("kWhPerMonth", new String[]{"km","","month"});
-      legacyItemValues.put("kWhPerQuarter", new String[]{"kWh","","quarter"});
-      legacyItemValues.put("litresPerMonth", new String[]{"litre","","month"});
-      legacyItemValues.put("transportKmPerLitre", new String[]{"km","","litre"});
-      legacyItemValues.put("usagePerQuarter", new String[]{"usage","","quarter"});
+      LEGACY_ITEM_VALUES = new HashMap<String, String[]>();
+      LEGACY_ITEM_VALUES.put("currencyGBPPerMonth", new String[]{"currency","GBP","month"});
+      LEGACY_ITEM_VALUES.put("currencyUSDPerMonth", new String[]{"currency","USD","month"});
+      LEGACY_ITEM_VALUES.put("cyclesPerMonth", new String[]{"cycles","","month"});
+      LEGACY_ITEM_VALUES.put("distanceKmPerMonth", new String[]{"distance","km","month"});
+      LEGACY_ITEM_VALUES.put("distanceKmPerYear", new String[]{"distance","km","year"});
+      LEGACY_ITEM_VALUES.put("hoursPerMonth", new String[]{"hours","","Month"});
+      LEGACY_ITEM_VALUES.put("journeysPerYear", new String[]{"journeys","","year"});
+      LEGACY_ITEM_VALUES.put("kgPerMonth", new String[]{"kg","","month"});
+      LEGACY_ITEM_VALUES.put("kmPerLitre", new String[]{"km","","litre"});
+      LEGACY_ITEM_VALUES.put("kmPerLitreOwn", new String[]{"km","","litre"});
+      LEGACY_ITEM_VALUES.put("kWhPerMonth", new String[]{"km","","month"});
+      LEGACY_ITEM_VALUES.put("kWhPerQuarter", new String[]{"kWh","","quarter"});
+      LEGACY_ITEM_VALUES.put("litresPerMonth", new String[]{"litre","","month"});
+      LEGACY_ITEM_VALUES.put("transportKmPerLitre", new String[]{"km","","litre"});
+      LEGACY_ITEM_VALUES.put("usagePerQuarter", new String[]{"usage","","quarter"});
     }
 
     public ProfileForm(Form form) {
@@ -64,8 +60,8 @@ public class ProfileForm extends Form {
             removeFirst("validFrom");   
         }
         for (String name : getNames()) {
-            if (legacyItemValues.containsKey(name)) {
-                String[] legacyItemValueMapping = legacyItemValues.get(name);
+            if (LEGACY_ITEM_VALUES.containsKey(name)) {
+                String[] legacyItemValueMapping = LEGACY_ITEM_VALUES.get(name);
                 add(legacyItemValueMapping[0],getFirstValue(name));
                 add(legacyItemValueMapping[0]+"Unit",legacyItemValueMapping[1]);
                 add(legacyItemValueMapping[0]+"PerUnit",legacyItemValueMapping[2]);

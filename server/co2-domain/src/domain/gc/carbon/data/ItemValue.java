@@ -265,30 +265,38 @@ public class ItemValue implements PersistentObject, Pathable {
 
 
     public String getUnit() {
-        return unit;
+        return (unit != null) ? unit : (hasUnits()) ? itemValueDefinition.getInternalUnit() : null;
     }
 
     public void setUnit(String unit) throws IllegalArgumentException {
-        if (!itemValueDefinition.getUnitDefinition().has(unit))
+        if (unit == null || unit.length() == 0)
+            return;
+
+        if ( !hasUnits() || !itemValueDefinition.isValidUnit(unit) )
             throw new IllegalArgumentException();
+
         this.unit = unit;
     }
 
     public String getPerUnit() {
-        return perUnit;
+        return (perUnit != null) ? perUnit : (hasPerUnits()) ? itemValueDefinition.getInternalPerUnit() : null;
     }
 
     public void setPerUnit(String perUnit) throws IllegalArgumentException {
-        if (!itemValueDefinition.getPerUnitDefinition().has(perUnit))
+        if (perUnit == null || perUnit.length() == 0)
+            return;
+
+        if ( !hasPerUnits() || !itemValueDefinition.isValidPerUnit(perUnit) )
             throw new IllegalArgumentException();
+
         this.perUnit = perUnit;
     }
 
     public boolean hasUnits() {
-        return itemValueDefinition.getUnitDefinition() != null;
+        return itemValueDefinition.hasUnits();
     }
 
     public boolean hasPerUnits() {
-        return itemValueDefinition.getPerUnitDefinition() != null;
+        return itemValueDefinition.hasPerUnits();
     }
 }

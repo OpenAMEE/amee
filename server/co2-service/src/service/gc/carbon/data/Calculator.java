@@ -23,6 +23,7 @@ import com.jellymold.sheet.Choices;
 import com.jellymold.sheet.ValueType;
 import gc.carbon.profile.ProfileFinder;
 import gc.carbon.profile.ProfileItem;
+import gc.carbon.path.InternalItemValue;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -39,6 +40,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.measure.*;
+import javax.measure.quantity.Velocity;
+import static javax.measure.unit.SI.*;
+import static javax.measure.unit.NonSI.*;
+import javax.measure.unit.Unit;
 
 // TODO: 'perMonth' is hard-coding - how should this be made more dynamic?
 
@@ -170,85 +177,45 @@ public class Calculator implements Serializable {
     }
 
     public Map<String, Object> getValues(ProfileItem profileItem) {
-        return getValues(profileItem.getDataItem(), profileItem, null);
+        Map<ItemValueDefinition, InternalItemValue> values = new HashMap<ItemValueDefinition, InternalItemValue>();
+        profileItem.getItemDefinition().appendInternalValues(values);
+        profileItem.getDataItem().appendInternalValues(values);
+        profileItem.appendInternalValues(values);
+
+        Map<String, Object> returnValues = new HashMap<String,Object>();
+        for (ItemValueDefinition ivd : values.keySet()) {
+            returnValues.put(ivd.getPath(), values.get(ivd).getValue());
+        }
+
+        return returnValues;
     }
 
     public Map<String, Object> getValues(DataItem dataItem, Choices userValueChoices) {
-        return getValues(dataItem, null, userValueChoices);
+        Map<ItemValueDefinition, InternalItemValue> values = new HashMap<ItemValueDefinition, InternalItemValue>();
+        dataItem.getItemDefinition().appendInternalValues(values);
+        dataItem.appendInternalValues(values);
+        appendUserValueChoices(userValueChoices,values);
+
+        Map<String, Object> returnValues = new HashMap<String,Object>();
+        for (ItemValueDefinition ivd : values.keySet()) {
+            returnValues.put(ivd.getPath(), values.get(ivd).getValue());
+        }
+
+        return returnValues;
     }
 
-    // TODO: surely this method can be more efficient
-    public Map<String, Object> getValues(DataItem dataItem, ProfileItem profileItem, Choices userValueChoices) {
-        Map<String, Object> returnValues = new HashMap<String, Object>();
-        String key;
-        String value;
-        Set<ItemValueDefinition> itemValueDefinitions = dataItem.getItemDefinition().getItemValueDefinitions();
-        List<ItemValue> dataItemValues = dataItem.getItemValues();
-        List<ItemValue> profileItemValues;
-        if (profileItem != null) {
-            profileItemValues = profileItem.getItemValues();
-        } else {
-            profileItemValues = null;
+    private void appendUserValueChoices(Choices userValueChoices, Map<ItemValueDefinition, InternalItemValue> values) {
+        if (userValueChoices != null) {
+            Map<ItemValueDefinition, InternalItemValue> userChoices = new HashMap<ItemValueDefinition, InternalItemValue>();
+            for(ItemValueDefinition itemValueDefinition : values.keySet()) {
+                if (itemValueDefinition.isFromProfile() && userValueChoices.containsKey(itemValueDefinition.getPath())) {
+                    userChoices.put(itemValueDefinition,
+                            new InternalItemValue(userValueChoices.get(itemValueDefinition.getPath()).getValue()));
+
+                }
+
+            }
+            values.putAll(userChoices);
         }
-        for (ItemValueDefinition itemValueDefinition : itemValueDefinitions) {
-            key = itemValueDefinition.getPath();
-            // first attempt from ItemValueDefinition
-            value = itemValueDefinition.getUsableValue();
-            // second attempt from DataItem
-            if (dataItemValues != null) {
-                for (ItemValue itemValue : dataItemValues) {
-                    if (itemValue.getItemValueDefinition().equals(itemValueDefinition)) {
-                        if (itemValue.getValue() != null) {
-                            value = itemValue.getUsableValue();
-                        }
-                        break;
-                    }
-                }
-            }
-            if (itemValueDefinition.isFromProfile()) {
-                if (userValueChoices != null) {
-                    // third attempt from userValueChoices
-                    if (itemValueDefinition.isFromProfile() && userValueChoices.containsKey(itemValueDefinition.getPath())) {
-                        value = userValueChoices.get(itemValueDefinition.getPath()).getValue();
-                    }
-                } else if (profileItemValues != null) {
-                    // third attempt from ProfileItem
-                    for (ItemValue itemValue : profileItemValues) {
-                        if (itemValue.getItemValueDefinition().equals(itemValueDefinition)) {
-                            if (itemValue.getValue() != null) {
-                                value = itemValue.getUsableValue();
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-            // now store key & value to map
-            if (value != null) {
-                if (itemValueDefinition.getValueDefinition().getValueType().equals(ValueType.DECIMAL)) {
-                    try {
-                        BigDecimal newValue;
-                        try {
-                            newValue = new BigDecimal(value);
-                            newValue = newValue.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
-                            if (newValue.precision() > ProfileItem.PRECISION) {
-                                log.warn("precision is too big: " + newValue);
-                                // TODO: do something?
-                            }
-                        } catch (Exception e) {
-                            // swallow
-                            log.warn("caught Exception: " + e);
-                            newValue = ProfileItem.ZERO;
-                        }
-                        returnValues.put(key, newValue);
-                    } catch (Exception e) {
-                        // swallow
-                    }
-                } else {
-                    returnValues.put(key, value);
-                }
-            }
-        }
-        return returnValues;
     }
 }

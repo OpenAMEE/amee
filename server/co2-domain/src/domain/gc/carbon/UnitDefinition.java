@@ -14,7 +14,6 @@ import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.kiwi.Environment;
-import com.jellymold.sheet.ValueType;
 
 import java.util.*;
 
@@ -62,12 +61,11 @@ public class UnitDefinition implements PersistentObject {
     @Column(name = "DESCRIPTION")
     private String description = "";
 
-    @Column(name = "CHOICES")
-    private String choices;
+    @Column(name = "UNITS")
+    private String units;
 
-
-    @Column(name = "DEFAULT_CHOICE")
-    private String default_choice;
+    @Column(name = "INTERNAL_UNIT")
+    private String internalUnit;
 
     @Column(name = "CREATED")
     private Date created = null;
@@ -84,7 +82,7 @@ public class UnitDefinition implements PersistentObject {
         this();
         setEnvironment(environment);
         setName(name);
-        setChoices(choices);
+        setUnits(choices);
     }
 
     public String toString() {
@@ -101,7 +99,8 @@ public class UnitDefinition implements PersistentObject {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
         obj.put("name", getName());
-        obj.put("choices", getChoices().toArray());
+        obj.put("units", getUnits().toArray());
+        obj.put("internalUnit", getInternalUnit());
         if (detailed) {
             obj.put("created", getCreated());
             obj.put("modified", getModified());
@@ -127,10 +126,11 @@ public class UnitDefinition implements PersistentObject {
         element.setAttribute("uid", getUid());
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         Element choices = document.createElement("Choices");
-        for (String choice : getChoices()) {
+        for (String choice : getUnits()) {
             choices.appendChild(APIUtils.getElement(document, "Choice", choice));
         }
         element.appendChild(choices);
+        element.appendChild(APIUtils.getElement(document, "InternalUnit", getInternalUnit()));
         if (detailed) {
             element.setAttribute("created", getCreated().toString());
             element.setAttribute("modified", getModified().toString());
@@ -205,26 +205,26 @@ public class UnitDefinition implements PersistentObject {
         this.description = description;
     }
 
-    public List<String> getChoices() {
-        return Arrays.asList(choices.split(","));
+    public List<String> getUnits() {
+        return Arrays.asList(units.split(","));
     }
 
-    public void setChoices(List<String> choices) {
-        if (choices.isEmpty())
+    public void setUnits(List<String> units) {
+        if (units.isEmpty())
             return;
-        String tmp = choices.remove(0);
-        for (String choice : choices) {
-            tmp = tmp + "," + choice;
+        String unitsStr = units.remove(0);
+        for (String unit : units) {
+            unitsStr = unitsStr + "," + unit;
         }
-        this.choices = tmp;
+        this.units = unitsStr;
     }
 
-    public String getDefault() {
-        return default_choice;
+    public String getInternalUnit() {
+        return internalUnit;
     }
 
-    public void setDefault(String default_choice) {
-        this.default_choice = default_choice;    
+    public void setInternalUnit(String internalUnit) {
+        this.internalUnit = internalUnit;
     }
 
     public Date getCreated() {
@@ -244,7 +244,7 @@ public class UnitDefinition implements PersistentObject {
     }
 
     public boolean has(String unit) {
-        for (String choice: getChoices()) {
+        for (String choice: getUnits()) {
             if (choice.equals(unit))
                 return true;
         }
