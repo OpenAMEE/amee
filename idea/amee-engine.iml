@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module relativePaths="true" type="JAVA_MODULE" version="4">
   <component name="BuildJarSettings">
-    <containerInfo />
-    <setting name="jarUrl" value="file://$MODULE_DIR$/../server/co2-engine/amee-engine.jar" />
+    <containerInfo>
+      <containerElement type="module" name="amee-engine">
+        <attribute name="method" value="1" />
+        <attribute name="URI" value="/" />
+      </containerElement>
+    </containerInfo>
+    <setting name="jarUrl" value="file://$MODULE_DIR$/../lib/amee/amee-engine.jar" />
     <setting name="buildJar" value="true" />
     <setting name="mainClass" value="" />
   </component>

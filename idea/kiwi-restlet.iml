@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module relativePaths="true" type="JAVA_MODULE" version="4">
   <component name="BuildJarSettings">
-    <containerInfo />
-    <setting name="jarUrl" value="file://$MODULE_DIR$/../../lib/pp/jm/kiwi-restlet.jar" />
+    <containerInfo>
+      <containerElement type="module" name="kiwi-restlet">
+        <attribute name="method" value="1" />
+        <attribute name="URI" value="/" />
+      </containerElement>
+    </containerInfo>
+    <setting name="jarUrl" value="file://$MODULE_DIR$/../lib/amee/kiwi-restlet.jar" />
     <setting name="buildJar" value="true" />
     <setting name="mainClass" value="" />
   </component>
