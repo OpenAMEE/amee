@@ -34,12 +34,12 @@ public class Engine implements WrapperListener, Serializable {
     protected SpringController springController;
     protected Component container;
 
-    private boolean initialise = false;
-    private int ajpPort = 8010;
-    private String serverName;
-    private int maxThreads = 700;
-    private int minThreads = 200;
-    private int threadMaxIdleTimeMs = 30000;
+    protected boolean initialise = false;
+    protected int ajpPort = 8010;
+    protected String serverName;
+    protected int maxThreads = 700;
+    protected int minThreads = 200;
+    protected int threadMaxIdleTimeMs = 30000;
 
     public Engine() {
         super();

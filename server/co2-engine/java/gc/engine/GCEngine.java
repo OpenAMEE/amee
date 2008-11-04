@@ -20,25 +20,18 @@
 package gc.engine;
 
 import com.jellymold.engine.Engine;
-import com.jellymold.kiwi.environment.ScheduledTaskManager;
 import org.apache.commons.cli.*;
 
 public class GCEngine extends Engine {
 
-    private static String serverName;
-    private static boolean initialiseSkinsFromSvn = false;
-    private static int ajpPort = 8010;
-
-    public GCEngine() {
-        super();
-    }
-
-    public GCEngine(boolean initialise, int ajpPort) {
-        super(initialise, ajpPort);
+    public GCEngine(boolean initialise, int ajpPort, String serverName) {
+        super(initialise, ajpPort, serverName);
     }
 
     public static void main(String[] args) {
 
+        int ajpPort = 8010;
+        String serverName = "localhost";
         Options options = new Options();
 
         Option serverNameOpt = OptionBuilder.withArgName("serverName")
@@ -47,10 +40,6 @@ public class GCEngine extends Engine {
                 .create("serverName");
         serverNameOpt.setRequired(true);
         options.addOption(serverNameOpt);
-
-        Option initialiseSkinsFromSvnOpt = new Option("initialiseSkinsFromSvn", false, "Initialise Skins from SVN");
-        initialiseSkinsFromSvnOpt.setRequired(false);
-        options.addOption(initialiseSkinsFromSvnOpt);
 
         Option ajpPortOpt = OptionBuilder.withArgName("port")
                 .hasArg()
@@ -73,10 +62,6 @@ public class GCEngine extends Engine {
             serverName = line.getOptionValue(serverNameOpt.getOpt());
         }
 
-        if (line.hasOption(initialiseSkinsFromSvnOpt.getOpt())) {
-            initialiseSkinsFromSvn = true;
-        }
-
         if (line.hasOption(ajpPortOpt.getOpt())) {
             try {
                 ajpPort = Integer.parseInt(line.getOptionValue(ajpPortOpt.getOpt()));
@@ -86,7 +71,7 @@ public class GCEngine extends Engine {
             }
         }
 
-        Engine.start(new GCEngine(false, ajpPort), args);
+        Engine.start(new GCEngine(false, ajpPort, serverName), args);
     }
 
     @Override

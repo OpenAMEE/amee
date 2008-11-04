@@ -9,15 +9,33 @@
   <component name="DBNavigator.Module.ConnectionManager">
     <connections />
   </component>
+  <component name="FacetManager">
+    <facet type="Spring" name="Spring" implicit="true">
+      <configuration>
+        <options>
+          <option name="enableValidation" value="false" />
+          <option name="reportErrorsAsWarnings" value="true" />
+        </options>
+        <customNs />
+      </configuration>
+    </facet>
+    <facet type="jpa" name="JPA" implicit="true">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="" />
+        <datasource-mapping />
+        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/../server/co2-engine/resources/META-INF/persistence.xml" optional="false" version="1.0" />
+      </configuration>
+    </facet>
+  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$/../server/co2-engine">
-      <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/src/resources" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/src/service" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/resources" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="amee-bootstrap" />
     <orderEntry type="module" module-name="amee-domain" />
     <orderEntry type="module" module-name="amee-restlet" />
     <orderEntry type="module" module-name="amee-service" />
