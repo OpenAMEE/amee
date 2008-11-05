@@ -19,22 +19,22 @@
 */
 package gc.carbon.profile;
 
+import com.jellymold.kiwi.Environment;
 import gc.carbon.BaseFilter;
 import gc.carbon.CarbonBeans;
-import gc.carbon.path.PathItem;
-import gc.carbon.path.PathItemGroup;
+import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.path.PathItemGroup;
+import gc.carbon.domain.profile.Profile;
 import gc.carbon.path.PathItemService;
 import org.apache.log4j.Logger;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.Component;
+import org.jboss.seam.contexts.Contexts;
 import org.restlet.Application;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 
 import java.util.List;
-
-import com.jellymold.kiwi.Environment;
 
 public class ProfileFilter extends BaseFilter {
 

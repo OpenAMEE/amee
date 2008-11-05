@@ -20,8 +20,8 @@
 package gc.carbon.environment;
 
 import com.jellymold.utils.BaseResource;
-import gc.carbon.data.Algorithm;
 import gc.carbon.data.DataConstants;
+import gc.carbon.domain.data.Algorithm;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;

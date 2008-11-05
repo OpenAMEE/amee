@@ -21,6 +21,7 @@ package gc.carbon.data;
 
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.BaseResource;
+import gc.carbon.domain.data.DataCategory;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;

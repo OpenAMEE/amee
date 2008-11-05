@@ -1,13 +1,13 @@
 package gc.carbon.profile.acceptor;
 
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
-import gc.carbon.profile.ProfileItem;
-import org.restlet.resource.Representation;
+import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
+import org.jboss.seam.util.XML;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
-import org.jboss.seam.util.XML;
-import org.dom4j.DocumentException;
-import org.apache.log4j.Logger;
+import org.restlet.resource.Representation;
 
 import java.io.IOException;
 import java.util.ArrayList;

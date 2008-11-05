@@ -21,7 +21,8 @@ package gc.carbon.path;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.cache.CacheHelper;
-import gc.carbon.profile.Profile;
+import gc.carbon.domain.path.PathItemGroup;
+import gc.carbon.domain.profile.Profile;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;

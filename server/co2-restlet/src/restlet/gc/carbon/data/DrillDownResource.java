@@ -23,6 +23,8 @@ import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
 import com.jellymold.utils.BaseResource;
 import gc.carbon.definition.DefinitionService;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.ItemDefinition;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;

@@ -19,21 +19,20 @@
 */
 package gc.carbon.definition;
 
-import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.Pager;
-import gc.carbon.ValueDefinition;
-import gc.carbon.data.Algorithm;
 import gc.carbon.data.DataService;
-import gc.carbon.data.ItemDefinition;
-import gc.carbon.data.ItemValueDefinition;
+import gc.carbon.domain.ValueDefinition;
+import gc.carbon.domain.data.Algorithm;
+import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.ItemValueDefinition;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.core.Events;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.core.Events;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;

@@ -1,19 +1,19 @@
 package gc.carbon.profile.acceptor;
 
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
-import gc.carbon.profile.ProfileItem;
-import org.restlet.resource.Representation;
-import org.restlet.data.Form;
-import org.restlet.data.MediaType;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.data.Form;
+import org.restlet.data.MediaType;
+import org.restlet.resource.Representation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * This file is part of AMEE.

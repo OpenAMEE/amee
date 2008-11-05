@@ -3,7 +3,7 @@ package gc.carbon;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.HeaderUtils;
 import gc.carbon.data.DataService;
-import gc.carbon.path.PathItem;
+import gc.carbon.domain.path.PathItem;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.restlet.data.Request;

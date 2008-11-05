@@ -20,6 +20,8 @@
 package gc.carbon.data;
 
 import com.jellymold.utils.BaseResource;
+import gc.carbon.domain.data.DataItem;
+import gc.carbon.domain.data.ItemValue;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;

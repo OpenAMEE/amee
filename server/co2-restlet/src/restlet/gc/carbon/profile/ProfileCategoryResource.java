@@ -22,15 +22,19 @@ package gc.carbon.profile;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
-import gc.carbon.profile.renderer.Renderer;
-import gc.carbon.profile.renderer.RendererFactory;
-import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
-import gc.carbon.profile.acceptor.ProfileCategoryFormAcceptor;
-import gc.carbon.profile.acceptor.Acceptor;
-import gc.carbon.profile.acceptor.ProfileCategoryXMLAcceptor;
-import gc.carbon.data.*;
-import gc.carbon.path.PathItem;
+import gc.carbon.data.Calculator;
+import gc.carbon.data.DataService;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.path.PathItemService;
+import gc.carbon.profile.acceptor.Acceptor;
+import gc.carbon.profile.acceptor.ProfileCategoryFormAcceptor;
+import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
+import gc.carbon.profile.acceptor.ProfileCategoryXMLAcceptor;
+import gc.carbon.builder.resource.ResourceBuilder;
+import gc.carbon.builder.resource.ResourceBuilderFactory;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -46,9 +50,10 @@ import org.w3c.dom.Element;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.Date;
 
 @Name("profileCategoryResource")
 @Scope(ScopeType.EVENT)
@@ -85,7 +90,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
 
-    private Renderer renderer;
+    private ResourceBuilder builder;
 
     private Map<MediaType, Acceptor> acceptors;
 
@@ -108,7 +113,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     }
 
     private void setRenderStrategy() {
-        renderer = RendererFactory.createProfileCategoryRenderer(this);
+        builder = ResourceBuilderFactory.createProfileCategoryRenderer(this);
     }
 
     private void setAcceptors() {
@@ -147,12 +152,12 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        return renderer.getJSONObject();
+        return builder.getJSONObject();
     }
 
     @Override
     public Element getElement(Document document) {
-        return renderer.getElement(document);
+        return builder.getElement(document);
     }
 
     @Override
@@ -261,8 +266,24 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
         return profileSheetService;
     }
 
+    public DataCategory getDataCategory() {
+        return profileBrowser.getDataCategory();    
+    }
+
+    public Profile getProfile() {
+        return profileBrowser.getProfile();
+    }
+    
     public ProfileBrowser getProfileBrowser() {
         return profileBrowser;
+    }
+
+    public Date getProfileDate() {
+        return profileBrowser.getProfileDate();
+    }
+
+    public ProfileItem getProfileItem() {
+        return profileBrowser.getProfileItem();
     }
 
     public PathItem getPathItem() {

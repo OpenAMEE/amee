@@ -19,31 +19,29 @@
 */
 package gc.carbon.profile;
 
-import com.jellymold.sheet.Cell;
-import com.jellymold.sheet.Column;
-import com.jellymold.sheet.Row;
-import com.jellymold.sheet.Sheet;
-import com.jellymold.sheet.ValueType;
+import com.jellymold.sheet.*;
 import com.jellymold.utils.cache.Cacheable;
 import com.jellymold.utils.cache.CacheableFactory;
-import gc.carbon.data.DataCategory;
 import gc.carbon.data.DataService;
-import gc.carbon.data.ItemDefinition;
-import gc.carbon.data.ItemValue;
-import gc.carbon.data.ItemValueDefinition;
 import gc.carbon.definition.DefinitionService;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.ProfileItem;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 @Name("profileSheetFactory")
 @Scope(ScopeType.EVENT)

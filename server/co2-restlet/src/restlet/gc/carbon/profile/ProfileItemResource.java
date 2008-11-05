@@ -19,17 +19,19 @@
 */
 package gc.carbon.profile;
 
-import com.jellymold.utils.BaseResource;
-import com.jellymold.utils.Pager;
-import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.kiwi.Environment;
+import com.jellymold.utils.Pager;
 import gc.carbon.data.Calculator;
-import gc.carbon.data.ItemValue;
 import gc.carbon.data.DataService;
-import gc.carbon.path.PathItem;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.domain.profile.Profile;
 import gc.carbon.path.PathItemService;
-import gc.carbon.profile.renderer.RendererFactory;
-import gc.carbon.profile.renderer.Renderer;
+import gc.carbon.builder.resource.ResourceBuilder;
+import gc.carbon.builder.resource.ResourceBuilderFactory;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -47,9 +49,10 @@ import org.w3c.dom.Element;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
+import java.util.Date;
 
 @Name("profileItemResource")
 @Scope(ScopeType.EVENT)
@@ -84,7 +87,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @In(create = true)
     private DataService dataService;
 
-    private Renderer renderer;
+    private ResourceBuilder builder;
 
     public ProfileItemResource() {
         super();
@@ -99,7 +102,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         super.init(context, request, response);
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
-        renderer = RendererFactory.createProfileItemRenderer(this);
+        builder = ResourceBuilderFactory.createProfileItemRenderer(this);
     }
 
     @Override
@@ -125,12 +128,12 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        return renderer.getJSONObject();
+        return builder.getJSONObject();
     }
 
     @Override
     public Element getElement(Document document) {
-        return renderer.getElement(document);
+        return builder.getElement(document);
     }
 
     @Override
@@ -239,10 +242,6 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         return profileSheetService;
     }
 
-    public ProfileBrowser getProfileBrowser() {
-        return profileBrowser;
-    }
-
     public PathItem getPathItem() {
         return pathItem;
     }
@@ -269,5 +268,21 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    public ProfileItem getProfileItem() {
+        return profileBrowser.getProfileItem();
+    }
+
+    public Date getProfileDate() {
+        return profileBrowser.getProfileDate();
+    }
+
+    public Profile getProfile() {
+        return profileBrowser.getProfile();
+    }
+
+    public DataCategory getDataCategory() {
+        return profileBrowser.getDataCategory();
     }
 }

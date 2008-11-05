@@ -22,6 +22,7 @@ package gc.carbon.data;
 import com.jellymold.sheet.*;
 import com.jellymold.utils.cache.Cacheable;
 import com.jellymold.utils.cache.CacheableFactory;
+import gc.carbon.domain.data.*;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;

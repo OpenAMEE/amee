@@ -19,11 +19,7 @@
 */
 package gc.carbon;
 
-import com.jellymold.kiwi.Site;
-import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.ApplicationFilter;
-import gc.carbon.definition.DefinitionService;
-import org.jboss.seam.contexts.Contexts;
 import org.restlet.Application;
 
 public abstract class BaseFilter extends ApplicationFilter {

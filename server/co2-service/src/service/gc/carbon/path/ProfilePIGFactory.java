@@ -19,15 +19,17 @@
 */
 package gc.carbon.path;
 
+import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.cache.Cacheable;
 import com.jellymold.utils.cache.CacheableFactory;
-import com.jellymold.kiwi.Environment;
-import gc.carbon.definition.DefinitionService;
-import gc.carbon.data.DataCategory;
 import gc.carbon.data.DataService;
-import gc.carbon.data.ItemValue;
-import gc.carbon.profile.Profile;
-import gc.carbon.profile.ProfileItem;
+import gc.carbon.definition.DefinitionService;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.path.PathItemGroup;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileService;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;

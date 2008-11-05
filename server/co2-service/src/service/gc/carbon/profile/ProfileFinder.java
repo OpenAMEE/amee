@@ -19,9 +19,10 @@
  */
 package gc.carbon.profile;
 
-import gc.carbon.data.DataCategory;
 import gc.carbon.data.DataFinder;
-import gc.carbon.data.ItemValue;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.profile.ProfileItem;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;

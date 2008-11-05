@@ -1,9 +1,9 @@
  package gc.carbon.profile;
-    
-import org.restlet.data.Form;
 
-import java.util.Map;
-import java.util.HashMap;
+ import gc.carbon.builder.APIVersion;
+ import gc.carbon.builder.mapper.LegacyDataMapper;
+ import gc.carbon.builder.mapper.LegacyItemValueMapper;
+ import org.restlet.data.Form;
 
  /**
  * This file is part of AMEE.
@@ -26,30 +26,15 @@ import java.util.HashMap;
  */
 public class ProfileForm extends Form {
 
-    private static final Map<String, String[]> LEGACY_ITEM_VALUES;
-    static {
-      LEGACY_ITEM_VALUES = new HashMap<String, String[]>();
-      LEGACY_ITEM_VALUES.put("currencyGBPPerMonth", new String[]{"currency","GBP","month"});
-      LEGACY_ITEM_VALUES.put("currencyUSDPerMonth", new String[]{"currency","USD","month"});
-      LEGACY_ITEM_VALUES.put("cyclesPerMonth", new String[]{"cycles","","month"});
-      LEGACY_ITEM_VALUES.put("distanceKmPerMonth", new String[]{"distance","km","month"});
-      LEGACY_ITEM_VALUES.put("distanceKmPerYear", new String[]{"distance","km","year"});
-      LEGACY_ITEM_VALUES.put("hoursPerMonth", new String[]{"hours","","Month"});
-      LEGACY_ITEM_VALUES.put("journeysPerYear", new String[]{"journeys","","year"});
-      LEGACY_ITEM_VALUES.put("kgPerMonth", new String[]{"kg","","month"});
-      LEGACY_ITEM_VALUES.put("kmPerLitre", new String[]{"km","","litre"});
-      LEGACY_ITEM_VALUES.put("kmPerLitreOwn", new String[]{"km","","litre"});
-      LEGACY_ITEM_VALUES.put("kWhPerMonth", new String[]{"km","","month"});
-      LEGACY_ITEM_VALUES.put("kWhPerQuarter", new String[]{"kWh","","quarter"});
-      LEGACY_ITEM_VALUES.put("litresPerMonth", new String[]{"litre","","month"});
-      LEGACY_ITEM_VALUES.put("transportKmPerLitre", new String[]{"km","","litre"});
-      LEGACY_ITEM_VALUES.put("usagePerQuarter", new String[]{"usage","","quarter"});
-    }
+    private APIVersion apiVersion = APIVersion.ONE;
 
     public ProfileForm(Form form) {
         super(form.getQueryString());
+
         // Read API version as a parameter - may move to a header
-        if (form.getFirstValue("v","1.0").equals("1.0")) {
+        apiVersion = APIVersion.version(form.getFirstValue("v","1.0"));
+
+        if (apiVersion.equals(APIVersion.ONE)) {
             mapLegacyParameters();
         }
     }
@@ -60,13 +45,16 @@ public class ProfileForm extends Form {
             removeFirst("validFrom");   
         }
         for (String name : getNames()) {
-            if (LEGACY_ITEM_VALUES.containsKey(name)) {
-                String[] legacyItemValueMapping = LEGACY_ITEM_VALUES.get(name);
-                add(legacyItemValueMapping[0],getFirstValue(name));
-                add(legacyItemValueMapping[0]+"Unit",legacyItemValueMapping[1]);
-                add(legacyItemValueMapping[0]+"PerUnit",legacyItemValueMapping[2]);
+            if (LegacyDataMapper.canMap(name)) {
+                add(LegacyItemValueMapper.getCurrentPath(name),getFirstValue(name));
+                add(LegacyItemValueMapper.getCurrentPath(name)+"Unit", LegacyDataMapper.getUnit(name));
+                add(LegacyItemValueMapper.getCurrentPath(name)+"PerUnit", LegacyDataMapper.getPerUnit(name));
                 removeFirst(name);
             }
         }
+    }
+
+    public APIVersion getVersion() {
+        return apiVersion;
     }
 }

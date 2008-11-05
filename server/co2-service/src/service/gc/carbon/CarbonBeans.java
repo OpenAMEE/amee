@@ -21,12 +21,10 @@ package gc.carbon;
 
 import gc.carbon.data.Calculator;
 import gc.carbon.data.DataService;
+import gc.carbon.definition.DefinitionService;
 import gc.carbon.path.PathItemService;
 import gc.carbon.profile.ProfileService;
-import gc.carbon.definition.DefinitionService;
 import org.jboss.seam.Component;
-import org.jboss.seam.contexts.Contexts;
-import com.jellymold.kiwi.Environment;
 
 public class CarbonBeans {
 

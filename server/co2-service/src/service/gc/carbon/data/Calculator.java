@@ -20,10 +20,13 @@
 package gc.carbon.data;
 
 import com.jellymold.sheet.Choices;
-import com.jellymold.sheet.ValueType;
+import gc.carbon.domain.data.Algorithm;
+import gc.carbon.domain.data.DataItem;
+import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.path.InternalItemValue;
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileFinder;
-import gc.carbon.profile.ProfileItem;
-import gc.carbon.path.InternalItemValue;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -37,15 +40,7 @@ import org.mozilla.javascript.Scriptable;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.measure.*;
-import javax.measure.quantity.Velocity;
-import static javax.measure.unit.SI.*;
-import static javax.measure.unit.NonSI.*;
-import javax.measure.unit.Unit;
 
 // TODO: 'perMonth' is hard-coding - how should this be made more dynamic?
 

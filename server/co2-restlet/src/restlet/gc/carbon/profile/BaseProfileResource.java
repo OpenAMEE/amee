@@ -1,20 +1,21 @@
 package gc.carbon.profile;
 
-import gc.carbon.path.PathItem;
-import gc.carbon.data.DataService;
-import gc.carbon.data.Calculator;
-
-import java.util.List;
-
+import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
-import com.jellymold.kiwi.Environment;
+import com.jellymold.utils.domain.APIObject;
+import gc.carbon.builder.APIVersion;
+import gc.carbon.builder.resource.BuildableResource;
+import gc.carbon.data.Calculator;
+import gc.carbon.data.DataService;
+import gc.carbon.domain.path.PathItem;
 import org.restlet.Context;
+import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.data.Form;
 
 import javax.persistence.EntityManager;
+import java.util.Set;
 
 /**
  * This file is part of AMEE.
@@ -35,7 +36,7 @@ import javax.persistence.EntityManager;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public abstract class BaseProfileResource extends BaseResource {
+public abstract class BaseProfileResource extends BaseResource implements BuildableResource {
 
     public BaseProfileResource() {
         super();
@@ -45,11 +46,7 @@ public abstract class BaseProfileResource extends BaseResource {
         super(context, request, response);
     }
 
-    public abstract List<ProfileItem> getProfileItems();
-
     public abstract ProfileSheetService getProfileSheetService();
-
-    public abstract ProfileBrowser getProfileBrowser();
 
     public abstract PathItem getPathItem();
 
@@ -67,5 +64,25 @@ public abstract class BaseProfileResource extends BaseResource {
 
     public Form getForm() {
         return new ProfileForm(super.getForm());
+    }
+
+    public String getVersion() {
+        return "1.0";
+    }
+
+    public APIVersion xgetVersion() {
+        return ((ProfileForm) getForm()).getVersion();
+    }
+
+    public String getFullPath() {
+        return getPathItem().getFullPath();
+    }
+
+    public boolean hasParent() {
+        return getPathItem().getParent() != null;
+    }
+
+    public Set<? extends APIObject> getChildrenByType(String type) {
+        return getPathItem().getChildrenByType(type);
     }
 }

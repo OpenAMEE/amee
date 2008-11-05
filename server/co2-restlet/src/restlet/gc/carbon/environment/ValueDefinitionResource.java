@@ -21,9 +21,9 @@ package gc.carbon.environment;
 
 import com.jellymold.sheet.ValueType;
 import com.jellymold.utils.BaseResource;
-import gc.carbon.ValueDefinition;
-import gc.carbon.definition.DefinitionService;
 import gc.carbon.data.DataConstants;
+import gc.carbon.definition.DefinitionService;
+import gc.carbon.domain.ValueDefinition;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;

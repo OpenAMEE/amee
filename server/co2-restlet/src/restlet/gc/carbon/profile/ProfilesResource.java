@@ -25,6 +25,7 @@ import com.jellymold.kiwi.Permission;
 import com.jellymold.kiwi.User;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
+import gc.carbon.domain.profile.Profile;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
