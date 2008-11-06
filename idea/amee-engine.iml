@@ -15,7 +15,7 @@
     <connections />
   </component>
   <component name="FacetManager">
-    <facet type="Spring" name="Spring" implicit="true">
+    <facet type="Spring" name="Spring">
       <configuration>
         <options>
           <option name="enableValidation" value="false" />
@@ -24,7 +24,7 @@
         <customNs />
       </configuration>
     </facet>
-    <facet type="jpa" name="JPA" implicit="true">
+    <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="" />
