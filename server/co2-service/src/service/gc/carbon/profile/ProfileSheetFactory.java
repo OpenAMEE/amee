@@ -1,48 +1,50 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package gc.carbon.profile;
 
 import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Column;
 import com.jellymold.sheet.Row;
 import com.jellymold.sheet.Sheet;
-import com.jellymold.utils.cache.CacheableFactory;
 import com.jellymold.utils.ValueType;
-import gc.carbon.data.DataCategory;
+import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.data.DataService;
-import gc.carbon.data.ItemDefinition;
-import gc.carbon.data.ItemValue;
-import gc.carbon.data.ItemValueDefinition;
 import gc.carbon.definition.DefinitionService;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.ProfileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 @Service
 @Scope("prototype")

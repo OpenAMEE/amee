@@ -259,10 +259,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/amee-bootstrap.iml" filepath="$PROJECT_DIR$/amee-bootstrap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-builder.iml" filepath="$PROJECT_DIR$/amee-builder.iml" />
       <module fileurl="file://$PROJECT_DIR$/amee-domain.iml" filepath="$PROJECT_DIR$/amee-domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/amee-engine.iml" filepath="$PROJECT_DIR$/amee-engine.iml" />
       <module fileurl="file://$PROJECT_DIR$/amee-restlet.iml" filepath="$PROJECT_DIR$/amee-restlet.iml" />
       <module fileurl="file://$PROJECT_DIR$/amee-service.iml" filepath="$PROJECT_DIR$/amee-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-test.iml" filepath="$PROJECT_DIR$/amee-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/cache-restlet.iml" filepath="$PROJECT_DIR$/cache-restlet.iml" />
       <module fileurl="file://$PROJECT_DIR$/cache-service.iml" filepath="$PROJECT_DIR$/cache-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/engine-service.iml" filepath="$PROJECT_DIR$/engine-service.iml" />
@@ -556,6 +558,20 @@
     <library name="rhino">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/../lib/rhino/js.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="xmlunit">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../lib/xmlunit/xmlunit.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="junit">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/junit/junit-4.4.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

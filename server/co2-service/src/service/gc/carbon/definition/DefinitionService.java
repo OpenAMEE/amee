@@ -21,11 +21,11 @@ package gc.carbon.definition;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.Pager;
-import gc.carbon.ValueDefinition;
-import gc.carbon.data.Algorithm;
 import gc.carbon.data.DataService;
-import gc.carbon.data.ItemDefinition;
-import gc.carbon.data.ItemValueDefinition;
+import gc.carbon.domain.ValueDefinition;
+import gc.carbon.domain.data.Algorithm;
+import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.ItemValueDefinition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

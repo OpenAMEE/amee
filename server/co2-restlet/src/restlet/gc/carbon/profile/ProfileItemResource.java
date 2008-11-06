@@ -1,35 +1,37 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package gc.carbon.profile;
 
-import com.jellymold.utils.BaseResource;
-import com.jellymold.utils.Pager;
-import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.kiwi.Environment;
+import com.jellymold.utils.Pager;
+import gc.carbon.builder.resource.ResourceBuilder;
+import gc.carbon.builder.resource.ResourceBuilderFactory;
 import gc.carbon.data.Calculator;
-import gc.carbon.data.ItemValue;
 import gc.carbon.data.DataService;
-import gc.carbon.path.PathItem;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
-import gc.carbon.profile.renderer.RendererFactory;
-import gc.carbon.profile.renderer.Renderer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -39,18 +41,19 @@ import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.springframework.stereotype.Component;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 
 @Component
 @Scope("prototype")
@@ -87,7 +90,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Autowired
     private DataService dataService;
 
-    private Renderer renderer;
+    private ResourceBuilder builder;
 
     public ProfileItemResource() {
         super();
@@ -102,7 +105,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         super.init(context, request, response);
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
-        renderer = RendererFactory.createProfileItemRenderer(this);
+        builder = ResourceBuilderFactory.createProfileItemRenderer(this);
     }
 
     @Override
@@ -128,12 +131,12 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        return renderer.getJSONObject();
+        return builder.getJSONObject();
     }
 
     @Override
     public Element getElement(Document document) {
-        return renderer.getElement(document);
+        return builder.getElement(document);
     }
 
     @Override
@@ -242,10 +245,6 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         return profileSheetService;
     }
 
-    public ProfileBrowser getProfileBrowser() {
-        return profileBrowser;
-    }
-
     public PathItem getPathItem() {
         return pathItem;
     }
@@ -272,5 +271,21 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    public ProfileItem getProfileItem() {
+        return profileBrowser.getProfileItem();
+    }
+
+    public Date getProfileDate() {
+        return profileBrowser.getProfileDate();
+    }
+
+    public Profile getProfile() {
+        return profileBrowser.getProfile();
+    }
+
+    public DataCategory getDataCategory() {
+        return profileBrowser.getDataCategory();
     }
 }

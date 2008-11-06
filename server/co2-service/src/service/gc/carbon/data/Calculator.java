@@ -1,44 +1,46 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package gc.carbon.data;
 
 import com.jellymold.sheet.Choices;
-import com.jellymold.utils.ValueType;
+import gc.carbon.domain.data.Algorithm;
+import gc.carbon.domain.data.DataItem;
+import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.path.InternalItemValue;
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileFinder;
-import gc.carbon.profile.ProfileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 // TODO: 'perMonth' is hard-coding - how should this be made more dynamic?
 
@@ -170,85 +172,45 @@ public class Calculator implements Serializable {
     }
 
     public Map<String, Object> getValues(ProfileItem profileItem) {
-        return getValues(profileItem.getDataItem(), profileItem, null);
+        Map<ItemValueDefinition, InternalItemValue> values = new HashMap<ItemValueDefinition, InternalItemValue>();
+        profileItem.getItemDefinition().appendInternalValues(values);
+        profileItem.getDataItem().appendInternalValues(values);
+        profileItem.appendInternalValues(values);
+
+        Map<String, Object> returnValues = new HashMap<String, Object>();
+        for (ItemValueDefinition ivd : values.keySet()) {
+            returnValues.put(ivd.getPath(), values.get(ivd).getValue());
+        }
+
+        return returnValues;
     }
 
     public Map<String, Object> getValues(DataItem dataItem, Choices userValueChoices) {
-        return getValues(dataItem, null, userValueChoices);
+        Map<ItemValueDefinition, InternalItemValue> values = new HashMap<ItemValueDefinition, InternalItemValue>();
+        dataItem.getItemDefinition().appendInternalValues(values);
+        dataItem.appendInternalValues(values);
+        appendUserValueChoices(userValueChoices, values);
+
+        Map<String, Object> returnValues = new HashMap<String, Object>();
+        for (ItemValueDefinition ivd : values.keySet()) {
+            returnValues.put(ivd.getPath(), values.get(ivd).getValue());
+        }
+
+        return returnValues;
     }
 
-    // TODO: surely this method can be more efficient
-    public Map<String, Object> getValues(DataItem dataItem, ProfileItem profileItem, Choices userValueChoices) {
-        Map<String, Object> returnValues = new HashMap<String, Object>();
-        String key;
-        String value;
-        Set<ItemValueDefinition> itemValueDefinitions = dataItem.getItemDefinition().getItemValueDefinitions();
-        List<ItemValue> dataItemValues = dataItem.getItemValues();
-        List<ItemValue> profileItemValues;
-        if (profileItem != null) {
-            profileItemValues = profileItem.getItemValues();
-        } else {
-            profileItemValues = null;
+    private void appendUserValueChoices(Choices userValueChoices, Map<ItemValueDefinition, InternalItemValue> values) {
+        if (userValueChoices != null) {
+            Map<ItemValueDefinition, InternalItemValue> userChoices = new HashMap<ItemValueDefinition, InternalItemValue>();
+            for (ItemValueDefinition itemValueDefinition : values.keySet()) {
+                if (itemValueDefinition.isFromProfile() && userValueChoices.containsKey(itemValueDefinition.getPath())) {
+                    userChoices.put(itemValueDefinition,
+                            new InternalItemValue(userValueChoices.get(itemValueDefinition.getPath()).getValue()));
+
+                }
+
+            }
+            values.putAll(userChoices);
         }
-        for (ItemValueDefinition itemValueDefinition : itemValueDefinitions) {
-            key = itemValueDefinition.getPath();
-            // first attempt from ItemValueDefinition
-            value = itemValueDefinition.getUsableValue();
-            // second attempt from DataItem
-            if (dataItemValues != null) {
-                for (ItemValue itemValue : dataItemValues) {
-                    if (itemValue.getItemValueDefinition().equals(itemValueDefinition)) {
-                        if (itemValue.getValue() != null) {
-                            value = itemValue.getUsableValue();
-                        }
-                        break;
-                    }
-                }
-            }
-            if (itemValueDefinition.isFromProfile()) {
-                if (userValueChoices != null) {
-                    // third attempt from userValueChoices
-                    if (itemValueDefinition.isFromProfile() && userValueChoices.containsKey(itemValueDefinition.getPath())) {
-                        value = userValueChoices.get(itemValueDefinition.getPath()).getValue();
-                    }
-                } else if (profileItemValues != null) {
-                    // third attempt from ProfileItem
-                    for (ItemValue itemValue : profileItemValues) {
-                        if (itemValue.getItemValueDefinition().equals(itemValueDefinition)) {
-                            if (itemValue.getValue() != null) {
-                                value = itemValue.getUsableValue();
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-            // now store key & value to map
-            if (value != null) {
-                if (itemValueDefinition.getValueDefinition().getValueType().equals(ValueType.DECIMAL)) {
-                    try {
-                        BigDecimal newValue;
-                        try {
-                            newValue = new BigDecimal(value);
-                            newValue = newValue.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
-                            if (newValue.precision() > ProfileItem.PRECISION) {
-                                log.warn("precision is too big: " + newValue);
-                                // TODO: do something?
-                            }
-                        } catch (Exception e) {
-                            // swallow
-                            log.warn("caught Exception: " + e);
-                            newValue = ProfileItem.ZERO;
-                        }
-                        returnValues.put(key, newValue);
-                    } catch (Exception e) {
-                        // swallow
-                    }
-                } else {
-                    returnValues.put(key, value);
-                }
-            }
-        }
-        return returnValues;
     }
 }

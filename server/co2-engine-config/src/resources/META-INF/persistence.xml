@@ -23,16 +23,16 @@
         <class>com.jellymold.plum.SkinFile</class>
         <class>com.jellymold.plum.SkinFileVersion</class>
         <class>com.jellymold.utils.domain.ClassAlias</class>        
-        <class>gc.carbon.ValueDefinition</class>
-        <class>gc.carbon.UnitDefinition</class>
-        <class>gc.carbon.data.Algorithm</class>
-        <class>gc.carbon.data.DataCategory</class>
-        <class>gc.carbon.data.DataItem</class>
-        <class>gc.carbon.data.ItemDefinition</class>
-        <class>gc.carbon.data.ItemValue</class>
-        <class>gc.carbon.data.ItemValueDefinition</class>
-        <class>gc.carbon.profile.Profile</class>
-        <class>gc.carbon.profile.ProfileItem</class>
+        <class>gc.carbon.domain.ValueDefinition</class>
+        <class>gc.carbon.domain.UnitDefinition</class>
+        <class>gc.carbon.domain.data.Algorithm</class>
+        <class>gc.carbon.domain.data.DataCategory</class>
+        <class>gc.carbon.domain.data.DataItem</class>
+        <class>gc.carbon.domain.data.ItemDefinition</class>
+        <class>gc.carbon.domain.data.ItemValue</class>
+        <class>gc.carbon.domain.data.ItemValueDefinition</class>
+        <class>gc.carbon.domain.profile.Profile</class>
+        <class>gc.carbon.domain.profile.ProfileItem</class>
         <properties>
             <property name="jboss.entity.manager.factory.jndi.name" value="java:/EntityManagerFactory"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>

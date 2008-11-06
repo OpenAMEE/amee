@@ -1,19 +1,18 @@
 package gc.carbon.profile.acceptor;
 
+import com.jellymold.utils.domain.APIUtils;
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
-import gc.carbon.profile.ProfileItem;
-import org.restlet.resource.Representation;
-import org.restlet.data.Form;
-import org.restlet.data.MediaType;
-import org.dom4j.DocumentException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.DocumentException;
+import org.restlet.data.Form;
+import org.restlet.data.MediaType;
+import org.restlet.resource.Representation;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.jellymold.utils.domain.APIUtils;
 
 /**
  * This file is part of AMEE.
@@ -39,7 +38,8 @@ public class ProfileCategoryXMLAcceptor extends Acceptor {
     private final Log log = LogFactory.getLog(getClass());
 
     public ProfileCategoryXMLAcceptor(ProfileCategoryResource resource) {
-        super(resource);    }
+        super(resource);
+    }
 
     public List<ProfileItem> accept(Representation entity, Form form) {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();

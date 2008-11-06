@@ -21,6 +21,7 @@ package gc.carbon.data;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.BaseResource;
+import gc.carbon.domain.data.DataCategory;
 import gc.carbon.path.PathItemService;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;

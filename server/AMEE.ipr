@@ -403,14 +403,16 @@
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/co2-builder/co2-builder.iml" filepath="$PROJECT_DIR$/co2-builder/co2-builder.iml" />
       <module fileurl="file://$PROJECT_DIR$/co2-domain/co2-domain.iml" filepath="$PROJECT_DIR$/co2-domain/co2-domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/co2-engine/co2-engine.iml" filepath="$PROJECT_DIR$/co2-engine/co2-engine.iml" />
       <module fileurl="file://$PROJECT_DIR$/co2-engine-config/co2-engine-config.iml" filepath="$PROJECT_DIR$/co2-engine-config/co2-engine-config.iml" />
       <module fileurl="file://$PROJECT_DIR$/co2-restlet/co2-restlet.iml" filepath="$PROJECT_DIR$/co2-restlet/co2-restlet.iml" />
       <module fileurl="file://$PROJECT_DIR$/co2-service/co2-service.iml" filepath="$PROJECT_DIR$/co2-service/co2-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/co2-test/co2-test.iml" filepath="$PROJECT_DIR$/co2-test/co2-test.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/output/classes" />
   </component>
   <component name="ResourceManagerContainer">
@@ -507,6 +509,19 @@
         <root url="jar://$PROJECT_DIR$/../amee/lib/spring/spring-2.5.5.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/ehcache/ehcache-1.4.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/jboss-seam/jboss-seam-ioc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/jsr275/jsr-275.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="test">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../amee/lib/junit/junit-4.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/xalan/xml-apis.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/xalan/xalan.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/xalan/xercesImpl.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/xalan/serializer.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/xmlunit/xmlunit-1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

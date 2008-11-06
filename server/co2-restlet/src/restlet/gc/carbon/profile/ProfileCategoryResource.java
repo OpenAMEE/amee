@@ -22,34 +22,35 @@ package gc.carbon.profile;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
-import gc.carbon.profile.renderer.Renderer;
-import gc.carbon.profile.renderer.RendererFactory;
-import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
-import gc.carbon.profile.acceptor.ProfileCategoryFormAcceptor;
-import gc.carbon.profile.acceptor.Acceptor;
-import gc.carbon.profile.acceptor.ProfileCategoryXMLAcceptor;
-import gc.carbon.data.*;
-import gc.carbon.path.PathItem;
+import gc.carbon.data.Calculator;
+import gc.carbon.data.DataService;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.path.PathItemService;
+import gc.carbon.profile.acceptor.Acceptor;
+import gc.carbon.profile.acceptor.ProfileCategoryFormAcceptor;
+import gc.carbon.profile.acceptor.ProfileCategoryXMLAcceptor;
+import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
+import gc.carbon.builder.resource.ResourceBuilder;
+import gc.carbon.builder.resource.ResourceBuilderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 @Component
 @Scope("prototype")
@@ -88,7 +89,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
 
-    private Renderer renderer;
+    private ResourceBuilder builder;
 
     private Map<MediaType, Acceptor> acceptors;
 
@@ -111,7 +112,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     }
 
     private void setRenderStrategy() {
-        renderer = RendererFactory.createProfileCategoryRenderer(this);
+        builder = ResourceBuilderFactory.createProfileCategoryRenderer(this);
     }
 
     private void setAcceptors() {
@@ -150,12 +151,12 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        return renderer.getJSONObject();
+        return builder.getJSONObject();
     }
 
     @Override
     public Element getElement(Document document) {
-        return renderer.getElement(document);
+        return builder.getElement(document);
     }
 
     @Override
@@ -216,9 +217,9 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     }
 
     private boolean isPostOrPutAuthorized() {
-         return (getRequest().getMethod().equals(Method.POST) && (profileBrowser.getProfileItemActions().isAllowCreate())) ||
-                 (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()));
-     }
+        return (getRequest().getMethod().equals(Method.POST) && (profileBrowser.getProfileItemActions().isAllowCreate())) ||
+                (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()));
+    }
 
 
     public List<ProfileItem> doPostOrPut(org.restlet.resource.Representation entity, Form form) {
@@ -232,11 +233,11 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
         } else if (MediaType.APPLICATION_XML.includes(type)) {
             return acceptors.get(MediaType.APPLICATION_XML);
         } else {
-           return acceptors.get(MediaType.APPLICATION_WWW_FORM);
+            return acceptors.get(MediaType.APPLICATION_WWW_FORM);
         }
     }
 
-     @Override
+    @Override
     public boolean allowDelete() {
         // only allow delete for profile (a request to /profiles/{profileUid})
         return (pathItem.getPath().length() == 0);
@@ -264,8 +265,24 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
         return profileSheetService;
     }
 
+    public DataCategory getDataCategory() {
+        return profileBrowser.getDataCategory();
+    }
+
+    public Profile getProfile() {
+        return profileBrowser.getProfile();
+    }
+
     public ProfileBrowser getProfileBrowser() {
         return profileBrowser;
+    }
+
+    public Date getProfileDate() {
+        return profileBrowser.getProfileDate();
+    }
+
+    public ProfileItem getProfileItem() {
+        return profileBrowser.getProfileItem();
     }
 
     public PathItem getPathItem() {

@@ -1,12 +1,11 @@
 package gc.carbon.profile.acceptor;
 
-import gc.carbon.profile.ProfileItem;
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
+import org.restlet.data.Form;
+import org.restlet.resource.Representation;
 
 import java.util.List;
-
-import org.restlet.resource.Representation;
-import org.restlet.data.Form;
 
 /**
  * This file is part of AMEE.

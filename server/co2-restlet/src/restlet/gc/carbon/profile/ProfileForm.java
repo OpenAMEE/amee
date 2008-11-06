@@ -1,15 +1,11 @@
  package gc.carbon.profile;
-    
-import org.restlet.data.Form;
 
-import java.util.Date;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+ import gc.carbon.builder.APIVersion;
+ import gc.carbon.builder.mapper.LegacyDataMapper;
+ import gc.carbon.builder.mapper.LegacyItemValueMapper;
+ import org.restlet.data.Form;
 
-/**
+ /**
  * This file is part of AMEE.
  * <p/>
  * AMEE is free software; you can redistribute it and/or modify
@@ -30,30 +26,15 @@ import java.text.SimpleDateFormat;
  */
 public class ProfileForm extends Form {
 
-    private static Map<String, String[]> legacyItemValues;
-    static {
-      legacyItemValues = new HashMap<String, String[]>();
-      legacyItemValues.put("currencyGBPPerMonth", new String[]{"currency","GBP","month"});
-      legacyItemValues.put("currencyUSDPerMonth", new String[]{"currency","USD","month"});
-      legacyItemValues.put("cyclesPerMonth", new String[]{"cycles","","month"});
-      legacyItemValues.put("distanceKmPerMonth", new String[]{"distance","km","month"});
-      legacyItemValues.put("distanceKmPerYear", new String[]{"distance","km","year"});
-      legacyItemValues.put("hoursPerMonth", new String[]{"hours","","Month"});
-      legacyItemValues.put("journeysPerYear", new String[]{"journeys","","year"});
-      legacyItemValues.put("kgPerMonth", new String[]{"kg","","month"});
-      legacyItemValues.put("kmPerLitre", new String[]{"km","","litre"});
-      legacyItemValues.put("kmPerLitreOwn", new String[]{"km","","litre"});
-      legacyItemValues.put("kWhPerMonth", new String[]{"km","","month"});
-      legacyItemValues.put("kWhPerQuarter", new String[]{"kWh","","quarter"});
-      legacyItemValues.put("litresPerMonth", new String[]{"litre","","month"});
-      legacyItemValues.put("transportKmPerLitre", new String[]{"km","","litre"});
-      legacyItemValues.put("usagePerQuarter", new String[]{"usage","","quarter"});
-    }
+    private APIVersion apiVersion = APIVersion.ONE;
 
     public ProfileForm(Form form) {
         super(form.getQueryString());
+
         // Read API version as a parameter - may move to a header
-        if (form.getFirstValue("v","1.0").equals("1.0")) {
+        apiVersion = APIVersion.version(form.getFirstValue("v","1.0"));
+
+        if (apiVersion.equals(APIVersion.ONE)) {
             mapLegacyParameters();
         }
     }
@@ -64,13 +45,16 @@ public class ProfileForm extends Form {
             removeFirst("validFrom");   
         }
         for (String name : getNames()) {
-            if (legacyItemValues.containsKey(name)) {
-                String[] legacyItemValueMapping = legacyItemValues.get(name);
-                add(legacyItemValueMapping[0],getFirstValue(name));
-                add(legacyItemValueMapping[0]+"Unit",legacyItemValueMapping[1]);
-                add(legacyItemValueMapping[0]+"PerUnit",legacyItemValueMapping[2]);
+            if (LegacyDataMapper.canMap(name)) {
+                add(LegacyItemValueMapper.getCurrentPath(name),getFirstValue(name));
+                add(LegacyItemValueMapper.getCurrentPath(name)+"Unit", LegacyDataMapper.getUnit(name));
+                add(LegacyItemValueMapper.getCurrentPath(name)+"PerUnit", LegacyDataMapper.getPerUnit(name));
                 removeFirst(name);
             }
         }
+    }
+
+    public APIVersion getVersion() {
+        return apiVersion;
     }
 }

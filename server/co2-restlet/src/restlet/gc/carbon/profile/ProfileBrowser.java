@@ -21,14 +21,17 @@ package gc.carbon.profile;
 
 import com.jellymold.kiwi.ResourceActions;
 import gc.carbon.BaseBrowser;
-import gc.carbon.data.DataCategory;
-import gc.carbon.data.ItemValue;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.ProfileDate;
+import gc.carbon.domain.profile.ProfileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
-import org.springframework.stereotype.Component;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 

@@ -19,9 +19,11 @@
 */
 package gc.carbon.path;
 
-import gc.carbon.data.DataCategory;
-import gc.carbon.data.DataItem;
-import gc.carbon.data.ItemValue;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.DataItem;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.path.PathItemGroup;
 
 import java.io.Serializable;
 import java.util.Iterator;

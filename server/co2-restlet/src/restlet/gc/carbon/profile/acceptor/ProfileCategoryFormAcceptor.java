@@ -1,19 +1,19 @@
 package gc.carbon.profile.acceptor;
 
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.DataItem;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.profile.ProfileCategoryResource;
-import gc.carbon.profile.ProfileItem;
-import gc.carbon.profile.StartEndDate;
-import gc.carbon.data.DataCategory;
-import gc.carbon.data.DataItem;
-import gc.carbon.data.ItemValue;
-import org.restlet.resource.Representation;
-import org.restlet.data.Form;
-import org.restlet.data.Method;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.restlet.data.Form;
+import org.restlet.data.Method;
+import org.restlet.resource.Representation;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,7 +49,7 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
         DataItem dataItem;
         ProfileItem profileItem = null;
         String uid;
-        dataCategory = resource.getProfileBrowser().getDataCategory();
+        dataCategory = resource.getDataCategory();
         if (resource.getRequest().getMethod().equals(Method.POST)) {
             // new ProfileItem
             uid = form.getFirstValue("dataItemUid");
@@ -64,7 +64,7 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                 }
                 if (dataItem != null) {
                     // create new ProfileItem
-                    profileItem = new ProfileItem(resource.getProfileBrowser().getProfile(), dataItem);
+                    profileItem = new ProfileItem(resource.getProfile(), dataItem);
                     profileItem = acceptProfileItem(form, profileItem);
                 } else {
                     log.warn("Data Item not found");
@@ -137,7 +137,7 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                         if (itemValue.hasUnits())
                             itemValue.setUnit(form.getFirstValue(name + "Unit"));
                         if (itemValue.hasPerUnits())
-                        itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
+                            itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
                     }
                 }
                 resource.getCalculator().calculate(profileItem);

@@ -22,6 +22,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="amee-builder" />
     <orderEntry type="module" module-name="kiwi-domain" />
     <orderEntry type="module" module-name="sheet-domain" />
     <orderEntry type="module" module-name="utils" />
@@ -30,6 +31,7 @@
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="hibernate" level="project" />
     <orderEntry type="library" name="joda" level="project" />
+    <orderEntry type="library" name="jscience" level="project" />
     <orderEntryProperties />
   </component>
 </module>
