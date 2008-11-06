@@ -37,3 +37,4 @@ antisamy,1.2
 jai,1.2
 lucece, 2.3.2
 joda-time, 1.5.2
+xmlutil, 1.2
