@@ -4,6 +4,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.util.Calendar;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * This file is part of AMEE.
@@ -26,12 +28,18 @@ import java.util.Calendar;
  */
 public abstract class GCDate extends java.util.Date {
 
+    protected static final DateFormat MONTH_DATE = new SimpleDateFormat("yyyyMM");
+
+    private String dateStr;
+
     public GCDate(String dateStr) {
         super();
         if (dateStr != null) {
             setTime(parseStr(dateStr));
+            this.dateStr = dateStr;
         } else {
-            setTime(defaultDate());    
+            setTime(defaultDate());
+            this.dateStr = MONTH_DATE.format(this);
         }
     }
 
@@ -44,6 +52,10 @@ public abstract class GCDate extends java.util.Date {
         cal.clear();
         cal.set(year, month, 1);
         return cal.getTimeInMillis();
+    }
+
+    public String toString() {
+        return dateStr;    
     }
 
     public Element toXML(Document document) {

@@ -62,22 +62,30 @@ public class LegacyDataMapper {
          CURRENT_2_LEGACY.put("usagequarter", new String[]{"usagePerQuarter","Usage Per Quarter"});
     }
 
-    public static String getLegacyPath(String current, String unit, String perUnit) {
+    public static String getLegacyPath(String path, String unit, String perUnit) {
         if (unit == null && perUnit == null)
-            return current;
+            return null;
 
         unit = (unit == null) ? "" : unit;
         perUnit = (perUnit == null) ? "" : perUnit;
-        return CURRENT_2_LEGACY.get(current+unit+perUnit)[0];
+        if (CURRENT_2_LEGACY.containsKey(path+unit+perUnit)) {
+            return CURRENT_2_LEGACY.get(path+unit+perUnit)[0];
+        } else {
+            return path + toTitleCase(unit) + "Per" + toTitleCase(perUnit);
+        }
     }
 
-    public static String getLegacyName(String current, String unit, String perUnit) {
+    public static String getLegacyName(String path, String unit, String perUnit) {
         if (unit == null && perUnit == null)
-            return current;
+            return null;
 
         unit = (unit == null) ? "" : unit;
         perUnit = (perUnit == null) ? "" : perUnit;
-        return CURRENT_2_LEGACY.get(current+unit+perUnit)[1];
+        if (CURRENT_2_LEGACY.containsKey(path+unit+perUnit)) {
+            return CURRENT_2_LEGACY.get(path+unit+perUnit)[1];
+        } else {
+            return toTitleCase(path) + " " + toTitleCase(unit) + " Per " + toTitleCase(perUnit);
+        }
     }
 
     public static boolean canMap(String legacyPath) {
@@ -101,5 +109,9 @@ public class LegacyDataMapper {
         if (!canMap(legacyPath))
             return null;
         return LEGACY_2_CURRENT.get(legacyPath)[2];
+    }
+
+    private static String toTitleCase(String string) {
+        return Character.toUpperCase(string.charAt(0)) + string.substring(1);
     }
 }

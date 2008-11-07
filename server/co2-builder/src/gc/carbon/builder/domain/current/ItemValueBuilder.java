@@ -41,6 +41,8 @@ public class ItemValueBuilder implements Builder {
         obj.put("path", itemValue.getPath());
         obj.put("name", itemValue.getName());
         obj.put("value", itemValue.getValue());
+        obj.put("unit",itemValue.getUnit());
+        obj.put("perUnit",itemValue.getPerUnit());
         obj.put("itemValueDefinition", itemValue.getItemValueDefinition().getJSONObject(false));
         if (detailed) {
             obj.put("created", itemValue.getCreated());
@@ -56,6 +58,8 @@ public class ItemValueBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "Path", itemValue.getPath()));
         element.appendChild(APIUtils.getElement(document, "Name", itemValue.getName()));
         element.appendChild(APIUtils.getElement(document, "Value", itemValue.getValue()));
+        element.appendChild(APIUtils.getElement(document, "Unit", itemValue.getUnit()));
+        element.appendChild(APIUtils.getElement(document, "PerUnit", itemValue.getPerUnit()));
         element.appendChild(itemValue.getItemValueDefinition().getElement(document, false));
         if (detailed) {
             element.setAttribute("Created", itemValue.getCreated().toString());

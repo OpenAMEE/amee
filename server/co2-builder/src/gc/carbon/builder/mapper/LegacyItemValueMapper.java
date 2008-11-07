@@ -35,13 +35,22 @@ public class LegacyItemValueMapper extends LegacyDataMapper {
     }
 
     public String getPath() {
-     return getLegacyPath(itemValue.getPath(),itemValue.getUnit(),itemValue.getPerUnit());
+        String legacyPath = getLegacyPath(itemValue.getPath(), itemValue.getUnit(), itemValue.getPerUnit());
+        if (legacyPath == null) {
+            return itemValue.getPath();
+        } else {
+            return legacyPath;
+        }
     }
 
     public String getName() {
-        return getLegacyName(itemValue.getPath(),itemValue.getUnit(),itemValue.getPerUnit());
+        String legacyName = getLegacyName(itemValue.getPath(), itemValue.getUnit(), itemValue.getPerUnit());
+        if (legacyName == null) {
+            return itemValue.getName();
+        } else {
+            return legacyName;
+        }
     }
-
 
     public BuildableItemValueDefinition getItemValueDefinition() {
         return itemValue.getItemValueDefinition();

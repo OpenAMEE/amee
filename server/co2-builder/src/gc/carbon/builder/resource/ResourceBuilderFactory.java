@@ -2,6 +2,7 @@ package gc.carbon.builder.resource;
 
 import gc.carbon.builder.resource.current.ProfileCategoryResourceBuilder;
 import gc.carbon.builder.resource.current.ProfileItemResourceBuilder;
+import gc.carbon.builder.APIVersion;
 
 /**
  * This file is part of AMEE.
@@ -24,19 +25,17 @@ import gc.carbon.builder.resource.current.ProfileItemResourceBuilder;
  */
 public class ResourceBuilderFactory {
 
-    public static ResourceBuilder createProfileCategoryRenderer(BuildableResource resource) {
-        //if (resource.getVersion() == APIVersion.ONE) {
-        if (resource.getVersion().equals("1.0")) {
-           return new ProfileCategoryResourceBuilder(resource);
+    public static ResourceBuilder createProfileCategoryBuilder(BuildableResource resource) {
+        if (resource.getVersion().equals(APIVersion.ONE_ZERO)) {
+           return new gc.carbon.builder.resource.v1.ProfileCategoryResourceBuilder(resource);
         } else {
             return new ProfileCategoryResourceBuilder(resource);
         }
     }
 
-    public static ResourceBuilder createProfileItemRenderer(BuildableResource resource) {
-        //if (resource.getVersion() == APIVersion.ONE) {
-        if (resource.getVersion().equals("1.0")) {
-            return new ProfileItemResourceBuilder(resource);
+    public static ResourceBuilder createProfileItemBuilder(BuildableResource resource) {
+        if (resource.getVersion().equals(APIVersion.ONE_ZERO)) {
+            return new gc.carbon.builder.resource.v1.ProfileItemResourceBuilder(resource);
         } else {
             return new ProfileItemResourceBuilder(resource);
         }

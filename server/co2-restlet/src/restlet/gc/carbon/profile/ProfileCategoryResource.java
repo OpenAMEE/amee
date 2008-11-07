@@ -109,11 +109,10 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
         profileBrowser.setProfileDate(request.getResourceRef().getQueryAsForm());
         setPage(request);
         setAcceptors();
-        setRenderStrategy();
     }
 
-    private void setRenderStrategy() {
-        builder = ResourceBuilderFactory.createProfileCategoryRenderer(this);
+    private void setBuilderStrategy() {
+        builder = ResourceBuilderFactory.createProfileCategoryBuilder(this);
     }
 
     private void setAcceptors() {
@@ -164,6 +163,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     public void handleGet() {
         log.debug("handleGet");
         if (profileBrowser.getEnvironmentActions().isAllowView()) {
+            setBuilderStrategy();
             super.handleGet();
         } else {
             notAuthorized();
@@ -224,6 +224,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
 
     public List<ProfileItem> doPostOrPut(org.restlet.resource.Representation entity, Form form) {
+        setBuilderStrategy();
         return lookupAcceptor(entity.getMediaType()).accept(entity, form);
     }
 

@@ -38,6 +38,8 @@ import java.util.Set;
  */
 public abstract class BaseProfileResource extends BaseResource implements BuildableResource {
 
+    ProfileForm form;
+
     public BaseProfileResource() {
         super();
     }
@@ -62,19 +64,19 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
     
     public abstract EntityManager getEntityManager();
 
-    public Form getForm() {
-        return new ProfileForm(super.getForm());
+    public Form getForm() throws IllegalArgumentException {
+        if (form == null)
+            form = new ProfileForm(super.getForm());
+        return form;
     }
 
-    public String getVersion() {
-        return "1.0";
+    public APIVersion getVersion() throws IllegalArgumentException {
+        if (form == null)
+            form = new ProfileForm(super.getForm());
+        return form.getVersion();
     }
 
-    public APIVersion xgetVersion() {
-        return ((ProfileForm) getForm()).getVersion();
-    }
-
-    public String getFullPath() {
+   public String getFullPath() {
         return getPathItem().getFullPath();
     }
 

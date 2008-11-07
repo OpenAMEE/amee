@@ -72,7 +72,13 @@ public class ProfileItem extends Item implements BuildableProfileItem {
     private Boolean end = false;
 
     @Column(name = "AMOUNT", precision = PRECISION, scale = SCALE)
-    private BigDecimal amountPerMonth = ZERO;
+    private BigDecimal amount = ZERO;
+
+    @Column(name = "UNIT")
+    private String unit;
+
+    @Column(name = "PER_UNIT")
+    private String perUnit;
 
     @Transient
     private Builder builder;
@@ -111,7 +117,7 @@ public class ProfileItem extends Item implements BuildableProfileItem {
         ProfileItem profileItem = new ProfileItem(getProfile(), getDataCategory(), getDataItem());
         profileItem.setStartDate(getStartDate());
         profileItem.setEnd(isEnd());
-        profileItem.setAmountPerMonth(getAmountPerMonth());
+        profileItem.setAmount(getAmount());
         profileItem.setName(getName());
         profileItem.setCreated(getCreated());
         profileItem.setModified(getModified());
@@ -121,13 +127,13 @@ public class ProfileItem extends Item implements BuildableProfileItem {
     }
 
     @Transient
-    public void updateAmountPerMonth(BigDecimal newAmountPerMonth) {
-        setAmountPerMonth(newAmountPerMonth);
+    public void updateAmount(BigDecimal newAmount) {
+        setAmount(newAmount);
     }
 
     @Transient
-    public void addToAmountPerMonth(BigDecimal difference) {
-        updateAmountPerMonth(getAmountPerMonth().add(difference));
+    public void addToAmount(BigDecimal difference) {
+        updateAmount(getAmount().add(difference));
     }
 
     @Transient
@@ -187,15 +193,15 @@ public class ProfileItem extends Item implements BuildableProfileItem {
         this.end = end;
     }
 
-    public BigDecimal getAmountPerMonth() {
-        return amountPerMonth;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setAmountPerMonth(BigDecimal amountPerMonth) {
-        if (amountPerMonth == null) {
-            amountPerMonth = ZERO;
+    public void setAmount(BigDecimal amount) {
+        if (amount == null) {
+            amount = ZERO;
         }
-        this.amountPerMonth = amountPerMonth;
+        this.amount = amount;
     }
 
     public JSONObject getJSONObject(boolean b) throws JSONException {
@@ -204,6 +210,22 @@ public class ProfileItem extends Item implements BuildableProfileItem {
 
     public Element getElement(Document document, boolean b) {
         return builder.getElement(document,b);
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getPerUnit() {
+        return perUnit;
+    }
+
+    public void setPerUnit(String perUnit) {
+        this.perUnit = perUnit;
     }
 
     @Transient

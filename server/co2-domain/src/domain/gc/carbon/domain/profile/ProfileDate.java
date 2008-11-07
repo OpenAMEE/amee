@@ -24,13 +24,8 @@ import java.text.SimpleDateFormat;
  */
 public class ProfileDate extends GCDate {
 
-    private String profileDate;
-
-    private static final DateFormat MONTH_DATE = new SimpleDateFormat("yyyyMM");
-
     public ProfileDate(String profileDate) {
         super(profileDate);
-        this.profileDate = profileDate;
     }
 
     protected long parseStr(String dateStr) {
@@ -39,9 +34,5 @@ public class ProfileDate extends GCDate {
         } catch (Exception ex) {
             return defaultDate();
         }
-    }
-
-    public String toString() {
-        return profileDate;     
     }
 }

@@ -35,11 +35,21 @@ public class LegacyItemValueDefinitionMapper extends LegacyDataMapper {
     }
 
     public String getPath() {
-     return getLegacyPath(itemValueDefinition.getPath(), itemValueDefinition.getInternalUnit(), itemValueDefinition.getInternalPerUnit());
+        String legacyPath = getLegacyPath(itemValueDefinition.getPath(), itemValueDefinition.getInternalUnit(), itemValueDefinition.getInternalPerUnit());
+        if (legacyPath == null) {
+            return itemValueDefinition.getPath();
+        } else {
+            return legacyPath;
+        }
     }
 
     public String getName() {
-        return getLegacyName(itemValueDefinition.getPath(), itemValueDefinition.getInternalUnit(), itemValueDefinition.getInternalPerUnit());
+        String legacyName = getLegacyName(itemValueDefinition.getPath(), itemValueDefinition.getInternalUnit(), itemValueDefinition.getInternalPerUnit());
+        if (legacyName == null) {
+            return itemValueDefinition.getName();
+        } else {
+            return legacyName;
+        }
     }
 
     public String getUid() {

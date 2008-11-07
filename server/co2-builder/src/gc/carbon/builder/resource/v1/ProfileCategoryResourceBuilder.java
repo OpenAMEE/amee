@@ -47,9 +47,9 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
-            obj.put("profile", resource.getProfile().getJSONObject());
-        } else {
             obj.put("profile", resource.getProfile().getIdentityJSONObject());
+        } else {
+            obj.put("profile", resource.getProfile().getJSONObject());
         }
 
         // add Data Category
@@ -115,15 +115,13 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
         element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));
 
         // add profile date
-        //element.appendChild(resource.getDateTimeBrowser().getProfileDate().toXML(document));
-                // add profile date
         element.appendChild(APIUtils.getElement(document, "ProfileDate",resource.getProfileDate().toString()));
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
-            element.appendChild(resource.getProfile().getElement(document));
-        } else {
             element.appendChild(resource.getProfile().getIdentityElement(document));
+        } else {
+            element.appendChild(resource.getProfile().getElement(document));
         }
 
         // add DataCategory and Profile elements

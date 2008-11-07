@@ -102,7 +102,6 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         super.init(context, request, response);
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
-        builder = ResourceBuilderFactory.createProfileItemRenderer(this);
     }
 
     @Override
@@ -140,6 +139,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     public void handleGet() {
         log.debug("handleGet");
         if (profileBrowser.getProfileItemActions().isAllowView()) {
+            builder = ResourceBuilderFactory.createProfileItemBuilder(this);
             super.handleGet();
         } else {
             notAuthorized();
@@ -151,10 +151,15 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         return true;
     }
 
+    private void setBuilderStrategy() {
+        builder = ResourceBuilderFactory.createProfileItemBuilder(this);
+    }
+
     @Override
     public void put(Representation entity) {
         log.debug("put");
         if (profileBrowser.getProfileItemActions().isAllowModify()) {
+            setBuilderStrategy();
             Form form = getForm();
             ProfileItem profileItem = profileBrowser.getProfileItem();
             // ensure updated ProfileItem does not break rules for ProfileItems

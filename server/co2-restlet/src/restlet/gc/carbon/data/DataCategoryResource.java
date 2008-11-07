@@ -227,15 +227,11 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             }
             childrenElement.appendChild(dataCategoriesElement);
 
+            //TODO - XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             // list child Data Items via sheet
-            Sheet sheet = dataSheetService.getSheet(thisDataCategory);
-            if (sheet != null) {
-                Pager pager = getPager(dataBrowser.getItemsPerPage(getRequest()));
-                sheet = Sheet.getCopy(sheet, pager);
-                pager.setCurrentPage(getPage());
-                childrenElement.appendChild(sheet.getElement(document, false));
-                childrenElement.appendChild(pager.getElement(document));
-            }
+            //Sheet sheet = dataSheetService.getSheet(thisDataCategory);
+            DataCategoryResourceBuilder builder = new DataCategoryResourceBuilder(this);
+            builder.addElement(childrenElement, document);
 
         } else if (getRequest().getMethod().equals(Method.POST) || getRequest().getMethod().equals(Method.PUT)) {
 
@@ -620,5 +616,17 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         } else {
             notAuthorized();
         }
+    }
+
+    public DataSheetFactory getDataSheetFactory() {
+        return dataSheetService.getDataSheetFactory(); 
+    }
+
+    public DataCategory getDataCategory() {
+        return dataBrowser.getDataCategory();
+    }
+
+    public Pager getPager() {
+        return getPager(dataBrowser.getItemsPerPage(getRequest()));
     }
 }
