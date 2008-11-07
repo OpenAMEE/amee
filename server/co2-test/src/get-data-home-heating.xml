@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Resources>
+  <DataCategoryResource>
+    <Path>/home/heating</Path>
+    <DataCategory created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="A46ECFA19333">
+      <Name>Heating</Name>
+      <Path>heating</Path>
+      <Environment uid="5F5887BCF726"/>
+      <DataCategory uid="BBA3AC3E795E">
+        <Name>Home</Name>
+        <Path>home</Path>
+      </DataCategory>
+      <ItemDefinition uid="94BB9DEA1FBC"/>
+    </DataCategory>
+    <Children>
+      <DataCategories>
+        <DataCategory uid="AA9FD8C7498D">
+          <Name>US</Name>
+          <Path>us</Path>
+        </DataCategory>
+      </DataCategories>
+      <DataItems>
+        <DataItem created="2007-07-27 11:03:45.0" modified="2007-07-27 11:03:45.0" uid="B10138EEFD0F">
+          <homeAge>1930-1995</homeAge>
+          <type>boiler (wood chip/pellets)</type>
+          <homeDwellingType>detached bungalow</homeDwellingType>
+          <label>detached bungalow, 1, biomass, 1930-1995, boiler (wood chip/pellets)</label>
+          <kgCO2PerYear>571.0</kgCO2PerYear>
+          <path>B10138EEFD0F</path>
+          <source>defra/BRE/dgen 2007</source>
+          <homeNoOfBedrooms>1</homeNoOfBedrooms>
+          <homeFuel>biomass</homeFuel>
+        </DataItem>
+        <DataItem created="2007-07-27 11:03:45.0" modified="2007-07-27 11:03:45.0" uid="1698D7640015">
+          <homeAge>1930-1995</homeAge>
+          <type>stove</type>
+          <homeDwellingType>detached bungalow</homeDwellingType>
+          <label>detached bungalow, 1, biomass, 1930-1995, stove</label>
+          <kgCO2PerYear>2157.0</kgCO2PerYear>
+          <path>1698D7640015</path>
+          <source>defra/BRE/dgen 2007</source>
+          <homeNoOfBedrooms>1</homeNoOfBedrooms>
+          <homeFuel>biomass</homeFuel>
+        </DataItem>
+        <DataItem created="2007-07-27 11:03:45.0" modified="2007-07-27 11:03:45.0" uid="CB47C32786C9">
+          <homeAge>post 1995</homeAge>
+          <type>boiler (wood chip/pellets)</type>
+          <homeDwellingType>detached bungalow</homeDwellingType>
+          <label>detached bungalow, 1, biomass, post 1995, boiler (wood chip/pellets)</label>
+          <kgCO2PerYear>416.0</kgCO2PerYear>
+          <path>CB47C32786C9</path>
+          <source>defra/BRE/dgen 2007</source>
+          <homeNoOfBedrooms>1</homeNoOfBedrooms>
+          <homeFuel>biomass</homeFuel>
+        </DataItem>
+        <DataItem created="2007-07-27 11:03:45.0" modified="2007-07-27 11:03:45.0" uid="C05426EB820F">
+          <homeAge>post 1995</homeAge>
+          <type>stove</type>
+          <homeDwellingType>detached bungalow</homeDwellingType>
+          <label>detached bungalow, 1, biomass, post 1995, stove</label>
+          <kgCO2PerYear>2002.0</kgCO2PerYear>
+          <path>C05426EB820F</path>
+          <source>defra/BRE/dgen 2007</source>
+          <homeNoOfBedrooms>1</homeNoOfBedrooms>
+          <homeFuel>biomass</homeFuel>
+        </DataItem>
+        <DataItem created="2007-07-27 11:03:45.0" modified="2007-07-27 11:03:45.0" uid="B65D3034E6DC">
+          <homeAge>pre 1930</homeAge>
+          <type>boiler (wood chip/pellets)</type>
+          <homeDwellingType>detached bungalow</homeDwellingType>
+          <label>detached bungalow, 1, biomass, pre 1930, boiler (wood chip/pellets)</label>
+          <kgCO2PerYear>700.0</kgCO2PerYear>
+          <path>B65D3034E6DC</path>
+          <source>defra/BRE/dgen 2007</source>
+          <homeNoOfBedrooms>1</homeNoOfBedrooms>
+          <homeFuel>biomass</homeFuel>
+        </DataItem>
+        <DataItem created="2007-07-27 11:03:45.0" modified="2007-07-27 11:03:45.0" uid="87CA82FFBF14">
+          <homeAge>pre 1930</homeAge>
+          <type>stove</type>
+          <homeDwellingType>detached bungalow</homeDwellingType>
+          <label>detached bungalow, 1, biomass, pre 1930, stove</label>
+          <kgCO2PerYear>2286.0</kgCO2PerYear>
+          <path>87CA82FFBF14</path>
+          <source>defra/BRE/dgen 2007</source>
+          <homeNoOfBedrooms>1</homeNoOfBedrooms>
+          <homeFuel>biomass</homeFuel>
+        </DataItem>
+        <DataItem created="2007-07-27 11:03:45.0" modified="2007-07-27 11:03:45.0" uid="E207C9CD8A76">
+          <homeAge>1930-1995</homeAge>
+          <type>boiler automatic (gravity) feed</type>
+          <homeDwellingType>detached bungalow</homeDwellingType>
+          <label>detached bungalow, 1, coal, 1930-1995, boiler automatic (gravity) feed</label>
+          <kgCO2PerYear>8331.0</kgCO2PerYear>
+          <path>E207C9CD8A76</path>
+          <source>defra/BRE/dgen 2007</source>
+          <homeNoOfBedrooms>1</homeNoOfBedrooms>
+          <homeFuel>coal</homeFuel>
+        </DataItem>
+        <DataItem created="2007-07-27 11:03:45.0" modified="2007-07-27 11:03:45.0" uid="711C16ED2B7C">
+          <homeAge>1930-1995</homeAge>
+          <type>boiler-manual feed</type>
+          <homeDwellingType>detached bungalow</homeDwellingType>
+          <label>detached bungalow, 1, coal, 1930-1995, boiler-manual feed</label>
+          <kgCO2PerYear>9088.0</kgCO2PerYear>
+          <path>711C16ED2B7C</path>
+          <source>defra/BRE/dgen 2007</source>
+          <homeNoOfBedrooms>1</homeNoOfBedrooms>
+          <homeFuel>coal</homeFuel>
+        </DataItem>
+        <DataItem created="2007-07-27 11:03:45.0" modified="2007-07-27 11:03:45.0" uid="4AE1A7C19D9B">
+          <homeAge>1930-1995</homeAge>
+          <type>closed room heaters</type>
+          <homeDwellingType>detached bungalow</homeDwellingType>
+          <label>detached bungalow, 1, coal, 1930-1995, closed room heaters</label>
+          <kgCO2PerYear>8403.0</kgCO2PerYear>
+          <path>4AE1A7C19D9B</path>
+          <source>defra/BRE/dgen 2007</source>
+          <homeNoOfBedrooms>1</homeNoOfBedrooms>
+          <homeFuel>coal</homeFuel>
+        </DataItem>
+        <DataItem created="2007-07-27 11:03:45.0" modified="2007-07-27 11:03:45.0" uid="C739D49A4F18">
+          <homeAge>1930-1995</homeAge>
+          <type>open fires</type>
+          <homeDwellingType>detached bungalow</homeDwellingType>
+          <label>detached bungalow, 1, coal, 1930-1995, open fires</label>
+          <kgCO2PerYear>14271.0</kgCO2PerYear>
+          <path>C739D49A4F18</path>
+          <source>defra/BRE/dgen 2007</source>
+          <homeNoOfBedrooms>1</homeNoOfBedrooms>
+          <homeFuel>coal</homeFuel>
+        </DataItem>
+      </DataItems>
+      <Pager>
+        <Start>0</Start>
+        <From>1</From>
+        <To>10</To>
+        <Items>3744</Items>
+        <CurrentPage>1</CurrentPage>
+        <RequestedPage>1</RequestedPage>
+        <NextPage>2</NextPage>
+        <PreviousPage>-1</PreviousPage>
+        <LastPage>375</LastPage>
+        <ItemsPerPage>10</ItemsPerPage>
+        <ItemsFound>10</ItemsFound>
+      </Pager>
+    </Children>
+  </DataCategoryResource>
+</Resources>
