@@ -45,7 +45,6 @@
     <orderEntry type="library" name="spring-runtime" level="project" />
     <orderEntry type="library" name="svnkit" level="project" />
     <orderEntry type="library" name="wrapper" level="project" />
-    <orderEntryProperties />
   </component>
 </module>
 

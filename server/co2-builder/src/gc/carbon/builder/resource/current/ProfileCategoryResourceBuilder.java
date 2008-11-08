@@ -6,6 +6,7 @@ import gc.carbon.builder.domain.current.ProfileItemBuilder;
 import gc.carbon.builder.domain.BuildableProfileItem;
 import gc.carbon.builder.resource.ResourceBuilder;
 import gc.carbon.builder.resource.BuildableResource;
+import gc.carbon.builder.APIVersion;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,15 +42,19 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
 
         JSONObject obj = new JSONObject();
 
+        // TODO - Move up to sibling
+        // Add APIVersion
+        obj.put("apiVersion", resource.getVersion().getJSONObject());
+
         // add objects
         obj.put("path", resource.getFullPath());
         obj.put("profileDate", resource.getProfileDate());
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
-            obj.put("profile", resource.getProfile().getJSONObject());
-        } else {
             obj.put("profile", resource.getProfile().getIdentityJSONObject());
+        } else {
+            obj.put("profile", resource.getProfile().getJSONObject());
         }
 
         // add Data Category
@@ -113,7 +118,10 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
         // create element
         Element element = document.createElement("ProfileCategoryResource");
 
-        // add objects
+        // TODO - Move up to sibling
+        // Add APIVersion
+        element.appendChild(resource.getVersion().getElement(document));
+
         element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));
 
         // add profile date
@@ -123,9 +131,9 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
-            element.appendChild(resource.getProfile().getElement(document));
-        } else {
             element.appendChild(resource.getProfile().getIdentityElement(document));
+        } else {
+            element.appendChild(resource.getProfile().getElement(document));
         }
 
         // add DataCategory and Profile elements

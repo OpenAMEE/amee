@@ -16,18 +16,13 @@
   </component>
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
-      <configuration>
-        <options>
-          <option name="enableValidation" value="false" />
-          <option name="reportErrorsAsWarnings" value="true" />
-        </options>
-        <customNs />
-      </configuration>
+      <configuration />
     </facet>
     <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="" />
+        <setting name="targe-facet" value="" />
         <datasource-mapping />
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/../server/co2-engine/resources/META-INF/persistence.xml" optional="false" version="1.0" />
       </configuration>
@@ -79,7 +74,6 @@
     <orderEntry type="library" name="spring-runtime" level="project" />
     <orderEntry type="library" name="svnkit" level="project" />
     <orderEntry type="library" name="wrapper" level="project" />
-    <orderEntryProperties />
   </component>
 </module>
 

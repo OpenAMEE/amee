@@ -3,6 +3,7 @@ package gc.carbon.builder.resource;
 import com.jellymold.utils.domain.APIObject;
 import gc.carbon.builder.domain.BuildableProfileItem;
 import gc.carbon.builder.Builder;
+import gc.carbon.builder.APIVersion;
 
 import java.util.List;
 import java.util.Date;
@@ -39,7 +40,7 @@ public interface BuildableResource extends Builder {
 
     APIObject getProfileItem();
 
-    String getVersion();
+    APIVersion getVersion();
 
     String getFullPath();
 

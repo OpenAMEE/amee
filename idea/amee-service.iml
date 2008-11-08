@@ -34,7 +34,6 @@
     <orderEntry type="library" name="json" level="project" />
     <orderEntry type="library" name="javacsv" level="project" />
     <orderEntry type="library" name="rhino" level="project" />
-    <orderEntryProperties />
   </component>
 </module>
 

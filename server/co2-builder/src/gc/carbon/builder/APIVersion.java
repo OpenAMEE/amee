@@ -1,8 +1,18 @@
 package gc.carbon.builder;
 
+import com.jellymold.utils.domain.APIObject;
+import com.jellymold.utils.domain.APIUtils;
+import com.jellymold.utils.domain.PersistentObject;
+
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.json.JSONObject;
+import org.json.JSONException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Document;
+import org.restlet.data.Form;
 
 /**
  * This file is part of AMEE.
@@ -23,26 +33,34 @@ import java.util.Map;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public enum APIVersion {
+public class APIVersion {
 
-    ONE("1.0"),
-    TWO("2.0");
+    public static final APIVersion ONE_ZERO = new APIVersion("1.0");
+    public static final APIVersion TWO_ZERO = new APIVersion("2.0");
 
     private String version;
-
-    private static final Map<String,APIVersion> versionStringToAPIVersionMap = new HashMap<String,APIVersion>();
-    static {
-        for (APIVersion v : EnumSet.allOf(APIVersion.class)) {
-            versionStringToAPIVersionMap.put(v.version, v);
-        }
-    }
 
     private APIVersion(String version) {
         this.version = version;
     }
 
-    public static APIVersion version(String version) {
-        return versionStringToAPIVersionMap.get(version);
+    public static APIVersion get(Form form) {
+        if ("2.0".equals(form.getFirstValue("v"))) {
+            return APIVersion.TWO_ZERO;
+        } else {
+            return APIVersion.ONE_ZERO;
+        }
     }
+
+    public JSONObject getJSONObject() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("v", version);
+        return obj;
+    }
+
+    public Element getElement(Document document) {
+        return APIUtils.getElement(document, "APIVersion", version);
+    }
+
 }
 

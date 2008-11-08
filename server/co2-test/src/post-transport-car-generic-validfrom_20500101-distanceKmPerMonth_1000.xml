@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Resources>
+  <ProfileCategoryResource>
+    <Path>/transport/car/generic</Path>
+    <ProfileDate>200811</ProfileDate>
+    <Profile uid="B74EC806243F"/>
+    <DataCategory uid="87E55DA88017">
+      <Name>Generic</Name>
+      <Path>generic</Path>
+    </DataCategory>
+    <ProfileItem uid="C4100C474028">
+      <Name>C4100C474028</Name>
+      <ItemValues>
+        <ItemValue uid="90B39CCF70B5">
+          <Path>distanceKmPerMonth</Path>
+          <Name>Distance Km Per Month</Name>
+          <Value>1000</Value>
+          <ItemValueDefinition uid="642D122C75CF">
+            <Path>distanceKmPerMonth</Path>
+            <Name>Distance Km Per Month</Name>
+            <FromProfile>true</FromProfile>
+            <FromData>false</FromData>
+            <ValueDefinition uid="B691497F1CF2">
+              <Name>kM</Name>
+              <ValueType>DECIMAL</ValueType>
+            </ValueDefinition>
+          </ItemValueDefinition>
+        </ItemValue>
+        <ItemValue uid="FEDB7619D04F">
+          <Path>kmPerLitre</Path>
+          <Name>km per litre</Name>
+          <Value>0</Value>
+          <ItemValueDefinition uid="E71C70232690">
+            <Path>kmPerLitre</Path>
+            <Name>km per litre</Name>
+            <FromProfile>true</FromProfile>
+            <FromData>false</FromData>
+            <ValueDefinition uid="45433E48B39F">
+              <Name>amount</Name>
+              <ValueType>DECIMAL</ValueType>
+            </ValueDefinition>
+          </ItemValueDefinition>
+        </ItemValue>
+        <ItemValue uid="561683885C08">
+          <Path>kmPerLitreOwn</Path>
+          <Name>km per litre own</Name>
+          <Value>0</Value>
+          <ItemValueDefinition uid="12EF40AE3350">
+            <Path>kmPerLitreOwn</Path>
+            <Name>km per litre own</Name>
+            <FromProfile>true</FromProfile>
+            <FromData>false</FromData>
+            <ValueDefinition uid="45433E48B39F">
+              <Name>amount</Name>
+              <ValueType>DECIMAL</ValueType>
+            </ValueDefinition>
+          </ItemValueDefinition>
+        </ItemValue>
+        <ItemValue uid="7044647A5513">
+          <Path>occupants</Path>
+          <Name>Occupants</Name>
+          <Value>-1</Value>
+          <ItemValueDefinition uid="7CD6E15D8A50">
+            <Path>occupants</Path>
+            <Name>Occupants</Name>
+            <FromProfile>true</FromProfile>
+            <FromData>false</FromData>
+            <ValueDefinition uid="45433E48B39F">
+              <Name>amount</Name>
+              <ValueType>DECIMAL</ValueType>
+            </ValueDefinition>
+          </ItemValueDefinition>
+        </ItemValue>
+        <ItemValue uid="9DC70F4A7A0B">
+          <Path>country</Path>
+          <Name>Country</Name>
+          <Value/>
+          <ItemValueDefinition uid="EB39CC97A53D">
+            <Path>country</Path>
+            <Name>Country</Name>
+            <FromProfile>true</FromProfile>
+            <FromData>false</FromData>
+            <ValueDefinition uid="CCEB59CACE1B">
+              <Name>text</Name>
+              <ValueType>TEXT</ValueType>
+            </ValueDefinition>
+          </ItemValueDefinition>
+        </ItemValue>
+      </ItemValues>
+      <AmountPerMonth>264.500</AmountPerMonth>
+      <ValidFrom>20500101</ValidFrom>
+      <End>false</End>
+      <DataItem uid="4F6CBCEE95F7"/>
+    </ProfileItem>
+  </ProfileCategoryResource>
+</Resources>

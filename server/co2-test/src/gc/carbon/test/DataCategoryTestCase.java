@@ -1,7 +1,10 @@
-package gc.carbon.domain.profile;
+package gc.carbon.test;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import org.restlet.data.Form;
+import org.restlet.data.Response;
+import org.restlet.data.Reference;
+import org.restlet.data.MediaType;
+import org.junit.Test;
 
 /**
  * This file is part of AMEE.
@@ -22,17 +25,27 @@ import java.text.SimpleDateFormat;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileDate extends GCDate {
+public class DataCategoryTestCase extends APITestCase {
 
-    public ProfileDate(String profileDate) {
-        super(profileDate);
+    public DataCategoryTestCase(String name) {
+        super(name);
     }
 
-    protected long parseStr(String dateStr) {
-        try {
-            return MONTH_DATE.parse(dateStr).getTime();
-        } catch (Exception ex) {
-            return defaultDate();
-        }
+    protected Response doGet() throws Exception {
+        Reference uri = new Reference(LOCAL_HOST_NAME + "/data/home/heating");
+        setMediaType(MediaType.APPLICATION_XML);
+        setControl("get-data-home-heating.xml");
+        return get(uri);
     }
+
+    private void doAssertSimilarXML() throws Exception {
+        Response response = doGet();
+        assertXMLSimilar(response);
+    }
+
+    @Test
+    public void testGetHomeHeating() throws Exception {
+        doAssertSimilarXML();
+    }
+
 }

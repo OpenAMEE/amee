@@ -82,7 +82,7 @@ public class ProfileItemBuilder implements Builder {
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);
-        obj.put("amountPerMonth", item.getAmountPerMonth());
+        obj.put("amountPerMonth", item.getAmount());
         obj.put("validFrom", DAY_DATE_FMT.format(item.getStartDate()));
         obj.put("end", Boolean.toString(item.isEnd()));
         obj.put("dataItem", item.getDataItem().getIdentityJSONObject());
@@ -95,7 +95,7 @@ public class ProfileItemBuilder implements Builder {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ProfileItem");
         buildElement(document, element, detailed);
-        element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmountPerMonth().toString()));
+        element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
         element.appendChild(APIUtils.getElement(document, "ValidFrom", DAY_DATE_FMT.format(item.getStartDate())));
         element.appendChild(APIUtils.getElement(document, "End", Boolean.toString(item.isEnd())));
         element.appendChild(item.getDataItem().getIdentityElement(document));

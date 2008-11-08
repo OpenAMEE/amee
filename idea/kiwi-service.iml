@@ -30,7 +30,6 @@
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="hibernate" level="project" />
     <orderEntry type="library" name="javacsv" level="project" />
-    <orderEntryProperties />
   </component>
 </module>
 

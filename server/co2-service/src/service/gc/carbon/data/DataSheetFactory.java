@@ -72,6 +72,8 @@ public class DataSheetFactory implements CacheableFactory {
                     new Column(sheet, itemValueDefinition.getPath(), itemValueDefinition.getName());
                 }
             }
+
+            //TODO - new Column(sheet,"",true) - probably for detail output - check..
             new Column(sheet, "label");
             new Column(sheet, "path");
             new Column(sheet, "uid", true);

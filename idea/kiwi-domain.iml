@@ -24,7 +24,6 @@
     <orderEntry type="library" name="global" level="project" />
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="hibernate" level="project" />
-    <orderEntryProperties />
   </component>
 </module>
 

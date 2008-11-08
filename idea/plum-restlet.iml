@@ -30,7 +30,6 @@
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="freemarker" level="project" />
     <orderEntry type="library" name="svnkit" level="project" />
-    <orderEntryProperties />
   </component>
 </module>
 

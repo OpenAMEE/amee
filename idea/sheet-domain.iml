@@ -21,7 +21,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="utils" />
     <orderEntry type="library" name="global" level="project" />
-    <orderEntryProperties />
   </component>
 </module>
 

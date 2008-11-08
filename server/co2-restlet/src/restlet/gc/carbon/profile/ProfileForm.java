@@ -26,15 +26,14 @@
  */
 public class ProfileForm extends Form {
 
-    private APIVersion apiVersion = APIVersion.ONE;
+    //private APIVersion apiVersion = APIVersion.ONE;
+    private APIVersion apiVersion;
 
     public ProfileForm(Form form) {
         super(form.getQueryString());
-
         // Read API version as a parameter - may move to a header
-        apiVersion = APIVersion.version(form.getFirstValue("v","1.0"));
-
-        if (apiVersion.equals(APIVersion.ONE)) {
+        apiVersion = APIVersion.get(form);
+        if (apiVersion.equals(APIVersion.ONE_ZERO)) {
             mapLegacyParameters();
         }
     }
@@ -46,6 +45,7 @@ public class ProfileForm extends Form {
         }
         for (String name : getNames()) {
             if (LegacyDataMapper.canMap(name)) {
+
                 add(LegacyItemValueMapper.getCurrentPath(name),getFirstValue(name));
                 add(LegacyItemValueMapper.getCurrentPath(name)+"Unit", LegacyDataMapper.getUnit(name));
                 add(LegacyItemValueMapper.getCurrentPath(name)+"PerUnit", LegacyDataMapper.getPerUnit(name));
@@ -57,4 +57,5 @@ public class ProfileForm extends Form {
     public APIVersion getVersion() {
         return apiVersion;
     }
+
 }

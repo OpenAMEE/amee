@@ -60,7 +60,7 @@ public class ItemValueBuilder implements Builder {
         Element element = document.createElement("ItemValue");
         element.setAttribute("uid", itemValue.getUid());
         element.appendChild(APIUtils.getElement(document, "Path", itemValue.getPath()));
-        element.appendChild(APIUtils.getElement(document, "Name", itemValue.getPath()));
+        element.appendChild(APIUtils.getElement(document, "Name", itemValue.getName()));
         element.appendChild(APIUtils.getElement(document, "Value", itemValue.getValue()));
         BuildableItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
         itemValueDefinition.setBuilder(itemValueDefinitionRenderer);

@@ -33,7 +33,7 @@ public interface BuildableProfileItem extends BuildableItem {
 
     boolean isEnd();
 
-    BigDecimal getAmountPerMonth();
+    BigDecimal getAmount();
 
     Date getEndDate();
 
@@ -41,5 +41,9 @@ public interface BuildableProfileItem extends BuildableItem {
 
     APIObject getProfile();
 
+    String getUnit();
+
+    String getPerUnit();
+    
     void setBuilder(Builder builder);
 }

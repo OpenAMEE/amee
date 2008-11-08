@@ -7,14 +7,14 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="utils" />
     <orderEntry type="library" name="spring" level="project" />
+    <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="global" level="project" />
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="hibernate" level="project" />
-    <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="xmlunit" level="project" />
     <orderEntry type="library" name="junit" level="project" />
-    <orderEntryProperties />
   </component>
 </module>
 

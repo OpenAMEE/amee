@@ -62,7 +62,7 @@ public class Calculator implements Serializable {
     public BigDecimal calculate(ProfileItem profileItem) {
         log.debug("starting calculator");
         Map<String, Object> values;
-        BigDecimal amountPerMonth;
+        BigDecimal amount;
         if (!profileItem.isEnd()) {
             ItemDefinition itemDefinition = profileItem.getItemDefinition();
             Algorithm algorithm = getAlgorithm(itemDefinition, "perMonth");
@@ -73,29 +73,29 @@ public class Calculator implements Serializable {
                 values.put("profileFinder", profileFinder);
                 values.put("dataFinder", dataFinder);
                 // get the new amount via algorithm and values
-                amountPerMonth = calculate(algorithm, values);
-                if (amountPerMonth != null) {
+                amount = calculate(algorithm, values);
+                if (amount != null) {
                     // store carbon to Item
-                    profileItem.updateAmountPerMonth(amountPerMonth);
+                    profileItem.updateAmount(amount);
                 } else {
                     log.warn("carbon not set");
-                    amountPerMonth = ProfileItem.ZERO;
+                    amount = ProfileItem.ZERO;
                 }
             } else {
                 log.warn("Algorithm NOT found");
-                amountPerMonth = ProfileItem.ZERO;
+                amount = ProfileItem.ZERO;
             }
         } else {
-            amountPerMonth = ProfileItem.ZERO;
-            profileItem.updateAmountPerMonth(amountPerMonth);
+            amount = ProfileItem.ZERO;
+            profileItem.updateAmount(amount);
         }
-        return amountPerMonth;
+        return amount;
     }
 
     public BigDecimal calculate(DataItem dataItem, Choices userValueChoices) {
         log.debug("starting calculator");
         Map<String, Object> values;
-        BigDecimal amountPerMonth;
+        BigDecimal amount;
         ItemDefinition itemDefinition = dataItem.getItemDefinition();
         Algorithm algorithm = getAlgorithm(itemDefinition, "perMonth");
         if (algorithm != null) {
@@ -103,12 +103,12 @@ public class Calculator implements Serializable {
             values = getValues(dataItem, userValueChoices);
             values.put("profileFinder", profileFinder);
             values.put("dataFinder", dataFinder);
-            amountPerMonth = calculate(algorithm, values);
+            amount = calculate(algorithm, values);
         } else {
             log.warn("Algorithm NOT found");
-            amountPerMonth = ProfileItem.ZERO;
+            amount = ProfileItem.ZERO;
         }
-        return amountPerMonth;
+        return amount;
     }
 
     protected BigDecimal calculate(Algorithm algorithm, Map<String, Object> values) {
