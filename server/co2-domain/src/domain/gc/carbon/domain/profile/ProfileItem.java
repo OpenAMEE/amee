@@ -226,22 +226,6 @@ public class ProfileItem extends Item implements BuildableProfileItem {
         this.perUnit = perUnit;
     }
 
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public String getPerUnit() {
-        return perUnit;
-    }
-
-    public void setPerUnit(String perUnit) {
-        this.perUnit = perUnit;
-    }
-
     @Transient
     public String getType() {
         return ObjectType.PI.toString();

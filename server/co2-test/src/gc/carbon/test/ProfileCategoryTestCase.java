@@ -1,10 +1,7 @@
 package gc.carbon.test;
 
-import org.testng.annotations.Test;
 import org.restlet.data.Form;
-import org.restlet.data.Reference;
-import org.restlet.data.MediaType;
-import org.restlet.resource.DomRepresentation;
+import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
 /**
@@ -35,7 +32,7 @@ public class ProfileCategoryTestCase extends BaseProfileCategoryTestCase {
     @Test
     public void testPostWithExternalPerUnitAsYear() throws Exception {
         Form data = new Form();
-        data.add("distancePerUnit","year");
+        data.add("distancePerUnit", "year");
         data.add("distance", "1000");
         data.add("v", "2.0");
         Document doc = doPost(data).getEntityAsDom().getDocument();
@@ -46,7 +43,7 @@ public class ProfileCategoryTestCase extends BaseProfileCategoryTestCase {
     @Test
     public void testPostWithExternalUnitAsMile() throws Exception {
         Form data = new Form();
-        data.add("distanceUnit","mi");
+        data.add("distanceUnit", "mi");
         data.add("distance", "1000");
         data.add("v", "2.0");
         Document doc = doPost(data).getEntityAsDom().getDocument();
@@ -57,8 +54,8 @@ public class ProfileCategoryTestCase extends BaseProfileCategoryTestCase {
     @Test
     public void testPostWithExternalUnitAsMileAndPerUnitAsYear() throws Exception {
         Form data = new Form();
-        data.add("distanceUnit","mi");
-        data.add("distancePerUnit","year");
+        data.add("distanceUnit", "mi");
+        data.add("distancePerUnit", "year");
         data.add("distance", "1000");
         data.add("v", "2.0");
         Document doc = doPost(data).getEntityAsDom().getDocument();
