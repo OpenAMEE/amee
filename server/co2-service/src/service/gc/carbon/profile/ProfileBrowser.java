@@ -26,14 +26,15 @@ import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileDate;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.restlet.data.Form;
 
 import java.util.Calendar;
+import java.util.Date;
 
 @Name("profileBrowser")
 @Scope(ScopeType.EVENT)
@@ -77,22 +78,22 @@ public class ProfileBrowser extends BaseBrowser {
     private ResourceActions profileItemValueActions = new ResourceActions("profileItemValue");
 
     // profile date
-    private java.util.Date profileDate = Calendar.getInstance().getTime();
-    // TODO: private int profileDatePrecision = Calendar.MONTH;
+    private Date profileDate = Calendar.getInstance().getTime();
+
+    private String selectBy;
+    private String mode;
 
     // General
-
     public String getFullPath() {
-        if ((getProfile() != null) && (getPathItem() != null)) {
-            return "/profiles/" + getProfile().getDisplayPath() + getPathItem().getFullPath();
+        if ((getProfile() != null) && (pathItem != null)) {
+            return "/profiles/" + getProfile().getDisplayPath() + pathItem.getFullPath();
         } else {
             return "/profiles";
         }
     }
 
     // Profiles
-
-    public Profile getProfile() {
+   public Profile getProfile() {
         return profile;
     }
 
@@ -101,7 +102,6 @@ public class ProfileBrowser extends BaseBrowser {
     }
 
     // ProfileCategories
-
     public String getDataCategoryUid() {
         return dataCategoryUid;
     }
@@ -124,7 +124,6 @@ public class ProfileBrowser extends BaseBrowser {
     }
 
     // ProfileItems
-
     public String getProfileItemUid() {
         return profileItemUid;
     }
@@ -147,7 +146,6 @@ public class ProfileBrowser extends BaseBrowser {
     }
 
     // ProfileItemValues
-
     public String getProfileItemValueUid() {
         return profileItemValueUid;
     }
@@ -169,20 +167,42 @@ public class ProfileBrowser extends BaseBrowser {
         return profileItemValueActions;
     }
 
-    // misc.
-
-    /**
-     * Set profileDate based on query string
-     *
-     * @param form
-     */
-    public void setProfileDate(Form form) {
-        String profileDateStr = form.getFirstValue("profileDate");
-        profileDate = new ProfileDate(profileDateStr);
+    public void setProfileDate(String profileDate) {
+        this.profileDate = new ProfileDate(profileDate);
     }
 
-    public java.util.Date getProfileDate() {
+
+    public Date getProfileDate() {
         return profileDate;
     }
 
+    public void setSelectBy(String selectBy) {
+        this.selectBy = selectBy;
+    }
+
+    public String getSelectBy() {
+        return selectBy;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public void setDuration(String duration) {
+        if (duration != null) {
+            endDate = startDate.plus(duration);
+        }
+    }
+
+    public boolean isProRataRequest() {
+        return getMode() != null && getMode().equals("prorata");
+    }
+
+    public boolean isSelectByRequest() {
+        return getSelectBy() != null;
+    }
 }

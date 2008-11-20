@@ -28,6 +28,7 @@ import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
 import gc.carbon.profile.acceptor.Acceptor;
 import gc.carbon.profile.acceptor.ProfileCategoryFormAcceptor;
@@ -35,6 +36,8 @@ import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
 import gc.carbon.profile.acceptor.ProfileCategoryXMLAcceptor;
 import gc.carbon.builder.resource.ResourceBuilder;
 import gc.carbon.builder.resource.ResourceBuilderFactory;
+import gc.carbon.builder.resource.BuildableCategoryResource;
+import gc.carbon.builder.APIVersion;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -54,10 +57,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Date;
+import java.math.BigDecimal;
 
 @Name("profileCategoryResource")
 @Scope(ScopeType.EVENT)
-public class ProfileCategoryResource extends BaseProfileResource implements Serializable {
+public class ProfileCategoryResource extends BaseProfileCategoryResource implements Serializable {
 
     private final static Logger log = Logger.getLogger(ProfileCategoryResource.class);
 
@@ -83,9 +87,6 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     private Calculator calculator;
 
     @In
-    private Environment environment;
-
-    @In
     private PathItem pathItem;
 
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
@@ -105,8 +106,14 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        Form form = request.getResourceRef().getQueryAsForm();
+        profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
+        profileBrowser.setStartDate(form.getFirstValue("startDate"));
+        profileBrowser.setEndDate(form.getFirstValue("endDate"));
+        profileBrowser.setDuration(form.getFirstValue("duration"));
+        profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
+        profileBrowser.setMode(form.getFirstValue("mode"));
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
-        profileBrowser.setProfileDate(request.getResourceRef().getQueryAsForm());
         setPage(request);
         setAcceptors();
     }
@@ -134,9 +141,9 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Profile profile = profileBrowser.getProfile();
-        DataCategory dataCategory = profileBrowser.getDataCategory();
-        Sheet sheet = profileSheetService.getSheet(profile, dataCategory, profileBrowser.getProfileDate());
+        Profile profile = getProfile();
+        DataCategory dataCategory = getDataCategory();
+        Sheet sheet = getSheet();
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", profileBrowser);
         values.put("profile", profile);
@@ -162,7 +169,11 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     @Override
     public void handleGet() {
         log.debug("handleGet");
-        if (profileBrowser.getEnvironmentActions().isAllowView()) {
+        setForm(new ProfileForm(getRequest().getResourceRef().getQueryAsForm()));
+        if (!isValidRequest()) {
+            badRequest();
+        }
+        else if (profileBrowser.getEnvironmentActions().isAllowView()) {
             setBuilderStrategy();
             super.handleGet();
         } else {
@@ -223,7 +234,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
      }
 
 
-    public List<ProfileItem> doPostOrPut(org.restlet.resource.Representation entity, Form form) {
+    public List<ProfileItem> doPostOrPut(org.restlet.resource.Representation entity, ProfileForm form) {
         setBuilderStrategy();
         return lookupAcceptor(entity.getMediaType()).accept(entity, form);
     }
@@ -292,7 +303,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     }
 
     public Pager getPager() {
-        return getPager(profileBrowser.getItemsPerPage(getRequest()));
+        return getPager(getItemsPerPage());
     }
 
     public ProfileService getProfileService() {
@@ -315,4 +326,25 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
         return entityManager;
     }
 
+    public Sheet getSheet() {
+        Sheet sheet = profileSheetService.getSheet(profileBrowser);
+        profileSheetService.removeSheets(getProfile());
+        return sheet;
+    }
+
+    public BigDecimal getTotalAmount(Sheet sheet) {
+        return profileSheetService.getTotalAmount(sheet);
+    }
+
+    public BigDecimal getTotalAmountPerMonth(Sheet sheet) {
+        return profileSheetService.getTotalAmountPerMonth(sheet);
+    }
+
+    public Date getStartDate() {
+        return profileBrowser.getStartDate();
+    }
+
+    public Date getEndDate() {
+        return profileBrowser.getEndDate();
+    }
 }

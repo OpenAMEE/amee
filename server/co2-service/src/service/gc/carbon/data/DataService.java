@@ -23,6 +23,7 @@ import com.jellymold.kiwi.Environment;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
 import gc.carbon.domain.data.*;
+import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
@@ -34,10 +35,12 @@ import org.jboss.seam.core.Events;
 import org.restlet.ext.seam.SeamController;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 /**
  * TODO: Clear caches after entity removal.
@@ -302,20 +305,26 @@ public class DataService implements Serializable {
         return dataItems;
     }
 
-    public List<DataItem> getDataItems(DataCategory dataCategory) {
+    public List<DataItem> getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
+        
+        String q = "SELECT DISTINCT di " +
+                "FROM DataItem di " +
+                "LEFT JOIN FETCH di.itemValues " +
+                "WHERE di.itemDefinition.id = :itemDefinitionId " +
+                "AND di.dataCategory = :dataCategory AND " +
+                ((endDate != null) ? "di.startDate < :endDate AND IFNULL(di.endDate,:startDate) >= :startDate" : "IFNULL(di.endDate,:startDate) >= :startDate");
+
+
         if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
-            List<DataItem> dataItems = entityManager.createQuery(
-                    "SELECT DISTINCT di " +
-                            "FROM DataItem di " +
-                            "LEFT JOIN FETCH di.itemValues " +
-                            "WHERE di.itemDefinition.id = :itemDefinitionId " +
-                            "AND di.dataCategory = :dataCategory")
-                    .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
-                    .setParameter("dataCategory", dataCategory)
-                    .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", "query.dataService")
-                    .getResultList();
-            return dataItems;
+               Query query = entityManager.createQuery(q);
+               query.setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId());
+               query.setParameter("dataCategory", dataCategory);
+               query.setParameter("startDate", startDate.toDate());
+               if (endDate != null)
+                query.setParameter("endDate", endDate.toDate());
+               query.setHint("org.hibernate.cacheable", true);
+               query.setHint("org.hibernate.cacheRegion", "query.dataService");
+            return query.getResultList();
         } else {
             return null;
         }

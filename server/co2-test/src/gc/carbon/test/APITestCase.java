@@ -5,15 +5,14 @@ import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.restlet.Client;
 import org.restlet.util.Series;
 import org.restlet.resource.Representation;
+import org.restlet.resource.DomRepresentation;
 import org.restlet.data.*;
 import org.junit.Before;
 import org.w3c.dom.Node;
 
 import java.io.*;
-import java.util.List;
-import java.util.ArrayList;
 
-import com.jellymold.utils.domain.UidGen;
+import gc.carbon.test.profile.BaseProfileCategoryTestCase;
 
 /**
  * This file is part of AMEE.
@@ -42,6 +41,7 @@ public class APITestCase extends XMLTestCase {
     protected Series<CookieSetting> cookieSettings;
     private String controlFile;
     private MediaType mediaType;
+
     public APITestCase(String s) {
         super(s);
         XMLUnit.setIgnoreWhitespace(true);
@@ -89,6 +89,23 @@ public class APITestCase extends XMLTestCase {
         return client.handle(request);
     }
 
+    protected Response put(Reference uri, Form form) {
+        Client client = new Client(Protocol.HTTP);
+        Representation rep = form.getWebRepresentation();
+        Request request = new Request(Method.PUT, uri, rep);
+        addHeaders(request);
+        return client.handle(request);
+    }
+
+    public String createProfileItem(Form data) throws Exception {
+        BaseProfileCategoryTestCase profileCategoryTestCase = new BaseProfileCategoryTestCase("BaseProfileItemTestCase");
+        profileCategoryTestCase.setUp();
+        Response response = profileCategoryTestCase.doPost(data);
+        DomRepresentation rep = response.getEntityAsDom();
+        //rep.write(System.out);
+        return rep.getDocument().
+                getElementsByTagName("ProfileItem").item(0).getAttributes().getNamedItem("uid").getNodeValue();
+    }
 
     protected void setMediaType(MediaType mediaType) {
         this.mediaType = mediaType;

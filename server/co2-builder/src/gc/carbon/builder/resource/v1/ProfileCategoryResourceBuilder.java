@@ -2,9 +2,11 @@ package gc.carbon.builder.resource.v1;
 
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.APIObject;
+import com.jellymold.utils.Pager;
+import com.jellymold.sheet.Sheet;
 import gc.carbon.builder.domain.v1.ProfileItemBuilder;
 import gc.carbon.builder.domain.BuildableProfileItem;
-import gc.carbon.builder.resource.BuildableResource;
+import gc.carbon.builder.resource.BuildableCategoryResource;
 import gc.carbon.builder.resource.ResourceBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,10 +33,12 @@ import org.w3c.dom.Element;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryResourceBuilder extends ResourceBuilder {
+public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
-    public ProfileCategoryResourceBuilder(BuildableResource resource) {
-        super(resource);
+    BuildableCategoryResource resource;
+
+    public ProfileCategoryResourceBuilder(BuildableCategoryResource resource) {
+        this.resource = resource;
     }
 
     public JSONObject getJSONObject()  throws JSONException {
@@ -68,19 +72,19 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
             children.put("dataCategories", dataCategories);
 
             // add Sheet containing Profile Items & totalAmountPerMonth
-/*            Sheet sheet = resource.getProfileSheetService().getSheet(resource.getProfile(), resource.getDataCategory(), resource.getProfileDate());
+            Sheet sheet = resource.getSheet();
             if (sheet != null) {
                 Pager pager = resource.getPager();
                 sheet = Sheet.getCopy(sheet, pager);
                 pager.setCurrentPage(resource.getPage());
                 children.put("profileItems", sheet.getJSONObject());
                 children.put("pager", pager.getJSONObject());
-                obj.put("totalAmountPerMonth", resource.getProfileSheetService().getTotalAmountPerMonth(sheet));
+                obj.put("totalAmountPerMonth", resource.getTotalAmountPerMonth(sheet));
             } else {
                 children.put("profileItems", new JSONObject());
                 children.put("pager", new JSONObject());
                 obj.put("totalAmountPerMonth", "0");
-            }*/
+            }
 
             // add chilren
             obj.put("children", children);
@@ -141,7 +145,7 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
             childrenElement.appendChild(dataCategoriesElement);
 
             // get Sheet containing Profile Items
-/*            Sheet sheet = resource.getProfileSheetService().getSheet(profile, resource.getDataCategory(), resource.getProfileDate());
+            Sheet sheet = resource.getSheet();
             if (sheet != null) {
                 Pager pager = resource.getPager();
                 sheet = Sheet.getCopy(sheet, pager);
@@ -151,8 +155,8 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
                 childrenElement.appendChild(pager.getElement(document));
                 // add CO2 amount
                 element.appendChild(APIUtils.getElement(document, "TotalAmountPerMonth",
-                        resource.getProfileSheetService().getTotalAmountPerMonth(sheet).toString()));
-            }*/
+                        resource.getTotalAmountPerMonth(sheet).toString()));
+            }
 
         } else if (resource.isPost() || resource.isPut()) {
 

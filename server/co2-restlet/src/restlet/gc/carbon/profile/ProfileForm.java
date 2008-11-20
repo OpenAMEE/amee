@@ -3,7 +3,12 @@
  import gc.carbon.builder.APIVersion;
  import gc.carbon.builder.mapper.LegacyDataMapper;
  import gc.carbon.builder.mapper.LegacyItemValueMapper;
+ import gc.carbon.domain.profile.StartEndDate;
  import org.restlet.data.Form;
+ import org.apache.commons.collections.CollectionUtils;
+ import org.apache.commons.collections.Predicate;
+
+ import java.util.Date;
 
  /**
  * This file is part of AMEE.
@@ -29,20 +34,23 @@ public class ProfileForm extends Form {
     //private APIVersion apiVersion = APIVersion.ONE;
     private APIVersion apiVersion;
 
+    public ProfileForm() {
+        super();
+    }
+
     public ProfileForm(Form form) {
         super(form.getQueryString());
+
         // Read API version as a parameter - may move to a header
         apiVersion = APIVersion.get(form);
+
         if (apiVersion.equals(APIVersion.ONE_ZERO)) {
             mapLegacyParameters();
         }
     }
 
     private void mapLegacyParameters() {
-        if (getNames().contains("validFrom")) {
-            add("startDate",getFirstValue("validFrom"));
-            removeFirst("validFrom");   
-        }
+
         for (String name : getNames()) {
             if (LegacyDataMapper.canMap(name)) {
 
@@ -58,4 +66,7 @@ public class ProfileForm extends Form {
         return apiVersion;
     }
 
+    public boolean isVersionOne() {
+      return getVersion().equals(APIVersion.ONE_ZERO);
+    }
 }

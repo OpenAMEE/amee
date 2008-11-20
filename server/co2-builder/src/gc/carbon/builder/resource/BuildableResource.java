@@ -1,13 +1,14 @@
 package gc.carbon.builder.resource;
 
-import com.jellymold.utils.domain.APIObject;
-import gc.carbon.builder.domain.BuildableProfileItem;
 import gc.carbon.builder.Builder;
 import gc.carbon.builder.APIVersion;
+import gc.carbon.builder.domain.BuildableProfileItem;
 
 import java.util.List;
 import java.util.Date;
 import java.util.Set;
+
+import com.jellymold.utils.domain.APIObject;
 
 /**
  * This file is part of AMEE.
@@ -29,7 +30,6 @@ import java.util.Set;
  * Website http://www.amee.cc
  */
 public interface BuildableResource extends Builder {
-
     List<? extends BuildableProfileItem> getProfileItems();
 
     APIObject getDataCategory();
@@ -38,7 +38,11 @@ public interface BuildableResource extends Builder {
 
     Date getProfileDate();
 
-    APIObject getProfileItem();
+    Date getStartDate();
+
+    Date getEndDate();
+
+    BuildableProfileItem getProfileItem();
 
     APIVersion getVersion();
 

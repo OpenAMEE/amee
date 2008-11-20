@@ -145,8 +145,9 @@ public class Algorithm implements PersistentObject {
 
     @PrePersist
     public void onCreate() {
-        setCreated(Calendar.getInstance().getTime());
-        setModified(getCreated());
+        Date now = Calendar.getInstance().getTime();
+        setCreated(now);
+        setModified(now);
     }
 
     @PreUpdate

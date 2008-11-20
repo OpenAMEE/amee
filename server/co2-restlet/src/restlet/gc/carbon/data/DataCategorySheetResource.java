@@ -78,8 +78,7 @@ public class DataCategorySheetResource extends BaseResource implements Serializa
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        DataCategory dataCategory = dataBrowser.getDataCategory();
-        Sheet sheet = dataSheetService.getSheet(dataCategory);
+        Sheet sheet = dataSheetService.getSheet(dataBrowser);
         Map<String, Object> values = super.getTemplateValues();
         values.put("sheet", sheet);
         return values;

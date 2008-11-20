@@ -1,10 +1,9 @@
-package gc.carbon.test;
+package gc.carbon.test.profile;
 
 import org.restlet.data.Form;
 import org.restlet.data.Reference;
 import org.restlet.data.MediaType;
 import org.restlet.data.Response;
-import com.jellymold.utils.domain.UidGen;
 
 /**
  * This file is part of AMEE.
@@ -25,27 +24,23 @@ import com.jellymold.utils.domain.UidGen;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class BaseProfileCategoryTestCase extends APITestCase {
+public class BaseProfileItemTestCase extends BaseProfileTestCase {
 
-    protected static final String KNOWN_AMOUNT_FOR_1000_KM_PER_MONTH = "264.500";
-    protected static final String KNOWN_AMOUNT_FOR_1000_MI_PER_MONTH = "425.671";
-    protected static final String KNOWN_AMOUNT_FOR_1000_KM_PER_YEAR = "22.042";
-    protected static final String KNOWN_AMOUNT_FOR_1000_MI_PER_YEAR = "35.473";
-
-    public BaseProfileCategoryTestCase(String s) {
+    public BaseProfileItemTestCase(String s) {
         super(s);
     }
 
-    protected Response doPost(Form data) throws Exception {
-        Reference uri = new Reference(LOCAL_HOST_NAME + "/profiles/B74EC806243F/transport/car/generic");
+    protected Response doPut(Form data) throws Exception {
+        Form post = new Form();
+        post.add("v",data.getFirstValue("v"));
+        String uid = createProfileItem(post);
+        Reference uri = new Reference(LOCAL_HOST_NAME + PROFILE_CATEGORY_URI + uid);
 
         Form form = new Form();
-        form.add("dataItemUid", "4F6CBCEE95F7");
-        form.add("name", UidGen.getUid());
         for (String parameter : data.getNames()) {
             form.add(parameter,data.getFirstValue(parameter));
         }
         setMediaType(MediaType.APPLICATION_XML);
-        return post(uri, form);
+        return put(uri, form);
     }
 }

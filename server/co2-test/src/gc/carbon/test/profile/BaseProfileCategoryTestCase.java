@@ -1,10 +1,10 @@
-package gc.carbon.test;
+package gc.carbon.test.profile;
 
 import org.restlet.data.Form;
-import org.restlet.data.Response;
 import org.restlet.data.Reference;
 import org.restlet.data.MediaType;
-import org.junit.Test;
+import org.restlet.data.Response;
+import com.jellymold.utils.domain.UidGen;
 
 /**
  * This file is part of AMEE.
@@ -25,27 +25,28 @@ import org.junit.Test;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class DataCategoryTestCase extends APITestCase {
+public class BaseProfileCategoryTestCase extends BaseProfileTestCase {
 
-    public DataCategoryTestCase(String name) {
-        super(name);
+    public BaseProfileCategoryTestCase(String s) {
+        super(s);
     }
 
-    protected Response doGet() throws Exception {
-        Reference uri = new Reference(LOCAL_HOST_NAME + "/data/home/heating");
+    public Response doGet() throws Exception {
         setMediaType(MediaType.APPLICATION_XML);
-        setControl("get-data-home-heating.xml");
-        return get(uri);
+        System.out.println(getReference());
+        return get(getReference());
     }
 
-    private void doAssertSimilarXML() throws Exception {
-        Response response = doGet();
-        assertXMLSimilar(response);
+    public Response doPost(Form data) throws Exception {
+        Form form = new Form();
+        form.add("dataItemUid", DATA_CATEGORY_UID);
+        form.add("name", UidGen.getUid());
+        for (String parameter : data.getNames()) {
+            form.add(parameter,data.getFirstValue(parameter));
+        }
+        setMediaType(MediaType.APPLICATION_XML);
+        return post(getReference(), form);
     }
 
-    @Test
-    public void testGetHomeHeating() throws Exception {
-        doAssertSimilarXML();
-    }
 
 }

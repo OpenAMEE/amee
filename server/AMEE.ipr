@@ -460,7 +460,9 @@
         <root url="jar://$PROJECT_DIR$/../amee/jm/cache-service.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="intellijad://intellijad" />
+      </SOURCES>
     </library>
     <library name="libs">
       <CLASSES>
@@ -511,9 +513,12 @@
         <root url="jar://$PROJECT_DIR$/../amee/lib/jboss-seam/jboss-seam-ioc.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/jsr275/jsr-275.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../../JellyMoldClosed/lib/pp/jdom/jdom.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/commons-collections/commons-collections-3.2.1.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="intellijad://intellijad" />
+      </SOURCES>
     </library>
     <library name="test">
       <CLASSES>

@@ -26,6 +26,7 @@ import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
@@ -46,6 +47,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Name("dataItemResource")
 @Scope(ScopeType.EVENT)
@@ -163,13 +165,38 @@ public class DataItemResource extends BaseResource implements Serializable {
         if (dataBrowser.getDataItemActions().isAllowModify()) {
             Form form = getForm();
             DataItem dataItem = dataBrowser.getDataItem();
+            Set<String> names = form.getNames();
+
             // are we updating this DataItem?
-            if (form.getNames().contains("name")) {
+            if (names.contains("name")) {
                 dataItem.setName(form.getFirstValue("name"));
             }
-            if (form.getNames().contains("path")) {
+
+            if (names.contains("path")) {
                 dataItem.setPath(form.getFirstValue("path"));
             }
+
+            // update 'startDate' value
+            if (names.contains("startDate")) {
+                dataItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
+            }
+
+            // update 'endDate' value
+            if (names.contains("endDate")) {
+                dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+            }
+
+            if (form.getNames().contains("duration")) {
+                StartEndDate endDate = ((StartEndDate) dataItem.getStartDate()).plus(form.getFirstValue("duration"));
+                dataItem.setEndDate(endDate);
+            }
+
+            if (dataItem.getEndDate() != null &&
+                    dataItem.getEndDate().before(dataItem.getStartDate())) {
+                badRequest();
+                return;
+            }
+
             // update ItemValues if supplied
             Map<String, ItemValue> itemValues = dataItem.getItemValuesMap();
             for (String name : form.getNames()) {
@@ -178,6 +205,7 @@ public class DataItemResource extends BaseResource implements Serializable {
                     itemValue.setValue(form.getFirstValue(name));
                 }
             }
+
             // clear caches
             pathItemService.removePathItemGroup(dataItem.getEnvironment());
             dataSheetService.removeSheet(dataItem.getDataCategory());

@@ -25,9 +25,11 @@ import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import gc.carbon.domain.path.InternalItemValue;
 import gc.carbon.domain.path.Pathable;
+import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.builder.domain.BuildableItem;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Index;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,6 +79,12 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
 
     @Column(name = "MODIFIED")
     private Date modified = Calendar.getInstance().getTime();
+    @Column(name = "START_DATE")
+    @Index(name = "START_DATE_IND")
+    protected Date startDate = Calendar.getInstance().getTime();
+    @Column(name = "END_DATE")
+    @Index(name = "END_DATE_IND")
+    protected Date endDate;
 
     public Item() {
         super();
@@ -163,8 +171,9 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
 
     @PrePersist
     public void onCreate() {
-        setCreated(Calendar.getInstance().getTime());
-        setModified(getCreated());
+        Date now = Calendar.getInstance().getTime();
+        setCreated(now);
+        setModified(now);
     }
 
     @PreUpdate
@@ -273,5 +282,25 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
 
     public Element getElement(Document document, boolean b) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Date getStartDate() {
+        return new StartEndDate(startDate);
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        if (endDate != null) {
+            return new StartEndDate(endDate);
+        } else {
+            return null;
+        }
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

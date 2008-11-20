@@ -2,6 +2,7 @@ package gc.carbon.profile.acceptor;
 
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
+import gc.carbon.profile.ProfileForm;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,7 +43,7 @@ public class ProfileCategoryJSONAcceptor extends Acceptor {
         super(resource);
     }
 
-    public List<ProfileItem> accept(Representation entity, Form form) {
+    public List<ProfileItem> accept(Representation entity, ProfileForm form) {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
         String key;
         JSONObject rootJSON;
@@ -54,7 +55,7 @@ public class ProfileCategoryJSONAcceptor extends Acceptor {
                 profileItemsJSON = rootJSON.getJSONArray("profileItems");
                 for (int i = 0; i < profileItemsJSON.length(); i++) {
                     profileItemJSON = profileItemsJSON.getJSONObject(i);
-                    form = new Form();
+                    form = new ProfileForm();
                     for (Iterator iterator = profileItemJSON.keys(); iterator.hasNext();) {
                         key = (String) iterator.next();
                         form.add(key, profileItemJSON.getString(key));

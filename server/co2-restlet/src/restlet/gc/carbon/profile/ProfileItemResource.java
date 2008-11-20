@@ -33,6 +33,9 @@ import gc.carbon.path.PathItemService;
 import gc.carbon.builder.resource.ResourceBuilder;
 import gc.carbon.builder.resource.ResourceBuilderFactory;
 import org.apache.log4j.Logger;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.collections.Predicate;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -49,10 +52,7 @@ import org.w3c.dom.Element;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Date;
+import java.util.*;
 
 @Name("profileItemResource")
 @Scope(ScopeType.EVENT)
@@ -174,6 +174,10 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
                     ItemValue itemValue = itemValues.get(name);
                     if (itemValue != null) {
                         itemValue.setValue(form.getFirstValue(name));
+                        if (itemValue.hasUnits())
+                            itemValue.setUnit(form.getFirstValue(name + "Unit"));
+                        if (itemValue.hasPerUnits())
+                        itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
                     }
                 }
                 log.debug("ProfileItem updated");
@@ -200,13 +204,18 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     protected void updateProfileItem(ProfileItem profileItem, Form form) {
         Set<String> names = form.getNames();
 
+        if (!isValidRequest()) {
+            badRequest();
+        }
+
         // update 'name' value
         if (names.contains("name")) {
             profileItem.setName(form.getFirstValue("name"));
         }
+
         // update 'startDate' value
         if (names.contains("startDate")) {
-            profileItem.setStartDate(new StartEndDate(form.getFirstValue("validFrom")));
+            profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
         }
 
         // update 'end' value
@@ -217,6 +226,17 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         // update 'endDate' value
         if (names.contains("endDate")) {
             profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+        }
+
+        if (form.getNames().contains("duration")) {
+            StartEndDate endDate = ((StartEndDate) profileItem.getStartDate()).plus(form.getFirstValue("duration"));
+            profileItem.setEndDate(endDate);
+        }
+
+        if (profileItem.getEndDate() != null &&
+                profileItem.getEndDate().before(profileItem.getStartDate())) {
+            badRequest();
+            return;
         }
     }
 
@@ -252,7 +272,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     public Pager getPager() {
-        return getPager(profileBrowser.getItemsPerPage(getRequest()));
+        return getPager(getItemsPerPage());
     }
 
     public ProfileService getProfileService() {
@@ -281,6 +301,14 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     public Date getProfileDate() {
         return profileBrowser.getProfileDate();
+    }
+
+    public Date getStartDate() {
+        return profileBrowser.getStartDate();
+    }
+
+    public Date getEndDate() {
+        return profileBrowser.getEndDate();
     }
 
     public Profile getProfile() {

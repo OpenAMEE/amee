@@ -26,6 +26,7 @@ import com.jellymold.utils.cache.CacheHelper;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -51,15 +52,34 @@ public class ProfileSheetService implements Serializable {
         super();
     }
 
-    public Sheet getSheet(Profile profile, DataCategory dataCategory, Date profileDate) {
-        profileSheetFactory.setProfile(profile);
-        profileSheetFactory.setDataCategory(dataCategory);
-        profileSheetFactory.setProfileDate(profileDate);
+    public Sheet getSheet(ProfileBrowser browser) {
+        profileSheetFactory.setProfileBrowser(browser);
         return (Sheet) cacheHelper.getCacheable(profileSheetFactory);
     }
 
     public void removeSheets(Profile profile) {
         cacheHelper.clearCache("ProfileSheets", "ProfileSheet_" + profile.getUid());
+    }
+
+    public BigDecimal getTotalAmount(Sheet sheet) {
+        BigDecimal totalAmount = ProfileItem.ZERO;
+        BigDecimal amount;
+        for (Row row : sheet.getRows()) {
+            try {
+                amount = row.findCell("amount").getValueAsBigDecimal();
+                amount = amount.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
+                if (amount.precision() > ProfileItem.PRECISION) {
+                    log.warn("precision is too big: " + amount);
+                    // TODO: do something?
+                }
+            } catch (Exception e) {
+                // swallow
+                log.warn("caught Exception: " + e);
+                amount = ProfileItem.ZERO;
+            }
+            totalAmount = totalAmount.add(amount);
+        }
+        return totalAmount;
     }
 
     public BigDecimal getTotalAmountPerMonth(Sheet sheet) {

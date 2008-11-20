@@ -27,19 +27,33 @@ import gc.carbon.data.DataService;
 import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
 import org.apache.log4j.Logger;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.collections.MapUtils;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.restlet.ext.seam.SeamController;
+import org.joda.time.DateTime;
+import org.joda.time.Seconds;
+import org.joda.time.Months;
+import org.joda.time.Duration;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.measure.unit.Unit;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import javax.measure.Measure;
 import java.io.Serializable;
 import java.util.*;
+import java.math.BigDecimal;
 
 /**
  * Encapsulates all persistence operations for Profiles and Profile Items.
@@ -378,12 +392,13 @@ public class ProfileService implements Serializable {
 
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, Date profileDate) {
         if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
+
             // need to roll the date forward
-            // TODO: this should use profileDatePrecision instead of MONTH
             Calendar profileDateCal = Calendar.getInstance();
             profileDateCal.setTime(profileDate);
             profileDateCal.add(Calendar.MONTH, 1);
             profileDate = profileDateCal.getTime();
+
             // now get all the Profile Items
             List<ProfileItem> profileItems = entityManager.createQuery(
                     "SELECT DISTINCT pi " +
@@ -420,6 +435,40 @@ public class ProfileService implements Serializable {
         } else {
             return null;
         }
+    }
+
+    public List<ProfileItem> getProfileItems(ProfileBrowser profileBrowser) {
+
+        if ((profileBrowser.getDataCategory() == null) || (profileBrowser.getDataCategory().getItemDefinition() == null))
+            return null;
+
+        StringBuilder queryBuilder = new StringBuilder("SELECT DISTINCT pi FROM ProfileItem pi ");
+        queryBuilder.append("LEFT JOIN FETCH pi.itemValues ");
+        queryBuilder.append("WHERE pi.itemDefinition.id = :itemDefinitionId ");
+        queryBuilder.append("AND pi.dataCategory = :dataCategory ");
+        queryBuilder.append("AND pi.profile = :profile AND ");
+        if (profileBrowser.getEndDate() == null) {
+            queryBuilder.append("IFNULL(pi.endDate,:startDate) >= :startDate");
+        } else {
+            queryBuilder.append("pi.startDate < :endDate AND IFNULL(pi.endDate,:startDate) >= :startDate");
+        }
+
+        // now get all the Profile Items
+        Query query = entityManager.createQuery(queryBuilder.toString());
+
+        query.setParameter("itemDefinitionId", profileBrowser.getDataCategory().getItemDefinition().getId());
+        query.setParameter("dataCategory", profileBrowser.getDataCategory());
+        query.setParameter("profile", profileBrowser.getProfile());
+        query.setParameter("startDate", profileBrowser.getStartDate().toDate());
+        
+        if (profileBrowser.getEndDate() != null)
+            query.setParameter("endDate", profileBrowser.getEndDate().toDate());
+
+         query.setHint("org.hibernate.cacheable", true);
+         query.setHint("org.hibernate.cacheRegion", "query.profileService");
+
+        return query.getResultList();
+
     }
 
     public void remove(ProfileItem profileItem) {

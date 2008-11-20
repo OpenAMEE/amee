@@ -24,13 +24,17 @@ import com.jellymold.kiwi.auth.AuthService;
 import gc.carbon.BaseBrowser;
 import gc.carbon.definition.DefinitionService;
 import gc.carbon.domain.data.*;
+import gc.carbon.domain.profile.StartEndDate;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.restlet.data.Form;
 
 import java.util.List;
+import java.util.Date;
+import java.util.Calendar;
 
 @Name("dataBrowser")
 @Scope(ScopeType.EVENT)
@@ -67,8 +71,8 @@ public class DataBrowser extends BaseBrowser {
     // General
 
     public String getFullPath() {
-        if (getPathItem() != null) {
-            return "/data" + getPathItem().getFullPath();
+        if (pathItem != null) {
+            return "/data" + pathItem.getFullPath();
         } else {
             return "/data";
         }
@@ -157,4 +161,5 @@ public class DataBrowser extends BaseBrowser {
         }
         return itemDefinitions;
     }
+
 }

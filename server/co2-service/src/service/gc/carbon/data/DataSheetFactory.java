@@ -23,6 +23,7 @@ import com.jellymold.sheet.*;
 import com.jellymold.utils.cache.Cacheable;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.domain.data.*;
+import gc.carbon.domain.profile.StartEndDate;
 import org.apache.log4j.Logger;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -31,6 +32,7 @@ import org.jboss.seam.annotations.Scope;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 @Name("dataSheetFactory")
 @Scope(ScopeType.EVENT)
@@ -42,7 +44,9 @@ public class DataSheetFactory implements CacheableFactory {
     private DataService dataService;
 
     private DataCategory dataCategory;
-
+    private StartEndDate startDate = new StartEndDate(new Date());
+    private StartEndDate endDate;
+    
     public DataSheetFactory() {
         super();
     }
@@ -70,16 +74,17 @@ public class DataSheetFactory implements CacheableFactory {
                 }
             }
 
-            //TODO - new Column(sheet,"",true) - probably for detail output - check..
             new Column(sheet, "label");
             new Column(sheet, "path");
             new Column(sheet, "uid", true);
             new Column(sheet, "created", true);
             new Column(sheet, "modified", true);
+            new Column(sheet, "startDate");
+            new Column(sheet, "endDate");
 
             // create rows and cells
             columns = sheet.getColumns();
-            for (DataItem dataItem : dataService.getDataItems(dataCategory)) {
+            for (DataItem dataItem : dataService.getDataItems(dataCategory, startDate, endDate)) {
                 itemValuesMap = dataItem.getItemValuesMap();
                 row = new Row(sheet, dataItem.getUid());
                 row.setLabel("DataItem");
@@ -97,6 +102,10 @@ public class DataSheetFactory implements CacheableFactory {
                         new Cell(column, row, dataItem.getCreated(), ValueType.DATE);
                     } else if ("modified".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, dataItem.getModified(), ValueType.DATE);
+                    } else if ("startDate".equalsIgnoreCase(column.getName())) {
+                        new Cell(column, row, dataItem.getStartDate(), ValueType.DATE);
+                    } else if ("endDate".equalsIgnoreCase(column.getName())) {
+                        new Cell(column, row, dataItem.getEndDate(), ValueType.DATE);
                     } else {
                         // add empty cell
                         new Cell(column, row);
@@ -115,6 +124,15 @@ public class DataSheetFactory implements CacheableFactory {
     }
 
     public String getKey() {
+/*
+        StringBuffer key = new StringBuffer("DataSheet_");
+        key.append(dataCategory.getUid()).append("_");
+        key.append(startDate.getTime());
+        if (endDate != null) {
+            key.append("_" ).append(endDate.getTime());
+        }
+        return key.toString();
+*/
         return "DataSheet_" + dataCategory.getUid();
     }
 
@@ -124,5 +142,11 @@ public class DataSheetFactory implements CacheableFactory {
 
     public void setDataCategory(DataCategory dataCategory) {
         this.dataCategory = dataCategory;
+    }
+
+    public void setDataBrowser(DataBrowser dataBrowser) {
+        this.dataCategory = dataBrowser.getDataCategory();
+        this.startDate = dataBrowser.getStartDate();
+        this.endDate = dataBrowser.getEndDate();
     }
 }

@@ -1,8 +1,9 @@
 package gc.carbon.profile;
 
 import com.jellymold.kiwi.Environment;
-import com.jellymold.utils.BaseResource;
+import gc.carbon.BaseResource;
 import com.jellymold.utils.Pager;
+import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.domain.APIObject;
 import gc.carbon.builder.APIVersion;
 import gc.carbon.builder.resource.BuildableResource;
@@ -10,9 +11,12 @@ import gc.carbon.data.Calculator;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.path.PathItem;
 import org.restlet.Context;
-import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Method;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.jboss.seam.annotations.In;
 
 import javax.persistence.EntityManager;
 import java.util.Set;
@@ -64,7 +68,11 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
     
     public abstract EntityManager getEntityManager();
 
-    public Form getForm() throws IllegalArgumentException {
+    public void setForm(ProfileForm form) {
+        this.form = form;    
+    }
+
+    public ProfileForm getForm() throws IllegalArgumentException {
         if (form == null)
             form = new ProfileForm(super.getForm());
         return form;
@@ -87,4 +95,63 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
     public Set<? extends APIObject> getChildrenByType(String type) {
         return getPathItem().getChildrenByType(type);
     }
+
+    private boolean isGET() {
+        return getRequest().getMethod().equals(Method.GET);
+    }
+
+    public boolean isValidRequest() {
+
+        if (getForm().isVersionOne()) {
+
+            if (containsCalendarParams())
+                return false;
+
+        } else {
+
+            if (isGET()) {
+
+                if (containsProfileDate())
+                    return false;
+
+            } else {
+
+                if (containsValidFromOrEnd())
+                    return false;
+            }
+
+            return isValidBoundedCalendarRequest();
+
+        }
+        return true;
+    }
+
+    private boolean containsCalendarParams() {
+        return getForm().getNames().contains("endDate") ||
+               getForm().getNames().contains("startDate") ||
+                getForm().getNames().contains("duration");
+    }
+
+    private boolean containsProfileDate() {
+        return getForm().getNames().contains("profileDate");
+    }
+
+    private boolean containsValidFromOrEnd() {
+        return getForm().getNames().contains("validFrom") ||
+               getForm().getNames().contains("end");
+    }
+
+    //TODO - end is not allowed in 2.0 so can be removed
+    private boolean isValidBoundedCalendarRequest() {
+        int count = CollectionUtils.countMatches(getForm().getNames(), new Predicate() {
+            public boolean evaluate(Object o) {
+                String p = (String) o;
+                return (p.equals("end") || (p.equals("endDate") || p.equals("duration")));
+            }
+        });
+        return (count <= 1);
+    }
+
 }
+
+
