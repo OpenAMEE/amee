@@ -109,7 +109,6 @@ public class ProfileItem extends Item implements BuildableProfileItem {
         return "ProfileItem_" + getUid();
     }
 
-
     @Transient
     public ProfileItem getCopy() {
         ProfileItem profileItem = new ProfileItem(getProfile(), getDataCategory(), getDataItem());
@@ -235,5 +234,4 @@ public class ProfileItem extends Item implements BuildableProfileItem {
     public ObjectType getObjectType() {
         return ObjectType.PI;
     }
-
 }
