@@ -35,9 +35,6 @@ import gc.carbon.builder.Builder;
 
 public class ProfileItemBuilder implements Builder {
 
-    private static final String DAY_DATE = "yyyyMMdd";
-    private static DateFormat DAY_DATE_FMT = new SimpleDateFormat(DAY_DATE);
-
     private BuildableProfileItem item;
 
     public ProfileItemBuilder(BuildableProfileItem item) {
@@ -88,8 +85,8 @@ public class ProfileItemBuilder implements Builder {
         obj.put("perUnit", item.getPerUnit());
         obj.put("amount",amount);
 
-        obj.put("validFrom", DAY_DATE_FMT.format(item.getStartDate()));
-        obj.put("end", Boolean.toString(item.isEnd()));
+        obj.put("startDate", item.getStartDate().toString());
+        obj.put("endDate", (item.getEndDate() != null) ? item.getEndDate().toString() : "");        
         obj.put("dataItem", item.getDataItem().getIdentityJSONObject());
         if (detailed) {
             obj.put("profile", item.getProfile().getIdentityJSONObject());
@@ -107,8 +104,8 @@ public class ProfileItemBuilder implements Builder {
         amount.appendChild(APIUtils.getElement(document, "PerUnit", item.getPerUnit()));
         element.appendChild(amount);
 
-        element.appendChild(APIUtils.getElement(document, "ValidFrom", DAY_DATE_FMT.format(item.getStartDate())));
-        element.appendChild(APIUtils.getElement(document, "End", Boolean.toString(item.isEnd())));
+        element.appendChild(APIUtils.getElement(document, "StartDate", item.getStartDate().toString()));
+            element.appendChild(APIUtils.getElement(document, "EndDate", (item.getEndDate() != null) ? item.getEndDate().toString() : ""));
         element.appendChild(item.getDataItem().getIdentityElement(document));
         if (detailed) {
             element.appendChild(item.getProfile().getIdentityElement(document));

@@ -84,6 +84,8 @@ public class DataItem extends Item {
         buildElement(obj, detailed);
         obj.put("path", getPath());
         obj.put("label", getLabel());
+        obj.put("startDate", getStartDate().toString());
+        obj.put("endDate", (getEndDate() != null) ? getEndDate().toString() : "");
         return obj;
     }
 
@@ -93,6 +95,8 @@ public class DataItem extends Item {
         buildElement(document, dataItemElement, detailed);
         dataItemElement.appendChild(APIUtils.getElement(document, "Path", getDisplayPath()));
         dataItemElement.appendChild(APIUtils.getElement(document, "Label", getLabel()));
+        dataItemElement.appendChild(APIUtils.getElement(document, "StartDate", getStartDate().toString()));
+        dataItemElement.appendChild(APIUtils.getElement(document, "EndDate", (getEndDate() != null) ? getEndDate().toString() : ""));
         return dataItemElement;
     }
 

@@ -58,14 +58,6 @@ public class ProfileItem extends Item implements BuildableProfileItem {
     @JoinColumn(name = "DATA_ITEM_ID")
     private DataItem dataItem;
 
-    @Column(name = "START_DATE")
-    @Index(name = "START_DATE_IND")
-    private Date startDate = Calendar.getInstance().getTime();
-
-    @Column(name = "END_DATE")
-    @Index(name = "END_DATE_IND")
-    private Date endDate;
-
     @Column(name = "END")
     private Boolean end = false;
 
@@ -164,22 +156,6 @@ public class ProfileItem extends Item implements BuildableProfileItem {
         if (dataItem != null) {
             this.dataItem = dataItem;
         }
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public boolean isEnd() {

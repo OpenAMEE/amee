@@ -22,6 +22,8 @@ package gc.carbon.profile;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
+import gc.carbon.builder.resource.ResourceBuilder;
+import gc.carbon.builder.resource.ResourceBuilderFactory;
 import gc.carbon.data.Calculator;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.data.DataCategory;
@@ -31,12 +33,12 @@ import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.path.PathItemService;
 import gc.carbon.profile.acceptor.Acceptor;
 import gc.carbon.profile.acceptor.ProfileCategoryFormAcceptor;
-import gc.carbon.profile.acceptor.ProfileCategoryXMLAcceptor;
 import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
-import gc.carbon.builder.resource.ResourceBuilder;
-import gc.carbon.builder.resource.ResourceBuilderFactory;
+import gc.carbon.profile.acceptor.ProfileCategoryXMLAcceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +46,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -88,9 +88,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     private PathItem pathItem;
 
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
-
     private ResourceBuilder builder;
-
     private Map<MediaType, Acceptor> acceptors;
 
     public ProfileCategoryResource() {
@@ -221,7 +219,6 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
                 (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()));
     }
 
-
     public List<ProfileItem> doPostOrPut(org.restlet.resource.Representation entity, Form form) {
         setBuilderStrategy();
         return lookupAcceptor(entity.getMediaType()).accept(entity, form);
@@ -314,4 +311,11 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
         return entityManager;
     }
 
+    public Date getStartDate() {
+        return profileBrowser.getStartDate();
+    }
+
+    public Date getEndDate() {
+        return profileBrowser.getEndDate();
+    }
 }

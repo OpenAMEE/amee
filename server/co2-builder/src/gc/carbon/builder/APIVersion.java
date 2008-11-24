@@ -1,18 +1,11 @@
 package gc.carbon.builder;
 
-import com.jellymold.utils.domain.APIObject;
 import com.jellymold.utils.domain.APIUtils;
-import com.jellymold.utils.domain.PersistentObject;
-
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.JSONObject;
 import org.json.JSONException;
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
+import org.json.JSONObject;
 import org.restlet.data.Form;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * This file is part of AMEE.
@@ -61,6 +54,5 @@ public class APIVersion {
     public Element getElement(Document document) {
         return APIUtils.getElement(document, "APIVersion", version);
     }
-
 }
 

@@ -6,6 +6,7 @@ import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.profile.ProfileCategoryResource;
+import gc.carbon.profile.ProfileForm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
@@ -43,7 +44,7 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
         super(resource);
     }
 
-    public List<ProfileItem> accept(Representation entity, Form form) {
+    public List<ProfileItem> accept(Representation entity, ProfileForm form) {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
         DataCategory dataCategory;
         DataItem dataItem;

@@ -54,7 +54,6 @@ public class DataCategoryResourceBuilder implements Serializable {
         }
     }
 
-
     //TODO - See DC.getItemValuesMap()
     private void test() {
         ItemDefinition itemDefinition = resource.getDataCategory().getItemDefinition();

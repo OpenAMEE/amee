@@ -25,7 +25,7 @@ import gc.carbon.builder.APIVersion;
  */
 public class ResourceBuilderFactory {
 
-    public static ResourceBuilder createProfileCategoryBuilder(BuildableResource resource) {
+    public static ResourceBuilder createProfileCategoryRenderer(BuildableResource resource) {
         if (resource.getVersion().equals(APIVersion.ONE_ZERO)) {
            return new gc.carbon.builder.resource.v1.ProfileCategoryResourceBuilder(resource);
         } else {

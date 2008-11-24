@@ -3,6 +3,7 @@ package gc.carbon.test;
 import org.restlet.data.Form;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
+import gc.carbon.test.profile.BaseProfileCategoryTestCase;
 
 /**
  * This file is part of AMEE.

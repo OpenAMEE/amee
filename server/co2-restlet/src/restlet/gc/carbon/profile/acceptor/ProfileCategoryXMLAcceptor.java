@@ -3,10 +3,10 @@ package gc.carbon.profile.acceptor;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
+import gc.carbon.profile.ProfileForm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
-import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
 
@@ -41,7 +41,7 @@ public class ProfileCategoryXMLAcceptor extends Acceptor {
         super(resource);
     }
 
-    public List<ProfileItem> accept(Representation entity, Form form) {
+    public List<ProfileItem> accept(Representation entity, ProfileForm form) {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
         org.dom4j.Element rootElem;
         org.dom4j.Element profileItemsElem;
@@ -54,7 +54,7 @@ public class ProfileCategoryXMLAcceptor extends Acceptor {
                 if (profileItemsElem != null) {
                     for (Object o1 : profileItemsElem.elements("ProfileItem")) {
                         profileItemElem = (org.dom4j.Element) o1;
-                        form = new Form();
+                        form = new ProfileForm();
                         for (Object o2 : profileItemElem.elements()) {
                             profileItemValueElem = (org.dom4j.Element) o2;
                             form.add(profileItemValueElem.getName(), profileItemValueElem.getText());

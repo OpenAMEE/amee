@@ -30,13 +30,13 @@ import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.*;
 
@@ -87,6 +87,7 @@ public class ProfileService implements Serializable {
 
     // TODO: Springify
     // @Observer("beforeDataItemDelete")
+
     public void beforeDataItemDelete(DataItem dataItem) {
         log.debug("beforeDataItemDelete");
         // remove ItemValues for ProfileItems
@@ -383,12 +384,13 @@ public class ProfileService implements Serializable {
 
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, Date profileDate) {
         if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
+
             // need to roll the date forward
-            // TODO: this should use profileDatePrecision instead of MONTH
             Calendar profileDateCal = Calendar.getInstance();
             profileDateCal.setTime(profileDate);
             profileDateCal.add(Calendar.MONTH, 1);
             profileDate = profileDateCal.getTime();
+
             // now get all the Profile Items
             List<ProfileItem> profileItems = entityManager.createQuery(
                     "SELECT DISTINCT pi " +
@@ -406,7 +408,7 @@ public class ProfileService implements Serializable {
                     .setHint("org.hibernate.cacheRegion", "query.profileService")
                     .getResultList();
 
-            
+
             // only include most recent ProfileItem per ProfileItem name per DataItem                                                                                               
             Iterator<ProfileItem> iterator = profileItems.iterator();
             while (iterator.hasNext()) {
@@ -421,10 +423,44 @@ public class ProfileService implements Serializable {
                 }
             }
 
-            return profileItems;    
+            return profileItems;
         } else {
             return null;
         }
+    }
+
+    public List<ProfileItem> getProfileItems(ProfileBrowser profileBrowser) {
+
+        if ((profileBrowser.getDataCategory() == null) || (profileBrowser.getDataCategory().getItemDefinition() == null))
+            return null;
+
+        StringBuilder queryBuilder = new StringBuilder("SELECT DISTINCT pi FROM ProfileItem pi ");
+        queryBuilder.append("LEFT JOIN FETCH pi.itemValues ");
+        queryBuilder.append("WHERE pi.itemDefinition.id = :itemDefinitionId ");
+        queryBuilder.append("AND pi.dataCategory = :dataCategory ");
+        queryBuilder.append("AND pi.profile = :profile AND ");
+        if (profileBrowser.getEndDate() == null) {
+            queryBuilder.append("IFNULL(pi.endDate,:startDate) >= :startDate");
+        } else {
+            queryBuilder.append("pi.startDate < :endDate AND IFNULL(pi.endDate,:startDate) >= :startDate");
+        }
+
+        // now get all the Profile Items
+        Query query = entityManager.createQuery(queryBuilder.toString());
+
+        query.setParameter("itemDefinitionId", profileBrowser.getDataCategory().getItemDefinition().getId());
+        query.setParameter("dataCategory", profileBrowser.getDataCategory());
+        query.setParameter("profile", profileBrowser.getProfile());
+        query.setParameter("startDate", profileBrowser.getStartDate().toDate());
+
+        if (profileBrowser.getEndDate() != null)
+            query.setParameter("endDate", profileBrowser.getEndDate().toDate());
+
+        query.setHint("org.hibernate.cacheable", true);
+        query.setHint("org.hibernate.cacheRegion", "query.profileService");
+
+        return query.getResultList();
+
     }
 
     public void remove(ProfileItem profileItem) {

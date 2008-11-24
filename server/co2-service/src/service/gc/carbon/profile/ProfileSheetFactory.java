@@ -27,12 +27,11 @@ import com.jellymold.utils.ValueType;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.data.DataService;
 import gc.carbon.definition.DefinitionService;
-import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.data.ItemValueDefinition;
-import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +40,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -64,9 +61,7 @@ public class ProfileSheetFactory implements CacheableFactory {
     @Autowired
     private ProfileService profileService;
 
-    private Profile profile;
-    private DataCategory dataCategory;
-    private Date profileDate;
+    private ProfileBrowser profileBrowser;
 
     public ProfileSheetFactory() {
         super();
@@ -82,9 +77,29 @@ public class ProfileSheetFactory implements CacheableFactory {
         Sheet sheet = null;
 
         // must have ItemDefinition
-        itemDefinition = dataCategory.getItemDefinition();
+        itemDefinition = profileBrowser.getDataCategory().getItemDefinition();
         if (itemDefinition != null) {
-            List<ProfileItem> profileItems = profileService.getProfileItems(profile, dataCategory, profileDate);
+
+            List<ProfileItem> profileItems;
+            boolean isV2 = profileBrowser.getStartDate() != null;
+            if (isV2) {
+
+                ProfileService decoratedProfileService = profileService;
+
+                if (profileBrowser.isProRataRequest()) {
+                    decoratedProfileService = new ProRataProfileService(profileService);
+                }
+
+                if (profileBrowser.isSelectByRequest()) {
+                    decoratedProfileService = new SelectByProfileService(decoratedProfileService, profileBrowser.getSelectBy());
+                }
+
+                profileItems = decoratedProfileService.getProfileItems(profileBrowser);
+
+
+            } else {
+                profileItems = profileService.getProfileItems(profileBrowser.getProfile(), profileBrowser.getDataCategory(), profileBrowser.getProfileDate());
+            }
 
             // create sheet and columns
             sheet = new Sheet();
@@ -95,9 +110,12 @@ public class ProfileSheetFactory implements CacheableFactory {
                     new Column(sheet, itemValueDefinition.getPath(), itemValueDefinition.getName());
                 }
             }
+
             new Column(sheet, "name");
-            new Column(sheet, "amountPerMonth");
-            new Column(sheet, "validFrom");
+            new Column(sheet, isV2 ? "amount" : "amountPerMonth");
+            new Column(sheet, isV2 ? "startDate" : "validFrom");
+            if (isV2)
+                new Column(sheet, "endDate");
             new Column(sheet, "end");
             new Column(sheet, "path");
             new Column(sheet, "uid", true);
@@ -105,20 +123,6 @@ public class ProfileSheetFactory implements CacheableFactory {
             new Column(sheet, "modified", true);
             new Column(sheet, "dataItemLabel");
             new Column(sheet, "dataItemUid");
-
-            // only include most recent ProfileItem per ProfileItem name per DataItem
-            Iterator<ProfileItem> iterator = profileItems.iterator();
-            while (iterator.hasNext()) {
-                ProfileItem outerProfileItem = iterator.next();
-                for (ProfileItem innerProfileItem : profileItems) {
-                    if (outerProfileItem.getDataItem().equals(innerProfileItem.getDataItem()) &&
-                            outerProfileItem.getName().equalsIgnoreCase(innerProfileItem.getName()) &&
-                            outerProfileItem.getStartDate().before(innerProfileItem.getStartDate())) {
-                        iterator.remove();
-                        break;
-                    }
-                }
-            }
 
             // create rows and cells
             columns = sheet.getColumns();
@@ -132,10 +136,18 @@ public class ProfileSheetFactory implements CacheableFactory {
                         new Cell(column, row, itemValue.getValue(), itemValue.getUid(), itemValue.getItemValueDefinition().getValueDefinition().getValueType());
                     } else if ("name".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.getName(), ValueType.TEXT);
-                    } else if ("amountPerMonth".equalsIgnoreCase(column.getName())) {
+                    } else if ((isV2 ? "amount" : "amountPerMonth").equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.getAmount(), ValueType.DECIMAL);
-                    } else if ("validFrom".equalsIgnoreCase(column.getName())) {
-                        new Cell(column, row, DAY_DATE_FMT.format(profileItem.getStartDate()), ValueType.TEXT);
+                    } else if ((isV2 ? "startDate" : "validFrom").equalsIgnoreCase(column.getName())) {
+                        if (isV2)
+                            new Cell(column, row, new StartEndDate(profileItem.getStartDate()).toString(), ValueType.TEXT);
+                        else
+                            new Cell(column, row, DAY_DATE_FMT.format(profileItem.getStartDate()), ValueType.TEXT);
+                    } else if ("endDate".equalsIgnoreCase(column.getName())) {
+                        if (isV2)
+                            new Cell(column, row, (profileItem.getEndDate() != null) ? new StartEndDate(profileItem.getEndDate()).toString() : "", ValueType.TEXT);
+                        else
+                            new Cell(column, row, DAY_DATE_FMT.format(profileItem.getEndDate()), ValueType.TEXT);
                     } else if ("end".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.isEnd(), ValueType.BOOLEAN);
                     } else if ("path".equalsIgnoreCase(column.getName())) {
@@ -159,10 +171,10 @@ public class ProfileSheetFactory implements CacheableFactory {
 
             // sort columns and rows in sheet
             sheet.addDisplayBy("dataItemLabel");
-            sheet.addDisplayBy("amountPerMonth");
+            sheet.addDisplayBy(isV2 ? "amount" : "amountPerMonth");
             sheet.sortColumns();
             sheet.addSortBy("dataItemLabel");
-            sheet.addSortBy("amountPerMonth");
+            sheet.addSortBy(isV2 ? "amount" : "amountPerMonth");
             sheet.sortRows();
         }
 
@@ -170,22 +182,30 @@ public class ProfileSheetFactory implements CacheableFactory {
     }
 
     public String getKey() {
-        return "ProfileSheet_" + profile.getUid() + "_" + dataCategory.getUid() + "_" + profileDate.getTime();
+        return "ProfileSheet_" + profileBrowser.getProfile().getUid() + "_" + profileBrowser.getDataCategory().getUid() + "_" +
+                ((profileBrowser.getProfileDate() != null) ? profileBrowser.getProfileDate().getTime() : profileBrowser.getStartDate().getTime());
+
+/*
+        StringBuffer key = new StringBuffer("ProfileSheet_");
+        key.append(profileBrowser.getProfile().getUid()).append("_");
+        key.append(profileBrowser.getDataCategory().getUid()).append("_");
+        if (profileBrowser.getProfileDate() != null) {
+            key.append(profileBrowser.getProfileDate().getTime());
+        } else {
+            key.append(profileBrowser.getStartDate().getTime());
+            if (profileBrowser.getEndDate() != null) {
+                key.append("_" ).append(profileBrowser.getEndDate().getTime());
+            }
+        }
+        return key.toString();
+*/
     }
 
     public String getCacheName() {
         return "ProfileSheets";
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
-    public void setDataCategory(DataCategory dataCategory) {
-        this.dataCategory = dataCategory;
-    }
-
-    public void setProfileDate(Date profileDate) {
-        this.profileDate = profileDate;
+    public void setProfileBrowser(ProfileBrowser browser) {
+        this.profileBrowser = browser;
     }
 }

@@ -2,11 +2,12 @@ package gc.carbon.builder.resource.current;
 
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.APIObject;
+import com.jellymold.utils.Pager;
+import com.jellymold.sheet.Sheet;
 import gc.carbon.builder.domain.current.ProfileItemBuilder;
 import gc.carbon.builder.domain.BuildableProfileItem;
 import gc.carbon.builder.resource.ResourceBuilder;
-import gc.carbon.builder.resource.BuildableResource;
-import gc.carbon.builder.APIVersion;
+import gc.carbon.builder.resource.BuildableCategoryResource;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,10 +33,12 @@ import org.w3c.dom.Element;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryResourceBuilder extends ResourceBuilder {
+public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
-    public ProfileCategoryResourceBuilder(BuildableResource resource) {
-        super(resource);
+    BuildableCategoryResource resource;
+
+    public ProfileCategoryResourceBuilder(BuildableCategoryResource resource) {
+        this.resource = resource;
     }
 
     public JSONObject getJSONObject()  throws JSONException {
@@ -48,8 +51,12 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
 
         // add objects
         obj.put("path", resource.getFullPath());
-        obj.put("profileDate", resource.getProfileDate());
-
+        obj.put("startDate", resource.getStartDate());
+        if (resource.getEndDate() != null) {
+            obj.put("endDate", resource.getEndDate());
+        } else {
+            obj.put("endDate", "");
+        }
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
             obj.put("profile", resource.getProfile().getIdentityJSONObject());
@@ -73,21 +80,19 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
             children.put("dataCategories", dataCategories);
 
             // add Sheet containing Profile Items & totalAmountPerMonth
-/*
-            Sheet sheet = resource.getProfileSheetService().getSheet(resource.getProfile(), resource.getDataCategory(), resource.getProfileDate());
+            Sheet sheet = resource.getSheet();
             if (sheet != null) {
                 Pager pager = resource.getPager();
                 sheet = Sheet.getCopy(sheet, pager);
                 pager.setCurrentPage(resource.getPage());
                 children.put("profileItems", sheet.getJSONObject());
                 children.put("pager", pager.getJSONObject());
-                obj.put("totalAmountPerMonth", resource.getProfileSheetService().getTotalAmountPerMonth(sheet));
+                obj.put("totalAmount", resource.getTotalAmount(sheet));
             } else {
                 children.put("profileItems", new JSONObject());
                 children.put("pager", new JSONObject());
-                obj.put("totalAmountPerMonth", "0");
+                obj.put("totalAmount", "0");
             }
-*/
 
             // add chilren
             obj.put("children", children);
@@ -127,7 +132,12 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
         // add profile date
         //element.appendChild(resource.getDateTimeBrowser().getProfileDate().toXML(document));
                 // add profile date
-        element.appendChild(APIUtils.getElement(document, "ProfileDate",resource.getProfileDate().toString()));
+        element.appendChild(APIUtils.getElement(document, "StartDate",resource.getStartDate().toString()));
+        if (resource.getEndDate() != null) {
+            element.appendChild(APIUtils.getElement(document, "EndDate",resource.getEndDate().toString()));
+        } else {
+            element.appendChild(APIUtils.getElement(document, "EndDate",""));
+        }
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
@@ -153,18 +163,20 @@ public class ProfileCategoryResourceBuilder extends ResourceBuilder {
             childrenElement.appendChild(dataCategoriesElement);
 
             // get Sheet containing Profile Items
-/*            Sheet sheet = resource.getProfileSheetService().getSheet(resource.getProfile(), resource.getDataCategory(), resource.getProfileDate());
+            Sheet sheet = resource.getSheet();
             if (sheet != null) {
                 Pager pager = resource.getPager();
                 sheet = Sheet.getCopy(sheet, pager);
                 pager.setCurrentPage(resource.getPage());
+
                 // list child Profile Items via sheet
                 childrenElement.appendChild(sheet.getElement(document, false));
                 childrenElement.appendChild(pager.getElement(document));
+
                 // add CO2 amount
-                element.appendChild(APIUtils.getElement(document, "TotalAmountPerMonth",
-                        resource.getProfileSheetService().getTotalAmountPerMonth(sheet).toString()));
-            }*/
+                element.appendChild(APIUtils.getElement(document, "TotalAmount",
+                        resource.getTotalAmount(sheet).toString()));
+            }
 
         } else if (resource.isPost() || resource.isPut()) {
 

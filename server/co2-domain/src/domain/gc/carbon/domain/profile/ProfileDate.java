@@ -2,6 +2,7 @@ package gc.carbon.domain.profile;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * This file is part of AMEE.
@@ -24,6 +25,8 @@ import java.text.SimpleDateFormat;
  */
 public class ProfileDate extends GCDate {
 
+    private static final DateFormat MONTH_DATE = new SimpleDateFormat("yyyyMM");
+
     public ProfileDate(String profileDate) {
         super(profileDate);
     }
@@ -34,5 +37,18 @@ public class ProfileDate extends GCDate {
         } catch (Exception ex) {
             return defaultDate();
         }
+    }
+
+    protected long defaultDate() {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        cal.clear();
+        cal.set(year, month, 1);
+        return cal.getTimeInMillis();
+    }
+
+    protected void setDefaultDateStr() {
+        this.dateStr = MONTH_DATE.format(this);
     }
 }

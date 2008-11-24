@@ -45,9 +45,14 @@ public class DataSheetService implements Serializable {
         super();
     }
 
+    public Sheet getSheet(DataBrowser browser) {
+        return getSheet(browser.getDataCategory());
+    }
+
     public Sheet getSheet(DataCategory dataCategory) {
         dataSheetFactory.setDataCategory(dataCategory);
-        return (Sheet) cacheHelper.getCacheable(dataSheetFactory);
+        Sheet sheet = (Sheet) cacheHelper.getCacheable(dataSheetFactory);
+        return sheet;
     }
 
     public void removeSheet(DataCategory dataCategory) {

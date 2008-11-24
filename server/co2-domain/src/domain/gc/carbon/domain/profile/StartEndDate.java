@@ -2,8 +2,16 @@ package gc.carbon.domain.profile;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.Duration;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormat;
+import org.joda.time.format.ISOPeriodFormat;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Calendar;
 
 /**
  * This file is part of AMEE.
@@ -26,21 +34,24 @@ import java.text.ParseException;
  */
 public class StartEndDate extends GCDate {
 
-    // Support legacy validFrom date formats.
-    private static final String DAY_DATE = "yyyyMMdd";
-    private static final String ISO_DATE = "yyyyMMdd'T'HHmm";
-    private static final String[] ALLOWABLE_DATE_FORMATS = new String[]{ISO_DATE, DAY_DATE};
+    public static final String ISO_DATE = "yyyyMMdd'T'HHmm";
+
+    public static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat(ISO_DATE);
 
     public StartEndDate(String dateStr) {
         super(dateStr);
     }
 
+    public StartEndDate(Date date) {
+        super(date.getTime());
+    }
+    
     // Parse the date string acccording to the allowed formats.
     // If successful, return a Date with the minute field floored to the nearest 30min.
     // If a ParseException occurs, return the defaultDate.
     protected long parseStr(String dateStr) {
         try {
-            DateTime requestedDate = new DateTime(DateUtils.parseDate(dateStr,ALLOWABLE_DATE_FORMATS));
+            DateTime requestedDate = new DateTime(ISO_DATE_FORMAT.parse(dateStr));
             DateTime dateFlooredToNearest30Mins = requestedDate.withMinuteOfHour( (requestedDate.getMinuteOfHour() < 30) ? 0 : 30);
             return dateFlooredToNearest30Mins.toDate().getTime();
         } catch (ParseException e) {
@@ -48,4 +59,17 @@ public class StartEndDate extends GCDate {
         }
     }
 
+    protected void setDefaultDateStr() {
+        this.dateStr = ISO_DATE_FORMAT.format(this);
+    }
+
+    protected long defaultDate() {
+        return new Date().getTime();
+    }
+
+    public StartEndDate plus(String duration) {
+        Period period = ISOPeriodFormat.standard().parsePeriod(duration);
+        DateTime thisPlusPeriod = new DateTime(getTime()).plus(period);
+        return new StartEndDate(thisPlusPeriod.toDate());
+    }
 }

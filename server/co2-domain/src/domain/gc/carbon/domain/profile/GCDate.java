@@ -2,8 +2,10 @@ package gc.carbon.domain.profile;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.joda.time.DateTime;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -28,9 +30,12 @@ import java.text.SimpleDateFormat;
  */
 public abstract class GCDate extends java.util.Date {
 
-    protected static final DateFormat MONTH_DATE = new SimpleDateFormat("yyyyMM");
+    protected String dateStr;
 
-    private String dateStr;
+    public GCDate(long time) {
+        setTime(time);
+        setDefaultDateStr();
+    }
 
     public GCDate(String dateStr) {
         super();
@@ -39,11 +44,13 @@ public abstract class GCDate extends java.util.Date {
             this.dateStr = dateStr;
         } else {
             setTime(defaultDate());
-            this.dateStr = MONTH_DATE.format(this);
+            setDefaultDateStr();
         }
     }
 
     protected abstract long parseStr(String dateStr);
+
+    protected abstract void setDefaultDateStr();
 
     protected long defaultDate() {
         Calendar cal = Calendar.getInstance();
@@ -58,9 +65,7 @@ public abstract class GCDate extends java.util.Date {
         return dateStr;    
     }
 
-    public Element toXML(Document document) {
-        //String elementName = name.substring(0,1).toUpperCase() + name.substring(1, name.length());
-        //return APIUtils.getElement(document, elementName, dt.toString(fmt));
-        return null;
+    public Date toDate() {
+        return new DateTime(this.getTime()).toDate();
     }
 }

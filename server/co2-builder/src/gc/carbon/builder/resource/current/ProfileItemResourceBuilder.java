@@ -3,7 +3,10 @@ package gc.carbon.builder.resource.current;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.APIObject;
 import gc.carbon.builder.resource.ResourceBuilder;
+import gc.carbon.builder.resource.BuildableCategoryResource;
 import gc.carbon.builder.resource.BuildableResource;
+import gc.carbon.builder.domain.current.ProfileItemBuilder;
+import gc.carbon.builder.domain.BuildableProfileItem;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -28,15 +31,18 @@ import org.w3c.dom.Element;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileItemResourceBuilder extends ResourceBuilder {
+public class ProfileItemResourceBuilder implements ResourceBuilder {
+
+    BuildableResource resource;
 
     public ProfileItemResourceBuilder(BuildableResource resource) {
-        super(resource);
+        this.resource = resource;
     }
 
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
-        APIObject profileItem = resource.getProfileItem();
+        BuildableProfileItem profileItem = resource.getProfileItem();
+        profileItem.setBuilder(new ProfileItemBuilder(profileItem));
         obj.put("profileItem", profileItem.getJSONObject());
         obj.put("path", resource.getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
@@ -45,7 +51,8 @@ public class ProfileItemResourceBuilder extends ResourceBuilder {
 
 
     public Element getElement(Document document) {
-        APIObject profileItem = resource.getProfileItem();
+        BuildableProfileItem profileItem = resource.getProfileItem();
+        profileItem.setBuilder(new ProfileItemBuilder(profileItem));
         Element element = document.createElement("ProfileItemResource");
         element.appendChild(profileItem.getElement(document));
         element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));

@@ -3,6 +3,17 @@
   <component name="DBNavigator.Module.ConnectionManager">
     <connections />
   </component>
+  <component name="FacetManager">
+    <facet type="Spring" name="Spring" implicit="true">
+      <configuration>
+        <options>
+          <option name="enableValidation" value="false" />
+          <option name="reportErrorsAsWarnings" value="true" />
+        </options>
+        <customNs />
+      </configuration>
+    </facet>
+  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -16,6 +27,7 @@
     <orderEntry type="library" name="jm" level="project" />
     <orderEntry type="library" name="libs" level="project" />
     <orderEntry type="module" module-name="co2-builder" />
+    <orderEntryProperties />
   </component>
 </module>
 

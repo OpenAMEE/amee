@@ -24,13 +24,7 @@ import org.w3c.dom.Element;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public abstract class ResourceBuilder {
-
-    protected BuildableResource resource;
-
-    public ResourceBuilder(BuildableResource resource) {
-        this.resource = resource;
-    }
+public interface ResourceBuilder {
 
     public abstract JSONObject getJSONObject()  throws JSONException;
 

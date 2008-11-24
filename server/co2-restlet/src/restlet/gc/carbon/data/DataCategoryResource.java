@@ -20,7 +20,7 @@
 package gc.carbon.data;
 
 import com.jellymold.sheet.Sheet;
-import com.jellymold.utils.BaseResource;
+import gc.carbon.BaseResource;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.definition.DefinitionService;
@@ -29,6 +29,7 @@ import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -102,7 +103,10 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        Form form = request.getResourceRef().getQueryAsForm();
         dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
+        dataBrowser.setStartDate(form.getFirstValue("startDate"));
+        dataBrowser.setEndDate(form.getFirstValue("endDate"));
         setPage(request);
     }
 
@@ -119,14 +123,14 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         DataCategory dataCategory = dataBrowser.getDataCategory();
-        Sheet sheet = dataSheetService.getSheet(dataCategory);
+        Sheet sheet = dataSheetService.getSheet(dataBrowser);
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
         values.put("dataCategory", dataCategory);
         values.put("itemDefinition", dataCategory.getItemDefinition());
         values.put("node", dataCategory);
         if (sheet != null) {
-            Pager pager = getPager(dataBrowser.getItemsPerPage(getRequest()));
+            Pager pager = getPager(getItemsPerPage());
             sheet = Sheet.getCopy(sheet, pager);
             pager.setCurrentPage(getPage());
             values.put("sheet", sheet);
@@ -138,16 +142,21 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     @Override
     public JSONObject getJSONObject() throws JSONException {
 
-        DataCategory thisDataCategory = dataBrowser.getDataCategory();
-
         // create JSON object
         JSONObject obj = new JSONObject();
         obj.put("path", pathItem.getFullPath());
 
         if (isGet()) {
 
+            obj.put("startDate", dataBrowser.getStartDate());
+            if (dataBrowser.getEndDate() != null) {
+                obj.put("endDate", dataBrowser.getEndDate());
+            } else {
+                obj.put("endDate", "");
+            }
+
             // add DataCategory
-            obj.put("dataCategory", thisDataCategory.getJSONObject());
+            obj.put("dataCategory", dataBrowser.getDataCategory().getJSONObject());
 
             // list child Data Categories and child Data Items
             JSONObject children = new JSONObject();
@@ -160,9 +169,9 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             children.put("dataCategories", dataCategories);
 
             // add Sheet containing Data Items
-            Sheet sheet = dataSheetService.getSheet(thisDataCategory);
+            Sheet sheet = dataSheetService.getSheet(dataBrowser);
             if (sheet != null) {
-                Pager pager = getPager(dataBrowser.getItemsPerPage(getRequest()));
+                Pager pager = getPager(getItemsPerPage());
                 sheet = Sheet.getCopy(sheet, pager);
                 pager.setCurrentPage(getPage());
                 children.put("dataItems", sheet.getJSONObject());
@@ -206,16 +215,20 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     @Override
     public Element getElement(Document document) {
 
-        DataCategory thisDataCategory = dataBrowser.getDataCategory();
-
-        // create Element
         Element element = document.createElement("DataCategoryResource");
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
 
         if (isGet()) {
 
+            element.appendChild(APIUtils.getElement(document, "StartDate",dataBrowser.getStartDate().toString()));
+            if (dataBrowser.getEndDate() != null) {
+                element.appendChild(APIUtils.getElement(document, "EndDate",dataBrowser.getEndDate().toString()));
+            } else {
+                element.appendChild(APIUtils.getElement(document, "EndDate",""));
+            }
+
             // add DataCategory
-            element.appendChild(thisDataCategory.getElement(document));
+            element.appendChild(dataBrowser.getDataCategory().getElement(document));
 
             // list child Data Categories and child Data Items
             Element childrenElement = document.createElement("Children");
@@ -228,11 +241,15 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             }
             childrenElement.appendChild(dataCategoriesElement);
 
-            //TODO - XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             // list child Data Items via sheet
-            //Sheet sheet = dataSheetService.getSheet(thisDataCategory);
-            DataCategoryResourceBuilder builder = new DataCategoryResourceBuilder(this);
-            builder.addElement(childrenElement, document);
+            Sheet sheet = dataSheetService.getSheet(dataBrowser);
+            if (sheet != null) {
+                Pager pager = getPager(getItemsPerPage());
+                sheet = Sheet.getCopy(sheet, pager);
+                pager.setCurrentPage(getPage());
+                childrenElement.appendChild(sheet.getElement(document, false));
+                childrenElement.appendChild(pager.getElement(document));
+            }
 
         } else if (getRequest().getMethod().equals(Method.POST) || getRequest().getMethod().equals(Method.PUT)) {
 
@@ -558,6 +575,26 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     protected DataItem acceptDataItem(Form form, DataItem dataItem) {
         dataItem.setName(form.getFirstValue("name"));
         dataItem.setPath(form.getFirstValue("path"));
+
+
+        // determine startdate for new DataItem
+        StartEndDate startDate = new StartEndDate(form.getFirstValue("startDate"));
+        dataItem.setStartDate(startDate);
+
+
+        if (form.getNames().contains("endDate"))
+            dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+
+        if (form.getNames().contains("duration")) {
+            StartEndDate endDate = startDate.plus(form.getFirstValue("duration"));
+            dataItem.setEndDate(endDate);
+        }
+
+        if (dataItem.getEndDate() != null && dataItem.getEndDate().before(dataItem.getStartDate())) {
+            badRequest();
+            return null;
+        }
+
         entityManager.persist(dataItem);
         dataService.checkDataItem(dataItem);
         // update item values if supplied
@@ -617,17 +654,5 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         } else {
             notAuthorized();
         }
-    }
-
-    public DataSheetFactory getDataSheetFactory() {
-        return dataSheetService.getDataSheetFactory(); 
-    }
-
-    public DataCategory getDataCategory() {
-        return dataBrowser.getDataCategory();
-    }
-
-    public Pager getPager() {
-        return getPager(dataBrowser.getItemsPerPage(getRequest()));
     }
 }
