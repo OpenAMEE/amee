@@ -51,10 +51,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.*;
+import java.math.BigDecimal;
 
 @Component
 @Scope("prototype")
-public class ProfileCategoryResource extends BaseProfileResource implements Serializable {
+public class ProfileCategoryResource extends BaseProfileCategoryResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -102,8 +103,15 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        Form form = request.getResourceRef().getQueryAsForm();
+        profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
+        profileBrowser.setStartDate(form.getFirstValue("startDate"));
+        profileBrowser.setEndDate(form.getFirstValue("endDate"));
+        profileBrowser.setDuration(form.getFirstValue("duration"));
+        profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
+        profileBrowser.setMode(form.getFirstValue("mode"));
+        profileBrowser.setAPIVersion(form.getFirstValue("v"));
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
-        profileBrowser.setProfileDate(request.getResourceRef().getQueryAsForm());
         setPage(request);
         setAcceptors();
     }
@@ -131,9 +139,9 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Profile profile = profileBrowser.getProfile();
-        DataCategory dataCategory = profileBrowser.getDataCategory();
-        Sheet sheet = profileSheetService.getSheet(profile, dataCategory, profileBrowser.getProfileDate());
+        Profile profile = getProfile();
+        DataCategory dataCategory = getDataCategory();
+        Sheet sheet = getSheet();
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", profileBrowser);
         values.put("profile", profile);
@@ -159,7 +167,11 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     @Override
     public void handleGet() {
         log.debug("handleGet");
-        if (profileBrowser.getEnvironmentActions().isAllowView()) {
+        setForm(new ProfileForm(getRequest().getResourceRef().getQueryAsForm()));
+        if (!isValidRequest()) {
+            badRequest();
+        }
+        else if (profileBrowser.getEnvironmentActions().isAllowView()) {
             setBuilderStrategy();
             super.handleGet();
         } else {
@@ -215,11 +227,12 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     }
 
     private boolean isPostOrPutAuthorized() {
-        return (getRequest().getMethod().equals(Method.POST) && (profileBrowser.getProfileItemActions().isAllowCreate())) ||
-                (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()));
-    }
+         return (getRequest().getMethod().equals(Method.POST) && (profileBrowser.getProfileItemActions().isAllowCreate())) ||
+                 (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()));
+     }
 
-    public List<ProfileItem> doPostOrPut(org.restlet.resource.Representation entity, Form form) {
+
+    public List<ProfileItem> doPostOrPut(org.restlet.resource.Representation entity, ProfileForm form) {
         setBuilderStrategy();
         return lookupAcceptor(entity.getMediaType()).accept(entity, form);
     }
@@ -231,11 +244,11 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
         } else if (MediaType.APPLICATION_XML.includes(type)) {
             return acceptors.get(MediaType.APPLICATION_XML);
         } else {
-            return acceptors.get(MediaType.APPLICATION_WWW_FORM);
+           return acceptors.get(MediaType.APPLICATION_WWW_FORM);
         }
     }
 
-    @Override
+     @Override
     public boolean allowDelete() {
         // only allow delete for profile (a request to /profiles/{profileUid})
         return (pathItem.getPath().length() == 0);
@@ -288,7 +301,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
     }
 
     public Pager getPager() {
-        return getPager(profileBrowser.getItemsPerPage(getRequest()));
+        return getPager(getItemsPerPage());
     }
 
     public ProfileService getProfileService() {
@@ -309,6 +322,20 @@ public class ProfileCategoryResource extends BaseProfileResource implements Seri
 
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    public Sheet getSheet() {
+        Sheet sheet = profileSheetService.getSheet(profileBrowser);
+        profileSheetService.removeSheets(getProfile());
+        return sheet;
+    }
+
+    public BigDecimal getTotalAmount(Sheet sheet) {
+        return profileSheetService.getTotalAmount(sheet);
+    }
+
+    public BigDecimal getTotalAmountPerMonth(Sheet sheet) {
+        return profileSheetService.getTotalAmountPerMonth(sheet);
     }
 
     public Date getStartDate() {

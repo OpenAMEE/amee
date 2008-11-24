@@ -24,6 +24,8 @@ public abstract class BaseBrowser implements Serializable {
     protected StartEndDate startDate = new StartEndDate(Calendar.getInstance().getTime());
     protected StartEndDate endDate;
 
+    private String apiVersion;
+
     public void setStartDate(String date) {
         startDate = new StartEndDate(date);
     }
@@ -39,5 +41,13 @@ public abstract class BaseBrowser implements Serializable {
 
     public StartEndDate getEndDate() {
         return endDate;
+    }
+
+    public void setAPIVersion(String v) {
+        apiVersion = v;
+    }
+
+    public boolean isAPIVersionOne() {
+        return apiVersion == null || apiVersion.equals("1.0");
     }
 }

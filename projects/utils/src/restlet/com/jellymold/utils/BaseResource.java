@@ -186,7 +186,7 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
         return document.createElement("Resource");
     }
 
-    protected void setPage(Request request) {
+    public void setPage(Request request) {
         String pageStr = request.getResourceRef().getQueryAsForm().getFirstValue("page");
         if (pageStr != null) {
             try {
@@ -197,7 +197,7 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
         }
     }
 
-    protected void setPagerSetType(Request request) {
+    public void setPagerSetType(Request request) {
         String pagerSetTypeStr = request.getResourceRef().getQueryAsForm().getFirstValue("pagerSetType");
         if (pagerSetTypeStr != null) {
             try {
@@ -209,17 +209,17 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
         }
     }
 
-    protected PagerSetType getPagerSetType() {
+    public PagerSetType getPagerSetType() {
         return pagerSetType;
     }
 
-    protected Pager getPager() {
+    public Pager getPager() {
         Pager pager = new Pager(0, 0, getPage());
         pager.setPagerSetType(pagerSetType);
         return pager;
     }
 
-    protected Pager getPager(int itemsPerPage) {
+    public Pager getPager(int itemsPerPage) {
         Pager pager = new Pager(0, itemsPerPage, getPage());
         pager.setPagerSetType(pagerSetType);
         return pager;

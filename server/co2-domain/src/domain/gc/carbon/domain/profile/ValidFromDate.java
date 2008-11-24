@@ -1,8 +1,13 @@
 package gc.carbon.domain.profile;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * This file is part of AMEE.
@@ -25,7 +30,7 @@ import java.util.Calendar;
  */
 public class ValidFromDate extends GCDate {
 
-    private static final DateFormat DAY_DATE = new SimpleDateFormat("yyyyMMdd");
+    private static DateTimeFormatter FMT = DateTimeFormat.forPattern("yyyyMMdd");
 
     public ValidFromDate(String profileDate) {
         super(profileDate);
@@ -33,22 +38,19 @@ public class ValidFromDate extends GCDate {
 
     protected long parseStr(String dateStr) {
         try {
-            return DAY_DATE.parse(dateStr).getTime();
+            DateTime date = FMT.parseDateTime(dateStr);
+            return date.dayOfMonth().withMinimumValue().toDateMidnight().getMillis();
         } catch (Exception ex) {
             return defaultDate();
         }
     }
 
     protected long defaultDate() {
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        cal.clear();
-        cal.set(year, month, 1);
-        return cal.getTimeInMillis();
+        DateTime dt = new DateTime();
+        return dt.dayOfMonth().withMinimumValue().getMillis();
     }
 
     protected void setDefaultDateStr() {
-        this.dateStr = DAY_DATE.format(this);
+        this.dateStr = FMT.print(this.getTime());
     }
 }

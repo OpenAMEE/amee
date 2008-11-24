@@ -76,86 +76,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ProfileCategoryResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../server/co2-restlet/src/restlet/gc/carbon/profile/ProfileCategoryResource.java">
+      <file leaf-file-name="log4j.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../server/co2-engine/resources/log4j.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="56" column="13" selection-start="2113" selection-end="2113" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ResourceBuilderFactory.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../server/co2-builder/src/gc/carbon/builder/resource/ResourceBuilderFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="56" selection-start="1388" selection-end="1388" vertical-scroll-proportion="0.39285713">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ProfileCategoryResourceBuilder.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../server/co2-builder/src/gc/carbon/builder/resource/current/ProfileCategoryResourceBuilder.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="39" column="0" selection-start="1447" selection-end="1566" vertical-scroll-proportion="0.0">
+            <state line="33" column="29" selection-start="1160" selection-end="1160" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BuildableItem.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../server/co2-builder/src/gc/carbon/builder/domain/BuildableItem.java">
+      <file leaf-file-name="ehcache.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../server/co2-engine/resources/ehcache.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="17" selection-start="978" selection-end="978" vertical-scroll-proportion="0.0">
+            <state line="8" column="44" selection-start="327" selection-end="327" vertical-scroll-proportion="0.09347615">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BaseProfileResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../server/co2-restlet/src/restlet/gc/carbon/profile/BaseProfileResource.java">
+      <file leaf-file-name="Profile.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../server/co2-domain/src/domain/gc/carbon/domain/profile/Profile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="40" column="22" selection-start="1472" selection-end="1472" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ProfileItemPUTV1.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../server/co2-test/src/gc/carbon/test/profile/ProfileItemPUTV1.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="13" selection-start="906" selection-end="906" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BaseProfileCategoryTestCase.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../server/co2-test/src/gc/carbon/test/profile/BaseProfileCategoryTestCase.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="13" selection-start="1003" selection-end="1003" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BaseProfileItemTestCase.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../server/co2-test/src/gc/carbon/test/profile/BaseProfileItemTestCase.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="13" selection-start="961" selection-end="961" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ScheduledTaskManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../projects/kiwi/service/java/com/jellymold/kiwi/environment/ScheduledTaskManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="46" column="30" selection-start="1527" selection-end="1527" vertical-scroll-proportion="0.0">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -365,11 +307,11 @@
         <option name="Make" value="true" />
       </method>
     </configuration>
-    <configuration default="false" name="AMEE" type="Application" factoryName="Application" enabled="false" merge="false" runner="emma">
+    <configuration default="false" name="AMEE" type="Application" factoryName="Application" enabled="false" merge="false" sample_coverage="true" runner="emma">
       <option name="MAIN_CLASS_NAME" value="gc.engine.GCEngine" />
       <option name="VM_PARAMETERS" value="-Dsun.lang.ClassLoader.allowArraySyntax=true -Djava.awt.headless=true -Dnet.sf.ehcache.disableShutdownHook=true -javaagent:$PROJECT_DIR$/../../SpringAndRestlet/lib/spring-framework-2.5.2/dist/weaving/spring-agent.jar -Dlog4j.configuration=log4j.xml -Dlog4j.debug" />
       <option name="PROGRAM_PARAMETERS" value="-serverName localhost" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/../server/bootstrap" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/../server/co2-engine/resources" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
       <option name="ENABLE_SWING_INSPECTOR" value="false" />
@@ -382,7 +324,9 @@
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
       <method>
         <option name="Make" value="true" />
       </method>
@@ -451,18 +395,18 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.14961496" sideWeight="0.6635071" order="3" side_tool="false" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29372936" sideWeight="0.6654028" order="0" side_tool="false" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23652366" sideWeight="0.6635071" order="0" side_tool="false" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32796207" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24972497" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39337748" sideWeight="0.5" order="8" side_tool="false" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39336494" sideWeight="0.5" order="8" side_tool="false" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5507109" sideWeight="0.5" order="8" side_tool="false" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4347826" sideWeight="0.5" order="4" side_tool="false" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32985783" sideWeight="0.5" order="2" side_tool="false" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43412322" sideWeight="0.5" order="4" side_tool="false" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32985783" sideWeight="0.5" order="8" side_tool="false" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.53459716" sideWeight="0.5" order="8" side_tool="false" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
@@ -545,51 +489,87 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../projects/utils/src/restlet/com/jellymold/utils/Pager.java">
+    <entry file="file://$PROJECT_DIR$/../server/co2-restlet/src/restlet/gc/carbon/profile/ProfileItemResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="13" selection-start="381" selection-end="381" vertical-scroll-proportion="0.0">
+        <state line="67" column="25" selection-start="2351" selection-end="2351" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../projects/utils/src/restlet/com/jellymold/utils/PagerSetType.java">
+    <entry file="file://$PROJECT_DIR$/../projects/utils/src/domain/com/jellymold/utils/domain/APIUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="12" selection-start="243" selection-end="243" vertical-scroll-proportion="0.0">
+        <state line="12" column="21" selection-start="308" selection-end="316" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../server/co2-service/src/service/gc/carbon/BaseBrowser.java">
+    <entry file="file://$PROJECT_DIR$/../server/co2-restlet/src/restlet/gc/carbon/data/DataCategoryResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="35" selection-start="415" selection-end="415" vertical-scroll-proportion="0.0">
+        <state line="412" column="25" selection-start="15112" selection-end="15112" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/co2-builder/src/gc/carbon/builder/resource/BuildableCategoryResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="17" selection-start="933" selection-end="933" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../server/co2-test/src/gc/carbon/test/ProfileCategoryTestCase.java">
+    <entry file="file://$PROJECT_DIR$/../server/co2-builder/src/gc/carbon/builder/resource/ResourceBuilderFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="13" selection-start="973" selection-end="973" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../server/co2-restlet/src/restlet/gc/carbon/BaseResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="0" selection-start="99" selection-end="99" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../server/co2-builder/src/gc/carbon/builder/domain/BuildableItem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="17" selection-start="978" selection-end="978" vertical-scroll-proportion="0.0">
-          <folding />
+        <state line="27" column="77" selection-start="1115" selection-end="1115" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../server/co2-restlet/src/restlet/gc/carbon/profile/ProfileCategoryResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="13" selection-start="2113" selection-end="2113" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/co2-builder/src/gc/carbon/builder/resource/BuildableResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="17" selection-start="1074" selection-end="1074" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/co2-builder/src/gc/carbon/builder/Builder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="17" selection-start="942" selection-end="942" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../projects/utils/src/restlet/com/jellymold/utils/BaseResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="188" column="10" selection-start="6940" selection-end="6940" vertical-scroll-proportion="1.2247934">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/co2-restlet/src/restlet/gc/carbon/BaseResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="15" selection-start="1319" selection-end="1319" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/co2-restlet/src/restlet/gc/carbon/profile/BaseProfileCategoryResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="60" selection-start="1025" selection-end="1025" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -598,52 +578,36 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../server/co2-restlet/src/restlet/gc/carbon/profile/BaseProfileResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="22" selection-start="1472" selection-end="1472" vertical-scroll-proportion="0.0">
+        <state line="56" column="34" selection-start="1901" selection-end="1909" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../server/co2-test/src/gc/carbon/test/profile/ProfileItemPUTV1.java">
+    <entry file="file://$PROJECT_DIR$/../server/co2-engine/resources/META-INF/persistence.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="13" selection-start="906" selection-end="906" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../server/co2-test/src/gc/carbon/test/profile/BaseProfileCategoryTestCase.java">
+    <entry file="file://$PROJECT_DIR$/../server/co2-domain/src/domain/gc/carbon/domain/profile/Profile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="13" selection-start="1003" selection-end="1003" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../server/co2-test/src/gc/carbon/test/profile/BaseProfileItemTestCase.java">
+    <entry file="file://$PROJECT_DIR$/../server/co2-engine/resources/log4j.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="13" selection-start="961" selection-end="961" vertical-scroll-proportion="0.0">
+        <state line="33" column="29" selection-start="1160" selection-end="1160" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../server/co2-builder/src/gc/carbon/builder/resource/current/ProfileCategoryResourceBuilder.java">
+    <entry file="file://$PROJECT_DIR$/../server/co2-engine/resources/ehcache.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="0" selection-start="1447" selection-end="1566" vertical-scroll-proportion="0.0">
+        <state line="8" column="44" selection-start="327" selection-end="327" vertical-scroll-proportion="0.09347615">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../projects/kiwi/service/java/com/jellymold/kiwi/environment/ScheduledTaskManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="30" selection-start="1527" selection-end="1527" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../server/co2-builder/src/gc/carbon/builder/resource/ResourceBuilderFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="56" selection-start="1388" selection-end="1388" vertical-scroll-proportion="0.39285713">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

@@ -1,12 +1,7 @@
 <!DOCTYPE ehcache-xml [
-        <!ENTITY com-jellymold-content SYSTEM "/var/www/content/conf/com-jellymold-content.ehcache.xml">
-        <!ENTITY com-jellymold-kiwi SYSTEM "/var/www/content/conf/com-jellymold-kiwi.ehcache.xml">
-        <!ENTITY com-jellymold-peach SYSTEM "/var/www/content/conf/com-jellymold-peach.ehcache.xml">
-        <!ENTITY com-jellymold-plum SYSTEM "/var/www/content/conf/com-jellymold-plum.ehcache.xml">
-        <!ENTITY com-jellymold-pop SYSTEM "/var/www/content/conf/com-jellymold-pop.ehcache.xml">
-        <!ENTITY com-jellymold-tag SYSTEM "/var/www/content/conf/com-jellymold-tag.ehcache.xml">
-        <!ENTITY com-jellymold-pp SYSTEM "/var/www/content/conf/com-jellymold-pp.ehcache.xml">
-
+        <!ENTITY net-dgen-amee SYSTEM "../conf/net-dgen-amee.ehcache.xml">
+        <!ENTITY com-jellymold-kiwi SYSTEM "../conf/com-jellymold-kiwi.ehcache.xml">
+        <!ENTITY com-jellymold-plum SYSTEM "../conf/com-jellymold-plum.ehcache.xml">
         ]>
 <ehcache>
 
@@ -14,12 +9,12 @@
 
     <!-- **** Cluster **** -->
 
-    <cacheManagerPeerProviderFactory
+    <!--cacheManagerPeerProviderFactory
             class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
-            properties="peerDiscovery=automatic, multicastGroupAddress=230.0.0.1, multicastGroupPort=4446, timeToLive=32"/>
+            properties="peerDiscovery=automatic, multicastGroupAddress=230.0.0.1, multicastGroupPort=4446, timeToLive=32"/-->
 
-    <cacheManagerPeerListenerFactory
-            class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"/>
+    <!--cacheManagerPeerListenerFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"/-->
 
     <!-- **** Default cache configuration **** -->
 
@@ -29,8 +24,8 @@
                   timeToIdleSeconds="1800"
                   timeToLiveSeconds="3600"
                   overflowToDisk="false">
-        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-                                   properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
+                                   <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </defaultCache>
 
     <!-- JavaDoc: Tracks the timestamps of the most recent updates to particular tables.
@@ -45,8 +40,8 @@
            timeToIdleSeconds="172800"
            timeToLiveSeconds="172800"
            overflowToDisk="false">
-        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-                                   properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
+                                   <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </cache>
 
     <!-- JavaDoc: The standard implementation of the Hibernate QueryCache interface.
@@ -59,18 +54,14 @@
            timeToIdleSeconds="1800"
            timeToLiveSeconds="3600"
            overflowToDisk="false">
-        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-                                   properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
+                                   <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </cache>
 
     <!-- **** Includes **** -->
 
-    &com-jellymold-content;
+    &net-dgen-amee;
     &com-jellymold-kiwi;
-    &com-jellymold-peach;
     &com-jellymold-plum;
-    &com-jellymold-pop;
-    &com-jellymold-tag;
-    &com-jellymold-pp;
 
 </ehcache>

@@ -81,7 +81,8 @@ public class ProfileSheetFactory implements CacheableFactory {
         if (itemDefinition != null) {
 
             List<ProfileItem> profileItems;
-            boolean isV2 = profileBrowser.getStartDate() != null;
+            //TODO - Rework once we are on Spring
+            boolean isV2 = !profileBrowser.isAPIVersionOne();
             if (isV2) {
 
                 ProfileService decoratedProfileService = profileService;
@@ -168,6 +169,7 @@ public class ProfileSheetFactory implements CacheableFactory {
                     }
                 }
             }
+
 
             // sort columns and rows in sheet
             sheet.addDisplayBy("dataItemLabel");

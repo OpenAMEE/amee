@@ -36,6 +36,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="amee-builder" />
     <orderEntry type="module" module-name="amee-domain" />
     <orderEntry type="module" module-name="amee-restlet" />
     <orderEntry type="module" module-name="amee-service" />

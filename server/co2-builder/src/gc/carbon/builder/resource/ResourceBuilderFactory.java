@@ -1,8 +1,8 @@
 package gc.carbon.builder.resource;
 
+import gc.carbon.builder.APIVersion;
 import gc.carbon.builder.resource.current.ProfileCategoryResourceBuilder;
 import gc.carbon.builder.resource.current.ProfileItemResourceBuilder;
-import gc.carbon.builder.APIVersion;
 
 /**
  * This file is part of AMEE.
@@ -25,9 +25,9 @@ import gc.carbon.builder.APIVersion;
  */
 public class ResourceBuilderFactory {
 
-    public static ResourceBuilder createProfileCategoryRenderer(BuildableResource resource) {
+    public static ResourceBuilder createProfileCategoryBuilder(BuildableCategoryResource resource) {
         if (resource.getVersion().equals(APIVersion.ONE_ZERO)) {
-           return new gc.carbon.builder.resource.v1.ProfileCategoryResourceBuilder(resource);
+            return new gc.carbon.builder.resource.v1.ProfileCategoryResourceBuilder(resource);
         } else {
             return new ProfileCategoryResourceBuilder(resource);
         }

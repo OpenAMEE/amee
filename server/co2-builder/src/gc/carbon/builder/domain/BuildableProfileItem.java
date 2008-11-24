@@ -1,12 +1,10 @@
 package gc.carbon.builder.domain;
 
 import com.jellymold.utils.domain.APIObject;
+import gc.carbon.builder.Builder;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
-import gc.carbon.builder.domain.BuildableItem;
-import gc.carbon.builder.Builder;
 
 /**
  * This file is part of AMEE.
@@ -44,6 +42,6 @@ public interface BuildableProfileItem extends BuildableItem {
     String getUnit();
 
     String getPerUnit();
-    
+
     void setBuilder(Builder builder);
 }

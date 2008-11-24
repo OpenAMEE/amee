@@ -20,9 +20,9 @@
 package gc.carbon.data;
 
 import com.jellymold.sheet.Sheet;
-import gc.carbon.BaseResource;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
+import gc.carbon.BaseResource;
 import gc.carbon.definition.DefinitionService;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
@@ -40,11 +40,11 @@ import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.*;
 import org.restlet.resource.Representation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -220,11 +220,11 @@ public class DataCategoryResource extends BaseResource implements Serializable {
 
         if (isGet()) {
 
-            element.appendChild(APIUtils.getElement(document, "StartDate",dataBrowser.getStartDate().toString()));
+            element.appendChild(APIUtils.getElement(document, "StartDate", dataBrowser.getStartDate().toString()));
             if (dataBrowser.getEndDate() != null) {
-                element.appendChild(APIUtils.getElement(document, "EndDate",dataBrowser.getEndDate().toString()));
+                element.appendChild(APIUtils.getElement(document, "EndDate", dataBrowser.getEndDate().toString()));
             } else {
-                element.appendChild(APIUtils.getElement(document, "EndDate",""));
+                element.appendChild(APIUtils.getElement(document, "EndDate", ""));
             }
 
             // add DataCategory

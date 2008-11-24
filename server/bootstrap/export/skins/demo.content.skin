@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Skin>
-    <SkinType>DATABASE_AND_SUBVERSION</SkinType>
-    <Name>Demo Content Skin</Name>
-    <Path>demo-content</Path>
-    <SvnUrl>http://closed.jellymold.com/svn/skins/demo-content</SvnUrl>
-    <SvnUsername>skins</SvnUsername>
-    <SvnPassword>5k1n5</SvnPassword>
-</Skin>

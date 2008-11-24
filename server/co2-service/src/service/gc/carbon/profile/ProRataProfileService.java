@@ -1,23 +1,18 @@
 package gc.carbon.profile;
 
-import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.profile.Profile;
-import gc.carbon.domain.profile.StartEndDate;
-import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemValue;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.math.BigDecimal;
-
+import gc.carbon.domain.profile.ProfileItem;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import javax.measure.Measure;
-import javax.measure.unit.SI;
 import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This file is part of AMEE.
@@ -49,7 +44,7 @@ public class ProRataProfileService extends ProfileService {
     public List<ProfileItem> getProfileItems(ProfileBrowser profileBrowser) {
 
         List<ProfileItem> requestedItems = new ArrayList<ProfileItem>();
-        
+
         for (ProfileItem pi : delegatee.getProfileItems(profileBrowser)) {
 
             if (hasOnePerUnitItemValue(pi)) {

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<App>
-    <Name>Content App</Name>
-    <Description/>
-    <FilterNames/>
-    <TargetBuilder>contentTargetBuilder</TargetBuilder>
-    <AllowClientCache>false</AllowClientCache>
-</App>

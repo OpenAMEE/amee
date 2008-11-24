@@ -1,22 +1,9 @@
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.Environment;
-import com.jellymold.utils.BaseResource;
-import com.jellymold.utils.Pager;
-import com.jellymold.utils.domain.APIObject;
-import gc.carbon.builder.APIVersion;
 import gc.carbon.builder.resource.BuildableCategoryResource;
-import gc.carbon.builder.resource.BuildableResource;
-import gc.carbon.data.Calculator;
-import gc.carbon.data.DataService;
-import gc.carbon.domain.path.PathItem;
 import org.restlet.Context;
-import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-
-import javax.persistence.EntityManager;
-import java.util.Set;
 
 /**
  * This file is part of AMEE.
@@ -46,6 +33,4 @@ public abstract class BaseProfileCategoryResource extends BaseProfileResource im
     public BaseProfileCategoryResource(Context context, Request request, Response response) {
         super(context, request, response);
     }
-
-
 }
