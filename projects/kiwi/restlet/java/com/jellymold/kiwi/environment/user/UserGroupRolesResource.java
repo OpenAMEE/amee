@@ -6,6 +6,7 @@ import com.jellymold.kiwi.Role;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
 import com.jellymold.kiwi.environment.SiteService;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import org.json.JSONException;
@@ -35,9 +36,6 @@ public class UserGroupRolesResource extends BaseResource {
 
     @Autowired
     private EnvironmentBrowser environmentBrowser;
-
-    @Autowired
-    private Environment environment;
 
     private GroupUser updatedGroupUser;
 
@@ -69,7 +67,7 @@ public class UserGroupRolesResource extends BaseResource {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         Map<String, Role> roleMap = new HashMap<String, Role>();
         Set<Object> pagerSet = new HashSet<Object>();
         for (Role role : environmentBrowser.getGroupUser().getRoles()) {
@@ -94,7 +92,7 @@ public class UserGroupRolesResource extends BaseResource {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             pager.setCurrentPage(getPage());
             obj.put("user", environmentBrowser.getUser().getJSONObject());
             obj.put("groupUser", environmentBrowser.getGroupUser().getJSONObject());

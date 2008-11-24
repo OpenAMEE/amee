@@ -28,9 +28,6 @@ public class UserGroupRoleResource extends BaseResource {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    @Autowired
-    private Environment environment;
-
     public UserGroupRoleResource() {
         super();
     }

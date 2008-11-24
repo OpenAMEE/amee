@@ -31,9 +31,6 @@ public class SiteResource extends BaseResource {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    @Autowired
-    private Environment environment;
-
     public SiteResource() {
         super();
     }

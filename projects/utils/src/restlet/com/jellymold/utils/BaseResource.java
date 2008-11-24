@@ -5,9 +5,9 @@ import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
-import org.apache.xerces.dom.DocumentImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xerces.dom.DocumentImpl;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -20,6 +20,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.springframework.context.ApplicationContext;
 
 import java.util.*;
 
@@ -109,18 +110,20 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
     }
 
     public Map<String, Object> getBaseTemplateValues() {
+        ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("path", getRequest().getResourceRef().getPath());
         // values below are mirrored in SkinRenderResource and EngineStatusFilter
-        // TODO: SPRINGIFY
-        // values.put("authService", Contexts.lookupInStatefulContexts("authService"));
-        // values.put("activeUser", Contexts.lookupInStatefulContexts("user"));
-        // values.put("activeGroup", Contexts.lookupInStatefulContexts("group"));
-        // values.put("activeSite", Contexts.lookupInStatefulContexts("site"));
-        // values.put("activeApp", Contexts.lookupInStatefulContexts("app"));
-        // values.put("activeSiteApp", Contexts.lookupInStatefulContexts("siteApp"));
+        values.put("authService", springContext.getBean("authService"));
+        values.put("activeUser", ThreadBeanHolder.get("user"));
+        values.put("activeGroup", ThreadBeanHolder.get("group"));
+        values.put("activeSite", ThreadBeanHolder.get("site"));
+        values.put("activeApp", ThreadBeanHolder.get("app"));
+        values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));
         // add enums
         values.put("SortOrder", getEnumForTemplate(SortOrder.class));
+        // add request params
+        values.put("Parameters", getRequest().getResourceRef().getQueryAsForm().getValuesMap());
         return values;
     }
 
@@ -155,7 +158,7 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
         }
         if (parentPath.endsWith("/")) {
             parentPath = parentPath.substring(0, parentPath.length() - 1);
-        }         
+        }
         return parentPath;
     }
 
@@ -273,7 +276,7 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
                 form = getRequest().getResourceRef().getQueryAsForm();
             }
         }
-        return form;   
+        return form;
     }
 
     public boolean isMultiPartForm() {

@@ -3,6 +3,7 @@ package com.jellymold.kiwi.environment;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
+import com.jellymold.utils.ThreadBeanHolder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,9 +32,6 @@ public class EnvironmentsResource extends BaseResource implements Serializable {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    @Autowired
-    private Environment environment;
-
     private Environment newEnvironment;
 
     public EnvironmentsResource() {
@@ -57,7 +55,7 @@ public class EnvironmentsResource extends BaseResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         List<Environment> environments = environmentService.getEnvironments(pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -72,12 +70,12 @@ public class EnvironmentsResource extends BaseResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<Environment> environments = environmentService.getEnvironments(pager);
             pager.setCurrentPage(getPage());
             JSONArray environmentsArr = new JSONArray();
-            for (Environment environment : environments) {
-                environmentsArr.put(environment.getJSONObject());
+            for (Environment e : environments) {
+                environmentsArr.put(e.getJSONObject());
             }
             obj.put("environments", environmentsArr);
             obj.put("pager", pager.getJSONObject());
@@ -91,12 +89,12 @@ public class EnvironmentsResource extends BaseResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("EnvironmentsResource");
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<Environment> environments = environmentService.getEnvironments(pager);
             pager.setCurrentPage(getPage());
             Element environmentsElement = document.createElement("Environments");
-            for (Environment environment : environments) {
-                environmentsElement.appendChild(environment.getElement(document));
+            for (Environment e : environments) {
+                environmentsElement.appendChild(e.getElement(document));
             }
             element.appendChild(environmentsElement);
             element.appendChild(pager.getElement(document));

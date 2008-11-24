@@ -18,7 +18,7 @@ public class SkinService implements Serializable {
     private EntityManager entityManager;
 
     // TODO: Springify
-    // @Autowired(required = false)
+    // @In(required = false)
     private String skinPath;
 
     // TODO: Springify

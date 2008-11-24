@@ -14,7 +14,7 @@ package com.jellymold.kiwi.account;
 //import java.util.Map;
 //
 //@Name("accountDetailsResource")
-//@Scope("prototype")
+//@Scope(ScopeType.EVENT)
 //@Authorized(actions = "account.details.view")
 //public class AccountDetailsResource extends BaseResource {
 //

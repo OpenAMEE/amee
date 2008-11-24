@@ -1,6 +1,7 @@
 package com.jellymold.cache;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Column;
 import com.jellymold.sheet.Row;
@@ -40,11 +41,7 @@ public class CacheResource extends BaseResource implements Serializable {
     @Autowired
     private CacheAdmin cacheAdmin;
 
-    @Autowired
-    private Environment environment;
-
     private String cacheName;
-
     private CacheSort cacheSort;
 
     public CacheResource() {
@@ -84,7 +81,7 @@ public class CacheResource extends BaseResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         values.put("cache", cacheAdmin.getCache());
         values.put("stats", cacheAdmin.getCache().getStatistics());
         values.put("configuration", cacheAdmin.getCache().getCacheConfiguration());
@@ -96,7 +93,7 @@ public class CacheResource extends BaseResource implements Serializable {
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         JSONObject obj = new JSONObject();
         obj.put("sheet", getSheet(cacheSort, getPage(), pager).getJSONObject());
         return obj;
@@ -104,7 +101,7 @@ public class CacheResource extends BaseResource implements Serializable {
 
     @Override
     public Element getElement(Document document, boolean detailed) {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         Element element = document.createElement("CacheResource");
         element.appendChild(getSheet(cacheSort, getPage(), pager).getElement(document, false));
         return element;

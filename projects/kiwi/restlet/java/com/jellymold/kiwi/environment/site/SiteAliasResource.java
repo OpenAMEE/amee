@@ -32,9 +32,6 @@ public class SiteAliasResource extends BaseResource {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    @Autowired
-    private Environment environment;
-
     public SiteAliasResource() {
         super();
     }

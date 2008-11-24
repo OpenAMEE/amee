@@ -1,7 +1,9 @@
 package com.jellymold.engine;
 
 import com.jellymold.kiwi.auth.AuthUtils;
+import com.jellymold.kiwi.auth.AuthService;
 import com.jellymold.utils.MediaTypeUtils;
+import com.jellymold.utils.ThreadBeanHolder;
 import freemarker.template.Configuration;
 import org.restlet.Application;
 import org.restlet.data.MediaType;
@@ -12,6 +14,7 @@ import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.resource.Representation;
 import org.restlet.resource.StringRepresentation;
 import org.restlet.service.StatusService;
+import org.springframework.context.ApplicationContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,16 +31,16 @@ public class EngineStatusService extends StatusService {
         if (MediaTypeUtils.isStandardWebBrowser(request)) {
             Configuration configuration = (Configuration)
                     request.getAttributes().get("freeMarkerConfiguration");
+            ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
             Map<String, Object> values = new HashMap<String, Object>();
             values.put("status", status);
             // values below are mirrored in BaseResource and SkinRenderResource
-            // TODO: Springify
-//            values.put("authService", Contexts.lookupInStatefulContexts("authService"));
-//            values.put("activeUser", Contexts.lookupInStatefulContexts("user"));
-//            values.put("activeGroup", Contexts.lookupInStatefulContexts("group"));
-//            values.put("activeSite", Contexts.lookupInStatefulContexts("site"));
-//            values.put("activeApp", Contexts.lookupInStatefulContexts("app"));
-//            values.put("activeSiteApp", Contexts.lookupInStatefulContexts("siteApp"));
+            values.put("authService", springContext.getBean("authService"));
+            values.put("activeUser", AuthService.getUser());
+            values.put("activeGroup", ThreadBeanHolder.get("group"));
+            values.put("activeSite", ThreadBeanHolder.get("site"));
+            values.put("activeApp", ThreadBeanHolder.get("app"));
+            values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));
             // find a Template Representation
             return getTemplateRepresentation(status, request, configuration, values);
         } else {

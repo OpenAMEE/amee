@@ -27,9 +27,6 @@ public class RoleActionResource extends BaseResource {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    @Autowired
-    private Environment environment;
-
     public RoleActionResource() {
         super();
     }

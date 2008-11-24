@@ -3,6 +3,7 @@ package com.jellymold.kiwi.environment;
 import com.jellymold.kiwi.*;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.PagerSetType;
+import com.jellymold.utils.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,6 @@ public class SiteService implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
-    // TODO: SPRINGIFY
-    @Autowired(required = false)
-    // @Out(scope = ScopeType.EVENT, required = false)
-    private Site site;
-
     public SiteService() {
         super();
     }
@@ -37,6 +33,7 @@ public class SiteService implements Serializable {
 
     public Site getSiteByHost(String host) {
         // load Site or use object from Event context
+        Site site = (Site) ThreadBeanHolder.get("site");
         if (site == null) {
             List<Site> sites = entityManager.createQuery(
                     "SELECT DISTINCT site FROM Site site " +
@@ -49,6 +46,7 @@ public class SiteService implements Serializable {
             if (sites.size() > 0) {
                 site = sites.get(0);
             }
+            ThreadBeanHolder.set("site", site);
         }
         return site;
     }
@@ -145,6 +143,10 @@ public class SiteService implements Serializable {
         // TODO: SPRINGIFY
         // Events.instance().raiseEvent("beforeSiteDelete", site);
         entityManager.remove(site);
+    }
+
+    public static Site getSite() {
+        return (Site) ThreadBeanHolder.get("site");
     }
 
     // SiteAliases

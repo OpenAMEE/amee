@@ -2,6 +2,7 @@ package com.jellymold.kiwi.app;
 
 import com.jellymold.kiwi.App;
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import org.json.JSONArray;
@@ -32,9 +33,6 @@ public class AppsResource extends BaseResource implements Serializable {
     @Autowired
     private AppBrowser appBrowser;
 
-    @Autowired
-    private Environment environment;
-
     private App newApp;
 
     public AppsResource() {
@@ -58,7 +56,7 @@ public class AppsResource extends BaseResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         List<App> apps = appService.getApps(pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -72,7 +70,7 @@ public class AppsResource extends BaseResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<App> apps = appService.getApps(pager);
             pager.setCurrentPage(getPage());
             JSONArray appsArr = new JSONArray();
@@ -91,7 +89,7 @@ public class AppsResource extends BaseResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("AppsResource");
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<App> apps = appService.getApps(pager);
             pager.setCurrentPage(getPage());
             Element appsElement = document.createElement("Apps");

@@ -2,6 +2,7 @@ package com.jellymold.kiwi.auth;
 
 import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.User;
+import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.BaseResource;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,9 +28,6 @@ public class AuthResource extends BaseResource implements Serializable {
 
     @Autowired
     private AuthService authService;
-
-    @Autowired
-    Site site;
 
     public AuthResource() {
         super();
@@ -60,6 +58,7 @@ public class AuthResource extends BaseResource implements Serializable {
 
     @Override
     public void handleGet() {
+        Site site = SiteService.getSite();
         Request request = getRequest();
         Response response = getResponse();
         if (site.isSecureAvailable() && !request.getResourceRef().getSchemeProtocol().equals(Protocol.HTTPS)) {

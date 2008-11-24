@@ -31,9 +31,6 @@ public class UserResource extends BaseResource {
     @Autowired
     private SiteService siteService;
 
-    @Autowired
-    private Environment environment;
-
     public UserResource() {
         super();
     }

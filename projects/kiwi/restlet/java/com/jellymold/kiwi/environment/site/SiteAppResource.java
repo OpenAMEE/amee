@@ -37,9 +37,6 @@ public class SiteAppResource extends BaseResource {
     @Autowired
     private AppService appService;
 
-    @Autowired
-    private Environment environment;
-
     public SiteAppResource() {
         super();
     }

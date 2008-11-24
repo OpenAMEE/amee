@@ -8,6 +8,7 @@ import com.jellymold.kiwi.app.AppService;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
 import com.jellymold.kiwi.environment.SiteService;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import org.json.JSONArray;
@@ -40,9 +41,6 @@ public class SiteAppsResource extends BaseResource {
     @Autowired
     private AppService appService;
 
-    @Autowired
-    private Environment environment;
-
     private SiteApp newSiteApp;
 
     public SiteAppsResource() {
@@ -73,7 +71,7 @@ public class SiteAppsResource extends BaseResource {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         List<SiteApp> siteApps = siteService.getSiteApps(environmentBrowser.getSite(), pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -90,7 +88,7 @@ public class SiteAppsResource extends BaseResource {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<SiteApp> siteApps = siteService.getSiteApps(environmentBrowser.getSite(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getIdentityJSONObject());
@@ -111,7 +109,7 @@ public class SiteAppsResource extends BaseResource {
     public Element getElement(Document document) {
         Element element = document.createElement("SiteAppsResource");
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<SiteApp> siteApps = siteService.getSiteApps(environmentBrowser.getSite(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));

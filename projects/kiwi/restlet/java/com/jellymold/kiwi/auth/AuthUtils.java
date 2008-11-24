@@ -1,6 +1,7 @@
 package com.jellymold.kiwi.auth;
 
 import com.jellymold.kiwi.Site;
+import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.ThreadBeanHolder;
 import org.restlet.data.CookieSetting;
@@ -12,9 +13,7 @@ public class AuthUtils {
 
     public static void addAuthCookie(Response response, String authToken) {
         if (authToken != null) {
-            // TODO: SPRINGIFY
-            // Site site = (Site) Contexts.lookupInStatefulContexts("site");
-            Site site = null;
+            Site site = SiteService.getSite();
             CookieSetting authCookie =
                     new CookieSetting(
                             0,
@@ -30,7 +29,7 @@ public class AuthUtils {
     }
 
     public static void discardAuthCookie(Response response) {
-        Site site = (Site) ThreadBeanHolder.get("site");
+        Site site = SiteService.getSite();
         CookieSetting authCookie =
                 new CookieSetting(
                         0,

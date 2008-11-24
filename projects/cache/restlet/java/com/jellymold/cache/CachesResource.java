@@ -1,6 +1,7 @@
 package com.jellymold.cache;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Column;
 import com.jellymold.sheet.Row;
@@ -35,9 +36,6 @@ public class CachesResource extends BaseResource implements Serializable {
     @Autowired
     private CacheAdmin cacheAdmin;
 
-    @Autowired
-    private Environment environment;
-
     private CacheSort cacheSort;
 
     public CachesResource() {
@@ -68,7 +66,7 @@ public class CachesResource extends BaseResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         values.put("pager", pager);
         values.put("cacheSort", cacheSort);
         values.put("sheet", getSheet(cacheSort, getPage(), pager));
@@ -78,7 +76,7 @@ public class CachesResource extends BaseResource implements Serializable {
     @Override
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         obj.put("sheet", getSheet(cacheSort, getPage(), pager).getJSONObject());
         return obj;
     }
@@ -86,7 +84,7 @@ public class CachesResource extends BaseResource implements Serializable {
     @Override
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("CachesResource");
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         element.appendChild(getSheet(cacheSort, getPage(), pager).getElement(document, false));
         return element;
     }

@@ -5,6 +5,7 @@ import com.jellymold.kiwi.Role;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
 import com.jellymold.kiwi.environment.SiteService;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import org.json.JSONArray;
@@ -35,9 +36,6 @@ public class RolesResource extends BaseResource implements Serializable {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    @Autowired
-    private Environment environment;
-
     private Role newRole;
 
     public RolesResource() {
@@ -67,7 +65,7 @@ public class RolesResource extends BaseResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         List<Role> roles = siteService.getRoles(environmentBrowser.getEnvironment(), pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -82,7 +80,7 @@ public class RolesResource extends BaseResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<Role> roles = siteService.getRoles(environmentBrowser.getEnvironment(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
@@ -102,7 +100,7 @@ public class RolesResource extends BaseResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("RolesResource");
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<Role> roles = siteService.getRoles(environmentBrowser.getEnvironment(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));

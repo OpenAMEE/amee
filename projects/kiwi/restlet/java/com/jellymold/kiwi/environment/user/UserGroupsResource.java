@@ -6,6 +6,7 @@ import com.jellymold.kiwi.GroupUser;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
 import com.jellymold.kiwi.environment.SiteService;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import org.json.JSONArray;
@@ -39,9 +40,6 @@ public class UserGroupsResource extends BaseResource implements Serializable {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    @Autowired
-    private Environment environment;
-
     private GroupUser newGroupUser;
 
     public UserGroupsResource() {
@@ -73,7 +71,7 @@ public class UserGroupsResource extends BaseResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         List<GroupUser> groupUsers = siteService.getGroupUsers(environmentBrowser.getUser());
         Map<String, GroupUser> groupUserMap = new HashMap<String, GroupUser>();
         Set<Object> pagerSet = new HashSet<Object>();
@@ -98,7 +96,7 @@ public class UserGroupsResource extends BaseResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<GroupUser> groupUsers = siteService.getGroupUsers(environmentBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
@@ -119,7 +117,7 @@ public class UserGroupsResource extends BaseResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("UserGroupsResource");
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<GroupUser> groupUsers = siteService.getGroupUsers(environmentBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));

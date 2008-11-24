@@ -1,14 +1,15 @@
 package com.jellymold.plum.admin;
 
 import com.jellymold.plum.FreeMarkerConfigurationService;
+import com.jellymold.utils.ThreadBeanHolder;
 import freemarker.template.Configuration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
 import org.restlet.Filter;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 
 public class FreeMarkerConfigurationFilter extends Filter {
@@ -28,8 +29,7 @@ public class FreeMarkerConfigurationFilter extends Filter {
         configuration = freeMarkerConfigurationService.getConfiguration();
         if (configuration != null) {
             request.getAttributes().put("freeMarkerConfiguration", configuration);
-            // TODO: Springify
-            // Contexts.getEventContext().set("freeMarkerConfiguration", configuration);
+            ThreadBeanHolder.set("freeMarkerConfiguration", configuration);
             return CONTINUE;
         }
         response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);

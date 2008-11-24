@@ -42,7 +42,7 @@ public class SeamController implements Serializable {
 
     public void beginSeamCall(boolean withTransaction) {
         Lifecycle.beginCall();
-        log.info(">>> START JBOSS SEAM CALL BEFORE HANDLE");
+        log.debug(">>> START JBOSS SEAM CALL BEFORE HANDLE");
         if (withTransaction) {
             beginTransaction();
         }
@@ -54,7 +54,7 @@ public class SeamController implements Serializable {
         commitOrRollbackTransaction();
         Lifecycle.endCall();
         Lifecycle.setPhaseId(null);
-        log.info("<<< END JBOSS SEAM CALL AFTER SEND");
+        log.debug("<<< END JBOSS SEAM CALL AFTER SEND");
     }
 
     // based on org.jboss.seam.jsf.TransactionalSeamPhaseListener.begin
@@ -62,7 +62,7 @@ public class SeamController implements Serializable {
         if (isManageTransactions()) {
             try {
                 if (!Transaction.instance().isActiveOrMarkedRollback()) {
-                    log.info(">>> BEGIN TRANSACTION");
+                    log.debug(">>> BEGIN TRANSACTION");
                     Transaction.instance().begin();
                 }
             } catch (Exception e) {
@@ -78,10 +78,10 @@ public class SeamController implements Serializable {
         if (isManageTransactions()) {
             try {
                 if (Transaction.instance().isActive()) {
-                    log.info("<<< COMMIT TRANSACTION");
+                    log.debug("<<< COMMIT TRANSACTION");
                     Transaction.instance().commit();
                 } else if (Transaction.instance().isMarkedRollback()) {
-                    log.info("<<< ROLLBACK TRANSACTION");
+                    log.debug("<<< ROLLBACK TRANSACTION");
                     Transaction.instance().rollback();
                 }
             } catch (Exception e) {
@@ -98,7 +98,7 @@ public class SeamController implements Serializable {
      * @param withTransaction specify whether a transaction should be used
      */
     public void beforeToRequest(boolean withTransaction) {
-        log.info(">>> BEFORE TO REQUEST");
+        log.debug(">>> BEFORE TO REQUEST");
         beginSeamCall(withTransaction);
     }
 
@@ -106,7 +106,7 @@ public class SeamController implements Serializable {
      * Called before Filter.doHandle
      */
     public void beforeHandle() {
-        log.info(">>> BEFORE HANDLE");
+        log.debug(">>> BEFORE HANDLE");
         Lifecycle.setPhaseId(PhaseId.INVOKE_APPLICATION); // fool Seam and JSF
     }
 
@@ -114,7 +114,7 @@ public class SeamController implements Serializable {
      * Called after Filter.doHandle
      */
     public void afterHandle() {
-        log.info("<<< AFTER HANDLE");
+        log.debug("<<< AFTER HANDLE");
         commitOrRollbackTransaction();
     }
 
@@ -122,7 +122,7 @@ public class SeamController implements Serializable {
      * Called after ConnectorService.beforeSend
      */
     public void beforeSend() {
-        log.info(">>> BEFORE SEND");
+        log.debug(">>> BEFORE SEND");
         Lifecycle.setPhaseId(PhaseId.RENDER_RESPONSE); // fool Seam and JSF
     }
 
@@ -130,14 +130,14 @@ public class SeamController implements Serializable {
      * Called after ConnectorService.afterSend
      */
     public void afterSend() {
-        log.info("<<< AFTER SEND");
+        log.debug("<<< AFTER SEND");
     }
 
     /**
      * Called after HttpConverter.commit
      */
     public void afterCommit() {
-        log.info("<<< AFTER COMMIT");
+        log.debug("<<< AFTER COMMIT");
         endSeamCall();
     }
 

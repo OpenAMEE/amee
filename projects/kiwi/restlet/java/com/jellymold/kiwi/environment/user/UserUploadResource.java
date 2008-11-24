@@ -51,9 +51,6 @@ public class UserUploadResource extends BaseResource implements Serializable {
     @Autowired
     private UserLoader userLoader;
 
-    @Autowired
-    private Environment environment;
-
     FileItemFactory fileItemFactory;
 
     public UserUploadResource() {

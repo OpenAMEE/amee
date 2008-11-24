@@ -41,9 +41,6 @@ public class TasksResource extends BaseResource implements Serializable {
 
     private ScheduledTask newScheduledTask;
 
-    @Autowired
-    private Environment environment;
-
     public TasksResource() {
         super();
     }
@@ -71,13 +68,13 @@ public class TasksResource extends BaseResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(environment.getItemsPerPage());
-        List<ScheduledTask> ScheduledTasks = environmentService.getScheduledTasks(environmentBrowser.getEnvironment(), pager);
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+        List<ScheduledTask> scheduledTasks = environmentService.getScheduledTasks(environmentBrowser.getEnvironment(), pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", environmentBrowser);
         values.put("environment", environmentBrowser.getEnvironment());
-        values.put("scheduledTasks", ScheduledTasks);
+        values.put("scheduledTasks", scheduledTasks);
         values.put("pager", pager);
         return values;
     }
@@ -86,7 +83,7 @@ public class TasksResource extends BaseResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<ScheduledTask> ScheduledTasks = environmentService.getScheduledTasks(environmentBrowser.getEnvironment(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
@@ -106,7 +103,7 @@ public class TasksResource extends BaseResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("ScheduledTasksResource");
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<ScheduledTask> ScheduledTasks = environmentService.getScheduledTasks(environmentBrowser.getEnvironment(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
@@ -120,7 +117,6 @@ public class TasksResource extends BaseResource implements Serializable {
             element.appendChild(newScheduledTask.getElement(document));
         }
         return element;
-
     }
 
     @Override
@@ -179,6 +175,12 @@ public class TasksResource extends BaseResource implements Serializable {
             if (form.getNames().contains("restart")) {
                 scheduledTaskManager.onShutdown(false);
                 scheduledTaskManager.onStart();
+            } else if (form.getNames().contains("runTask")) {
+                String taskUid = form.getFirstValue("runTask");
+                ScheduledTask task = environmentService.getScheduledTaskByUid(environmentBrowser.getEnvironment(), taskUid);
+                if (task != null) {
+                    scheduledTaskManager.run(task);
+                }
             }
             success();
         } else {

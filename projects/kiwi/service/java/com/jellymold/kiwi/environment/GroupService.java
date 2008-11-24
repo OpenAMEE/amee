@@ -2,6 +2,7 @@ package com.jellymold.kiwi.environment;
 
 import com.jellymold.kiwi.Group;
 import com.jellymold.kiwi.Site;
+import com.jellymold.kiwi.auth.AuthService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +23,9 @@ public class GroupService implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired(required = false)
-    private Site site;
-
-    // TODO: SPRINGIFY
-    @Autowired(required = false)
-    // @Out(scope = ScopeType.EVENT, required = false)
-    private Group group;
-
     public Group getGroup(String name) {
+        Site site = SiteService.getSite();
+        Group group = AuthService.getGroup();
         if (group == null) {
             List<Group> groups = entityManager.createQuery(
                     "SELECT DISTINCT gr " +

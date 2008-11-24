@@ -7,6 +7,7 @@ import com.jellymold.kiwi.Role;
 import com.jellymold.kiwi.app.AppService;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import org.json.JSONArray;
@@ -35,9 +36,6 @@ public class RoleActionsResource extends BaseResource implements Serializable {
 
     @Autowired
     private EnvironmentBrowser environmentBrowser;
-
-    @Autowired
-    private Environment environment;
 
     public RoleActionsResource() {
         super();
@@ -69,7 +67,7 @@ public class RoleActionsResource extends BaseResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         Role role = environmentBrowser.getRole();
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         Map<String, Action> actionMap = new HashMap<String, Action>();
         Set<Object> pagerSet = new HashSet<Object>();
         for (Action action : role.getActions()) {

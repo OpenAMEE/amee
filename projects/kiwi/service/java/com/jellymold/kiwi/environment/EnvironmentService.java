@@ -4,6 +4,7 @@ import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.ScheduledTask;
 import com.jellymold.kiwi.Site;
 import com.jellymold.utils.Pager;
+import com.jellymold.utils.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -119,6 +120,10 @@ public class EnvironmentService implements Serializable {
         // TODO: SPRINGIFY
         // Events.instance().raiseEvent("beforeEnvironmentDelete", environment);
         entityManager.remove(environment);
+    }
+
+    public static Environment getEnvironment() {
+        return (Environment) ThreadBeanHolder.get("environment");
     }
 
     // ScheduledTasks

@@ -4,9 +4,8 @@ import com.jellymold.kiwi.*;
 import com.jellymold.utils.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,29 +23,13 @@ public class AuthService implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
-    // TODO: SPRINGIFY
-    @Autowired(required = false)
-    // @Out(scope = ScopeType.EVENT, required = false)
-    private User user;
-
-    // TODO: SPRINGIFY
-    @Autowired(required = false)
-    // @Out(scope = ScopeType.EVENT, required = false)
-    private List<GroupUser> groupUsers;
-
-    // TODO: SPRINGIFY
-    @Autowired(required = false)
-    // @Out(scope = ScopeType.EVENT, required = false)
-    private Group group;
-
-    @Autowired(required = false)
-    private Permission permission;
-
     public User doGuestSignIn() {
         signOut();
-        user = getUserByUsername("guest");
+        reset();
+        User user = getUserByUsername("guest");
         if (user != null) {
             log.debug("Guest user authenticated and signed in");
+            ThreadBeanHolder.set("user", user);
             getAndExportGroups();
             return user;
         } else {
@@ -55,8 +38,16 @@ public class AuthService implements Serializable {
         }
     }
 
+    public void reset() {
+        ThreadBeanHolder.set("user", null);
+        ThreadBeanHolder.set("groupUsers", null);
+        ThreadBeanHolder.set("group", null);
+        ThreadBeanHolder.set("permission", null);
+    }
+
     public String isAuthenticated(String authToken, String remoteAddress) {
 
+        User user;
         Map<String, String> values;
         boolean remoteAddressCheckPassed = false;
         boolean maxAuthDurationCheckPassed = false;
@@ -70,7 +61,14 @@ public class AuthService implements Serializable {
 
         // has authToken been supplied?
         if (authToken != null) {
-            log.info("authToken supplied");
+
+            log.debug("authToken supplied");
+
+            // must have a Site object
+            if (site == null) {
+                log.error("Site object missing.");
+                throw new RuntimeException("Site object missing.");
+            }
 
             // get authToken values
             oldAuthToken = authToken;
@@ -83,7 +81,7 @@ public class AuthService implements Serializable {
                 if (remoteAddressHash != null) {
                     try {
                         if (remoteAddress.hashCode() == Integer.valueOf(remoteAddressHash)) {
-                            log.info("remote address check passed: " + remoteAddress);
+                            log.debug("remote address check passed: " + remoteAddress);
                             remoteAddressCheckPassed = true;
                         }
                     } catch (NumberFormatException e) {
@@ -95,7 +93,7 @@ public class AuthService implements Serializable {
                 remoteAddressCheckPassed = true;
             }
             if (!remoteAddressCheckPassed) {
-                log.info("user NOT authenticated, remote address check failed: " + remoteAddress);
+                log.debug("user NOT authenticated, remote address check failed: " + remoteAddress);
                 return null;
             }
 
@@ -112,7 +110,7 @@ public class AuthService implements Serializable {
                 maxAuthDurationCheckPassed = true;
             }
             if (!maxAuthDurationCheckPassed) {
-                log.info("user NOT authenticated, max auth duration check failed");
+                log.debug("user NOT authenticated, max auth duration check failed");
                 return null;
             }
 
@@ -129,7 +127,7 @@ public class AuthService implements Serializable {
                 maxAuthIdleCheckPassed = true;
             }
             if (!maxAuthIdleCheckPassed) {
-                log.info("user NOT authenticated, max auth idle check failed");
+                log.debug("user NOT authenticated, max auth idle check failed");
                 return null;
             }
 
@@ -138,7 +136,8 @@ public class AuthService implements Serializable {
             if (userUid != null) {
                 user = getUserByUid(userUid);
                 if (user != null) {
-                    log.info("user authenticated and signed in: " + user.getUsername());
+                    log.debug("user authenticated and signed in: " + user.getUsername());
+                    ThreadBeanHolder.set("user", user);
                     getAndExportGroups();
                     Long touched = new Long(values.get(AuthToken.MODIFIED));
                     // only touch token if older than 60 seconds (60*1000ms)
@@ -147,57 +146,60 @@ public class AuthService implements Serializable {
                     } else {
                         return oldAuthToken;
                     }
+                } else {
+                    reset();
                 }
             }
 
         } else {
-            log.info("authToken NOT supplied");
+            log.debug("authToken NOT supplied");
         }
 
-        log.info("user NOT authenticated");
+        log.debug("user NOT authenticated");
         return null;
     }
 
     public String authenticate(User sampleUser, String remoteAddress) {
         // signed out by default
+        reset();
         signOut();
         // try to find user based on 'sampleUser' User 'template'
-        user = getUserByUsername(sampleUser.getUsername());
+        User user = getUserByUsername(sampleUser.getUsername());
         if (user != null) {
             if (user.getPassword().equals(sampleUser.getPassword())) {
-                log.info("user authenticated and signed in: " + sampleUser.getUsername());
+                log.debug("user authenticated and signed in: " + sampleUser.getUsername());
+                ThreadBeanHolder.set("user", user);
                 getAndExportGroups();
                 return AuthToken.createToken(user, remoteAddress);
             } else {
-                log.info("user NOT authenticated, bad password: " + sampleUser.getUsername());
-                signOut();
+                log.debug("user NOT authenticated, bad password: " + sampleUser.getUsername());
                 return null;
             }
         } else {
-            log.info("user NOT authenticated, not found: " + sampleUser.getUsername());
+            log.debug("user NOT authenticated, not found: " + sampleUser.getUsername());
             return null;
         }
     }
 
     public String switchToUser(User newUser, String remoteAddress) {
-        // TODO: Springify
-        // Contexts.getEventContext().set("user", newUser);
-        user = newUser;
-        groupUsers = null;
-        group = null;
+        reset();
+        ThreadBeanHolder.set("user", newUser);
         getAndExportGroups();
-        return AuthToken.createToken(user, remoteAddress);
+        return AuthToken.createToken(newUser, remoteAddress);
     }
 
     public boolean isSuperUser() {
+        User user = getUser();
         return (user != null) && user.isSuperUser();
     }
 
     public boolean hasGroup(String name) {
-        getAndExportGroups();
-        for (GroupUser groupUser : groupUsers) {
-            if (groupUser.getGroup().getName().equalsIgnoreCase(name)) {
-                return true;
+        List<GroupUser> groupUsers = getAndExportGroups();
+        if (groupUsers != null) {
+            for (GroupUser groupUser : groupUsers) {
+                if (groupUser.getGroup().getName().equalsIgnoreCase(name)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -205,12 +207,14 @@ public class AuthService implements Serializable {
 
     public boolean hasRoles(String roles) {
         boolean result = false;
+        List<GroupUser> groupUsers;
+        User user = getUser();
         if (user != null) {
             if (user.isSuperUser()) {
                 result = true;
             } else {
                 if (roles != null) {
-                    getAndExportGroups();
+                    groupUsers = getAndExportGroups();
                     if (groupUsers != null) {
                         for (GroupUser groupUser : groupUsers) {
                             if (groupUser.hasRoles(roles)) {
@@ -228,12 +232,14 @@ public class AuthService implements Serializable {
 
     public boolean hasActions(String actions) {
         boolean result = false;
+        List<GroupUser> groupUsers;
+        User user = getUser();
         if (user != null) {
             if (user.isSuperUser()) {
                 result = true;
             } else {
                 if (actions != null) {
-                    getAndExportGroups();
+                    groupUsers = getAndExportGroups();
                     if (groupUsers != null) {
                         for (GroupUser groupUser : groupUsers) {
                             if (groupUser.hasActions(actions)) {
@@ -250,7 +256,10 @@ public class AuthService implements Serializable {
     }
 
     public boolean isAllowView() {
-        if (permission != null) {
+        User user = getUser();
+        Group group = getGroup();
+        Permission permission = getPermission();
+        if ((permission != null) && (user != null) && (group != null)) {
             getAndExportGroups();
             // check permission
             if (permission.getUser().equals(user)) {
@@ -270,7 +279,10 @@ public class AuthService implements Serializable {
     }
 
     public boolean isAllowModify() {
-        if (permission != null) {
+        User user = getUser();
+        Group group = getGroup();
+        Permission permission = getPermission();
+        if ((permission != null) && (user != null) && (group != null)) {
             getAndExportGroups();
             // check permission
             if (permission.getUser().equals(user)) {
@@ -331,9 +343,9 @@ public class AuthService implements Serializable {
 
     public List<GroupUser> getGroupUsersByUser(User user) {
         List<GroupUser> groupUsers = entityManager.createQuery(
-                "SELECT DISTINCT gm " +
-                        "FROM GroupUser gm " +
-                        "LEFT JOIN FETCH gm.user u " +
+                "SELECT DISTINCT gu " +
+                        "FROM GroupUser gu " +
+                        "LEFT JOIN FETCH gu.user u " +
                         "WHERE u.id = :userId")
                 .setParameter("userId", user.getId())
                 .setHint("org.hibernate.cacheable", true)
@@ -372,27 +384,47 @@ public class AuthService implements Serializable {
 
     public void signOut() {
         log.debug("signed out");
-        user = null;
-        groupUsers = null;
-        group = null;
-    }
-
-    public User getUser() {
-        return user;
+        reset();
     }
 
     // TODO: better way to select default group
-    public void getAndExportGroups() {
+    public List<GroupUser> getAndExportGroups() {
+
+        Group group;
+        List<GroupUser> groupUsers = null;
+        User user = getUser();
+
+        // reset
+        ThreadBeanHolder.set("group", null);
+        ThreadBeanHolder.set("groupUsers", null);
+
+        // find GroupUsers and Group for current User
         if (user != null) {
-            if (groupUsers == null || groupUsers.size() == 0) {
-                groupUsers = getGroupUsersByUser(user);
-                if (groupUsers.size() > 0) {
-                    group = groupUsers.get(0).getGroup();
-                } else {
-                    group = null;
-                }
-                user.setGroupNames(getGroupNames(user));
+            groupUsers = getGroupUsersByUser(user);
+            ThreadBeanHolder.set("groupUsers", groupUsers);
+            if (groupUsers.size() > 0) {
+                group = groupUsers.get(0).getGroup();
+                ThreadBeanHolder.set("group", group);
             }
+            user.setGroupNames(getGroupNames(user));
         }
+
+        return groupUsers;
+    }
+
+    public static User getUser() {
+        return (User) ThreadBeanHolder.get("user");
+    }
+
+    public static Group getGroup() {
+        return (Group) ThreadBeanHolder.get("group");
+    }
+
+    public static List<GroupUser> getGroupUsers() {
+        return (List<GroupUser>) ThreadBeanHolder.get("groupUsers");
+    }
+
+    public static Permission getPermission() {
+        return (Permission) ThreadBeanHolder.get("permission");
     }
 }

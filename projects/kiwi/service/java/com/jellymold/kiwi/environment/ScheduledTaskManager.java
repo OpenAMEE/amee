@@ -4,6 +4,7 @@ import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.ScheduledTask;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.beanutils.MethodUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.lang.reflect.InvocationTargetException;
 
 @Service
 public class ScheduledTaskManager implements Serializable {
@@ -143,6 +145,24 @@ public class ScheduledTaskManager implements Serializable {
             }
         }
         */
+    }
+
+    public void run(ScheduledTask task) {
+//        Object component = Component.getInstance(task.getComponent(), true);
+//        if (component != null) {
+//            try {
+//                MethodUtils.invokeMethod(component, task.getMethod(), task.getEnvironment());
+//            } catch (NoSuchMethodException e) {
+//                // swallow
+//                log.warn("Caught NoSuchMethodException: " + e.getMessage());
+//            } catch (IllegalAccessException e) {
+//                // swallow
+//                log.warn("Caught IllegalAccessException: " + e.getMessage());
+//            } catch (InvocationTargetException e) {
+//                // swallow
+//                log.warn("Caught InvocationTargetException: " + e.getMessage());
+//            }
+//        }
     }
 
     public String getServerName() {

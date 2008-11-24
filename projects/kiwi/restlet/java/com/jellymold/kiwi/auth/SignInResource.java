@@ -2,6 +2,7 @@ package com.jellymold.kiwi.auth;
 
 import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.User;
+import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.domain.APIUtils;
 import org.json.JSONException;
@@ -27,13 +28,6 @@ public class SignInResource extends BaseResource implements Serializable {
     @Autowired
     private AuthService authService;
 
-    @Autowired
-    Site site;
-
-    // TODO: Springify
-    // @Autowired(required = false)
-    User user;
-
     public SignInResource() {
         super();
     }
@@ -56,6 +50,7 @@ public class SignInResource extends BaseResource implements Serializable {
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
+        User user = AuthService.getUser();
         JSONObject obj = new JSONObject();
         obj.put("next", AuthUtils.getNextUrl(getRequest(), getForm()));
         if (user != null) {
@@ -66,6 +61,7 @@ public class SignInResource extends BaseResource implements Serializable {
 
     @Override
     public Element getElement(Document document) {
+        User user = AuthService.getUser();
         Element element = document.createElement("SignInResource");
         element.appendChild(APIUtils.getElement(document, "Next", AuthUtils.getNextUrl(getRequest(), getForm())));
         if (user != null) {
@@ -76,6 +72,7 @@ public class SignInResource extends BaseResource implements Serializable {
 
     @Override
     public void handleGet() {
+        Site site = SiteService.getSite();
         Request request = getRequest();
         Response response = getResponse();
         if (site.isSecureAvailable() && !request.getResourceRef().getSchemeProtocol().equals(Protocol.HTTPS)) {
@@ -116,7 +113,6 @@ public class SignInResource extends BaseResource implements Serializable {
                 // signed in
                 AuthUtils.addAuthCookie(getResponse(), authToken);
                 AuthUtils.addAuthHeader(getResponse(), authToken);
-                user = authService.getUser();
                 // different response for API calls
                 if (isStandardWebBrowser()) {
                     // go to 'next' page - which IS a protected resource

@@ -2,6 +2,7 @@ package com.jellymold.kiwi.app;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Target;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import org.json.JSONArray;
@@ -32,9 +33,6 @@ public class TargetsResource extends BaseResource implements Serializable {
     @Autowired
     private AppBrowser appBrowser;
 
-    @Autowired
-    private Environment environment;
-
     private Target newTarget;
 
     public TargetsResource() {
@@ -64,7 +62,7 @@ public class TargetsResource extends BaseResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
         List<Target> targets = appService.getTargets(appBrowser.getApp(), pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -79,7 +77,7 @@ public class TargetsResource extends BaseResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<Target> targets = appService.getTargets(appBrowser.getApp(), pager);
             pager.setCurrentPage(getPage());
             obj.put("app", appBrowser.getApp().getJSONObject());
@@ -99,7 +97,7 @@ public class TargetsResource extends BaseResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("TargetsResource");
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             List<Target> targets = appService.getTargets(appBrowser.getApp(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(appBrowser.getApp().getElement(document));

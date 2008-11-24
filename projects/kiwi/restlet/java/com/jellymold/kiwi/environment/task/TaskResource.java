@@ -32,9 +32,6 @@ public class TaskResource extends BaseResource implements Serializable {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    @Autowired
-    private Environment environment;
-
     public TaskResource() {
         super();
     }

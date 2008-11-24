@@ -32,9 +32,6 @@ public class RoleResource extends BaseResource {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    @Autowired
-    private Environment environment;
-
     public RoleResource() {
         super();
     }

@@ -1,6 +1,7 @@
 package com.jellymold.kiwi.auth;
 
 import com.jellymold.kiwi.Site;
+import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.MediaTypeUtils;
 import org.restlet.Application;
@@ -57,9 +58,7 @@ public class BaseAuthFilter extends Filter {
 
     protected void reject(Request request, Response response) {
         if (MediaTypeUtils.isStandardWebBrowser(request)) {
-            // TODO: SPRINGIFY
-            // Site site = (Site) Contexts.lookupInStatefulContexts("site");
-            Site site = null;
+            Site site = SiteService.getSite();
             if (site.isSecureAvailable()) {
                 // bounce to HTTPS
                 response.setLocationRef("https://" +
