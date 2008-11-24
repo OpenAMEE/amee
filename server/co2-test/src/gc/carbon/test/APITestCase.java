@@ -11,6 +11,10 @@ import org.junit.Before;
 import org.w3c.dom.Node;
 
 import java.io.*;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 import gc.carbon.test.profile.BaseProfileCategoryTestCase;
 
@@ -48,8 +52,16 @@ public class APITestCase extends XMLTestCase {
     }
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws Exception {
        cookieSettings = authenticate();
+    }
+
+
+    protected void initDB() throws Exception {
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/amee","amee","amee");
+        PreparedStatement statement = conn.prepareStatement("DELETE FROM ITEM WHERE TYPE = 'PI'");
+        boolean b = statement.execute();
     }
 
     private Series<CookieSetting> authenticate() throws IOException {

@@ -113,6 +113,7 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
         profileBrowser.setDuration(form.getFirstValue("duration"));
         profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
         profileBrowser.setMode(form.getFirstValue("mode"));
+        profileBrowser.setAPIVersion(form.getFirstValue("v"));
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         setPage(request);
         setAcceptors();
