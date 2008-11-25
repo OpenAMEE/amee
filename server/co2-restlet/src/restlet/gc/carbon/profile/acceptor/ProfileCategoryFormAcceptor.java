@@ -107,7 +107,6 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
         return profileItems;
     }
 
-
     private ProfileItem acceptProfileItem(Form form, ProfileItem profileItem) {
 
         // determine startdate for new ProfileItem

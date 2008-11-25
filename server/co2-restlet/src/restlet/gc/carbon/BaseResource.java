@@ -1,8 +1,14 @@
 package gc.carbon;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.HeaderUtils;
+import com.jellymold.utils.ThreadBeanHolder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.BeansException;
+import gc.carbon.profile.ProfileBrowser;
 
 /**
  * This file is part of AMEE.
@@ -23,10 +29,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public abstract class BaseResource extends com.jellymold.utils.BaseResource {
+public abstract class BaseResource extends com.jellymold.utils.BaseResource implements BeanFactoryAware {
 
-    @Autowired
-    protected Environment environment;
+    protected BeanFactory beanFactory;
 
     public BaseResource() {
         super();
@@ -37,7 +42,7 @@ public abstract class BaseResource extends com.jellymold.utils.BaseResource {
     }
 
     public int getItemsPerPage() {
-        int itemsPerPage = environment.getItemsPerPage();
+        int itemsPerPage = EnvironmentService.getEnvironment().getItemsPerPage();
         String itemsPerPageStr = getRequest().getResourceRef().getQueryAsForm().getFirstValue("itemsPerPage");
         if (itemsPerPageStr == null) {
             itemsPerPageStr = HeaderUtils.getHeaderFirstValue("ItemsPerPage", getRequest());
@@ -50,5 +55,18 @@ public abstract class BaseResource extends com.jellymold.utils.BaseResource {
             }
         }
         return itemsPerPage;
+    }
+
+    public ProfileBrowser getProfileBrowser() {
+        ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowser");
+        if (profileBrowser == null) {
+            profileBrowser = (ProfileBrowser) beanFactory.getBean("profileBrowser");
+            ThreadBeanHolder.set("profileBrowser", profileBrowser);
+        }
+        return profileBrowser;
+    }
+    
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
     }
 }

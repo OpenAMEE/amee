@@ -20,8 +20,9 @@
 package gc.carbon.data;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
+import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.BaseFilter;
-import gc.carbon.CarbonBeans;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.path.PathItemGroup;
 import gc.carbon.path.PathItemService;
@@ -31,6 +32,7 @@ import org.restlet.Application;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 
@@ -58,24 +60,22 @@ public class DataFilter extends BaseFilter {
     protected int rewrite(Request request) {
         log.debug("start data path rewrite");
         String path = null;
-        // TODO: Springify
-        Environment environment = null; // (Environment) Component.getInstance("environment");
+        Environment environment = EnvironmentService.getEnvironment();
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
-        // TODO: Springify
-        // removeEmptySegmentAtEnd(segments);
+        removeEmptySegmentAtEnd(segments);
         segments.remove(0); // remove '/data'
         if (!skipRewrite(segments)) {
             // handle suffixes
             String suffix = handleSuffix(segments);
             // look for path match
-            PathItemService pathItemService = CarbonBeans.getPathItemService();
-            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
+            ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
+            PathItemService pathItemService = (PathItemService) springContext.getBean("pathItemService");
+            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
             PathItem pathItem = pathItemGroup.findBySegments(segments);
             if (pathItem != null) {
                 // found matching path, rewrite
-                // TODO: Springify
-                // Contexts.getEventContext().set("pathItem", pathItem);
+                ThreadBeanHolder.set("pathItem", pathItem);
                 path = pathItem.getInternalPath() + suffix;
             }
         }

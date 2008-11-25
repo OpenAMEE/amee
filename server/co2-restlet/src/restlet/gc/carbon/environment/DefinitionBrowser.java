@@ -104,8 +104,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public Environment getEnvironment() {
         if (environment == null) {
             if (environmentUid != null) {
-                // TODO: Springify
-                // environment = environmentService.getEnvironment(getEnvironmentUid());
+                environment = environmentService.getEnvironmentByUid(getEnvironmentUid());
             }
         }
         return environment;

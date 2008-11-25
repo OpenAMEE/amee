@@ -22,6 +22,7 @@ package gc.carbon.data;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
 import com.jellymold.utils.BaseResource;
+import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
@@ -70,10 +71,7 @@ public class DataItemResource extends BaseResource implements Serializable {
     @Autowired
     private PathItemService pathItemService;
 
-    // TODO: Springify
-    @Autowired
     private PathItem pathItem;
-
     private List<Choice> parameters = new ArrayList<Choice>();
 
     public DataItemResource() {
@@ -87,8 +85,9 @@ public class DataItemResource extends BaseResource implements Serializable {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        dataBrowser.setDataItemUid(request.getAttributes().get("itemUid").toString());
         Form query = request.getResourceRef().getQueryAsForm();
+        pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
+        dataBrowser.setDataItemUid(request.getAttributes().get("itemUid").toString());
         for (String key : query.getNames()) {
             parameters.add(new Choice(key, query.getValues(key)));
         }

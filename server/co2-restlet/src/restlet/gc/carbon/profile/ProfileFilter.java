@@ -20,8 +20,9 @@
 package gc.carbon.profile;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
+import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.BaseFilter;
-import gc.carbon.CarbonBeans;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.path.PathItemGroup;
 import gc.carbon.domain.profile.Profile;
@@ -32,6 +33,7 @@ import org.restlet.Application;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 
@@ -59,33 +61,30 @@ public class ProfileFilter extends BaseFilter {
     protected int rewrite(Request request) {
         log.info("start profile path rewrite");
         String path = null;
-        // TODO: Springify
-        Environment environment = null; // (Environment) Component.getInstance("environment");
+        Environment environment = EnvironmentService.getEnvironment();
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
-        // TODO: Springify
-        // removeEmptySegmentAtEnd(segments);
+        removeEmptySegmentAtEnd(segments);
         segments.remove(0); // remove '/profiles'
         if (segments.size() > 0) {
             String segment = segments.remove(0);
             if (!matchesReservedPaths(segment)) {
                 // look for Profile matching path
-                ProfileService profileService = CarbonBeans.getProfileService();
+                ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
+                ProfileService profileService = (ProfileService) springContext.getBean("profileService");
                 Profile profile = profileService.getProfile(segment);
                 if (profile != null) {
                     // we found a Profile
                     // make available in Seam contexts
-                    // TODO: Springify
-                    // Contexts.getEventContext().set("profile", profile);
-                    // Contexts.getEventContext().set("permission", profile.getPermission());
+                    ThreadBeanHolder.set("profile", profile);
+                    ThreadBeanHolder.set("permission", profile.getPermission());
                     // look for path match
-                    PathItemService pathItemService = CarbonBeans.getPathItemService();
-                    PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment, profile);
+                    PathItemService pathItemService = (PathItemService) springContext.getBean("pathItemService");
+                    PathItemGroup pathItemGroup = pathItemService.getProfilePathItemGroup();
                     PathItem pathItem = pathItemGroup.findBySegments(segments);
                     if (pathItem != null) {
                         // rewrite paths
-                        // TODO: Springify
-                        // Contexts.getEventContext().set("pathItem", pathItem);
+                        ThreadBeanHolder.set("pathItem", pathItem);
                         path = pathItem.getInternalPath();
                         if (path != null) {
                             path = "/profiles" + path;

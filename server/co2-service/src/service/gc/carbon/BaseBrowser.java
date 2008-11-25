@@ -1,6 +1,7 @@
 package gc.carbon;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
@@ -14,17 +15,24 @@ public abstract class BaseBrowser implements Serializable {
     @Autowired
     protected DataService dataService;
 
-    @Autowired
-    protected Environment environment;
-
-    // TODO: Springify
-    // @In(scope = ScopeType.EVENT, required = false)
     protected PathItem pathItem;
-
     protected StartEndDate startDate = new StartEndDate(Calendar.getInstance().getTime());
     protected StartEndDate endDate;
 
     private String apiVersion;
+
+    public BaseBrowser() {
+        super();
+        setPathItem((PathItem) ThreadBeanHolder.get("pathItem"));
+    }
+
+    public void setPathItem(PathItem pathItem) {
+        this.pathItem = pathItem;
+    }
+
+    public PathItem getPathItem() {
+        return pathItem;
+    }
 
     public void setStartDate(String date) {
         startDate = new StartEndDate(date);

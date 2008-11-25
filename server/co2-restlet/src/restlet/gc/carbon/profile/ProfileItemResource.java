@@ -20,7 +20,9 @@
 package gc.carbon.profile;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.Pager;
+import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.builder.resource.ResourceBuilder;
 import gc.carbon.builder.resource.ResourceBuilderFactory;
 import gc.carbon.data.Calculator;
@@ -55,17 +57,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Component
+@Component("profileItemResource")
 @Scope("prototype")
 public class ProfileItemResource extends BaseProfileResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    @Autowired
-    private ProfileService profileService;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
-    private ProfileBrowser profileBrowser;
+    private ProfileService profileService;
 
     @Autowired
     private PathItemService pathItemService;
@@ -76,20 +78,12 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Autowired
     private Calculator calculator;
 
-    // TODO: Springify
-    // @In
-    private PathItem pathItem;
-
-    // TODO: Springify
-    // @In
-    private Environment environment;
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     private DataService dataService;
 
+    private Environment environment;
+    private ProfileBrowser profileBrowser;
+    private PathItem pathItem;
     private ResourceBuilder builder;
 
     public ProfileItemResource() {
@@ -103,6 +97,9 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        environment = EnvironmentService.getEnvironment();
+        pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
+        profileBrowser = getProfileBrowser();
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
     }

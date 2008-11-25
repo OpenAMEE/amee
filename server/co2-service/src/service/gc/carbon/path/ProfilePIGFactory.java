@@ -20,6 +20,8 @@
 package gc.carbon.path;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
+import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.data.DataService;
 import gc.carbon.definition.DefinitionService;
@@ -31,7 +33,6 @@ import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
@@ -39,7 +40,6 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Scope("prototype")
 public class ProfilePIGFactory extends BasePIGFactory implements CacheableFactory {
 
     @Autowired
@@ -51,16 +51,14 @@ public class ProfilePIGFactory extends BasePIGFactory implements CacheableFactor
     @Autowired
     private ProfileService profileService;
 
-    private Environment environment;
-
-    private Profile profile;
-
     public ProfilePIGFactory() {
         super();
     }
 
     public Object create() {
         PathItemGroup pathItemGroup = null;
+        Environment environment = EnvironmentService.getEnvironment();
+        Profile profile = (Profile) ThreadBeanHolder.get("profile");
         List<DataCategory> dataCategories = dataService.getDataCategories(environment);
         DataCategory rootDataCategory = findRootDataCategory(dataCategories);
         if (rootDataCategory != null) {
@@ -97,26 +95,11 @@ public class ProfilePIGFactory extends BasePIGFactory implements CacheableFactor
     }
 
     public String getKey() {
+        Profile profile = (Profile) ThreadBeanHolder.get("profile");
         return profile.getUid();
     }
 
     public String getCacheName() {
         return "ProfilePIGs";
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
     }
 }

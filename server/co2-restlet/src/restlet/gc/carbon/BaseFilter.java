@@ -22,6 +22,8 @@ package gc.carbon;
 import org.restlet.Application;
 import org.restlet.Filter;
 
+import java.util.List;
+
 public abstract class BaseFilter extends Filter {
 
     public BaseFilter() {
@@ -30,5 +32,14 @@ public abstract class BaseFilter extends Filter {
 
     public BaseFilter(Application application) {
         super(application.getContext(), application);
+    }
+
+    protected void removeEmptySegmentAtEnd(List<String> segments) {
+        if (!segments.isEmpty()) {
+            int last = segments.size() - 1;
+            if (segments.get(last).length() == 0) {
+                segments.remove(last);
+            }
+        }
     }
 }

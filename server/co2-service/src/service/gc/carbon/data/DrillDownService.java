@@ -36,13 +36,9 @@ import java.util.Iterator;
 import java.util.List;
 
 @Service
-@Scope("prototype")
 public class DrillDownService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    private DataService dataService;
 
     @Autowired
     private DataSheetService dataSheetService;

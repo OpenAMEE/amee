@@ -20,6 +20,7 @@
 package gc.carbon.data;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
 import gc.carbon.domain.ObjectType;
@@ -38,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.Serializable;
 
 @Service
-@Scope("prototype")
 public class DataFinder implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -51,10 +51,6 @@ public class DataFinder implements Serializable {
 
     @Autowired
     private DrillDownService drillDownService;
-
-    // TODO: Springify
-    // @In
-    private Environment environment;
 
     public DataFinder() {
         super();
@@ -90,11 +86,11 @@ public class DataFinder implements Serializable {
         DataCategory dataCategory = null;
         PathItemGroup pig;
         PathItem pi;
-        pig = pathItemService.getPathItemGroup(environment);
+        pig = pathItemService.getPathItemGroup();
         if (pig != null) {
             pi = pig.findByPath(path);
             if ((pi != null) && pi.getObjectType().equals(ObjectType.DC)) {
-                dataCategory = dataService.getDataCategory(environment, pi.getUid());
+                dataCategory = dataService.getDataCategory(EnvironmentService.getEnvironment(), pi.getUid());
             }
         }
         return dataCategory;

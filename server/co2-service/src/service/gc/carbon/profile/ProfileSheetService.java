@@ -23,6 +23,7 @@ import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Row;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.cache.CacheHelper;
+import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import org.apache.commons.logging.Log;
@@ -35,7 +36,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Service
-@Scope("prototype")
 public class ProfileSheetService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -50,7 +50,7 @@ public class ProfileSheetService implements Serializable {
     }
 
     public Sheet getSheet(ProfileBrowser browser) {
-        profileSheetFactory.setProfileBrowser(browser);
+        ThreadBeanHolder.set("profileBrowser", browser);
         return (Sheet) cacheHelper.getCacheable(profileSheetFactory);
     }
 

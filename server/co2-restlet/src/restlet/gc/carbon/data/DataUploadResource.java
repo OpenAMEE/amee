@@ -20,6 +20,7 @@
 package gc.carbon.data;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.path.PathItemService;
@@ -77,11 +78,8 @@ public class DataUploadResource extends BaseResource implements Serializable {
     @Autowired
     private PathItemService pathItemService;
 
-    // TODO: Springify
-    @Autowired
     private Environment environment;
-
-    FileItemFactory fileItemFactory;
+    private FileItemFactory fileItemFactory;
 
     public DataUploadResource() {
         super();
@@ -94,6 +92,7 @@ public class DataUploadResource extends BaseResource implements Serializable {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        environment = EnvironmentService.getEnvironment();
         dataBrowser.setDataCategoryUid(request.getResourceRef().getQueryAsForm().getFirstValue("categoryUid"));
         DiskFileItemFactory diskFileItemFactory = new DiskFileItemFactory();
         diskFileItemFactory.setSizeThreshold(SIZE_THRESHOLD);
@@ -109,7 +108,7 @@ public class DataUploadResource extends BaseResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
-        values.put("environmentPIG", pathItemService.getPathItemGroup(environment));
+        values.put("environmentPIG", pathItemService.getPathItemGroup());
         return values;
     }
 

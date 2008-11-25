@@ -23,7 +23,8 @@ import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Group;
 import com.jellymold.kiwi.Permission;
 import com.jellymold.kiwi.User;
-import com.jellymold.utils.BaseResource;
+import com.jellymold.kiwi.auth.AuthService;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.Pager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,8 +50,9 @@ import java.util.List;
 import java.util.Map;
 
 import gc.carbon.domain.profile.Profile;
+import gc.carbon.BaseResource;
 
-@Component
+@Component("profilesResource")
 @Scope("prototype")
 public class ProfilesResource extends BaseResource implements Serializable {
 
@@ -62,21 +64,10 @@ public class ProfilesResource extends BaseResource implements Serializable {
     @Autowired
     private ProfileService profileService;
 
-    @Autowired
-    private ProfileBrowser profileBrowser;
-
-    // TODO: Springify
-    // @In
     private Environment environment;
-
-    // TODO: Springify
-    // @In
+    private ProfileBrowser profileBrowser;
     private User user;
-
-    // TODO: Springify
-    @Autowired(required = false)
     private Group group;
-
     private Profile newProfile = null;
 
     public ProfilesResource() {
@@ -90,6 +81,10 @@ public class ProfilesResource extends BaseResource implements Serializable {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        environment = EnvironmentService.getEnvironment();
+        user = AuthService.getUser();
+        group = AuthService.getGroup();
+        profileBrowser = getProfileBrowser();
         setPage(request);
     }
 

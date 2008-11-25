@@ -19,13 +19,14 @@
 */
 package gc.carbon.profile;
 
-import com.jellymold.utils.BaseResource;
+import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.data.Calculator;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.path.PathItemService;
+import gc.carbon.BaseResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -51,9 +52,6 @@ public class ProfileItemValueResource extends BaseResource implements Serializab
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private ProfileBrowser profileBrowser;
-
-    @Autowired
     private PathItemService pathItemService;
 
     @Autowired
@@ -62,8 +60,7 @@ public class ProfileItemValueResource extends BaseResource implements Serializab
     @Autowired
     private Calculator calculator;
 
-    // TODO: Springify
-    // @In
+    private ProfileBrowser profileBrowser;
     private PathItem pathItem;
 
     public ProfileItemValueResource() {
@@ -77,6 +74,8 @@ public class ProfileItemValueResource extends BaseResource implements Serializab
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
+        profileBrowser = getProfileBrowser();
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
         profileBrowser.setProfileItemValueUid(request.getAttributes().get("valueUid").toString());

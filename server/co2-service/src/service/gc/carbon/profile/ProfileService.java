@@ -22,6 +22,8 @@ package gc.carbon.profile;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Group;
 import com.jellymold.kiwi.User;
+import com.jellymold.kiwi.auth.AuthService;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.Pager;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.data.*;
@@ -53,7 +55,6 @@ import java.util.*;
  * TODO: Remove site and group injection and make method calls explicit.
  */
 @Service
-@Scope("prototype")
 public class ProfileService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -62,22 +63,10 @@ public class ProfileService implements Serializable {
     private EntityManager entityManager;
 
     @Autowired
-    private DataService dataService;
-
-    @Autowired
     private PathItemService pathItemService;
 
     @Autowired
     private ProfileSheetService profileSheetService;
-
-    @Autowired(required = false)
-    private Environment environment;
-
-    @Autowired(required = false)
-    private Group group;
-
-    @Autowired(required = false)
-    private User user;
 
     public ProfileService() {
         super();
@@ -206,6 +195,7 @@ public class ProfileService implements Serializable {
     public Profile getProfileByUid(String uid) {
         Profile profile = null;
         List<Profile> profiles;
+        Environment environment = EnvironmentService.getEnvironment();
         profiles = entityManager.createQuery(
                 "FROM Profile p " +
                         "WHERE p.uid = :uid " +
@@ -227,6 +217,7 @@ public class ProfileService implements Serializable {
     public Profile getProfileByPath(String path) {
         Profile profile = null;
         List<Profile> profiles;
+        Environment environment = EnvironmentService.getEnvironment();
         profiles = entityManager.createQuery(
                 "FROM Profile p " +
                         "WHERE p.path = :path " +
@@ -246,6 +237,9 @@ public class ProfileService implements Serializable {
     }
 
     public List<Profile> getProfiles(Pager pager) {
+        Environment environment = EnvironmentService.getEnvironment();
+        User user = AuthService.getUser();
+        Group group = AuthService.getGroup();
         // first count all profiles
         long count = (Long) entityManager.createQuery(
                 "SELECT count(p) " +

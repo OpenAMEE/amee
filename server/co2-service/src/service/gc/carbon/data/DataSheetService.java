@@ -21,6 +21,7 @@ package gc.carbon.data;
 
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.cache.CacheHelper;
+import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.domain.data.DataCategory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,7 +32,6 @@ import org.springframework.stereotype.Service;
 import java.io.Serializable;
 
 @Service
-@Scope("prototype")
 public class DataSheetService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -50,9 +50,8 @@ public class DataSheetService implements Serializable {
     }
 
     public Sheet getSheet(DataCategory dataCategory) {
-        dataSheetFactory.setDataCategory(dataCategory);
-        Sheet sheet = (Sheet) cacheHelper.getCacheable(dataSheetFactory);
-        return sheet;
+        ThreadBeanHolder.set("dataCategory", dataCategory);
+        return (Sheet) cacheHelper.getCacheable(dataSheetFactory);
     }
 
     public void removeSheet(DataCategory dataCategory) {

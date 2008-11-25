@@ -32,6 +32,7 @@ import java.util.List;
 
 import com.jellymold.kiwi.auth.AuthService;
 import com.jellymold.kiwi.ResourceActions;
+import com.jellymold.kiwi.environment.EnvironmentService;
 
 @Service
 @Scope("prototype")
@@ -65,6 +66,10 @@ public class DataBrowser extends BaseBrowser {
     // ItemDefinitions
     private List<ItemDefinition> itemDefinitions = null;
 
+    public DataBrowser() {
+        super();
+    }
+
     // General
 
     public String getFullPath() {
@@ -88,7 +93,7 @@ public class DataBrowser extends BaseBrowser {
     public DataCategory getDataCategory() {
         if (dataCategory == null) {
             if (dataCategoryUid != null) {
-                dataCategory = dataService.getDataCategory(environment, dataCategoryUid);
+                dataCategory = dataService.getDataCategory(EnvironmentService.getEnvironment(), dataCategoryUid);
             }
         }
         return dataCategory;
@@ -118,7 +123,7 @@ public class DataBrowser extends BaseBrowser {
     public DataItem getDataItem() {
         if (dataItem == null) {
             if (dataItemUid != null) {
-                Item item = dataService.getItem(environment, dataItemUid);
+                Item item = dataService.getItem(EnvironmentService.getEnvironment(), dataItemUid);
                 if (item instanceof DataItem) {
                     dataItem = (DataItem) item;
                 }
@@ -154,7 +159,7 @@ public class DataBrowser extends BaseBrowser {
 
     public List<ItemDefinition> getItemDefinitions() {
         if (itemDefinitions == null) {
-            itemDefinitions = definitionService.getItemDefinitions(environment);
+            itemDefinitions = definitionService.getItemDefinitions(EnvironmentService.getEnvironment());
         }
         return itemDefinitions;
     }

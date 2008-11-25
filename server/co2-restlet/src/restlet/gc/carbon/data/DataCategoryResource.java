@@ -21,6 +21,7 @@ package gc.carbon.data;
 
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
+import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.BaseResource;
 import gc.carbon.definition.DefinitionService;
@@ -59,7 +60,7 @@ import java.util.Map;
  * TODO: may be a more elegant way to handle incoming representations of different media types
  * TODO: may be better to break this class down into components that handle post/put and json/xml individually
  */
-@Component
+@Component("dataCategoryResource")
 @Scope("prototype")
 public class DataCategoryResource extends BaseResource implements Serializable {
 
@@ -83,10 +84,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     @Autowired
     private PathItemService pathItemService;
 
-    // TODO: Springify
-    // @In
     private PathItem pathItem;
-
     private DataCategory dataCategory;
     private List<DataCategory> dataCategories;
     private DataItem dataItem;
@@ -104,6 +102,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         Form form = request.getResourceRef().getQueryAsForm();
+        pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
         dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         dataBrowser.setStartDate(form.getFirstValue("startDate"));
         dataBrowser.setEndDate(form.getFirstValue("endDate"));

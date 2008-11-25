@@ -39,7 +39,7 @@ public class FreeMarkerConfigurationFactory implements CacheableFactory {
             }
         }
         if (configuration == null) {
-            throw new RuntimeException("Must have a Skin.");
+            throw new RuntimeException("Must have a Skin. Could not find: " + skinPath);
         }
         return configuration;
     }

@@ -34,7 +34,9 @@ import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -45,8 +47,7 @@ import java.util.Map;
 // TODO: 'perMonth' is hard-coding - how should this be made more dynamic?
 
 @Service
-@Scope("prototype")
-public class Calculator implements Serializable {
+public class Calculator implements BeanFactoryAware, Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -56,11 +57,11 @@ public class Calculator implements Serializable {
     @Autowired
     DataFinder dataFinder;
 
-    @Autowired
-    ProfileFinder profileFinder;
+    private BeanFactory beanFactory;
 
     public BigDecimal calculate(ProfileItem profileItem) {
         log.debug("starting calculator");
+        ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
         Map<String, Object> values;
         BigDecimal amount;
         if (!profileItem.isEnd()) {
@@ -94,6 +95,7 @@ public class Calculator implements Serializable {
 
     public BigDecimal calculate(DataItem dataItem, Choices userValueChoices) {
         log.debug("starting calculator");
+        ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
         Map<String, Object> values;
         BigDecimal amount;
         ItemDefinition itemDefinition = dataItem.getItemDefinition();
@@ -212,5 +214,9 @@ public class Calculator implements Serializable {
             }
             values.putAll(userChoices);
         }
+    }
+
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
     }
 }

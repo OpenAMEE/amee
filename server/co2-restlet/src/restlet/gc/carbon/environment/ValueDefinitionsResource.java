@@ -20,6 +20,7 @@
 package gc.carbon.environment;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.ValueType;
@@ -59,10 +60,7 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
-    // TODO: Springify
-    @Autowired
     private Environment environment;
-
     private ValueDefinition newValueDefinition;
 
     public ValueDefinitionsResource() {
@@ -76,6 +74,7 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        environment = EnvironmentService.getEnvironment();
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
     }

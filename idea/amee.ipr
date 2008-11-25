@@ -271,6 +271,7 @@
       <module fileurl="file://$PROJECT_DIR$/cache-restlet.iml" filepath="$PROJECT_DIR$/cache-restlet.iml" />
       <module fileurl="file://$PROJECT_DIR$/cache-service.iml" filepath="$PROJECT_DIR$/cache-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/engine-service.iml" filepath="$PROJECT_DIR$/engine-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/htdocs.iml" filepath="$PROJECT_DIR$/htdocs.iml" />
       <module fileurl="file://$PROJECT_DIR$/idea.iml" filepath="$PROJECT_DIR$/idea.iml" />
       <module fileurl="file://$PROJECT_DIR$/kiwi-domain.iml" filepath="$PROJECT_DIR$/kiwi-domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/kiwi-restlet.iml" filepath="$PROJECT_DIR$/kiwi-restlet.iml" />
@@ -280,6 +281,7 @@
       <module fileurl="file://$PROJECT_DIR$/plum-restlet.iml" filepath="$PROJECT_DIR$/plum-restlet.iml" />
       <module fileurl="file://$PROJECT_DIR$/plum-service.iml" filepath="$PROJECT_DIR$/plum-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/sheet-domain.iml" filepath="$PROJECT_DIR$/sheet-domain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/skins.iml" filepath="$PROJECT_DIR$/skins.iml" />
       <module fileurl="file://$PROJECT_DIR$/utils.iml" filepath="$PROJECT_DIR$/utils.iml" />
     </modules>
   </component>

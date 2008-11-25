@@ -35,7 +35,6 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 
 @Service
-@Scope("prototype")
 public class CarbonDataLoader implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());

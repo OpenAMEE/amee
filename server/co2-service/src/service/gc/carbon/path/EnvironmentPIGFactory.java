@@ -20,6 +20,7 @@
 package gc.carbon.path;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.data.DataService;
 import gc.carbon.definition.DefinitionService;
@@ -34,7 +35,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Scope("prototype")
 public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFactory {
 
     @Autowired
@@ -43,8 +43,6 @@ public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFa
     @Autowired
     private DataService dataService;
 
-    private Environment environment;
-
     public EnvironmentPIGFactory() {
         super();
     }
@@ -52,6 +50,7 @@ public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFa
     // TODO: This uses up lots of memory, so what?
     public Object create() {
         PathItemGroup pathItemGroup = null;
+        Environment environment = EnvironmentService.getEnvironment();
         List<DataCategory> dataCategories = dataService.getDataCategories(environment);
         DataCategory rootDataCategory = findRootDataCategory(dataCategories);
         if (rootDataCategory != null) {
@@ -69,18 +68,11 @@ public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFa
     }
 
     public String getKey() {
+        Environment environment = EnvironmentService.getEnvironment();
         return environment.getUid();
     }
 
     public String getCacheName() {
         return "EnvironmentPIGs";
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
     }
 }

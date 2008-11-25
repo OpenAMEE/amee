@@ -24,6 +24,7 @@ import com.jellymold.sheet.Column;
 import com.jellymold.sheet.Row;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.ValueType;
+import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.data.DataService;
 import gc.carbon.definition.DefinitionService;
@@ -44,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Scope("prototype")
 public class ProfileSheetFactory implements CacheableFactory {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -53,15 +53,7 @@ public class ProfileSheetFactory implements CacheableFactory {
     private static DateFormat DAY_DATE_FMT = new SimpleDateFormat(DAY_DATE);
 
     @Autowired
-    private DefinitionService definitionService;
-
-    @Autowired
-    private DataService dataService;
-
-    @Autowired
     private ProfileService profileService;
-
-    private ProfileBrowser profileBrowser;
 
     public ProfileSheetFactory() {
         super();
@@ -75,6 +67,7 @@ public class ProfileSheetFactory implements CacheableFactory {
         ItemValue itemValue;
         ItemDefinition itemDefinition;
         Sheet sheet = null;
+        ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowser");
 
         // must have ItemDefinition
         itemDefinition = profileBrowser.getDataCategory().getItemDefinition();
@@ -184,6 +177,7 @@ public class ProfileSheetFactory implements CacheableFactory {
     }
 
     public String getKey() {
+        ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowser");
         return "ProfileSheet_" + profileBrowser.getProfile().getUid() + "_" + profileBrowser.getDataCategory().getUid() + "_" +
                 ((profileBrowser.getProfileDate() != null) ? profileBrowser.getProfileDate().getTime() : profileBrowser.getStartDate().getTime());
 
@@ -205,9 +199,5 @@ public class ProfileSheetFactory implements CacheableFactory {
 
     public String getCacheName() {
         return "ProfileSheets";
-    }
-
-    public void setProfileBrowser(ProfileBrowser browser) {
-        this.profileBrowser = browser;
     }
 }

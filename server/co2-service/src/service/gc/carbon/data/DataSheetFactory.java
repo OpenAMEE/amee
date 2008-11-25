@@ -24,6 +24,7 @@ import com.jellymold.sheet.Column;
 import com.jellymold.sheet.Row;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.ValueType;
+import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.StartEndDate;
@@ -38,17 +39,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Scope("prototype")
 public class DataSheetFactory implements CacheableFactory {
 
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private DataService dataService;
-
-    private DataCategory dataCategory;
-    private StartEndDate startDate = new StartEndDate(new Date());
-    private StartEndDate endDate;
 
     public DataSheetFactory() {
         super();
@@ -62,6 +58,9 @@ public class DataSheetFactory implements CacheableFactory {
         ItemValue itemValue;
         Sheet sheet = null;
         ItemDefinition itemDefinition;
+        DataCategory dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategory");
+        StartEndDate startDate = new StartEndDate(new Date());
+        StartEndDate endDate = null;
 
         // must have an ItemDefinition
         itemDefinition = dataCategory.getItemDefinition();
@@ -136,20 +135,11 @@ public class DataSheetFactory implements CacheableFactory {
         }
         return key.toString();
 */
+        DataCategory dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategory");
         return "DataSheet_" + dataCategory.getUid();
     }
 
     public String getCacheName() {
         return "DataSheets";
-    }
-
-    public void setDataCategory(DataCategory dataCategory) {
-        this.dataCategory = dataCategory;
-    }
-
-    public void setDataBrowser(DataBrowser dataBrowser) {
-        this.dataCategory = dataBrowser.getDataCategory();
-        this.startDate = dataBrowser.getStartDate();
-        this.endDate = dataBrowser.getEndDate();
     }
 }

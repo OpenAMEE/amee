@@ -1,0 +1,68 @@
+8
+
+dir
+3853
+http://closed.jellymold.com/svn/skins/auth/auth
+http://closed.jellymold.com/svn
+
+
+
+2008-03-24T10:13:41.273850Z
+1150
+skins
+
+
+svn:special svn:externals svn:needs-lock
+
+home.ftl
+file
+
+
+
+
+2008-06-12T18:06:36.000000Z
+7068d68d47ef54c25a651407e92fde0a
+2008-03-24T10:13:41.273850Z
+1150
+skins
+has-props
+
+protected.ftl
+file
+
+
+
+
+2008-06-12T18:06:36.000000Z
+3b11c7bc4f37ec13fa798083d75978d3
+2008-03-24T10:13:41.273850Z
+1150
+skins
+has-props
+
+signIn.ftl
+file
+
+
+
+
+2008-06-12T18:06:36.000000Z
+f15b0b0cd53ce8bdb4f277595ce5119d
+2008-03-24T10:13:41.273850Z
+1150
+skins
+has-props
+
+signOut.ftl
+file
+
+
+
+
+2008-06-12T18:06:36.000000Z
+ac3efde2d9d50c6df12918ddde04f65b
+2008-03-24T10:13:41.273850Z
+1150
+skins
+has-props
+

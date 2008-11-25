@@ -15,7 +15,7 @@
 
     <context:load-time-weaver/>
     <context:annotation-config/>
-    <context:component-scan base-package="gc.engine"/>
+    <context:component-scan base-package="gc"/>
     <context:component-scan base-package="com.jellymold"/>
     <context:component-scan base-package="org.restlet.ext.seam"/>
 

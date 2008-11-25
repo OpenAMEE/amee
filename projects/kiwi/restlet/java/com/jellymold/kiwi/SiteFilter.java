@@ -59,9 +59,7 @@ public class SiteFilter extends Filter {
 
     protected void afterHandle(Request request, Response response) {
         log.debug("after handle");
-        // TODO: SPRINGIFY
-        // App app = (App) Contexts.lookupInStatefulContexts("app");
-        App app = null;
+        App app = (App) ThreadBeanHolder.get("app");
         if ((app != null) && (!app.isAllowClientCache())) {
             // ensure client does not cache response
             HeaderUtils.addHeader("Pragma", "no-cache", response);

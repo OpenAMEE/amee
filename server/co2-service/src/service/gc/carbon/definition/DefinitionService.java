@@ -42,16 +42,12 @@ import java.util.Set;
  * TODO: Come up with more efficient way to delete Environment entities.
  */
 @Service
-@Scope("prototype")
 public class DefinitionService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    @Autowired
-    private DataService dataService;
 
     public DefinitionService() {
         super();

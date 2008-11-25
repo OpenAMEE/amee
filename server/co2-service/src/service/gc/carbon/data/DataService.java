@@ -44,7 +44,6 @@ import java.util.Map;
  * TODO: Any other cache operations to put here?
  */
 @Service
-@Scope("prototype")
 public class DataService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());

@@ -2,6 +2,7 @@ package gc.carbon.profile;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.Pager;
+import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.domain.APIObject;
 import gc.carbon.BaseResource;
 import gc.carbon.builder.APIVersion;
@@ -15,6 +16,7 @@ import org.restlet.Context;
 import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.springframework.beans.factory.BeanFactory;
 
 import javax.persistence.EntityManager;
 import java.util.Set;
@@ -149,7 +151,6 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
         });
         return (count <= 1);
     }
-
 }
 
 

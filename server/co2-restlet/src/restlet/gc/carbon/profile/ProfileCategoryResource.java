@@ -20,8 +20,10 @@
 package gc.carbon.profile;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
+import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.builder.resource.ResourceBuilder;
 import gc.carbon.builder.resource.ResourceBuilderFactory;
 import gc.carbon.data.Calculator;
@@ -53,7 +55,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.math.BigDecimal;
 
-@Component
+@Component("profileCategoryResource")
 @Scope("prototype")
 public class ProfileCategoryResource extends BaseProfileCategoryResource implements Serializable {
 
@@ -69,9 +71,6 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
     private ProfileService profileService;
 
     @Autowired
-    private ProfileBrowser profileBrowser;
-
-    @Autowired
     private PathItemService pathItemService;
 
     @Autowired
@@ -80,14 +79,9 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
     @Autowired
     private Calculator calculator;
 
-    // TODO: Springify
-    // @In
     private Environment environment;
-
-    // TODO: Springify
-    // @In
     private PathItem pathItem;
-
+    private ProfileBrowser profileBrowser;
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
     private ResourceBuilder builder;
     private Map<MediaType, Acceptor> acceptors;
@@ -104,6 +98,9 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         Form form = request.getResourceRef().getQueryAsForm();
+        environment = EnvironmentService.getEnvironment();
+        pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
+        profileBrowser = getProfileBrowser();
         profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
         profileBrowser.setStartDate(form.getFirstValue("startDate"));
         profileBrowser.setEndDate(form.getFirstValue("endDate"));
@@ -282,10 +279,6 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
 
     public Profile getProfile() {
         return profileBrowser.getProfile();
-    }
-
-    public ProfileBrowser getProfileBrowser() {
-        return profileBrowser;
     }
 
     public Date getProfileDate() {

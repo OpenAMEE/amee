@@ -32,7 +32,6 @@ import org.springframework.stereotype.Service;
 import java.io.Serializable;
 
 @Service
-@Scope("prototype")
 public class PathItemService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -49,8 +48,7 @@ public class PathItemService implements Serializable {
         super();
     }
 
-    public PathItemGroup getPathItemGroup(Environment environment) {
-        environmentPIGFactory.setEnvironment(environment);
+    public PathItemGroup getPathItemGroup() {
         return (PathItemGroup) cacheHelper.getCacheable(environmentPIGFactory);
     }
 
@@ -58,9 +56,7 @@ public class PathItemService implements Serializable {
         cacheHelper.remove("EnvironmentPIGs", environment.getUid());
     }
 
-    public PathItemGroup getPathItemGroup(Environment environment, Profile profile) {
-        profilePIGFactory.setEnvironment(environment);
-        profilePIGFactory.setProfile(profile);
+    public PathItemGroup getProfilePathItemGroup() {
         return (PathItemGroup) cacheHelper.getCacheable(profilePIGFactory);
     }
 

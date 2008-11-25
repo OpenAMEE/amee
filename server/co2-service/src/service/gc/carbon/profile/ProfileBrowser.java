@@ -20,6 +20,8 @@
 package gc.carbon.profile;
 
 import com.jellymold.kiwi.ResourceActions;
+import com.jellymold.kiwi.environment.EnvironmentService;
+import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.BaseBrowser;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemValue;
@@ -44,40 +46,23 @@ public class ProfileBrowser extends BaseBrowser {
     @Autowired
     private ProfileService profileService;
 
-    // TODO: Springify
-    // @In(scope = ScopeType.EVENT, required = false)
+    // Profiles
     private Profile profile;
-
     private ResourceActions profileActions = new ResourceActions("profile");
 
     // ProfileCategories
-
-    // TODO: Springify
-    // @In(scope = ScopeType.EVENT, required = false)
     private DataCategory dataCategory = null;
-
     private String dataCategoryUid = null;
-
     private ResourceActions dataCategoryActions = new ResourceActions("profileCategory");
 
     // ProfileItems
-
-    // TODO: Springify
-    // @In(scope = ScopeType.EVENT, required = false)
     private ProfileItem profileItem = null;
-
     private String profileItemUid = null;
-
     private ResourceActions profileItemActions = new ResourceActions("profileItem");
 
     // ProfileItemValues
-
-    // TODO: Springify
-    // @In(scope = ScopeType.EVENT, required = false)
     private ItemValue profileItemValue = null;
-
     private String profileItemValueUid = null;
-
     private ResourceActions profileItemValueActions = new ResourceActions("profileItemValue");
 
     // profile date
@@ -85,6 +70,14 @@ public class ProfileBrowser extends BaseBrowser {
 
     private String selectBy;
     private String mode;
+
+    public ProfileBrowser() {
+        super();
+        profile = (Profile) ThreadBeanHolder.get("profile");
+        dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategory");
+        profileItem = (ProfileItem) ThreadBeanHolder.get("profileItem");
+        profileItemValue = (ItemValue) ThreadBeanHolder.get("profileItemValue");
+    }
 
     // General
     public String getFullPath() {
@@ -116,7 +109,7 @@ public class ProfileBrowser extends BaseBrowser {
     public DataCategory getDataCategory() {
         if (dataCategory == null) {
             if (getDataCategoryUid() != null) {
-                dataCategory = dataService.getDataCategory(environment, getDataCategoryUid());
+                dataCategory = dataService.getDataCategory(EnvironmentService.getEnvironment(), getDataCategoryUid());
             }
         }
         return dataCategory;
