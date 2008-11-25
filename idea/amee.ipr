@@ -319,66 +319,56 @@
   <component name="libraryTable">
     <library name="spring">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/modules/spring-core.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/modules/spring-context.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/modules/spring-context-support.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/modules/spring-beans.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/modules/spring-orm.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/modules/spring-jdbc.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/modules/spring-aop.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/modules/spring-tx.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/weaving/spring-agent.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/weaving/spring-aspects.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/modules/spring-web.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/modules/spring-core.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/modules/spring-context-support.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/modules/spring-web.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/modules/spring-tx.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/modules/spring-orm.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/modules/spring-jdbc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/modules/spring-aop.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/modules/spring-beans.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/modules/spring-context.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/weaving/spring-agent.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/weaving/spring-aspects.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/module-sources/spring-context-support-sources.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/module-sources/spring-aop-sources.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/module-sources/spring-context-sources.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/module-sources/spring-jdbc-sources.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/module-sources/spring-core-sources.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/module-sources/spring-beans-sources.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/module-sources/spring-orm-sources.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/module-sources/spring-tx-sources.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/weaving-sources/spring-aspects-sources.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/weaving-sources/spring-agent-sources.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/dist/module-sources/spring-web-sources.jar!/" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="hibernate">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/hibernate/hibernate-annotations.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/hibernate/hibernate-commons-annotations.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/hibernate/hibernate-entitymanager.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/hibernate/hibernate3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/hibernate/jboss-archive-browsing.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/hibernate/hibernate-commons-annotations.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/hibernate/jboss-archive-browsing.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/hibernate/hibernate-entitymanager.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/hibernate/hibernate3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/hibernate/hibernate-annotations.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="jee">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/j2ee/persistence.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/j2ee/jta.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/j2ee/servlet-api.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/j2ee/persistence.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/j2ee/jta.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/j2ee/servlet-api.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="restlet">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/com.noelios.restlet.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/org.restlet.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/org.restlet.ext.spring_2.5.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/org.restlet.ext.freemarker_2.3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/org.restlet.ext.fileupload_1.2.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/org.restlet.ext.json_2.0.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/org.mortbay.jetty_6.1/org.mortbay.jetty.https.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/org.mortbay.jetty_6.1/org.mortbay.jetty.util.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/org.mortbay.jetty_6.1/org.mortbay.jetty.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/org.mortbay.jetty_6.1/org.mortbay.jetty.ajp.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/com.noelios.restlet.ext.jetty_6.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.apache.commons.fileupload.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.restlet.ext.json.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.restlet.ext.freemarker.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/com.noelios.restlet.ext.net.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.restlet.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.restlet.ext.fileupload.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/com.noelios.restlet.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/com.noelios.restlet.ext.jetty.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.mortbay.jetty_6.1/org.mortbay.jetty.util.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.mortbay.jetty_6.1/org.mortbay.jetty.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.mortbay.jetty_6.1/org.mortbay.jetty.ajp.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.mortbay.jetty_6.1/org.mortbay.jetty.https.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.restlet.ext.spring.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -389,9 +379,7 @@
         <root url="jar://$PROJECT_DIR$/../lib/backport-util-concurrent/backport-util-concurrent.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/../../lib/ehcache/ehcache-1.3.0-sources.jar!/" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="freemarker">
       <CLASSES>
@@ -421,13 +409,6 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="svnkit">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../lib/svnkit/svnkit.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="mysql-connector-java">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/../lib/mysql/mysql-connector-java.jar!/" />
@@ -448,39 +429,40 @@
     </library>
     <library name="spring-runtime">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/antlr/antlr-2.7.6.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/aopalliance/aopalliance.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/aspectj/aspectjweaver.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/aspectj/aspectjrt.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/javassist/javassist-3.4.ga.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/cglib/cglib-nodep-2.1_3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/log4j/log4j-1.2.14.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/cglib/chlib-nodep.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/aspectj/aspectjrt.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/antlr/antlr.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/log4j/log4j.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/aopalliance/aopalliance.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/aspectj/aspectjweaver.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/javassist/javassist.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="global">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/dom4j/dom4j-1.6.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-httpclient.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-beanutils.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-io.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-pool.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-logging.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-validator.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-codec.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-digester.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-collections.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-lang.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-attributes-api.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-discovery.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-dbcp.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-attributes-compiler.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/restlet-1.1m4/lib/org.json_2.0/org.json.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/jdom/lib/xml-apis.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/jdom/lib/xerces.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/jdom/lib/xalan.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/jakarta-commons/commons-fileupload.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/jdom/xml-apis.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/jdom/xerces.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/jdom/xalan.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/jdom/jdom.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.json.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-digester.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-pool.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-logging.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-codec.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-fileupload.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-dbcp.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-validator.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-io.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-attributes-api.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-attributes-compiler.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-lang.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-httpclient.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-collections.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-discovery.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/jakarta-commons/commons-beanutils.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/dom4j/dom4j.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -532,27 +514,6 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="antlr">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../lib/antlr/antlr.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="jdom">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../lib/jdom/jdom.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="json">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../lib/restlet/org.json.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="joda">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/../lib/joda/joda-time.jar!/" />
@@ -576,14 +537,14 @@
     </library>
     <library name="junit">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../lib/spring-framework-2.5.2/lib/junit/junit-4.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/junit/junit-4.4.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="testng">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../lib/jboss-seam/lib/testng-4.5.1-jdk15.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/testng/testng.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

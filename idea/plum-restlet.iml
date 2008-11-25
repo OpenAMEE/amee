@@ -29,7 +29,6 @@
     <orderEntry type="library" name="hibernate" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="freemarker" level="project" />
-    <orderEntry type="library" name="svnkit" level="project" />
   </component>
 </module>
 

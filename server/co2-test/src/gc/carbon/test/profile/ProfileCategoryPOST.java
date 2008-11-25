@@ -1,13 +1,11 @@
 package gc.carbon.test.profile;
 
-import org.testng.annotations.Test;
 import org.restlet.data.Form;
 import org.restlet.data.Status;
+import org.testng.annotations.Test;
 import org.w3c.dom.Document;
-import gc.carbon.test.profile.BaseProfileCategoryTestCase;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -65,7 +63,7 @@ public class ProfileCategoryPOST extends BaseProfileCategoryTestCase {
     @Test
     public void testPostWithEnd() throws Exception {
         Form data = new Form();
-        data.add("end","true");
+        data.add("end", "true");
         assertBadRequest(data);
     }
 
@@ -75,7 +73,7 @@ public class ProfileCategoryPOST extends BaseProfileCategoryTestCase {
         String endDate = "20100401T0030";
         Form data = new Form();
         data.add("startDate", startDate);
-        data.add("duration","PT30M");
+        data.add("duration", "PT30M");
         assertDateNodes(data, startDate, endDate, "false");
     }
 
@@ -83,7 +81,7 @@ public class ProfileCategoryPOST extends BaseProfileCategoryTestCase {
     public void testPostWithEndAndEndDate() throws Exception {
         Form data = new Form();
         data.add("endDate", "20100401T0000");
-        data.add("end","true");
+        data.add("end", "true");
         assertBadRequest(data);
     }
 
@@ -91,7 +89,7 @@ public class ProfileCategoryPOST extends BaseProfileCategoryTestCase {
     public void testPostWithEndAndDuration() throws Exception {
         Form data = new Form();
         data.add("duration", "PT30M");
-        data.add("end","true");
+        data.add("end", "true");
         assertBadRequest(data);
     }
 
@@ -114,33 +112,33 @@ public class ProfileCategoryPOST extends BaseProfileCategoryTestCase {
     @Test
     public void testPostWithExternalPerUnitAsYear() throws Exception {
         Form data = new Form();
-        data.add("distancePerUnit","year");
+        data.add("distancePerUnit", "year");
         data.add("distance", "1000");
-        assertDistanceNode(data,"km","year");
+        assertDistanceNode(data, "km", "year");
     }
 
     @Test
     public void testPostWithExternalUnitAsMile() throws Exception {
         Form data = new Form();
-        data.add("distanceUnit","mi");
+        data.add("distanceUnit", "mi");
         data.add("distance", "1000");
-        assertDistanceNode(data,"mi","month");
+        assertDistanceNode(data, "mi", "month");
     }
 
     @Test
     public void testPostWithExternalUnitAsMileAndPerUnitAsYear() throws Exception {
         Form data = new Form();
-        data.add("distanceUnit","mi");
-        data.add("distancePerUnit","year");
+        data.add("distanceUnit", "mi");
+        data.add("distancePerUnit", "year");
         data.add("distance", "1000");
-        assertDistanceNode(data,"mi","year");
+        assertDistanceNode(data, "mi", "year");
     }
 
 
     private void assertBadRequest(Form data) throws Exception {
         data.add("v", "2.0");
         Status status = doPost(data).getStatus();
-        assertEquals("Should be Bad Request",400,status.getCode());
+        assertEquals("Should be Bad Request", 400, status.getCode());
     }
 
     private void assertDistanceNode(Form data, String unit, String perUnit) throws Exception {

@@ -26,7 +26,6 @@
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="hibernate" level="project" />
     <orderEntry type="library" name="freemarker" level="project" />
-    <orderEntry type="library" name="svnkit" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
   </component>
 </module>

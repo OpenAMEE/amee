@@ -53,7 +53,6 @@
     <orderEntry type="module" module-name="plum-service" />
     <orderEntry type="module" module-name="sheet-domain" />
     <orderEntry type="module" module-name="utils" />
-    <orderEntry type="library" name="antlr" level="project" />
     <orderEntry type="library" name="commons-cli" level="project" />
     <orderEntry type="library" name="ehcache" level="project" />
     <orderEntry type="library" name="freemarker" level="project" />
@@ -61,11 +60,9 @@
     <orderEntry type="library" name="hibernate" level="project" />
     <orderEntry type="library" name="janino" level="project" />
     <orderEntry type="library" name="javacsv" level="project" />
-    <orderEntry type="library" name="jdom" level="project" />
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="jetty" level="project" />
     <orderEntry type="library" name="jscience" level="project" />
-    <orderEntry type="library" name="json" level="project" />
     <orderEntry type="library" name="jts" level="project" />
     <orderEntry type="library" name="memcached" level="project" />
     <orderEntry type="library" name="mvel" level="project" />
@@ -73,7 +70,6 @@
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="spring-runtime" level="project" />
-    <orderEntry type="library" name="svnkit" level="project" />
     <orderEntry type="library" name="wrapper" level="project" />
   </component>
 </module>
