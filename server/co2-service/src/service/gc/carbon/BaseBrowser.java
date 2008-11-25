@@ -12,9 +12,6 @@ import java.util.Calendar;
 
 public abstract class BaseBrowser implements Serializable {
 
-    @Autowired
-    protected DataService dataService;
-
     protected PathItem pathItem;
     protected StartEndDate startDate = new StartEndDate(Calendar.getInstance().getTime());
     protected StartEndDate endDate;

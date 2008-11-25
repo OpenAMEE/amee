@@ -67,7 +67,7 @@ public class ProfileSheetFactory implements CacheableFactory {
         ItemValue itemValue;
         ItemDefinition itemDefinition;
         Sheet sheet = null;
-        ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowser");
+        ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowserForFactory");
 
         // must have ItemDefinition
         itemDefinition = profileBrowser.getDataCategory().getItemDefinition();
@@ -177,7 +177,7 @@ public class ProfileSheetFactory implements CacheableFactory {
     }
 
     public String getKey() {
-        ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowser");
+        ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowserForFactory");
         return "ProfileSheet_" + profileBrowser.getProfile().getUid() + "_" + profileBrowser.getDataCategory().getUid() + "_" +
                 ((profileBrowser.getProfileDate() != null) ? profileBrowser.getProfileDate().getTime() : profileBrowser.getStartDate().getTime());
 

@@ -19,7 +19,7 @@
  */
 package gc.carbon.data;
 
-import com.jellymold.utils.BaseResource;
+import gc.carbon.BaseResource;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
 import org.apache.commons.logging.Log;
@@ -31,7 +31,6 @@ import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -46,10 +45,6 @@ public class DataItemValueResource extends BaseResource implements Serializable 
 
     private final Log log = LogFactory.getLog(getClass());
 
-    @Autowired
-    private DataService dataService;
-
-    @Autowired
     private DataBrowser dataBrowser;
 
     public DataItemValueResource() {
@@ -63,6 +58,7 @@ public class DataItemValueResource extends BaseResource implements Serializable 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        dataBrowser = getDataBrowser();
         dataBrowser.setDataItemUid(request.getAttributes().get("itemUid").toString());
         dataBrowser.setItemValueUid(request.getAttributes().get("valueUid").toString());
     }

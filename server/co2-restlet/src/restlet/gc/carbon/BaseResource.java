@@ -1,14 +1,16 @@
 package gc.carbon;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.ThreadBeanHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.BeansException;
+import gc.carbon.data.DataBrowser;
+import gc.carbon.domain.path.PathItem;
 import gc.carbon.profile.ProfileBrowser;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * This file is part of AMEE.
@@ -30,6 +32,8 @@ import gc.carbon.profile.ProfileBrowser;
  * Website http://www.amee.cc
  */
 public abstract class BaseResource extends com.jellymold.utils.BaseResource implements BeanFactoryAware {
+
+    private final Log log = LogFactory.getLog(getClass());
 
     protected BeanFactory beanFactory;
 
@@ -57,6 +61,15 @@ public abstract class BaseResource extends com.jellymold.utils.BaseResource impl
         return itemsPerPage;
     }
 
+    public DataBrowser getDataBrowser() {
+        DataBrowser dataBrowser = (DataBrowser) ThreadBeanHolder.get("dataBrowser");
+        if (dataBrowser == null) {
+            dataBrowser = (DataBrowser) beanFactory.getBean("dataBrowser");
+            ThreadBeanHolder.set("dataBrowser", dataBrowser);
+        }
+        return dataBrowser;
+    }
+
     public ProfileBrowser getProfileBrowser() {
         ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowser");
         if (profileBrowser == null) {
@@ -65,7 +78,11 @@ public abstract class BaseResource extends com.jellymold.utils.BaseResource impl
         }
         return profileBrowser;
     }
-    
+
+    public PathItem getPathItem() {
+        return (PathItem) ThreadBeanHolder.get("pathItem");
+    }
+
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
     }

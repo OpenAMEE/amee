@@ -50,7 +50,7 @@ public class DataSheetService implements Serializable {
     }
 
     public Sheet getSheet(DataCategory dataCategory) {
-        ThreadBeanHolder.set("dataCategory", dataCategory);
+        ThreadBeanHolder.set("dataCategoryForFactory", dataCategory);
         return (Sheet) cacheHelper.getCacheable(dataSheetFactory);
     }
 

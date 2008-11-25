@@ -21,9 +21,9 @@ package gc.carbon.data;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentService;
-import com.jellymold.utils.BaseResource;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.path.PathItemService;
+import gc.carbon.BaseResource;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
@@ -64,12 +64,6 @@ public class DataUploadResource extends BaseResource implements Serializable {
     private EntityManager entityManager;
 
     @Autowired
-    private DataService dataService;
-
-    @Autowired
-    private DataBrowser dataBrowser;
-
-    @Autowired
     private CarbonDataLoader carbonDataLoader;
 
     @Autowired
@@ -78,7 +72,7 @@ public class DataUploadResource extends BaseResource implements Serializable {
     @Autowired
     private PathItemService pathItemService;
 
-    private Environment environment;
+    private DataBrowser dataBrowser;
     private FileItemFactory fileItemFactory;
 
     public DataUploadResource() {
@@ -92,7 +86,7 @@ public class DataUploadResource extends BaseResource implements Serializable {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        environment = EnvironmentService.getEnvironment();
+        dataBrowser = getDataBrowser();
         dataBrowser.setDataCategoryUid(request.getResourceRef().getQueryAsForm().getFirstValue("categoryUid"));
         DiskFileItemFactory diskFileItemFactory = new DiskFileItemFactory();
         diskFileItemFactory.setSizeThreshold(SIZE_THRESHOLD);

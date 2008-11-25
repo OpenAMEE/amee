@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ import com.jellymold.kiwi.auth.AuthService;
 import com.jellymold.kiwi.ResourceActions;
 import com.jellymold.kiwi.environment.EnvironmentService;
 
-@Service
+@Component("dataBrowser")
 @Scope("prototype")
 public class DataBrowser extends BaseBrowser {
 
@@ -46,17 +47,20 @@ public class DataBrowser extends BaseBrowser {
     @Autowired
     private DefinitionService definitionService;
 
+    @Autowired
+    protected DataService dataService;
+
     // DataCategories
-    private String dataCategoryUid = null;
     private DataCategory dataCategory = null;
+    private String dataCategoryUid = null;
     private ResourceActions dataCategoryActions = new ResourceActions("dataCategory");
 
     // upload
     private Boolean allowDataUpload = null;
 
     // DataItems
-    private String dataItemUid = null;
     private DataItem dataItem = null;
+    private String dataItemUid = null;
     private ResourceActions dataItemActions = new ResourceActions("dataItem");
 
     // ItemValues

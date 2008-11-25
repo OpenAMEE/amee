@@ -23,6 +23,7 @@ import com.jellymold.kiwi.ResourceActions;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.BaseBrowser;
+import gc.carbon.data.DataService;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.Profile;
@@ -37,11 +38,14 @@ import org.springframework.stereotype.Component;
 import java.util.Calendar;
 import java.util.Date;
 
-@Component
+@Component("profileBrowser")
 @Scope("prototype")
 public class ProfileBrowser extends BaseBrowser {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    protected DataService dataService;
 
     @Autowired
     private ProfileService profileService;
@@ -74,9 +78,6 @@ public class ProfileBrowser extends BaseBrowser {
     public ProfileBrowser() {
         super();
         profile = (Profile) ThreadBeanHolder.get("profile");
-        dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategory");
-        profileItem = (ProfileItem) ThreadBeanHolder.get("profileItem");
-        profileItemValue = (ItemValue) ThreadBeanHolder.get("profileItemValue");
     }
 
     // General

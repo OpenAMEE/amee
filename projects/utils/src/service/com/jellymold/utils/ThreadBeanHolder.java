@@ -21,4 +21,8 @@ public abstract class ThreadBeanHolder {
         }
         BEAN_HOLDER.get().put(name, obj);
     }
+
+    public static void clear() {
+        BEAN_HOLDER.set(null);
+    }
 }

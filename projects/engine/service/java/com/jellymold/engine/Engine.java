@@ -6,6 +6,7 @@ import com.jellymold.kiwi.auth.GuestFilter;
 import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.plum.admin.FreeMarkerConfigurationFilter;
 import com.jellymold.utils.cache.CacheHelper;
+import com.jellymold.utils.ThreadBeanHolderFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Component;
@@ -199,6 +200,7 @@ public class Engine implements WrapperListener, Serializable {
         // create sequential list of Filters
         List<Filter> filters = new ArrayList<Filter>();
         // add standard Filters
+        filters.add(new ThreadBeanHolderFilter());
         filters.add(new SpringFilter(engineApplication, springController, springContext));
         filters.add(new SiteFilter(engineApplication, engineApplication.getName()));
         filters.add(new FreeMarkerConfigurationFilter(engineApplication));

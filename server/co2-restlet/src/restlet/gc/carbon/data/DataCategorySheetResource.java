@@ -20,8 +20,6 @@
 package gc.carbon.data;
 
 import com.jellymold.sheet.Sheet;
-import com.jellymold.utils.BaseResource;
-import gc.carbon.domain.data.DataCategory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Context;
@@ -34,6 +32,8 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.util.Map;
 
+import gc.carbon.BaseResource;
+
 // TODO: set content type to CSV 
 
 @Component
@@ -43,13 +43,9 @@ public class DataCategorySheetResource extends BaseResource implements Serializa
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DataService dataService;
-
-    @Autowired
-    private DataBrowser dataBrowser;
-
-    @Autowired
     private DataSheetService dataSheetService;
+
+    private DataBrowser dataBrowser;
 
     public DataCategorySheetResource() {
         super();
@@ -62,6 +58,7 @@ public class DataCategorySheetResource extends BaseResource implements Serializa
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        dataBrowser = getDataBrowser();
         dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
     }
 

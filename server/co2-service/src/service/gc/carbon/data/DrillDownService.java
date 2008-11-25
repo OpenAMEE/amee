@@ -53,6 +53,8 @@ public class DrillDownService implements Serializable {
         List<Choice> choiceList = new ArrayList<Choice>();
         Sheet sheet = dataSheetService.getSheet(dataCategory);
         ItemDefinition itemDefinition = dataCategory.getItemDefinition();
+        Iterator<Choice> iterator;
+        Choice choice;
 
         // will only have sheet if itemDefinition was avaialable for this dataCategory
         if (sheet != null) {
@@ -65,22 +67,24 @@ public class DrillDownService implements Serializable {
                 // obtain drill down choices and selections
                 List<Choice> drillDownChoices = itemDefinition.getDrillDownChoices();
                 // re-order selection list to match choices
-                for (Choice choice : drillDownChoices) {
-                    int selectionIndex = selections.indexOf(choice);
+                for (Choice c : drillDownChoices) {
+                    int selectionIndex = selections.indexOf(c);
                     if (selectionIndex >= 0) {
                         selections.add(selections.remove(selectionIndex));
                     }
                 }
                 // remove selections not in choices
-                for (Choice selection : selections) {
-                    if (!drillDownChoices.contains(selection)) {
-                        selections.remove(selection);
+                iterator = selections.iterator();
+                while (iterator.hasNext()) {
+                    choice = iterator.next();
+                    if (!drillDownChoices.contains(choice)) {
+                        iterator.remove();
                     }
                 }
                 // remove drill down choices that have been selected
-                Iterator<Choice> iterator = drillDownChoices.iterator();
+                iterator = drillDownChoices.iterator();
                 while (iterator.hasNext()) {
-                    Choice choice = iterator.next();
+                    choice = iterator.next();
                     if (selections.contains(choice)) {
                         iterator.remove();
                     }

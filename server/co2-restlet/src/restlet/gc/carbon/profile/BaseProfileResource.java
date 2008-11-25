@@ -54,8 +54,6 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
 
     public abstract ProfileSheetService getProfileSheetService();
 
-    public abstract PathItem getPathItem();
-
     public abstract Pager getPager();
 
     public abstract ProfileService getProfileService();

@@ -1,34 +1,33 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package gc.carbon.data;
 
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
-import com.jellymold.utils.BaseResource;
-import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
+import gc.carbon.BaseResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -38,11 +37,11 @@ import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -63,15 +62,13 @@ public class DataItemResource extends BaseResource implements Serializable {
     private Calculator calculator;
 
     @Autowired
-    private DataBrowser dataBrowser;
-
-    @Autowired
     private DataSheetService dataSheetService;
 
     @Autowired
     private PathItemService pathItemService;
 
     private PathItem pathItem;
+    private DataBrowser dataBrowser;
     private List<Choice> parameters = new ArrayList<Choice>();
 
     public DataItemResource() {
@@ -86,7 +83,8 @@ public class DataItemResource extends BaseResource implements Serializable {
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         Form query = request.getResourceRef().getQueryAsForm();
-        pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
+        pathItem = getPathItem();
+        dataBrowser = getDataBrowser();
         dataBrowser.setDataItemUid(request.getAttributes().get("itemUid").toString());
         for (String key : query.getNames()) {
             parameters.add(new Choice(key, query.getValues(key)));

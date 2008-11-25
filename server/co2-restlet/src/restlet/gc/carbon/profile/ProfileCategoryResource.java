@@ -99,7 +99,7 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
         super.init(context, request, response);
         Form form = request.getResourceRef().getQueryAsForm();
         environment = EnvironmentService.getEnvironment();
-        pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
+        pathItem = getPathItem();
         profileBrowser = getProfileBrowser();
         profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
         profileBrowser.setStartDate(form.getFirstValue("startDate"));
@@ -287,10 +287,6 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
 
     public ProfileItem getProfileItem() {
         return profileBrowser.getProfileItem();
-    }
-
-    public PathItem getPathItem() {
-        return pathItem;
     }
 
     public Pager getPager() {

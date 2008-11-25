@@ -74,7 +74,7 @@ public class ProfileItemValueResource extends BaseResource implements Serializab
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
+        pathItem = getPathItem();
         profileBrowser = getProfileBrowser();
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());

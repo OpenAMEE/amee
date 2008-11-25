@@ -76,15 +76,13 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     private DataService dataService;
 
     @Autowired
-    private DataBrowser dataBrowser;
-
-    @Autowired
     private DataSheetService dataSheetService;
 
     @Autowired
     private PathItemService pathItemService;
 
     private PathItem pathItem;
+    private DataBrowser dataBrowser;
     private DataCategory dataCategory;
     private List<DataCategory> dataCategories;
     private DataItem dataItem;
@@ -102,7 +100,8 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         Form form = request.getResourceRef().getQueryAsForm();
-        pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
+        dataBrowser = getDataBrowser();
+        pathItem = getPathItem();
         dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         dataBrowser.setStartDate(form.getFirstValue("startDate"));
         dataBrowser.setEndDate(form.getFirstValue("endDate"));

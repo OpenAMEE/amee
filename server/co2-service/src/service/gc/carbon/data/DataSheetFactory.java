@@ -58,7 +58,7 @@ public class DataSheetFactory implements CacheableFactory {
         ItemValue itemValue;
         Sheet sheet = null;
         ItemDefinition itemDefinition;
-        DataCategory dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategory");
+        DataCategory dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
         StartEndDate startDate = new StartEndDate(new Date());
         StartEndDate endDate = null;
 
@@ -135,7 +135,7 @@ public class DataSheetFactory implements CacheableFactory {
         }
         return key.toString();
 */
-        DataCategory dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategory");
+        DataCategory dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
         return "DataSheet_" + dataCategory.getUid();
     }
 

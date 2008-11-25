@@ -50,7 +50,7 @@ public class ProfileSheetService implements Serializable {
     }
 
     public Sheet getSheet(ProfileBrowser browser) {
-        ThreadBeanHolder.set("profileBrowser", browser);
+        ThreadBeanHolder.set("profileBrowserForFactory", browser);
         return (Sheet) cacheHelper.getCacheable(profileSheetFactory);
     }
 

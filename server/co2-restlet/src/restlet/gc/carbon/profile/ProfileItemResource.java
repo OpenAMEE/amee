@@ -98,7 +98,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         environment = EnvironmentService.getEnvironment();
-        pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
+        pathItem = getPathItem();
         profileBrowser = getProfileBrowser();
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
@@ -265,10 +265,6 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     public ProfileSheetService getProfileSheetService() {
         return profileSheetService;
-    }
-
-    public PathItem getPathItem() {
-        return pathItem;
     }
 
     public Pager getPager() {
