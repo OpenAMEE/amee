@@ -1,6 +1,6 @@
 <#include 'profileCommon.ftl'>
 <#include '/includes/before_content.ftl'>
-<script src="/profiles/js/profile_service.js" type="text/javascript"></script>
+<script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 <script type="text/javascript">
 function profileCategoryLoaded() {
   $("totalAmountPerMonth").innerHTML = this.resource.totalAmountPerMonth;

@@ -74,17 +74,19 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
     @Column(name = "NAME", nullable = false)
     private String name = "";
 
+    @Column(name = "START_DATE")
+    @Index(name = "START_DATE_IND")
+    protected Date startDate = Calendar.getInstance().getTime();
+
+    @Column(name = "END_DATE")
+    @Index(name = "END_DATE_IND")
+    protected Date endDate;
+
     @Column(name = "CREATED")
     private Date created = Calendar.getInstance().getTime();
 
     @Column(name = "MODIFIED")
     private Date modified = Calendar.getInstance().getTime();
-    @Column(name = "START_DATE")
-    @Index(name = "START_DATE_IND")
-    protected Date startDate = Calendar.getInstance().getTime();
-    @Column(name = "END_DATE")
-    @Index(name = "END_DATE_IND")
-    protected Date endDate;
 
     public Item() {
         super();
