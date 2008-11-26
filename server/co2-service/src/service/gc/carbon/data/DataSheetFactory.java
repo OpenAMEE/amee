@@ -86,7 +86,9 @@ public class DataSheetFactory implements CacheableFactory {
 
             // create rows and cells
             columns = sheet.getColumns();
-            for (DataItem dataItem : dataService.getDataItems(dataCategory, startDate, endDate)) {
+
+            // TODO - Will need to switch between OnlyActive - for DC GET and EarliestActive for Finder - tho need to ask AC this
+            for (DataItem dataItem : new OnlyActiveDataService(dataService).getDataItems(dataCategory, startDate, endDate)) {
                 itemValuesMap = dataItem.getItemValuesMap();
                 row = new Row(sheet, dataItem.getUid());
                 row.setLabel("DataItem");

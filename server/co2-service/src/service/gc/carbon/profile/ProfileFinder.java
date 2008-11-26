@@ -38,9 +38,7 @@ public class ProfileFinder implements Serializable {
     @Autowired
     private ProfileService profileService;
 
-    @Autowired
     private DataFinder dataFinder;
-
     private ProfileItem profileItem;
 
     public ProfileFinder() {
@@ -113,6 +111,10 @@ public class ProfileFinder implements Serializable {
             }
         }
         return profileItems;
+    }
+
+    public void setDataFinder(DataFinder dataFinder) {
+        this.dataFinder = dataFinder;
     }
 
     public void setProfileItem(ProfileItem profileItem) {

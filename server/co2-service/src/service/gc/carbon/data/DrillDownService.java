@@ -34,6 +34,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Date;
 
 @Service
 public class DrillDownService implements Serializable {
@@ -43,15 +44,15 @@ public class DrillDownService implements Serializable {
     @Autowired
     private DataSheetService dataSheetService;
 
-    public Choices getChoices(DataCategory dataCategory) {
-        return getChoices(dataCategory, new ArrayList<Choice>());
-    }
 
-    public Choices getChoices(DataCategory dataCategory, List<Choice> selections) {
-
+    public Choices getChoices(DataCategory dataCategory, List<Choice> selections, Date startDate, Date endDate) {
         String name = "uid";
         List<Choice> choiceList = new ArrayList<Choice>();
-        Sheet sheet = dataSheetService.getSheet(dataCategory);
+        DataBrowser browser = new DataBrowser();
+        browser.setDataCategory(dataCategory);
+        browser.setStartDate(startDate);
+        browser.setEndDate(endDate);
+        Sheet sheet = dataSheetService.getSheet(browser);
         ItemDefinition itemDefinition = dataCategory.getItemDefinition();
         Iterator<Choice> iterator;
         Choice choice;
@@ -112,5 +113,13 @@ public class DrillDownService implements Serializable {
             // wrap result in Choices object
             return new Choices(name, choiceList);
         }
+    }
+
+    public Choices getChoices(DataCategory dataCategory) {
+        return getChoices(dataCategory, new ArrayList<Choice>());
+    }
+
+    public Choices getChoices(DataCategory dataCategory, List<Choice> selections) {
+        return getChoices(dataCategory, selections, new Date(), null);
     }
 }

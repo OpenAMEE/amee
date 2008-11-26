@@ -103,6 +103,10 @@ public class DataBrowser extends BaseBrowser {
         return dataCategory;
     }
 
+    public void setDataCategory(DataCategory dataCategory) {
+        this.dataCategory = dataCategory;    
+    }
+
     public ResourceActions getDataCategoryActions() {
         return dataCategoryActions;
     }

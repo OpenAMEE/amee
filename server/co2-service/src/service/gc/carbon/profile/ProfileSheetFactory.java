@@ -78,7 +78,7 @@ public class ProfileSheetFactory implements CacheableFactory {
             boolean isV2 = !profileBrowser.isAPIVersionOne();
             if (isV2) {
 
-                ProfileService decoratedProfileService = profileService;
+                ProfileService decoratedProfileService = new OnlyActiveProfileService(profileService);
 
                 if (profileBrowser.isProRataRequest()) {
                     decoratedProfileService = new ProRataProfileService(profileService);

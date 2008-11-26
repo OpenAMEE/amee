@@ -46,7 +46,11 @@ public class DataSheetService implements Serializable {
     }
 
     public Sheet getSheet(DataBrowser browser) {
-        return getSheet(browser.getDataCategory());
+        ThreadBeanHolder.set("dataCategoryForFactory", browser.getDataCategory());
+        Sheet sheet = (Sheet) cacheHelper.getCacheable(dataSheetFactory);
+        // TODO - temporary invalidation to aid testing
+        removeSheet(browser.getDataCategory());
+        return sheet;
     }
 
     public Sheet getSheet(DataCategory dataCategory) {

@@ -37,8 +37,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Service
+@Scope("prototype")
 public class DataFinder implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -51,6 +53,9 @@ public class DataFinder implements Serializable {
 
     @Autowired
     private DrillDownService drillDownService;
+
+    private Date startDate;
+    private Date endDate;
 
     public DataFinder() {
         super();
@@ -74,7 +79,7 @@ public class DataFinder implements Serializable {
         Choices choices;
         DataCategory dataCategory = getDataCategory(path);
         if (dataCategory != null) {
-            choices = drillDownService.getChoices(dataCategory, Choice.parseChoices(drillDown));
+            choices = drillDownService.getChoices(dataCategory, Choice.parseChoices(drillDown), startDate, endDate);
             if (choices.getName().equals("uid") && (choices.getChoices().size() > 0)) {
                 dataItem = dataService.getDataItem(dataCategory, choices.getChoices().get(0).getValue());
             }
@@ -94,5 +99,22 @@ public class DataFinder implements Serializable {
             }
         }
         return dataCategory;
+    }
+
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 }

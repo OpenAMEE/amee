@@ -112,6 +112,8 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
                 if (containsProfileDate())
                     return false;
 
+                if (proRateModeHasNoEndDate())
+                    return false;
             } else {
 
                 if (containsValidFromOrEnd())
@@ -122,6 +124,12 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
 
         }
         return true;
+    }
+
+
+    private boolean proRateModeHasNoEndDate() {
+        return getForm().getFirstValue("mode","null").equals("prorata")
+                   && !getForm().getNames().contains("endDate");
     }
 
     private boolean containsCalendarParams() {

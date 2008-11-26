@@ -60,28 +60,32 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
         if (alreadySetUp)
             return;
 
+        initDB();
+
         startDate = new DateTime();
         duration = Days.days(15);
         endDate = startDate.plus(duration);
 
-        before_and_after = create(startDate.minusDays(1),endDate.plusDays(1));
-        before_and_inside = create(startDate.minusDays(1),endDate.minusDays(1));
-        inside_and_after = create(startDate.plusDays(1),endDate.plusDays(1));
-        outside_and_before = create(startDate.minusDays(2),startDate.minusDays(1));
-        inside = create(startDate.plusDays(2),endDate.minusDays(2));
-        after_and_outside = create(endDate.plusDays(1),endDate.plusDays(2));
-        before_and_ongoing = create(startDate.minusDays(1),null);
-        inside_and_ongoing = create(startDate.plusDays(1),null);
-        after_and_ongoing = create(endDate.plusDays(1),null);
+        before_and_after = create(startDate.minusDays(1),endDate.plusDays(1), null);
+        before_and_inside = create(startDate.minusDays(1),endDate.minusDays(1), null);
+        inside_and_after = create(startDate.plusDays(1),endDate.plusDays(1), null);
+        outside_and_before = create(startDate.minusDays(2),startDate.minusDays(1), null);
+        inside = create(startDate.plusDays(2),endDate.minusDays(2), null);
+        after_and_outside = create(endDate.plusDays(1),endDate.plusDays(2), null);
+        before_and_ongoing = create(startDate.minusDays(1),null, null);
+        inside_and_ongoing = create(startDate.plusDays(1),null, null);
+        after_and_ongoing = create(endDate.plusDays(1),null, null);
 
         alreadySetUp = true;
     }
 
-    private String create(DateTime startDate, DateTime endDate) throws Exception {
+    private String create(DateTime startDate, DateTime endDate, String name) throws Exception {
         Form data = new Form();
         data.add("startDate",startDate.toString(fmt));
         if (endDate != null)
             data.add("endDate",endDate.toString(fmt));
+        if (name != null)
+            data.add("name", name);
         data.add("distance","1000");
         data.add("v","2.0");
         return createProfileItem(data);
@@ -172,4 +176,60 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
         assertXpathEvaluatesTo(startDate.toString(fmt),"//StartDate", doc);
         assertXpathEvaluatesTo("","//EndDate", doc);
     }
+
+    @Test
+    public void testSupercededNotReturned() throws Exception {
+
+        String before_and_ongoing_named = create(startDate.minusDays(2), null, "test");
+        String before_and_ongoing2_named = create(startDate.minusDays(1), null, "test");
+        String on_and_ongoing_named = create(startDate, null, "test");
+        String inside_and_ongoing_named = create(startDate.plusDays(1), null, "test");
+        String inside_and_ongoing2_named = create(startDate.plusDays(2), null, "test");
+
+        System.out.println("before_and_ongoing_named  : " + before_and_ongoing_named);
+        System.out.println("before_and_ongoing1_named : " + before_and_ongoing2_named);
+        System.out.println("on_and_ongoing_named      : " + on_and_ongoing_named);
+        System.out.println("inside_and_ongoing_named  : " + inside_and_ongoing_named);
+        System.out.println("inside_and_ongoing2_named : " + inside_and_ongoing2_named);
+
+        getReference().setQuery("v=2.0&startDate="+startDate.toString(fmt));
+        DomRepresentation rep = doGet().getEntityAsDom();
+        Document doc = rep.getDocument();
+        assertXpathNotExists("//ProfileItem[@uid='" + before_and_ongoing_named + "']", doc);
+        assertXpathNotExists("//ProfileItem[@uid='" + before_and_ongoing2_named + "']", doc);
+        assertXpathExists("//ProfileItem[@uid='" + on_and_ongoing_named + "']", doc);
+        assertXpathExists("//ProfileItem[@uid='" + inside_and_ongoing_named + "']", doc);
+        assertXpathExists("//ProfileItem[@uid='" + inside_and_ongoing2_named + "']", doc);
+    }
+
+
+/*
+    @Test
+    public void testProRata() throws Exception {
+
+        String bounded_and_perMonth = create(startDate.plusDays(1),endDate.minusDays(1), null);
+        String open_and_perMonth = create(startDate.plusDays(1),null, null);
+        String bounded_and_perMonth_amount_xpath = "//ProfileItem[@uid='" + bounded_and_perMonth + "']/amount";
+        String open_and_perMonth_amount_xpath = "//ProfileItem[@uid='" + open_and_perMonth + "']/amount";
+
+        // A prorata request must include an endDate
+        getReference().setQuery("v=2.0&mode=prorata&startDate="+startDate.toString(fmt));
+        Status status = doGet().getStatus();
+        assertEquals("Should be Bad Request",400,status.getCode());
+
+        // Validate correct prorata logic
+        getReference().setQuery("v=2.0&startDate="+startDate.toString(fmt) + "&endDate=" + endDate.toString(fmt));
+        DomRepresentation rep = doGet().getEntityAsDom();
+        String bounded_and_perMonth_amount = XPathFactory.newInstance().newXPath().evaluate(bounded_and_perMonth_amount_xpath,rep.getStream());
+        String open_and_perMonth_amount = XPathFactory.newInstance().newXPath().evaluate(open_and_perMonth_amount_xpath,rep.getStream());
+
+        getReference().setQuery("v=2.0&mode=prorata&startDate="+startDate.toString(fmt) + "&endDate=" + endDate.toString(fmt));
+        rep = doGet().getEntityAsDom();
+        Document doc = rep.getDocument();
+
+        assertXpathEvaluatesTo(bounded_and_perMonth_amount, bounded_and_perMonth_amount_xpath, doc);
+        assertXpathEvaluatesTo(open_and_perMonth_amount, open_and_perMonth_amount_xpath, doc);
+
+    }
+*/
 }

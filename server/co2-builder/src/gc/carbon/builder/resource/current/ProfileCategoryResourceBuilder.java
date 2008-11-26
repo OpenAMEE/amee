@@ -51,12 +51,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         // add objects
         obj.put("path", resource.getFullPath());
-        obj.put("startDate", resource.getStartDate());
-        if (resource.getEndDate() != null) {
-            obj.put("endDate", resource.getEndDate());
-        } else {
-            obj.put("endDate", "");
-        }
+
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
             obj.put("profile", resource.getProfile().getIdentityJSONObject());
@@ -129,16 +124,6 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));
 
-        // add profile date
-        //element.appendChild(resource.getDateTimeBrowser().getProfileDate().toXML(document));
-                // add profile date
-        element.appendChild(APIUtils.getElement(document, "StartDate",resource.getStartDate().toString()));
-        if (resource.getEndDate() != null) {
-            element.appendChild(APIUtils.getElement(document, "EndDate",resource.getEndDate().toString()));
-        } else {
-            element.appendChild(APIUtils.getElement(document, "EndDate",""));
-        }
-
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
             element.appendChild(resource.getProfile().getIdentityElement(document));
@@ -157,8 +142,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
             // add Profile Categories via pathItem
             Element dataCategoriesElement = document.createElement("ProfileCategories");
-            for (APIObject pi : resource.getChildrenByType("DC")) {
-                dataCategoriesElement.appendChild(pi.getElement(document));
+            for (APIObject dc : resource.getChildrenByType("DC")) {
+                dataCategoriesElement.appendChild(dc.getElement(document));
             }
             childrenElement.appendChild(dataCategoriesElement);
 

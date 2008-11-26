@@ -54,23 +54,28 @@ public class Calculator implements BeanFactoryAware, Serializable {
     @Autowired
     DataService dataService;
 
-    @Autowired
-    DataFinder dataFinder;
-
     private BeanFactory beanFactory;
 
     public BigDecimal calculate(ProfileItem profileItem) {
         log.debug("starting calculator");
-        ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
+        DataFinder dataFinder;
+        ProfileFinder profileFinder;
         Map<String, Object> values;
         BigDecimal amount;
         if (!profileItem.isEnd()) {
             ItemDefinition itemDefinition = profileItem.getItemDefinition();
             Algorithm algorithm = getAlgorithm(itemDefinition, "perMonth");
             if (algorithm != null) {
-                // setup values list
+                // get DataFinder and ProfileFinder beans
+                dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
+                profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
+                profileFinder.setDataFinder(dataFinder);
+                // setup values list and initialise DataFinder and ProfileFinder
                 values = getValues(profileItem);
                 profileFinder.setProfileItem(profileItem);
+                dataFinder.setStartDate(profileItem.getStartDate());
+                dataFinder.setEndDate(profileItem.getEndDate());
+                dataFinder.getDataItemValue("home/energy/quantity", "type=diesel", "kgCO2PerLitre");
                 values.put("profileFinder", profileFinder);
                 values.put("dataFinder", dataFinder);
                 // get the new amount via algorithm and values
@@ -95,12 +100,17 @@ public class Calculator implements BeanFactoryAware, Serializable {
 
     public BigDecimal calculate(DataItem dataItem, Choices userValueChoices) {
         log.debug("starting calculator");
-        ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
+        DataFinder dataFinder;
+        ProfileFinder profileFinder;
         Map<String, Object> values;
         BigDecimal amount;
         ItemDefinition itemDefinition = dataItem.getItemDefinition();
         Algorithm algorithm = getAlgorithm(itemDefinition, "perMonth");
         if (algorithm != null) {
+            // get DataFinder and ProfileFinder beans
+            dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
+            profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
+            profileFinder.setDataFinder(dataFinder);
             // get the new amount via algorithm and values
             values = getValues(dataItem, userValueChoices);
             values.put("profileFinder", profileFinder);
