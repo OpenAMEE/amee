@@ -1,31 +1,22 @@
+Fully updated on 26/11/2008.
 Library, Version
 backport-util-concurrent, Java60-3.1
-commons-beanutils, 1.7.0
 commons-cli, 1.1
-commons-codec, 1.3
-commons-httpclient, 3.1
-commons-io, 1.2
-commons-lang, 2.3
-commons-net, 1.4.1
-ehcache, 1.3.0
-freemarker, 2.3.9
-jai,1.2
-janino,2.5.10
+ehcache, 1.5.0
+freemarker, 2.3.14
+janino,2.5.15
 javacsv, 2.0
 javassist, 3.4.ga
-jcharset, ?
-jdom, 1.0
-jetty, 6.1.7
-jfreechart, 1.0.8
-joda-time, 1.5.2
+jdom, 1.1
+jetty, 6.1.14
+joda-time, 1.6
 jscience,4.3.1
-json, 2.0
-jts,1.8
-mvel,1.3.1-java1.4
-mysql-connector-java, 5.1.0
-quartz, 1.5.2
-restlet, 1.1 M4
-spring, 2.5.2
-testnt, 4.5.1-jdk15
+memcached, ?
+mysql-connector-java, 5.1.7
+quartz, 1.6.3
+restlet, 1.1.1 (testing)
+rhino, 1.7R1
+spring, 2.5.6
+testng, 5.8-jdk15
 wrapper, macosx-universal-32-3.2.3
 xmlutil, 1.2
