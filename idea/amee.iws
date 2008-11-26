@@ -151,17 +151,17 @@
     </navigator>
   </component>
   <component name="PropertiesComponent">
-    <property name="project.structure.proportion" value="0.15" />
     <property name="GoToClass.includeJavaFiles" value="false" />
-    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="FileHistory.git4idea.providers.GitHistoryProvider_treeWidth0" value="240" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="FileHistory.git4idea.providers.GitHistoryProvider_flatOrder0" value="0" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
     <property name="FileHistory.git4idea.providers.GitHistoryProvider_treeOrder2" value="2" />
-    <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="GoToClass.includeLibraries" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="FileHistory.git4idea.providers.GitHistoryProvider_treeWidth1" value="270" />
@@ -179,10 +179,10 @@
     <property name="FileHistory.git4idea.providers.GitHistoryProvider_treeOrder1" value="1" />
     <property name="FileHistory.git4idea.providers.GitHistoryProvider_flatOrder2" value="2" />
     <property name="FileHistory.git4idea.providers.GitHistoryProvider_treeOrder3" value="3" />
-    <property name="FileHistory.git4idea.providers.GitHistoryProvider_treeWidth3" value="1031" />
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
-    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
+    <property name="FileHistory.git4idea.providers.GitHistoryProvider_treeWidth3" value="1031" />
     <property name="FileHistory.git4idea.providers.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
     <property name="FileHistory.git4idea.providers.GitHistoryProvider_treeWidth2" value="247" />
     <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
     <property name="FileHistory.git4idea.providers.GitHistoryProvider_flatWidth2" value="246" />
