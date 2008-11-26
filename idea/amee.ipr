@@ -337,7 +337,6 @@
     <library name="hibernate">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/../lib/spring/hibernate/hibernate-commons-annotations.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../lib/spring/hibernate/jboss-archive-browsing.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/spring/hibernate/hibernate-entitymanager.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/spring/hibernate/hibernate3.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/spring/hibernate/hibernate-annotations.jar!/" />
@@ -390,7 +389,7 @@
     </library>
     <library name="commons-cli">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../lib/commons/commons-cli.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/commons-cli/commons-cli.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -418,10 +417,8 @@
     </library>
     <library name="jetty">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../lib/jetty/jetty-java5-threadpool.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/jetty/jetty.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/jetty/jetty-util.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../lib/jetty/jetty-sslengine.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/jetty/jetty-ajp.jar!/" />
       </CLASSES>
       <JAVADOC />
@@ -488,24 +485,6 @@
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/../lib/jscience/jscience-src.zip!/jscience-4.3/src" />
       </SOURCES>
-    </library>
-    <library name="jts">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../lib/jts/jts.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../lib/jts/jtsio.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/../lib/jts/jts-io-src.zip!/src" />
-        <root url="jar://$PROJECT_DIR$/../lib/jts/jts-src.zip!/src" />
-      </SOURCES>
-    </library>
-    <library name="mvel">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../lib/mvel/mvel.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
     </library>
     <library name="janino">
       <CLASSES>

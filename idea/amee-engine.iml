@@ -65,9 +65,7 @@
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="jetty" level="project" />
     <orderEntry type="library" name="jscience" level="project" />
-    <orderEntry type="library" name="jts" level="project" />
     <orderEntry type="library" name="memcached" level="project" />
-    <orderEntry type="library" name="mvel" level="project" />
     <orderEntry type="library" name="mysql-connector-java" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="spring" level="project" />
