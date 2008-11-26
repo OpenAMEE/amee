@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Scope("prototype")
 public class AppBrowser extends BaseBrowser {
 
-
     @Autowired
     AppService appService;
 

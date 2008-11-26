@@ -5,14 +5,11 @@ import com.jellymold.kiwi.auth.AuthFilter;
 import com.jellymold.kiwi.auth.GuestFilter;
 import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.plum.admin.FreeMarkerConfigurationFilter;
-import com.jellymold.utils.cache.CacheHelper;
 import com.jellymold.utils.ThreadBeanHolderFilter;
+import com.jellymold.utils.cache.CacheHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.restlet.Component;
-import org.restlet.Filter;
-import org.restlet.Restlet;
-import org.restlet.VirtualHost;
+import org.restlet.*;
 import org.restlet.data.Protocol;
 import org.restlet.ext.seam.SpringConnectorService;
 import org.restlet.ext.seam.SpringController;
@@ -107,21 +104,24 @@ public class Engine implements WrapperListener, Serializable {
         onStart();
         springController.end();
 
-        // create the Reslet container
+        // create the Restlet container and add Spring stuff
         container = new Component();
-
-        // add an HTTP server connector to the Restlet container
-        // TODO: some constants to extract here
-        container.getServers().add(Protocol.AJP, ajpPort);
-        container.getClients().add(Protocol.FILE);
         container.getContext().getAttributes().put("springContext", springContext);
         container.getContext().getAttributes().put("springController", springController);
-        container.getContext().getParameters().add("converter", "org.restlet.ext.seam.SpringServerConverter");
-        container.getContext().getParameters().add("minThreads", "" + minThreads); // default is 1
-        container.getContext().getParameters().add("maxThreads", "" + maxThreads); // default is 255
-        container.getContext().getParameters().add("threadMaxIdleTimeMs", "" + threadMaxIdleTimeMs); // default is 60000
+
+        // configure AJP server
+        Server ajpServer = container.getServers().add(Protocol.AJP, ajpPort);
+        ajpServer.getContext().getAttributes().put("springContext", springContext);
+        ajpServer.getContext().getAttributes().put("springController", springController);
+        ajpServer.getContext().getParameters().add("converter", "org.restlet.ext.seam.SpringServerConverter");
+        ajpServer.getContext().getParameters().add("minThreads", "" + minThreads); // default is 1
+        ajpServer.getContext().getParameters().add("maxThreads", "" + maxThreads); // default is 255
+        ajpServer.getContext().getParameters().add("threadMaxIdleTimeMs", "" + threadMaxIdleTimeMs); // default is 60000
         // more params here: http://www.restlet.org/documentation/1.0/ext/com/noelios/restlet/ext/jetty/JettyServerHelper
         // advice here: http://jetty.mortbay.org/jetty5/doc/optimization.html (what about Jetty 6?)
+
+        // configure file client
+        container.getClients().add(Protocol.FILE);
 
         // wrap VirtualHost creation in a Seam call
         springController.begin(true);

@@ -370,7 +370,16 @@
         <root url="jar://$PROJECT_DIR$/../lib/restlet/org.restlet.ext.spring.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.json_2.0" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.jetty_6.1" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.spring_2.5" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.net" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.fileupload_1.2" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.spring_2.5" />
+      </SOURCES>
     </library>
     <library name="ehcache">
       <CLASSES>

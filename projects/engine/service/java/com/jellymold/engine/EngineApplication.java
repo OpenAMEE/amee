@@ -27,12 +27,6 @@ public class EngineApplication extends Application {
         setName(name);
     }
 
-    private EngineApplication(Context parentContext) {
-        super(parentContext);
-        this.springContext = (ApplicationContext) parentContext.getAttributes().get("springContext");
-        this.springController = (SpringController) parentContext.getAttributes().get("springController");
-    }
-
     public EngineApplication(Context parentContext, String name) {
         super(parentContext);
         setName(name);
