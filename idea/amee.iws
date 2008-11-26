@@ -384,18 +384,18 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.14961496" sideWeight="0.6635071" order="3" side_tool="false" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22494432" sideWeight="0.37086093" order="0" side_tool="false" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22494432" sideWeight="0.5642384" order="0" side_tool="false" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5509934" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24972497" sideWeight="0.5592417" order="1" side_tool="false" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2794702" sideWeight="0.5" order="8" side_tool="false" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42649007" sideWeight="0.5" order="8" side_tool="false" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5507109" sideWeight="0.5" order="8" side_tool="false" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32985783" sideWeight="0.5" order="2" side_tool="false" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.61986756" sideWeight="0.5" order="4" side_tool="false" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4688742" sideWeight="0.5" order="4" side_tool="false" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32985783" sideWeight="0.5" order="8" side_tool="false" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34437087" sideWeight="0.5" order="8" side_tool="false" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
@@ -478,71 +478,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet/com/noelios/restlet/Engine.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="314" column="8" selection-start="10956" selection-end="10956" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet/com/noelios/restlet/http/HttpServerConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="13" selection-start="1930" selection-end="1930" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet/org/restlet/Application.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="210" column="55" selection-start="7269" selection-end="7269" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet/com/noelios/restlet/http/HttpCall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="178" column="28" selection-start="4970" selection-end="4970" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet/com/noelios/restlet/http/HttpClientCall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="426" column="66" selection-start="15657" selection-end="15657" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../projects/org.restlet.ext.seam/spring/src/org/restlet/ext/seam/SpringServerConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="0" selection-start="868" selection-end="868" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home/src.jar!/src/java/lang/reflect/Constructor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="496" column="13" selection-start="19507" selection-end="19507" vertical-scroll-proportion="0.42372882">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet/org/restlet/util/Helper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="23" selection-start="2620" selection-end="2620" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet/com/noelios/restlet/http/HttpServerHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="0" selection-start="3322" selection-end="3322" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet/org/restlet/Restlet.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="49" column="13" selection-start="1806" selection-end="1806" vertical-scroll-proportion="0.0">
@@ -590,6 +525,69 @@
     <entry file="jar:///System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home/src.jar!/src/java/net/PlainSocketImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/co2-domain/src/domain/gc/carbon/domain/UnitDefinition.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="13" selection-start="1444" selection-end="1444" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../projects/kiwi/domain/java/com/jellymold/kiwi/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="55" column="28" selection-start="1610" selection-end="1618" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/co2-engine/resources/META-INF/persistence.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="38" selection-start="1710" selection-end="1710" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/co2-engine/bin/update.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="53" selection-start="1828" selection-end="1839" vertical-scroll-proportion="0.78646934">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/co2-restlet/src/restlet/gc/carbon/data/DataFilter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="51" column="46" selection-start="1721" selection-end="1721" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/skins/profile.skin/profiles.ftl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="30" selection-start="998" selection-end="998" vertical-scroll-proportion="0.2072893">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/skins/profile.skin/profileItem.ftl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="79" selection-start="471" selection-end="471" vertical-scroll-proportion="0.3084112">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/co2-domain/src/domain/gc/carbon/domain/data/Item.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="108" column="8" selection-start="3583" selection-end="3583" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../server/co2-domain/src/domain/gc/carbon/domain/profile/ProfileItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="30" selection-start="1139" selection-end="1139" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>

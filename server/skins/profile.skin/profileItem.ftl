@@ -1,12 +1,15 @@
+<#-- TODO: date formatting -->
+<#-- TODO: check form fields match model -->
+
 <#include 'profileCommon.ftl'>
 <#include '/includes/before_content.ftl'>
 <h1>Profile Item</h1>
 <#include 'profileTrail.ftl'>
 <h2>Profile Item Details</h2>
 <p><#if profileItem.name != ''>Name: ${profileItem.name}<br/></#if>
-   kgCO2 pcm: ${profileItem.amountPerMonth}<br/>
-   Valid From: ${profileItem.validFromFormatted}<br/>
-   End: <#if profileItem.end>Yes<#else>No</#if><br/>
+   Amount: ${profileItem.amount}<br/>
+   Start Date: ${profileItem.startDate?datetime}<br/>
+   End Date: <#if profileItem.endDate??>${profileItem.endDate?datetime}<#else>None</#if><br/>
    Full Path: ${browser.fullPath}<br/>
    Data Item Label: ${profileItem.dataItem.label}<br/>
    Item Definition: ${profileItem.itemDefinition.name}<br/>
@@ -34,9 +37,9 @@
 <tr>
   <td>Valid From</td>
   <#if browser.profileItemActions.allowModify>
-    <td><input name='validFrom' value='${profileItem.validFromFormatted}' type='text' size='10'/> (yyyyMMdd)<br/>
+    <td><input name='startDate' value='${profileItem.startDate?datetime}' type='text' size='10'/> (yyyyMMdd)<br/>
   <#else>
-    <td>${profileItem.validFromFormatted}</td>
+    <td>${profileItem.startDate?datetime}</td>
   </#if>
 </tr>
 <tr>
