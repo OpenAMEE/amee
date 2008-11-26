@@ -27,8 +27,8 @@ import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.restlet.ext.seam.SpringController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -50,6 +50,9 @@ public class DataService implements Serializable {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private SpringController springController;
 
     @Autowired
     private DataSheetService dataSheetService;
@@ -377,8 +380,7 @@ public class DataService implements Serializable {
                 .getResultList();
         if (itemValueDefinitions.size() > 0) {
             // ensure transaction has been started
-            // TODO: Springify
-            // SeamController.getInstance().beginTransaction();
+            springController.beginTransaction();
             // create missing ItemValues
             for (ItemValueDefinition ivd : itemValueDefinitions) {
                 entityManager.persist(new ItemValue(ivd, dataItem, ""));

@@ -25,15 +25,14 @@ import com.jellymold.kiwi.User;
 import com.jellymold.kiwi.auth.AuthService;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.Pager;
-import gc.carbon.data.DataService;
 import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.restlet.ext.seam.SpringController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -61,6 +60,9 @@ public class ProfileService implements Serializable {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private SpringController springController;
 
     @Autowired
     private PathItemService pathItemService;
@@ -505,8 +507,7 @@ public class ProfileService implements Serializable {
                 .getResultList();
         if (itemValueDefinitions.size() > 0) {
             // ensure transaction has been started
-            // TODO: Springify
-            // SeamController.getInstance().beginTransaction();
+            springController.beginTransaction();
             // create missing ItemValues
             for (ItemValueDefinition ivd : itemValueDefinitions) {
                 // start default value with value from ItemValueDefinition
