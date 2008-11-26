@@ -108,6 +108,7 @@ public class ProfileItem extends Item implements BuildableProfileItem {
     public ProfileItem getCopy() {
         ProfileItem profileItem = new ProfileItem(getProfile(), getDataCategory(), getDataItem());
         profileItem.setStartDate(getStartDate());
+        profileItem.setEndDate(getEndDate());
         profileItem.setEnd(isEnd());
         profileItem.setAmount(getAmount());
         profileItem.setName(getName());

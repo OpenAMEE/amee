@@ -70,6 +70,11 @@ public class Calculator implements Serializable {
                 // setup values list
                 values = getValues(profileItem);
                 profileFinder.setProfileItem(profileItem);
+                dataFinder.setStartDate(profileItem.getStartDate());
+                dataFinder.setEndDate(profileItem.getEndDate());
+
+                dataFinder.getDataItemValue("home/energy/quantity", "type=diesel", "kgCO2PerLitre");
+
                 values.put("profileFinder", profileFinder);
                 values.put("dataFinder", dataFinder);
                 // get the new amount via algorithm and values

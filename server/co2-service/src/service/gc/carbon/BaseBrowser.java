@@ -10,6 +10,7 @@ import org.restlet.data.Form;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 
 public abstract class BaseBrowser implements Serializable {
 
@@ -44,9 +45,19 @@ public abstract class BaseBrowser implements Serializable {
         return endDate;
     }
 
+    public void setEndDate(Date endDate) {
+        if (endDate != null)
+            this.endDate = new StartEndDate(endDate);
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = new StartEndDate(startDate);    
+    }
+
     public void setAPIVersion(String v) {
         apiVersion = v;
     }
+
 
     public boolean isAPIVersionOne() {
         return apiVersion == null || apiVersion.equals("1.0");

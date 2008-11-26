@@ -3,14 +3,13 @@ package gc.carbon.test.profile;
 import org.testng.annotations.Test;
 import org.restlet.data.Status;
 import org.restlet.data.Form;
-import org.restlet.data.Response;
 import org.restlet.resource.DomRepresentation;
-import org.restlet.resource.Representation;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormat;
-import org.w3c.dom.Document;
-import gc.carbon.test.profile.BaseProfileCategoryTestCase;
+import org.jdom.xpath.XPath;
+import org.jdom.input.DOMBuilder;
+import org.jdom.Element;
 
 /**
  * This file is part of AMEE.
@@ -42,13 +41,14 @@ public class ProfileCategoryGETV1 extends BaseProfileCategoryTestCase {
     }
 
     public void setUp() throws Exception {
-        initDB();
         super.setUp();
+        initDB();
     }
 
     private String create(DateTime startDate) throws Exception {
          Form data = new Form();
          data.add("validFrom",startDate.toString(VALID_FROM_FMT));
+         data.add("distanceKmPerMonth","1000");
          return createProfileItem(data);
     }
 
@@ -79,16 +79,15 @@ public class ProfileCategoryGETV1 extends BaseProfileCategoryTestCase {
 
         String uid = create(startDate);
         getReference().setQuery("validFrom=" + VALID_FROM_FMT.print(startDate));
-
         DomRepresentation rep = doGet().getEntityAsDom();
-        rep.write(System.out);
-
         assertXpathExists("//ProfileItem[@uid='" + uid + "']", rep.getDocument());
+        Element e = (Element) XPath.selectSingleNode(new DOMBuilder().build(rep.getDocument()).getRootElement(), "//ProfileItem[@uid='" + uid + "']/amountPerMonth");
+        String amount = e.getText();        
 
         getReference().setQuery("v=2.0&startDate=" + START_DATE_FMT.print(startDate));
         rep = doGet().getEntityAsDom();
-        rep.write(System.out);
         assertXpathExists("//ProfileItem[@uid='" + uid + "']", rep.getDocument());
-
+        e = (Element) XPath.selectSingleNode(new DOMBuilder().build(rep.getDocument()).getRootElement(), "//ProfileItem[@uid='" + uid + "']/amount");
+        assertEquals("Amount should be equal",amount,e.getText());
     }
 }

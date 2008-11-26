@@ -36,6 +36,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Name("dataFinder")
 @Scope(ScopeType.EVENT)
@@ -54,6 +55,9 @@ public class DataFinder implements Serializable {
 
     @In
     private Environment environment;
+
+    private Date startDate;
+    private Date endDate;
 
     public DataFinder() {
         super();
@@ -77,7 +81,7 @@ public class DataFinder implements Serializable {
         Choices choices;
         DataCategory dataCategory = getDataCategory(path);
         if (dataCategory != null) {
-            choices = drillDownService.getChoices(dataCategory, Choice.parseChoices(drillDown));
+            choices = drillDownService.getChoices(dataCategory, Choice.parseChoices(drillDown), startDate, endDate);
             if (choices.getName().equals("uid") && (choices.getChoices().size() > 0)) {
                 dataItem = dataService.getDataItem(dataCategory, choices.getChoices().get(0).getValue());
             }
@@ -97,5 +101,22 @@ public class DataFinder implements Serializable {
             }
         }
         return dataCategory;
+    }
+
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 }

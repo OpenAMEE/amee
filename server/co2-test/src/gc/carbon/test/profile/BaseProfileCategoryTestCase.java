@@ -40,7 +40,8 @@ public class BaseProfileCategoryTestCase extends BaseProfileTestCase {
     public Response doPost(Form data) throws Exception {
         Form form = new Form();
         form.add("dataItemUid", DATA_CATEGORY_UID);
-        form.add("name", UidGen.getUid());
+        if (!data.getNames().contains("name"))
+            form.add("name", UidGen.getUid());
         for (String parameter : data.getNames()) {
             form.add(parameter,data.getFirstValue(parameter));
         }

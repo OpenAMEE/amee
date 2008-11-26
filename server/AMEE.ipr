@@ -460,7 +460,9 @@
         <root url="jar://$PROJECT_DIR$/../amee/jm/cache-service.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="intellijad://intellijad" />
+      </SOURCES>
     </library>
     <library name="libs">
       <CLASSES>
@@ -526,6 +528,7 @@
         <root url="jar://$PROJECT_DIR$/../amee/lib/xalan/xercesImpl.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/xalan/serializer.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/xmlunit/xmlunit-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../amee/lib/jaxen/jaxen-1.1.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
