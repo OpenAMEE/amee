@@ -2,6 +2,7 @@
 <#-- TODO: check form fields match model -->
 
 <#include 'profileCommon.ftl'>
+<#include '/includes/furniture.ftl'>
 <#include '/includes/before_content.ftl'>
 
 <h1>Profile Item</h1>
@@ -13,8 +14,8 @@
     Amount: ${profileItem.amount}<br/>
     Unit: <#if profileItem.punit??>${profileItem.unit}<#else>None</#if><br/>
     Per Unit: <#if profileItem.perUnit??>${profileItem.perUnit}<#else>None</#if><br/>
-    Start Date: ${profileItem.startDate?datetime}<br/>
-    End Date: <#if profileItem.endDate??>${profileItem.endDate?datetime}<#else>None</#if><br/>
+    Start Date: ${startEndDate(profileItem.startDate)}<br/>
+    End Date: <#if profileItem.endDate??>${startEndDate(profileItem.endDate)}<#else>None</#if><br/>
     Full Path: ${browser.fullPath}<br/>
     Data Item Label: ${profileItem.dataItem.label}<br/>
     Item Definition: ${profileItem.itemDefinition.name}<br/>
@@ -43,8 +44,8 @@
         <tr>
             <td>Start Date</td>
             <#if browser.profileItemActions.allowModify>
-                <td><input name='startDate' value='${profileItem.startDate?datetime}' type='text' size='10'/>
-                    (yyyyMMdd)<br/>
+                <td><input name='startDate' value='${startEndDate(profileItem.startDate)}' type='text' size='13'/>
+                    (yyyymmddThhmm)<br/>
                     <#else>
                 <td>${profileItem.startDate?datetime}</td>
             </#if>
@@ -52,8 +53,8 @@
         <tr>
             <td>End Date</td>
             <#if browser.profileItemActions.allowModify>
-                <td><input name='endDate' value='<#if profileItem.endDate??>${profileItem.endDate?datetime}</#if>' type='text' size='10'/>
-                    (yyyyMMdd)<br/>
+                <td><input name='endDate' value='<#if profileItem.endDate??>${startEndDate(profileItem.endDate)}</#if>' type='text' size='13'/>
+                    (yyyymmddThhmm)<br/>
                     <#else>
                 <td><#if profileItem.endDate??>${profileItem.endDate?datetime}<#else>None</#if></td>
             </#if>
