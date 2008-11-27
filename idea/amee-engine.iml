@@ -34,7 +34,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../server/co2-engine">
       <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/resources" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
