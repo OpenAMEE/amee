@@ -20,6 +20,8 @@
 package gc.engine;
 
 import com.jellymold.engine.Engine;
+import com.jellymold.kiwi.environment.SiteService;
+import com.jellymold.kiwi.environment.ScheduledTaskManager;
 import org.apache.commons.cli.*;
 
 public class GCEngine extends Engine {
@@ -76,18 +78,14 @@ public class GCEngine extends Engine {
 
     @Override
     public void onStart() {
-        // TODO: Springify
-        // start scheduled tasks
-//        ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) Component.getInstance("scheduledTaskManager", true);
-//        scheduledTaskManager.setServerName(serverName);
-//        scheduledTaskManager.onStart();
+        ScheduledTaskManager taskMan = (ScheduledTaskManager) springContext.getBean("scheduledTaskManager");
+        taskMan.setServerName(serverName);
+        taskMan.onStart();
     }
 
     @Override
     public void onShutdown() {
-        // shutdown scheduled tasks
-        // TODO: Springify
-//        ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) Component.getInstance("scheduledTaskManager", true);
-//        scheduledTaskManager.onShutdown();
+        ScheduledTaskManager taskMan = (ScheduledTaskManager) springContext.getBean("scheduledTaskManager");
+        taskMan.onShutdown();
     }
 }
