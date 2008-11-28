@@ -1,3 +1,80 @@
+/**
+ * ModalHelper class. Helper for creating modal windows.
+ */
+var ModalHelper = Class.create({
+    initialize: function(params) {
+        params = params || {};
+        this.owner = params.owner || null;
+        this.element = params.element || null;
+        this.title = params.title || 'Attention';
+        this.message = params.message || 'Are you sure?';
+        this.okText = params.okText || 'Yes';
+        this.cancelText = params.cancelText || 'No';
+        this.form = params.form || null;
+        this.onOk = params.onOk || null;
+        this.onCancel = params.onCancel || null;
+        this.showCancel = (params.showCancel !== undefined) ? params.showCancel : true;
+        this.modal = this.getModal();
+        this.modal.open();
+    },
+    getModal: function() {
+        if (!this.modal) {
+            this.modal = new Control.Modal(false, {
+                width: 420,
+                height: 120,
+                afterOpen: this.afterOpen.bind(this)
+            });
+            this.modal.container.insert(this.getModelElement());
+        }
+        return this.modal;
+    },
+    afterOpen: function() {
+    },
+    ok: function(event) {
+        event.stop();
+        this.modal.close();
+        this.modal = null;
+        if (this.onOk) {
+            this.onOk(this);
+        }
+        return false;
+    },
+    cancel: function(event) {
+        event.stop();
+        this.modal.close();
+        this.modal = null;
+        if (this.onCancel) {
+            this.onCancel(this);
+        }
+        return false;
+    },
+    getModelElement: function() {
+        var element = new Element('div').addClassName("loginModalHead clearfix");
+        var outerDiv = new Element('div').addClassName("loginOuterDiv")
+                .insert(new Element('h2').update(this.title))
+                .insert(new Element('div').addClassName("loginInnerDiv clearfix").update(this.message));
+        if (this.form) {
+            outerDiv.insert(this.form);
+        }
+        var buttonsOuter = new Element('div').addClassName("loginButtonsOuter clearfix");
+        var buttonsInner = new Element('div');
+        var okButton = new Element('button').addClassName("button").update(this.okText);
+        okButton.observe("click", this.ok.bindAsEventListener(this));
+        if (this.showCancel) {
+            var cancelButton = new Element('button').addClassName("cancelButton").update(this.cancelText);
+            cancelButton.observe("click", this.cancel.bindAsEventListener(this));
+            buttonsInner.insert(cancelButton);
+        }
+        buttonsInner.insert(okButton);
+        buttonsOuter.insert(buttonsInner);
+        outerDiv.insert(buttonsOuter);
+        element.insert(outerDiv);
+        return element;
+    }
+});
+
+
+
 function alertModal(message) {
     new ModalHelper({
         owner: this,

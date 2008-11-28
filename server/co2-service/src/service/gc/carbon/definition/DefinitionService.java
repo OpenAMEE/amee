@@ -21,6 +21,8 @@ package gc.carbon.definition;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.Pager;
+import com.jellymold.utils.event.ObserveEventService;
+import com.jellymold.utils.event.ObservedEvent;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.ValueDefinition;
 import gc.carbon.domain.data.Algorithm;
@@ -31,6 +33,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.integration.annotation.ServiceActivator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -49,16 +52,17 @@ public class DefinitionService implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired(required = true)
+    private ObserveEventService observeEventService;
+
     public DefinitionService() {
         super();
     }
 
     // Handle events
 
-    // TODO: Springify
-    // @Observer("beforeEnvironmentDelete")
-
-    public void beforeEnvironmentDelete(Environment environment) {
+    @ServiceActivator(inputChannel="beforeEnvironmentDelete")
+    public void beforeEnvironmentDelete(ObservedEvent oe) {
         log.debug("beforeEnvironmentDelete");
         // TODO: what?
     }
@@ -178,8 +182,7 @@ public class DefinitionService implements Serializable {
     }
 
     public void remove(ItemDefinition itemDefinition) {
-        // TODO: Springify
-        // Events.instance().raiseEvent("beforeItemDefinitionDelete", itemDefinition);
+        observeEventService.raiseEvent("beforeItemDefinitionDelete", itemDefinition);
         entityManager.remove(itemDefinition);
     }
 
@@ -206,8 +209,7 @@ public class DefinitionService implements Serializable {
     }
 
     public void remove(ItemValueDefinition itemValueDefinition) {
-        // TODO: Springify
-        // Events.instance().raiseEvent("beforeItemValueDefinitionDelete", itemValueDefinition);
+        observeEventService.raiseEvent("beforeItemValueDefinitionDelete", itemValueDefinition);
         entityManager.remove(itemValueDefinition);
     }
 
@@ -279,8 +281,7 @@ public class DefinitionService implements Serializable {
     }
 
     public void remove(ValueDefinition valueDefinition) {
-        // TODO: Springify
-        // Events.instance().raiseEvent("beforeValueDefinitionDelete", valueDefinition);
+        observeEventService.raiseEvent("beforeValueDefinitionDelete", valueDefinition);
         // remove ItemValueDefinitions
         List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
                 "SELECT DISTINCT ivd " +

@@ -5,9 +5,13 @@ import com.jellymold.kiwi.ScheduledTask;
 import com.jellymold.kiwi.Site;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.ThreadBeanHolder;
+import com.jellymold.utils.event.ObservedEvent;
+import com.jellymold.utils.event.ObserveEventService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,15 +26,16 @@ public class EnvironmentService implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired(required = true)
+    private ObserveEventService observeEventService;
+
     public EnvironmentService() {
         super();
     }
 
-    // TODO: SPRINGIFY
-    // @Observer("beforeSiteDelete")
-    public void beforeSiteDelete(Site site) {
-        log.debug("beforeSiteDelete");
-        // TODO: To what?
+    @ServiceActivator(inputChannel="beforeSiteDelete")
+    public void beforeSiteDelete(ObservedEvent oe) {
+        log.debug("beforeSiteDelete" + (Site) oe.getPayload());
     }
 
     // Environments
@@ -117,8 +122,7 @@ public class EnvironmentService implements Serializable {
     }
 
     public void remove(Environment environment) {
-        // TODO: SPRINGIFY
-        // Events.instance().raiseEvent("beforeEnvironmentDelete", environment);
+        observeEventService.raiseEvent("beforeEnvironmentDelete", environment);
         entityManager.remove(environment);
     }
 
