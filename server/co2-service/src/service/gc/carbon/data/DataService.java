@@ -22,6 +22,8 @@ package gc.carbon.data;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
+import com.jellymold.utils.event.ObserveEventService;
+import com.jellymold.utils.event.ObservedEvent;
 import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
@@ -30,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import org.restlet.ext.seam.SpringController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.integration.annotation.ServiceActivator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -60,35 +63,35 @@ public class DataService implements Serializable {
     @Autowired
     private PathItemService pathItemService;
 
+    @Autowired(required = true)
+    private ObserveEventService observeEventService;
+
     public DataService() {
         super();
     }
 
     // Handle events
 
-    // TODO: Springify
-    // @Observer("beforeEnvironmentDelete")
-
-    public void beforeEnvironmentDelete(Environment environment) {
+    @ServiceActivator(inputChannel="beforeEnvironmentDelete")
+    public void beforeEnvironmentDelete(ObservedEvent oe) {
         log.debug("beforeEnvironmentDelete");
         // delete root DataCategories
         List<DataCategory> dataCategories = entityManager.createQuery(
                 "FROM DataCategory dc " +
                         "WHERE dc.environment = :environment " +
                         "AND dc.dataCategory IS NULL")
-                .setParameter("environment", environment)
+                .setParameter("environment", ((Environment) oe.getPayload()))
                 .getResultList();
         for (DataCategory dataCategory : dataCategories) {
             remove(dataCategory);
         }
     }
 
-    // TODO: Springify
-    // @Observer("beforeItemDefinitionDelete")
-    public void beforeItemDefinitionDelete(ItemDefinition itemDefinition) {
+    @ServiceActivator(inputChannel="beforeItemDefinitionDelete")
+    public void beforeItemDefinitionDelete(ObservedEvent oe) {
+        ItemDefinition itemDefinition = (ItemDefinition) oe.getPayload();
         log.debug("beforeItemDefinitionDelete");
-        // TODO: Springify
-        // Events.instance().raiseEvent("beforeDataItemsDelete", itemDefinition);
+        observeEventService.raiseEvent("beforeDataItemsDelete", itemDefinition);
         // remove ItemValues for DataItems
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
@@ -104,15 +107,14 @@ public class DataService implements Serializable {
                 .executeUpdate();
     }
 
-    // TODO: Springify
-    // @Observer("beforeItemValueDefinitionDelete")
-    public void beforeItemValueDefinitionDelete(ItemValueDefinition itemValueDefinition) {
+    @ServiceActivator(inputChannel="beforeItemValueDefinitionDelete")
+    public void beforeItemValueDefinitionDelete(ObservedEvent oe) {
         log.debug("beforeItemValueDefinitionDelete");
         // remove ItemValues (from DataItems and ProfileItems)
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
                         "WHERE iv.itemValueDefinition = :itemValueDefinition")
-                .setParameter("itemValueDefinition", itemValueDefinition)
+                .setParameter("itemValueDefinition", ((ItemValueDefinition) oe.getPayload()))
                 .executeUpdate();
     }
 
@@ -172,8 +174,7 @@ public class DataService implements Serializable {
 
     public void remove(DataCategory dataCategory) {
         log.debug("remove: " + dataCategory.getName());
-        // TODO: Springify
-        // Events.instance().raiseEvent("beforeDataCategoryDelete", dataCategory);
+        observeEventService.raiseEvent("beforeDataCategoryDelete", dataCategory);
         // remove ItemValues for DataItems
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
@@ -357,8 +358,7 @@ public class DataService implements Serializable {
     }
 
     public void remove(DataItem dataItem) {
-        // TODO: Springify
-        // Events.instance().raiseEvent("beforeDataItemDelete", dataItem);
+        observeEventService.raiseEvent("beforeDataItemDelete", dataItem);
         entityManager.remove(dataItem);
     }
 

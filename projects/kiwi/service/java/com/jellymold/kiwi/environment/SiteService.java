@@ -4,6 +4,7 @@ import com.jellymold.kiwi.*;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.PagerSetType;
 import com.jellymold.utils.ThreadBeanHolder;
+import com.jellymold.utils.event.ObserveEventService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class SiteService implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired(required = true)
+    private ObserveEventService observeEventService;
+    
     public SiteService() {
         super();
     }
@@ -140,8 +144,7 @@ public class SiteService implements Serializable {
     }
 
     public void remove(Site site) {
-        // TODO: SPRINGIFY
-        // Events.instance().raiseEvent("beforeSiteDelete", site);
+        observeEventService.raiseEvent("beforeSiteDelete", site);
         entityManager.remove(site);
     }
 
@@ -402,8 +405,7 @@ public class SiteService implements Serializable {
     }
 
     public void remove(Group group) {
-        // TODO: SPRINGIFY
-        // Events.instance().raiseEvent("beforeGroupDelete", group);
+        observeEventService.raiseEvent("beforeGroupDelete", group);
         entityManager.remove(group);
     }
 
@@ -740,8 +742,7 @@ public class SiteService implements Serializable {
     }
 
     public void remove(User user) {
-        // TODO: SPRINGIFY
-        // Events.instance().raiseEvent("beforeUserDelete", user);
+        observeEventService.raiseEvent("beforeUserDelete", user);
         //also delete group users
         entityManager.createQuery(
                 "DELETE FROM GroupUser gu " +

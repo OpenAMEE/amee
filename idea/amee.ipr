@@ -538,7 +538,9 @@
       <SOURCES />
     </library>
     <library name="spring-integration">
-      <CLASSES />
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../lib/spring-integration/org.springframework.integration.jar!/" />
+      </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
