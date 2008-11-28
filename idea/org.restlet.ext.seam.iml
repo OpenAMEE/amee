@@ -7,7 +7,7 @@
         <attribute name="URI" value="/" />
       </containerElement>
     </containerInfo>
-    <setting name="jarUrl" value="file://$MODULE_DIR$/../lib/amee/org.restlet.ext.seam.jar" />
+    <setting name="jarUrl" value="file://$MODULE_DIR$/../output/lib/org.restlet.ext.seam.jar" />
     <setting name="buildJar" value="true" />
     <setting name="mainClass" value="" />
   </component>

@@ -7,7 +7,7 @@
         <attribute name="URI" value="/" />
       </containerElement>
     </containerInfo>
-    <setting name="jarUrl" value="file://$MODULE_DIR$/../lib/amee/amee-builder.jar" />
+    <setting name="jarUrl" value="file://$MODULE_DIR$/../output/lib/amee-builder.jar" />
     <setting name="buildJar" value="true" />
     <setting name="mainClass" value="" />
   </component>
