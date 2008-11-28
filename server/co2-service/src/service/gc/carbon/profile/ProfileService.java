@@ -172,7 +172,7 @@ public class ProfileService implements Serializable {
 
     @ServiceActivator(inputChannel="beforeEnvironmentDelete")
     public void beforeEnvironmentDelete(ObservedEvent oe) {
-        Environment environment (Environment) oe.getPayload();
+        Environment environment = (Environment) oe.getPayload();
         log.debug("beforeEnvironmentDelete");
         List<Profile> profiles = entityManager.createQuery(
                 "SELECT p " +
