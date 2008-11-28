@@ -537,6 +537,13 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="quartz">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../lib/quartz/quartz.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
   </component>
 </project>
 

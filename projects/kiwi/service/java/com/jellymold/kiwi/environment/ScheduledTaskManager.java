@@ -6,7 +6,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.beanutils.MethodUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeansException;
 import org.springframework.stereotype.Service;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContext;
+import org.quartz.Scheduler;
+import org.quartz.JobDetail;
+import org.quartz.Trigger;
+import org.quartz.TriggerUtils;
+import org.quartz.SchedulerException;
+import org.quartz.CronTrigger;
+import org.quartz.SimpleTrigger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,9 +26,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 
 @Service
-public class ScheduledTaskManager implements Serializable {
+public class ScheduledTaskManager implements Serializable, ApplicationContextAware {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -29,9 +41,10 @@ public class ScheduledTaskManager implements Serializable {
 
     private String serverName = "";
 
-    // TODO: SPRINGIFY
-    // private Map<String, QuartzTriggerHandle> timers =
-    //        Collections.synchronizedMap(new HashMap<String, QuartzTriggerHandle>());
+    @Autowired
+    private SchedulerFactoryBean quartzScheduler;
+
+    private ApplicationContext applicationContext;
 
     public ScheduledTaskManager() {
         super();
@@ -45,51 +58,36 @@ public class ScheduledTaskManager implements Serializable {
                 start(scheduledTask);
             }
         }
+
+        try {
+            quartzScheduler.getScheduler().start();
+        } catch (SchedulerException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void start(ScheduledTask scheduledTask) {
-        List<Object> args;
+
         Object component;
-        // TODO: SPRINGIFY
-        // QuartzTriggerHandle timer;
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.add(Calendar.MINUTE, 1); // start at next round minute
+
         if (scheduledTask.isEnabled() && scheduledTask.isServerEnabled(serverName)) {
-            // TODO: SPRINGIFY
-            // component = Component.getInstance(scheduledTask.getComponent(), true);
-            component = null;
+
+            component = applicationContext.getBean(scheduledTask.getComponent()).getClass();
+
             if (component != null) {
-                args = new ArrayList<Object>();
-                args.add(calendar.getTime());
-                args.add(scheduledTask.getCron());
-                if (scheduledTask.getDuration() > 0) {
-                    args.add(scheduledTask.getDuration());
-                }
-                args.add(scheduledTask.getEnvironment().getUid());
-                // TODO: SPRINGIFY
-                /*
+
                 try {
 
-                    timer = (QuartzTriggerHandle) MethodUtils.invokeMethod(component, scheduledTask.getMethod(), args.toArray());
-                    timer = timers.put(scheduledTask.getUid(), timer);
-                    if (timer != null) {
-                        // shutdown previous ScheduledTask
-                        try {
-                            timer.cancel();
-                        } catch (SchedulerException e) {
-                            // swallow
-                        }
-                    }
-                } catch (NoSuchMethodException e) {
-                    // swallow
-                } catch (IllegalAccessException e) {
-                    // swallow
-                } catch (InvocationTargetException e) {
-                    // swallow
+                    Scheduler scheduler = quartzScheduler.getScheduler();
+                    JobDetail jd = new JobDetail(scheduledTask.getName(), scheduledTask.getEnvironment().getUid(), applicationContext.getBean(scheduledTask.getComponent()).getClass());
+                    CronTrigger ct = new CronTrigger(scheduledTask.getName(), "DEFAULT", scheduledTask.getCron());
+                    scheduler.scheduleJob(jd, ct);
+
+                } catch (SchedulerException ex) {
+                    ex.printStackTrace();
+                } catch (ParseException pr) {
+                    pr.printStackTrace();
                 }
-                */
             }
         }
     }
@@ -99,6 +97,8 @@ public class ScheduledTaskManager implements Serializable {
     }
 
     public void onShutdown(boolean runOnShutdown) {
+        Scheduler scheduler = quartzScheduler.getScheduler();
+
         List<Environment> environments = environmentService.getEnvironments();
         for (Environment environment : environments) {
             List<ScheduledTask> scheduledTasks = environmentService.getScheduledTasks(environment);
@@ -106,63 +106,65 @@ public class ScheduledTaskManager implements Serializable {
                 shutdown(scheduledTask, runOnShutdown);
             }
         }
+        try {
+            scheduler.shutdown();
+        } catch (SchedulerException ex) {
+            log.error(ex);
+        }
     }
 
-    // TODO: SPRINGIFY
+
     private void shutdown(ScheduledTask scheduledTask, boolean runOnShutdown) {
-        /*
-        QuartzTriggerHandle timer;
-        List<Object> args;
+
         Object component;
-        timer = timers.remove(scheduledTask.getUid());
-        // only work with ScheduledTasks that were actually scheduled
-        if (timer != null) {
-            try {
-                // unschedule the task
-                timer.cancel();
-            } catch (SchedulerException e) {
-                // swallow
-            }
-            // if needed, run task one last time
-            if (runOnShutdown && scheduledTask.getRunOnShutdown() && scheduledTask.getEnabled()) {
-                component = Component.getInstance(scheduledTask.getComponent(), true);
-                if (component != null) {
-                    args = new ArrayList<Object>();
-                    if (scheduledTask.getDuration() > 0) {
-                        args.add(scheduledTask.getDuration());
+
+        Scheduler scheduler = quartzScheduler.getScheduler();
+
+        if (runOnShutdown && scheduledTask.getRunOnShutdown() && scheduledTask.getEnabled() && scheduledTask.isServerEnabled(serverName)) {
+
+            component = applicationContext.getBean(scheduledTask.getComponent()).getClass();
+
+            if (component != null) {
+
+                try {
+                    JobDetail jd = new JobDetail(scheduledTask.getName()+"_shutdown", scheduledTask.getEnvironment().getUid(), applicationContext.getBean(scheduledTask.getComponent()).getClass());
+                    SimpleTrigger st = new SimpleTrigger(
+                            scheduledTask.getName()+"_shutdown", "DEFAULT", 0, 1);
+                    scheduler.scheduleJob(jd, st);
+                    if (!scheduler.isStarted()) {
+                        scheduler.start();
                     }
-                    args.add(scheduledTask.getEnvironment().getUid());
-                    try {
-                        MethodUtils.invokeMethod(component, scheduledTask.getMethod(), args);
-                    } catch (NoSuchMethodException e) {
-                        // swallow
-                    } catch (IllegalAccessException e) {
-                        // swallow
-                    } catch (InvocationTargetException e) {
-                        // swallow
-                    }
+                } catch (SchedulerException ex) {
+                    ex.printStackTrace();
                 }
             }
         }
-        */
+
+
     }
 
-    public void run(ScheduledTask task) {
-//        Object component = Component.getInstance(task.getComponent(), true);
-//        if (component != null) {
-//            try {
-//                MethodUtils.invokeMethod(component, task.getMethod(), task.getEnvironment());
-//            } catch (NoSuchMethodException e) {
-//                // swallow
-//                log.warn("Caught NoSuchMethodException: " + e.getMessage());
-//            } catch (IllegalAccessException e) {
-//                // swallow
-//                log.warn("Caught IllegalAccessException: " + e.getMessage());
-//            } catch (InvocationTargetException e) {
-//                // swallow
-//                log.warn("Caught InvocationTargetException: " + e.getMessage());
-//            }
-//        }
+    public void run(ScheduledTask scheduledTask) {
+        Object component;
+
+        Scheduler scheduler = quartzScheduler.getScheduler();
+
+        component = applicationContext.getBean(scheduledTask.getComponent()).getClass();
+
+        if (component != null) {
+
+            try {
+                JobDetail jd = new JobDetail(scheduledTask.getName()+"_temp", scheduledTask.getEnvironment().getUid(), applicationContext.getBean(scheduledTask.getComponent()).getClass());
+                SimpleTrigger st = new SimpleTrigger(
+                        scheduledTask.getName()+"_temp", "DEFAULT", 0, 1);
+                scheduler.scheduleJob(jd, st);
+                if (!scheduler.isStarted()) {
+                    scheduler.start();
+                }
+            } catch (SchedulerException ex) {
+                ex.printStackTrace();
+            }
+        }
+
     }
 
     public String getServerName() {
@@ -174,5 +176,9 @@ public class ScheduledTaskManager implements Serializable {
             serverName = "";
         }
         this.serverName = serverName;
+    }
+
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

@@ -14,7 +14,6 @@
     <orderEntry type="library" name="jm" level="project" />
     <orderEntry type="library" name="libs" level="project" />
     <orderEntry type="module" module-name="co2-builder" />
-    <orderEntryProperties />
   </component>
 </module>
 

@@ -412,7 +412,7 @@
       <module fileurl="file://$PROJECT_DIR$/co2-test/co2-test.iml" filepath="$PROJECT_DIR$/co2-test/co2-test.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/output/classes" />
   </component>
   <component name="ResourceManagerContainer">
@@ -461,7 +461,7 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="intellijad://intellijad" />
+        <root url="NullVirtualFilePointer" />
       </SOURCES>
     </library>
     <library name="libs">
@@ -512,12 +512,12 @@
         <root url="jar://$PROJECT_DIR$/../amee/lib/ehcache/ehcache-1.4.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/jboss-seam/jboss-seam-ioc.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/jsr275/jsr-275.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../../../JellyMoldClosed/lib/pp/jdom/jdom.jar!/" />
+        <root url="jar:///../JellyMoldClosed/lib/pp/jdom/jdom.jar!/" />
         <root url="jar://$PROJECT_DIR$/../amee/lib/commons-collections/commons-collections-3.2.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="intellijad://intellijad" />
+        <root url="NullVirtualFilePointer" />
       </SOURCES>
     </library>
     <library name="test">
