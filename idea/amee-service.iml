@@ -36,6 +36,8 @@
     <orderEntry type="library" name="javacsv" level="project" />
     <orderEntry type="library" name="rhino" level="project" />
     <orderEntry type="library" name="joda" level="project" />
+    <orderEntry type="library" name="quartz" level="project" />
+    <orderEntry type="library" name="spring-integration" level="project" />
   </component>
 </module>
 

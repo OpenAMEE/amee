@@ -25,6 +25,7 @@ import com.jellymold.kiwi.User;
 import com.jellymold.kiwi.auth.AuthService;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.Pager;
+import com.jellymold.utils.event.ObservedEvent;
 import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
@@ -34,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import org.restlet.ext.seam.SpringController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.integration.annotation.ServiceActivator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -76,10 +78,9 @@ public class ProfileService implements Serializable {
 
     // Handle events
 
-    // TODO: Springify
-    // @Observer("beforeDataItemDelete")
-
-    public void beforeDataItemDelete(DataItem dataItem) {
+    @ServiceActivator(inputChannel="beforeDataItemDelete")
+    public void beforeDataItemDelete(ObservedEvent oe) {
+        DataItem dataItem = (DataItem) oe.getPayload();
         log.debug("beforeDataItemDelete");
         // remove ItemValues for ProfileItems
         entityManager.createQuery(
@@ -96,9 +97,9 @@ public class ProfileService implements Serializable {
                 .executeUpdate();
     }
 
-    // TODO: Springify
-    // @Observer("beforeDataItemsDelete")
-    public void beforeDataItemsDelete(ItemDefinition itemDefinition) {
+    @ServiceActivator(inputChannel="beforeDataItemsDelete")
+    public void beforeDataItemsDelete(ObservedEvent oe) {
+        ItemDefinition itemDefinition = (ItemDefinition) oe.getPayload();
         log.debug("beforeDataItemsDelete");
         // remove ItemValues for ProfileItems
         entityManager.createQuery(
@@ -115,9 +116,9 @@ public class ProfileService implements Serializable {
                 .executeUpdate();
     }
 
-    // TODO: Springify
-    // @Observer("beforeDataCategoryDelete")
-    public void beforeDataCategoryDelete(DataCategory dataCategory) {
+    @ServiceActivator(inputChannel="beforeDataCategoryDelete")
+    public void beforeDataCategoryDelete(ObservedEvent oe) {
+        DataCategory dataCategory = (DataCategory) oe.getPayload();
         log.debug("beforeDataCategoryDelete");
         // remove ItemValues for ProfileItems
         entityManager.createQuery(
@@ -134,9 +135,9 @@ public class ProfileService implements Serializable {
                 .executeUpdate();
     }
 
-    // TODO: Springify
-    // @Observer("beforeUserDelete")
-    public void beforeUserDelete(User user) {
+    @ServiceActivator(inputChannel="beforeUserDelete")
+    public void beforeUserDelete(ObservedEvent oe) {
+        User user = (User) oe.getPayload();
         log.debug("beforeUserDelete");
         List<Profile> profiles = entityManager.createQuery(
                 "SELECT p " +
@@ -152,9 +153,9 @@ public class ProfileService implements Serializable {
 
     }
 
-    // TODO: Springify
-    // @Observer("beforeGroupDelete")
-    public void beforeGroupDelete(Group group) {
+    @ServiceActivator(inputChannel="beforeGroupDelete")
+    public void beforeGroupDelete(ObservedEvent oe) {
+        Group group = (Group) oe.getPayload();
         log.debug("beforeGroupDelete");
         List<Profile> profiles = entityManager.createQuery(
                 "SELECT p " +
@@ -169,9 +170,9 @@ public class ProfileService implements Serializable {
         }
     }
 
-    // TODO: Springify
-    // @Observer("beforeEnvironmentDelete")
-    public void beforeEnvironmentDelete(Environment environment) {
+    @ServiceActivator(inputChannel="beforeEnvironmentDelete")
+    public void beforeEnvironmentDelete(ObservedEvent oe) {
+        Environment environment = (Environment) oe.getPayload();
         log.debug("beforeEnvironmentDelete");
         List<Profile> profiles = entityManager.createQuery(
                 "SELECT p " +

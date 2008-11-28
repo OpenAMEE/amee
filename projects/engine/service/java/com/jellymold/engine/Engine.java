@@ -34,7 +34,7 @@ public class Engine implements WrapperListener, Serializable {
 
     private boolean initialise = false;
     private int ajpPort = 8010;
-    private String serverName;
+    protected String serverName;
     private int maxThreads = 700;
     private int minThreads = 200;
     private int threadMaxIdleTimeMs = 30000;

@@ -28,7 +28,7 @@ public class EngineApplication extends Application {
     }
 
     public EngineApplication(Context parentContext, String name) {
-        super(parentContext);
+        super(parentContext.createChildContext());
         setName(name);
         setStatusService(new EngineStatusService(true));
         this.springContext = (ApplicationContext) parentContext.getAttributes().get("springContext");

@@ -22,7 +22,6 @@ package gc.carbon.profile;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.builder.resource.ResourceBuilder;
 import gc.carbon.builder.resource.ResourceBuilderFactory;
 import gc.carbon.data.Calculator;
@@ -37,6 +36,7 @@ import gc.carbon.domain.profile.ValidFromDate;
 import gc.carbon.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -165,8 +165,8 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
             ProfileItem profileItem = profileBrowser.getProfileItem();
             // ensure updated ProfileItem does not break rules for ProfileItems
             ProfileItem profileItemCopy = profileItem.getCopy();
-            updateProfileItem(profileItemCopy, form);
-            if (!profileService.isEquivilentProfileItemExists(profileItemCopy)) {
+            if (updateProfileItem(profileItemCopy, form) &&
+                    !profileService.isEquivilentProfileItemExists(profileItemCopy)) {
                 // update persistent ProfileItem
                 updateProfileItem(profileItem, form);
                 // update ItemValues if supplied
@@ -202,7 +202,8 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         }
     }
 
-    protected void updateProfileItem(ProfileItem profileItem, Form form) {
+    protected boolean updateProfileItem(ProfileItem profileItem, Form form) {
+
         Set<String> names = form.getNames();
 
         if (!isValidRequest()) {
@@ -231,19 +232,26 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
         // update 'endDate' value
         if (names.contains("endDate")) {
-            profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+            if (StringUtils.isNotBlank(form.getFirstValue("endDate"))) {
+                profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+            } else {
+                profileItem.setEndDate(null);
+            }
         }
 
+        // update 'duration' value
         if (form.getNames().contains("duration")) {
             profileItem.setDuration(form.getFirstValue("duration"));
             StartEndDate endDate = ((StartEndDate) profileItem.getStartDate()).plus(form.getFirstValue("duration"));
             profileItem.setEndDate(endDate);
         }
 
+        // ensure endDate is not before startDate
         if (profileItem.getEndDate() != null &&
                 profileItem.getEndDate().before(profileItem.getStartDate())) {
-            badRequest();
-            return;
+            return false;
+        } else {
+            return true;
         }
     }
 

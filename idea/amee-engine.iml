@@ -71,6 +71,7 @@
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="spring-runtime" level="project" />
     <orderEntry type="library" name="wrapper" level="project" />
+    <orderEntry type="library" name="quartz" level="project" />
   </component>
 </module>
 

@@ -92,7 +92,6 @@ public class ProfileItem extends Item implements BuildableProfileItem {
         setBuilder(new ProfileItemBuilder(this));
     }
 
-
     public void setBuilder(Builder builder) {
         this.builder = builder;
     }
