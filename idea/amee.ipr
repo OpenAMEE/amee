@@ -537,6 +537,11 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="spring-integration">
+      <CLASSES />
+      <JAVADOC />
+      <SOURCES />
+    </library>
   </component>
 </project>
 
