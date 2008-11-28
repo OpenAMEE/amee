@@ -25,15 +25,15 @@ import org.restlet.data.Reference;
 public class BaseProfileTestCase extends APITestCase {
 
 
-    protected static final String PROFILE_CATEGORY_URI = "/profiles/B74EC806243F/transport/car/generic/";
-    protected static final String DATA_CATEGORY_UID = "4F6CBCEE95F7";
+    protected String profileCategoryURI = "/profiles/B74EC806243F/transport/car/generic/";
+    protected String dataCategoryURI = "4F6CBCEE95F7";
     
     protected static final String KNOWN_AMOUNT_FOR_1000_KM_PER_MONTH = "264.500";
     protected static final String KNOWN_AMOUNT_FOR_1000_MI_PER_MONTH = "425.671";
     protected static final String KNOWN_AMOUNT_FOR_1000_KM_PER_YEAR = "22.042";
     protected static final String KNOWN_AMOUNT_FOR_1000_MI_PER_YEAR = "35.473";
 
-    private Reference reference = new Reference(LOCAL_HOST_NAME + PROFILE_CATEGORY_URI);
+    private Reference reference = new Reference(LOCAL_HOST_NAME + profileCategoryURI);
 
     public BaseProfileTestCase(String s) {
         super(s);
@@ -46,6 +46,11 @@ public class BaseProfileTestCase extends APITestCase {
 
     public void setReference(Reference reference) {
         this.reference = reference;
+    }
+
+    protected void setURIs(String profileCategoryURI, String dataCategoryURI) {
+        this.profileCategoryURI = profileCategoryURI;
+        this.dataCategoryURI = dataCategoryURI;
     }
 
 }

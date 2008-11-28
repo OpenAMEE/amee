@@ -17,6 +17,8 @@
     <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="library" name="joda" level="project" />
     <orderEntry type="library" name="testng" level="project" />
+    <orderEntry type="library" name="mysql-connector-java" level="project" />
+    <orderEntry type="library" name="jaxen" level="project" />
   </component>
 </module>
 

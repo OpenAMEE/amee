@@ -6,11 +6,15 @@ import gc.carbon.domain.data.ItemValueDefinition;
 import gc.carbon.domain.profile.ProfileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.Duration;
 
 import javax.measure.DecimalMeasure;
 import javax.measure.unit.Unit;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.BigInteger;
+
+import static javax.measure.unit.SI.*;
 
 /**
  * This file is part of AMEE.
@@ -59,15 +63,23 @@ public class InternalItemValue {
         }
     }
 
-    public InternalItemValue(ItemValue item) {
-        if (isDecimal(item.getItemValueDefinition())) {
-            if (item.hasUnits())
-                unit = Unit.valueOf(item.getUnit());
-            if (item.hasPerUnits())
-                perUnit = Unit.valueOf(item.getPerUnit());
-            value = asInternalValue(convertStringToDecimal(item.getUsableValue()), item.getItemValueDefinition());
+    public InternalItemValue(ItemValue itemValue) {
+        if (isDecimal(itemValue.getItemValueDefinition())) {
+            if (itemValue.hasUnits())
+                unit = Unit.valueOf(itemValue.getUnit());
+            if (itemValue.hasPerUnits()) {
+                if (itemValue.getPerUnit().equals("none")) {
+                    Duration duration = itemValue.getItem().getDuration();
+                    long ms = duration.getMillis();
+                    perUnit = MILLI(SECOND);
+                    value = new BigDecimal(value.toString()).divide(new BigDecimal(ms)).toString();
+                } else {
+                    perUnit = Unit.valueOf(itemValue.getPerUnit());
+                }
+            }
+            value = asInternalValue(convertStringToDecimal(itemValue.getUsableValue()), itemValue.getItemValueDefinition());
         } else {
-            value = item.getUsableValue();
+            value = itemValue.getUsableValue();
         }
     }
 

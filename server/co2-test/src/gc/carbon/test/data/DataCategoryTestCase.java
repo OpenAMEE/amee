@@ -71,10 +71,10 @@ public class DataCategoryTestCase extends APITestCase {
     }
 
     @Test
-    public void testGetHomeHeating() throws Exception {
-        setControl("get-data-home-heating.xml");
-        doAssertSimilarXML();
-    }
+    //public void testGetHomeHeating() throws Exception {
+    //    setControl("get-data-home-heating.xml");
+    //    doAssertSimilarXML();
+    //}
 
     @org.testng.annotations.Test
     public void testSupercededNotReturned() throws Exception {

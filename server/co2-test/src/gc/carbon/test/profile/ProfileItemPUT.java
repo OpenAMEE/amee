@@ -49,7 +49,7 @@ public class ProfileItemPUT extends BaseProfileItemTestCase {
         data.add("distanceUnit","mi");
         data.add("distance", "1000");
         data.add("v", "2.0");
-        assertDistanceNode(data,"mi","month");
+        assertDistanceNode(data,"mi","year");
     }
 
     @Test
@@ -181,7 +181,7 @@ public class ProfileItemPUT extends BaseProfileItemTestCase {
         assertXpathEvaluatesTo(unit, "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Unit", doc);
         assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Path", doc);
         assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Name", doc);
-        assertXpathEvaluatesTo("month", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit", doc);
+        assertXpathEvaluatesTo("year", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit", doc);
         assertXpathEvaluatesTo("km", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Unit", doc);
 
     }
