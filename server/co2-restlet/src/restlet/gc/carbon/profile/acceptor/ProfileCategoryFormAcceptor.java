@@ -5,6 +5,7 @@ import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.domain.profile.ValidFromDate;
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileForm;
 import org.apache.commons.logging.Log;
@@ -109,14 +110,35 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
 
     private ProfileItem acceptProfileItem(Form form, ProfileItem profileItem) {
 
-        // determine startdate for new ProfileItem
-        profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
+        if (!resource.isValidRequest()) {
+            resource.badRequest();
+            return null;
+        }
 
-        // determine if the new ProfileItem is an end marker
-        profileItem.setEnd(Boolean.valueOf(form.getFirstValue("end")));
+        // TODO - Refactor this, each version should have it's own acceptor
+        if (resource.getForm().isVersionOne()) {
 
-        if (form.getNames().contains("endDate"))
-            profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+            profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
+            profileItem.setEnd(Boolean.valueOf(form.getFirstValue("end")));
+
+        } else {
+            profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
+            if (form.getNames().contains("endDate"))
+                profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+
+            if (form.getNames().contains("duration")) {
+                profileItem.setDuration(form.getFirstValue("duration"));
+                StartEndDate endDate = ((StartEndDate) profileItem.getStartDate()).plus(form.getFirstValue("duration"));
+                profileItem.setEndDate(endDate);
+            }
+
+            if (profileItem.getEndDate() != null &&
+                profileItem.getEndDate().before(profileItem.getStartDate())) {
+                resource.badRequest();
+                return null;
+            }
+
+        }
 
         // determine name for new ProfileItem
         profileItem.setName(form.getFirstValue("name"));

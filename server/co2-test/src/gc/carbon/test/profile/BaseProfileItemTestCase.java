@@ -34,7 +34,7 @@ public class BaseProfileItemTestCase extends BaseProfileTestCase {
         Form post = new Form();
         post.add("v",data.getFirstValue("v"));
         String uid = createProfileItem(post);
-        Reference uri = new Reference(LOCAL_HOST_NAME + PROFILE_CATEGORY_URI + uid);
+        Reference uri = new Reference(LOCAL_HOST_NAME + profileCategoryURI + uid);
 
         Form form = new Form();
         for (String parameter : data.getNames()) {

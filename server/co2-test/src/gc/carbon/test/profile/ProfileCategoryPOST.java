@@ -122,7 +122,7 @@ public class ProfileCategoryPOST extends BaseProfileCategoryTestCase {
         Form data = new Form();
         data.add("distanceUnit", "mi");
         data.add("distance", "1000");
-        assertDistanceNode(data, "mi", "month");
+        assertDistanceNode(data, "mi", "year");
     }
 
     @Test
@@ -150,7 +150,7 @@ public class ProfileCategoryPOST extends BaseProfileCategoryTestCase {
         assertXpathEvaluatesTo(unit, "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/Unit", doc);
         assertXpathEvaluatesTo("distance", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Path", doc);
         assertXpathEvaluatesTo("Distance", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Name", doc);
-        assertXpathEvaluatesTo("month", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit", doc);
+        assertXpathEvaluatesTo("year", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit", doc);
         assertXpathEvaluatesTo("km", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Unit", doc);
 
     }

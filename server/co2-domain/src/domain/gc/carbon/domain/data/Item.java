@@ -35,6 +35,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.joda.time.Duration;
+import org.joda.time.format.ISOPeriodFormat;
 
 import javax.persistence.*;
 import java.util.*;
@@ -81,6 +83,9 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
     @Column(name = "END_DATE")
     @Index(name = "END_DATE_IND")
     protected Date endDate;
+
+    @Transient
+    protected Duration duration;
 
     @Column(name = "CREATED")
     private Date created = Calendar.getInstance().getTime();
@@ -304,5 +309,13 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = ISOPeriodFormat.standard().parsePeriod(duration).toStandardDuration();
     }
 }

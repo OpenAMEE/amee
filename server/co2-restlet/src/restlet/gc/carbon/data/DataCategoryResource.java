@@ -584,6 +584,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
 
         if (form.getNames().contains("duration")) {
+            dataItem.setDuration(form.getFirstValue("duration"));
             StartEndDate endDate = startDate.plus(form.getFirstValue("duration"));
             dataItem.setEndDate(endDate);
         }

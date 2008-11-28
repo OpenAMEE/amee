@@ -80,7 +80,7 @@ public class ProfileItemPUTV1 extends BaseProfileItemTestCase {
     }
 
     @Test
-    public void testPutWithValidFromAndDistanceAndUnitInMiAndPerUnit() throws Exception {
+    public void     testPutWithValidFromAndDistanceAndUnitInMiAndPerUnit() throws Exception {
         Form data = new Form();
         data.add("validFrom", "20500101");
         data.add("distance", "1000");

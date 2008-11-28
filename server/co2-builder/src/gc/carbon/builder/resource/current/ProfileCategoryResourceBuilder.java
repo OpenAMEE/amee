@@ -52,6 +52,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         // add objects
         obj.put("path", resource.getFullPath());
 
+        obj.put("startDate", resource.getStartDate());
+        obj.put("endDate", (resource.getEndDate() != null) ? resource.getEndDate().toString() : "");
+
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
             obj.put("profile", resource.getProfile().getIdentityJSONObject());
@@ -123,6 +126,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         element.appendChild(resource.getVersion().getElement(document));
 
         element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));
+
+        element.appendChild(APIUtils.getElement(document, "StartDate",resource.getStartDate().toString()));
+        element.appendChild(APIUtils.getElement(document, "EndDate", (resource.getEndDate() != null) ? resource.getEndDate().toString() : ""));
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {

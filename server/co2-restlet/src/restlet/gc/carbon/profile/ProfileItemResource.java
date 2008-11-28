@@ -33,6 +33,7 @@ import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.domain.profile.ValidFromDate;
 import gc.carbon.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -218,6 +219,11 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
             profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
         }
 
+        // update 'startDate' value
+        if (names.contains("validFrom")) {
+            profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
+        }
+
         // update 'end' value
         if (names.contains("end")) {
             profileItem.setEnd(Boolean.valueOf(form.getFirstValue("end")));
@@ -229,6 +235,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         }
 
         if (form.getNames().contains("duration")) {
+            profileItem.setDuration(form.getFirstValue("duration"));
             StartEndDate endDate = ((StartEndDate) profileItem.getStartDate()).plus(form.getFirstValue("duration"));
             profileItem.setEndDate(endDate);
         }

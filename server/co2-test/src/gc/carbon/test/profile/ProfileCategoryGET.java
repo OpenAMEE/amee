@@ -163,6 +163,7 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
     public void testCorrectStartDateAndEndDateReturned() throws Exception {
         getReference().setQuery("v=2.0&startDate="+startDate.toString(fmt) + "&endDate=" +endDate.toString(fmt));
         DomRepresentation rep = doGet().getEntityAsDom();
+        rep.write(System.out);
         Document doc = rep.getDocument();
         assertXpathEvaluatesTo(startDate.toString(fmt),"//StartDate", doc);
         assertXpathEvaluatesTo(endDate.toString(fmt),"//EndDate", doc);

@@ -1,7 +1,6 @@
 package gc.carbon.test.profile;
 
 import org.restlet.data.Form;
-import org.restlet.data.Reference;
 import org.restlet.data.MediaType;
 import org.restlet.data.Response;
 import com.jellymold.utils.domain.UidGen;
@@ -39,7 +38,7 @@ public class BaseProfileCategoryTestCase extends BaseProfileTestCase {
 
     public Response doPost(Form data) throws Exception {
         Form form = new Form();
-        form.add("dataItemUid", DATA_CATEGORY_UID);
+        form.add("dataItemUid", dataCategoryURI);
         if (!data.getNames().contains("name"))
             form.add("name", UidGen.getUid());
         for (String parameter : data.getNames()) {
