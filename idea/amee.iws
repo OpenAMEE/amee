@@ -169,8 +169,10 @@
       <file leaf-file-name="applicationContext.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../server/co2-engine/resources/META-INF/applicationContext.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="78" selection-start="1432" selection-end="1507" vertical-scroll-proportion="-3.2941177">
-              <folding />
+            <state line="24" column="10" selection-start="1507" selection-end="1507" vertical-scroll-proportion="-3.2941177">
+              <folding>
+                <marker date="1227880223000" expanded="true" signature="97:3341" placeholder="..." />
+              </folding>
             </state>
           </provider>
           <provider editor-type-id="com.intellij.spring.perspectives.SpringBeansStructureEditorProvider">
@@ -454,7 +456,7 @@
     </subPane>
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="0" />
+    <option name="STATE" value="1" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="0.16666667" version="1" splitterProportion="0.5">
@@ -820,8 +822,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../server/co2-engine/resources/META-INF/applicationContext.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="78" selection-start="1432" selection-end="1507" vertical-scroll-proportion="-3.2941177">
-          <folding />
+        <state line="24" column="10" selection-start="1507" selection-end="1507" vertical-scroll-proportion="-3.2941177">
+          <folding>
+            <marker date="1227880223000" expanded="true" signature="97:3341" placeholder="..." />
+          </folding>
         </state>
       </provider>
       <provider editor-type-id="com.intellij.spring.perspectives.SpringBeansStructureEditorProvider">

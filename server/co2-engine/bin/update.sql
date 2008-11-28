@@ -12,6 +12,7 @@ UPDATE amee.SKIN SET PATH = 'base-import' WHERE ID=1;
 UPDATE amee.SKIN SET PATH = 'amee-base-import' WHERE ID=2;
 UPDATE amee.SKIN SET PATH = 'admin-import' WHERE ID=3;
 UPDATE amee.SKIN SET PATH = 'admin-default' WHERE ID=4;
+update SITE_APP set SKIN_PATH = 'admin-default' where SKIN_PATH = 'default.admin.skin';
 UPDATE amee.SKIN SET PATH = 'app-admin' WHERE ID=5;
 UPDATE amee.SITE_APP set SKIN_PATH = 'app-admin' WHERE SKIN_PATH = 'app.admin.skin';
 UPDATE amee.SKIN SET PATH = 'cache-admin' WHERE ID=6;
