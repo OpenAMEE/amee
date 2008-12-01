@@ -52,8 +52,8 @@ public class StartEndDate extends GCDate {
     protected long parseStr(String dateStr) {
         try {
             DateTime requestedDate = new DateTime(ISO_DATE_FORMAT.parse(dateStr));
-            DateTime dateFlooredToNearest30Mins = requestedDate.withMinuteOfHour( (requestedDate.getMinuteOfHour() < 30) ? 0 : 30);
-            return dateFlooredToNearest30Mins.toDate().getTime();
+            DateTime dateFlooredToPreceeding30Mins = requestedDate.withMinuteOfHour( (requestedDate.getMinuteOfHour() < 30) ? 0 : 30);
+            return dateFlooredToPreceeding30Mins.toDate().getTime();
         } catch (ParseException e) {
             return defaultDate();
         }

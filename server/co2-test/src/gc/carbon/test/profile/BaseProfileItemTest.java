@@ -1,7 +1,6 @@
 package gc.carbon.test.profile;
 
 import org.restlet.data.Form;
-import org.restlet.data.MediaType;
 import org.restlet.data.Response;
 import com.jellymold.utils.domain.UidGen;
 
@@ -24,29 +23,15 @@ import com.jellymold.utils.domain.UidGen;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class BaseProfileCategoryTestCase extends BaseProfileTestCase {
+public class BaseProfileItemTest extends BaseProfileTest {
 
-    public BaseProfileCategoryTestCase(String s) {
+    public BaseProfileItemTest(String s) throws Exception {
         super(s);
     }
 
-    public Response doGet() throws Exception {
-        setMediaType(MediaType.APPLICATION_XML);
-        System.out.println(getReference());
-        return get(getReference());
+    protected Response doPut(Form data) throws Exception {
+        data.add("dataItemUid",DATA_CATEGORY_UID);
+        data.add("name", UidGen.getUid());
+        return client.createProfileItemAndUpdate(data);
     }
-
-    public Response doPost(Form data) throws Exception {
-        Form form = new Form();
-        form.add("dataItemUid", dataCategoryURI);
-        if (!data.getNames().contains("name"))
-            form.add("name", UidGen.getUid());
-        for (String parameter : data.getNames()) {
-            form.add(parameter,data.getFirstValue(parameter));
-        }
-        setMediaType(MediaType.APPLICATION_XML);
-        return post(getReference(), form);
-    }
-
-
 }

@@ -2,21 +2,13 @@ package gc.carbon.test;
 
 import org.custommonkey.xmlunit.*;
 import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
-import org.restlet.Client;
-import org.restlet.util.Series;
-import org.restlet.resource.Representation;
-import org.restlet.resource.DomRepresentation;
 import org.restlet.data.*;
-import org.junit.Before;
 import org.w3c.dom.Node;
 
 import java.io.*;
 import java.sql.DriverManager;
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.PreparedStatement;
-
-import gc.carbon.test.profile.BaseProfileCategoryTestCase;
 
 /**
  * This file is part of AMEE.
@@ -39,88 +31,18 @@ import gc.carbon.test.profile.BaseProfileCategoryTestCase;
  */
 public class APITestCase extends XMLTestCase {
 
-    protected static final String LOCAL_HOST_NAME = "http://local.stage.co2.dgen.net";
-    protected static final String REMOTE_HOST_NAME = "http://stage.co2.dgen.net";
-
-    protected Series<CookieSetting> cookieSettings;
     private String controlFile;
-    private MediaType mediaType;
 
     public APITestCase(String s) {
         super(s);
         XMLUnit.setIgnoreWhitespace(true);
     }
 
-    @Before
-    public void setUp() throws Exception {
-       cookieSettings = authenticate();
-    }
-
-
     protected void initDB() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/amee","amee","amee");
         PreparedStatement statement = conn.prepareStatement("DELETE FROM ITEM WHERE TYPE = 'PI'");
-        boolean b = statement.execute();
-    }
-
-    private Series<CookieSetting> authenticate() throws IOException {
-        Client client = new Client(Protocol.HTTP);
-        Reference uri = new Reference(LOCAL_HOST_NAME + "/auth/signIn?method=put");
-        Form form = new Form();
-        form.add("next", "auth");
-        form.add("username", "admin");
-        form.add("password", "r41n80w");
-        Representation rep = form.getWebRepresentation();
-        Response response = client.post(uri, rep);
-        if (response.getStatus().isRedirection()) {
-            return response.getCookieSettings();
-        }
-        return null;
-    }
-
-    private void addHeaders(Request request) {
-        Form requestHeaders = new Form();
-        requestHeaders.add("authToken",cookieSettings.getFirstValue("authToken"));
-        request.getAttributes().put("org.restlet.http.headers", requestHeaders);
-        request.getClientInfo().getAcceptedMediaTypes().add(new Preference<MediaType>(mediaType));
-    }
-
-    protected Response get(Reference uri) {
-        Client client = new Client(Protocol.HTTP);
-        Request request = new Request(Method.GET, uri);
-        addHeaders(request);
-        return client.handle(request);
-    }
-
-    protected Response post(Reference uri, Form form) {
-        Client client = new Client(Protocol.HTTP);
-        Representation rep = form.getWebRepresentation();
-        Request request = new Request(Method.POST, uri, rep);
-        addHeaders(request);
-        return client.handle(request);
-    }
-
-    protected Response put(Reference uri, Form form) {
-        Client client = new Client(Protocol.HTTP);
-        Representation rep = form.getWebRepresentation();
-        Request request = new Request(Method.PUT, uri, rep);
-        addHeaders(request);
-        return client.handle(request);
-    }
-
-    public String createProfileItem(Form data) throws Exception {
-        BaseProfileCategoryTestCase profileCategoryTestCase = new BaseProfileCategoryTestCase("BaseProfileItemTestCase");
-        profileCategoryTestCase.setUp();
-        Response response = profileCategoryTestCase.doPost(data);
-        DomRepresentation rep = response.getEntityAsDom();
-        //rep.write(System.out);
-        return rep.getDocument().
-                getElementsByTagName("ProfileItem").item(0).getAttributes().getNamedItem("uid").getNodeValue();
-    }
-
-    protected void setMediaType(MediaType mediaType) {
-        this.mediaType = mediaType;
+        statement.execute();
     }
 
     protected void setControl(String controlFile) {
@@ -128,8 +50,6 @@ public class APITestCase extends XMLTestCase {
     }
 
     protected void assertJSONIdentical(Response response) throws Exception {
-        String test = asString(response.getEntity().getStream());
-        System.out.println(test);
     }
 
     protected void assertXMLSimilar(Response response) throws Exception {
@@ -158,31 +78,6 @@ public class APITestCase extends XMLTestCase {
             sb.append(line.trim());
         }
         return sb.toString();
-
     }
 }
 
-class UIDDifferenceListener implements DifferenceListener {
-
-    public int differenceFound(Difference difference) {
-
-        Node node = difference.getControlNodeDetail().getNode();
-
-        if (node.getNodeName().equals("uid")) {
-            return RETURN_IGNORE_DIFFERENCE_NODES_SIMILAR;
-        }
-
-        if (node.getNodeType() == Node.TEXT_NODE &&
-                node.getParentNode().getNodeName().equals("Name") &&
-                node.getParentNode().getParentNode().getNodeName().equals("ProfileItem")) {
-            return RETURN_IGNORE_DIFFERENCE_NODES_SIMILAR;
-        }
-
-        //System.out.println(node.getNodeName() + " => " + difference.getDescription() + " => " + node.getNodeValue());
-
-        return RETURN_ACCEPT_DIFFERENCE;
-    }
-
-    public void skippedComparison(Node node, Node node1) {
-    }
-}

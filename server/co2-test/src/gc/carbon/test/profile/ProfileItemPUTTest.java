@@ -6,7 +6,6 @@ import org.restlet.data.Status;
 import org.w3c.dom.Document;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -28,10 +27,11 @@ import java.util.Date;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileItemPUT extends BaseProfileItemTestCase {
+public class ProfileItemPUTTest extends BaseProfileItemTest {
 
-    public ProfileItemPUT(String name) {
+    public ProfileItemPUTTest(String name) throws Exception {
         super(name);
+        initDB();
     }
 
     @Test
@@ -163,8 +163,6 @@ public class ProfileItemPUT extends BaseProfileItemTestCase {
 
     private void assertDateNodes(Form data, String startDate, String endDate, String end) throws Exception {
         Document doc = doPut(data).getEntityAsDom().getDocument();
-        //doPut(data).getEntityAsDom().write(System.out);
-
         assertXpathEvaluatesTo(startDate, "/Resources/ProfileItemResource/ProfileItem/StartDate", doc);
         if (endDate != null) {
             assertXpathEvaluatesTo(endDate, "/Resources/ProfileItemResource/ProfileItem/EndDate", doc);

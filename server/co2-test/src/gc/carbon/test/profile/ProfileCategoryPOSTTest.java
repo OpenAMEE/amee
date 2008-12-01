@@ -27,9 +27,9 @@ import java.util.Date;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryPOST extends BaseProfileCategoryTestCase {
+public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
 
-    public ProfileCategoryPOST(String name) {
+    public ProfileCategoryPOSTTest(String name) throws Exception {
         super(name);
     }
 
