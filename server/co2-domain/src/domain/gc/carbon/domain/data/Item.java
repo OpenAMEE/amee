@@ -276,8 +276,9 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
 
     public void appendInternalValues(Map<ItemValueDefinition, InternalItemValue> values) {
         for (ItemValue iv : getItemValues()) {
-            if (iv.getUsableValue() != null)
+            if (iv.getUsableValue() != null) {
                 values.put(iv.getItemValueDefinition(), new InternalItemValue(iv));
+            }
         }
     }
 

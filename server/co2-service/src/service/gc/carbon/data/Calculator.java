@@ -75,7 +75,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
                 profileFinder.setProfileItem(profileItem);
                 dataFinder.setStartDate(profileItem.getStartDate());
                 dataFinder.setEndDate(profileItem.getEndDate());
-                dataFinder.getDataItemValue("home/energy/quantity", "type=diesel", "kgCO2PerLitre");
+                // dataFinder.getDataItemValue("home/energy/quantity", "type=diesel", "kgCO2PerLitre");
                 values.put("profileFinder", profileFinder);
                 values.put("dataFinder", dataFinder);
                 // get the new amount via algorithm and values
@@ -149,7 +149,6 @@ public class Calculator implements BeanFactoryAware, Serializable {
             log.warn("caught EvaluatorException: " + e.getMessage());
         } catch (RhinoException e) {
             log.warn("caught RhinoException: " + e.getMessage());
-
         } finally {
             Context.exit();
         }
@@ -188,12 +187,10 @@ public class Calculator implements BeanFactoryAware, Serializable {
         profileItem.getItemDefinition().appendInternalValues(values);
         profileItem.getDataItem().appendInternalValues(values);
         profileItem.appendInternalValues(values);
-
         Map<String, Object> returnValues = new HashMap<String, Object>();
         for (ItemValueDefinition ivd : values.keySet()) {
             returnValues.put(ivd.getPath(), values.get(ivd).getValue());
         }
-
         return returnValues;
     }
 
@@ -218,9 +215,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
                 if (itemValueDefinition.isFromProfile() && userValueChoices.containsKey(itemValueDefinition.getPath())) {
                     userChoices.put(itemValueDefinition,
                             new InternalItemValue(userValueChoices.get(itemValueDefinition.getPath()).getValue()));
-
                 }
-
             }
             values.putAll(userChoices);
         }

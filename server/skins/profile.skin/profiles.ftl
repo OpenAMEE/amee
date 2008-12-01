@@ -36,7 +36,7 @@ function deleteProfile(profileUid) {
         <td>${p.displayPath}</td>
         <td>${p.permission.group.name}</td>
         <td>${p.permission.user.username}</td>
-        <td>${p.created?string}</td>
+        <td>${p.created?datetime}</td>
         <td>
             <#if browser.profileActions.allowView><a href='/profiles/${p.displayPath}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
             <#if browser.profileActions.allowDelete><input type="image" onClick="deleteProfile('${p.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>

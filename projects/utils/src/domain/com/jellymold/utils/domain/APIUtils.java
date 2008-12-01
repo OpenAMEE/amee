@@ -2,11 +2,11 @@ package com.jellymold.utils.domain;
 
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
+import org.hibernate.util.DTDEntityResolver;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.hibernate.util.DTDEntityResolver;
 
 import java.io.InputStream;
 
@@ -35,9 +35,13 @@ public class APIUtils {
     }
 
     public static org.dom4j.Element getRootElement(InputStream stream) throws DocumentException {
-        SAXReader saxReader = new SAXReader();
-        saxReader.setEntityResolver(new DTDEntityResolver());
-        saxReader.setMergeAdjacentText(true);
-        return saxReader.read(stream).getRootElement();
+        if (stream != null) {
+            SAXReader saxReader = new SAXReader();
+            saxReader.setEntityResolver(new DTDEntityResolver());
+            saxReader.setMergeAdjacentText(true);
+            return saxReader.read(stream).getRootElement();
+        } else {
+            return null;
+        }
     }
 }

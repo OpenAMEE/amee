@@ -23,7 +23,6 @@ import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.builder.resource.ResourceBuilder;
 import gc.carbon.builder.resource.ResourceBuilderFactory;
 import gc.carbon.data.Calculator;
@@ -52,8 +51,8 @@ import org.w3c.dom.Element;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.*;
 import java.math.BigDecimal;
+import java.util.*;
 
 @Component("profileCategoryResource")
 @Scope("prototype")
@@ -167,8 +166,7 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
         setForm(new ProfileForm(getRequest().getResourceRef().getQueryAsForm()));
         if (!isValidRequest()) {
             badRequest();
-        }
-        else if (profileBrowser.getEnvironmentActions().isAllowView()) {
+        } else if (profileBrowser.getEnvironmentActions().isAllowView()) {
             setBuilderStrategy();
             super.handleGet();
         } else {
@@ -200,11 +198,13 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
 
     protected void postOrPut(org.restlet.resource.Representation entity) {
         log.debug("postOrPut");
-
         if (isPostOrPutAuthorized()) {
-
-            profileItems = doPostOrPut(entity, getForm());
-
+            // TODO: This is a hack - need to rethink how this is done as once getForm() is called we can't get the body as a stream
+            if (entity.getMediaType().equals(MediaType.APPLICATION_XML)) {
+                profileItems = doPostOrPut(entity, new ProfileForm());
+            } else {
+                profileItems = doPostOrPut(entity, getForm());
+            }
             if (!profileItems.isEmpty()) {
                 // clear caches
                 pathItemService.removePathItemGroup(profileBrowser.getProfile());
@@ -224,16 +224,14 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
     }
 
     private boolean isPostOrPutAuthorized() {
-         return (getRequest().getMethod().equals(Method.POST) && (profileBrowser.getProfileItemActions().isAllowCreate())) ||
-                 (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()));
-     }
-
+        return (getRequest().getMethod().equals(Method.POST) && (profileBrowser.getProfileItemActions().isAllowCreate())) ||
+                (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()));
+    }
 
     public List<ProfileItem> doPostOrPut(org.restlet.resource.Representation entity, ProfileForm form) {
         setBuilderStrategy();
         return lookupAcceptor(entity.getMediaType()).accept(entity, form);
     }
-
 
     private Acceptor lookupAcceptor(MediaType type) {
         if (MediaType.APPLICATION_JSON.includes(type)) {
@@ -241,11 +239,11 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
         } else if (MediaType.APPLICATION_XML.includes(type)) {
             return acceptors.get(MediaType.APPLICATION_XML);
         } else {
-           return acceptors.get(MediaType.APPLICATION_WWW_FORM);
+            return acceptors.get(MediaType.APPLICATION_WWW_FORM);
         }
     }
 
-     @Override
+    @Override
     public boolean allowDelete() {
         // only allow delete for profile (a request to /profiles/{profileUid})
         return (pathItem.getPath().length() == 0);

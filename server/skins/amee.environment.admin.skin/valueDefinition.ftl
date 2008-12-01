@@ -8,8 +8,8 @@
 <h2>Value Definition Details</h2>
 <p>Name: ${valueDefinition.name}<br/>
    Value Type: ${valueDefinition.valueType}<br/>
-   Created: ${valueDefinition.created?string.short}<br/>
-   Modified: ${valueDefinition.modified?string.short}<br/>
+   Created: ${valueDefinition.created?datetime}<br/>
+   Modified: ${valueDefinition.modified?datetime}<br/>
 </p>
 <#if browser.valueDefinitionActions.allowModify>
   <h2>Update Value Definition</h2>
