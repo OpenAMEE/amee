@@ -1,17 +1,9 @@
 package gc.carbon.test.data;
 
-import org.restlet.data.Response;
-import org.restlet.data.Reference;
-import org.restlet.data.MediaType;
-import org.restlet.data.Form;
 import org.restlet.resource.DomRepresentation;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormat;
-import gc.carbon.test.APITestCase;
-import gc.carbon.test.profile.BaseProfileCategoryTestCase;
 
 /**
  * This file is part of AMEE.
@@ -32,51 +24,13 @@ import gc.carbon.test.profile.BaseProfileCategoryTestCase;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class DataCategoryTestCase extends APITestCase {
+public class DataCategoryTest extends BaseDataTest {
 
-    private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMdd'T'HHmm");
-    private Reference reference = new Reference(LOCAL_HOST_NAME + "/data/home/energy/quantity");
-
-    public DataCategoryTestCase(String name) {
+    public DataCategoryTest(String name) throws Exception {
         super(name);
     }
 
-    protected Response doGet() throws Exception {
-        setMediaType(MediaType.APPLICATION_XML);
-        return get(reference);
-    }
-
-    private String create(DateTime startDate, DateTime endDate) throws Exception {
-        Form data = new Form();
-        data.add("newObjectType","DI");
-        data.add("type","diesel");
-        data.add("startDate",startDate.toString(fmt));
-        if (endDate != null)
-            data.add("endDate",endDate.toString(fmt));
-        return createDataItem(data);
-    }
-
-    public String createDataItem(Form data) throws Exception {
-        setMediaType(MediaType.APPLICATION_XML);
-        DomRepresentation rep = post(reference, data).getEntityAsDom();
-        rep.write(System.out);
-        System.out.println("");
-        return rep.getDocument().
-                getElementsByTagName("DataItem").item(0).getAttributes().getNamedItem("uid").getNodeValue();
-    }
-
-    private void doAssertSimilarXML() throws Exception {
-        Response response = doGet();
-        assertXMLSimilar(response);
-    }
-
     @Test
-    //public void testGetHomeHeating() throws Exception {
-    //    setControl("get-data-home-heating.xml");
-    //    doAssertSimilarXML();
-    //}
-
-    @org.testng.annotations.Test
     public void testSupercededNotReturned() throws Exception {
 
         DateTime startDate = new DateTime();
@@ -93,8 +47,8 @@ public class DataCategoryTestCase extends APITestCase {
         System.out.println("inside_and_ongoing_named  : " + inside_and_ongoing_named);
         System.out.println("inside_and_ongoing2_named : " + inside_and_ongoing2_named);
 
-        reference.setQuery("startDate="+startDate.toString(fmt));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        client.setQuery("startDate="+startDate.toString(FMT));
+        DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//DataItem[@uid='" + before_and_ongoing_named + "']", doc);
         assertXpathNotExists("//DataItem[@uid='" + before_and_ongoing2_named + "']", doc);

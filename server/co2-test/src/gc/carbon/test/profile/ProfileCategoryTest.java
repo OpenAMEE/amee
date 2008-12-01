@@ -1,9 +1,9 @@
-package gc.carbon.test;
+package gc.carbon.test.profile;
 
 import org.restlet.data.Form;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
-import gc.carbon.test.profile.BaseProfileCategoryTestCase;
+import gc.carbon.test.profile.BaseProfileCategoryTest;
 
 /**
  * This file is part of AMEE.
@@ -24,9 +24,9 @@ import gc.carbon.test.profile.BaseProfileCategoryTestCase;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryTestCase extends BaseProfileCategoryTestCase {
+public class ProfileCategoryTest extends BaseProfileCategoryTest {
 
-    public ProfileCategoryTestCase(String name) {
+    public ProfileCategoryTest(String name) throws Exception {
         super(name);
     }
 

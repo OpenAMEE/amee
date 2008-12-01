@@ -1,4 +1,4 @@
-package gc.carbon.test.profile;
+package gc.carbon.test.profile.v1;
 
 import org.testng.annotations.Test;
 import org.restlet.data.Status;
@@ -10,6 +10,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.jdom.xpath.XPath;
 import org.jdom.input.DOMBuilder;
 import org.jdom.Element;
+import gc.carbon.test.profile.BaseProfileCategoryTest;
 
 /**
  * This file is part of AMEE.
@@ -30,13 +31,13 @@ import org.jdom.Element;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryGETV1 extends BaseProfileCategoryTestCase {
+public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
 
     private DateTimeFormatter VALID_FROM_FMT = DateTimeFormat.forPattern("yyyyMMdd");
     private DateTimeFormatter START_DATE_FMT = DateTimeFormat.forPattern("yyyyMMdd'T'HHmm");
 
 
-    public ProfileCategoryGETV1(String name) {
+    public ProfileCategoryGETTest(String name) throws Exception {
         super(name);
     }
 
@@ -49,27 +50,28 @@ public class ProfileCategoryGETV1 extends BaseProfileCategoryTestCase {
          Form data = new Form();
          data.add("validFrom",startDate.toString(VALID_FROM_FMT));
          data.add("distanceKmPerMonth","1000");
-         return createProfileItem(data);
+         data.add("dataItemUid",DATA_CATEGORY_UID);
+         return client.createProfileItem(data);
     }
 
     @Test
     public void testInValidEndDateRequest() throws Exception {
-        getReference().setQuery("endDate=20100401");
-        Status status = doGet().getStatus();
+        client.setQuery("endDate=20100401");
+        Status status = client.get().getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
     }
 
     @Test
     public void testInValidDurationRequest() throws Exception {
-        getReference().setQuery("duration=PT30M");
-        Status status = doGet().getStatus();
+        client.setQuery("duration=PT30M");
+        Status status = client.get().getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
     }
 
     @Test
     public void testInValidStartDateRequest() throws Exception {
-        getReference().setQuery("startDate=20100401");
-        Status status = doGet().getStatus();
+        client.setQuery("startDate=20100401");
+        Status status = client.get().getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
     }
 
@@ -78,14 +80,14 @@ public class ProfileCategoryGETV1 extends BaseProfileCategoryTestCase {
         DateTime startDate = new DateTime();
 
         String uid = create(startDate);
-        getReference().setQuery("validFrom=" + VALID_FROM_FMT.print(startDate));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        client.setQuery("validFrom=" + VALID_FROM_FMT.print(startDate));
+        DomRepresentation rep = client.get().getEntityAsDom();
         assertXpathExists("//ProfileItem[@uid='" + uid + "']", rep.getDocument());
         Element e = (Element) XPath.selectSingleNode(new DOMBuilder().build(rep.getDocument()).getRootElement(), "//ProfileItem[@uid='" + uid + "']/amountPerMonth");
         String amount = e.getText();        
 
-        getReference().setQuery("v=2.0&startDate=" + START_DATE_FMT.print(startDate));
-        rep = doGet().getEntityAsDom();
+        client.setQuery("v=2.0&startDate=" + START_DATE_FMT.print(startDate));
+        rep = client.get().getEntityAsDom();
         assertXpathExists("//ProfileItem[@uid='" + uid + "']", rep.getDocument());
         e = (Element) XPath.selectSingleNode(new DOMBuilder().build(rep.getDocument()).getRootElement(), "//ProfileItem[@uid='" + uid + "']/amount");
         assertEquals("Amount should be equal",amount,e.getText());

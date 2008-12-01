@@ -58,30 +58,22 @@ public class Calculator implements BeanFactoryAware, Serializable {
 
     public BigDecimal calculate(ProfileItem profileItem) {
         log.debug("starting calculator");
-        DataFinder dataFinder;
-        ProfileFinder profileFinder;
-        Map<String, Object> values;
         BigDecimal amount;
         if (!profileItem.isEnd()) {
             ItemDefinition itemDefinition = profileItem.getItemDefinition();
             Algorithm algorithm = getAlgorithm(itemDefinition, "perMonth");
             if (algorithm != null) {
-                // get DataFinder and ProfileFinder beans
-                dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
-                profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
-                profileFinder.setDataFinder(dataFinder);
-                // setup values list and initialise DataFinder and ProfileFinder
-                values = getValues(profileItem);
-                profileFinder.setProfileItem(profileItem);
-                dataFinder.setStartDate(profileItem.getStartDate());
-                dataFinder.setEndDate(profileItem.getEndDate());
-                // dataFinder.getDataItemValue("home/energy/quantity", "type=diesel", "kgCO2PerLitre");
+
+                DataFinder dataFinder = initDataFinder(profileItem);
+                ProfileFinder profileFinder = initProfileFinder(profileItem, dataFinder);
+                Map<String, Object> values = getValues(profileItem);
                 values.put("profileFinder", profileFinder);
                 values.put("dataFinder", dataFinder);
+
                 // get the new amount via algorithm and values
                 amount = calculate(algorithm, values);
+
                 if (amount != null) {
-                    // store carbon to Item
                     profileItem.updateAmount(amount);
                 } else {
                     log.warn("carbon not set");
@@ -96,6 +88,20 @@ public class Calculator implements BeanFactoryAware, Serializable {
             profileItem.updateAmount(amount);
         }
         return amount;
+    }
+
+    private ProfileFinder initProfileFinder(ProfileItem profileItem, DataFinder dataFinder) {
+        ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
+        profileFinder.setDataFinder(dataFinder);
+        profileFinder.setProfileItem(profileItem);
+        return profileFinder;
+    }
+
+    private DataFinder initDataFinder(ProfileItem profileItem) {
+        DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
+        dataFinder.setStartDate(profileItem.getStartDate());
+        dataFinder.setEndDate(profileItem.getEndDate());
+        return dataFinder;
     }
 
     public BigDecimal calculate(DataItem dataItem, Choices userValueChoices) {
@@ -130,11 +136,9 @@ public class Calculator implements BeanFactoryAware, Serializable {
         BigDecimal amount = ProfileItem.ZERO;
         String value = null;
 
-        // get our template
         String algorithmContent = algorithm.getContent();
 
         try {
-            // use a Rhino context to evaluate the carbon algorithm
             Context cx = Context.enter();
             Scriptable scope = cx.initStandardObjects();
 
@@ -160,12 +164,9 @@ public class Calculator implements BeanFactoryAware, Serializable {
                 amount = amount.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
                 if (amount.precision() > ProfileItem.PRECISION) {
                     log.warn("precision is too big: " + amount);
-                    // TODO: do something?
                 }
             } catch (Exception e) {
-                // swallow
                 log.warn("caught Exception: " + e);
-                // TODO: do something?
             }
             log.debug("got value: " + amount);
         }

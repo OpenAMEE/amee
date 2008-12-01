@@ -10,7 +10,8 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.ISOPeriodFormat;
 import org.w3c.dom.Document;
-import gc.carbon.test.profile.BaseProfileCategoryTestCase;
+import gc.carbon.test.profile.BaseProfileCategoryTest;
+import com.jellymold.utils.domain.UidGen;
 
 /**
  * This file is part of AMEE.
@@ -31,7 +32,7 @@ import gc.carbon.test.profile.BaseProfileCategoryTestCase;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
+public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
 
     private static String before_and_after;
     private static String before_and_inside;
@@ -47,17 +48,17 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
     private static DateTime endDate;
     private static Days duration;
 
-    private static boolean alreadySetUp = false;
+    private static boolean initialised = false;
 
     private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMdd'T'HHmm");
 
-    public ProfileCategoryGET(String name) throws Exception {
+    public ProfileCategoryGETTest(String name) throws Exception {
         super(name);
         setUpProfileItems();
     }
 
     private void setUpProfileItems() throws Exception {
-        if (alreadySetUp)
+        if (initialised)
             return;
 
         initDB();
@@ -76,7 +77,7 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
         inside_and_ongoing = create(startDate.plusDays(1),null, null);
         after_and_ongoing = create(endDate.plusDays(1),null, null);
 
-        alreadySetUp = true;
+        initialised = true;
     }
 
     private String create(DateTime startDate, DateTime endDate, String name) throws Exception {
@@ -84,17 +85,21 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
         data.add("startDate",startDate.toString(fmt));
         if (endDate != null)
             data.add("endDate",endDate.toString(fmt));
-        if (name != null)
+        if (name != null) {
             data.add("name", name);
+        } else {
+            data.add("name", UidGen.getUid());  
+        }
         data.add("distance","1000");
         data.add("v","2.0");
-        return createProfileItem(data);
+        data.add("dataItemUid",DATA_CATEGORY_UID);
+        return client.createProfileItem(data);
     }
 
     @Test
     public void testStartDateAfterAllEndDates() throws Exception {
-        getReference().setQuery("v=2.0&startDate="+startDate.plusDays(100).toString(fmt));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        client.setQuery("v=2.0&startDate="+startDate.plusDays(100).toString(fmt));
+        DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathExists("//ProfileItem[@uid='" + before_and_ongoing + "']", doc);
         assertXpathExists("//ProfileItem[@uid='" + inside_and_ongoing + "']", doc);
@@ -104,8 +109,8 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
 
     @Test
     public void testStartDateBeforeAllEndDates() throws Exception {
-        getReference().setQuery("v=2.0&startDate="+startDate.toString(fmt));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        client.setQuery("v=2.0&startDate="+startDate.toString(fmt));
+        DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + outside_and_before + "']", doc);
         assertXpathEvaluatesTo("8","count(//ProfileItem)",doc);
@@ -113,8 +118,8 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
 
     @Test
     public void testStartDateAndEndDate() throws Exception {
-        getReference().setQuery("v=2.0&startDate="+startDate.toString(fmt) + "&endDate=" +endDate.toString(fmt));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        client.setQuery("v=2.0&startDate="+startDate.toString(fmt) + "&endDate=" +endDate.toString(fmt));
+        DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + outside_and_before + "']", doc);
         assertXpathNotExists("//ProfileItem[@uid='" + after_and_outside + "']", doc);
@@ -124,8 +129,8 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
 
     @Test
     public void testStartDateAndDuration() throws Exception {
-        getReference().setQuery("v=2.0&startDate="+startDate.toString(fmt) + "&duration=" + ISOPeriodFormat.standard().print(duration));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        client.setQuery("v=2.0&startDate="+startDate.toString(fmt) + "&duration=" + ISOPeriodFormat.standard().print(duration));
+        DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + outside_and_before + "']", doc);
         assertXpathNotExists("//ProfileItem[@uid='" + after_and_outside + "']", doc);
@@ -135,8 +140,8 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
 
     @Test
     public void testSelectByStart() throws Exception {
-        getReference().setQuery("v=2.0&selectBy=start&startDate="+startDate.toString(fmt));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        client.setQuery("v=2.0&selectBy=start&startDate="+startDate.toString(fmt));
+        DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + before_and_after + "']", doc);
         assertXpathNotExists("//ProfileItem[@uid='" + before_and_inside + "']", doc);
@@ -145,8 +150,8 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
 
     @Test
     public void testSelectByEnd() throws Exception {
-        getReference().setQuery("v=2.0&selectBy=end&startDate="+startDate.toString(fmt));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        client.setQuery("v=2.0&selectBy=end&startDate="+startDate.toString(fmt));
+        DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + after_and_outside + "']", doc);
         assertXpathNotExists("//ProfileItem[@uid='" + after_and_ongoing + "']", doc);
@@ -154,15 +159,15 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
 
     @Test
     public void testInValidProfileDateRequest() throws Exception {
-        getReference().setQuery("profileDate=201004&v=2.0");
-        Status status = doGet().getStatus();
+        client.setQuery("profileDate=201004&v=2.0");
+        Status status = client.get().getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
     }
 
     @Test
     public void testCorrectStartDateAndEndDateReturned() throws Exception {
-        getReference().setQuery("v=2.0&startDate="+startDate.toString(fmt) + "&endDate=" +endDate.toString(fmt));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        client.setQuery("v=2.0&startDate="+startDate.toString(fmt) + "&endDate=" +endDate.toString(fmt));
+        DomRepresentation rep = client.get().getEntityAsDom();
         rep.write(System.out);
         Document doc = rep.getDocument();
         assertXpathEvaluatesTo(startDate.toString(fmt),"//StartDate", doc);
@@ -171,8 +176,8 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
 
     @Test
     public void testCorrectStartDateReturned() throws Exception {
-        getReference().setQuery("v=2.0&startDate="+startDate.toString(fmt));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        client.setQuery("v=2.0&startDate="+startDate.toString(fmt));
+        DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathEvaluatesTo(startDate.toString(fmt),"//StartDate", doc);
         assertXpathEvaluatesTo("","//EndDate", doc);
@@ -193,8 +198,8 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
         System.out.println("inside_and_ongoing_named  : " + inside_and_ongoing_named);
         System.out.println("inside_and_ongoing2_named : " + inside_and_ongoing2_named);
 
-        getReference().setQuery("v=2.0&startDate="+startDate.toString(fmt));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        client.setQuery("v=2.0&startDate="+startDate.toString(fmt));
+        DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + before_and_ongoing_named + "']", doc);
         assertXpathNotExists("//ProfileItem[@uid='" + before_and_ongoing2_named + "']", doc);
@@ -215,17 +220,17 @@ public class ProfileCategoryGET extends BaseProfileCategoryTestCase {
 
         // A prorata request must include an endDate
         getReference().setQuery("v=2.0&mode=prorata&startDate="+startDate.toString(fmt));
-        Status status = doGet().getStatus();
+        Status status = client.get().getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
 
         // Validate correct prorata logic
         getReference().setQuery("v=2.0&startDate="+startDate.toString(fmt) + "&endDate=" + endDate.toString(fmt));
-        DomRepresentation rep = doGet().getEntityAsDom();
+        DomRepresentation rep = client.get().getEntityAsDom();
         String bounded_and_perMonth_amount = XPathFactory.newInstance().newXPath().evaluate(bounded_and_perMonth_amount_xpath,rep.getStream());
         String open_and_perMonth_amount = XPathFactory.newInstance().newXPath().evaluate(open_and_perMonth_amount_xpath,rep.getStream());
 
         getReference().setQuery("v=2.0&mode=prorata&startDate="+startDate.toString(fmt) + "&endDate=" + endDate.toString(fmt));
-        rep = doGet().getEntityAsDom();
+        rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
 
         assertXpathEvaluatesTo(bounded_and_perMonth_amount, bounded_and_perMonth_amount_xpath, doc);
