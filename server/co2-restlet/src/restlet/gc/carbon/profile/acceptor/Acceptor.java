@@ -3,7 +3,6 @@ package gc.carbon.profile.acceptor;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileForm;
-import org.restlet.data.Form;
 import org.restlet.resource.Representation;
 
 import java.util.List;

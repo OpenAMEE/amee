@@ -38,5 +38,4 @@ public class BaseProfileTest extends APITestCase {
         super(s);
         client = new TestClient(CATEGORY);
     }
-
 }

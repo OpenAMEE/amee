@@ -34,9 +34,9 @@ import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.domain.profile.ValidFromDate;
 import gc.carbon.path.PathItemService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -175,10 +175,12 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
                     ItemValue itemValue = itemValues.get(name);
                     if (itemValue != null) {
                         itemValue.setValue(form.getFirstValue(name));
-                        if (itemValue.hasUnits())
+                        if (itemValue.hasUnits()) {
                             itemValue.setUnit(form.getFirstValue(name + "Unit"));
-                        if (itemValue.hasPerUnits())
+                        }
+                        if (itemValue.hasPerUnits()) {
                             itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
+                        }
                     }
                 }
                 log.debug("ProfileItem updated");

@@ -2,21 +2,18 @@ package gc.carbon.profile;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.domain.APIObject;
 import gc.carbon.BaseResource;
 import gc.carbon.builder.APIVersion;
 import gc.carbon.builder.resource.BuildableResource;
 import gc.carbon.data.Calculator;
 import gc.carbon.data.DataService;
-import gc.carbon.domain.path.PathItem;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.restlet.Context;
 import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.springframework.beans.factory.BeanFactory;
 
 import javax.persistence.EntityManager;
 import java.util.Set;
@@ -71,14 +68,16 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
     }
 
     public ProfileForm getForm() throws IllegalArgumentException {
-        if (form == null)
+        if (form == null) {
             form = new ProfileForm(super.getForm());
+        }
         return form;
     }
 
     public APIVersion getVersion() throws IllegalArgumentException {
-        if (form == null)
+        if (form == null) {
             form = new ProfileForm(super.getForm());
+        }
         return form.getVersion();
     }
 
@@ -128,8 +127,8 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
 
 
     private boolean proRateModeHasNoEndDate() {
-        return getForm().getFirstValue("mode","null").equals("prorata")
-                   && !getForm().getNames().contains("endDate");
+        return getForm().getFirstValue("mode", "null").equals("prorata")
+                && !getForm().getNames().contains("endDate");
     }
 
     private boolean containsCalendarParams() {

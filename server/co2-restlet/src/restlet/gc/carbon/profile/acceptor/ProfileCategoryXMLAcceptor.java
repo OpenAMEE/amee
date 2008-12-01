@@ -47,36 +47,39 @@ public class ProfileCategoryXMLAcceptor extends Acceptor {
         org.dom4j.Element profileItemsElem;
         org.dom4j.Element profileItemElem;
         org.dom4j.Element profileItemValueElem;
-        try {
-            rootElem = APIUtils.getRootElement(entity.getStream());
-            if (rootElem.getName().equalsIgnoreCase("ProfileCategory")) {
-                profileItemsElem = rootElem.element("ProfileItems");
-                if (profileItemsElem != null) {
-                    for (Object o1 : profileItemsElem.elements("ProfileItem")) {
-                        profileItemElem = (org.dom4j.Element) o1;
-                        form = new ProfileForm();
-                        for (Object o2 : profileItemElem.elements()) {
-                            profileItemValueElem = (org.dom4j.Element) o2;
-                            form.add(profileItemValueElem.getName(), profileItemValueElem.getText());
-                        }
-
-                        entity.setMediaType(MediaType.TEXT_PLAIN);
-                        List<ProfileItem> items = resource.doPostOrPut(entity, form);
-                        if (!items.isEmpty()) {
-                            profileItems.addAll(items);
-                        } else {
-                            log.warn("Profile Item not added");
-                            return profileItems;
+        if (entity.isAvailable()) {
+            try {
+                rootElem = APIUtils.getRootElement(entity.getStream());
+                if (rootElem.getName().equalsIgnoreCase("ProfileCategory")) {
+                    profileItemsElem = rootElem.element("ProfileItems");
+                    if (profileItemsElem != null) {
+                        for (Object o1 : profileItemsElem.elements("ProfileItem")) {
+                            profileItemElem = (org.dom4j.Element) o1;
+                            form = new ProfileForm();
+                            for (Object o2 : profileItemElem.elements()) {
+                                profileItemValueElem = (org.dom4j.Element) o2;
+                                form.add(profileItemValueElem.getName(), profileItemValueElem.getText());
+                            }
+                            entity.setMediaType(MediaType.TEXT_PLAIN);
+                            List<ProfileItem> items = resource.doPostOrPut(entity, form);
+                            if (!items.isEmpty()) {
+                                profileItems.addAll(items);
+                            } else {
+                                log.warn("Profile Item not added");
+                                return profileItems;
+                            }
                         }
                     }
+                } else {
+                    log.warn("Profile Category not found");
                 }
-            } else {
-                log.warn("Profile Category not found");
+            } catch (DocumentException e) {
+                log.warn("Caught DocumentException: " + e.getMessage(), e);
+            } catch (IOException e) {
+                log.warn("Caught IOException: " + e.getMessage(), e);
             }
-        } catch (DocumentException e) {
-            log.warn("Caught DocumentException: " + e.getMessage(), e);
-        } catch (IOException e) {
-            log.warn("Caught IOException: " + e.getMessage(), e);
+        } else {
+            log.warn("XML not available");
         }
         return profileItems;
     }

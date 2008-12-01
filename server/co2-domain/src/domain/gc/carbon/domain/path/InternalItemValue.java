@@ -9,12 +9,11 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.Duration;
 
 import javax.measure.DecimalMeasure;
+import static javax.measure.unit.SI.MILLI;
+import static javax.measure.unit.SI.SECOND;
 import javax.measure.unit.Unit;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.BigInteger;
-
-import static javax.measure.unit.SI.*;
 
 /**
  * This file is part of AMEE.
@@ -65,8 +64,9 @@ public class InternalItemValue {
 
     public InternalItemValue(ItemValue itemValue) {
         if (isDecimal(itemValue.getItemValueDefinition())) {
-            if (itemValue.hasUnits())
+            if (itemValue.hasUnits()) {
                 unit = Unit.valueOf(itemValue.getUnit());
+            }
             if (itemValue.hasPerUnits()) {
                 if (itemValue.getPerUnit().equals("none")) {
                     Duration duration = itemValue.getItem().getDuration();
@@ -108,8 +108,9 @@ public class InternalItemValue {
     }
 
     private BigDecimal asInternalValue(BigDecimal decimal, ItemValueDefinition ivd) {
-        if (unit == null && perUnit == null)
+        if (unit == null && perUnit == null) {
             return decimal;
+        }
 
         Unit internalUnit = Unit.valueOf(ivd.getInternalUnit()).divide(Unit.valueOf(ivd.getInternalPerUnit()));
         Unit externalUnit;
@@ -133,6 +134,4 @@ public class InternalItemValue {
 
         return internalDecimal;
     }
-
 }
-

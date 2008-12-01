@@ -22,9 +22,9 @@ package gc.carbon.domain.data;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
+import gc.carbon.builder.Builder;
 import gc.carbon.builder.domain.BuildableItemValue;
 import gc.carbon.builder.domain.current.ItemValueBuilder;
-import gc.carbon.builder.Builder;
 import gc.carbon.domain.ObjectType;
 import gc.carbon.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
@@ -258,12 +258,12 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
     }
 
     public void setUnit(String unit) throws IllegalArgumentException {
-        if (unit == null || unit.length() == 0)
+        if (unit == null || unit.length() == 0) {
             return;
-
-        if ( !hasUnits() || !itemValueDefinition.isValidUnit(unit) )
+        }
+        if (!hasUnits() || !itemValueDefinition.isValidUnit(unit)) {
             throw new IllegalArgumentException();
-
+        }
         this.unit = unit;
     }
 
@@ -272,12 +272,12 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
     }
 
     public void setPerUnit(String perUnit) throws IllegalArgumentException {
-        if (perUnit == null || perUnit.length() == 0)
+        if (perUnit == null || perUnit.length() == 0) {
             return;
-
-        if ( !hasPerUnits() || !itemValueDefinition.isValidPerUnit(perUnit) )
+        }
+        if (!hasPerUnits() || !itemValueDefinition.isValidPerUnit(perUnit)) {
             throw new IllegalArgumentException();
-
+        }
         this.perUnit = perUnit;
     }
 

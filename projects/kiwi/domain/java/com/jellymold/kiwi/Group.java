@@ -25,7 +25,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.persistence.Version;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,10 +71,6 @@ public class Group implements EnvironmentObject, DatedObject, Comparable, Serial
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "MODIFIED")
     private Date modified = null;
-
-    @Version
-    @Column(name = "VERSION")
-    private Long version;
 
     public Group() {
         super();
@@ -248,13 +243,5 @@ public class Group implements EnvironmentObject, DatedObject, Comparable, Serial
 
     public void setModified(Date modified) {
         this.modified = modified;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 }

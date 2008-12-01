@@ -54,10 +54,6 @@ public class Environment implements DatedObject, Comparable, Serializable {
     @Column(name = "MODIFIED")
     private Date modified = Calendar.getInstance().getTime();
 
-    @Version
-    @Column(name = "VERSION")
-    private Long version;
-
     public Environment() {
         super();
         setUid(UidGen.getUid());
@@ -249,14 +245,6 @@ public class Environment implements DatedObject, Comparable, Serializable {
 
     public void setModified(Date modified) {
         this.modified = modified;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public String getOwner() {

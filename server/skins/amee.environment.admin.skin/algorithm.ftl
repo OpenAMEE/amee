@@ -9,8 +9,8 @@
    <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/algorithms/${algorithm.uid}'>${algorithm.name}</a></p>
 <h2>Algorithm Details</h2>
 <p>Name: ${algorithm.name}<br/>
-   Created: ${algorithm.created?string.short}<br/>
-   Modified: ${algorithm.modified?string.short}<br/>
+   Created: ${algorithm.created?datetime}<br/>
+   Modified: ${algorithm.modified?datetime}<br/>
 </p>
 <#if browser.algorithmActions.allowModify>
   <h2>Update Algorithm</h2>

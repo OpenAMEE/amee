@@ -74,20 +74,27 @@
             <#list profileItem.itemValues as iv>
             <tr>
                 <#if browser.profileItemActions.allowModify>
-                <td><a href='${basePath}/${iv.displayPath}'>${iv.displayName}</a></td>
-                <td>
-                    <#if iv.itemValueDefinition.choicesAvailable>
-                    <select name='${iv.displayPath}'>
-                        <#list iv.itemValueDefinition.choiceList as choice>
-                            <option value='${choice.value}' <#if iv.value == choice.value>selected</#if>>${choice.name}</option>
-                        </#list>
-                    </select>
-                    <#else>
-                        <input name='${iv.displayPath}' value='${iv.value}' type='text' size="30"/>
-                    </#if></td>
+                    <td><a href='${basePath}/${iv.displayPath}'>${iv.displayName}</a></td>
+                    <td>
+                        <#if iv.itemValueDefinition.choicesAvailable>
+                            <select name='${iv.displayPath}'>
+                                <#list iv.itemValueDefinition.choiceList as choice>
+                                    <option value='${choice.value}' <#if iv.value == choice.value>selected</#if>>${choice.name}</option>
+                                </#list>
+                            </select>
+                        <#else>
+                            <input name='${iv.displayPath}' value='${iv.value}' type='text' size="30"/>
+                            <#if iv.hasUnits()>
+                                <input name='${iv.displayPath}Unit' value='${iv.unit}' type='text' size="30"/>
+                            </#if>
+                            <#if iv.hasPerUnits()>
+                                <input name='${iv.displayPath}PerUnit' value='${iv.perUnit}' type='text' size="30"/>
+                            </#if>
+                        </#if>
+                    </td>
                 <#else>
-                <td>${iv.displayName}</td>
-                <td>${iv.value}</td>
+                    <td>${iv.displayName}</td>
+                    <td>${iv.value}</td>
                 </#if>
             </tr>
             </#list>

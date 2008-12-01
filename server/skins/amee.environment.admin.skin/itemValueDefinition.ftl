@@ -11,8 +11,8 @@
 <p>Name: ${itemValueDefinition.name}<br/>
    Value Definition: <#if browser.valueDefinitionActions.allowView><a href='/environments/${environment.uid}/valueDefinitions/${itemValueDefinition.valueDefinition.uid}'>${itemValueDefinition.valueDefinition.name}</a><#else>${itemValueDefinition.valueDefinition.name}</#if><br/>
    Value Type: ${itemValueDefinition.valueDefinition.valueType}<br/>
-   Created: ${itemValueDefinition.created?string.short}<br/>
-   Modified: ${itemValueDefinition.modified?string.short}<br/>
+   Created: ${itemValueDefinition.created?datetime}<br/>
+   Modified: ${itemValueDefinition.modified?datetime}<br/>
 </p>
 <#if browser.itemValueDefinitionActions.allowModify>
   <h2>Update Item Value Definition</h2>

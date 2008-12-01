@@ -123,8 +123,9 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
 
         } else {
             profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
-            if (form.getNames().contains("endDate"))
+            if (form.getNames().contains("endDate")) {
                 profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+            }
 
             if (form.getNames().contains("duration")) {
                 profileItem.setDuration(form.getFirstValue("duration"));
@@ -133,11 +134,10 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
             }
 
             if (profileItem.getEndDate() != null &&
-                profileItem.getEndDate().before(profileItem.getStartDate())) {
+                    profileItem.getEndDate().before(profileItem.getStartDate())) {
                 resource.badRequest();
                 return null;
             }
-
         }
 
         // determine name for new ProfileItem
@@ -156,10 +156,12 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                     ItemValue itemValue = itemValues.get(name);
                     if (itemValue != null) {
                         itemValue.setValue(form.getFirstValue(name));
-                        if (itemValue.hasUnits())
+                        if (itemValue.hasUnits()) {
                             itemValue.setUnit(form.getFirstValue(name + "Unit"));
-                        if (itemValue.hasPerUnits())
+                        }
+                        if (itemValue.hasPerUnits()) {
                             itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
+                        }
                     }
                 }
                 resource.getCalculator().calculate(profileItem);

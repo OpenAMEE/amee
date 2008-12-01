@@ -1,8 +1,8 @@
 package gc.carbon.test.profile;
 
-import org.testng.annotations.Test;
 import org.restlet.data.Form;
 import org.restlet.data.Status;
+import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
 import java.text.SimpleDateFormat;
@@ -37,29 +37,29 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     @Test
     public void testPutWithExternalPerUnitAsYear() throws Exception {
         Form data = new Form();
-        data.add("distancePerUnit","year");
+        data.add("distancePerUnit", "year");
         data.add("distance", "1000");
         data.add("v", "2.0");
-        assertDistanceNode(data,"km","year");
+        assertDistanceNode(data, "km", "year");
     }
 
     @Test
     public void testPutWithExternalUnitAsMile() throws Exception {
         Form data = new Form();
-        data.add("distanceUnit","mi");
+        data.add("distanceUnit", "mi");
         data.add("distance", "1000");
         data.add("v", "2.0");
-        assertDistanceNode(data,"mi","year");
+        assertDistanceNode(data, "mi", "year");
     }
 
     @Test
     public void testPutWithExternalUnitAsMileAndPerUnitAsYear() throws Exception {
         Form data = new Form();
-        data.add("distanceUnit","mi");
-        data.add("distancePerUnit","year");
+        data.add("distanceUnit", "mi");
+        data.add("distancePerUnit", "year");
         data.add("distance", "1000");
         data.add("v", "2.0");
-        assertDistanceNode(data,"mi","year");
+        assertDistanceNode(data, "mi", "year");
     }
 
     @Test
@@ -98,7 +98,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         String endDate = "20100401T0030";
         Form data = new Form();
         data.add("startDate", startDate);
-        data.add("duration","PT30M");
+        data.add("duration", "PT30M");
         data.add("v", "2.0");
         assertDateNodes(data, startDate, endDate, "false");
     }
@@ -107,20 +107,20 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     public void testPutWithEndAndEndDate() throws Exception {
         Form data = new Form();
         data.add("endDate", "20100401T0000");
-        data.add("end","true");
+        data.add("end", "true");
         data.add("v", "2.0");
         Status status = doPut(data).getStatus();
-        assertEquals("Should be Bad Request",400,status.getCode());
+        assertEquals("Should be Bad Request", 400, status.getCode());
     }
 
     @Test
     public void testPutWithEndAndDuration() throws Exception {
         Form data = new Form();
         data.add("duration", "PT30M");
-        data.add("end","true");
+        data.add("end", "true");
         data.add("v", "2.0");
         Status status = doPut(data).getStatus();
-        assertEquals("Should be Bad Request",400,status.getCode());
+        assertEquals("Should be Bad Request", 400, status.getCode());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         data.add("endDate", "20100401T0000");
         data.add("v", "2.0");
         Status status = doPut(data).getStatus();
-        assertEquals("Should be Bad Request",400,status.getCode());
+        assertEquals("Should be Bad Request", 400, status.getCode());
     }
 
     @Test
@@ -140,7 +140,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         data.add("endDate", "20100401T0000");
         data.add("v", "2.0");
         Status status = doPut(data).getStatus();
-        assertEquals("Should be Bad Request",400,status.getCode());
+        assertEquals("Should be Bad Request", 400, status.getCode());
     }
 
     @Test
@@ -149,7 +149,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         data.add("validFrom", "20100401");
         data.add("v", "2.0");
         Status status = doPut(data).getStatus();
-        assertEquals("Should be Bad Request",400,status.getCode());
+        assertEquals("Should be Bad Request", 400, status.getCode());
     }
 
     @Test
@@ -158,7 +158,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         data.add("end", "true");
         data.add("v", "2.0");
         Status status = doPut(data).getStatus();
-        assertEquals("Should be Bad Request",400,status.getCode());
+        assertEquals("Should be Bad Request", 400, status.getCode());
     }
 
     private void assertDateNodes(Form data, String startDate, String endDate, String end) throws Exception {
