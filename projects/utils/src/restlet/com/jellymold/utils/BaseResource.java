@@ -29,7 +29,6 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
     protected final Log log = LogFactory.getLog(getClass());
 
     private Form form;
-
     private int page = 1;
     private PagerSetType pagerSetType = PagerSetType.ALL;
 

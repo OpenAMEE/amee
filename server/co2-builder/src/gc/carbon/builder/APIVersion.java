@@ -45,6 +45,16 @@ public class APIVersion {
         }
     }
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof APIVersion)) return false;
+        return o.toString().equals(version);
+    }
+
+    public String toString() {
+        return version;
+    }
+
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("v", version);
@@ -54,5 +64,12 @@ public class APIVersion {
     public Element getElement(Document document) {
         return APIUtils.getElement(document, "APIVersion", version);
     }
-}
 
+    public boolean isVersionOne() {
+        return equals(ONE_ZERO);
+    }
+
+    public boolean isVersionTwo() {
+        return equals(TWO_ZERO);
+    }
+}

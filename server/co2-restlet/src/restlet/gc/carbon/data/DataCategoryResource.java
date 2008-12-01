@@ -21,7 +21,6 @@ package gc.carbon.data;
 
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.BaseResource;
 import gc.carbon.definition.DefinitionService;
@@ -87,14 +86,6 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     private List<DataCategory> dataCategories;
     private DataItem dataItem;
     private List<DataItem> dataItems;
-
-    public DataCategoryResource() {
-        super();
-    }
-
-    public DataCategoryResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
 
     @Override
     public void init(Context context, Request request, Response response) {
@@ -298,20 +289,20 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void post(Representation entity) {
-        log.debug("post");
-        postOrPut(entity);
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation");
+        acceptOrStore(entity);
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
-        postOrPut(entity);
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation");
+        acceptOrStore(entity);
     }
 
     // TODO: may be a more elegant way to handle incoming representations of different media types
-    public void postOrPut(Representation entity) {
-        log.debug("postOrPut");
+    public void acceptOrStore(Representation entity) {
+        log.debug("acceptOrStore");
         DataCategory thisDataCategory = dataBrowser.getDataCategory();
         dataItems = new ArrayList<DataItem>();
         dataCategories = new ArrayList<DataCategory>();

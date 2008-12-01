@@ -62,14 +62,6 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     private Environment environment;
     private ItemDefinition newItemDefinition;
 
-    public ItemDefinitionsResource() {
-        super();
-    }
-
-    public ItemDefinitionsResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

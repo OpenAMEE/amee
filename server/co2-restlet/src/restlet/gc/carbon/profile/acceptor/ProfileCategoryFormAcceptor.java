@@ -116,7 +116,7 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
         }
 
         // TODO - Refactor this, each version should have it's own acceptor
-        if (resource.getForm().isVersionOne()) {
+        if (resource.getVersion().isVersionOne()) {
 
             profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
             profileItem.setEnd(Boolean.valueOf(form.getFirstValue("end")));

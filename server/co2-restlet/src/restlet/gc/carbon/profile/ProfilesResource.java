@@ -70,14 +70,6 @@ public class ProfilesResource extends BaseResource implements Serializable {
     private Group group;
     private Profile newProfile = null;
 
-    public ProfilesResource() {
-        super();
-    }
-
-    public ProfilesResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

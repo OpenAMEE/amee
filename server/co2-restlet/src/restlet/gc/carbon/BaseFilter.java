@@ -21,10 +21,17 @@ package gc.carbon;
 
 import org.restlet.Application;
 import org.restlet.Filter;
+import org.restlet.data.Request;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
+import gc.carbon.builder.APIVersion;
+
 public abstract class BaseFilter extends Filter {
+
+    private final Log log = LogFactory.getLog(getClass());
 
     public BaseFilter() {
         super();
@@ -41,5 +48,11 @@ public abstract class BaseFilter extends Filter {
                 segments.remove(last);
             }
         }
+    }
+
+    protected void setVersion(Request request) {
+        APIVersion apiVersion = APIVersion.get(request.getResourceRef().getQueryAsForm());
+        log.debug("APIVersion: " + apiVersion);
+        request.getAttributes().put("apiVersion", apiVersion);
     }
 }

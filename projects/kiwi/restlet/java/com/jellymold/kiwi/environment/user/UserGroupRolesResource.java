@@ -39,14 +39,6 @@ public class UserGroupRolesResource extends BaseResource {
 
     private GroupUser updatedGroupUser;
 
-    public UserGroupRolesResource() {
-        super();
-    }
-
-    public UserGroupRolesResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

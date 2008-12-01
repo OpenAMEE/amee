@@ -54,14 +54,6 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
-    public AlgorithmResource() {
-        super();
-    }
-
-    public AlgorithmResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

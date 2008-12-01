@@ -53,14 +53,6 @@ public class AlgorithmsResource extends BaseResource implements Serializable {
 
     private Algorithm newAlgorithm;
 
-    public AlgorithmsResource() {
-        super();
-    }
-
-    public AlgorithmsResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

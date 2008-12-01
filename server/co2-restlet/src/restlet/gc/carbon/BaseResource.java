@@ -3,11 +3,15 @@ package gc.carbon;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.ThreadBeanHolder;
+import gc.carbon.builder.APIVersion;
 import gc.carbon.data.DataBrowser;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.profile.ProfileBrowser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.restlet.Context;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -35,14 +39,12 @@ public abstract class BaseResource extends com.jellymold.utils.BaseResource impl
 
     private final Log log = LogFactory.getLog(getClass());
 
+    protected APIVersion apiVersion;
     protected BeanFactory beanFactory;
-
-    public BaseResource() {
-        super();
-    }
-
-    public BaseResource(org.restlet.Context context, org.restlet.data.Request request, org.restlet.data.Response response) {
-        super(context, request, response);
+    
+    public void init(Context context, Request request, Response response) {
+        super.init(context, request, response);
+        apiVersion = (APIVersion) request.getAttributes().get("apiVersion");
     }
 
     public int getItemsPerPage() {
@@ -65,6 +67,7 @@ public abstract class BaseResource extends com.jellymold.utils.BaseResource impl
         DataBrowser dataBrowser = (DataBrowser) ThreadBeanHolder.get("dataBrowser");
         if (dataBrowser == null) {
             dataBrowser = (DataBrowser) beanFactory.getBean("dataBrowser");
+            dataBrowser.setAPIVersion(apiVersion);
             ThreadBeanHolder.set("dataBrowser", dataBrowser);
         }
         return dataBrowser;
@@ -74,6 +77,7 @@ public abstract class BaseResource extends com.jellymold.utils.BaseResource impl
         ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowser");
         if (profileBrowser == null) {
             profileBrowser = (ProfileBrowser) beanFactory.getBean("profileBrowser");
+            profileBrowser.setAPIVersion(apiVersion);
             ThreadBeanHolder.set("profileBrowser", profileBrowser);
         }
         return profileBrowser;

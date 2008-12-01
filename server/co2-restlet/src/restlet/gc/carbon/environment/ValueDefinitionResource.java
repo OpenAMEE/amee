@@ -55,14 +55,6 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
-    public ValueDefinitionResource() {
-        super();
-    }
-
-    public ValueDefinitionResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

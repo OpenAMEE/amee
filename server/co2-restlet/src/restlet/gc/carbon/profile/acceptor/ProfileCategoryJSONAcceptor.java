@@ -62,7 +62,7 @@ public class ProfileCategoryJSONAcceptor extends Acceptor {
                     }
 
                     entity.setMediaType(MediaType.TEXT_PLAIN);
-                    List<ProfileItem> items = resource.doPostOrPut(entity, form);
+                    List<ProfileItem> items = resource.doAcceptOrStore(entity, form);
                     if (!items.isEmpty()) {
                         profileItems.addAll(items);
                     } else {

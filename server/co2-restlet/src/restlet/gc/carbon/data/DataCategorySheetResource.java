@@ -47,14 +47,6 @@ public class DataCategorySheetResource extends BaseResource implements Serializa
 
     private DataBrowser dataBrowser;
 
-    public DataCategorySheetResource() {
-        super();
-    }
-
-    public DataCategorySheetResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
