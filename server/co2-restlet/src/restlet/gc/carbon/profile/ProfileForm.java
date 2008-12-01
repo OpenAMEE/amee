@@ -1,16 +1,11 @@
- package gc.carbon.profile;
+package gc.carbon.profile;
 
- import gc.carbon.builder.APIVersion;
- import gc.carbon.builder.mapper.LegacyDataMapper;
- import gc.carbon.builder.mapper.LegacyItemValueMapper;
- import gc.carbon.domain.profile.StartEndDate;
- import org.restlet.data.Form;
- import org.apache.commons.collections.CollectionUtils;
- import org.apache.commons.collections.Predicate;
+import gc.carbon.builder.APIVersion;
+import gc.carbon.builder.mapper.LegacyDataMapper;
+import gc.carbon.builder.mapper.LegacyItemValueMapper;
+import org.restlet.data.Form;
 
- import java.util.Date;
-
- /**
+/**
  * This file is part of AMEE.
  * <p/>
  * AMEE is free software; you can redistribute it and/or modify
@@ -31,7 +26,6 @@
  */
 public class ProfileForm extends Form {
 
-    //private APIVersion apiVersion = APIVersion.ONE;
     private APIVersion apiVersion;
 
     public ProfileForm() {
@@ -40,23 +34,19 @@ public class ProfileForm extends Form {
 
     public ProfileForm(Form form) {
         super(form.getQueryString());
-
-        // Read API version as a parameter - may move to a header
+        // read API version as a parameter - may move to a header
         apiVersion = APIVersion.get(form);
-
-        if (apiVersion.equals(APIVersion.ONE_ZERO)) {
+        if (apiVersion.isVersionOne()) {
             mapLegacyParameters();
         }
     }
 
     private void mapLegacyParameters() {
-
         for (String name : getNames()) {
             if (LegacyDataMapper.canMap(name)) {
-
-                add(LegacyItemValueMapper.getCurrentPath(name),getFirstValue(name));
-                add(LegacyItemValueMapper.getCurrentPath(name)+"Unit", LegacyDataMapper.getUnit(name));
-                add(LegacyItemValueMapper.getCurrentPath(name)+"PerUnit", LegacyDataMapper.getPerUnit(name));
+                add(LegacyItemValueMapper.getCurrentPath(name), getFirstValue(name));
+                add(LegacyItemValueMapper.getCurrentPath(name) + "Unit", LegacyDataMapper.getUnit(name));
+                add(LegacyItemValueMapper.getCurrentPath(name) + "PerUnit", LegacyDataMapper.getPerUnit(name));
                 removeFirst(name);
             }
         }
@@ -64,9 +54,5 @@ public class ProfileForm extends Form {
 
     public APIVersion getVersion() {
         return apiVersion;
-    }
-
-    public boolean isVersionOne() {
-      return getVersion().equals(APIVersion.ONE_ZERO);
     }
 }

@@ -10,10 +10,7 @@ import gc.carbon.data.Calculator;
 import gc.carbon.data.DataService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.restlet.Context;
 import org.restlet.data.Method;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
 
 import javax.persistence.EntityManager;
 import java.util.Set;
@@ -41,14 +38,6 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
 
     ProfileForm form;
 
-    public BaseProfileResource() {
-        super();
-    }
-
-    public BaseProfileResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     public abstract ProfileSheetService getProfileSheetService();
 
     public abstract Pager getPager();
@@ -75,10 +64,7 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
     }
 
     public APIVersion getVersion() throws IllegalArgumentException {
-        if (form == null) {
-            form = new ProfileForm(super.getForm());
-        }
-        return form.getVersion();
+        return (APIVersion) getRequest().getAttributes().get("apiVersion");
     }
 
     public String getFullPath() {
@@ -97,34 +83,29 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
         return getRequest().getMethod().equals(Method.GET);
     }
 
+    // TODO: need to ensure this is only called when dealing with a standard form
     public boolean isValidRequest() {
-
-        if (getForm().isVersionOne()) {
-
-            if (containsCalendarParams())
+        if (getVersion().isVersionOne()) {
+            if (containsCalendarParams()) {
                 return false;
-
-        } else {
-
-            if (isGET()) {
-
-                if (containsProfileDate())
-                    return false;
-
-                if (proRateModeHasNoEndDate())
-                    return false;
-            } else {
-
-                if (containsValidFromOrEnd())
-                    return false;
             }
-
+        } else {
+            if (isGET()) {
+                if (containsProfileDate()) {
+                    return false;
+                }
+                if (proRateModeHasNoEndDate()) {
+                    return false;
+                }
+            } else {
+                if (containsValidFromOrEnd()) {
+                    return false;
+                }
+            }
             return isValidBoundedCalendarRequest();
-
         }
         return true;
     }
-
 
     private boolean proRateModeHasNoEndDate() {
         return getForm().getFirstValue("mode", "null").equals("prorata")
@@ -146,7 +127,7 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
                 getForm().getNames().contains("end");
     }
 
-    //TODO - end is not allowed in 2.0 so can be removed
+    // TODO: end is not allowed in 2.0 so can be removed
     private boolean isValidBoundedCalendarRequest() {
         int count = CollectionUtils.countMatches(getForm().getNames(), new Predicate() {
             public boolean evaluate(Object o) {

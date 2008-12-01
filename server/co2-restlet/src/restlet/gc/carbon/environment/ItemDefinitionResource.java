@@ -56,14 +56,6 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
-    public ItemDefinitionResource() {
-        super();
-    }
-
-    public ItemDefinitionResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

@@ -87,14 +87,6 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     private PathItem pathItem;
     private ResourceBuilder builder;
 
-    public ProfileItemResource() {
-        super();
-    }
-
-    public ProfileItemResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

@@ -23,11 +23,9 @@ import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Column;
 import com.jellymold.sheet.Row;
 import com.jellymold.sheet.Sheet;
-import com.jellymold.utils.ValueType;
 import com.jellymold.utils.ThreadBeanHolder;
+import com.jellymold.utils.ValueType;
 import com.jellymold.utils.cache.CacheableFactory;
-import gc.carbon.data.DataService;
-import gc.carbon.definition.DefinitionService;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.data.ItemValueDefinition;
@@ -36,7 +34,6 @@ import gc.carbon.domain.profile.StartEndDate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -74,8 +71,8 @@ public class ProfileSheetFactory implements CacheableFactory {
         if (itemDefinition != null) {
 
             List<ProfileItem> profileItems;
-            //TODO - Rework once we are on Spring
-            boolean isV2 = !profileBrowser.isAPIVersionOne();
+            // TODO: Rework once we are on Spring
+            boolean isV2 = profileBrowser.getAPIVersion().isVersionTwo();
             if (isV2) {
 
                 ProfileService decoratedProfileService = new OnlyActiveProfileService(profileService);

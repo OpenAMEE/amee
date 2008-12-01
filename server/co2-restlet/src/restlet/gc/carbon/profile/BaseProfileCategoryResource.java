@@ -25,12 +25,4 @@ import org.restlet.data.Response;
  * Website http://www.amee.cc
  */
 public abstract class BaseProfileCategoryResource extends BaseProfileResource implements BuildableCategoryResource {
-
-    public BaseProfileCategoryResource() {
-        super();
-    }
-
-    public BaseProfileCategoryResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
 }

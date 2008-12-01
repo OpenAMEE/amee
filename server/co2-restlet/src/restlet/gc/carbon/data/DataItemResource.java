@@ -71,14 +71,6 @@ public class DataItemResource extends BaseResource implements Serializable {
     private DataBrowser dataBrowser;
     private List<Choice> parameters = new ArrayList<Choice>();
 
-    public DataItemResource() {
-        super();
-    }
-
-    public DataItemResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

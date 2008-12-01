@@ -59,14 +59,6 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
 
     private ItemValueDefinition newItemValueDefinition;
 
-    public ItemValueDefinitionsResource() {
-        super();
-    }
-
-    public ItemValueDefinitionsResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

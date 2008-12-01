@@ -51,6 +51,7 @@ public class ProfileFilter extends BaseFilter {
 
     protected int beforeHandle(Request request, Response response) {
         log.debug("before handle");
+        setVersion(request);
         return rewrite(request);
     }
 
@@ -61,7 +62,6 @@ public class ProfileFilter extends BaseFilter {
     protected int rewrite(Request request) {
         log.info("start profile path rewrite");
         String path = null;
-        Environment environment = EnvironmentService.getEnvironment();
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
         removeEmptySegmentAtEnd(segments);

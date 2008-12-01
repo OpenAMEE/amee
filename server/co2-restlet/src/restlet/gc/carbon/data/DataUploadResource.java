@@ -75,14 +75,6 @@ public class DataUploadResource extends BaseResource implements Serializable {
     private DataBrowser dataBrowser;
     private FileItemFactory fileItemFactory;
 
-    public DataUploadResource() {
-        super();
-    }
-
-    public DataUploadResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

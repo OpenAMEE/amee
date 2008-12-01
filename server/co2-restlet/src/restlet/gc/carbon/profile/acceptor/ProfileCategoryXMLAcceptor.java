@@ -61,7 +61,7 @@ public class ProfileCategoryXMLAcceptor extends Acceptor {
                                 form.add(profileItemValueElem.getName(), profileItemValueElem.getText());
                             }
                             entity.setMediaType(MediaType.TEXT_PLAIN);
-                            List<ProfileItem> items = resource.doPostOrPut(entity, form);
+                            List<ProfileItem> items = resource.doAcceptOrStore(entity, form);
                             if (!items.isEmpty()) {
                                 profileItems.addAll(items);
                             } else {

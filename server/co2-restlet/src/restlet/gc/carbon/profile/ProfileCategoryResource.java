@@ -42,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.*;
+import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -85,14 +86,6 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
     private ResourceBuilder builder;
     private Map<MediaType, Acceptor> acceptors;
 
-    public ProfileCategoryResource() {
-        super();
-    }
-
-    public ProfileCategoryResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -106,7 +99,6 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
         profileBrowser.setDuration(form.getFirstValue("duration"));
         profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
         profileBrowser.setMode(form.getFirstValue("mode"));
-        profileBrowser.setAPIVersion(form.getFirstValue("v"));
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         setPage(request);
         setAcceptors();
@@ -163,7 +155,6 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
     @Override
     public void handleGet() {
         log.debug("handleGet");
-        setForm(new ProfileForm(getRequest().getResourceRef().getQueryAsForm()));
         if (!isValidRequest()) {
             badRequest();
         } else if (profileBrowser.getEnvironmentActions().isAllowView()) {
@@ -185,26 +176,22 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
     }
 
     @Override
-    public void post(org.restlet.resource.Representation entity) {
-        log.debug("post");
-        postOrPut(entity);
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation");
+        acceptOrStore(entity);
     }
 
     @Override
-    public void put(org.restlet.resource.Representation entity) {
-        log.debug("put");
-        postOrPut(entity);
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation");
+        acceptOrStore(entity);
     }
 
-    protected void postOrPut(org.restlet.resource.Representation entity) {
-        log.debug("postOrPut");
-        if (isPostOrPutAuthorized()) {
-            // TODO: This is a hack - need to rethink how this is done as once getForm() is called we can't get the body as a stream
-            if (entity.getMediaType().equals(MediaType.APPLICATION_XML)) {
-                profileItems = doPostOrPut(entity, new ProfileForm());
-            } else {
-                profileItems = doPostOrPut(entity, getForm());
-            }
+    protected void acceptOrStore(Representation entity) {
+        log.debug("acceptOrStore");
+        if (isAcceptOrStoreAuthorized()) {
+            profileItems = doAcceptOrStore(entity, new ProfileForm());
+            // profileItems = doAcceptOrStore(entity, getForm());
             if (!profileItems.isEmpty()) {
                 // clear caches
                 pathItemService.removePathItemGroup(profileBrowser.getProfile());
@@ -223,17 +210,17 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
         }
     }
 
-    private boolean isPostOrPutAuthorized() {
+    protected boolean isAcceptOrStoreAuthorized() {
         return (getRequest().getMethod().equals(Method.POST) && (profileBrowser.getProfileItemActions().isAllowCreate())) ||
                 (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()));
     }
 
-    public List<ProfileItem> doPostOrPut(org.restlet.resource.Representation entity, ProfileForm form) {
+    public List<ProfileItem> doAcceptOrStore(Representation entity, ProfileForm form) {
         setBuilderStrategy();
         return lookupAcceptor(entity.getMediaType()).accept(entity, form);
     }
 
-    private Acceptor lookupAcceptor(MediaType type) {
+    protected Acceptor lookupAcceptor(MediaType type) {
         if (MediaType.APPLICATION_JSON.includes(type)) {
             return acceptors.get(MediaType.APPLICATION_JSON);
         } else if (MediaType.APPLICATION_XML.includes(type)) {
@@ -250,8 +237,8 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
     }
 
     @Override
-    public void delete() {
-        log.debug("delete");
+    public void removeRepresentations() {
+        log.debug("removeRepresentations");
         if (profileBrowser.getProfileActions().isAllowDelete()) {
             Profile profile = profileBrowser.getProfile();
             pathItemService.removePathItemGroup(profile);

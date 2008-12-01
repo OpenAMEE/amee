@@ -62,14 +62,6 @@ public class ProfileItemValueResource extends BaseResource implements Serializab
     private ProfileBrowser profileBrowser;
     private PathItem pathItem;
 
-    public ProfileItemValueResource() {
-        super();
-    }
-
-    public ProfileItemValueResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

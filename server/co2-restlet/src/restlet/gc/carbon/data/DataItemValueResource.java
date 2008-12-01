@@ -47,14 +47,6 @@ public class DataItemValueResource extends BaseResource implements Serializable 
 
     private DataBrowser dataBrowser;
 
-    public DataItemValueResource() {
-        super();
-    }
-
-    public DataItemValueResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

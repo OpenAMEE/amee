@@ -3,7 +3,6 @@ package gc.carbon.test;
 import org.custommonkey.xmlunit.*;
 import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.restlet.data.*;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -82,4 +81,3 @@ public class APITestCase extends XMLTestCase {
         return sb.toString();
     }
 }
-

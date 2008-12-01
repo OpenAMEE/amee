@@ -56,14 +56,6 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
-    public ItemValueDefinitionResource() {
-        super();
-    }
-
-    public ItemValueDefinitionResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);

@@ -63,14 +63,6 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
     private Environment environment;
     private ValueDefinition newValueDefinition;
 
-    public ValueDefinitionsResource() {
-        super();
-    }
-
-    public ValueDefinitionsResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
