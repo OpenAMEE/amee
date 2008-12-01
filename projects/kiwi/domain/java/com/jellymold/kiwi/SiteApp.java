@@ -60,10 +60,6 @@ public class SiteApp implements EnvironmentObject, DatedObject {
     @Column(name = "MODIFIED")
     private Date modified = null;
 
-    @Version
-    @Column(name = "VERSION")
-    private Long version;
-
     public SiteApp() {
         super();
         setUid(UidGen.getUid());
@@ -292,13 +288,5 @@ public class SiteApp implements EnvironmentObject, DatedObject {
 
     public void setModified(Date modified) {
         this.modified = modified;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 }
