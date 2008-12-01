@@ -59,10 +59,6 @@ public class Action implements DatedObject, Comparable {
     @Column(name = "MODIFIED")
     private Date modified = null;
 
-    @Version
-    @Column(name = "VERSION")
-    private Long version;
-
     public Action() {
         super();
         setUid(UidGen.getUid());
@@ -251,13 +247,5 @@ public class Action implements DatedObject, Comparable {
 
     public void setModified(Date modified) {
         this.modified = modified;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 }

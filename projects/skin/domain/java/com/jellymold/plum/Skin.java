@@ -73,10 +73,6 @@ public class Skin implements DatedObject, Serializable {
     @Column(name = "MODIFIED")
     private Date modified = null;
 
-    @Version
-    @Column(name = "VERSION")
-    private Long version;
-
     public Skin() {
         super();
         setUid(UidGen.getUid());
@@ -343,13 +339,5 @@ public class Skin implements DatedObject, Serializable {
 
     public void setModified(Date modified) {
         this.modified = modified;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 }
