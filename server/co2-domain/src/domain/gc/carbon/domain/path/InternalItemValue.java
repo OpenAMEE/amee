@@ -62,7 +62,7 @@ public class InternalItemValue {
         }
     }
 
-    public InternalItemValue(ItemValue itemValue) {
+        public InternalItemValue(ItemValue itemValue) {
         if (isDecimal(itemValue.getItemValueDefinition())) {
             if (itemValue.hasUnits()) {
                 unit = Unit.valueOf(itemValue.getUnit());

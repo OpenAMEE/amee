@@ -1,29 +1,15 @@
 package gc.carbon.test;
 
-import gc.carbon.test.profile.BaseProfileCategoryTestCase;
 import org.custommonkey.xmlunit.*;
 import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
-<<<<<<< HEAD:server/co2-test/src/gc/carbon/test/APITestCase.java
 import org.restlet.data.*;
-=======
-import org.junit.Before;
-import org.restlet.Client;
-import org.restlet.data.*;
-import org.restlet.resource.DomRepresentation;
-import org.restlet.resource.Representation;
-import org.restlet.util.Series;
->>>>>>> 63ca64fdd4369294fb820f22b718cd2f44c7ef2d:server/co2-test/src/gc/carbon/test/APITestCase.java
-import org.w3c.dom.Node;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
-<<<<<<< HEAD:server/co2-test/src/gc/carbon/test/APITestCase.java
-=======
 import java.sql.DriverManager;
->>>>>>> 63ca64fdd4369294fb820f22b718cd2f44c7ef2d:server/co2-test/src/gc/carbon/test/APITestCase.java
 import java.sql.PreparedStatement;
 
 /**
