@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
 
@@ -43,38 +44,45 @@ public class ProfileCategoryJSONAcceptor extends Acceptor {
         super(resource);
     }
 
-    public List<ProfileItem> accept(Representation entity, ProfileForm form) {
+    public List<ProfileItem> accept(Form form) {
+        throw new UnsupportedOperationException();
+    }
+
+    public List<ProfileItem> accept(Representation entity) {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
         String key;
         JSONObject rootJSON;
         JSONArray profileItemsJSON;
         JSONObject profileItemJSON;
-        try {
-            rootJSON = new JSONObject(entity.getText());
-            if (rootJSON.has("profileItems")) {
-                profileItemsJSON = rootJSON.getJSONArray("profileItems");
-                for (int i = 0; i < profileItemsJSON.length(); i++) {
-                    profileItemJSON = profileItemsJSON.getJSONObject(i);
-                    form = new ProfileForm();
-                    for (Iterator iterator = profileItemJSON.keys(); iterator.hasNext();) {
-                        key = (String) iterator.next();
-                        form.add(key, profileItemJSON.getString(key));
-                    }
-
-                    entity.setMediaType(MediaType.TEXT_PLAIN);
-                    List<ProfileItem> items = resource.doAcceptOrStore(entity, form);
-                    if (!items.isEmpty()) {
-                        profileItems.addAll(items);
-                    } else {
-                        log.warn("Profile Item not added/modified");
-                        return profileItems;
+        Form form;
+        if (entity.isAvailable()) {
+            try {
+                rootJSON = new JSONObject(entity.getText());
+                if (rootJSON.has("profileItems")) {
+                    profileItemsJSON = rootJSON.getJSONArray("profileItems");
+                    for (int i = 0; i < profileItemsJSON.length(); i++) {
+                        profileItemJSON = profileItemsJSON.getJSONObject(i);
+                        form = new ProfileForm(resource.getVersion());
+                        for (Iterator iterator = profileItemJSON.keys(); iterator.hasNext();) {
+                            key = (String) iterator.next();
+                            form.add(key, profileItemJSON.getString(key));
+                        }
+                        List<ProfileItem> items = resource.getAcceptor(MediaType.TEXT_PLAIN).accept(form);
+                        if (!items.isEmpty()) {
+                            profileItems.addAll(items);
+                        } else {
+                            log.warn("Profile Item not added/modified");
+                            return profileItems;
+                        }
                     }
                 }
+            } catch (JSONException e) {
+                log.warn("Caught JSONException: " + e.getMessage(), e);
+            } catch (IOException e) {
+                log.warn("Caught JSONException: " + e.getMessage(), e);
             }
-        } catch (JSONException e) {
-            log.warn("Caught JSONException: " + e.getMessage(), e);
-        } catch (IOException e) {
-            log.warn("Caught JSONException: " + e.getMessage(), e);
+        } else {
+            log.warn("JSON not available");
         }
         return profileItems;
     }

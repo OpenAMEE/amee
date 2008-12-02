@@ -4,6 +4,7 @@ import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileForm;
 import org.restlet.resource.Representation;
+import org.restlet.data.Form;
 
 import java.util.List;
 
@@ -34,5 +35,7 @@ public abstract class Acceptor {
         this.resource = resource;
     }
 
-    public abstract List<ProfileItem> accept(Representation entity, ProfileForm form);
+    public abstract List<ProfileItem> accept(Representation entity);
+
+    public abstract List<ProfileItem> accept(Form form);
 }

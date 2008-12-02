@@ -58,7 +58,7 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
 
     public ProfileForm getForm() throws IllegalArgumentException {
         if (form == null) {
-            form = new ProfileForm(super.getForm());
+            form = new ProfileForm(super.getForm(), getVersion());
         }
         return form;
     }
@@ -83,7 +83,6 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
         return getRequest().getMethod().equals(Method.GET);
     }
 
-    // TODO: need to ensure this is only called when dealing with a standard form
     public boolean isValidRequest() {
         if (getVersion().isVersionOne()) {
             if (containsCalendarParams()) {

@@ -7,6 +7,8 @@ import gc.carbon.profile.ProfileForm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
 
@@ -41,12 +43,17 @@ public class ProfileCategoryXMLAcceptor extends Acceptor {
         super(resource);
     }
 
-    public List<ProfileItem> accept(Representation entity, ProfileForm form) {
+    public List<ProfileItem> accept(Form form) {
+        throw new UnsupportedOperationException();
+    }
+
+    public List<ProfileItem> accept(Representation entity) {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
-        org.dom4j.Element rootElem;
-        org.dom4j.Element profileItemsElem;
-        org.dom4j.Element profileItemElem;
-        org.dom4j.Element profileItemValueElem;
+        Element rootElem;
+        Element profileItemsElem;
+        Element profileItemElem;
+        Element profileItemValueElem;
+        Form form;
         if (entity.isAvailable()) {
             try {
                 rootElem = APIUtils.getRootElement(entity.getStream());
@@ -54,14 +61,13 @@ public class ProfileCategoryXMLAcceptor extends Acceptor {
                     profileItemsElem = rootElem.element("ProfileItems");
                     if (profileItemsElem != null) {
                         for (Object o1 : profileItemsElem.elements("ProfileItem")) {
-                            profileItemElem = (org.dom4j.Element) o1;
-                            form = new ProfileForm();
+                            profileItemElem = (Element) o1;
+                            form = new ProfileForm(resource.getVersion());
                             for (Object o2 : profileItemElem.elements()) {
-                                profileItemValueElem = (org.dom4j.Element) o2;
+                                profileItemValueElem = (Element) o2;
                                 form.add(profileItemValueElem.getName(), profileItemValueElem.getText());
                             }
-                            entity.setMediaType(MediaType.TEXT_PLAIN);
-                            List<ProfileItem> items = resource.doAcceptOrStore(entity, form);
+                            List<ProfileItem> items = resource.getAcceptor(MediaType.TEXT_PLAIN).accept(form);
                             if (!items.isEmpty()) {
                                 profileItems.addAll(items);
                             } else {
