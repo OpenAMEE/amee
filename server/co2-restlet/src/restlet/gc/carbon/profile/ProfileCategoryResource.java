@@ -190,8 +190,7 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
     protected void acceptOrStore(Representation entity) {
         log.debug("acceptOrStore");
         if (isAcceptOrStoreAuthorized()) {
-            profileItems = doAcceptOrStore(entity, new ProfileForm());
-            // profileItems = doAcceptOrStore(entity, getForm());
+            profileItems = doAcceptOrStore(entity);
             if (!profileItems.isEmpty()) {
                 // clear caches
                 pathItemService.removePathItemGroup(profileBrowser.getProfile());
@@ -215,12 +214,12 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
                 (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()));
     }
 
-    public List<ProfileItem> doAcceptOrStore(Representation entity, ProfileForm form) {
+    public List<ProfileItem> doAcceptOrStore(Representation entity) {
         setBuilderStrategy();
-        return lookupAcceptor(entity.getMediaType()).accept(entity, form);
+        return getAcceptor(entity.getMediaType()).accept(entity);
     }
 
-    protected Acceptor lookupAcceptor(MediaType type) {
+    public Acceptor getAcceptor(MediaType type) {
         if (MediaType.APPLICATION_JSON.includes(type)) {
             return acceptors.get(MediaType.APPLICATION_JSON);
         } else if (MediaType.APPLICATION_XML.includes(type)) {

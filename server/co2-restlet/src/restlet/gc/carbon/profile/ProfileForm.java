@@ -28,14 +28,26 @@ public class ProfileForm extends Form {
 
     private APIVersion apiVersion;
 
-    public ProfileForm() {
+    private ProfileForm() {
         super();
     }
 
-    public ProfileForm(Form form) {
+    private ProfileForm(Form form) {
         super(form.getQueryString());
-        // read API version as a parameter - may move to a header
-        apiVersion = APIVersion.get(form);
+    }
+
+    public ProfileForm(APIVersion apiVersion) {
+        this();
+        init(apiVersion);
+    }
+
+    public ProfileForm(Form form, APIVersion apiVersion) {
+        this(form);
+        init(apiVersion);
+    }
+
+    private void init(APIVersion apiVersion) {
+        this.apiVersion = apiVersion;
         if (apiVersion.isVersionOne()) {
             mapLegacyParameters();
         }
