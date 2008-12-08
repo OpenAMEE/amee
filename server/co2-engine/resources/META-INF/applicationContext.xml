@@ -24,8 +24,7 @@
 
     <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"/>   
-
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"/>
 
     <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
         <property name="scopes">
@@ -56,7 +55,6 @@
     <springIntegration:channel id="beforeEnvironmentDelete"/>
     <springIntegration:channel id="beforeGroupDelete"/>
     <springIntegration:channel id="beforeUserDelete"/>
-
 
     <springIntegration:channel id="beforeDataItemsDelete"/>
     <springIntegration:channel id="beforeDataCategoryDelete"/>

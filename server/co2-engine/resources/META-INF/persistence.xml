@@ -1,7 +1,6 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
     <persistence-unit name="entityManager">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <!--jta-data-source>java:/PPDS</jta-data-source-->
         <class>com.jellymold.kiwi.Action</class>
         <class>com.jellymold.kiwi.App</class>
         <class>com.jellymold.kiwi.Environment</class>
@@ -27,28 +26,33 @@
         <class>gc.carbon.domain.profile.Profile</class>
         <class>gc.carbon.domain.profile.ProfileItem</class>
         <properties>
+            <!-- *** Hibernate Configuration *** -->
             <property name="hibernate.archive.autodetection" value="class"/>
-            <!-- TODO: add fancy MYSQL configuration -->
-            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
-            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/amee"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
-            <property name="hibernate.connection.username" value="amee"/>
-            <property name="hibernate.connection.password" value="amee"/>
-            <property name="hibernate.transaction.flush_before_completion" value="true"/>
-            <!--<property name="hibernate.hbm2ddl.auto" value="create"/>-->
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <!--<property name="hibernate.hbm2ddl.auto" value="create-drop"/>-->
             <property name="hibernate.max_fetch_depth" value="3"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="false"/>
             <property name="hibernate.use_sql_comments" value="true"/>
             <property name="hibernate.jdbc.batch_size" value="50"/>
+            <!-- *** Connection / MySQL Configuration *** -->
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/amee?validationQuery=SELECT+1&amp;minEvictableIdleTimeMillis=240000&amp;timeBetweenEvictionRunsMillis=1000&amp;testOnBorrow=true&amp;testWhileIdle=true&amp;autoReconnectForPools=true&amp;useCompression=true"/>
+            <property name="hibernate.connection.username" value="amee"/>
+            <property name="hibernate.connection.password" value="amee"/>
+            <!--<property name="hibe rnate.connection.check-valid-connection-sql" value="select count(*) from dual"/>-->
+            <!--<property name="hibernate.connection.exception-sorter-class-name" value="com.mysql.jdbc.integration.jboss.ExtendedMysqlExceptionSorter"/>-->
+            <!--<property name="hibernate.connection.valid-connection-checker-class-name" value="com.mysql.jdbc.integration.jboss.MysqlValidConnectionChecker"/>-->
             <property name="hibernate.connection.is-connection-validation-required" value="true"/>
-            <property name="hibernate.cache.provider_class" value="net.sf.ehcache.hibernate.SingletonEhCacheProvider"/>
-            <property name="hibernate.cache.use_second_level_cache" value="true"/>
-            <!--<property name="hibernate.cache.provider_class"-->
-            <!--value="com.googlecode.hibernate.memcached.MemcachedCacheProvider"/>-->
+            <property name="hibernate.transaction.flush_before_completion" value="true"/>
+            <!-- *** Cache Configuration *** -->
             <property name="hibernate.cache.use_query_cache" value="true"/>
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.cache.provider_class" value="net.sf.ehcache.hibernate.SingletonEhCacheProvider"/>
+            <!--<property name="hibernate.cache.provider_class" value="com.googlecode.hibernate.memcached.MemcachedCacheProvider"/>-->
+            <!-- *** Schema Create & Update *** -->
+            <!--<property name="hibernate.hbm2ddl.auto" value="create"/>-->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <!--<property name="hibernate.hbm2ddl.auto" value="create-drop"/>-->
         </properties>
     </persistence-unit>
 </persistence>
