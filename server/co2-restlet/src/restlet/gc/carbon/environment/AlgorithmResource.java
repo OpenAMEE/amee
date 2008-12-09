@@ -19,14 +19,19 @@
  */
 package gc.carbon.environment;
 
+import com.jellymold.sheet.Choice;
 import com.jellymold.utils.BaseResource;
+import gc.carbon.data.Calculator;
 import gc.carbon.data.DataConstants;
 import gc.carbon.definition.DefinitionService;
 import gc.carbon.domain.data.Algorithm;
+import gc.carbon.domain.data.AlgorithmContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.javascript.RhinoException;
 import org.restlet.Context;
 import org.restlet.data.Form;
 import org.restlet.data.Request;
@@ -38,7 +43,13 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,6 +64,15 @@ public class AlgorithmResource extends BaseResource implements Serializable {
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
+
+    @Autowired
+    private Calculator calculator;
+
+    private
+    StringBuffer testAlgorithmError = null;
+
+    private
+    BigDecimal testAlgorithmAmount = null;
 
     @Override
     public void init(Context context, Request request, Response response) {
@@ -79,6 +99,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
         values.put("environment", definitionBrowser.getEnvironment());
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("algorithm", definitionBrowser.getAlgorithm());
+        values.put("algorithmContexts", definitionBrowser.getAlgorithmContexts());
         return values;
     }
 
@@ -86,6 +107,15 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("algorithmResource", definitionBrowser.getAlgorithm().getJSONObject());
+        if (definitionBrowser.getAlgorithm().getAlgorithmContext() != null) {
+            obj.put("algorithmContext", definitionBrowser.getAlgorithm().getAlgorithmContext().getJSONObject());
+        }
+        if (testAlgorithmError != null) {
+            obj.put("testAlgorithmError", testAlgorithmError.toString());
+        }
+        if (testAlgorithmAmount != null) {
+            obj.put("testAlgorithmResult", testAlgorithmAmount);
+        }
         return obj;
     }
 
@@ -93,6 +123,12 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("AlgorithmResource");
         element.appendChild(definitionBrowser.getAlgorithm().getElement(document));
+
+        Element algorithmContextsElement = document.createElement("AlgorithmContexts");
+        element.appendChild(algorithmContextsElement);
+        for (AlgorithmContext algorithmContext : definitionBrowser.getAlgorithmContexts()) {
+            algorithmContextsElement.appendChild(algorithmContext.getElement(document, false));
+        }
         return element;
     }
 
@@ -100,9 +136,79 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     public void handleGet() {
         log.debug("handleGet");
         if (definitionBrowser.getAlgorithmActions().isAllowView()) {
+
+            Form form = getForm();
+            Set<String> names = form.getNames();
+
+            if (names.contains("testAlgorithmContent")) {
+                testAlgorithm(form);
+            }
             super.handleGet();
         } else {
             notAuthorized();
+        }
+    }
+
+    /**
+     * Tests the algorithm in the form
+     *
+     * @param form the form
+     */
+    private void testAlgorithm(Form form) {
+        Algorithm mockAlgorithm = new Algorithm();
+        AlgorithmContext mockAlgorithmContext = new AlgorithmContext();
+
+        // parse values
+        List<Choice> choices = Choice.parseChoices(form.getFirstValue("testValues"));
+        Map<String, Object> values = new HashMap<String, Object>();
+        for (Choice choice : choices) {
+            values.put(choice.getName(), choice.getValue());
+        }
+
+        // innit algorithm
+        mockAlgorithm.setContent(form.getFirstValue("testAlgorithmContent"));
+        mockAlgorithmContext.setEnvironment(definitionBrowser.getEnvironment());
+        mockAlgorithmContext.setContent(form.getFirstValue("testAlgorithmContextContent"));
+        mockAlgorithm.setAlgorithmContext(mockAlgorithmContext);
+
+        try {
+            testAlgorithmAmount = calculator.calculateWithRuntime(mockAlgorithm, values, true);
+        } catch (RhinoException e) {
+            testAlgorithmError = new StringBuffer();
+            testAlgorithmError.append("Error on line")
+                    .append("'").append(e.lineNumber()).append("'");
+            if (!StringUtils.isBlank(e.lineSource())) {
+                testAlgorithmError.append("\nLine Source: ").append(e.lineSource());
+            }
+            testAlgorithmError.append("\nError: ").append(e.getMessage());
+            if (!StringUtils.isBlank(e.getScriptStackTrace())) {
+                testAlgorithmError.append("\nScript StackTrace: ").append(e.getScriptStackTrace());
+            }
+        } catch (Exception e) {
+
+            StringWriter writer = null;
+            PrintWriter printWriter = null;
+
+            try {
+                writer = new StringWriter();
+                printWriter = new PrintWriter(writer);
+                e.printStackTrace(printWriter);
+
+                testAlgorithmError = new StringBuffer();
+                testAlgorithmError.append("Processing Error ")
+                        .append(writer.toString());
+            } finally {
+                if (printWriter != null) {
+                    printWriter.close();
+                }
+                if (writer != null) {
+                    try {
+                        writer.close();
+                    } catch (IOException e1) {
+                        // consume
+                    }
+                }
+            }
         }
     }
 
@@ -112,7 +218,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void put(Representation entity) {
+    public void storeRepresentation(Representation entity) {
         log.debug("put");
         if (definitionBrowser.getAlgorithmActions().isAllowModify()) {
             Algorithm algorithm = definitionBrowser.getAlgorithm();
@@ -123,6 +229,15 @@ public class AlgorithmResource extends BaseResource implements Serializable {
             }
             if (names.contains("content")) {
                 algorithm.setContent(form.getFirstValue("content"));
+            }
+            if (names.contains("algorithmContextUid")) {
+                String algorithmCxtUid = form.getFirstValue("algorithmContextUid");
+                if (StringUtils.isBlank(algorithmCxtUid)) {
+                    algorithm.setAlgorithmContext(null);
+                } else {
+                    definitionBrowser.setAlgorithmContextUid(algorithmCxtUid);
+                    algorithm.setAlgorithmContext(definitionBrowser.getAlgorithmContext());
+                }
             }
             success();
         } else {
@@ -136,7 +251,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         log.debug("delete");
         if (definitionBrowser.getAlgorithmActions().isAllowDelete()) {
             Algorithm algorithm = definitionBrowser.getAlgorithm();

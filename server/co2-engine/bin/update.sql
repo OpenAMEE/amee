@@ -72,3 +72,10 @@ ALTER TABLE amee.SITE_ALIAS DROP COLUMN VERSION;
 ALTER TABLE amee.SITE_APP DROP COLUMN VERSION;
 ALTER TABLE amee.TARGET DROP COLUMN VERSION;
 ALTER TABLE amee.SKIN DROP COLUMN VERSION;
+
+# Algorithm
+Update amee.ALGORITHM set TYPE='AL';
+ALTER TABLE amee.ALGORITHM MODIFY COLUMN ITEM_DEFINITION_ID BIGINT (20) NULL;
+INSERT INTO amee.TARGET VALUES ('67','F613C476EADD','Algorithm Contexts Resource','','/{environmentUid}/algorithmContexts','algorithmContextsResource',b'00000000',b'00000000',b'00000001', SYSDATE(),SYSDATE(),'4','0');
+INSERT INTO amee.TARGET VALUES ('68','21F188A4937F','Algorithm Context Resource','','/{environmentUid}/algorithmContexts/{algorithmContentUid}','algorithmContextResource',b'00000000',b'00000000',b'00000001',SYSDATE(),SYSDATE(),'4','0');
+

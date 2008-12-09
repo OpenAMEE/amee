@@ -34,6 +34,7 @@
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="hibernate" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
+    <orderEntry type="library" name="rhino" level="project" />
   </component>
 </module>
 

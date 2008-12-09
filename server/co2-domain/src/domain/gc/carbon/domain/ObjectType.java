@@ -27,7 +27,7 @@ import java.io.Serializable;
 
 public enum ObjectType implements Serializable {
 
-    DC, AL, ID, IVD, DI, PI, IV, PR;
+    DC, AL, ID, IVD, DI, PI, IV, PR, ALC;
 
     private String[] names = {
             "DC",
@@ -37,7 +37,8 @@ public enum ObjectType implements Serializable {
             "DI",
             "PI",
             "IV",
-            "PR"};
+            "PR",
+            "ALC"};
 
     private String[] labels = {
             "DataCategory",
@@ -47,7 +48,8 @@ public enum ObjectType implements Serializable {
             "DataItem",
             "ProfileItem",
             "ItemValue",
-            "Profile"};
+            "Profile",
+            "AlgorithmContext"};
 
     private Class[] clazzes = {
             DataCategory.class,
@@ -57,7 +59,8 @@ public enum ObjectType implements Serializable {
             DataItem.class,
             ProfileItem.class,
             ItemValue.class,
-            Profile.class};
+            Profile.class,
+            AlgorithmContext.class};
 
     public String toString() {
         return getName();
