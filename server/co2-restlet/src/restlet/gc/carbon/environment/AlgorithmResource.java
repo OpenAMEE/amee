@@ -26,6 +26,7 @@ import gc.carbon.data.DataConstants;
 import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.Algorithm;
 import gc.carbon.domain.data.AlgorithmContext;
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -160,7 +161,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
             algorithmTestWrapper.setAmount(calculator.calculateWithRuntime(
                     algorithmTestWrapper.getMockAlgorithm(),
                     algorithmTestWrapper.getValuesMap(),
-                    true));
+                    algorithmTestWrapper.getMockProfileItem()));
         } catch (RhinoException e) {
             StringBuffer testAlgorithmError = new StringBuffer();
             testAlgorithmError.append("Error on line")
@@ -342,6 +343,13 @@ public class AlgorithmResource extends BaseResource implements Serializable {
             }
         }
 
+        public ProfileItem getMockProfileItem() {
+            ProfileItem mockProfileItem = new ProfileItem();
+            mockProfileItem.setStartDate(getStartDate());
+            mockProfileItem.setEndDate(getEndDate());
+            return mockProfileItem;
+        }
+
         public void parseForm(Form form) {
             setMockAlgorithm(form.getFirstValue("testAlgorithmContent"), form.getFirstValue("testAlgorithmContextContent"));
             setValues(form.getFirstValue("testValues"));
@@ -370,7 +378,6 @@ public class AlgorithmResource extends BaseResource implements Serializable {
             return obj;
 
         }
-
     }
 
 }

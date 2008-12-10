@@ -27,17 +27,16 @@ import gc.carbon.domain.data.ItemValueDefinition;
 import gc.carbon.domain.path.InternalValue;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileFinder;
-import gc.carbon.data.DataServiceDAO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -64,14 +63,10 @@ public class Calculator implements BeanFactoryAware, Serializable {
 
             if (algorithm != null) {
 
-                DataFinder dataFinder = initDataFinder(profileItem);
-                ProfileFinder profileFinder = initProfileFinder(profileItem, dataFinder);
                 Map<String, Object> values = getValues(profileItem);
-                values.put("profileFinder", profileFinder);
-                values.put("dataFinder", dataFinder);
 
                 // get the new amount via algorithm and values
-                amount = calculate(algorithm, values, false);
+                amount = calculate(algorithm, values, profileItem);
 
                 if (amount != null) {
                     profileItem.updateAmount(amount);
@@ -93,14 +88,18 @@ public class Calculator implements BeanFactoryAware, Serializable {
     private ProfileFinder initProfileFinder(ProfileItem profileItem, DataFinder dataFinder) {
         ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
         profileFinder.setDataFinder(dataFinder);
-        profileFinder.setProfileItem(profileItem);
+        if (profileItem != null) {
+            profileFinder.setProfileItem(profileItem);
+        }
         return profileFinder;
     }
 
     private DataFinder initDataFinder(ProfileItem profileItem) {
         DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
-        dataFinder.setStartDate(profileItem.getStartDate());
-        dataFinder.setEndDate(profileItem.getEndDate());
+        if (profileItem != null) {
+            dataFinder.setStartDate(profileItem.getStartDate());
+            dataFinder.setEndDate(profileItem.getEndDate());
+        }
         return dataFinder;
     }
 
@@ -113,7 +112,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
         if (algorithm != null) {
             // get the new amount via algorithm and values
             values = getValues(dataItem, userValueChoices);
-            amount = calculate(algorithm, values, true);
+            amount = calculate(algorithm, values, null);
         } else {
             log.warn("calculate() - Algorithm NOT found");
             amount = ProfileItem.ZERO;
@@ -124,27 +123,21 @@ public class Calculator implements BeanFactoryAware, Serializable {
     /**
      * Calculate a value based on the algorithm and values. This implementation will expose any algorithm processing exceptions
      *
-     * @param algorithm        The algorithm
-     * @param values           values map for use in the algorithm
-     * @param initGlobalValues true if global services should be added to the values
+     * @param algorithm   The algorithm
+     * @param values      values map for use in the algorithm
+     * @param profileItem optional ProfileItem
      * @return returns the result of the algorithm
      * @throws RhinoException thrown if the algorithm is processed with errors
      */
-    public BigDecimal calculateWithRuntime(Algorithm algorithm, Map<String, Object> values, boolean initGlobalValues) throws RhinoException {
+    public BigDecimal calculateWithRuntime(Algorithm algorithm, Map<String, Object> values, ProfileItem profileItem) throws RhinoException {
         log.debug("calculateWithRuntime() - getting value");
 
-        if (initGlobalValues) {
-            DataFinder dataFinder;
-            ProfileFinder profileFinder;
+        // init DataFinder and ProfileFinder beans
+        DataFinder dataFinder = initDataFinder(profileItem);
+        ProfileFinder profileFinder = initProfileFinder(profileItem, dataFinder);
 
-            // get DataFinder and ProfileFinder beans
-            dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
-            profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
-            profileFinder.setDataFinder(dataFinder);
-
-            values.put("dataFinder", dataFinder);
-            values.put("profileFinder", profileFinder);
-        }
+        values.put("dataFinder", dataFinder);
+        values.put("profileFinder", profileFinder);
 
         BigDecimal amount = ProfileItem.ZERO;
         String value = null;
@@ -178,9 +171,9 @@ public class Calculator implements BeanFactoryAware, Serializable {
         return amount;
     }
 
-    protected BigDecimal calculate(Algorithm algorithm, Map<String, Object> values, boolean initGlobalValues) {
+    protected BigDecimal calculate(Algorithm algorithm, Map<String, Object> values, ProfileItem profileItem) {
         try {
-            return calculateWithRuntime(algorithm, values, initGlobalValues);
+            return calculateWithRuntime(algorithm, values, profileItem);
         } catch (EvaluatorException e) {
             log.warn("calculate() - caught EvaluatorException: " + e.getMessage());
         } catch (RhinoException e) {

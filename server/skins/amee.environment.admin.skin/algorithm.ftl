@@ -40,7 +40,6 @@
     function failureTest(response) {
         var errElement = document.getElementById("errorTxt");
         errElement.value = "Error! Unable to test Algorithm, try reloading the page."
-        Log.debug("test");
     }
 
     function updateContext(select) {
