@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
-import gc.carbon.builder.APIVersion;
+import gc.carbon.APIVersion;
 
 public abstract class BaseFilter extends Filter {
 
@@ -52,7 +52,7 @@ public abstract class BaseFilter extends Filter {
 
     protected void setVersion(Request request) {
         APIVersion apiVersion = APIVersion.get(request.getResourceRef().getQueryAsForm());
-        log.debug("APIVersion: " + apiVersion);
+        log.debug("setVersion() - APIVersion: " + apiVersion);
         request.getAttributes().put("apiVersion", apiVersion);
     }
 }

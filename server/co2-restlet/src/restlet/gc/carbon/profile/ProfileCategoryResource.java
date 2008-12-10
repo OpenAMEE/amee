@@ -19,19 +19,11 @@
  */
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.environment.EnvironmentService;
-import com.jellymold.sheet.Sheet;
-import com.jellymold.utils.Pager;
-import gc.carbon.builder.resource.ResourceBuilder;
-import gc.carbon.builder.resource.ResourceBuilderFactory;
-import gc.carbon.data.Calculator;
-import gc.carbon.data.DataService;
-import gc.carbon.domain.data.DataCategory;
-import gc.carbon.domain.path.PathItem;
+import gc.carbon.data.builder.ResourceBuilder;
+import gc.carbon.data.builder.ResourceBuilderFactory;
+import gc.carbon.data.builder.BuildableCategoryResource;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.path.PathItemService;
 import gc.carbon.profile.acceptor.Acceptor;
 import gc.carbon.profile.acceptor.ProfileCategoryFormAcceptor;
 import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
@@ -43,45 +35,20 @@ import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.*;
 import org.restlet.resource.Representation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.*;
 
 @Component("profileCategoryResource")
 @Scope("prototype")
-public class ProfileCategoryResource extends BaseProfileCategoryResource implements Serializable {
+public class ProfileCategoryResource extends BaseProfileResource implements BuildableCategoryResource, Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Autowired
-    private DataService dataService;
-
-    @Autowired
-    private ProfileService profileService;
-
-    @Autowired
-    private PathItemService pathItemService;
-
-    @Autowired
-    private ProfileSheetService profileSheetService;
-
-    @Autowired
-    private Calculator calculator;
-
-    private Environment environment;
-    private PathItem pathItem;
-    private ProfileBrowser profileBrowser;
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
     private ResourceBuilder builder;
     private Map<MediaType, Acceptor> acceptors;
@@ -89,19 +56,10 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        Form form = request.getResourceRef().getQueryAsForm();
-        environment = EnvironmentService.getEnvironment();
-        pathItem = getPathItem();
-        profileBrowser = getProfileBrowser();
-        profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
-        profileBrowser.setStartDate(form.getFirstValue("startDate"));
-        profileBrowser.setEndDate(form.getFirstValue("endDate"));
-        profileBrowser.setDuration(form.getFirstValue("duration"));
-        profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
-        profileBrowser.setMode(form.getFirstValue("mode"));
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         setPage(request);
         setAcceptors();
+        setBuilderStrategy();
     }
 
     private void setBuilderStrategy() {
@@ -127,19 +85,9 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Profile profile = getProfile();
-        DataCategory dataCategory = getDataCategory();
-        Sheet sheet = getSheet();
-        Map<String, Object> values = super.getTemplateValues();
-        values.put("browser", profileBrowser);
-        values.put("profile", profile);
-        values.put("dataCategory", dataCategory);
-        values.put("node", dataCategory);
-        values.put("sheet", sheet);
-        if (sheet != null) {
-            values.put("totalAmountPerMonth", profileSheetService.getTotalAmountPerMonth(sheet));
-        }
-        return values;
+        Map<String, Object> templateValues = builder.getTemplateValues();
+        templateValues.putAll(super.getTemplateValues());
+        return templateValues;
     }
 
     @Override
@@ -158,7 +106,13 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
         if (!isValidRequest()) {
             badRequest();
         } else if (profileBrowser.getEnvironmentActions().isAllowView()) {
-            setBuilderStrategy();
+            Form form = getRequest().getResourceRef().getQueryAsForm();
+            profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
+            profileBrowser.setStartDate(form.getFirstValue("startDate"));
+            profileBrowser.setEndDate(form.getFirstValue("endDate"));
+            profileBrowser.setDuration(form.getFirstValue("duration"));
+            profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
+            profileBrowser.setMode(form.getFirstValue("mode"));
             super.handleGet();
         } else {
             notAuthorized();
@@ -193,8 +147,7 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
             profileItems = doAcceptOrStore(entity);
             if (!profileItems.isEmpty()) {
                 // clear caches
-                pathItemService.removePathItemGroup(profileBrowser.getProfile());
-                profileSheetService.removeSheets(profileBrowser.getProfile());
+                profileService.clearCaches(profileBrowser);
                 if (isStandardWebBrowser()) {
                     success(profileBrowser.getFullPath());
                 } else {
@@ -215,7 +168,6 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
     }
 
     public List<ProfileItem> doAcceptOrStore(Representation entity) {
-        setBuilderStrategy();
         return getAcceptor(entity.getMediaType()).accept(entity);
     }
 
@@ -240,8 +192,7 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
         log.debug("removeRepresentations");
         if (profileBrowser.getProfileActions().isAllowDelete()) {
             Profile profile = profileBrowser.getProfile();
-            pathItemService.removePathItemGroup(profile);
-            profileSheetService.removeSheets(profile);
+            profileService.clearCaches(profileBrowser);
             profileService.remove(profile);
             success("/profiles");
         } else {
@@ -249,73 +200,12 @@ public class ProfileCategoryResource extends BaseProfileCategoryResource impleme
         }
     }
 
-    public List<ProfileItem> getProfileItems() {
-        return profileItems;
-    }
-
-    public ProfileSheetService getProfileSheetService() {
-        return profileSheetService;
-    }
-
-    public DataCategory getDataCategory() {
-        return profileBrowser.getDataCategory();
-    }
-
-    public Profile getProfile() {
-        return profileBrowser.getProfile();
-    }
-
-    public Date getProfileDate() {
-        return profileBrowser.getProfileDate();
-    }
-
     public ProfileItem getProfileItem() {
         return profileBrowser.getProfileItem();
     }
 
-    public Pager getPager() {
-        return getPager(getItemsPerPage());
+    public List<ProfileItem> getProfileItems() {
+        return profileItems;
     }
 
-    public ProfileService getProfileService() {
-        return profileService;
-    }
-
-    public DataService getDataService() {
-        return dataService;
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public Calculator getCalculator() {
-        return calculator;
-    }
-
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
-    public Sheet getSheet() {
-        Sheet sheet = profileSheetService.getSheet(profileBrowser);
-        profileSheetService.removeSheets(getProfile());
-        return sheet;
-    }
-
-    public BigDecimal getTotalAmount(Sheet sheet) {
-        return profileSheetService.getTotalAmount(sheet);
-    }
-
-    public BigDecimal getTotalAmountPerMonth(Sheet sheet) {
-        return profileSheetService.getTotalAmountPerMonth(sheet);
-    }
-
-    public Date getStartDate() {
-        return profileBrowser.getStartDate();
-    }
-
-    public Date getEndDate() {
-        return profileBrowser.getEndDate();
-    }
 }

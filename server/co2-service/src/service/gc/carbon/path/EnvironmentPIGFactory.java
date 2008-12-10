@@ -22,14 +22,13 @@ package gc.carbon.path;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.cache.CacheableFactory;
-import gc.carbon.data.DataService;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.path.PathItemGroup;
+import gc.carbon.data.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,7 +37,7 @@ import java.util.List;
 public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFactory {
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
     private DataService dataService;
@@ -58,7 +57,7 @@ public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFa
             while (!dataCategories.isEmpty()) {
                 addDataCategories(pathItemGroup, dataCategories);
             }
-            definitionService.getItemDefinitions(environment); // preload so we can iterate over ItemValues later
+            definitionServiceDAO.getItemDefinitions(environment); // preload so we can iterate over ItemValues later
             List<DataItem> dataItems = dataService.getDataItems(environment);
             while (!dataItems.isEmpty()) {
                 addDataItems(pathItemGroup, dataItems);

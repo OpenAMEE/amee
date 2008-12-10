@@ -28,10 +28,11 @@ import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.data.OnlyActiveDataService;
+import gc.carbon.data.DataServiceDAO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -58,15 +59,13 @@ public class DataSheetFactory implements CacheableFactory {
         ItemValue itemValue;
         Sheet sheet = null;
         ItemDefinition itemDefinition;
-        DataCategory dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
-        StartEndDate startDate = new StartEndDate(new Date());
-        StartEndDate endDate = null;
+        DataBrowser dataBrowser = (DataBrowser) ThreadBeanHolder.get("dataBrowserForFactory");
 
         // must have an ItemDefinition
-        itemDefinition = dataCategory.getItemDefinition();
+        itemDefinition = dataBrowser.getDataCategory().getItemDefinition();
         if (itemDefinition != null) {
 
-            // create sheet and columns
+            // create sheet and columns     
             sheet = new Sheet();
             sheet.setKey(getKey());
             sheet.setLabel("DataItems");
@@ -88,7 +87,9 @@ public class DataSheetFactory implements CacheableFactory {
             columns = sheet.getColumns();
 
             // TODO - Will need to switch between OnlyActive - for DC GET and EarliestActive for Finder - tho need to ask AC this
-            for (DataItem dataItem : new OnlyActiveDataService(dataService).getDataItems(dataCategory, startDate, endDate)) {
+            StartEndDate startDate = dataBrowser.getStartDate();
+            StartEndDate endDate = dataBrowser.getEndDate();
+            for (DataItem dataItem : new OnlyActiveDataService(dataService).getDataItems(dataBrowser.getDataCategory(), startDate, endDate)) {
                 itemValuesMap = dataItem.getItemValuesMap();
                 row = new Row(sheet, dataItem.getUid());
                 row.setLabel("DataItem");
@@ -128,17 +129,10 @@ public class DataSheetFactory implements CacheableFactory {
     }
 
     public String getKey() {
-/*
-        StringBuffer key = new StringBuffer("DataSheet_");
-        key.append(dataCategory.getUid()).append("_");
-        key.append(startDate.getTime());
-        if (endDate != null) {
-            key.append("_" ).append(endDate.getTime());
-        }
-        return key.toString();
-*/
-        DataCategory dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
-        return "DataSheet_" + dataCategory.getUid();
+        DataBrowser browser = (DataBrowser) ThreadBeanHolder.get("dataBrowserForFactory");
+        return "DataSheet_" + browser.getDataCategory().getUid() + "_" +
+                browser.getStartDate().getTime() +
+                ((browser.getEndDate() != null) ? "_" + browser.getEndDate().getTime() : "");
     }
 
     public String getCacheName() {

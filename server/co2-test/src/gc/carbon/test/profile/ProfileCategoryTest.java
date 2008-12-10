@@ -31,13 +31,13 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
     }
 
     @Test
-    public void testPostWithExternalPerUnitAsYear() throws Exception {
+    public void testPostWithExternalPerUnitAsMonth() throws Exception {
         Form data = new Form();
-        data.add("distancePerUnit", "year");
+        data.add("distancePerUnit", "month");
         data.add("distance", "1000");
-        data.add("v", "2.0");
+        client.addQueryParameter("v","2.0");
         Document doc = doPost(data).getEntityAsDom().getDocument();
-        assertXpathEvaluatesTo("22.042", "/Resources/ProfileCategoryResource/ProfileItem/Amount", doc);
+        assertXpathEvaluatesTo("3174.000", "/Resources/ProfileCategoryResource/ProfileItem/Amount", doc);
         assertXpathEvaluatesTo("1000", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue/Value", doc);
     }
 
@@ -46,9 +46,9 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
         Form data = new Form();
         data.add("distanceUnit", "mi");
         data.add("distance", "1000");
-        data.add("v", "2.0");
+        client.addQueryParameter("v","2.0");
         Document doc = doPost(data).getEntityAsDom().getDocument();
-        assertXpathEvaluatesTo("22.042", "/Resources/ProfileCategoryResource/ProfileItem/Amount", doc);
+        assertXpathEvaluatesTo("425.671", "/Resources/ProfileCategoryResource/ProfileItem/Amount", doc);
         assertXpathEvaluatesTo("1000", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue/Value", doc);
     }
 
@@ -56,11 +56,11 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
     public void testPostWithExternalUnitAsMileAndPerUnitAsYear() throws Exception {
         Form data = new Form();
         data.add("distanceUnit", "mi");
-        data.add("distancePerUnit", "year");
+        data.add("distancePerUnit", "month");
         data.add("distance", "1000");
-        data.add("v", "2.0");
+        client.addQueryParameter("v","2.0");
         Document doc = doPost(data).getEntityAsDom().getDocument();
-        assertXpathEvaluatesTo("22.042", "/Resources/ProfileCategoryResource/ProfileItem/Amount", doc);
+        assertXpathEvaluatesTo("5108.058", "/Resources/ProfileCategoryResource/ProfileItem/Amount", doc);
         assertXpathEvaluatesTo("1000", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue/Value", doc);
     }
 }

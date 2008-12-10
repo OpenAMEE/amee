@@ -24,7 +24,7 @@ import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import gc.carbon.data.DataConstants;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.ItemDefinition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,7 +54,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -84,7 +84,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager(environment.getItemsPerPage());
         Environment environment = definitionBrowser.getEnvironment();
-        List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(environment, pager);
+        List<ItemDefinition> itemDefinitions = definitionServiceDAO.getItemDefinitions(environment, pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
@@ -100,7 +100,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
         if (isGet()) {
             Pager pager = getPager(environment.getItemsPerPage());
             Environment environment = definitionBrowser.getEnvironment();
-            List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(environment, pager);
+            List<ItemDefinition> itemDefinitions = definitionServiceDAO.getItemDefinitions(environment, pager);
             pager.setCurrentPage(getPage());
             JSONArray itemDefinitionsJSONArray = new JSONArray();
             for (ItemDefinition itemDefinition : itemDefinitions) {
@@ -120,7 +120,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
         if (isGet()) {
             Pager pager = getPager(environment.getItemsPerPage());
             Environment environment = definitionBrowser.getEnvironment();
-            List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(environment, pager);
+            List<ItemDefinition> itemDefinitions = definitionServiceDAO.getItemDefinitions(environment, pager);
             pager.setCurrentPage(getPage());
             Element itemDefinitionsElement = document.createElement("ItemDefinitions");
             for (ItemDefinition itemDefinition : itemDefinitions) {
@@ -136,7 +136,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
+        log.debug("handleGet()");
         if (definitionBrowser.getItemDefinitionActions().isAllowList()) {
             super.handleGet();
         } else {
@@ -150,19 +150,19 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     }
 
     @Override
-    public void post(Representation entity) {
-        log.debug("post");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation()");
         if (definitionBrowser.getItemDefinitionActions().isAllowCreate()) {
             Form form = getForm();
             if (form.getFirstValue("name") != null) {
                 newItemDefinition = new ItemDefinition(definitionBrowser.getEnvironment(), form.getFirstValue("name"));
-                definitionService.save(newItemDefinition);
+                definitionServiceDAO.save(newItemDefinition);
             }
             if (newItemDefinition != null) {
                 if (isStandardWebBrowser()) {
                     success();
                 } else {
-                    // return a response for API calls
+                    // Return a response for API calls
                     super.handleGet();
                 }
             } else {

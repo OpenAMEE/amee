@@ -56,21 +56,21 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
 
     @Test
     public void testInValidEndDateRequest() throws Exception {
-        client.setQuery("endDate=20100401");
+        client.addQueryParameter("endDate","20100401");
         Status status = client.get().getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
     }
 
     @Test
     public void testInValidDurationRequest() throws Exception {
-        client.setQuery("duration=PT30M");
+        client.addQueryParameter("duration","PT30M");
         Status status = client.get().getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
     }
 
     @Test
     public void testInValidStartDateRequest() throws Exception {
-        client.setQuery("startDate=20100401");
+        client.addQueryParameter("startDate", "20100401");
         Status status = client.get().getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
     }
@@ -80,13 +80,15 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
         DateTime startDate = new DateTime();
 
         String uid = create(startDate);
-        client.setQuery("validFrom=" + VALID_FROM_FMT.print(startDate));
+        client.addQueryParameter("validFrom", VALID_FROM_FMT.print(startDate));
         DomRepresentation rep = client.get().getEntityAsDom();
         assertXpathExists("//ProfileItem[@uid='" + uid + "']", rep.getDocument());
         Element e = (Element) XPath.selectSingleNode(new DOMBuilder().build(rep.getDocument()).getRootElement(), "//ProfileItem[@uid='" + uid + "']/amountPerMonth");
         String amount = e.getText();        
 
-        client.setQuery("v=2.0&startDate=" + START_DATE_FMT.print(startDate));
+        client.addQueryParameter("v","2.0");
+        client.addQueryParameter("startDate", START_DATE_FMT.print(startDate));
+        rep.write(System.out);
         rep = client.get().getEntityAsDom();
         assertXpathExists("//ProfileItem[@uid='" + uid + "']", rep.getDocument());
         e = (Element) XPath.selectSingleNode(new DOMBuilder().build(rep.getDocument()).getRootElement(), "//ProfileItem[@uid='" + uid + "']/amount");

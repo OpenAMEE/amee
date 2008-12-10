@@ -21,7 +21,7 @@ package gc.carbon.environment;
 
 import com.jellymold.utils.BaseResource;
 import gc.carbon.data.DataConstants;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.ValueDefinition;
 import gc.carbon.domain.data.ItemValueDefinition;
 import org.apache.commons.logging.Log;
@@ -52,7 +52,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -78,7 +78,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(definitionBrowser.getEnvironment());
+        List<ValueDefinition> valueDefinitions = definitionServiceDAO.getValueDefinitions(definitionBrowser.getEnvironment());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
         values.put("environment", definitionBrowser.getEnvironment());
@@ -124,7 +124,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
+        log.debug("handleGet()");
         if (definitionBrowser.getItemValueDefinitionActions().isAllowList()) {
             super.handleGet();
         } else {
@@ -138,12 +138,12 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
     }
 
     @Override
-    public void post(Representation entity) {
-        log.debug("post");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation()");
         if (definitionBrowser.getItemValueDefinitionActions().isAllowCreate()) {
             Form form = getForm();
             ValueDefinition valueDefinition =
-                    definitionService.getValueDefinition(definitionBrowser.getEnvironment(), form.getFirstValue("valueDefinitionUid"));
+                    definitionServiceDAO.getValueDefinition(definitionBrowser.getEnvironment(), form.getFirstValue("valueDefinitionUid"));
             if ((form.getFirstValue("name") != null) && (valueDefinition != null)) {
                 newItemValueDefinition = new ItemValueDefinition(definitionBrowser.getItemDefinition());
                 newItemValueDefinition.setValueDefinition(valueDefinition);

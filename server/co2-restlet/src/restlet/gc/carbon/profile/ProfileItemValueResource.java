@@ -20,7 +20,8 @@
 package gc.carbon.profile;
 
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.BaseResource;
+import gc.carbon.AMEEResource;
+import gc.carbon.profile.ProfileSheetService;
 import gc.carbon.data.Calculator;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
@@ -46,27 +47,19 @@ import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class ProfileItemValueResource extends BaseResource implements Serializable {
+public class ProfileItemValueResource extends AMEEResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private PathItemService pathItemService;
-
-    @Autowired
-    private ProfileSheetService profileSheetService;
-
-    @Autowired
-    private Calculator calculator;
+    private ProfileService profileService;
 
     private ProfileBrowser profileBrowser;
-    private PathItem pathItem;
 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        pathItem = getPathItem();
-        profileBrowser = getProfileBrowser();
+        profileBrowser = (ProfileBrowser) beanFactory.getBean("profileBrowser");
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
         profileBrowser.setProfileItemValueUid(request.getAttributes().get("valueUid").toString());
@@ -116,7 +109,7 @@ public class ProfileItemValueResource extends BaseResource implements Serializab
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
+        log.debug("handleGet()");
         if (profileBrowser.getProfileItemValueActions().isAllowView()) {
             super.handleGet();
         } else {
@@ -130,8 +123,8 @@ public class ProfileItemValueResource extends BaseResource implements Serializab
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation()");
         if (profileBrowser.getProfileItemValueActions().isAllowModify()) {
             Form form = getForm();
             ItemValue profileItemValue = profileBrowser.getProfileItemValue();
@@ -142,10 +135,9 @@ public class ProfileItemValueResource extends BaseResource implements Serializab
                 profileItemValue.setValue(form.getFirstValue("value"));
             }
             // should recalculate now (regardless)
-            calculator.calculate(profileItem);
+            profileService.calculate(profileItem);
             // path may have changed
-            pathItemService.removePathItemGroup(profileBrowser.getProfile());
-            profileSheetService.removeSheets(profileBrowser.getProfile());
+            profileService.clearCaches(profileBrowser);
             // all done
             if (isStandardWebBrowser()) {
                 success(profileBrowser.getFullPath());

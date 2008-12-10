@@ -19,21 +19,13 @@
  */
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.environment.EnvironmentService;
-import com.jellymold.utils.Pager;
-import gc.carbon.builder.resource.ResourceBuilder;
-import gc.carbon.builder.resource.ResourceBuilderFactory;
-import gc.carbon.data.Calculator;
-import gc.carbon.data.DataService;
-import gc.carbon.domain.data.DataCategory;
+import gc.carbon.data.builder.ResourceBuilder;
+import gc.carbon.data.builder.ResourceBuilderFactory;
 import gc.carbon.domain.data.ItemValue;
-import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.domain.profile.ValidFromDate;
-import gc.carbon.path.PathItemService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,10 +42,7 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,37 +53,17 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     private final Log log = LogFactory.getLog(getClass());
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
-    private ProfileService profileService;
+    ProfileService profileService;
 
-    @Autowired
-    private PathItemService pathItemService;
-
-    @Autowired
-    private ProfileSheetService profileSheetService;
-
-    @Autowired
-    private Calculator calculator;
-
-    @Autowired
-    private DataService dataService;
-
-    private Environment environment;
-    private ProfileBrowser profileBrowser;
-    private PathItem pathItem;
     private ResourceBuilder builder;
 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        environment = EnvironmentService.getEnvironment();
-        pathItem = getPathItem();
-        profileBrowser = getProfileBrowser();
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
+        setBuilderStrategy();
     }
 
     @Override
@@ -130,9 +99,8 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
+        log.debug("handleGet()");
         if (profileBrowser.getProfileItemActions().isAllowView()) {
-            builder = ResourceBuilderFactory.createProfileItemBuilder(this);
             super.handleGet();
         } else {
             notAuthorized();
@@ -149,16 +117,15 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation()");
         if (profileBrowser.getProfileItemActions().isAllowModify()) {
-            setBuilderStrategy();
             Form form = getForm();
             ProfileItem profileItem = profileBrowser.getProfileItem();
             // ensure updated ProfileItem does not break rules for ProfileItems
             ProfileItem profileItemCopy = profileItem.getCopy();
             if (updateProfileItem(profileItemCopy, form) &&
-                    !profileService.isEquivilentProfileItemExists(profileItemCopy)) {
+                    profileService.hasNoEquivalent(profileItemCopy)) {
                 // update persistent ProfileItem
                 updateProfileItem(profileItem, form);
                 // update ItemValues if supplied
@@ -175,11 +142,10 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
                         }
                     }
                 }
-                log.debug("ProfileItem updated");
+                log.debug("storeRepresentation() - ProfileItem updated");
                 // all done, need to recalculate and clear caches
-                calculator.calculate(profileItem);
-                pathItemService.removePathItemGroup(profileBrowser.getProfile());
-                profileSheetService.removeSheets(profileBrowser.getProfile());
+                profileService.calculate(profileItem);
+                profileService.clearCaches(profileBrowser);
                 // do response
                 if (isStandardWebBrowser()) {
                     success(profileBrowser.getFullPath());
@@ -188,7 +154,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
                     super.handleGet();
                 }
             } else {
-                log.warn("ProfileItem NOT updated");
+                log.warn("storeRepresentation() - ProfileItem NOT updated");
                 badRequest();
             }
         } else {
@@ -255,13 +221,12 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     @Override
-    public void delete() {
-        log.debug("delete");
+    public void removeRepresentations() {
+        log.debug("removeRepresentations()");
         if (profileBrowser.getProfileItemActions().isAllowDelete()) {
             ProfileItem profileItem = profileBrowser.getProfileItem();
             profileService.remove(profileItem);
-            pathItemService.removePathItemGroup(profileBrowser.getProfile());
-            profileSheetService.removeSheets(profileBrowser.getProfile());
+            profileService.clearCaches(profileBrowser);
             success(pathItem.getParent().getFullPath());
         } else {
             notAuthorized();
@@ -272,55 +237,12 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         return null;
     }
 
-    public ProfileSheetService getProfileSheetService() {
-        return profileSheetService;
-    }
-
-    public Pager getPager() {
-        return getPager(getItemsPerPage());
-    }
-
-    public ProfileService getProfileService() {
-        return profileService;
-    }
-
-    public DataService getDataService() {
-        return dataService;
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public Calculator getCalculator() {
-        return calculator;
-    }
-
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
     public ProfileItem getProfileItem() {
         return profileBrowser.getProfileItem();
-    }
-
-    public Date getProfileDate() {
-        return profileBrowser.getProfileDate();
-    }
-
-    public Date getStartDate() {
-        return profileBrowser.getStartDate();
-    }
-
-    public Date getEndDate() {
-        return profileBrowser.getEndDate();
     }
 
     public Profile getProfile() {
         return profileBrowser.getProfile();
     }
 
-    public DataCategory getDataCategory() {
-        return profileBrowser.getDataCategory();
-    }
 }

@@ -1,25 +1,14 @@
 package gc.carbon.data;
 
-import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.domain.data.DataCategory;
-import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.data.DataItem;
-import gc.carbon.profile.ProfileService;
-import gc.carbon.profile.ProfileBrowser;
+import gc.carbon.data.DataService;
 
 import java.util.*;
-import java.math.BigDecimal;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
-
-import javax.measure.Measure;
-import javax.measure.unit.SI;
-import javax.measure.unit.NonSI;
 
 /**
  * This file is part of AMEE.

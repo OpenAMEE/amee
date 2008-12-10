@@ -39,7 +39,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         Form data = new Form();
         data.add("distancePerUnit", "year");
         data.add("distance", "1000");
-        data.add("v", "2.0");
         assertDistanceNode(data, "km", "year");
     }
 
@@ -48,7 +47,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         Form data = new Form();
         data.add("distanceUnit", "mi");
         data.add("distance", "1000");
-        data.add("v", "2.0");
         assertDistanceNode(data, "mi", "year");
     }
 
@@ -58,7 +56,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         data.add("distanceUnit", "mi");
         data.add("distancePerUnit", "year");
         data.add("distance", "1000");
-        data.add("v", "2.0");
         assertDistanceNode(data, "mi", "year");
     }
 
@@ -68,7 +65,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         Form data = new Form();
         data.add("distance", "1000");
         data.add("startDate", startDate);
-        data.add("v", "2.0");
         assertDateNodes(data, startDate, null, "false");
     }
 
@@ -79,7 +75,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         Form data = new Form();
         data.add("startDate", startDate);
         data.add("endDate", endDate);
-        data.add("v", "2.0");
         assertDateNodes(data, startDate, endDate, "false");
     }
 
@@ -88,7 +83,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         String endDate = "20100402T0000";
         Form data = new Form();
         data.add("endDate", endDate);
-        data.add("v", "2.0");
         assertDateNodes(data, getDefaultDate(), endDate, "false");
     }
 
@@ -99,7 +93,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         Form data = new Form();
         data.add("startDate", startDate);
         data.add("duration", "PT30M");
-        data.add("v", "2.0");
         assertDateNodes(data, startDate, endDate, "false");
     }
 
@@ -108,7 +101,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         Form data = new Form();
         data.add("endDate", "20100401T0000");
         data.add("end", "true");
-        data.add("v", "2.0");
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
     }
@@ -118,7 +110,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         Form data = new Form();
         data.add("duration", "PT30M");
         data.add("end", "true");
-        data.add("v", "2.0");
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
     }
@@ -128,7 +119,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         Form data = new Form();
         data.add("duration", "PT30M");
         data.add("endDate", "20100401T0000");
-        data.add("v", "2.0");
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
     }
@@ -138,7 +128,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         Form data = new Form();
         data.add("startDate", "20100402T0000");
         data.add("endDate", "20100401T0000");
-        data.add("v", "2.0");
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
     }
@@ -147,7 +136,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     public void testPutWithValidFrom() throws Exception {
         Form data = new Form();
         data.add("validFrom", "20100401");
-        data.add("v", "2.0");
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
     }
@@ -156,7 +144,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     public void testPutWithEnd() throws Exception {
         Form data = new Form();
         data.add("end", "true");
-        data.add("v", "2.0");
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
     }
@@ -172,6 +159,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     }
 
     private void assertDistanceNode(Form data, String unit, String perUnit) throws Exception {
+        client.addQueryParameter("v","2.0");
         Document doc = doPut(data).getEntityAsDom().getDocument();
         assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Path", doc);
         assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Name", doc);

@@ -31,6 +31,7 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
 
     public ProfileCategoryPOSTTest(String name) throws Exception {
         super(name);
+        client.setAPIVersion("2.0");
     }
 
     @Test
@@ -136,13 +137,11 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
 
 
     private void assertBadRequest(Form data) throws Exception {
-        data.add("v", "2.0");
         Status status = doPost(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
     }
 
     private void assertDistanceNode(Form data, String unit, String perUnit) throws Exception {
-        data.add("v", "2.0");
         Document doc = doPost(data).getEntityAsDom().getDocument();
         assertXpathEvaluatesTo("distance", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/Path", doc);
         assertXpathEvaluatesTo("Distance", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/Name", doc);
@@ -156,7 +155,7 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
     }
 
     private void assertDateNodes(Form data, String startDate, String endDate, String end) throws Exception {
-        data.add("v", "2.0");
+        client.addQueryParameter("v","2.0");
         Document doc = doPost(data).getEntityAsDom().getDocument();
         assertXpathEvaluatesTo(startDate, "/Resources/ProfileCategoryResource/ProfileItem/StartDate", doc);
         if (endDate != null) {

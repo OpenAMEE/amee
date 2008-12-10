@@ -1,19 +1,24 @@
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIObject;
-import gc.carbon.BaseResource;
-import gc.carbon.builder.APIVersion;
-import gc.carbon.builder.resource.BuildableResource;
-import gc.carbon.data.Calculator;
+import gc.carbon.AMEEResource;
+import gc.carbon.APIVersion;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.data.builder.BuildableResource;
 import gc.carbon.data.DataService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.restlet.data.Method;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
+import org.restlet.Context;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
 import java.util.Set;
+import java.util.Date;
 
 /**
  * This file is part of AMEE.
@@ -34,23 +39,27 @@ import java.util.Set;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public abstract class BaseProfileResource extends BaseResource implements BuildableResource {
+@Component("baseProfileResource")
+public abstract class BaseProfileResource extends AMEEResource implements BuildableResource {
 
-    ProfileForm form;
+    @Autowired
+    protected ProfileService profileService;
 
-    public abstract ProfileSheetService getProfileSheetService();
+    @Autowired
+    protected DataService dataService;
 
-    public abstract Pager getPager();
+    protected ProfileForm form;
+    protected ProfileBrowser profileBrowser;
 
-    public abstract ProfileService getProfileService();
+    public void init(Context context, Request request, Response response) {
+        super.init(context, request, response);
+        this.profileBrowser = (ProfileBrowser) beanFactory.getBean("profileBrowser");
 
-    public abstract DataService getDataService();
+    }
 
-    public abstract Environment getEnvironment();
-
-    public abstract Calculator getCalculator();
-
-    public abstract EntityManager getEntityManager();
+    public Pager getPager() {
+        return getPager(getItemsPerPage());
+    }
 
     public void setForm(ProfileForm form) {
         this.form = form;
@@ -68,19 +77,23 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
     }
 
     public String getFullPath() {
-        return getPathItem().getFullPath();
+        return pathItem.getFullPath();
     }
 
     public boolean hasParent() {
-        return getPathItem().getParent() != null;
+        return pathItem.getParent() != null;
     }
 
     public Set<? extends APIObject> getChildrenByType(String type) {
-        return getPathItem().getChildrenByType(type);
+        return pathItem.getChildrenByType(type);
     }
 
     private boolean isGET() {
         return getRequest().getMethod().equals(Method.GET);
+    }
+
+    public ProfileBrowser getProfileBrowser() {
+        return profileBrowser;
     }
 
     public boolean isValidRequest() {
@@ -136,6 +149,33 @@ public abstract class BaseProfileResource extends BaseResource implements Builda
         });
         return (count <= 1);
     }
+
+    public DataCategory getDataCategory() {
+        return profileBrowser.getDataCategory();
+    }
+
+    public Date getProfileDate() {
+        return profileBrowser.getProfileDate();
+    }
+
+    public Date getStartDate() {
+        return profileBrowser.getStartDate();
+    }
+
+    public Date getEndDate() {
+        return profileBrowser.getEndDate();
+    }
+
+    public Profile getProfile() {
+        return profileBrowser.getProfile();
+    }
+
+    public ProfileService getProfileService() {
+        return profileService;
+    }
+
+    public DataService getDataService() {
+        return dataService;
+    }
+
 }
-
-

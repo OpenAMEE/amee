@@ -1,13 +1,9 @@
 package gc.carbon.domain.profile;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.joda.time.DateTime;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 /**
  * This file is part of AMEE.

@@ -25,7 +25,7 @@ import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.BaseBrowser;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.ValueDefinition;
 import gc.carbon.domain.data.Algorithm;
 import gc.carbon.domain.data.ItemDefinition;
@@ -55,7 +55,7 @@ public class DefinitionBrowser extends BaseBrowser {
     private SiteService siteService;
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     // Environments
     private String environmentUid = null;
@@ -150,7 +150,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public ValueDefinition getValueDefinition() {
         if (valueDefinition == null) {
             if ((valueDefinitionUid != null) && (getEnvironment() != null)) {
-                valueDefinition = definitionService.getValueDefinition(getEnvironment(), valueDefinitionUid);
+                valueDefinition = definitionServiceDAO.getValueDefinition(getEnvironment(), valueDefinitionUid);
             }
         }
         return valueDefinition;
@@ -173,7 +173,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public Algorithm getAlgorithm() {
         if (algorithm == null) {
             if ((algorithmUid != null) && (getItemDefinition() != null)) {
-                algorithm = definitionService.getAlgorithm(algorithmUid);
+                algorithm = definitionServiceDAO.getAlgorithm(algorithmUid);
             }
         }
         return algorithm;
@@ -196,7 +196,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public ItemDefinition getItemDefinition() {
         if (itemDefinition == null) {
             if ((itemDefinitionUid != null) && (getEnvironment() != null)) {
-                itemDefinition = definitionService.getItemDefinition(getEnvironment(), itemDefinitionUid);
+                itemDefinition = definitionServiceDAO.getItemDefinition(getEnvironment(), itemDefinitionUid);
             }
         }
         return itemDefinition;
@@ -219,7 +219,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public ItemValueDefinition getItemValueDefinition() {
         if (itemValueDefinition == null) {
             if ((itemValueDefinitionUid != null) && (getItemDefinition() != null)) {
-                itemValueDefinition = definitionService.getItemValueDefinition(getItemDefinition(), itemValueDefinitionUid);
+                itemValueDefinition = definitionServiceDAO.getItemValueDefinition(getItemDefinition(), itemValueDefinitionUid);
             }
         }
         return itemValueDefinition;

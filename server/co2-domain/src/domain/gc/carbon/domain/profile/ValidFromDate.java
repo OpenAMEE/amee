@@ -1,13 +1,8 @@
 package gc.carbon.domain.profile;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormat;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.format.DateTimeFormatter;
 
 /**
  * This file is part of AMEE.

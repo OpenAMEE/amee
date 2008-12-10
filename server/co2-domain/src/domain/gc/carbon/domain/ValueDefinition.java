@@ -24,6 +24,7 @@ import com.jellymold.utils.ValueType;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
+import gc.carbon.domain.data.builder.BuildableValueDefinition;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -38,7 +39,7 @@ import java.util.Date;
 @Entity
 @Table(name = "VALUE_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ValueDefinition implements PersistentObject {
+public class ValueDefinition implements PersistentObject, BuildableValueDefinition {
 
     @Id
     @GeneratedValue

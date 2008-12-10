@@ -47,7 +47,7 @@ public class DataCategoryTest extends BaseDataTest {
         System.out.println("inside_and_ongoing_named  : " + inside_and_ongoing_named);
         System.out.println("inside_and_ongoing2_named : " + inside_and_ongoing2_named);
 
-        client.setQuery("startDate="+startDate.toString(FMT));
+        client.addQueryParameter("startDate",startDate.toString(FMT));
         DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//DataItem[@uid='" + before_and_ongoing_named + "']", doc);

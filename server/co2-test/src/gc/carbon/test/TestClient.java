@@ -12,15 +12,19 @@ public class TestClient {
 
     private static final String LOCAL_HOST_NAME = "local.stage.co2.dgen.net";
     private Reference reference = new Reference(Protocol.HTTP, LOCAL_HOST_NAME);
-    private String category;
+    private String path;
 
     private Series<CookieSetting> cookieSettings;
     private MediaType mediaType;
 
-    public TestClient(String category) throws IOException {
+    public TestClient(String profile, String category) throws IOException {
+        this("/profiles/" + profile + category);
+    }
+
+    public TestClient(String path) throws IOException {
         authenticate();
         setMediaType(MediaType.APPLICATION_XML);
-        setPath(category);
+        setPath(path);
     }
 
     private void authenticate() throws IOException {
@@ -37,8 +41,12 @@ public class TestClient {
         }
     }
 
-    public void setQuery(String query) {
-        reference.setQuery(query);
+    public void addQueryParameter(String param, String value) {
+        reference.addQueryParameter(param, value);
+    }
+
+    public void setAPIVersion(String v) {
+        reference.addQueryParameter("v", v);
     }
 
     public void setMediaType(MediaType mediaType) {
@@ -46,7 +54,7 @@ public class TestClient {
     }
 
     public void setPath(String category) {
-        this.category = category;
+        this.path = category;
         this.reference.setPath(category);
     }
 
@@ -61,6 +69,7 @@ public class TestClient {
         Client client = new Client(Protocol.HTTP);
         Request request = new Request(Method.GET, reference);
         addHeaders(request);
+        System.out.println("Resource - " + request.getResourceRef());
         return client.handle(request);
     }
 
@@ -68,6 +77,8 @@ public class TestClient {
         Client client = new Client(Protocol.HTTP);
         Request request = new Request(Method.POST, reference, form.getWebRepresentation());
         addHeaders(request);
+        System.out.println("Resource - " + request.getResourceRef());
+        System.out.println("Form - " + form.getMatrixString());
         return client.handle(request);
     }
 
@@ -75,7 +86,8 @@ public class TestClient {
         Client client = new Client(Protocol.HTTP);
         Request request = new Request(Method.PUT, reference, form.getWebRepresentation());
         addHeaders(request);
-        System.out.println(request.getResourceRef().getQuery());
+        System.out.println("Resource - " + request.getResourceRef());
+        System.out.println("Form - " + form.getMatrixString());
         return client.handle(request);
     }
 
@@ -84,7 +96,7 @@ public class TestClient {
         copyIfPresent(putData,postData,"v");
         copyIfPresent(putData,postData,"dataItemUid");
         copyIfPresent(putData,postData,"name");
-        String putPath = category + createProfileItem(postData);
+        String putPath = path + createProfileItem(postData);
         setPath(putPath);
         return put(putData);
     }

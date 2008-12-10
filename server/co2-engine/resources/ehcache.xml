@@ -210,7 +210,7 @@
 
     <!-- **** Queries **** -->
 
-    <!-- DataService -->
+    <!-- DataServiceDAO -->
     <cache name="query.dataService"
            maxElementsInMemory="1000"
            eternal="false"
@@ -220,7 +220,7 @@
            memoryStoreEvictionPolicy="LRU">
     </cache>
 
-    <!-- ProfileService -->
+    <!-- ProfileServiceDAO -->
     <cache name="query.profileService"
            maxElementsInMemory="200"
            eternal="false"

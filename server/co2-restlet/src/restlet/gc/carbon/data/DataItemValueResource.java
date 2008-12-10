@@ -19,7 +19,7 @@
  */
 package gc.carbon.data;
 
-import gc.carbon.BaseResource;
+import gc.carbon.AMEEResource;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
 import org.apache.commons.logging.Log;
@@ -41,16 +41,13 @@ import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class DataItemValueResource extends BaseResource implements Serializable {
+public class DataItemValueResource extends BaseDataResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    private DataBrowser dataBrowser;
 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        dataBrowser = getDataBrowser();
         dataBrowser.setDataItemUid(request.getAttributes().get("itemUid").toString());
         dataBrowser.setItemValueUid(request.getAttributes().get("valueUid").toString());
     }
@@ -116,8 +113,8 @@ public class DataItemValueResource extends BaseResource implements Serializable 
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation()");
         if (dataBrowser.getDataItemActions().isAllowModify()) {
             Form form = getForm();
             DataItem dataItem = dataBrowser.getDataItem();

@@ -21,7 +21,7 @@ package gc.carbon.environment;
 
 import com.jellymold.utils.BaseResource;
 import gc.carbon.data.DataConstants;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.Algorithm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,7 +49,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -98,7 +98,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
+        log.debug("handleGet()");
         if (definitionBrowser.getAlgorithmActions().isAllowView()) {
             super.handleGet();
         } else {
@@ -112,8 +112,8 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation()");
         if (definitionBrowser.getAlgorithmActions().isAllowModify()) {
             Algorithm algorithm = definitionBrowser.getAlgorithm();
             Form form = getForm();
@@ -136,12 +136,12 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void delete() {
-        log.debug("delete");
+    public void removeRepresentations() {
+        log.debug("removeRepresentations()");
         if (definitionBrowser.getAlgorithmActions().isAllowDelete()) {
             Algorithm algorithm = definitionBrowser.getAlgorithm();
             definitionBrowser.getItemDefinition().remove(algorithm);
-            definitionService.remove(algorithm);
+            definitionServiceDAO.remove(algorithm);
             success();
         } else {
             notAuthorized();

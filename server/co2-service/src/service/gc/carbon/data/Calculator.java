@@ -24,9 +24,10 @@ import gc.carbon.domain.data.Algorithm;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValueDefinition;
-import gc.carbon.domain.path.InternalItemValue;
+import gc.carbon.domain.path.InternalValue;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileFinder;
+import gc.carbon.data.DataServiceDAO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
@@ -44,24 +45,23 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: 'perMonth' is hard-coding - how should this be made more dynamic?
-
 @Service
 public class Calculator implements BeanFactoryAware, Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    DataService dataService;
+    DataServiceDAO dataServiceDAO;
 
     private BeanFactory beanFactory;
 
     public BigDecimal calculate(ProfileItem profileItem) {
-        log.debug("starting calculator");
+        log.debug("calculate() - starting calculator");
         BigDecimal amount;
         if (!profileItem.isEnd()) {
             ItemDefinition itemDefinition = profileItem.getItemDefinition();
             Algorithm algorithm = getAlgorithm(itemDefinition, "perMonth");
+
             if (algorithm != null) {
 
                 DataFinder dataFinder = initDataFinder(profileItem);
@@ -76,11 +76,11 @@ public class Calculator implements BeanFactoryAware, Serializable {
                 if (amount != null) {
                     profileItem.updateAmount(amount);
                 } else {
-                    log.warn("carbon not set");
+                    log.warn("calculate() - Calculated amount was NULL. Setting amount to ZERO");
                     amount = ProfileItem.ZERO;
                 }
             } else {
-                log.warn("Algorithm NOT found");
+                log.warn("calculate() - Algorithm NOT found. Setting amount to ZERO");
                 amount = ProfileItem.ZERO;
             }
         } else {
@@ -105,7 +105,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
     }
 
     public BigDecimal calculate(DataItem dataItem, Choices userValueChoices) {
-        log.debug("starting calculator");
+        log.debug("calculate() - Starting calculator");
         DataFinder dataFinder;
         ProfileFinder profileFinder;
         Map<String, Object> values;
@@ -113,25 +113,21 @@ public class Calculator implements BeanFactoryAware, Serializable {
         ItemDefinition itemDefinition = dataItem.getItemDefinition();
         Algorithm algorithm = getAlgorithm(itemDefinition, "perMonth");
         if (algorithm != null) {
-            // get DataFinder and ProfileFinder beans
             dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
             profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
             profileFinder.setDataFinder(dataFinder);
-            // get the new amount via algorithm and values
             values = getValues(dataItem, userValueChoices);
             values.put("profileFinder", profileFinder);
             values.put("dataFinder", dataFinder);
             amount = calculate(algorithm, values);
         } else {
-            log.warn("Algorithm NOT found");
+            log.warn("calculate() - Algorithm NOT found");
             amount = ProfileItem.ZERO;
         }
         return amount;
     }
 
     protected BigDecimal calculate(Algorithm algorithm, Map<String, Object> values) {
-
-        log.debug("getting value");
 
         BigDecimal amount = ProfileItem.ZERO;
         String value = null;
@@ -148,27 +144,27 @@ public class Calculator implements BeanFactoryAware, Serializable {
 
             Object result = cx.evaluateString(scope, algorithmContent, "", 0, null);
             value = Context.toString(result);
-            log.debug("value: " + value);
+            log.debug("calculate() - Unscaled amount: " + value);
         } catch (EvaluatorException e) {
-            log.warn("caught EvaluatorException: " + e.getMessage());
+            log.warn("calculate() - " + e);
         } catch (RhinoException e) {
-            log.warn("caught RhinoException: " + e.getMessage());
+            log.warn("calculate() - " + e);
         } finally {
             Context.exit();
         }
 
-        // process result
+        // Scale the result
         if (value != null) {
             try {
                 amount = new BigDecimal(value);
                 amount = amount.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
                 if (amount.precision() > ProfileItem.PRECISION) {
-                    log.warn("precision is too big: " + amount);
+                    log.warn("calculate() - Precision is too big: " + amount);
                 }
             } catch (Exception e) {
-                log.warn("caught Exception: " + e);
+                log.warn("calculate() - " + e);
             }
-            log.debug("got value: " + amount);
+            log.debug("calculate() - Scaled amount: " + amount);
         }
         return amount;
     }
@@ -176,7 +172,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
     protected Algorithm getAlgorithm(ItemDefinition itemDefinition, String path) {
         for (Algorithm algorithm : itemDefinition.getAlgorithms()) {
             if (algorithm.getName().equalsIgnoreCase(path)) {
-                log.debug("found Algorithm");
+                log.debug("getAlgorithm() - Found Algorithm: " + algorithm.getId());
                 return algorithm;
             }
         }
@@ -184,7 +180,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
     }
 
     public Map<String, Object> getValues(ProfileItem profileItem) {
-        Map<ItemValueDefinition, InternalItemValue> values = new HashMap<ItemValueDefinition, InternalItemValue>();
+        Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
         profileItem.getItemDefinition().appendInternalValues(values);
         profileItem.getDataItem().appendInternalValues(values);
         profileItem.appendInternalValues(values);
@@ -196,7 +192,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
     }
 
     public Map<String, Object> getValues(DataItem dataItem, Choices userValueChoices) {
-        Map<ItemValueDefinition, InternalItemValue> values = new HashMap<ItemValueDefinition, InternalItemValue>();
+        Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
         dataItem.getItemDefinition().appendInternalValues(values);
         dataItem.appendInternalValues(values);
         appendUserValueChoices(userValueChoices, values);
@@ -209,13 +205,13 @@ public class Calculator implements BeanFactoryAware, Serializable {
         return returnValues;
     }
 
-    private void appendUserValueChoices(Choices userValueChoices, Map<ItemValueDefinition, InternalItemValue> values) {
+    private void appendUserValueChoices(Choices userValueChoices, Map<ItemValueDefinition, InternalValue> values) {
         if (userValueChoices != null) {
-            Map<ItemValueDefinition, InternalItemValue> userChoices = new HashMap<ItemValueDefinition, InternalItemValue>();
+            Map<ItemValueDefinition, InternalValue> userChoices = new HashMap<ItemValueDefinition, InternalValue>();
             for (ItemValueDefinition itemValueDefinition : values.keySet()) {
                 if (itemValueDefinition.isFromProfile() && userValueChoices.containsKey(itemValueDefinition.getPath())) {
                     userChoices.put(itemValueDefinition,
-                            new InternalItemValue(userValueChoices.get(itemValueDefinition.getPath()).getValue()));
+                            new InternalValue(userValueChoices.get(itemValueDefinition.getPath()).getValue()));
                 }
             }
             values.putAll(userChoices);
