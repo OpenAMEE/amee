@@ -33,6 +33,7 @@ import javax.measure.unit.Unit;
 import javax.measure.unit.SI;
 import javax.measure.unit.NonSI;
 import javax.measure.quantity.Mass;
+import javax.measure.DecimalMeasure;
 import java.math.BigDecimal;
 
 public class ProfileItemBuilder implements Builder {
@@ -123,7 +124,8 @@ public class ProfileItemBuilder implements Builder {
     private String getAmount(BuildableProfileItem item) {
         BigDecimal amount = item.getAmount();
         if (returnUnit != null) {
-
+            //DecimalMeasure dm = DecimalMeasure.valueOf(amount, );
+            //amount = dm.to(internalUnit, CONTEXT).getValue();
         }
         return amount.toString();
     }

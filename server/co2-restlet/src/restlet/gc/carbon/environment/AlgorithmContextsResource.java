@@ -3,7 +3,7 @@ package gc.carbon.environment;
 import com.jellymold.utils.BaseResource;
 import gc.carbon.data.DataConstants;
 import gc.carbon.domain.data.AlgorithmContext;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -31,7 +31,7 @@ public class AlgorithmContextsResource extends BaseResource implements Serializa
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -118,7 +118,7 @@ public class AlgorithmContextsResource extends BaseResource implements Serializa
             }
             if (newAlgorithmContext != null) {
                 if (isStandardWebBrowser()) {
-                    definitionService.save(newAlgorithmContext);
+                    definitionServiceDAO.save(newAlgorithmContext);
                     success();
                 } else {
                     // return a response for API calls

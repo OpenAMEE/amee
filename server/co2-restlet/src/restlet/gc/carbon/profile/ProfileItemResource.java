@@ -166,11 +166,12 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         }
     }
 
+    //TODO - parsing v1 and v2 params - see Acceptors which at least conditionally parse based on APIVersion. Ideal solution should be transparent tho.
     protected boolean updateProfileItem(ProfileItem profileItem, Form form) {
 
         Set<String> names = form.getNames();
 
-        if (!isValidRequest()) {
+        if (!validateParameters()) {
             badRequest();
         }
 

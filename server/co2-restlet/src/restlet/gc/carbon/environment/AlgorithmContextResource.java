@@ -21,7 +21,7 @@ package gc.carbon.environment;
 
 import com.jellymold.utils.BaseResource;
 import gc.carbon.data.DataConstants;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.AlgorithmContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,7 +49,7 @@ public class AlgorithmContextResource extends BaseResource implements Serializab
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -133,7 +133,7 @@ public class AlgorithmContextResource extends BaseResource implements Serializab
         log.debug("delete");
         if (definitionBrowser.getAlgorithmActions().isAllowDelete()) {
             AlgorithmContext algorithmContext = definitionBrowser.getAlgorithmContext();
-            definitionService.remove(algorithmContext);
+            definitionServiceDAO.remove(algorithmContext);
             success();
         } else {
             notAuthorized();

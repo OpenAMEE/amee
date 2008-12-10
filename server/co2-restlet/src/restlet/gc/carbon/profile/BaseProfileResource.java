@@ -124,4 +124,62 @@ public abstract class BaseProfileResource extends AMEEResource implements Builda
         return dataService;
     }
 
+    //TODO - Move, validation is not general to all Profile Resources
+    public boolean validateParameters() {
+        if (getVersion().isVersionOne()) {
+            if (containsCalendarParams() || containsReturnUnitParams() ) {
+                return false;
+            }
+        } else {
+            if (isGET()) {
+                if (containsProfileDate()) {
+                    return false;
+                }
+                if (proRateModeHasNoEndDate()) {
+                    return false;
+                }
+            } else {
+                if (containsValidFromOrEnd()) {
+                    return false;
+                }
+            }
+            return isValidBoundedCalendarRequest();
+        }
+        return true;
+    }
+
+    private boolean proRateModeHasNoEndDate() {
+        return getForm().getFirstValue("mode", "null").equals("prorata")
+                && !getForm().getNames().contains("endDate");
+    }
+
+    private boolean containsCalendarParams() {
+        return getForm().getNames().contains("endDate") ||
+                getForm().getNames().contains("startDate") ||
+                getForm().getNames().contains("duration");
+    }
+
+    private boolean containsReturnUnitParams() {
+        return getForm().getNames().contains("returnUnit") ||
+                getForm().getNames().contains("returnPerUnit");
+    }
+
+    private boolean containsProfileDate() {
+        return getForm().getNames().contains("profileDate");
+    }
+
+    private boolean containsValidFromOrEnd() {
+        return getForm().getNames().contains("validFrom") ||
+                getForm().getNames().contains("end");
+    }
+
+    private boolean isValidBoundedCalendarRequest() {
+        int count = CollectionUtils.countMatches(getForm().getNames(), new Predicate() {
+            public boolean evaluate(Object o) {
+                String p = (String) o;
+                return (p.equals("endDate") || p.equals("duration"));
+            }
+        });
+        return (count <= 1);
+    }
 }

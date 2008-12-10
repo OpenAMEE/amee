@@ -192,14 +192,14 @@ public class DefinitionBrowser extends BaseBrowser {
     public AlgorithmContext getAlgorithmContext() {
         if (algorithmContext == null) {
             if (algorithmContextUid != null) {
-                algorithmContext = definitionService.getAlgorithmContext(getEnvironment(), algorithmContextUid);
+                algorithmContext = definitionServiceDAO.getAlgorithmContext(getEnvironment(), algorithmContextUid);
             }
         }
         return algorithmContext;
     }
 
     public List<AlgorithmContext> getAlgorithmContexts() {
-        return definitionService.getAlgorithmContexts(getEnvironment());
+        return definitionServiceDAO.getAlgorithmContexts(getEnvironment());
     }
 
     public ResourceActions getAlgorithmActions() {
