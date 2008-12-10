@@ -29,9 +29,24 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.measure.unit.Unit;
+import javax.measure.unit.SI;
+import javax.measure.unit.NonSI;
+import javax.measure.quantity.Mass;
+import java.math.BigDecimal;
+
 public class ProfileItemBuilder implements Builder {
 
+    private Unit<Mass> AMOUNT_RETURN_UNIT = SI.KILOGRAM;
+    private Unit<javax.measure.quantity.Duration> AMOUNT_RETURN_PER_UNIT = NonSI.YEAR;
+
     private BuildableProfileItem item;
+    private Unit returnUnit;
+
+    public ProfileItemBuilder(BuildableProfileItem item, Unit returnUnit) {
+        this.item = item;
+        this.returnUnit = returnUnit;
+    }
 
     public ProfileItemBuilder(BuildableProfileItem item) {
         this.item = item;
@@ -76,7 +91,7 @@ public class ProfileItemBuilder implements Builder {
         buildElement(obj, detailed);
 
         JSONObject amount = new JSONObject();
-        amount.put("value", item.getAmount());
+        amount.put("value", getAmount(item));
         obj.put("amount",amount);
 
         obj.put("startDate", item.getStartDate().toString());
@@ -93,7 +108,7 @@ public class ProfileItemBuilder implements Builder {
         buildElement(document, element, detailed);
 
         Element amount = document.createElement("Amount");
-        amount.appendChild(APIUtils.getElement(document, "Value", item.getAmount().toString()));
+        amount.appendChild(APIUtils.getElement(document, "Value", getAmount(item)));
         element.appendChild(amount);
 
         element.appendChild(APIUtils.getElement(document, "StartDate", item.getStartDate().toString()));
@@ -103,6 +118,14 @@ public class ProfileItemBuilder implements Builder {
             element.appendChild(item.getProfile().getIdentityElement(document));
         }
         return element;
+    }
+
+    private String getAmount(BuildableProfileItem item) {
+        BigDecimal amount = item.getAmount();
+        if (returnUnit != null) {
+
+        }
+        return amount.toString();
     }
     
 }

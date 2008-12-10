@@ -69,9 +69,14 @@ public class ProfileBrowser extends BaseBrowser {
     private String profileItemValueUid = null;
     private ResourceActions profileItemValueActions = new ResourceActions("profileItemValue");
 
-    // profile date
+    // ProfileDate (API v1)
     private Date profileDate = Calendar.getInstance().getTime();
 
+    // Return Units
+    private String returnUnit;
+    private String returnPerUnit;
+
+    // Filters
     private String selectBy;
     private String mode;
 
@@ -201,5 +206,21 @@ public class ProfileBrowser extends BaseBrowser {
 
     public boolean isSelectByRequest() {
         return getSelectBy() != null;
+    }
+
+    public String getReturnUnit() {
+        return returnUnit;
+    }
+
+    public void setReturnUnit(String returnUnit) {
+        this.returnUnit = returnUnit;
+    }
+
+    public String getReturnPerUnit() {
+        return returnPerUnit;
+    }
+
+    public void setReturnPerUnit(String returnPerUnit) {
+        this.returnPerUnit = returnPerUnit;
     }
 }

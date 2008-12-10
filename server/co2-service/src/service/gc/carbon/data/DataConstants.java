@@ -27,6 +27,8 @@ public class DataConstants {
     public final static String VIEW_DATA_CATEGORY = "dataCategory.ftl";
     public final static String VIEW_ALGORITHMS = "algorithms.ftl";
     public final static String VIEW_CARBON_ALGORITHM = "algorithm.ftl";
+    public final static String VIEW_ALGORITHM_CONTEXTS = "algorithmContexts.ftl";
+    public final static String VIEW_CARBON_ALGORITHM_CONTEXT = "algorithmContext.ftl";
     public final static String VIEW_VALUE_DEFINITIONS = "valueDefinitions.ftl";
     public final static String VIEW_VALUE_DEFINITION = "valueDefinition.ftl";
     public final static String VIEW_ITEM_DEFINITIONS = "itemDefinitions.ftl";

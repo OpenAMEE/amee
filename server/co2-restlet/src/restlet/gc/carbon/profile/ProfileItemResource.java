@@ -122,12 +122,14 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         if (profileBrowser.getProfileItemActions().isAllowModify()) {
             Form form = getForm();
             ProfileItem profileItem = profileBrowser.getProfileItem();
+
             // ensure updated ProfileItem does not break rules for ProfileItems
             ProfileItem profileItemCopy = profileItem.getCopy();
-            if (updateProfileItem(profileItemCopy, form) &&
-                    profileService.hasNoEquivalent(profileItemCopy)) {
+            if (updateProfileItem(profileItemCopy, form) && profileService.hasNoEquivalent(profileItemCopy)) {
+
                 // update persistent ProfileItem
                 updateProfileItem(profileItem, form);
+
                 // update ItemValues if supplied
                 Map<String, ItemValue> itemValues = profileItem.getItemValuesMap();
                 for (String name : form.getNames()) {
@@ -143,9 +145,11 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
                     }
                 }
                 log.debug("storeRepresentation() - ProfileItem updated");
+
                 // all done, need to recalculate and clear caches
                 profileService.calculate(profileItem);
                 profileService.clearCaches(profileBrowser);
+
                 // do response
                 if (isStandardWebBrowser()) {
                     success(profileBrowser.getFullPath());

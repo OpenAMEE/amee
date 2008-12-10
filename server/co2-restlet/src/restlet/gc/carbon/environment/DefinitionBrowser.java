@@ -28,6 +28,7 @@ import com.jellymold.utils.BaseBrowser;
 import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.ValueDefinition;
 import gc.carbon.domain.data.Algorithm;
+import gc.carbon.domain.data.AlgorithmContext;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValueDefinition;
 import org.apache.commons.logging.Log;
@@ -36,17 +37,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Component
 @Scope("prototype")
 public class DefinitionBrowser extends BaseBrowser {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Autowired
     private EnvironmentService environmentService;
@@ -76,6 +73,10 @@ public class DefinitionBrowser extends BaseBrowser {
     private String algorithmUid = null;
     private Algorithm algorithm = null;
     private ResourceActions algorithmActions = new ResourceActions("algorithm");
+
+    // Algorithm Contexts
+    private String algorithmContextUid = null;
+    private AlgorithmContext algorithmContext = null;
 
     // ItemDefinitions
     private String itemDefinitionUid = null;
@@ -170,6 +171,15 @@ public class DefinitionBrowser extends BaseBrowser {
         this.algorithmUid = algorithmId;
     }
 
+    public String getAlgorithmContextUid() {
+        return algorithmContextUid;
+    }
+
+    public void setAlgorithmContextUid(String algorithmContextId) {
+        this.algorithmContextUid = algorithmContextId;
+    }
+
+
     public Algorithm getAlgorithm() {
         if (algorithm == null) {
             if ((algorithmUid != null) && (getItemDefinition() != null)) {
@@ -177,6 +187,19 @@ public class DefinitionBrowser extends BaseBrowser {
             }
         }
         return algorithm;
+    }
+
+    public AlgorithmContext getAlgorithmContext() {
+        if (algorithmContext == null) {
+            if (algorithmContextUid != null) {
+                algorithmContext = definitionService.getAlgorithmContext(getEnvironment(), algorithmContextUid);
+            }
+        }
+        return algorithmContext;
+    }
+
+    public List<AlgorithmContext> getAlgorithmContexts() {
+        return definitionService.getAlgorithmContexts(getEnvironment());
     }
 
     public ResourceActions getAlgorithmActions() {

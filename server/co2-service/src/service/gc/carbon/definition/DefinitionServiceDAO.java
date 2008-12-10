@@ -24,9 +24,7 @@ import com.jellymold.utils.Pager;
 import com.jellymold.utils.event.ObserveEventService;
 import com.jellymold.utils.event.ObservedEvent;
 import gc.carbon.domain.ValueDefinition;
-import gc.carbon.domain.data.Algorithm;
-import gc.carbon.domain.data.ItemDefinition;
-import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.data.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,8 +85,52 @@ public class DefinitionServiceDAO implements Serializable {
         return algorithm;
     }
 
-    public void remove(Algorithm algorithm) {
+    public void remove(AbstractAlgorithm algorithm) {
         entityManager.remove(algorithm);
+    }
+
+
+    public void save(AbstractAlgorithm algorithm) {
+        entityManager.persist(algorithm);
+    }
+
+
+    // TODO: Scope to something
+
+    public List<AlgorithmContext> getAlgorithmContexts(Environment environment) {
+        List<AlgorithmContext> algorithmContexts =
+                entityManager.createQuery("FROM AlgorithmContext ac " +
+                        "WHERE ac.environment = :environment")
+                        .setParameter("environment", environment)
+                        .setHint("org.hibernate.cacheable", true)
+                        .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                        .getResultList();
+        if (algorithmContexts.size() == 1) {
+            log.debug("found AlgorithmContexts");
+        } else {
+            log.debug("AlgorithmContexts NOT found");
+        }
+        return algorithmContexts;
+    }
+
+    public AlgorithmContext getAlgorithmContext(Environment environment, String algorithmContextUid) {
+        AlgorithmContext algorithmContext = null;
+        List<AlgorithmContext> algorithmContexts =
+                entityManager.createQuery("FROM AlgorithmContext ac " +
+                        "WHERE ac.environment = :environment "
+                        + "AND ac.uid = :uid")
+                        .setParameter("environment", environment)
+                        .setParameter("uid", algorithmContextUid)
+                        .setHint("org.hibernate.cacheable", true)
+                        .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                        .getResultList();
+        if (algorithmContexts.size() == 1) {
+            log.debug("found AlgorithmContext");
+            algorithmContext = algorithmContexts.get(0);
+        } else {
+            log.debug("AlgorithmContext NOT found");
+        }
+        return algorithmContext;
     }
 
     // ItemDefinition

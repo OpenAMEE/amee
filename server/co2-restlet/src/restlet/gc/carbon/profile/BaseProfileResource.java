@@ -88,66 +88,12 @@ public abstract class BaseProfileResource extends AMEEResource implements Builda
         return pathItem.getChildrenByType(type);
     }
 
-    private boolean isGET() {
+    protected boolean isGET() {
         return getRequest().getMethod().equals(Method.GET);
     }
 
     public ProfileBrowser getProfileBrowser() {
         return profileBrowser;
-    }
-
-    public boolean isValidRequest() {
-        if (getVersion().isVersionOne()) {
-            if (containsCalendarParams()) {
-                return false;
-            }
-        } else {
-            if (isGET()) {
-                if (containsProfileDate()) {
-                    return false;
-                }
-                if (proRateModeHasNoEndDate()) {
-                    return false;
-                }
-            } else {
-                if (containsValidFromOrEnd()) {
-                    return false;
-                }
-            }
-            return isValidBoundedCalendarRequest();
-        }
-        return true;
-    }
-
-    private boolean proRateModeHasNoEndDate() {
-        return getForm().getFirstValue("mode", "null").equals("prorata")
-                && !getForm().getNames().contains("endDate");
-    }
-
-    private boolean containsCalendarParams() {
-        return getForm().getNames().contains("endDate") ||
-                getForm().getNames().contains("startDate") ||
-                getForm().getNames().contains("duration");
-    }
-
-    private boolean containsProfileDate() {
-        return getForm().getNames().contains("profileDate");
-    }
-
-    private boolean containsValidFromOrEnd() {
-        return getForm().getNames().contains("validFrom") ||
-                getForm().getNames().contains("end");
-    }
-
-    // TODO: end is not allowed in 2.0 so can be removed
-    private boolean isValidBoundedCalendarRequest() {
-        int count = CollectionUtils.countMatches(getForm().getNames(), new Predicate() {
-            public boolean evaluate(Object o) {
-                String p = (String) o;
-                return (p.equals("end") || (p.equals("endDate") || p.equals("duration")));
-            }
-        });
-        return (count <= 1);
     }
 
     public DataCategory getDataCategory() {

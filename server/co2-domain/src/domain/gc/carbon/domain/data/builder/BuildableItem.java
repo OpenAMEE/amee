@@ -22,6 +22,10 @@ package gc.carbon.domain.data.builder;
 import com.jellymold.utils.domain.APIObject;
 import gc.carbon.domain.profile.StartEndDate;
 
+import javax.measure.quantity.Mass;
+import javax.measure.unit.Unit;
+import javax.measure.unit.SI;
+import javax.measure.unit.NonSI;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

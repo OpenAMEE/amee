@@ -189,17 +189,11 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         } else if (resource.isPost() || resource.isPut()) {
 
             if (!resource.getProfileItems().isEmpty()) {
-                if (resource.getProfileItems().size() == 1) {
-                    BuildableProfileItem pi = resource.getProfileItems().get(0);
+                Element profileItemsElement = document.createElement("ProfileItems");
+                element.appendChild(profileItemsElement);
+                for (BuildableProfileItem pi : resource.getProfileItems()) {
                     pi.setBuilder(new ProfileItemBuilder(pi));
-                    element.appendChild(pi.getElement(document, false));
-                } else {
-                    Element profileItemsElement = document.createElement("ProfileItems");
-                    element.appendChild(profileItemsElement);
-                    for (BuildableProfileItem pi : resource.getProfileItems()) {
-                        pi.setBuilder(new ProfileItemBuilder(pi));
-                        profileItemsElement.appendChild(pi.getElement(document, false));
-                    }
+                    profileItemsElement.appendChild(pi.getElement(document, false));
                 }
             }
         }

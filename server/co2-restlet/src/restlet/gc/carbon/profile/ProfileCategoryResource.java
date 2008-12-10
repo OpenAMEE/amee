@@ -30,6 +30,8 @@ import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
 import gc.carbon.profile.acceptor.ProfileCategoryXMLAcceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -102,8 +104,8 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
-        if (!isValidRequest()) {
+        log.debug("handleGet()");
+        if (!validateParameters()) {
             badRequest();
         } else if (profileBrowser.getEnvironmentActions().isAllowView()) {
             Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -113,6 +115,8 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
             profileBrowser.setDuration(form.getFirstValue("duration"));
             profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
             profileBrowser.setMode(form.getFirstValue("mode"));
+            profileBrowser.setReturnUnit(form.getFirstValue("returnUnit"));
+            profileBrowser.setReturnPerUnit(form.getFirstValue("returnPerUnit"));
             super.handleGet();
         } else {
             notAuthorized();
@@ -131,18 +135,18 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
 
     @Override
     public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation");
+        log.debug("acceptRepresentation()");
         acceptOrStore(entity);
     }
 
     @Override
     public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation");
+        log.debug("storeRepresentation()");
         acceptOrStore(entity);
     }
 
     protected void acceptOrStore(Representation entity) {
-        log.debug("acceptOrStore");
+        log.debug("acceptOrStore()");
         if (isAcceptOrStoreAuthorized()) {
             profileItems = doAcceptOrStore(entity);
             if (!profileItems.isEmpty()) {
@@ -189,7 +193,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
 
     @Override
     public void removeRepresentations() {
-        log.debug("removeRepresentations");
+        log.debug("removeRepresentations()");
         if (profileBrowser.getProfileActions().isAllowDelete()) {
             Profile profile = profileBrowser.getProfile();
             profileService.clearCaches(profileBrowser);
@@ -206,6 +210,64 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
 
     public List<ProfileItem> getProfileItems() {
         return profileItems;
+    }
+
+    public boolean validateParameters() {
+        if (getVersion().isVersionOne()) {
+            if (containsCalendarParams() || containsReturnUnitParams() ) {
+                return false;
+            }
+        } else {
+            if (isGET()) {
+                if (containsProfileDate()) {
+                    return false;
+                }
+                if (proRateModeHasNoEndDate()) {
+                    return false;
+                }
+            } else {
+                if (containsValidFromOrEnd()) {
+                    return false;
+                }
+            }
+            return isValidBoundedCalendarRequest();
+        }
+        return true;
+    }
+
+    private boolean proRateModeHasNoEndDate() {
+        return getForm().getFirstValue("mode", "null").equals("prorata")
+                && !getForm().getNames().contains("endDate");
+    }
+
+    private boolean containsCalendarParams() {
+        return getForm().getNames().contains("endDate") ||
+                getForm().getNames().contains("startDate") ||
+                getForm().getNames().contains("duration");
+    }
+
+    private boolean containsReturnUnitParams() {
+        return getForm().getNames().contains("returnUnit") ||
+                getForm().getNames().contains("returnPerUnit");
+    }
+
+    private boolean containsProfileDate() {
+        return getForm().getNames().contains("profileDate");
+    }
+
+    private boolean containsValidFromOrEnd() {
+        return getForm().getNames().contains("validFrom") ||
+                getForm().getNames().contains("end");
+    }
+
+    private boolean isValidBoundedCalendarRequest() {
+        int count = CollectionUtils.countMatches(getForm().getNames(), new Predicate() {
+            public boolean evaluate(Object o) {
+                String p = (String) o;
+                return (p.equals("endDate") || p.equals("duration"));
+            }
+        });
+        return (count <= 1);
     }
 
 }

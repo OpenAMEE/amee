@@ -38,5 +38,4 @@ public interface BuildableProfileItem extends BuildableItem {
 
     void setBuilder(Builder builder);
 
-
 }

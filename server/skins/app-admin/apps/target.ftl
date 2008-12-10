@@ -11,8 +11,8 @@
 Name: ${target.name}<br/>
 URI Pattern: ${target.uriPattern}<br/>
 Target: ${target.target}<br/>
-Created: ${target.created?string.short}<br/>
-Modified: ${target.modified?string.short}<br/>
+Created: ${target.created?string("dd/mm/yy hh:mm a")}<br/>
+Modified: ${target.modified?string("dd/mm/yy hh:mm a")}<br/>
 </p>
 </#if> 
 <#if browser.appActions.allowModify>

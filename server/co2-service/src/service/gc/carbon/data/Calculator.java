@@ -71,7 +71,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
                 values.put("dataFinder", dataFinder);
 
                 // get the new amount via algorithm and values
-                amount = calculate(algorithm, values);
+                amount = calculate(algorithm, values, false);
 
                 if (amount != null) {
                     profileItem.updateAmount(amount);
@@ -105,21 +105,15 @@ public class Calculator implements BeanFactoryAware, Serializable {
     }
 
     public BigDecimal calculate(DataItem dataItem, Choices userValueChoices) {
-        log.debug("calculate() - Starting calculator");
-        DataFinder dataFinder;
-        ProfileFinder profileFinder;
+        log.debug("starting calculator");
         Map<String, Object> values;
         BigDecimal amount;
         ItemDefinition itemDefinition = dataItem.getItemDefinition();
         Algorithm algorithm = getAlgorithm(itemDefinition, "perMonth");
         if (algorithm != null) {
-            dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
-            profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
-            profileFinder.setDataFinder(dataFinder);
+            // get the new amount via algorithm and values
             values = getValues(dataItem, userValueChoices);
-            values.put("profileFinder", profileFinder);
-            values.put("dataFinder", dataFinder);
-            amount = calculate(algorithm, values);
+            amount = calculate(algorithm, values, true);
         } else {
             log.warn("calculate() - Algorithm NOT found");
             amount = ProfileItem.ZERO;
@@ -127,12 +121,35 @@ public class Calculator implements BeanFactoryAware, Serializable {
         return amount;
     }
 
-    protected BigDecimal calculate(Algorithm algorithm, Map<String, Object> values) {
+    /**
+     * Calculate a value based on the algorithm and values. This implementation will expose any algorithm processing exceptions
+     *
+     * @param algorithm        The algorithm
+     * @param values           values map for use in the algorithm
+     * @param initGlobalValues true if global services should be added to the values
+     * @return returns the result of the algorithm
+     * @throws RhinoException thrown if the algorithm is processed with errors
+     */
+    public BigDecimal calculateWithRuntime(Algorithm algorithm, Map<String, Object> values, boolean initGlobalValues) throws RhinoException {
+        log.debug("calculateWithRuntime() - getting value");
+
+        if (initGlobalValues) {
+            DataFinder dataFinder;
+            ProfileFinder profileFinder;
+
+            // get DataFinder and ProfileFinder beans
+            dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
+            profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
+            profileFinder.setDataFinder(dataFinder);
+
+            values.put("dataFinder", dataFinder);
+            values.put("profileFinder", profileFinder);
+        }
 
         BigDecimal amount = ProfileItem.ZERO;
         String value = null;
 
-        String algorithmContent = algorithm.getContent();
+        String algorithmContent = algorithm.getFullContent();
 
         try {
             Context cx = Context.enter();
@@ -144,29 +161,34 @@ public class Calculator implements BeanFactoryAware, Serializable {
 
             Object result = cx.evaluateString(scope, algorithmContent, "", 0, null);
             value = Context.toString(result);
-            log.debug("calculate() - Unscaled amount: " + value);
-        } catch (EvaluatorException e) {
-            log.warn("calculate() - " + e);
-        } catch (RhinoException e) {
-            log.warn("calculate() - " + e);
+            log.debug("calculateWithRuntime() - value: " + value);
         } finally {
             Context.exit();
         }
 
         // Scale the result
         if (value != null) {
-            try {
-                amount = new BigDecimal(value);
-                amount = amount.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
-                if (amount.precision() > ProfileItem.PRECISION) {
-                    log.warn("calculate() - Precision is too big: " + amount);
-                }
-            } catch (Exception e) {
-                log.warn("calculate() - " + e);
+            amount = new BigDecimal(value);
+            amount = amount.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
+            if (amount.precision() > ProfileItem.PRECISION) {
+                log.warn("calculateWithRuntime() - precision is too big: " + amount);
             }
-            log.debug("calculate() - Scaled amount: " + amount);
+            log.debug("calculateWithRuntime() - Scaled amount: " + amount);
         }
         return amount;
+    }
+
+    protected BigDecimal calculate(Algorithm algorithm, Map<String, Object> values, boolean initGlobalValues) {
+        try {
+            return calculateWithRuntime(algorithm, values, initGlobalValues);
+        } catch (EvaluatorException e) {
+            log.warn("calculate() - caught EvaluatorException: " + e.getMessage());
+        } catch (RhinoException e) {
+            log.warn("calculate() - caught RhinoException: " + e.getMessage());
+        } catch (Exception e) {
+            log.warn("calculate() - caught Exception: " + e);
+        }
+        return ProfileItem.ZERO;
     }
 
     protected Algorithm getAlgorithm(ItemDefinition itemDefinition, String path) {

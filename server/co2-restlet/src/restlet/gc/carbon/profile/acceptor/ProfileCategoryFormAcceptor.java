@@ -14,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
 import org.restlet.data.Method;
 import org.restlet.resource.Representation;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +121,7 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
 
     private ProfileItem acceptProfileItem(Form form, ProfileItem profileItem) {
 
-        if (!resource.isValidRequest()) {
+        if (!resource.validateParameters()) {
             resource.badRequest();
             return null;
         }
