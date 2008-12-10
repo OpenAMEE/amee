@@ -13,8 +13,6 @@
         var errElement = document.getElementById("errorTxt");
         var resElement = document.getElementById("resultTxt");
 
-        Log.debug(response.responseJSON.algorithmTestWrapper);
-
         if (response.responseJSON.algorithmTestWrapper.result !== undefined) {
             var e = new Element('b', {id : 'resultTxt'});
             e.insert(response.responseJSON.algorithmTestWrapper.result);
