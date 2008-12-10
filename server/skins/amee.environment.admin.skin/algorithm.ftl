@@ -13,9 +13,11 @@
         var errElement = document.getElementById("errorTxt");
         var resElement = document.getElementById("resultTxt");
 
-        if (response.responseJSON.testAlgorithmResult !== undefined) {
+        Log.debug(response.responseJSON.algorithmTestWrapper);
+
+        if (response.responseJSON.algorithmTestWrapper.result !== undefined) {
             var e = new Element('b', {id : 'resultTxt'});
-            e.insert(response.responseJSON.testAlgorithmResult);
+            e.insert(response.responseJSON.algorithmTestWrapper.result);
             resElement.replace(e)
 
             if (errElement != null) {
@@ -23,7 +25,7 @@
             }
         } else {
             var e = new Element('textarea', {id : 'errorTxt', rows : 15, cols : 60, readonly : ""});
-            e.value = response.responseJSON.testAlgorithmError;
+            e.value = response.responseJSON.algorithmTestWrapper.error;
             errElement.replace(e);
 
             if (resElement != null) {
@@ -36,7 +38,9 @@
     }
 
     function failureTest(response) {
-        Log.debug(response.responseJSON.algorithmContextResource.test);
+        var errElement = document.getElementById("errorTxt");
+        errElement.value = "Error! Unable to test Algorithm, try reloading the page."
+        Log.debug("test");
     }
 
     function updateContext(select) {
@@ -68,6 +72,10 @@
         document.algorithmTestFrm.testAlgorithmContent.value = document.algorithmFrm.content.value;
         document.algorithmTestFrm.testAlgorithmContextContent.value = document.algorithmFrm.algorithmContextContent.value;
 
+        document.algorithmTestFrm.startDate.value = document.algorithmFrm.startDate.value;
+        document.algorithmTestFrm.endDate.value = document.algorithmFrm.endDate.value;
+
+
         var myAjax = new Ajax.Request(
                 path, {
             method: 'get',
@@ -75,6 +83,7 @@
             requestHeaders: ['Accept', 'application/json'],
             onSuccess: successTest.bind(this),
             onFailure: failureTest.bind(this)});
+        return false;
     }
 
 </script>
@@ -134,9 +143,17 @@
         <#if !testValues?? >
           <#assign testValues="" />
         </#if>
-        <div class="valueCol"><input name='testValues' value='${testValues}' type='text' size='60'/><br/>
+        <div class="valueCol"><input name='testValues' value='${testValues}' type='text' size='60'/> <a href="#" onclick="return testAlgorithm('${path}');" style="margin-left:10%">Test</a><br/>
             <span style="font-size:12; font-weight:bold; color:silver;">Comma delimited list of name=value pairs (e.g name=1,kg=2)</span>
         </div><br/><br/>
+
+        <div class="nameCol">Date(s):<br/><span style="font-size:12; font-weight:bold; color:silver;">optional</span></div>
+        <div class="valueCol">
+            <div class="nameCol">Start:</div> <input name='startDate' value='' type='text' size='20' />
+            <span style="font-size:12; font-weight:bold; color:silver;">format (yyyyMMdd'T'HHmm)</span><br/>
+            <div class="nameCol">End:</div> <input name='endDate' value='' type='text' size='20' />
+            <span style="font-size:12; font-weight:bold; color:silver;">format (yyyyMMdd'T'HHmm)</span>
+        </div><br/><br/><br/><hr>
 
         <div name="testResult" id="testResult" style="visibility:visible;">
             <div class="nameCol">Result:</div>
@@ -145,11 +162,8 @@
 
         <div name="testError" id="testError" style="visibility:visible;">
             <div class="nameCol">Error:</div>
-            <div name="error" id="error" class="valueCol"><textarea id="errorTxt" rows="15" cols="60" readonly=""></textarea></div>
+            <div name="error" id="error" class="valueCol"><textarea id="errorTxt" rows="15" cols="60" readonly="" style="color:red;"></textarea></div>
         </div>
-
-        <div class="valueCol" style="text-align:right;"><a href="#" onclick="testAlgorithm('${path}')">Test</a></div>
-
     </fieldset>
 
     <fieldset>
@@ -185,8 +199,10 @@
     <input type="hidden" name="testAlgorithmContent" value=""/>
     <input type="hidden" name="testAlgorithmContextContent" value=""/>
     <input type="hidden" name="testValues" value=""/>
+    <input type="hidden" name="startDate" value=""/>
+    <input type="hidden" name="endDate" value=""/>
 </form>
 
 </p>
 </#if>
-        <#include '/includes/after_content.ftl'>
+<#include '/includes/after_content.ftl'>

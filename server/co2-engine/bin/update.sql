@@ -79,6 +79,7 @@ UPDATE item_value_definition SET unit_definition_id=48 WHERE id=105
 # Algorithm
 ALTER TABLE amee.ALGORITHM MODIFY COLUMN ITEM_DEFINITION_ID BIGINT (20) NULL;
 ALTER TABLE amee.ALGORITHM ADD COLUMN TYPE VARCHAR(3) NOT NULL;
-Update amee.ALGORITHM set TYPE='AL';
+ALTER TABLE amee.ALGORITHM ADD COLUMN ALGORITHM_CONTEXT_ID bigint(20) default NULL;
+UPDATE amee.ALGORITHM set TYPE='AL';
 INSERT INTO amee.TARGET VALUES ('67','F613C476EADD','Algorithm Contexts Resource','','/{environmentUid}/algorithmContexts','algorithmContextsResource',b'00000000',b'00000000',b'00000001', SYSDATE(),SYSDATE(),'4','0');
 INSERT INTO amee.TARGET VALUES ('68','21F188A4937F','Algorithm Context Resource','','/{environmentUid}/algorithmContexts/{algorithmContentUid}','algorithmContextResource',b'00000000',b'00000000',b'00000001',SYSDATE(),SYSDATE(),'4','0');

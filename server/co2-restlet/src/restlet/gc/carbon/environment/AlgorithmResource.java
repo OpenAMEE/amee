@@ -26,6 +26,7 @@ import gc.carbon.data.DataConstants;
 import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.Algorithm;
 import gc.carbon.domain.data.AlgorithmContext;
+import gc.carbon.domain.profile.StartEndDate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,10 +70,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     private Calculator calculator;
 
     private
-    StringBuffer testAlgorithmError = null;
-
-    private
-    BigDecimal testAlgorithmAmount = null;
+    AlgorithmTestWrapper algorithmTestWrapper = null;
 
     @Override
     public void init(Context context, Request request, Response response) {
@@ -110,11 +108,9 @@ public class AlgorithmResource extends BaseResource implements Serializable {
         if (definitionBrowser.getAlgorithm().getAlgorithmContext() != null) {
             obj.put("algorithmContext", definitionBrowser.getAlgorithm().getAlgorithmContext().getJSONObject());
         }
-        if (testAlgorithmError != null) {
-            obj.put("testAlgorithmError", testAlgorithmError.toString());
-        }
-        if (testAlgorithmAmount != null) {
-            obj.put("testAlgorithmResult", testAlgorithmAmount);
+
+        if (algorithmTestWrapper != null) {
+            obj.put("algorithmTestWrapper", algorithmTestWrapper.getJSONObject());
         }
         return obj;
     }
@@ -155,26 +151,18 @@ public class AlgorithmResource extends BaseResource implements Serializable {
      * @param form the form
      */
     private void testAlgorithm(Form form) {
-        Algorithm mockAlgorithm = new Algorithm();
-        AlgorithmContext mockAlgorithmContext = new AlgorithmContext();
 
-        // parse values
-        List<Choice> choices = Choice.parseChoices(form.getFirstValue("testValues"));
-        Map<String, Object> values = new HashMap<String, Object>();
-        for (Choice choice : choices) {
-            values.put(choice.getName(), choice.getValue());
-        }
+        algorithmTestWrapper = new AlgorithmTestWrapper();
+        algorithmTestWrapper.parseForm(form);
 
-        // innit algorithm
-        mockAlgorithm.setContent(form.getFirstValue("testAlgorithmContent"));
-        mockAlgorithmContext.setEnvironment(definitionBrowser.getEnvironment());
-        mockAlgorithmContext.setContent(form.getFirstValue("testAlgorithmContextContent"));
-        mockAlgorithm.setAlgorithmContext(mockAlgorithmContext);
-
+        // apply calculation
         try {
-            testAlgorithmAmount = calculator.calculateWithRuntime(mockAlgorithm, values, true);
+            algorithmTestWrapper.setAmount(calculator.calculateWithRuntime(
+                    algorithmTestWrapper.getMockAlgorithm(),
+                    algorithmTestWrapper.getValuesMap(),
+                    true));
         } catch (RhinoException e) {
-            testAlgorithmError = new StringBuffer();
+            StringBuffer testAlgorithmError = new StringBuffer();
             testAlgorithmError.append("Error on line")
                     .append("'").append(e.lineNumber()).append("'");
             if (!StringUtils.isBlank(e.lineSource())) {
@@ -184,6 +172,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
             if (!StringUtils.isBlank(e.getScriptStackTrace())) {
                 testAlgorithmError.append("\nScript StackTrace: ").append(e.getScriptStackTrace());
             }
+            algorithmTestWrapper.setError(testAlgorithmError);
         } catch (Exception e) {
 
             StringWriter writer = null;
@@ -194,9 +183,10 @@ public class AlgorithmResource extends BaseResource implements Serializable {
                 printWriter = new PrintWriter(writer);
                 e.printStackTrace(printWriter);
 
-                testAlgorithmError = new StringBuffer();
+                StringBuffer testAlgorithmError = new StringBuffer();
                 testAlgorithmError.append("Processing Error ")
                         .append(writer.toString());
+                algorithmTestWrapper.setError(testAlgorithmError);
             } finally {
                 if (printWriter != null) {
                     printWriter.close();
@@ -262,4 +252,125 @@ public class AlgorithmResource extends BaseResource implements Serializable {
             notAuthorized();
         }
     }
+
+    private class AlgorithmTestWrapper {
+
+        private StringBuffer error = null;
+
+        private BigDecimal amount = null;
+
+        private String values = null;
+
+        private StartEndDate startDate = null;
+
+        private StartEndDate endDate = null;
+
+        private Algorithm mockAlgorithm = null;
+
+        private Map<String, Object> valuesMap = new HashMap<String, Object>();
+
+
+        public AlgorithmTestWrapper() {
+            super();
+        }
+
+        public StringBuffer getError() {
+            return error;
+        }
+
+        public void setError(StringBuffer error) {
+            this.error = error;
+        }
+
+        public BigDecimal getAmount() {
+            return amount;
+        }
+
+        public void setAmount(BigDecimal amount) {
+            this.amount = amount;
+        }
+
+        public String getValues() {
+            return values;
+        }
+
+        public void setValues(String values) {
+            this.values = values;
+
+            if (values != null) {
+                List<Choice> choices = Choice.parseChoices(values);
+                for (Choice choice : choices) {
+                    valuesMap.put(choice.getName(), choice.getValue());
+                }
+            }
+        }
+
+        public StartEndDate getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(String startDate) {
+            this.startDate = new StartEndDate(startDate);
+        }
+
+        public StartEndDate getEndDate() {
+            return endDate;
+        }
+
+        public void setEndDate(String endDate) {
+            if (endDate != null) {
+                this.endDate = new StartEndDate(endDate);
+            }
+        }
+
+        public Algorithm getMockAlgorithm() {
+            return mockAlgorithm;
+        }
+
+        public Map<String, Object> getValuesMap() {
+            return valuesMap;
+        }
+
+        private void setMockAlgorithm(String content, String contextContent) {
+            this.mockAlgorithm = new Algorithm();
+            this.mockAlgorithm.setContent(content);
+            if (!StringUtils.isBlank(contextContent)) {
+                AlgorithmContext algorithmContext = new AlgorithmContext();
+                algorithmContext.setEnvironment(definitionBrowser.getEnvironment());
+                algorithmContext.setContent(contextContent);
+                mockAlgorithm.setAlgorithmContext(algorithmContext);
+            }
+        }
+
+        public void parseForm(Form form) {
+            setMockAlgorithm(form.getFirstValue("testAlgorithmContent"), form.getFirstValue("testAlgorithmContextContent"));
+            setValues(form.getFirstValue("testValues"));
+            setStartDate(form.getFirstValue("startDate"));
+            setEndDate(form.getFirstValue("endDate"));
+        }
+
+        public JSONObject getJSONObject() throws JSONException {
+            JSONObject obj = new JSONObject();
+
+            if (algorithmTestWrapper.getError() != null) {
+                obj.put("error", algorithmTestWrapper.getError());
+            }
+            if (algorithmTestWrapper.getAmount() != null) {
+                obj.put("result", algorithmTestWrapper.getAmount());
+            }
+            if (algorithmTestWrapper.getValues() != null) {
+                obj.put("values", algorithmTestWrapper.getValues());
+            }
+            if (algorithmTestWrapper.getStartDate() != null) {
+                obj.put("startDate", algorithmTestWrapper.getValues());
+            }
+            if (algorithmTestWrapper.getEndDate() != null) {
+                obj.put("endDate", algorithmTestWrapper.getValues());
+            }
+            return obj;
+
+        }
+
+    }
+
 }
