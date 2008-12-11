@@ -22,7 +22,7 @@
                 errElement.value = "";
             }
         } else {
-            var e = new Element('textarea', {id : 'errorTxt', rows : 15, cols : 60, readonly : ""});
+            var e = new Element('textarea', {id : 'errorTxt', rows : 15, cols : 60, readonly : ""}).setStyle("color:red;");
             e.value = response.responseJSON.algorithmTestWrapper.error;
             errElement.replace(e);
 
@@ -67,8 +67,9 @@
         // init form
         document.algorithmTestFrm.testValues.value = document.algorithmFrm.testValues.value;
         document.algorithmTestFrm.testAlgorithmContent.value = document.algorithmFrm.content.value;
-        document.algorithmTestFrm.testAlgorithmContextContent.value = document.algorithmFrm.algorithmContextContent.value;
-
+        if (document.algorithmFrm.algorithmContextContent) {
+            document.algorithmTestFrm.testAlgorithmContextContent.value = document.algorithmFrm.algorithmContextContent.value;
+        }
         document.algorithmTestFrm.startDate.value = document.algorithmFrm.startDate.value;
         document.algorithmTestFrm.endDate.value = document.algorithmFrm.endDate.value;
 
