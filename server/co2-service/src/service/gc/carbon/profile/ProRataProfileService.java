@@ -2,6 +2,7 @@ package gc.carbon.profile;
 
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.profile.ProfileBrowser;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
@@ -14,6 +15,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * A ProfileService which prorates amounts belonging to the {@link gc.carbon.domain.profile.ProfileItem ProfileItem} instances
+ * that are returned by the delegated ProfileService.
+ * <p/>
+ * The protated duration is specified by the ProfileBrowser passed to {@link #getProfileItems(gc.carbon.profile.ProfileBrowser profileBrowser)}
+ * <p/>
  * This file is part of AMEE.
  * <p/>
  * AMEE is free software; you can redistribute it and/or modify
@@ -30,6 +36,7 @@ import java.util.List;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * <p/>
  * Created by http://www.dgen.net.
+ * <p/>
  * Website http://www.amee.cc
  */
 public class ProRataProfileService extends ProfileService {
@@ -40,6 +47,7 @@ public class ProRataProfileService extends ProfileService {
         this.delegatee = delegatee;
     }
 
+    @SuppressWarnings(value="unchecked")
     public List<ProfileItem> getProfileItems(ProfileBrowser profileBrowser) {
 
         List<ProfileItem> requestedItems = new ArrayList<ProfileItem>();

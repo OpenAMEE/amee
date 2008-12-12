@@ -27,7 +27,9 @@ import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
-import gc.carbon.BaseResource;
+import gc.carbon.AMEEResource;
+import gc.carbon.data.DataServiceDAO;
+import gc.carbon.data.DataSheetService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -51,12 +53,12 @@ import java.util.Set;
 
 @Component
 @Scope("prototype")
-public class DataItemResource extends BaseResource implements Serializable {
+public class DataItemResource extends BaseDataResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DataService dataService;
+    private DataServiceDAO dataServiceDAO;
 
     @Autowired
     private Calculator calculator;
@@ -75,8 +77,6 @@ public class DataItemResource extends BaseResource implements Serializable {
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         Form query = request.getResourceRef().getQueryAsForm();
-        pathItem = getPathItem();
-        dataBrowser = getDataBrowser();
         dataBrowser.setDataItemUid(request.getAttributes().get("itemUid").toString());
         for (String key : query.getNames()) {
             parameters.add(new Choice(key, query.getValues(key)));
@@ -96,7 +96,7 @@ public class DataItemResource extends BaseResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         DataItem dataItem = dataBrowser.getDataItem();
-        Choices userValueChoices = dataService.getUserValueChoices(dataItem);
+        Choices userValueChoices = dataServiceDAO.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
@@ -110,7 +110,7 @@ public class DataItemResource extends BaseResource implements Serializable {
     @Override
     public JSONObject getJSONObject() throws JSONException {
         DataItem dataItem = dataBrowser.getDataItem();
-        Choices userValueChoices = dataService.getUserValueChoices(dataItem);
+        Choices userValueChoices = dataServiceDAO.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         JSONObject obj = new JSONObject();
         obj.put("dataItem", dataItem.getJSONObject());
@@ -123,7 +123,7 @@ public class DataItemResource extends BaseResource implements Serializable {
     @Override
     public Element getElement(Document document) {
         DataItem dataItem = dataBrowser.getDataItem();
-        Choices userValueChoices = dataService.getUserValueChoices(dataItem);
+        Choices userValueChoices = dataServiceDAO.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         Element element = document.createElement("DataItemResource");
         element.appendChild(dataItem.getElement(document));
@@ -150,8 +150,8 @@ public class DataItemResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation()");
         if (dataBrowser.getDataItemActions().isAllowModify()) {
             Form form = getForm();
             DataItem dataItem = dataBrowser.getDataItem();
@@ -212,13 +212,13 @@ public class DataItemResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void delete() {
-        log.debug("delete");
+    public void removeRepresentations() {
+        log.debug("removeRepresentations()");
         if (dataBrowser.getDataItemActions().isAllowDelete()) {
             DataItem dataItem = dataBrowser.getDataItem();
             pathItemService.removePathItemGroup(dataItem.getEnvironment());
             dataSheetService.removeSheet(dataItem.getDataCategory());
-            dataService.remove(dataItem);
+            dataServiceDAO.remove(dataItem);
             success(pathItem.getParent().getFullPath());
         } else {
             notAuthorized();

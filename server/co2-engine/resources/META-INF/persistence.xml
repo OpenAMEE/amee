@@ -17,6 +17,7 @@
         <class>com.jellymold.plum.Skin</class>
         <class>gc.carbon.domain.UnitDefinition</class>
         <class>gc.carbon.domain.ValueDefinition</class>
+        <class>gc.carbon.domain.data.AlgorithmContext</class>
         <class>gc.carbon.domain.data.Algorithm</class>
         <class>gc.carbon.domain.data.DataCategory</class>
         <class>gc.carbon.domain.data.DataItem</class>

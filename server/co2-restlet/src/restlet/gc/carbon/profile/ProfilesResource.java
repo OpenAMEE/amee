@@ -19,12 +19,10 @@
  */
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Group;
 import com.jellymold.kiwi.Permission;
 import com.jellymold.kiwi.User;
 import com.jellymold.kiwi.auth.AuthService;
-import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.Pager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,28 +41,22 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import gc.carbon.domain.profile.Profile;
-import gc.carbon.BaseResource;
+import gc.carbon.AMEEResource;
 
 @Component("profilesResource")
 @Scope("prototype")
-public class ProfilesResource extends BaseResource implements Serializable {
+public class ProfilesResource extends AMEEResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Autowired
     private ProfileService profileService;
 
-    private Environment environment;
     private ProfileBrowser profileBrowser;
     private User user;
     private Group group;
@@ -73,10 +65,9 @@ public class ProfilesResource extends BaseResource implements Serializable {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        environment = EnvironmentService.getEnvironment();
         user = AuthService.getUser();
         group = AuthService.getGroup();
-        profileBrowser = getProfileBrowser();
+        profileBrowser = (ProfileBrowser) beanFactory.getBean("profileBrowser");
         setPage(request);
     }
 
@@ -137,7 +128,7 @@ public class ProfilesResource extends BaseResource implements Serializable {
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
+        log.debug("handleGet()");
         if (profileBrowser.getProfileActions().isAllowList()) {
             super.handleGet();
         } else {
@@ -151,8 +142,8 @@ public class ProfilesResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void post(Representation entity) {
-        log.debug("post");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation()");
         if (profileBrowser.getProfileActions().isAllowCreate()) {
             Form form = getForm();
             // are we creating a new Profile?
@@ -161,7 +152,7 @@ public class ProfilesResource extends BaseResource implements Serializable {
                 Permission permission = new Permission(group, user);
                 // create new Profile
                 newProfile = new Profile(environment, permission);
-                entityManager.persist(newProfile);
+                profileService.persist(newProfile);
             }
             if (newProfile != null) {
                 if (isStandardWebBrowser()) {

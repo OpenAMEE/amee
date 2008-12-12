@@ -19,88 +19,30 @@
  */
 package gc.carbon.profile;
 
-import com.jellymold.sheet.Cell;
-import com.jellymold.sheet.Row;
 import com.jellymold.sheet.Sheet;
-import com.jellymold.utils.cache.CacheHelper;
 import com.jellymold.utils.ThreadBeanHolder;
-import gc.carbon.domain.profile.Profile;
-import gc.carbon.domain.profile.ProfileItem;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
+import com.jellymold.utils.cache.CacheHelper;
+import com.jellymold.utils.cache.CacheableFactory;
+import gc.carbon.profile.ProfileBrowser;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 @Service
 public class ProfileSheetService implements Serializable {
 
-    private final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    private ProfileSheetFactory profileSheetFactory;
-
     private CacheHelper cacheHelper = CacheHelper.getInstance();
 
-    public ProfileSheetService() {
+    ProfileSheetService() {
         super();
     }
 
-    public Sheet getSheet(ProfileBrowser browser) {
+    public Sheet getSheet(ProfileBrowser browser, CacheableFactory builder) {
         ThreadBeanHolder.set("profileBrowserForFactory", browser);
-        return (Sheet) cacheHelper.getCacheable(profileSheetFactory);
+        return (Sheet) cacheHelper.getCacheable(builder);
     }
 
-    public void removeSheets(Profile profile) {
-        cacheHelper.clearCache("ProfileSheets", "ProfileSheet_" + profile.getUid());
-    }
-
-    public BigDecimal getTotalAmount(Sheet sheet) {
-        BigDecimal totalAmount = ProfileItem.ZERO;
-        BigDecimal amount;
-        for (Row row : sheet.getRows()) {
-            try {
-                amount = row.findCell("amount").getValueAsBigDecimal();
-                amount = amount.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
-                if (amount.precision() > ProfileItem.PRECISION) {
-                    log.warn("precision is too big: " + amount);
-                    // TODO: do something?
-                }
-            } catch (Exception e) {
-                // swallow
-                log.warn("caught Exception: " + e);
-                amount = ProfileItem.ZERO;
-            }
-            totalAmount = totalAmount.add(amount);
-        }
-        return totalAmount;
-    }
-
-    public BigDecimal getTotalAmountPerMonth(Sheet sheet) {
-        Cell endCell;
-        BigDecimal totalAmountPerMonth = ProfileItem.ZERO;
-        BigDecimal amountPerMonth;
-        for (Row row : sheet.getRows()) {
-            endCell = row.findCell("end");
-            if (!endCell.getValueAsBoolean()) {
-                try {
-                    amountPerMonth = row.findCell("amountPerMonth").getValueAsBigDecimal();
-                    amountPerMonth = amountPerMonth.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
-                    if (amountPerMonth.precision() > ProfileItem.PRECISION) {
-                        log.warn("precision is too big: " + amountPerMonth);
-                        // TODO: do something?
-                    }
-                } catch (Exception e) {
-                    // swallow
-                    log.warn("caught Exception: " + e);
-                    amountPerMonth = ProfileItem.ZERO;
-                }
-                totalAmountPerMonth = totalAmountPerMonth.add(amountPerMonth);
-            }
-        }
-        return totalAmountPerMonth;
+    public void removeSheets(ProfileBrowser browser) {
+        cacheHelper.clearCache("ProfileSheets", "ProfileSheet_" + browser.getProfile().getUid());
     }
 }

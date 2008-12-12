@@ -21,7 +21,7 @@ package gc.carbon.environment;
 
 import com.jellymold.utils.BaseResource;
 import gc.carbon.data.DataConstants;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.ItemValueDefinition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,7 +51,7 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -100,7 +100,7 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
+        log.debug("handleGet()");
         if (definitionBrowser.getItemDefinitionActions().isAllowView()) {
             super.handleGet();
         } else {
@@ -114,8 +114,8 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation()");
         if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
             ItemValueDefinition itemValueDefinition = definitionBrowser.getItemValueDefinition();
             Form form = getForm();
@@ -154,12 +154,12 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     }
 
     @Override
-    public void delete() {
-        log.debug("delete");
+    public void removeRepresentations() {
+        log.debug("removeRepresentations()");
         if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
             ItemValueDefinition itemValueDefinition = definitionBrowser.getItemValueDefinition();
             definitionBrowser.getItemDefinition().remove(itemValueDefinition);
-            definitionService.remove(itemValueDefinition);
+            definitionServiceDAO.remove(itemValueDefinition);
             success();
         } else {
             notAuthorized();

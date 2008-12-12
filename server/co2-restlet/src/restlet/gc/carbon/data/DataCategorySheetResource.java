@@ -32,25 +32,23 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.util.Map;
 
-import gc.carbon.BaseResource;
+import gc.carbon.AMEEResource;
+import gc.carbon.data.DataSheetService;
 
 // TODO: set content type to CSV 
 
 @Component
 @Scope("prototype")
-public class DataCategorySheetResource extends BaseResource implements Serializable {
+public class DataCategorySheetResource extends BaseDataResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private DataSheetService dataSheetService;
 
-    private DataBrowser dataBrowser;
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        dataBrowser = getDataBrowser();
         dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
     }
 

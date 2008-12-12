@@ -19,10 +19,9 @@
  */
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.BaseFilter;
+import gc.carbon.profile.ProfileServiceDAO;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.path.PathItemGroup;
 import gc.carbon.domain.profile.Profile;
@@ -71,8 +70,8 @@ public class ProfileFilter extends BaseFilter {
             if (!matchesReservedPaths(segment)) {
                 // look for Profile matching path
                 ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
-                ProfileService profileService = (ProfileService) springContext.getBean("profileService");
-                Profile profile = profileService.getProfile(segment);
+                ProfileServiceDAO profileServiceDAO = (ProfileServiceDAO) springContext.getBean("profileServiceDAO");
+                Profile profile = profileServiceDAO.getProfile(segment);
                 if (profile != null) {
                     // we found a Profile
                     // make available in Seam contexts

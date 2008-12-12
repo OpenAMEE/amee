@@ -20,13 +20,12 @@
 package gc.carbon.data;
 
 import gc.carbon.BaseBrowser;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -45,10 +44,10 @@ public class DataBrowser extends BaseBrowser {
     private AuthService authService;
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
-    protected DataService dataService;
+    protected DataServiceDAO dataServiceDAO;
 
     // DataCategories
     private DataCategory dataCategory = null;
@@ -97,7 +96,7 @@ public class DataBrowser extends BaseBrowser {
     public DataCategory getDataCategory() {
         if (dataCategory == null) {
             if (dataCategoryUid != null) {
-                dataCategory = dataService.getDataCategory(EnvironmentService.getEnvironment(), dataCategoryUid);
+                dataCategory = dataServiceDAO.getDataCategory(EnvironmentService.getEnvironment(), dataCategoryUid);
             }
         }
         return dataCategory;
@@ -131,7 +130,7 @@ public class DataBrowser extends BaseBrowser {
     public DataItem getDataItem() {
         if (dataItem == null) {
             if (dataItemUid != null) {
-                Item item = dataService.getItem(EnvironmentService.getEnvironment(), dataItemUid);
+                Item item = dataServiceDAO.getItem(EnvironmentService.getEnvironment(), dataItemUid);
                 if (item instanceof DataItem) {
                     dataItem = (DataItem) item;
                 }
@@ -157,7 +156,7 @@ public class DataBrowser extends BaseBrowser {
     public ItemValue getItemValue() {
         if (itemValue == null) {
             if ((itemValueUid != null) && (getDataItem() != null)) {
-                itemValue = dataService.getItemValue(dataItem, itemValueUid);
+                itemValue = dataServiceDAO.getItemValue(dataItem, itemValueUid);
             }
         }
         return itemValue;
@@ -167,7 +166,7 @@ public class DataBrowser extends BaseBrowser {
 
     public List<ItemDefinition> getItemDefinitions() {
         if (itemDefinitions == null) {
-            itemDefinitions = definitionService.getItemDefinitions(EnvironmentService.getEnvironment());
+            itemDefinitions = definitionServiceDAO.getItemDefinitions(EnvironmentService.getEnvironment());
         }
         return itemDefinitions;
     }

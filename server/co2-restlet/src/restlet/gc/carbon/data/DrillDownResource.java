@@ -21,7 +21,8 @@ package gc.carbon.data;
 
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
-import gc.carbon.BaseResource;
+import gc.carbon.AMEEResource;
+import gc.carbon.data.DrillDownService;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemDefinition;
 import org.apache.commons.logging.Log;
@@ -49,19 +50,16 @@ import java.util.Set;
 
 @Component
 @Scope("prototype")
-public class DrillDownResource extends BaseResource implements Serializable {
+public class DrillDownResource extends BaseDataResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private DrillDownService drillDownService;
 
-    private DataBrowser dataBrowser;
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        dataBrowser = getDataBrowser();
         dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
     }
 

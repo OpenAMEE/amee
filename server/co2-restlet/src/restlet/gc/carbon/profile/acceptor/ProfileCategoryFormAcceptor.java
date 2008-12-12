@@ -7,6 +7,8 @@ import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.domain.profile.ValidFromDate;
 import gc.carbon.profile.ProfileCategoryResource;
+import gc.carbon.profile.ProfileService;
+import gc.carbon.data.DataService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
@@ -40,8 +42,13 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
 
     private final Log log = LogFactory.getLog(getClass());
 
+    private ProfileService profileService;
+    private DataService dataService;
+
     public ProfileCategoryFormAcceptor(ProfileCategoryResource resource) {
         super(resource);
+        this.profileService = resource.getProfileService();
+        this.dataService = resource.getDataService();
     }
 
     public List<ProfileItem> accept(Representation entity) {
@@ -63,10 +70,10 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                 // the root DataCategory has an empty path
                 if (dataCategory.getPath().length() == 0) {
                     // allow any DataItem for any DataCategory
-                    dataItem = resource.getDataService().getDataItem(resource.getEnvironment(), uid);
+                    dataItem = dataService.getDataItem(resource.getEnvironment(), uid);
                 } else {
                     // only allow DataItems for specific DataCategory (not root)
-                    dataItem = resource.getDataService().getDataItem(dataCategory, uid);
+                    dataItem = dataService.getDataItem(dataCategory, uid);
                 }
                 if (dataItem != null) {
                     // create new ProfileItem
@@ -88,10 +95,10 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                 // the root DataCategory has an empty path
                 if (dataCategory.getPath().length() == 0) {
                     // allow any ProfileItem for any DataCategory
-                    profileItem = resource.getProfileService().getProfileItem(resource.getProfileBrowser().getProfile().getUid(), uid);
+                    profileItem = profileService.getProfileItem(resource.getProfileBrowser().getProfile().getUid(), uid);
                 } else {
                     // only allow ProfileItems for specific DataCategory (not root)
-                    profileItem = resource.getProfileService().getProfileItem(resource.getProfileBrowser().getProfile().getUid(), dataCategory.getUid(), uid);
+                    profileItem = profileService.getProfileItem(resource.getProfileBrowser().getProfile().getUid(), dataCategory.getUid(), uid);
                 }
                 if (profileItem != null) {
                     // update existing Profile Item
@@ -114,7 +121,7 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
 
     private ProfileItem acceptProfileItem(Form form, ProfileItem profileItem) {
 
-        if (!resource.isValidRequest()) {
+        if (!resource.validateParameters()) {
             resource.badRequest();
             return null;
         }
@@ -148,10 +155,13 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
         profileItem.setName(form.getFirstValue("name"));
 
         // see if ProfileItem already exists
-        if (!resource.getProfileService().isEquivilentProfileItemExists(profileItem)) {
+        if (profileService.hasNoEquivalent(profileItem)) {
+
             // save newProfileItem and do calculations
-            resource.getEntityManager().persist(profileItem);
-            resource.getProfileService().checkProfileItem(profileItem);
+            profileService.persist(profileItem);
+
+            // clear caches
+            profileService.clearCaches(resource.getProfileBrowser());
 
             try {
                 // update item values if supplied
@@ -168,10 +178,10 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                         }
                     }
                 }
-                resource.getCalculator().calculate(profileItem);
+                profileService.calculate(profileItem);
             } catch (IllegalArgumentException ex) {
                 log.warn("Bad parameter received");
-                resource.getEntityManager().remove(profileItem);
+                profileService.remove(profileItem);
                 profileItem = null;
             }
         } else {

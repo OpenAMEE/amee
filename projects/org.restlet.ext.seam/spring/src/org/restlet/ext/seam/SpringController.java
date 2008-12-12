@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Service
-public class SpringController extends EntityManagerFactoryAccessor {
+    public class SpringController extends EntityManagerFactoryAccessor {
 
     @Autowired
     private PlatformTransactionManager transactionManager;

@@ -1,7 +1,6 @@
 package gc.carbon;
 
 import com.jellymold.utils.ThreadBeanHolder;
-import gc.carbon.builder.APIVersion;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
 
@@ -11,7 +10,6 @@ import java.util.Date;
 
 public abstract class BaseBrowser implements Serializable {
 
-    protected APIVersion apiVersion;
     protected PathItem pathItem;
     protected StartEndDate startDate = new StartEndDate(Calendar.getInstance().getTime());
     protected StartEndDate endDate;
@@ -19,14 +17,6 @@ public abstract class BaseBrowser implements Serializable {
     public BaseBrowser() {
         super();
         setPathItem((PathItem) ThreadBeanHolder.get("pathItem"));
-    }
-
-    public void setAPIVersion(APIVersion apiVersion) {
-        this.apiVersion = apiVersion;
-    }
-
-    public APIVersion getAPIVersion() {
-        return apiVersion;
     }
 
     public void setPathItem(PathItem pathItem) {
@@ -38,12 +28,12 @@ public abstract class BaseBrowser implements Serializable {
     }
 
     public void setStartDate(String date) {
-        startDate = new StartEndDate(date);
+        startDate = new StartEndDate(date, false);
     }
 
     public void setEndDate(String date) {
         if (date != null)
-            endDate = new StartEndDate(date);
+            endDate = new StartEndDate(date, false);
     }
 
     public StartEndDate getStartDate() {

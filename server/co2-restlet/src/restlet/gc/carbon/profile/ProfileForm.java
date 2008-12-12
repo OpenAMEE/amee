@@ -1,8 +1,8 @@
 package gc.carbon.profile;
 
-import gc.carbon.builder.APIVersion;
-import gc.carbon.builder.mapper.LegacyDataMapper;
-import gc.carbon.builder.mapper.LegacyItemValueMapper;
+import gc.carbon.APIVersion;
+import gc.carbon.domain.mapper.LegacyDataMapper;
+import gc.carbon.domain.mapper.LegacyItemValueMapper;
 import org.restlet.data.Form;
 
 /**

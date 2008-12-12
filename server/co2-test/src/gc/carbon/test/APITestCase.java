@@ -1,11 +1,8 @@
 package gc.carbon.test;
 
-import org.custommonkey.xmlunit.DetailedDiff;
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
+import org.custommonkey.xmlunit.*;
 import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
-import org.restlet.data.Response;
-
+import org.restlet.data.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

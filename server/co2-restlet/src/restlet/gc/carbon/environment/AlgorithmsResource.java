@@ -116,7 +116,7 @@ public class AlgorithmsResource extends BaseResource implements Serializable {
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
+        log.debug("handleGet()");
         if (definitionBrowser.getAlgorithmActions().isAllowList()) {
             super.handleGet();
         } else {
@@ -130,8 +130,8 @@ public class AlgorithmsResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void post(Representation entity) {
-        log.debug("post");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation()");
         if (definitionBrowser.getAlgorithmActions().isAllowCreate()) {
             Form form = getForm();
             if (form.getFirstValue("name") != null) {
@@ -143,7 +143,7 @@ public class AlgorithmsResource extends BaseResource implements Serializable {
                 if (isStandardWebBrowser()) {
                     success();
                 } else {
-                    // return a response for API calls
+                    // Return a response for API calls
                     super.handleGet();
                 }
             } else {

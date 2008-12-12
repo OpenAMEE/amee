@@ -21,7 +21,7 @@ package gc.carbon.environment;
 
 import com.jellymold.utils.BaseResource;
 import gc.carbon.data.DataConstants;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.ValueDefinition;
 import gc.carbon.domain.data.ItemDefinition;
 import org.apache.commons.logging.Log;
@@ -51,7 +51,7 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -75,7 +75,7 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(definitionBrowser.getEnvironment());
+        List<ValueDefinition> valueDefinitions = definitionServiceDAO.getValueDefinitions(definitionBrowser.getEnvironment());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
         values.put("environment", definitionBrowser.getEnvironment());
@@ -100,7 +100,7 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
+        log.debug("handleGet()");
         if (definitionBrowser.getItemDefinitionActions().isAllowView()) {
             super.handleGet();
         } else {
@@ -114,8 +114,8 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation()");
         if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
             ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
             Form form = getForm();
@@ -138,11 +138,11 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
     }
 
     @Override
-    public void delete() {
-        log.debug("delete");
+    public void removeRepresentations() {
+        log.debug("removeRepresentations()");
         if (definitionBrowser.getItemDefinitionActions().isAllowDelete()) {
             ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
-            definitionService.remove(itemDefinition);
+            definitionServiceDAO.remove(itemDefinition);
             success();
         } else {
             notAuthorized();

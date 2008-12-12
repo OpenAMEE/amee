@@ -22,15 +22,12 @@ package gc.carbon.data;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.BaseResource;
-import gc.carbon.definition.DefinitionService;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
-import gc.carbon.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
@@ -46,8 +43,6 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -61,27 +56,13 @@ import java.util.Map;
  */
 @Component("dataCategoryResource")
 @Scope("prototype")
-public class DataCategoryResource extends BaseResource implements Serializable {
+public class DataCategoryResource extends BaseDataResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Autowired
-    private DefinitionService definitionService;
 
     @Autowired
     private DataService dataService;
 
-    @Autowired
-    private DataSheetService dataSheetService;
-
-    @Autowired
-    private PathItemService pathItemService;
-
-    private PathItem pathItem;
-    private DataBrowser dataBrowser;
     private DataCategory dataCategory;
     private List<DataCategory> dataCategories;
     private DataItem dataItem;
@@ -90,12 +71,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        Form form = request.getResourceRef().getQueryAsForm();
-        dataBrowser = getDataBrowser();
-        pathItem = getPathItem();
         dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
-        dataBrowser.setStartDate(form.getFirstValue("startDate"));
-        dataBrowser.setEndDate(form.getFirstValue("endDate"));
         setPage(request);
     }
 
@@ -112,7 +88,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         DataCategory dataCategory = dataBrowser.getDataCategory();
-        Sheet sheet = dataSheetService.getSheet(dataBrowser);
+        Sheet sheet = dataService.getSheet(dataBrowser);
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
         values.put("dataCategory", dataCategory);
@@ -158,7 +134,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             children.put("dataCategories", dataCategories);
 
             // add Sheet containing Data Items
-            Sheet sheet = dataSheetService.getSheet(dataBrowser);
+            Sheet sheet = dataService.getSheet(dataBrowser);
             if (sheet != null) {
                 Pager pager = getPager(getItemsPerPage());
                 sheet = Sheet.getCopy(sheet, pager);
@@ -231,7 +207,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             childrenElement.appendChild(dataCategoriesElement);
 
             // list child Data Items via sheet
-            Sheet sheet = dataSheetService.getSheet(dataBrowser);
+            Sheet sheet = dataService.getSheet(dataBrowser);
             if (sheet != null) {
                 Pager pager = getPager(getItemsPerPage());
                 sheet = Sheet.getCopy(sheet, pager);
@@ -272,6 +248,9 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     public void handleGet() {
         log.debug("handleGet");
         if (dataBrowser.getDataCategoryActions().isAllowView()) {
+            Form form = getRequest().getResourceRef().getQueryAsForm();
+            dataBrowser.setStartDate(form.getFirstValue("startDate"));
+            dataBrowser.setEndDate(form.getFirstValue("endDate"));
             super.handleGet();
         } else {
             notAuthorized();
@@ -320,8 +299,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
         }
         if ((dataCategory != null) || (dataItem != null) || !dataCategories.isEmpty() || !dataItems.isEmpty()) {
             // clear caches
-            pathItemService.removePathItemGroup(thisDataCategory.getEnvironment());
-            dataSheetService.removeSheet(thisDataCategory);
+            dataService.clearCaches(thisDataCategory);
             if (isStandardWebBrowser()) {
                 success(dataBrowser.getFullPath());
             } else {
@@ -488,7 +466,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
                 dataCategory = new DataCategory(thisDataCategory);
                 if (form.getNames().contains("itemDefinitionUid")) {
                     ItemDefinition itemDefinition =
-                            definitionService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
+                            dataService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
                     if (itemDefinition != null) {
                         dataCategory.setItemDefinition(itemDefinition);
                     }
@@ -517,7 +495,7 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     private DataCategory acceptDataCategory(Form form, DataCategory dataCategory) {
         dataCategory.setName(form.getFirstValue("name"));
         dataCategory.setPath(form.getFirstValue("path"));
-        entityManager.persist(dataCategory);
+        dataService.persist(dataCategory);
         return dataCategory;
     }
 
@@ -585,8 +563,8 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             return null;
         }
 
-        entityManager.persist(dataItem);
-        dataService.checkDataItem(dataItem);
+        dataService.persist(dataItem);
+
         // update item values if supplied
         Map<String, ItemValue> itemValues = dataItem.getItemValuesMap();
         for (String name : form.getNames()) {
@@ -611,15 +589,14 @@ public class DataCategoryResource extends BaseResource implements Serializable {
             }
             if (form.getNames().contains("itemDefinitionUid")) {
                 ItemDefinition itemDefinition =
-                        definitionService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
+                        dataService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
                 if (itemDefinition != null) {
                     thisDataCategory.setItemDefinition(itemDefinition);
                 } else {
                     thisDataCategory.setItemDefinition(null);
                 }
             }
-            pathItemService.removePathItemGroup(thisDataCategory.getEnvironment());
-            dataSheetService.removeSheet(thisDataCategory);
+            dataService.clearCaches(thisDataCategory);
             success(dataBrowser.getFullPath());
             dataCategory = thisDataCategory;
         } else {
@@ -633,12 +610,11 @@ public class DataCategoryResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void delete() {
-        log.debug("delete");
+    public void removeRepresentations() {
+        log.debug("removeRepresentations()");
         if (dataBrowser.getDataCategoryActions().isAllowDelete()) {
             DataCategory dataCategory = dataBrowser.getDataCategory();
-            pathItemService.removePathItemGroup(dataCategory.getEnvironment());
-            dataSheetService.removeSheet(dataCategory);
+            dataService.clearCaches(dataBrowser.getDataCategory());
             dataService.remove(dataCategory);
             success(pathItem.getParent().getFullPath());
         } else {

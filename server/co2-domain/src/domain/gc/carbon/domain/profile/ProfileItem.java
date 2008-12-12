@@ -1,14 +1,13 @@
 package gc.carbon.domain.profile;
 
-import gc.carbon.builder.Builder;
-import gc.carbon.builder.domain.BuildableProfileItem;
-import gc.carbon.builder.domain.current.ProfileItemBuilder;
 import gc.carbon.domain.EngineUtils;
 import gc.carbon.domain.ObjectType;
+import gc.carbon.domain.Builder;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.Item;
-import org.hibernate.annotations.Index;
+import gc.carbon.domain.profile.builder.BuildableProfileItem;
+import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -17,8 +16,6 @@ import org.w3c.dom.Element;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * This file is part of AMEE.
@@ -63,12 +60,6 @@ public class ProfileItem extends Item implements BuildableProfileItem {
 
     @Column(name = "AMOUNT", precision = PRECISION, scale = SCALE)
     private BigDecimal amount = ZERO;
-
-    @Column(name = "UNIT")
-    private String unit;
-
-    @Column(name = "PER_UNIT")
-    private String perUnit;
 
     @Transient
     private Builder builder;
@@ -183,22 +174,6 @@ public class ProfileItem extends Item implements BuildableProfileItem {
 
     public Element getElement(Document document, boolean b) {
         return builder.getElement(document, b);
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public String getPerUnit() {
-        return perUnit;
-    }
-
-    public void setPerUnit(String perUnit) {
-        this.perUnit = perUnit;
     }
 
     @Transient

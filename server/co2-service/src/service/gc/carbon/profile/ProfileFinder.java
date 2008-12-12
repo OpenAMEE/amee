@@ -23,6 +23,7 @@ import gc.carbon.data.DataFinder;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.profile.ProfileServiceDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ import java.util.List;
 public class ProfileFinder implements Serializable {
 
     @Autowired
-    private ProfileService profileService;
+    private ProfileServiceDAO profileServiceDAO;
 
     private DataFinder dataFinder;
     private ProfileItem profileItem;
@@ -91,7 +92,7 @@ public class ProfileFinder implements Serializable {
     public List<ProfileItem> getProfileItems() {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
         if (profileItem != null) {
-            profileItems = profileService.getProfileItems(
+            profileItems = profileServiceDAO.getProfileItems(
                     profileItem.getProfile(),
                     profileItem.getDataCategory(),
                     profileItem.getStartDate());
@@ -104,7 +105,7 @@ public class ProfileFinder implements Serializable {
         if (profileItem != null) {
             DataCategory dataCategory = dataFinder.getDataCategory(path);
             if (dataCategory != null) {
-                profileItems = profileService.getProfileItems(
+                profileItems = profileServiceDAO.getProfileItems(
                         profileItem.getProfile(),
                         dataCategory,
                         profileItem.getStartDate());

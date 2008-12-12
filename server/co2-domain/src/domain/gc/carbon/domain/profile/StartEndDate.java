@@ -1,17 +1,12 @@
 package gc.carbon.domain.profile;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
-import org.joda.time.Duration;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormat;
 import org.joda.time.format.ISOPeriodFormat;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Calendar;
 
 /**
  * This file is part of AMEE.
@@ -38,22 +33,30 @@ public class StartEndDate extends GCDate {
 
     public static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat(ISO_DATE);
 
+    private boolean floor = true;
+
     public StartEndDate(String dateStr) {
         super(dateStr);
+    }
+
+    public StartEndDate(String dateStr, boolean floor) {
+        super(dateStr);
+        this.floor = floor;
     }
 
     public StartEndDate(Date date) {
         super(date.getTime());
     }
     
-    // Parse the date string acccording to the allowed formats.
-    // If successful, return a Date with the minute field floored to the nearest 30min.
-    // If a ParseException occurs, return the defaultDate.
     protected long parseStr(String dateStr) {
         try {
             DateTime requestedDate = new DateTime(ISO_DATE_FORMAT.parse(dateStr));
-            DateTime dateFlooredToPreceeding30Mins = requestedDate.withMinuteOfHour( (requestedDate.getMinuteOfHour() < 30) ? 0 : 30);
-            return dateFlooredToPreceeding30Mins.toDate().getTime();
+            if (floor) {
+                DateTime dateFlooredToPreceeding30Mins = requestedDate.withMinuteOfHour( (requestedDate.getMinuteOfHour() < 30) ? 0 : 30);
+                return dateFlooredToPreceeding30Mins.toDate().getTime();
+            } else {
+                return requestedDate.toDate().getTime();
+            }
         } catch (ParseException e) {
             return defaultDate();
         }

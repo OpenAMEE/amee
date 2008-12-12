@@ -19,7 +19,6 @@
 */
 package gc.carbon.data;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
@@ -30,6 +29,7 @@ import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.path.PathItemGroup;
 import gc.carbon.path.PathItemService;
+import gc.carbon.data.DataServiceDAO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public class DataFinder implements Serializable {
     private PathItemService pathItemService;
 
     @Autowired
-    private DataService dataService;
+    private DataServiceDAO dataServiceDAO;
 
     @Autowired
     private DrillDownService drillDownService;
@@ -81,7 +81,7 @@ public class DataFinder implements Serializable {
         if (dataCategory != null) {
             choices = drillDownService.getChoices(dataCategory, Choice.parseChoices(drillDown), startDate, endDate);
             if (choices.getName().equals("uid") && (choices.getChoices().size() > 0)) {
-                dataItem = dataService.getDataItem(dataCategory, choices.getChoices().get(0).getValue());
+                dataItem = dataServiceDAO.getDataItem(dataCategory, choices.getChoices().get(0).getValue());
             }
         }
         return dataItem;
@@ -95,7 +95,7 @@ public class DataFinder implements Serializable {
         if (pig != null) {
             pi = pig.findByPath(path);
             if ((pi != null) && pi.getObjectType().equals(ObjectType.DC)) {
-                dataCategory = dataService.getDataCategory(EnvironmentService.getEnvironment(), pi.getUid());
+                dataCategory = dataServiceDAO.getDataCategory(EnvironmentService.getEnvironment(), pi.getUid());
             }
         }
         return dataCategory;

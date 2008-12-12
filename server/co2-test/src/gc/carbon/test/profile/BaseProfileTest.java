@@ -29,13 +29,15 @@ public class BaseProfileTest extends APITestCase {
     protected static final String KNOWN_AMOUNT_FOR_1000_KM_PER_YEAR = "22.042";
     protected static final String KNOWN_AMOUNT_FOR_1000_MI_PER_YEAR = "35.473";
 
-    protected static final String CATEGORY = "/profiles/B74EC806243F/transport/car/generic/";
+    protected static final String PROFILE = "B74EC806243F";
+    protected static final String CATEGORY = "/transport/car/generic/";
     protected static final String DATA_CATEGORY_UID = "4F6CBCEE95F7";
 
     protected TestClient client;
 
     public BaseProfileTest(String s) throws Exception {
         super(s);
-        client = new TestClient(CATEGORY);
+        client = new TestClient(PROFILE, CATEGORY);
     }
+
 }

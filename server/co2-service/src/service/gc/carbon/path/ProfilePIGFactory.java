@@ -24,7 +24,7 @@ import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.data.DataService;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
@@ -43,7 +43,7 @@ import java.util.Map;
 public class ProfilePIGFactory extends BasePIGFactory implements CacheableFactory {
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
     private DataService dataService;
@@ -66,7 +66,7 @@ public class ProfilePIGFactory extends BasePIGFactory implements CacheableFactor
             while (!dataCategories.isEmpty()) {
                 addDataCategories(pathItemGroup, dataCategories);
             }
-            definitionService.getItemDefinitions(environment); // preload so we can iterate over ItemValues later
+            definitionServiceDAO.getItemDefinitions(environment); // preload so we can iterate over ItemValues later
             List<ProfileItem> profileItems = profileService.getProfileItems(profile);
             while (!profileItems.isEmpty()) {
                 addProfileItems(pathItemGroup, profileItems);

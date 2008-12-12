@@ -22,7 +22,7 @@ package gc.carbon.environment;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.ValueType;
 import gc.carbon.data.DataConstants;
-import gc.carbon.definition.DefinitionService;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.ValueDefinition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +50,7 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionService definitionService;
+    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -100,7 +100,7 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
+        log.debug("handleGet()");
         if (definitionBrowser.getValueDefinitionActions().isAllowView()) {
             super.handleGet();
         } else {
@@ -114,8 +114,8 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation()");
         if (definitionBrowser.getValueDefinitionActions().isAllowModify()) {
             ValueDefinition valueDefinition = definitionBrowser.getValueDefinition();
             Form form = getForm();
@@ -141,11 +141,11 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
     }
 
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         log.debug("delete");
         if (definitionBrowser.getValueDefinitionActions().isAllowDelete()) {
             ValueDefinition valueDefinition = definitionBrowser.getValueDefinition();
-            definitionService.remove(valueDefinition);
+            definitionServiceDAO.remove(valueDefinition);
             success();
         } else {
             notAuthorized();

@@ -49,17 +49,17 @@ public class DataFilter extends BaseFilter {
     }
 
     protected int beforeHandle(Request request, Response response) {
-        log.debug("before handle");
+        log.debug("beforeHandle()");
         setVersion(request);
         return rewrite(request);
     }
 
     protected void afterHandle(Request request, Response response) {
-        log.debug("after handle");
+        log.debug("afterHandle()");
     }
 
     protected int rewrite(Request request) {
-        log.debug("start data path rewrite");
+        log.debug("rewrite() - start data path rewrite");
         String path = null;
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
@@ -84,7 +84,7 @@ public class DataFilter extends BaseFilter {
             request.getAttributes().put("previousResourceRef", reference.toString());
             reference.setPath("/data" + path);
         }
-        log.debug("end data path rewrite");
+        log.debug("rewrite() - end data path rewrite");
         return CONTINUE;
     }
 

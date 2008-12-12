@@ -23,10 +23,10 @@ import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.cache.CacheHelper;
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.domain.data.DataCategory;
+import gc.carbon.data.DataBrowser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -46,12 +46,7 @@ public class DataSheetService implements Serializable {
     }
 
     public Sheet getSheet(DataBrowser browser) {
-        ThreadBeanHolder.set("dataCategoryForFactory", browser.getDataCategory());
-        return (Sheet) cacheHelper.getCacheable(dataSheetFactory);
-    }
-
-    public Sheet getSheet(DataCategory dataCategory) {
-        ThreadBeanHolder.set("dataCategoryForFactory", dataCategory);
+        ThreadBeanHolder.set("dataBrowserForFactory", browser);
         return (Sheet) cacheHelper.getCacheable(dataSheetFactory);
     }
 

@@ -25,7 +25,8 @@ import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import gc.carbon.domain.ObjectType;
-import gc.carbon.domain.path.InternalItemValue;
+import gc.carbon.domain.data.builder.BuildableItemDefinition;
+import gc.carbon.domain.path.InternalValue;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -39,7 +40,7 @@ import java.util.*;
 @Entity
 @Table(name = "ITEM_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ItemDefinition implements PersistentObject {
+public class ItemDefinition implements PersistentObject, BuildableItemDefinition {
 
     @Id
     @GeneratedValue
@@ -120,7 +121,6 @@ public class ItemDefinition implements PersistentObject {
         return Choice.parseChoices(getDrillDown());
     }
 
-    // TODO: optimise this by using a transient HashMap instead
     @Transient
     public ItemValueDefinition getItemValueDefinition(String path) {
         for (ItemValueDefinition itemValueDefinition : getItemValueDefinitions()) {
@@ -279,10 +279,10 @@ public class ItemDefinition implements PersistentObject {
         return ObjectType.ID;
     }
 
-    public void appendInternalValues(Map<ItemValueDefinition, InternalItemValue> values) {
+    public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values) {
         for (ItemValueDefinition ivd : getItemValueDefinitions()) {
             if (ivd.getUsableValue() != null)
-                values.put(ivd, new InternalItemValue(ivd));
+                values.put(ivd, new InternalValue(ivd));
         }
     }
 

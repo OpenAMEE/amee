@@ -23,22 +23,26 @@ import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
-import gc.carbon.domain.path.InternalItemValue;
+import gc.carbon.domain.data.builder.BuildableItem;
+import gc.carbon.domain.path.InternalValue;
 import gc.carbon.domain.path.Pathable;
 import gc.carbon.domain.profile.StartEndDate;
-import gc.carbon.builder.domain.BuildableItem;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
+import org.joda.time.Duration;
+import org.joda.time.format.ISOPeriodFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.joda.time.Duration;
-import org.joda.time.format.ISOPeriodFormat;
 
 import javax.persistence.*;
+import javax.measure.unit.Unit;
+import javax.measure.unit.SI;
+import javax.measure.unit.NonSI;
+import javax.measure.quantity.Mass;
 import java.util.*;
 
 @Entity
@@ -274,10 +278,10 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
         this.modified = modified;
     }
 
-    public void appendInternalValues(Map<ItemValueDefinition, InternalItemValue> values) {
+    public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values) {
         for (ItemValue iv : getItemValues()) {
             if (iv.getUsableValue() != null) {
-                values.put(iv.getItemValueDefinition(), new InternalItemValue(iv));
+                values.put(iv.getItemValueDefinition(), new InternalValue(iv));
             }
         }
     }
@@ -292,7 +296,7 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Date getStartDate() {
+    public StartEndDate getStartDate() {
         return new StartEndDate(startDate);
     }
 
@@ -300,7 +304,7 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public StartEndDate getEndDate() {
         if (endDate != null) {
             return new StartEndDate(endDate);
         } else {
