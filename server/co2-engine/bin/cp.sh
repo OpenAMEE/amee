@@ -37,6 +37,8 @@ cp -r $SRC/lib/* $DST/lib
 mkdir -p $DST/logs
 
 # archive and clean up
-tar cvf $ARCHIVE $DST
+cd $DST
+tar cvf $ARCHIVE .
 gzip $ARCHIVE
 rm -rf $DST/*
+cd -
