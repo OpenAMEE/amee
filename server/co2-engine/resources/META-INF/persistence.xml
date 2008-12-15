@@ -36,10 +36,10 @@
             <property name="hibernate.use_sql_comments" value="true"/>
             <property name="hibernate.jdbc.batch_size" value="50"/>
             <!-- *** Connection / MySQL Configuration *** -->
-            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <!--<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/amee?validationQuery=SELECT+1&amp;minEvictableIdleTimeMillis=240000&amp;timeBetweenEvictionRunsMillis=1000&amp;testOnBorrow=true&amp;testWhileIdle=true&amp;autoReconnectForPools=true&amp;useCompression=true"/>
             <property name="hibernate.connection.username" value="amee"/>
-            <property name="hibernate.connection.password" value="amee"/>
+            <property name="hibernate.connection.password" value="amee"/>-->
             <!--<property name="hibe rnate.connection.check-valid-connection-sql" value="select count(*) from dual"/>-->
             <!--<property name="hibernate.connection.exception-sorter-class-name" value="com.mysql.jdbc.integration.jboss.ExtendedMysqlExceptionSorter"/>-->
             <!--<property name="hibernate.connection.valid-connection-checker-class-name" value="com.mysql.jdbc.integration.jboss.MysqlValidConnectionChecker"/>-->
