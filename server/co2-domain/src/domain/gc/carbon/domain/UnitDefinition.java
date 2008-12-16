@@ -243,7 +243,7 @@ public class UnitDefinition implements PersistentObject {
         this.modified = modified;
     }
 
-    public boolean has(String unit) {
+    public boolean contains(String unit) {
         for (String choice: getUnits()) {
             if (choice.equals(unit))
                 return true;

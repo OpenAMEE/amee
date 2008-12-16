@@ -71,9 +71,6 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         // add objects
         obj.put("path", resource.getFullPath());
 
-        obj.put("startDate", resource.getStartDate());
-        obj.put("endDate", (resource.getEndDate() != null) ? resource.getEndDate().toString() : "");
-
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
             obj.put("profile", resource.getProfile().getIdentityJSONObject());
@@ -119,13 +116,13 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             if (!resource.getProfileItems().isEmpty()) {
                 if (resource.getProfileItems().size() == 1) {
                     BuildableProfileItem pi = resource.getProfileItems().get(0);
-                    pi.setBuilder(new ProfileItemBuilder(pi));
+                    setBuilder(pi);
                     obj.put("profileItem", resource.getProfileItems().get(0).getJSONObject());
                 } else {
                     JSONArray profileItems = new JSONArray();
                     obj.put("profileItems", profileItems);
                     for (BuildableProfileItem pi : resource.getProfileItems()) {
-                        pi.setBuilder(new ProfileItemBuilder(pi));
+                        setBuilder(pi);
                         profileItems.put(pi.getJSONObject(false));
                     }
                 }
@@ -144,9 +141,6 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         element.appendChild(resource.getVersion().getElement(document));
 
         element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));
-
-        element.appendChild(APIUtils.getElement(document, "StartDate",resource.getStartDate().toString()));
-        element.appendChild(APIUtils.getElement(document, "EndDate", (resource.getEndDate() != null) ? resource.getEndDate().toString() : ""));
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
@@ -192,13 +186,21 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
                 Element profileItemsElement = document.createElement("ProfileItems");
                 element.appendChild(profileItemsElement);
                 for (BuildableProfileItem pi : resource.getProfileItems()) {
-                    pi.setBuilder(new ProfileItemBuilder(pi));
+                    setBuilder(pi);
                     profileItemsElement.appendChild(pi.getElement(document, false));
                 }
             }
         }
 
         return element;
+    }
+
+    private void setBuilder(BuildableProfileItem pi) {
+        if (resource.getProfileBrowser().returnAmountInExternalUnit()) {
+            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getAmountUnit()));
+        } else {
+            pi.setBuilder(new ProfileItemBuilder(pi));
+        }
     }
 
     private Sheet getSheet() {

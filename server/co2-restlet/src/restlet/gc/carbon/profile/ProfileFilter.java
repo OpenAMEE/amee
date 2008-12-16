@@ -49,17 +49,17 @@ public class ProfileFilter extends BaseFilter {
     }
 
     protected int beforeHandle(Request request, Response response) {
-        log.debug("before handle");
+        log.debug("beforeHandle()");
         setVersion(request);
         return rewrite(request);
     }
 
     protected void afterHandle(Request request, Response response) {
-        log.debug("after handle");
+        log.debug("afterHandle()");
     }
 
     protected int rewrite(Request request) {
-        log.info("start profile path rewrite");
+        log.info("rewrite() - start profile path rewrite");
         String path = null;
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
@@ -97,7 +97,7 @@ public class ProfileFilter extends BaseFilter {
             request.getAttributes().put("previousResourceRef", reference.toString());
             reference.setPath(path);
         }
-        log.info("end profile path rewrite");
+        log.info("rewrite() - end profile path rewrite");
         return CONTINUE;
     }
 

@@ -4,16 +4,11 @@ import com.jellymold.utils.ValueType;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.data.ItemValueDefinition;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.Unit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.Duration;
-
 import javax.measure.DecimalMeasure;
-import static javax.measure.unit.SI.MILLI;
-import static javax.measure.unit.SI.SECOND;
-import javax.measure.unit.Unit;
 import java.math.BigDecimal;
-import java.math.MathContext;
 
 /**
  * This file is part of AMEE.
@@ -39,8 +34,6 @@ import java.math.MathContext;
 public class InternalValue {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    private static final MathContext CONTEXT = new MathContext(ProfileItem.PRECISION, ProfileItem.ROUNDING_MODE);
 
     private Object value;
 
@@ -94,61 +87,12 @@ public class InternalValue {
         if (!iv.hasUnits() && !iv.hasPerUnits())
             return decimal;
 
-        ItemValueDefinition ivd = iv.getItemValueDefinition();
-        Unit internalUnit = getInternalUnit(ivd);
-        Unit externalUnit = getExternalUnit(iv);
-
-        if (externalUnit.equals(internalUnit))
-            return decimal;
-
-        DecimalMeasure dm = DecimalMeasure.valueOf(decimal, externalUnit);
-        return dm.to(internalUnit, CONTEXT).getValue();
-
-    }
-
-    private Unit getInternalUnit(ItemValueDefinition ivd) {
-        Unit internalUnit;
-        if (ivd.hasUnits() && ivd.hasPerUnits()) {
-            internalUnit = Unit.valueOf(ivd.getInternalUnit()).divide(Unit.valueOf(ivd.getInternalPerUnit()));
-        } else {
-            if (ivd.hasUnits())
-                internalUnit = Unit.valueOf(ivd.getInternalUnit());
-            else
-                internalUnit = Unit.valueOf(ivd.getInternalPerUnit()).inverse();
+        Unit internalUnit = iv.getItemValueDefinition().getCompoundUnit();
+        Unit externalUnit = iv.getCompoundUnit();
+        if (!externalUnit.equals(internalUnit)) {
+            decimal = externalUnit.convert(decimal, internalUnit);
         }
-        return internalUnit;
-    }
 
-    //TODO - Become overly complex - refactor
-    private Unit getExternalUnit(ItemValue iv) {
-        Unit externalUnit;
-        if ( (iv.getUnit() != null) && (iv.getPerUnit() != null) ) {
-            externalUnit = Unit.valueOf(iv.getUnit()).divide(getPerUnit(iv));
-        } else {
-            if (iv.getUnit() != null) {
-                if (iv.hasPerUnits()) {
-                    externalUnit = Unit.valueOf(iv.getUnit()).divide(Unit.valueOf(iv.getItemValueDefinition().getInternalPerUnit()));
-                } else {
-                    externalUnit = Unit.valueOf(iv.getUnit());
-                }
-            } else {
-                if (iv.hasUnits()) {
-                    externalUnit = Unit.valueOf(iv.getItemValueDefinition().getInternalUnit()).divide(getPerUnit(iv));
-                } else {
-                    externalUnit = getPerUnit(iv).inverse();
-                }
-            }
-        }
-        return externalUnit;
+        return decimal;
     }
-
-    private Unit getPerUnit(ItemValue itemValue) {
-        if (!itemValue.getPerUnit().equals("none")) {
-            return Unit.valueOf(itemValue.getPerUnit());
-        } else {
-            Duration duration = itemValue.getItem().getDuration();
-            return MILLI(SECOND).times(duration.getMillis());
-        }
-    }
-
 }

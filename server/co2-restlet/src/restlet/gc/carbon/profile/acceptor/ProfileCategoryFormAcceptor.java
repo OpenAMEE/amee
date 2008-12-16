@@ -9,6 +9,7 @@ import gc.carbon.domain.profile.ValidFromDate;
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileService;
 import gc.carbon.data.DataService;
+import gc.carbon.APIFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
@@ -80,11 +81,11 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                     profileItem = new ProfileItem(resource.getProfile(), dataItem);
                     profileItem = acceptProfileItem(form, profileItem);
                 } else {
-                    log.warn("Data Item not found");
+                    log.warn("accept() - Data Item not found");
                     profileItem = null;
                 }
             } else {
-                log.warn("dataItemUid not supplied");
+                log.warn("accept() - dataItemUid not supplied");
                 profileItem = null;
             }
         } else if (resource.getRequest().getMethod().equals(Method.PUT)) {
@@ -104,11 +105,11 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                     // update existing Profile Item
                     profileItem = acceptProfileItem(form, profileItem);
                 } else {
-                    log.warn("Profile Item not found");
+                    log.warn("accept() - Profile Item not found");
                     profileItem = null;
                 }
             } else {
-                log.warn("profileItemUid not supplied");
+                log.warn("accept() - profileItemUid not supplied");
                 profileItem = null;
             }
         }
@@ -122,7 +123,7 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
     private ProfileItem acceptProfileItem(Form form, ProfileItem profileItem) {
 
         if (!resource.validateParameters()) {
-            resource.badRequest();
+            resource.badRequest(resource.getFault().toString());
             return null;
         }
 
@@ -136,17 +137,17 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
             profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
             if (form.getNames().contains("endDate")) {
                 profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
-            }
-
-            if (form.getNames().contains("duration")) {
-                profileItem.setDuration(form.getFirstValue("duration"));
-                StartEndDate endDate = ((StartEndDate) profileItem.getStartDate()).plus(form.getFirstValue("duration"));
-                profileItem.setEndDate(endDate);
+            } else {
+                if (form.getNames().contains("duration")) {
+                    profileItem.setDuration(form.getFirstValue("duration"));
+                    StartEndDate endDate = profileItem.getStartDate().plus(form.getFirstValue("duration"));
+                    profileItem.setEndDate(endDate);
+                }
             }
 
             if (profileItem.getEndDate() != null &&
                     profileItem.getEndDate().before(profileItem.getStartDate())) {
-                resource.badRequest();
+                resource.badRequest(APIFault.INVALID_DATE_RANGE.toString());
                 return null;
             }
         }
@@ -155,7 +156,7 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
         profileItem.setName(form.getFirstValue("name"));
 
         // see if ProfileItem already exists
-        if (profileService.hasNoEquivalent(profileItem)) {
+        if (profileService.isUnique(profileItem)) {
 
             // save newProfileItem and do calculations
             profileService.persist(profileItem);
@@ -170,23 +171,25 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                     ItemValue itemValue = itemValues.get(name);
                     if (itemValue != null) {
                         itemValue.setValue(form.getFirstValue(name));
-                        if (itemValue.hasUnits()) {
+                        if (itemValue.hasUnits() && form.getNames().contains(name+"Unit")) {
                             itemValue.setUnit(form.getFirstValue(name + "Unit"));
                         }
-                        if (itemValue.hasPerUnits()) {
+                        if (itemValue.hasPerUnits() && form.getNames().contains(name+"PerUnit")) {
                             itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
                         }
                     }
                 }
                 profileService.calculate(profileItem);
             } catch (IllegalArgumentException ex) {
-                log.warn("Bad parameter received");
+                log.warn("accept() - Bad parameter received");
                 profileService.remove(profileItem);
+                resource.badRequest(APIFault.INVALID_PARAMETERS.toString());
                 profileItem = null;
             }
         } else {
-            log.warn("Profile Item already exists");
-            profileItem = null;
+            log.warn("accept() - Profile Item already exists");
+            resource.badRequest(APIFault.DUPLICATE_ITEM.toString());
+            return null;
         }
         return profileItem;
     }

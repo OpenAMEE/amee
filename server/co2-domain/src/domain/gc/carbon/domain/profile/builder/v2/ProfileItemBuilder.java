@@ -22,27 +22,21 @@ package gc.carbon.domain.profile.builder.v2;
 import com.jellymold.utils.domain.APIObject;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.profile.builder.BuildableProfileItem;
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.Builder;
+import gc.carbon.domain.Unit;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.measure.unit.Unit;
-import javax.measure.unit.SI;
-import javax.measure.unit.NonSI;
-import javax.measure.quantity.Mass;
-import javax.measure.DecimalMeasure;
 import java.math.BigDecimal;
 
 public class ProfileItemBuilder implements Builder {
 
-    private Unit<Mass> AMOUNT_RETURN_UNIT = SI.KILOGRAM;
-    private Unit<javax.measure.quantity.Duration> AMOUNT_RETURN_PER_UNIT = NonSI.YEAR;
-
     private BuildableProfileItem item;
-    private Unit returnUnit;
+    private Unit returnUnit = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT;
 
     public ProfileItemBuilder(BuildableProfileItem item, Unit returnUnit) {
         this.item = item;
@@ -93,6 +87,7 @@ public class ProfileItemBuilder implements Builder {
 
         JSONObject amount = new JSONObject();
         amount.put("value", getAmount(item));
+        returnUnit.getJSONObject(amount);
         obj.put("amount",amount);
 
         obj.put("startDate", item.getStartDate().toString());
@@ -110,6 +105,7 @@ public class ProfileItemBuilder implements Builder {
 
         Element amount = document.createElement("Amount");
         amount.appendChild(APIUtils.getElement(document, "Value", getAmount(item)));
+        returnUnit.getElement(amount, document);
         element.appendChild(amount);
 
         element.appendChild(APIUtils.getElement(document, "StartDate", item.getStartDate().toString()));
@@ -123,9 +119,8 @@ public class ProfileItemBuilder implements Builder {
 
     private String getAmount(BuildableProfileItem item) {
         BigDecimal amount = item.getAmount();
-        if (returnUnit != null) {
-            //DecimalMeasure dm = DecimalMeasure.valueOf(amount, );
-            //amount = dm.to(internalUnit, CONTEXT).getValue();
+        if (!returnUnit.equals(ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT)) {
+            amount = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT.convert(amount, returnUnit);
         }
         return amount.toString();
     }

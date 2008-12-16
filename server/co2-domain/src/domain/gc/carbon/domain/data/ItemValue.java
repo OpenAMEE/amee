@@ -22,8 +22,7 @@ package gc.carbon.domain.data;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
-import gc.carbon.domain.ObjectType;
-import gc.carbon.domain.Builder;
+import gc.carbon.domain.*;
 import gc.carbon.domain.data.builder.BuildableItemValue;
 import gc.carbon.domain.data.builder.v2.ItemValueBuilder;
 import gc.carbon.domain.path.Pathable;
@@ -252,33 +251,30 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
         return ObjectType.IV;
     }
 
-
-    public String getUnit() {
-        return (unit != null) ? unit : (hasUnits()) ? itemValueDefinition.getInternalUnit() : null;
+    public Unit getUnit() {
+        return (unit != null) ? Unit.valueOf(unit) : itemValueDefinition.getUnit();
     }
 
     public void setUnit(String unit) throws IllegalArgumentException {
-        if (unit == null || unit.length() == 0) {
-            return;
-        }
-        if (!hasUnits() || !itemValueDefinition.isValidUnit(unit)) {
+        if (!itemValueDefinition.isValidUnit(unit)) {
             throw new IllegalArgumentException();
         }
         this.unit = unit;
     }
 
-    public String getPerUnit() {
-        return (perUnit != null) ? perUnit : (hasPerUnits()) ? itemValueDefinition.getInternalPerUnit() : null;
+    public PerUnit getPerUnit() {
+        return (perUnit != null) ? perUnit() : itemValueDefinition.getPerUnit();
     }
 
     public void setPerUnit(String perUnit) throws IllegalArgumentException {
-        if (perUnit == null || perUnit.length() == 0) {
-            return;
-        }
-        if (!hasPerUnits() || !itemValueDefinition.isValidPerUnit(perUnit)) {
+        if (!itemValueDefinition.isValidPerUnit(perUnit)) {
             throw new IllegalArgumentException();
         }
         this.perUnit = perUnit;
+    }
+
+    public Unit getCompoundUnit() {
+        return getUnit().with(getPerUnit());
     }
 
     public boolean hasUnits() {
@@ -287,5 +283,26 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
 
     public boolean hasPerUnits() {
         return itemValueDefinition.hasPerUnits();
+    }
+
+    private PerUnit perUnit() {
+        if (perUnit.equals("none")) {
+            return PerUnit.valueOf(getItem().getDuration());
+        } else {
+            return PerUnit.valueOf(perUnit);
+        }
+    }
+
+    public ItemValue getCopy() {
+        ItemValue clone = new ItemValue();
+        clone.setUid(getUid());
+        clone.setValue(getValue());
+        clone.setItemValueDefinition(getItemValueDefinition());
+        clone.setItem(getItem());
+        if (hasUnits())
+            clone.setUnit(getUnit().toString());
+        if (hasPerUnits())
+            clone.setPerUnit(getPerUnit().toString());
+        return clone;
     }
 }

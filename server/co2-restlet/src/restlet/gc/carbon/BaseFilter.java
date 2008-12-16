@@ -54,5 +54,10 @@ public abstract class BaseFilter extends Filter {
         APIVersion apiVersion = APIVersion.get(request.getResourceRef().getQueryAsForm());
         log.debug("setVersion() - APIVersion: " + apiVersion);
         request.getAttributes().put("apiVersion", apiVersion);
+        
+        //TODO - Move legacy mapping logic to own filter
+        if (apiVersion.isVersionOne()) {
+            request.getResourceRef().addQueryParameter("returnPerUnit","month");
+        }
     }
 }

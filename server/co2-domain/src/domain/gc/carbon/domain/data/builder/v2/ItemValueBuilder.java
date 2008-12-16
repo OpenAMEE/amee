@@ -58,8 +58,8 @@ public class ItemValueBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "Path", itemValue.getPath()));
         element.appendChild(APIUtils.getElement(document, "Name", itemValue.getName()));
         element.appendChild(APIUtils.getElement(document, "Value", itemValue.getValue()));
-        element.appendChild(APIUtils.getElement(document, "Unit", itemValue.getUnit()));
-        element.appendChild(APIUtils.getElement(document, "PerUnit", itemValue.getPerUnit()));
+        element.appendChild(APIUtils.getElement(document, "Unit", itemValue.getUnit().toString()));
+        element.appendChild(APIUtils.getElement(document, "PerUnit", itemValue.getPerUnit().toString()));
         element.appendChild(itemValue.getItemValueDefinition().getElement(document, false));
         if (detailed) {
             element.setAttribute("Created", itemValue.getCreated().toString());

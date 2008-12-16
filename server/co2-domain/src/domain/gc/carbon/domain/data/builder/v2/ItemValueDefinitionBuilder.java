@@ -40,8 +40,8 @@ public class ItemValueDefinitionBuilder implements Builder {
         obj.put("uid", itemValueDefinition.getUid());
         obj.put("path", itemValueDefinition.getPath());
         obj.put("name", itemValueDefinition.getName());
-        obj.put("unit",itemValueDefinition.getInternalUnit());
-        obj.put("perUnit",itemValueDefinition.getInternalPerUnit());
+        obj.put("unit",itemValueDefinition.getUnit());
+        obj.put("perUnit",itemValueDefinition.getPerUnit());
         obj.put("valueDefinition", itemValueDefinition.getValueDefinition().getJSONObject(false));
         if (detailed) {
             obj.put("created", itemValueDefinition.getCreated());
@@ -62,8 +62,8 @@ public class ItemValueDefinitionBuilder implements Builder {
         element.setAttribute("uid", itemValueDefinition.getUid());
         element.appendChild(APIUtils.getElement(document, "Path", itemValueDefinition.getPath()));
         element.appendChild(APIUtils.getElement(document, "Name", itemValueDefinition.getName()));
-        element.appendChild(APIUtils.getElement(document, "Unit", itemValueDefinition.getInternalUnit()));
-        element.appendChild(APIUtils.getElement(document, "PerUnit", itemValueDefinition.getInternalPerUnit()));
+        element.appendChild(APIUtils.getElement(document, "Unit", itemValueDefinition.getUnit().toString()));
+        element.appendChild(APIUtils.getElement(document, "PerUnit", itemValueDefinition.getPerUnit().toString()));
         element.appendChild(APIUtils.getElement(document, "FromProfile", Boolean.toString(itemValueDefinition.isFromProfile())));
         element.appendChild(APIUtils.getElement(document, "FromData", Boolean.toString(itemValueDefinition.isFromData())));
         element.appendChild(itemValueDefinition.getValueDefinition().getElement(document, false));

@@ -26,6 +26,7 @@ import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.domain.profile.ValidFromDate;
+import gc.carbon.APIFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -125,7 +126,16 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
             // ensure updated ProfileItem does not break rules for ProfileItems
             ProfileItem profileItemCopy = profileItem.getCopy();
-            if (updateProfileItem(profileItemCopy, form) && profileService.hasNoEquivalent(profileItemCopy)) {
+            updateProfileItem(profileItemCopy, form);
+
+            // ensure endDate is not before startDate
+            if (profileItemCopy.getEndDate() != null &&
+                    profileItemCopy.getEndDate().before(profileItemCopy.getStartDate())) {
+                badRequest(APIFault.INVALID_DATE_RANGE.toString());
+                return;
+            }
+
+            if (!profileService.isUnique(profileItemCopy)) {
 
                 // update persistent ProfileItem
                 updateProfileItem(profileItem, form);
@@ -136,10 +146,10 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
                     ItemValue itemValue = itemValues.get(name);
                     if (itemValue != null) {
                         itemValue.setValue(form.getFirstValue(name));
-                        if (itemValue.hasUnits()) {
+                        if (itemValue.hasUnits() && form.getNames().contains(name+"Unit")) {
                             itemValue.setUnit(form.getFirstValue(name + "Unit"));
                         }
-                        if (itemValue.hasPerUnits()) {
+                        if (itemValue.hasPerUnits() && form.getNames().contains(name+"PerUnit")) {
                             itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
                         }
                     }
@@ -159,7 +169,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
                 }
             } else {
                 log.warn("storeRepresentation() - ProfileItem NOT updated");
-                badRequest();
+                badRequest(APIFault.DUPLICATE_ITEM.toString());
             }
         } else {
             notAuthorized();
@@ -167,12 +177,12 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     //TODO - parsing v1 and v2 params - see Acceptors which at least conditionally parse based on APIVersion. Ideal solution should be transparent tho.
-    protected boolean updateProfileItem(ProfileItem profileItem, Form form) {
+    protected void updateProfileItem(ProfileItem profileItem, Form form) {
 
         Set<String> names = form.getNames();
 
         if (!validateParameters()) {
-            badRequest();
+            badRequest(getFault().toString());
         }
 
         // update 'name' value
@@ -202,21 +212,13 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
             } else {
                 profileItem.setEndDate(null);
             }
-        }
-
-        // update 'duration' value
-        if (form.getNames().contains("duration")) {
-            profileItem.setDuration(form.getFirstValue("duration"));
-            StartEndDate endDate = ((StartEndDate) profileItem.getStartDate()).plus(form.getFirstValue("duration"));
-            profileItem.setEndDate(endDate);
-        }
-
-        // ensure endDate is not before startDate
-        if (profileItem.getEndDate() != null &&
-                profileItem.getEndDate().before(profileItem.getStartDate())) {
-            return false;
         } else {
-            return true;
+            // update 'duration' value
+            if (form.getNames().contains("duration")) {
+                profileItem.setDuration(form.getFirstValue("duration"));
+                StartEndDate endDate = profileItem.getStartDate().plus(form.getFirstValue("duration"));
+                profileItem.setEndDate(endDate);
+            }
         }
     }
 

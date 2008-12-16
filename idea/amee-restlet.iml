@@ -22,7 +22,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="amee-builder" />
     <orderEntry type="module" module-name="amee-domain" />
     <orderEntry type="module" module-name="amee-service" />
     <orderEntry type="module" module-name="kiwi-domain" />
@@ -36,6 +35,8 @@
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="module" module-name="org.restlet.ext.seam" />
     <orderEntry type="library" name="rhino" level="project" />
+    <orderEntry type="library" name="jscience" level="project" />
+    <orderEntry type="library" name="joda" level="project" />
   </component>
 </module>
 

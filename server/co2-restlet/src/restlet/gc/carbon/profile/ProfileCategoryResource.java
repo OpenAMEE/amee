@@ -30,8 +30,6 @@ import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
 import gc.carbon.profile.acceptor.ProfileCategoryXMLAcceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -106,7 +104,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
     public void handleGet() {
         log.debug("handleGet()");
         if (!validateParameters()) {
-            badRequest();
+            badRequest(getFault().toString());
         } else if (profileBrowser.getEnvironmentActions().isAllowView()) {
             Form form = getRequest().getResourceRef().getQueryAsForm();
             profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
@@ -115,8 +113,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
             profileBrowser.setDuration(form.getFirstValue("duration"));
             profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
             profileBrowser.setMode(form.getFirstValue("mode"));
-            profileBrowser.setReturnUnit(form.getFirstValue("returnUnit"));
-            profileBrowser.setReturnPerUnit(form.getFirstValue("returnPerUnit"));
+            profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
             super.handleGet();
         } else {
             notAuthorized();
@@ -172,6 +169,8 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
     }
 
     public List<ProfileItem> doAcceptOrStore(Representation entity) {
+        Form form = getRequest().getResourceRef().getQueryAsForm();
+        profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
         return getAcceptor(entity.getMediaType()).accept(entity);
     }
 

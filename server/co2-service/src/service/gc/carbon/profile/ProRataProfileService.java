@@ -2,13 +2,14 @@ package gc.carbon.profile;
 
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.profile.ProfileBrowser;
 import org.joda.time.DateTime;
-import org.joda.time.Duration;
+import org.joda.time.Interval;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.measure.Measure;
+import javax.measure.quantity.Duration;
 import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,54 +53,75 @@ public class ProRataProfileService extends ProfileService {
 
         List<ProfileItem> requestedItems = new ArrayList<ProfileItem>();
 
+        Interval requestInterval = getInterval(profileBrowser.getStartDate(), profileBrowser.getEndDate());
+
         for (ProfileItem pi : delegatee.getProfileItems(profileBrowser)) {
 
-            String perUnit = getPerUnit(pi);
-            if (perUnit != null) {
+            Interval interval = requestInterval;
+
+            if (pi.hasPerUnits()) {
 
                 ProfileItem pic = pi.getCopy();
 
-                Measure<Long, javax.measure.quantity.Duration> requestedDuration = getDuration(profileBrowser.getStartDate(), profileBrowser.getEndDate());
-                Unit internalPerUnit = Unit.valueOf(perUnit);
+                if (interval.getStart().toDate().before(pi.getStartDate())) {
+                    interval = interval.withStartMillis(pi.getStartDate().getTime());
+                }
 
-                pic.setAmount(pi.getAmount().multiply(new BigDecimal(requestedDuration.doubleValue(internalPerUnit))).setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE));
+                if (pi.getEndDate() != null) {
+                    if (pi.getEndDate().before(interval.getEnd().toDate())) {
+                        interval = interval.withEndMillis(pi.getEndDate().getTime());
+                    }
+                }
+
+                for (ItemValue iv : pi.getItemValues()) {
+                    if(iv.hasPerUnits()) {
+                        pic.add(getProRatedItemValue(interval, iv));
+                    } else {
+                        pic.add(iv.getCopy());
+                    }
+                }
+
+                delegatee.calculate(pic);
+
                 requestedItems.add(pic);
-
+                
             } else if (pi.getEndDate() != null) {
 
                 ProfileItem pic = pi.getCopy();
+                BigDecimal requestedInterval = new BigDecimal(interval.toDurationMillis());
+                BigDecimal itemInterval = new BigDecimal(getIntervalInMillis(pic.getStartDate(), pic.getEndDate()));
+                BigDecimal itemIntervalBasedToRequestInterval = itemInterval.divide(requestedInterval, ProfileItem.CONTEXT);
+                pic.setAmount(pic.getAmount().multiply(itemIntervalBasedToRequestInterval, ProfileItem.CONTEXT));
 
-                Measure<Long, javax.measure.quantity.Duration> requestedDuration = getDuration(profileBrowser.getStartDate(), profileBrowser.getEndDate());
-                Measure<Long, javax.measure.quantity.Duration> itemDuration = getDuration(pi.getStartDate(), pi.getEndDate());
-
-                BigDecimal proRata = new BigDecimal(requestedDuration.getValue()).divide(new BigDecimal(itemDuration.getValue()));
-                pic.setAmount(pi.getAmount().multiply(proRata).setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE));
                 requestedItems.add(pic);
 
             } else {
-
                 requestedItems.add(pi);
-
             }
+
         }
 
         return requestedItems;
     }
 
-    private Measure<Long, javax.measure.quantity.Duration> getDuration(Date startDate, Date endDate) {
-        DateTime start = new DateTime(startDate.getTime());
-        DateTime end = new DateTime(endDate.getTime());
-        long duration = new Duration(start, end).getMillis();
-        return Measure.valueOf(duration, SI.MILLI(SI.SECOND));
+    private ItemValue getProRatedItemValue(Interval interval, ItemValue iv) {
+        ItemValue ivc = iv.getCopy();
+        Measure<Long, Duration> intercept = Measure.valueOf(interval.toDurationMillis(), SI.MILLI(SI.SECOND));
+        BigDecimal interceptBasedToPerUnit = new BigDecimal(intercept.doubleValue(ivc.getPerUnit().toUnit()));
+        BigDecimal value = new BigDecimal(ivc.getValue());
+        value = value.multiply(interceptBasedToPerUnit, ProfileItem.CONTEXT);
+        ivc.setValue(value.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE).toString());
+        return ivc;
     }
 
-    private String getPerUnit(ProfileItem pi) {
-        List<ItemValue> itemValues = pi.getItemValues();
-        for (ItemValue iv : itemValues) {
-            if (iv.hasPerUnits()) {
-                return iv.getPerUnit();
-            }
-        }
-        return null;
+    private Interval getInterval(Date startDate, Date endDate) {
+        DateTime start = new DateTime(startDate.getTime());
+        DateTime end = new DateTime(endDate.getTime());
+        return new Interval(start, end);
     }
+
+    private long getIntervalInMillis(Date startDate, Date endDate) {
+        return getInterval(startDate, endDate).toDurationMillis();
+    }
+
 }

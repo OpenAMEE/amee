@@ -1,13 +1,11 @@
 package gc.carbon.domain.profile;
 
-import gc.carbon.domain.EngineUtils;
-import gc.carbon.domain.ObjectType;
-import gc.carbon.domain.Builder;
+import gc.carbon.domain.*;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.Item;
+import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.builder.BuildableProfileItem;
-import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -16,6 +14,8 @@ import org.w3c.dom.Element;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.math.MathContext;
+import java.util.List;
 
 /**
  * This file is part of AMEE.
@@ -45,7 +45,8 @@ public class ProfileItem extends Item implements BuildableProfileItem {
     public final static int PRECISION = 18;
     public final static int SCALE = 3;
     public final static RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
-    public final static BigDecimal ZERO = BigDecimal.valueOf(0, SCALE);
+    public final static BigDecimal ZERO = BigDecimal.valueOf(0,SCALE);
+    public static final MathContext CONTEXT = new MathContext(ProfileItem.PRECISION, ProfileItem.ROUNDING_MODE);
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "PROFILE_ID")
@@ -64,29 +65,32 @@ public class ProfileItem extends Item implements BuildableProfileItem {
     @Transient
     private Builder builder;
 
+    //TODO - model amount unit as other units - internal and external chocies should be in db
+    private static final PerUnit INTERNAL_AMOUNT_UNIT = PerUnit.valueOf("kg");
+    private static final PerUnit INTERNAL_AMOUNT_PERUNIT = PerUnit.valueOf("year");
+    public static final Unit INTERNAL_COMPOUND_AMOUNT_UNIT = CompoundUnit.valueOf(INTERNAL_AMOUNT_UNIT,INTERNAL_AMOUNT_PERUNIT);
+
+
     public ProfileItem() {
         super();
-        setBuilder(new ProfileItemBuilder(this));
     }
 
     public ProfileItem(Profile profile, DataItem dataItem) {
         super(dataItem.getDataCategory(), dataItem.getItemDefinition());
         setProfile(profile);
         setDataItem(dataItem);
-        setBuilder(new ProfileItemBuilder(this));
     }
 
     public ProfileItem(Profile profile, DataCategory dataCategory, DataItem dataItem) {
         super(dataCategory, dataItem.getItemDefinition());
         setProfile(profile);
         setDataItem(dataItem);
-        setBuilder(new ProfileItemBuilder(this));
     }
 
     public void setBuilder(Builder builder) {
         this.builder = builder;
     }
-
+                    
     public String toString() {
         return "ProfileItem_" + getUid();
     }
@@ -104,16 +108,6 @@ public class ProfileItem extends Item implements BuildableProfileItem {
         profileItem.setUid(getUid());
         profileItem.setId(getId());
         return profileItem;
-    }
-
-    @Transient
-    public void updateAmount(BigDecimal newAmount) {
-        setAmount(newAmount);
-    }
-
-    @Transient
-    public void addToAmount(BigDecimal difference) {
-        updateAmount(getAmount().add(difference));
     }
 
     @Transient
@@ -168,6 +162,11 @@ public class ProfileItem extends Item implements BuildableProfileItem {
         this.amount = amount;
     }
 
+    @Transient
+    public void updateAmount(BigDecimal newAmount) {
+        setAmount(newAmount);
+    }
+
     public JSONObject getJSONObject(boolean b) throws JSONException {
         return builder.getJSONObject(b);
     }
@@ -184,5 +183,15 @@ public class ProfileItem extends Item implements BuildableProfileItem {
     @Transient
     public ObjectType getObjectType() {
         return ObjectType.PI;
+    }
+
+    public boolean hasPerUnits() {
+        List<ItemValue> itemValues = getItemValues();
+        for (ItemValue iv : itemValues) {
+            if (iv.hasPerUnits()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

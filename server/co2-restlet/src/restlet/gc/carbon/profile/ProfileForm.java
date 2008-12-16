@@ -53,6 +53,7 @@ public class ProfileForm extends Form {
         }
     }
 
+    //TODO - Move mapping logic to filter
     private void mapLegacyParameters() {
         for (String name : getNames()) {
             if (LegacyDataMapper.canMap(name)) {

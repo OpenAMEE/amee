@@ -26,7 +26,6 @@
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"/>   
 
-
     <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
         <property name="scopes">
             <map>
@@ -37,6 +36,7 @@
         </property>
     </bean>
 
+    <!-- JPA Beans -->
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean"/>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -45,7 +45,7 @@
 
     <tx:annotation-driven mode="aspectj"/>
 
-    <!-- event/messaging configuration -->
+    <!-- Event/Messaging Beans -->
     <springIntegration:annotation-config/>
 
     <springIntegration:gateway id="ObserveEventGateway"

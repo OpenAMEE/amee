@@ -29,6 +29,9 @@ import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileDate;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.Unit;
+import gc.carbon.domain.PerUnit;
+import gc.carbon.domain.CompoundUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,12 +73,11 @@ public class ProfileBrowser extends BaseBrowser {
     private ResourceActions profileItemValueActions = new ResourceActions("profileItemValue");
 
     // ProfileDate (API v1)
-    private Date profileDate = Calendar.getInstance().getTime();
+    private Date profileDate = new ProfileDate();
 
-    // Return Units
-    private String returnUnit;
-    private String returnPerUnit;
-
+    // Return Unit
+    private Unit amountUnit = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT;
+    
     // Filters
     private String selectBy;
     private String mode;
@@ -195,7 +197,7 @@ public class ProfileBrowser extends BaseBrowser {
     }
 
     public void setDuration(String duration) {
-        if (duration != null) {
+        if (duration != null && endDate == null) {
             endDate = startDate.plus(duration);
         }
     }
@@ -208,19 +210,26 @@ public class ProfileBrowser extends BaseBrowser {
         return getSelectBy() != null;
     }
 
-    public String getReturnUnit() {
-        return returnUnit;
+    public Unit getAmountUnit() {
+        return amountUnit;
     }
 
-    public void setReturnUnit(String returnUnit) {
-        this.returnUnit = returnUnit;
+    public boolean returnAmountInExternalUnit() {
+        return !amountUnit.equals(ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT);
     }
 
-    public String getReturnPerUnit() {
-        return returnPerUnit;
+    public void setAmountReturnUnit(String returnUnit, String returnPerUnit) {
+
+        if (returnUnit == null)
+            returnUnit = "kg";
+
+        Unit unit = Unit.valueOf(returnUnit);
+
+        if (returnPerUnit == null)
+            returnPerUnit = "year";
+        PerUnit perUnit = PerUnit.valueOf(returnPerUnit);
+
+        amountUnit = CompoundUnit.valueOf(unit, perUnit);
     }
 
-    public void setReturnPerUnit(String returnPerUnit) {
-        this.returnPerUnit = returnPerUnit;
-    }
 }

@@ -27,6 +27,10 @@ public class ProfileDate extends GCDate {
 
     private static final DateFormat MONTH_DATE = new SimpleDateFormat("yyyyMM");
 
+    public ProfileDate() {
+        super(System.currentTimeMillis());
+    }
+
     public ProfileDate(String profileDate) {
         super(profileDate);
     }

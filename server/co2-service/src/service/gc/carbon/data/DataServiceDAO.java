@@ -319,7 +319,7 @@ class DataServiceDAO implements Serializable {
                 "LEFT JOIN FETCH di.itemValues " +
                 "WHERE di.itemDefinition.id = :itemDefinitionId " +
                 "AND di.dataCategory = :dataCategory AND " +
-                ((endDate != null) ? "di.startDate <= :endDate AND (di.endDate >= :startDate OR di.endDate IS NULL" : "di.endDate > :startDate OR di.endDate IS NULL");
+                ((endDate != null) ? "di.startDate < :endDate AND (di.endDate > :startDate OR di.endDate IS NULL)" : "(di.endDate > :startDate OR di.endDate IS NULL)");
 
         if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
             Query query = entityManager.createQuery(q);

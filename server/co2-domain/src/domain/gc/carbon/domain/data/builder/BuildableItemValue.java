@@ -21,7 +21,8 @@ package gc.carbon.domain.data.builder;
 
 import com.jellymold.utils.domain.APIObject;
 import gc.carbon.domain.Builder;
-
+import gc.carbon.domain.PerUnit;
+import gc.carbon.domain.Unit;
 import java.util.Date;
 
 public interface BuildableItemValue extends APIObject {
@@ -39,9 +40,9 @@ public interface BuildableItemValue extends APIObject {
 
     Date getModified();
 
-    String getUnit();
+    Unit getUnit();
 
-    String getPerUnit();
+    PerUnit getPerUnit();
 
     String getValue();
     

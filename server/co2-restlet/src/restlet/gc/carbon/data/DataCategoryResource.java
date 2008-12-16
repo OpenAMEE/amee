@@ -28,6 +28,7 @@ import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.APIFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
@@ -246,7 +247,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Override
     public void handleGet() {
-        log.debug("handleGet");
+        log.debug("handleGet()");
         if (dataBrowser.getDataCategoryActions().isAllowView()) {
             Form form = getRequest().getResourceRef().getQueryAsForm();
             dataBrowser.setStartDate(form.getFirstValue("startDate"));
@@ -269,19 +270,19 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Override
     public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation");
+        log.debug("acceptRepresentation()");
         acceptOrStore(entity);
     }
 
     @Override
     public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation");
+        log.debug("storeRepresentation()");
         acceptOrStore(entity);
     }
 
     // TODO: may be a more elegant way to handle incoming representations of different media types
     public void acceptOrStore(Representation entity) {
-        log.debug("acceptOrStore");
+        log.debug("acceptOrStore()");
         DataCategory thisDataCategory = dataBrowser.getDataCategory();
         dataItems = new ArrayList<DataItem>();
         dataCategories = new ArrayList<DataCategory>();
@@ -312,7 +313,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     protected void acceptJSON(Representation entity) {
-        log.debug("acceptJSON");
+        log.debug("acceptJSON()");
         DataCategory dataCategory;
         DataItem dataItem;
         Form form;
@@ -323,7 +324,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         JSONObject itemJSON;
         try {
             rootJSON = new JSONObject(entity.getText());
-            if (rootJSON.has("dataCategories")) {
+            if (rootJSON.has("acceptJSON() - dataCategories")) {
                 dataCategoriesJSON = rootJSON.getJSONArray("dataCategories");
                 for (int i = 0; i < dataCategoriesJSON.length(); i++) {
                     itemJSON = dataCategoriesJSON.getJSONObject(i);
@@ -336,7 +337,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                     if (dataCategory != null) {
                         dataCategories.add(dataCategory);
                     } else {
-                        log.warn("Data Category not added/modified");
+                        log.warn("acceptJSON() - Data Category not added/modified");
                         return;
                     }
                 }
@@ -354,20 +355,20 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                     if (dataItem != null) {
                         dataItems.add(dataItem);
                     } else {
-                        log.warn("Data Item not added/modified");
+                        log.warn("acceptJSON() - Data Item not added/modified");
                         return;
                     }
                 }
             }
         } catch (JSONException e) {
-            log.warn("Caught JSONException: " + e.getMessage(), e);
+            log.warn("acceptJSON() - Caught JSONException: " + e.getMessage(), e);
         } catch (IOException e) {
-            log.warn("Caught JSONException: " + e.getMessage(), e);
+            log.warn("acceptJSON() - Caught JSONException: " + e.getMessage(), e);
         }
     }
 
     protected void acceptXML(Representation entity) {
-        log.debug("acceptXML");
+        log.debug("acceptXML()");
         DataCategory dataCategory;
         DataItem dataItem;
         Form form;
@@ -393,7 +394,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                         if (dataCategory != null) {
                             dataCategories.add(dataCategory);
                         } else {
-                            log.warn("Data Category not added");
+                            log.warn("acceptXML() - Data Category not added");
                             return;
                         }
                     }
@@ -412,23 +413,23 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                         if (dataItem != null) {
                             dataItems.add(dataItem);
                         } else {
-                            log.warn("Data Item not added");
+                            log.warn("acceptXML() - Data Item not added");
                             return;
                         }
                     }
                 }
             } else {
-                log.warn("DataCategory not found");
+                log.warn("acceptXML() - DataCategory not found");
             }
         } catch (DocumentException e) {
-            log.warn("Caught DocumentException: " + e.getMessage(), e);
+            log.warn("acceptXML() - Caught DocumentException: " + e.getMessage(), e);
         } catch (IOException e) {
-            log.warn("Caught IOException: " + e.getMessage(), e);
+            log.warn("acceptXML() - Caught IOException: " + e.getMessage(), e);
         }
     }
 
     protected void acceptFormPost(Form form) {
-        log.debug("acceptFormPost");
+        log.debug("acceptFormPost()");
         String type = form.getFirstValue("newObjectType");
         if (type != null) {
             if (type.equalsIgnoreCase("DC")) {
@@ -453,7 +454,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     protected DataCategory acceptFormForDataCategory(Form form) {
 
-        log.debug("acceptFormForDataCategory");
+        log.debug("acceptFormForDataCategory()");
 
         String uid;
         DataCategory dataCategory = null;
@@ -501,7 +502,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     protected DataItem acceptFormForDataItem(Form form) {
 
-        log.debug("acceptFormForDataItem");
+        log.debug("acceptFormForDataItem()");
 
         String uid;
         DataItem dataItem = null;
@@ -549,17 +550,18 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         dataItem.setStartDate(startDate);
 
 
-        if (form.getNames().contains("endDate"))
+        if (form.getNames().contains("endDate")) {
             dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
-
-        if (form.getNames().contains("duration")) {
-            dataItem.setDuration(form.getFirstValue("duration"));
-            StartEndDate endDate = startDate.plus(form.getFirstValue("duration"));
-            dataItem.setEndDate(endDate);
+        } else {
+            if (form.getNames().contains("duration")) {
+                dataItem.setDuration(form.getFirstValue("duration"));
+                StartEndDate endDate = startDate.plus(form.getFirstValue("duration"));
+                dataItem.setEndDate(endDate);
+            }
         }
 
         if (dataItem.getEndDate() != null && dataItem.getEndDate().before(dataItem.getStartDate())) {
-            badRequest();
+            badRequest(APIFault.INVALID_DATE_RANGE.toString());
             return null;
         }
 
@@ -577,7 +579,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     public void acceptFormPut(Form form) {
-        log.debug("put");
+        log.debug("acceptFormPut()");
         DataCategory thisDataCategory;
         if (dataBrowser.getDataCategoryActions().isAllowModify()) {
             thisDataCategory = dataBrowser.getDataCategory();

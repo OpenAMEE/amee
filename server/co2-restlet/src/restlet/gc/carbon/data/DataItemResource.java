@@ -174,12 +174,12 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             // update 'endDate' value
             if (names.contains("endDate")) {
                 dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
-            }
-
-            if (form.getNames().contains("duration")) {
-                dataItem.setDuration(form.getFirstValue("duration"));
-                StartEndDate endDate = ((StartEndDate) dataItem.getStartDate()).plus(form.getFirstValue("duration"));
-                dataItem.setEndDate(endDate);
+            } else {
+                if (form.getNames().contains("duration")) {
+                    dataItem.setDuration(form.getFirstValue("duration"));
+                    StartEndDate endDate = ((StartEndDate) dataItem.getStartDate()).plus(form.getFirstValue("duration"));
+                    dataItem.setEndDate(endDate);
+                }
             }
 
             if (dataItem.getEndDate() != null &&

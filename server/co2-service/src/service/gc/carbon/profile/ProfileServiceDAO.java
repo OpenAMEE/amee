@@ -354,10 +354,10 @@ class ProfileServiceDAO implements Serializable {
                 .setParameter("name", profileItem.getName())
                 .getResultList();
         if (profileItems.size() > 0) {
-            log.debug("found ProfileItem(s)");
+            log.debug("isEquivilentProfileItemExists() - found ProfileItem(s)");
             return true;
         } else {
-            log.debug("ProfileItem(s) NOT found");
+            log.debug("isEquivilentProfileItemExists() - no ProfileItem(s) found");
             return false;
         }
     }
@@ -436,7 +436,7 @@ class ProfileServiceDAO implements Serializable {
         if (profileBrowser.getEndDate() == null) {
             queryBuilder.append("(pi.endDate > :startDate OR pi.endDate IS NULL)");
         } else {
-            queryBuilder.append("pi.startDate <= :endDate AND (pi.endDate > :startDate OR pi.endDate IS NULL)");
+            queryBuilder.append("pi.startDate < :endDate AND (pi.endDate > :startDate OR pi.endDate IS NULL)");
         }
 
         // now get all the Profile Items

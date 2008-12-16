@@ -23,7 +23,9 @@ import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.data.builder.BuildableItemValue;
 import gc.carbon.domain.data.builder.v1.ItemValueBuilder;
 import gc.carbon.domain.profile.builder.BuildableProfileItem;
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.Builder;
+import gc.carbon.domain.Unit;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +34,7 @@ import org.w3c.dom.Element;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
 
 public class ProfileItemBuilder implements Builder {
 
@@ -39,8 +42,12 @@ public class ProfileItemBuilder implements Builder {
     private static DateFormat DAY_DATE_FMT = new SimpleDateFormat(DAY_DATE);
 
     private BuildableProfileItem item;
+    private Unit returnUnit = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT;
 
-    public ProfileItemBuilder(BuildableProfileItem item) {
+    public ProfileItemBuilder(BuildableProfileItem item, Unit returnUnit) {
+        this.item = item;
+        this.returnUnit = returnUnit;
+    }    public ProfileItemBuilder(BuildableProfileItem item) {
         this.item = item;
     }
 
@@ -83,7 +90,7 @@ public class ProfileItemBuilder implements Builder {
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);
-        obj.put("amountPerMonth", item.getAmount());
+        obj.put("amountPerMonth", getAmount(item));
         obj.put("validFrom", DAY_DATE_FMT.format(item.getStartDate()));
         obj.put("end", Boolean.toString(item.isEnd()));
         obj.put("dataItem", item.getDataItem().getIdentityJSONObject());
@@ -96,7 +103,7 @@ public class ProfileItemBuilder implements Builder {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ProfileItem");
         buildElement(document, element, detailed);
-        element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
+        element.appendChild(APIUtils.getElement(document, "AmountPerMonth", getAmount(item)));
         element.appendChild(APIUtils.getElement(document, "ValidFrom", DAY_DATE_FMT.format(item.getStartDate())));
         element.appendChild(APIUtils.getElement(document, "End", Boolean.toString(item.isEnd())));
         element.appendChild(item.getDataItem().getIdentityElement(document));
@@ -106,4 +113,11 @@ public class ProfileItemBuilder implements Builder {
         return element;
     }
 
+    private String getAmount(BuildableProfileItem item) {
+        BigDecimal amount = item.getAmount();
+        if (!returnUnit.equals(ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT)) {
+            amount = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT.convert(amount, returnUnit);
+        }
+        return amount.toString();
+    }
 }

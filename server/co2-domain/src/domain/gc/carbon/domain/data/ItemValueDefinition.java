@@ -24,10 +24,7 @@ import com.jellymold.sheet.Choice;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
-import gc.carbon.domain.ObjectType;
-import gc.carbon.domain.UnitDefinition;
-import gc.carbon.domain.ValueDefinition;
-import gc.carbon.domain.Builder;
+import gc.carbon.domain.*;
 import gc.carbon.domain.data.builder.BuildableItemValueDefinition;
 import gc.carbon.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import org.hibernate.annotations.Cache;
@@ -76,11 +73,11 @@ public class ItemValueDefinition implements PersistentObject, BuildableItemValue
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "UNIT_DEFINITION_ID")
-    private UnitDefinition unitDefinition;
+    private UnitDefinition unit;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "PER_UNIT_DEFINITION_ID")
-    private UnitDefinition perUnitDefinition;
+    private UnitDefinition perUnit;
 
     @Column(name = "NAME")
     private String name = "";
@@ -343,35 +340,40 @@ public class ItemValueDefinition implements PersistentObject, BuildableItemValue
         return ObjectType.IVD;
     }
 
-    public void setPerUnitDefinition(UnitDefinition perUnitDefinition) {
-        this.perUnitDefinition = perUnitDefinition;
+    public void setPerUnit(UnitDefinition perUnitDefinition) {
+        this.perUnit = perUnitDefinition;
     }
 
-    public void setUnitDefinition(UnitDefinition unitDefinition) {
-        this.unitDefinition = unitDefinition;
+    public void setUnit(UnitDefinition unitDefinition) {
+        this.unit = unitDefinition;
     }
 
-    public String getInternalUnit() {
-        return (unitDefinition != null) ? unitDefinition.getInternalUnit() : null;
+    public Unit getUnit() {
+        return (hasUnits()) ? Unit.valueOf(unit.getInternalUnit()) : Unit.ONE;
     }
 
-    public String getInternalPerUnit() {
-        return (perUnitDefinition != null) ? perUnitDefinition.getInternalUnit() : null;
+    public PerUnit getPerUnit() {
+        return (hasPerUnits()) ? PerUnit.valueOf(perUnit.getInternalUnit()) : PerUnit.ONE;
     }
 
     public boolean hasUnits() {
-        return unitDefinition != null;
+        return unit != null;
     }
 
     public boolean hasPerUnits() {
-        return perUnitDefinition != null;
+        return perUnit != null;
     }
 
-    public boolean isValidUnit(String unit) {
-        return unitDefinition.has(unit);
+    public boolean isValidUnit(String u) {
+        return unit.contains(u);
     }
 
-    public boolean isValidPerUnit(String perUnit) {
-        return perUnitDefinition.has(perUnit);
+    public boolean isValidPerUnit(String pu) {
+        return perUnit.contains(pu);
     }
+
+    public Unit getCompoundUnit() {
+        return getUnit().with(getPerUnit());
+    }
+
 }

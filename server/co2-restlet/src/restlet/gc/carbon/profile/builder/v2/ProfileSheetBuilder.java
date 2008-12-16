@@ -30,6 +30,7 @@ import gc.carbon.domain.data.builder.BuildableItemDefinition;
 import gc.carbon.domain.data.builder.BuildableItemValue;
 import gc.carbon.domain.data.builder.BuildableItemValueDefinition;
 import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.builder.BuildableProfileItem;
 import gc.carbon.profile.*;
 import gc.carbon.profile.ProRataProfileService;
@@ -40,6 +41,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.math.BigDecimal;
 
 public class ProfileSheetBuilder implements CacheableFactory {
 
@@ -113,7 +115,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
                     } else if ("name".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.getName(), ValueType.TEXT);
                     } else if ("amount".equalsIgnoreCase(column.getName())) {
-                        new Cell(column, row, profileItem.getAmount(), ValueType.DECIMAL);
+                        new Cell(column, row, getAmount(profileItem, profileBrowser), ValueType.DECIMAL);
                     } else if ("startDate".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, new StartEndDate(profileItem.getStartDate()).toString(), ValueType.TEXT);
                     } else if ("endDate".equalsIgnoreCase(column.getName())) {
@@ -150,6 +152,15 @@ public class ProfileSheetBuilder implements CacheableFactory {
         }
 
         return sheet;
+    }
+
+    @SuppressWarnings("true")
+    private String getAmount(BuildableProfileItem pi, ProfileBrowser browser) {
+        BigDecimal decimal = pi.getAmount();
+        if (browser.returnAmountInExternalUnit()) {
+            decimal = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT.convert(decimal, browser.getAmountUnit());
+        }
+        return decimal.toString();
     }
 
     public String getKey() {

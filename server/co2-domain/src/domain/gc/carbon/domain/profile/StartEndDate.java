@@ -30,6 +30,7 @@ import java.util.Date;
 public class StartEndDate extends GCDate {
 
     public static final String ISO_DATE = "yyyyMMdd'T'HHmm";
+    //public static final String ISO_DATE = "yyyyMMdd'T'HHmmZ";
 
     public static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat(ISO_DATE);
 
@@ -58,7 +59,7 @@ public class StartEndDate extends GCDate {
                 return requestedDate.toDate().getTime();
             }
         } catch (ParseException e) {
-            return defaultDate();
+            throw new RuntimeException("Invalid date format: " + dateStr);
         }
     }
 
@@ -74,5 +75,14 @@ public class StartEndDate extends GCDate {
         Period period = ISOPeriodFormat.standard().parsePeriod(duration);
         DateTime thisPlusPeriod = new DateTime(getTime()).plus(period);
         return new StartEndDate(thisPlusPeriod.toDate());
+    }
+
+    public static boolean validate(String dateStr) {
+        try {
+            ISO_DATE_FORMAT.parse(dateStr);   
+        } catch (ParseException ex) {
+            return false;
+        }
+        return true;
     }
 }

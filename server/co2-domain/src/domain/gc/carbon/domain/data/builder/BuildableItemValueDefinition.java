@@ -22,6 +22,8 @@ package gc.carbon.domain.data.builder;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.domain.APIObject;
 import gc.carbon.domain.Builder;
+import gc.carbon.domain.PerUnit;
+import gc.carbon.domain.Unit;
 
 import java.util.Date;
 
@@ -51,9 +53,9 @@ public interface BuildableItemValueDefinition extends APIObject {
 
     Date getModified();
 
-    String getInternalUnit();
+    Unit getUnit();
 
-    String getInternalPerUnit();
+    PerUnit getPerUnit();
 
     APIObject getItemDefinition();
 

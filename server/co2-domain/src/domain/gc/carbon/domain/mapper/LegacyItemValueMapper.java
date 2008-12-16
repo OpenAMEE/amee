@@ -34,7 +34,7 @@ public class LegacyItemValueMapper extends LegacyDataMapper {
     }
 
     public String getPath() {
-        String legacyPath = getLegacyPath(itemValue.getPath(), itemValue.getUnit(), itemValue.getPerUnit());
+        String legacyPath = getLegacyPath(itemValue.getPath(), itemValue.getUnit().toString(), itemValue.getPerUnit().toString());
         if (legacyPath == null) {
             return itemValue.getPath();
         } else {
@@ -43,7 +43,7 @@ public class LegacyItemValueMapper extends LegacyDataMapper {
     }
 
     public String getName() {
-        String legacyName = getLegacyName(itemValue.getPath(), itemValue.getUnit(), itemValue.getPerUnit());
+        String legacyName = getLegacyName(itemValue.getPath(), itemValue.getUnit().toString(), itemValue.getPerUnit().toString());
         if (legacyName == null) {
             return itemValue.getName();
         } else {

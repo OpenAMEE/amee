@@ -113,13 +113,13 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             if (!resource.getProfileItems().isEmpty()) {
                 if (resource.getProfileItems().size() == 1) {
                     BuildableProfileItem pi = resource.getProfileItems().get(0);
-                    pi.setBuilder(new ProfileItemBuilder(pi));
+                    setBuilder(pi);
                     obj.put("profileItem", pi.getJSONObject());
                 } else {
                     JSONArray profileItems = new JSONArray();
                     obj.put("profileItems", profileItems);
                     for (BuildableProfileItem pi : resource.getProfileItems()) {
-                        pi.setBuilder(new ProfileItemBuilder(pi));
+                        setBuilder(pi);
                         profileItems.put(pi.getJSONObject(false));
                     }
                 }
@@ -182,13 +182,13 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             if (!resource.getProfileItems().isEmpty()) {
                 if (resource.getProfileItems().size() == 1) {
                     BuildableProfileItem pi = resource.getProfileItems().get(0);
-                    pi.setBuilder(new ProfileItemBuilder(pi));
+                    setBuilder(pi);
                     element.appendChild(pi.getElement(document, false));
                 } else {
                     org.w3c.dom.Element profileItemsElement = document.createElement("ProfileItems");
                     element.appendChild(profileItemsElement);
                     for (BuildableProfileItem pi : resource.getProfileItems()) {
-                        pi.setBuilder(new ProfileItemBuilder(pi));
+                        setBuilder(pi);
                         profileItemsElement.appendChild(pi.getElement(document, false));
                     }
                 }
@@ -196,6 +196,14 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         }
 
         return element;
+    }
+
+    private void setBuilder(BuildableProfileItem pi) {
+        if (resource.getProfileBrowser().returnAmountInExternalUnit()) {
+            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getAmountUnit()));
+        } else {
+            pi.setBuilder(new ProfileItemBuilder(pi));
+        }
     }
 
     private Sheet getSheet() {

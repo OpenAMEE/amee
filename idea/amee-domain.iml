@@ -22,7 +22,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="amee-builder" />
     <orderEntry type="module" module-name="kiwi-domain" />
     <orderEntry type="module" module-name="sheet-domain" />
     <orderEntry type="module" module-name="utils" />

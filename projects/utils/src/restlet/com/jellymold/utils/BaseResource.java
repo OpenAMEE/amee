@@ -263,6 +263,11 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
         getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
     }
 
+    public void badRequest(String msg) {
+        log.debug("badRequest() - " + msg);
+        getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST, msg);
+    }
+
     public void error() {
         getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
     }

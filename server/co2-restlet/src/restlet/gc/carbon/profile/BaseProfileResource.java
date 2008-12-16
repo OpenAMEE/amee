@@ -4,18 +4,19 @@ import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIObject;
 import gc.carbon.AMEEResource;
 import gc.carbon.APIVersion;
+import gc.carbon.APIFault;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.data.builder.BuildableResource;
 import gc.carbon.data.DataService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.joda.time.format.ISOPeriodFormat;
 
 import java.util.Set;
 import java.util.Date;
@@ -50,6 +51,8 @@ public abstract class BaseProfileResource extends AMEEResource implements Builda
 
     protected ProfileForm form;
     protected ProfileBrowser profileBrowser;
+
+    private APIFault fault = APIFault.NULL;
 
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -124,26 +127,55 @@ public abstract class BaseProfileResource extends AMEEResource implements Builda
         return dataService;
     }
 
-    //TODO - Move, validation is not general to all Profile Resources
+    //TODO - Move to filter - validation is not general to all Profile Resources
     public boolean validateParameters() {
         if (getVersion().isVersionOne()) {
-            if (containsCalendarParams() || containsReturnUnitParams() ) {
+            if (containsCalendarParams()) {
+                fault = APIFault.INVALID_API_PARAMETERS;
                 return false;
             }
         } else {
+            if (!validISODateTimeFormats()) {
+                fault = APIFault.INVALID_DATE_FORMAT;
+                return false;
+            }
             if (isGET()) {
                 if (containsProfileDate()) {
+                    fault = APIFault.INVALID_API_PARAMETERS;
                     return false;
                 }
                 if (proRateModeHasNoEndDate()) {
+                    fault = APIFault.INVALID_PRORATA_REQUEST;
                     return false;
                 }
             } else {
                 if (containsValidFromOrEnd()) {
+                    fault = APIFault.INVALID_API_PARAMETERS;
                     return false;
                 }
             }
-            return isValidBoundedCalendarRequest();
+        }
+        return true;
+    }
+
+    private boolean validISODateTimeFormats() {
+        String startDate = getForm().getFirstValue("startDate");
+        if (startDate != null && !StartEndDate.validate(startDate)) {
+            return false;
+        }
+
+        String endDate = getForm().getFirstValue("endDate");
+        if (endDate != null && !StartEndDate.validate(endDate)) {
+            return false;
+        }
+
+        String duration = getForm().getFirstValue("duration");
+        if (duration != null) {
+            try {
+                ISOPeriodFormat.standard().parsePeriod(duration);
+            } catch (IllegalArgumentException ex) {
+                return false;
+            }
         }
         return true;
     }
@@ -159,11 +191,6 @@ public abstract class BaseProfileResource extends AMEEResource implements Builda
                 getForm().getNames().contains("duration");
     }
 
-    private boolean containsReturnUnitParams() {
-        return getForm().getNames().contains("returnUnit") ||
-                getForm().getNames().contains("returnPerUnit");
-    }
-
     private boolean containsProfileDate() {
         return getForm().getNames().contains("profileDate");
     }
@@ -173,13 +200,8 @@ public abstract class BaseProfileResource extends AMEEResource implements Builda
                 getForm().getNames().contains("end");
     }
 
-    private boolean isValidBoundedCalendarRequest() {
-        int count = CollectionUtils.countMatches(getForm().getNames(), new Predicate() {
-            public boolean evaluate(Object o) {
-                String p = (String) o;
-                return (p.equals("endDate") || p.equals("duration"));
-            }
-        });
-        return (count <= 1);
+    public APIFault getFault() {
+        return fault;
     }
+
 }

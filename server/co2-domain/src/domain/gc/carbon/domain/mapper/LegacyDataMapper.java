@@ -56,6 +56,7 @@ public class LegacyDataMapper {
          CURRENT_2_LEGACY.put("kmlitre", new String[]{"kmPerLitre","km per litre"});
          CURRENT_2_LEGACY.put("kmlitreOwn",new String[]{"kmPerLitreOwn","km per litre own"});
          CURRENT_2_LEGACY.put("kWhmonth", new String[]{"kWhPerMonth","kWh Per Month"});
+         CURRENT_2_LEGACY.put("kWhyear", new String[]{"kWhPerMonth","kWh Per Month"});
          CURRENT_2_LEGACY.put("kWhquarter", new String[]{"kWhPerQuarter","kWh Per Quarter"});
          CURRENT_2_LEGACY.put("litremonth", new String[]{"litresPerMonth","Litres Per Month"});
          CURRENT_2_LEGACY.put("kmlitre", new String[]{"transportKmPerLitre","Kilometres per litre"});
@@ -112,6 +113,8 @@ public class LegacyDataMapper {
     }
 
     private static String toTitleCase(String string) {
+        if (string.isEmpty())
+            return string;
         return Character.toUpperCase(string.charAt(0)) + string.substring(1);
     }
 }

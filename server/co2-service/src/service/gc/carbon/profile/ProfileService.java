@@ -111,7 +111,7 @@ public class ProfileService {
         return profileSheetService.getSheet(browser, sheetFactory);
     }
 
-    public boolean hasNoEquivalent(ProfileItem pi) {
+    public boolean isUnique(ProfileItem pi) {
         return !dao.isEquivilentProfileItemExists(pi);
     }
 
