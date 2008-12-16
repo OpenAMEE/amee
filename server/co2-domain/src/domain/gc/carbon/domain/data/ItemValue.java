@@ -38,19 +38,21 @@ import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 
-// TODO: add state (draft, live)
-
 @Entity
 @Table(name = "ITEM_VALUE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemValue implements PersistentObject, Pathable, BuildableItemValue {
+
+    public final static int VALUE_SIZE = 100;
+    public final static int UNIT_SIZE = 100;
+    public final static int PER_UNIT_SIZE = 100;
 
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -61,9 +63,7 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
     @JoinColumn(name = "ITEM_ID")
     private Item item;
 
-    // TODO: sizing
-    // TODO: also see setValue below
-    @Column(name = "VALUE")
+    @Column(name = "VALUE", nullable = false, length = VALUE_SIZE)
     private String value = "";
 
     @Column(name = "CREATED")
@@ -72,10 +72,10 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
     @Column(name = "MODIFIED")
     private Date modified = Calendar.getInstance().getTime();
 
-    @Column(name = "UNIT")
+    @Column(name = "UNIT", nullable = true, length = UNIT_SIZE)
     private String unit;
 
-    @Column(name = "PER_UNIT")
+    @Column(name = "PER_UNIT", nullable = true, length = PER_UNIT_SIZE)
     private String perUnit;
 
     @Transient
@@ -223,10 +223,8 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
         if (value == null) {
             value = "";
         }
-        // TODO: better way to enforce this limit
-        // TODO: needs to match limit of VALUE column
-        if (value.length() > 255) {
-            value = value.substring(0, 255);
+        if (value.length() > VALUE_SIZE) {
+            value = value.substring(0, VALUE_SIZE - 1);
         }
         this.value = value;
     }
@@ -264,6 +262,9 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
         if (!hasUnits() || !itemValueDefinition.isValidUnit(unit)) {
             throw new IllegalArgumentException();
         }
+        if (unit.length() > UNIT_SIZE) {
+            unit = unit.substring(0, UNIT_SIZE - 1);
+        }
         this.unit = unit;
     }
 
@@ -277,6 +278,9 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
         }
         if (!hasPerUnits() || !itemValueDefinition.isValidPerUnit(perUnit)) {
             throw new IllegalArgumentException();
+        }
+        if (perUnit.length() > PER_UNIT_SIZE) {
+            perUnit = perUnit.substring(0, PER_UNIT_SIZE - 1);
         }
         this.perUnit = perUnit;
     }
