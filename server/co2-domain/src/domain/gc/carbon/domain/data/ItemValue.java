@@ -43,9 +43,11 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemValue implements PersistentObject, Pathable, BuildableItemValue {
 
-    public final static int VALUE_SIZE = 100;
-    public final static int UNIT_SIZE = 100;
-    public final static int PER_UNIT_SIZE = 100;
+    // 32767 because this is bigger than 255, smaller
+    // than 65535 and fits into an exact number of bits
+    public final static int VALUE_SIZE = 32767;
+    public final static int UNIT_SIZE = 255;
+    public final static int PER_UNIT_SIZE = 255;
 
     @Id
     @GeneratedValue
