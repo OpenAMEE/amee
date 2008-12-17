@@ -74,7 +74,7 @@ public class ProRataProfileService extends ProfileService {
                 }
 
                 for (ItemValue iv : pi.getItemValues()) {
-                    if(iv.hasPerUnits()) {
+                    if(iv.hasPerUnits() && iv.getValue().length() > 0) {
                         pic.add(getProRatedItemValue(interval, iv));
                     } else {
                         pic.add(iv.getCopy());

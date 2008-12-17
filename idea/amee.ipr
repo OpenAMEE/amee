@@ -105,7 +105,7 @@
     <option name="MAXIMUM_HEAP_SIZE" value="256" />
   </component>
   <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../../../../doc" />
+    <option name="OUTPUT_DIRECTORY" value="/../doc" />
     <option name="OPTION_SCOPE" value="protected" />
     <option name="OPTION_HIERARCHY" value="true" />
     <option name="OPTION_NAVIGATOR" value="true" />
@@ -471,11 +471,9 @@
     <library name="spring-runtime">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/../lib/spring/cglib/chlib-nodep.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../lib/spring/aspectj/aspectjrt.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/spring/antlr/antlr.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/spring/log4j/log4j.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/spring/aopalliance/aopalliance.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../lib/spring/aspectj/aspectjweaver.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/javassist/javassist.jar!/" />
       </CLASSES>
       <JAVADOC />
@@ -589,6 +587,14 @@
     <library name="spring-integration">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/../lib/spring-integration/org.springframework.integration.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="aspectj">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../lib/aspectj/aspectjrt.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/aspectj/aspectjweaver.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

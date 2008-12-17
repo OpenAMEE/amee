@@ -26,7 +26,13 @@
     </#list>
     </select>
   <#else>
-    <input name='value' value='${itemValue.value}' type='text' size="30"/>
+    <input name='value' value='${itemValue.value}' type='text' size="30"/><br/>
+    <#if itemValue.hasUnits()>
+        Unit: <input name='unit' value='${itemValue.unit}' type='text' size="30"/><br/>
+    </#if>
+    <#if itemValue.hasPerUnits()>
+        PerUnit: <input name='perUnit' value='${itemValue.perUnit}' type='text' size="30"/><br/>
+    </#if>
   </#if><br/><br/>
   <input type='submit' value='Update'/>
   </form>

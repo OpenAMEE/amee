@@ -112,7 +112,7 @@ public class ProfileService {
     }
 
     public boolean isUnique(ProfileItem pi) {
-        return !dao.isEquivilentProfileItemExists(pi);
+        return !dao.equivilentProfileItemExists(pi);
     }
 
     public void calculate(ProfileItem pi) {

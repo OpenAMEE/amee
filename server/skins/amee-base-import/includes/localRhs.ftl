@@ -42,12 +42,13 @@
             width: 600,
             height: 300
         });
+        
         modal.open();
     }
 
     function showJSON() {
         new Ajax.Request(window.location.href,
-        {method: 'get', requestHeaders: ['Accept', 'application/json'], onSuccess: showJSONResponse});
+        {method: 'get', parameters: $('api').serialize(getHash=true), requestHeaders: ['Accept', 'application/json'], onSuccess: showJSONResponse});
     }
 
     function showJSONResponse(t) {
@@ -56,7 +57,7 @@
 
     function showXML() {
         new Ajax.Request(window.location.href,
-        {method: 'get', requestHeaders: ['Accept', 'application/xml'], onSuccess: showXMLResponse});
+        {method: 'get', parameters: $('api').serialize(getHash=true), requestHeaders: ['Accept', 'application/xml'], onSuccess: showXMLResponse});
     }
 
     function showXMLResponse(t) {
@@ -65,9 +66,19 @@
 
 </script>
 
-<h2>API</h2>
-<p>
-<form onSubmit="return false;">
+<form id='api' onSubmit="return false;">
+<h2>API
+<!--
+<#if apiVersions??>
+    <select name='v'>
+        <#list apiVersions as v>
+          <option value='${v}'>${v}</option>
+        </#list>
+    </select>
+</#if>
+-->
+</h2>
+    <br/>
     <button name='showAPIJSON' type='button' onClick='showJSON(); return false;'>Show JSON</button>
     <br/><br/>
     <button name='showAPIXML' type='button' onClick='showXML(); return false;'>Show XML</button>

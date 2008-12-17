@@ -29,6 +29,10 @@ import com.sun.org.apache.xalan.internal.xsltc.DOM;
  */
 public class ProfileItemPUTTest extends BaseProfileItemTest {
 
+    public ProfileItemPUTTest() {
+        super();
+    }
+
     public ProfileItemPUTTest(String name) throws Exception {
         super(name);
         initDB();

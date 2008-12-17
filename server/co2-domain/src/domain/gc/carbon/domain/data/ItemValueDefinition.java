@@ -348,11 +348,19 @@ public class ItemValueDefinition implements PersistentObject, BuildableItemValue
         this.unit = unitDefinition;
     }
 
-    public Unit getUnit() {
+    public UnitDefinition getUnit() {
+        return unit;
+    }
+
+    public UnitDefinition getPerUnit() {
+        return perUnit;
+    }
+
+    public Unit getInternalUnit() {
         return (hasUnits()) ? Unit.valueOf(unit.getInternalUnit()) : Unit.ONE;
     }
 
-    public PerUnit getPerUnit() {
+    public PerUnit getInternalPerUnit() {
         return (hasPerUnits()) ? PerUnit.valueOf(perUnit.getInternalUnit()) : PerUnit.ONE;
     }
 
@@ -373,7 +381,7 @@ public class ItemValueDefinition implements PersistentObject, BuildableItemValue
     }
 
     public Unit getCompoundUnit() {
-        return getUnit().with(getPerUnit());
+        return getInternalUnit().with(getInternalPerUnit());
     }
 
 }

@@ -24,6 +24,15 @@
   Get value from admin? <select name='fromData'><option value='false'<#if !itemValueDefinition.fromData> selected</#if>>No</option><option value='true'<#if itemValueDefinition.fromData> selected</#if>>Yes</option></select><br/>
   Get value from user? <select name='fromProfile'><option value='false'<#if !itemValueDefinition.fromProfile> selected</#if>>No</option><option value='true'<#if itemValueDefinition.fromProfile> selected</#if>>Yes</option></select><br/>
   Allowed roles: <input name='allowedRoles' <#if itemValueDefinition.allowedRoles??>value='${itemValueDefinition.allowedRoles}'</#if> type='text' size='30'/><br/><br/>
+
+  <#if itemValueDefinition.hasUnits()>
+    Unit: <input name='unit' value='${itemValueDefinition.unit}' type='text' size="30"/><br/>
+  </#if>
+
+  <#if itemValueDefinition.hasPerUnits()>
+    PerUnit: <input name='perUnit' value='${itemValueDefinition.perUnit}' type='text' size="30"/><br/>
+  </#if>
+
   <input type='submit' value='Update'/>
   </form>
   </p>

@@ -31,7 +31,13 @@
                 </#list>
             </select>
         <#else>
-            <input name='value' value='${profileItemValue.value}' type='text' size="30"/>
+            <input name='value' value='${profileItemValue.value}' type='text' size="30"/><br/>
+            <#if profileItemValue.hasUnits()>
+                Unit: <input name='unit' value='${profileItemValue.unit}' type='text' size="30"/><br/>
+            </#if>
+            <#if profileItemValue.hasPerUnits()>
+                PerUnit: <input name='perUnit' value='${profileItemValue.perUnit}' type='text' size="30"/><br/>
+            </#if>
         </#if><br/><br/>
         <input type='submit' value='Update'/>
     </form>

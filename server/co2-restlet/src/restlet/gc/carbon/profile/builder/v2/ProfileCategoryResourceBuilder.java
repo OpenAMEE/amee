@@ -83,6 +83,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         if (resource.isGet()) {
 
+            obj.put("startDate", resource.getStartDate());
+            obj.put("endDate", (resource.getEndDate() != null) ? resource.getEndDate().toString() : "");
+
             // create children JSON
             JSONObject children = new JSONObject();
 
@@ -153,6 +156,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         element.appendChild(resource.getDataCategory().getIdentityElement(document));
 
         if (resource.isGet()) {
+
+            element.appendChild(APIUtils.getElement(document, "StartDate",resource.getStartDate().toString()));
+            element.appendChild(APIUtils.getElement(document, "EndDate", (resource.getEndDate() != null) ? resource.getEndDate().toString() : ""));
 
             // list child Profile Categories and child Profile Items
             Element childrenElement = document.createElement("Children");

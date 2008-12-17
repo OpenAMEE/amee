@@ -34,6 +34,10 @@ public class APITestCase extends XMLTestCase {
 
     private String controlFile;
 
+    public APITestCase() {
+        super();
+    }
+
     public APITestCase(String s) {
         super(s);
         XMLUnit.setIgnoreWhitespace(true);

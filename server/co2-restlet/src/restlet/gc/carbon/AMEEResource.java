@@ -16,6 +16,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
+import java.util.Map;
+
 /**
  * This file is part of AMEE.
  * <p/>
@@ -71,5 +73,12 @@ public abstract class AMEEResource extends BaseResource implements BeanFactoryAw
 
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
+    }
+
+    @Override
+    public Map<String, Object> getTemplateValues() {
+        Map<String, Object> values = super.getTemplateValues();
+        values.put("apiVersions", APIVersion.getVersions());
+        return values;
     }
 }

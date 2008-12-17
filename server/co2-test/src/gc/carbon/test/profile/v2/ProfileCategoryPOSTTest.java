@@ -2,6 +2,7 @@ package gc.carbon.test.profile.v2;
 
 import org.restlet.data.Form;
 import org.restlet.data.Status;
+import org.restlet.resource.DomRepresentation;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
@@ -97,14 +98,6 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
     }
 
     @Test
-    public void testPostWithEndDateAndDuration() throws Exception {
-        Form data = new Form();
-        data.add("duration", "PT30M");
-        data.add("endDate", "20100401T0000");
-        assertBadRequest(data);
-    }
-
-    @Test
     public void testPostEndDateBeforeStartDate() throws Exception {
         Form data = new Form();
         data.add("startDate", "20100402T0000");
@@ -145,25 +138,27 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
 
     private void assertDistanceNode(Form data, String unit, String perUnit) throws Exception {
         Document doc = doPost(data).getEntityAsDom().getDocument();
-        assertXpathEvaluatesTo("distance", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/Path", doc);
-        assertXpathEvaluatesTo("Distance", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/Name", doc);
-        assertXpathEvaluatesTo(perUnit, "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/PerUnit", doc);
-        assertXpathEvaluatesTo(unit, "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/Unit", doc);
-        assertXpathEvaluatesTo("distance", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Path", doc);
-        assertXpathEvaluatesTo("Distance", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Name", doc);
-        assertXpathEvaluatesTo("year", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit", doc);
-        assertXpathEvaluatesTo("km", "/Resources/ProfileCategoryResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Unit", doc);
+        assertXpathEvaluatesTo("distance", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/Path", doc);
+        assertXpathEvaluatesTo("Distance", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/Name", doc);
+        assertXpathEvaluatesTo(perUnit, "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/PerUnit", doc);
+        assertXpathEvaluatesTo(unit, "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/Unit", doc);
+        assertXpathEvaluatesTo("distance", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Path", doc);
+        assertXpathEvaluatesTo("Distance", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Name", doc);
+        assertXpathEvaluatesTo("year", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit/InternalUnit", doc);
+        assertXpathEvaluatesTo("km", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Unit/InternalUnit", doc);
 
     }
 
     private void assertDateNodes(Form data, String startDate, String endDate, String end) throws Exception {
         client.addQueryParameter("v","2.0");
-        Document doc = doPost(data).getEntityAsDom().getDocument();
-        assertXpathEvaluatesTo(startDate, "/Resources/ProfileCategoryResource/ProfileItem/StartDate", doc);
+        DomRepresentation rep = doPost(data).getEntityAsDom();
+        rep.write(System.out);
+        Document doc = rep.getDocument();
+        assertXpathEvaluatesTo(startDate, "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/StartDate", doc);
         if (endDate != null) {
-            assertXpathEvaluatesTo(endDate, "/Resources/ProfileCategoryResource/ProfileItem/EndDate", doc);
+            assertXpathEvaluatesTo(endDate, "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/EndDate", doc);
         } else {
-            assertXpathEvaluatesTo("", "/Resources/ProfileCategoryResource/ProfileItem/EndDate", doc);
+            assertXpathEvaluatesTo("", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/EndDate", doc);
         }
     }
 

@@ -150,6 +150,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
         client.addQueryParameter("startDate",startDate.toString(fmt));
         client.addQueryParameter("v","2.0");
         DomRepresentation rep = client.get().getEntityAsDom();
+        rep.write(System.out);
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + before_and_after + "']", doc);
         assertXpathNotExists("//ProfileItem[@uid='" + before_and_inside + "']", doc);

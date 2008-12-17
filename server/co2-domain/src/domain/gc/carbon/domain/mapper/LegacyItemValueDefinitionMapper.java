@@ -35,7 +35,7 @@ public class LegacyItemValueDefinitionMapper extends LegacyDataMapper {
 
     public String getPath() {
         String legacyPath = getLegacyPath(itemValueDefinition.getPath(),
-                itemValueDefinition.getUnit().toString(), itemValueDefinition.getPerUnit().toString());
+                itemValueDefinition.getInternalUnit().toString(), itemValueDefinition.getInternalPerUnit().toString());
         if (legacyPath == null) {
             return itemValueDefinition.getPath();
         } else {
@@ -45,7 +45,7 @@ public class LegacyItemValueDefinitionMapper extends LegacyDataMapper {
 
     public String getName() {
         String legacyName = getLegacyName(itemValueDefinition.getPath(),
-                itemValueDefinition.getUnit().toString(), itemValueDefinition.getPerUnit().toString());
+                itemValueDefinition.getInternalUnit().toString(), itemValueDefinition.getInternalPerUnit().toString());
         if (legacyName == null) {
             return itemValueDefinition.getName();
         } else {

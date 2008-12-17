@@ -2,6 +2,7 @@ package gc.carbon.test.profile.v2;
 
 import org.restlet.data.Form;
 import org.restlet.data.Status;
+import org.restlet.resource.DomRepresentation;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
@@ -101,6 +102,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     @Test
     public void testPutWithEndAndEndDate() throws Exception {
         Form data = new Form();
+        client.addQueryParameter("v","2.0");
         data.add("endDate", "20100401T0000");
         data.add("end", "true");
         Status status = doPut(data).getStatus();
@@ -110,6 +112,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     @Test
     public void testPutWithEndAndDuration() throws Exception {
         Form data = new Form();
+        client.addQueryParameter("v","2.0");
         data.add("duration", "PT30M");
         data.add("end", "true");
         Status status = doPut(data).getStatus();
@@ -117,17 +120,9 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     }
 
     @Test
-    public void testPutWithEndDateAndDuration() throws Exception {
-        Form data = new Form();
-        data.add("duration", "PT30M");
-        data.add("endDate", "20100401T0000");
-        Status status = doPut(data).getStatus();
-        assertEquals("Should be Bad Request", 400, status.getCode());
-    }
-
-    @Test
     public void testPutEndDateBeforeStartDate() throws Exception {
         Form data = new Form();
+        client.addQueryParameter("v","2.0");
         data.add("startDate", "20100402T0000");
         data.add("endDate", "20100401T0000");
         Status status = doPut(data).getStatus();
@@ -137,6 +132,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     @Test
     public void testPutWithValidFrom() throws Exception {
         Form data = new Form();
+        client.addQueryParameter("v","2.0");
         data.add("validFrom", "20100401");
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
@@ -145,13 +141,17 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     @Test
     public void testPutWithEnd() throws Exception {
         Form data = new Form();
+        client.addQueryParameter("v","2.0");
         data.add("end", "true");
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
     }
 
     private void assertDateNodes(Form data, String startDate, String endDate, String end) throws Exception {
-        Document doc = doPut(data).getEntityAsDom().getDocument();
+        client.addQueryParameter("v","2.0");
+        DomRepresentation rep = doPut(data).getEntityAsDom();
+        rep.write(System.out);
+        Document doc = rep.getDocument();
         assertXpathEvaluatesTo(startDate, "/Resources/ProfileItemResource/ProfileItem/StartDate", doc);
         if (endDate != null) {
             assertXpathEvaluatesTo(endDate, "/Resources/ProfileItemResource/ProfileItem/EndDate", doc);
@@ -162,15 +162,17 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
 
     private void assertDistanceNode(Form data, String unit, String perUnit) throws Exception {
         client.addQueryParameter("v","2.0");
-        Document doc = doPut(data).getEntityAsDom().getDocument();
+        DomRepresentation rep = doPut(data).getEntityAsDom();
+        rep.write(System.out);
+        Document doc = rep.getDocument();
         assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Path", doc);
         assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Name", doc);
         assertXpathEvaluatesTo(perUnit, "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/PerUnit", doc);
         assertXpathEvaluatesTo(unit, "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Unit", doc);
         assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Path", doc);
         assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Name", doc);
-        assertXpathEvaluatesTo("year", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit", doc);
-        assertXpathEvaluatesTo("km", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Unit", doc);
+        assertXpathEvaluatesTo("year", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit/InternalUnit", doc);
+        assertXpathEvaluatesTo("km", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Unit/InternalUnit", doc);
 
     }
 

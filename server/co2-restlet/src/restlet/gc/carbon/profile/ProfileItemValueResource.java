@@ -134,6 +134,14 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
                 // update ProfileItemValue
                 profileItemValue.setValue(form.getFirstValue("value"));
             }
+            if (form.getFirstValue("unit") != null) {
+                // update ProfileItemValue
+                profileItemValue.setUnit(form.getFirstValue("unit"));
+            }
+            if (form.getFirstValue("perUnit") != null) {
+                // update ProfileItemValue
+                profileItemValue.setPerUnit(form.getFirstValue("perUnit"));
+            }
             // should recalculate now (regardless)
             profileService.calculate(profileItem);
             // path may have changed

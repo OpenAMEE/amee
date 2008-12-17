@@ -40,8 +40,17 @@ public class ItemValueDefinitionBuilder implements Builder {
         obj.put("uid", itemValueDefinition.getUid());
         obj.put("path", itemValueDefinition.getPath());
         obj.put("name", itemValueDefinition.getName());
-        obj.put("unit",itemValueDefinition.getUnit());
-        obj.put("perUnit",itemValueDefinition.getPerUnit());
+
+        JSONObject unit = new JSONObject();
+        unit.put("internalUnit",itemValueDefinition.getInternalUnit());
+        unit.put("choices", itemValueDefinition.getUnit().getChoices());
+        obj.append("unit",unit);
+
+        JSONObject perUnit = new JSONObject();
+        unit.put("internalUnit",itemValueDefinition.getInternalPerUnit());
+        unit.put("choices", itemValueDefinition.getPerUnit().getChoices());
+        obj.append("perUnit",perUnit);
+
         obj.put("valueDefinition", itemValueDefinition.getValueDefinition().getJSONObject(false));
         if (detailed) {
             obj.put("created", itemValueDefinition.getCreated());
@@ -62,8 +71,21 @@ public class ItemValueDefinitionBuilder implements Builder {
         element.setAttribute("uid", itemValueDefinition.getUid());
         element.appendChild(APIUtils.getElement(document, "Path", itemValueDefinition.getPath()));
         element.appendChild(APIUtils.getElement(document, "Name", itemValueDefinition.getName()));
-        element.appendChild(APIUtils.getElement(document, "Unit", itemValueDefinition.getUnit().toString()));
-        element.appendChild(APIUtils.getElement(document, "PerUnit", itemValueDefinition.getPerUnit().toString()));
+
+        Element unit = document.createElement("Unit");
+        if (itemValueDefinition.hasUnits()) {
+            unit.appendChild(APIUtils.getElement(document, "InternalUnit", itemValueDefinition.getInternalUnit().toString()));
+            unit.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getUnit().getChoices()));
+        }
+        element.appendChild(unit);
+
+        Element perUnit = document.createElement("PerUnit");
+        if (itemValueDefinition.hasPerUnits()) {
+            perUnit.appendChild(APIUtils.getElement(document, "InternalUnit", itemValueDefinition.getInternalPerUnit().toString()));
+            perUnit.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getPerUnit().getChoices()));
+        }
+        element.appendChild(perUnit);
+
         element.appendChild(APIUtils.getElement(document, "FromProfile", Boolean.toString(itemValueDefinition.isFromProfile())));
         element.appendChild(APIUtils.getElement(document, "FromData", Boolean.toString(itemValueDefinition.isFromData())));
         element.appendChild(itemValueDefinition.getValueDefinition().getElement(document, false));

@@ -29,8 +29,6 @@ import com.jellymold.utils.event.ObservedEvent;
 import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.profile.builder.BuildableProfileItem;
-import gc.carbon.path.PathItemService;
 import gc.carbon.profile.ProfileBrowser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -335,7 +333,7 @@ class ProfileServiceDAO implements Serializable {
         return profileItem;
     }
 
-    public boolean isEquivilentProfileItemExists(ProfileItem profileItem) {
+    public boolean equivilentProfileItemExists(ProfileItem profileItem) {
         List<ProfileItem> profileItems = entityManager.createQuery(
                 "SELECT DISTINCT pi " +
                         "FROM ProfileItem pi " +
@@ -354,10 +352,10 @@ class ProfileServiceDAO implements Serializable {
                 .setParameter("name", profileItem.getName())
                 .getResultList();
         if (profileItems.size() > 0) {
-            log.debug("isEquivilentProfileItemExists() - found ProfileItem(s)");
+            log.debug("equivilentProfileItemExists() - found ProfileItem(s)");
             return true;
         } else {
-            log.debug("isEquivilentProfileItemExists() - no ProfileItem(s) found");
+            log.debug("equivilentProfileItemExists() - no ProfileItem(s) found");
             return false;
         }
     }

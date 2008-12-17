@@ -12,8 +12,6 @@
 <h2>Profile Item Details</h2>
 <p><#if profileItem.name != ''>Name: ${profileItem.name}<br/></#if>
     Amount: ${profileItem.amount}<br/>
-    Unit: <#if profileItem.punit??>${profileItem.unit}<#else>None</#if><br/>
-    Per Unit: <#if profileItem.perUnit??>${profileItem.perUnit}<#else>None</#if><br/>
     Start Date: ${startEndDate(profileItem.startDate)}<br/>
     End Date: <#if profileItem.endDate??>${startEndDate(profileItem.endDate)}<#else>None</#if><br/>
     Full Path: ${browser.fullPath}<br/>
@@ -59,17 +57,6 @@
                 <td><#if profileItem.endDate??>${profileItem.endDate?datetime}<#else>None</#if></td>
             </#if>
         </tr>
-        <tr>
-            <td>End Marker</td>
-            <#if browser.profileItemActions.allowModify>
-                <td><select name='end'>
-                    <option value='true'<#if profileItem.end> selected</#if>>Yes</option>
-                    <option value='false'<#if !profileItem.end> selected</#if>>No</option>
-                </select></td>
-            <#else>
-                <td>${profileItem.end}</td>
-            </#if>
-        </tr>
         <#if 0 != profileItem.itemValues?size>
             <#list profileItem.itemValues as iv>
             <tr>
@@ -84,7 +71,7 @@
                             </select>
                         <#else>
                             <input name='${iv.displayPath}' value='${iv.value}' type='text' size="30"/>
-                            <#if iv.hasUnits()>
+                                <#if iv.hasUnits()>
                                 <input name='${iv.displayPath}Unit' value='${iv.unit}' type='text' size="30"/>
                             </#if>
                             <#if iv.hasPerUnits()>

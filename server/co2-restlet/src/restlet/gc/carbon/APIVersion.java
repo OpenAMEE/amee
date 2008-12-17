@@ -7,6 +7,9 @@ import org.restlet.data.Form;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * This file is part of AMEE.
  * <p/>
@@ -30,6 +33,11 @@ public class APIVersion {
 
     public static final APIVersion ONE_ZERO = new APIVersion("1.0");
     public static final APIVersion TWO_ZERO = new APIVersion("2.0");
+    private static final List<APIVersion> versions = new ArrayList<APIVersion>();
+    static {
+        versions.add(ONE_ZERO);
+        versions.add(TWO_ZERO);    
+    }
 
     private String version;
 
@@ -71,5 +79,9 @@ public class APIVersion {
 
     public boolean isVersionTwo() {
         return equals(TWO_ZERO);
+    }
+
+    public static List<APIVersion> getVersions() {
+        return versions;
     }
 }

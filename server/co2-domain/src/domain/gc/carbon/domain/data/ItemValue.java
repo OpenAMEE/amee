@@ -252,7 +252,7 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
     }
 
     public Unit getUnit() {
-        return (unit != null) ? Unit.valueOf(unit) : itemValueDefinition.getUnit();
+        return (unit != null) ? Unit.valueOf(unit) : itemValueDefinition.getInternalUnit();
     }
 
     public void setUnit(String unit) throws IllegalArgumentException {
@@ -263,7 +263,7 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
     }
 
     public PerUnit getPerUnit() {
-        return (perUnit != null) ? perUnit() : itemValueDefinition.getPerUnit();
+        return (perUnit != null) ? perUnit() : itemValueDefinition.getInternalPerUnit();
     }
 
     public void setPerUnit(String perUnit) throws IllegalArgumentException {

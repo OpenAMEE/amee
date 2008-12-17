@@ -135,7 +135,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
                 return;
             }
 
-            if (!profileService.isUnique(profileItemCopy)) {
+            if (profileService.isUnique(profileItemCopy)) {
 
                 // update persistent ProfileItem
                 updateProfileItem(profileItem, form);

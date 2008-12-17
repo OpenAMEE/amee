@@ -69,8 +69,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Autowired
     private PathItemService pathItemService;
 
-    private PathItem pathItem;
-    private DataBrowser dataBrowser;
     private List<Choice> parameters = new ArrayList<Choice>();
 
     @Override

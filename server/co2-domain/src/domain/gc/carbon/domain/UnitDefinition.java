@@ -205,6 +205,10 @@ public class UnitDefinition implements PersistentObject {
         this.description = description;
     }
 
+    public String getChoices() {
+        return units;    
+    }
+
     public List<String> getUnits() {
         return Arrays.asList(units.split(","));
     }

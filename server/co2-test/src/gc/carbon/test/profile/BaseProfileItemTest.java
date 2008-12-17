@@ -25,6 +25,10 @@ import com.jellymold.utils.domain.UidGen;
  */
 public class BaseProfileItemTest extends BaseProfileTest {
 
+    public BaseProfileItemTest() {
+        super();
+    }
+
     public BaseProfileItemTest(String s) throws Exception {
         super(s);
     }

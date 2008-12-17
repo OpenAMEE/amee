@@ -59,7 +59,7 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
     <th>kgCO2 pcm</th>
     <th>Name</th>
     <th>Valid From</th>
-    <th>End</th>
+        <th>End</th>
     <th>Actions</th>
   </tr>
   <#list sheet.rows as row>
