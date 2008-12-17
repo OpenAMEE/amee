@@ -68,7 +68,6 @@
     <orderEntry type="library" name="mysql-connector-java" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="spring" level="project" />
-    <orderEntry type="library" name="aspectj" level="project" />
     <orderEntry type="library" name="spring-runtime" level="project" />
     <orderEntry type="library" name="wrapper" level="project" />
     <orderEntry type="library" name="quartz" level="project" />
