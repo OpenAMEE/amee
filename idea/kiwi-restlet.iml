@@ -28,5 +28,7 @@
     <orderEntry type="library" name="hibernate" level="project" />
     <orderEntry type="library" name="jee" level="project" />
   </component>
+  <component name="ProjectRunConfigurationManager" />
+  <component name="libraryTable" />
 </module>
 

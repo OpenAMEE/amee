@@ -1,30 +1,32 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package gc.carbon.domain.profile.builder.v2;
 
 import com.jellymold.utils.domain.APIObject;
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.domain.profile.builder.BuildableProfileItem;
-import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.Builder;
 import gc.carbon.domain.Unit;
+import gc.carbon.domain.data.builder.BuildableDataItem;
+import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.domain.profile.builder.BuildableProfileItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +51,9 @@ public class ProfileItemBuilder implements Builder {
 
     public void buildElement(JSONObject obj, boolean detailed) throws JSONException {
         obj.put("uid", item.getUid());
+        obj.put("created", new StartEndDate(item.getCreated()));
+        obj.put("modified", new StartEndDate(item.getModified()));
+
         obj.put("name", item.getDisplayName());
         JSONArray itemValues = new JSONArray();
         for (APIObject itemValue : item.getItemValues()) {
@@ -56,8 +61,6 @@ public class ProfileItemBuilder implements Builder {
         }
         obj.put("itemValues", itemValues);
         if (detailed) {
-            obj.put("created", item.getCreated());
-            obj.put("modified", item.getModified());
             obj.put("environment", item.getEnvironment().getIdentityJSONObject());
             obj.put("itemDefinition", item.getItemDefinition().getIdentityJSONObject());
             obj.put("dataCategory", item.getDataCategory().getIdentityJSONObject());
@@ -66,6 +69,9 @@ public class ProfileItemBuilder implements Builder {
 
     public void buildElement(Document document, Element element, boolean detailed) {
         element.setAttribute("uid", item.getUid());
+        element.setAttribute("created", new StartEndDate(item.getCreated()).toString());
+        element.setAttribute("modified", new StartEndDate(item.getModified()).toString());
+
         element.appendChild(APIUtils.getElement(document, "Name", item.getDisplayName()));
         Element itemValuesElem = document.createElement("ItemValues");
         for (APIObject itemValue : item.getItemValues()) {
@@ -73,8 +79,6 @@ public class ProfileItemBuilder implements Builder {
         }
         element.appendChild(itemValuesElem);
         if (detailed) {
-            element.setAttribute("created", item.getCreated().toString());
-            element.setAttribute("modified", item.getModified().toString());
             element.appendChild(item.getEnvironment().getIdentityElement(document));
             element.appendChild(item.getItemDefinition().getIdentityElement(document));
             element.appendChild(item.getDataCategory().getIdentityElement(document));
@@ -88,11 +92,19 @@ public class ProfileItemBuilder implements Builder {
         JSONObject amount = new JSONObject();
         amount.put("value", getAmount(item));
         returnUnit.getJSONObject(amount);
-        obj.put("amount",amount);
+        obj.put("amount", amount);
 
         obj.put("startDate", item.getStartDate().toString());
-        obj.put("endDate", (item.getEndDate() != null) ? item.getEndDate().toString() : "");        
+        obj.put("endDate", (item.getEndDate() != null) ? item.getEndDate().toString() : "");
         obj.put("dataItem", item.getDataItem().getIdentityJSONObject());
+
+        // DataItem
+        BuildableDataItem bDataItem = item.getDataItem();
+        JSONObject dataItemObj = bDataItem.getIdentityJSONObject();
+        //TODO: can this obj definition be created from DataItem? (Avoid duplication of ItemValues!!)
+        dataItemObj.put("Label", bDataItem.getLabel());
+        obj.put("dataItem", dataItemObj);
+
         if (detailed) {
             obj.put("profile", item.getProfile().getIdentityJSONObject());
         }
@@ -109,8 +121,16 @@ public class ProfileItemBuilder implements Builder {
         element.appendChild(amount);
 
         element.appendChild(APIUtils.getElement(document, "StartDate", item.getStartDate().toString()));
-            element.appendChild(APIUtils.getElement(document, "EndDate", (item.getEndDate() != null) ? item.getEndDate().toString() : ""));
-        element.appendChild(item.getDataItem().getIdentityElement(document));
+        element.appendChild(APIUtils.getElement(document, "EndDate", (item.getEndDate() != null) ? item.getEndDate().toString() : ""));
+
+        // DataItem
+        BuildableDataItem bDataItem = item.getDataItem();
+        Element dataItemElement = bDataItem.getIdentityElement(document);
+        //TODO: can this element definition be created from DataItem? (Avoid duplication of ItemValues!!)
+        dataItemElement.appendChild(APIUtils.getElement(document, "Label", bDataItem.getLabel()));
+
+        element.appendChild(dataItemElement);
+
         if (detailed) {
             element.appendChild(item.getProfile().getIdentityElement(document));
         }
@@ -124,5 +144,5 @@ public class ProfileItemBuilder implements Builder {
         }
         return amount.toString();
     }
-    
+
 }

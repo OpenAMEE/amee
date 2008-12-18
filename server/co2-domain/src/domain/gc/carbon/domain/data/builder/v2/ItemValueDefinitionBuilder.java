@@ -41,15 +41,19 @@ public class ItemValueDefinitionBuilder implements Builder {
         obj.put("path", itemValueDefinition.getPath());
         obj.put("name", itemValueDefinition.getName());
 
-        JSONObject unit = new JSONObject();
-        unit.put("internalUnit",itemValueDefinition.getInternalUnit());
-        unit.put("choices", itemValueDefinition.getUnit().getChoices());
-        obj.append("unit",unit);
+        if (itemValueDefinition.hasUnits()) {
+            JSONObject unit = new JSONObject();
+            unit.put("internalUnit", itemValueDefinition.getInternalUnit());
+            unit.put("choices", itemValueDefinition.getUnit().getChoices());
+            obj.append("unit", unit);
+        }
 
-        JSONObject perUnit = new JSONObject();
-        unit.put("internalUnit",itemValueDefinition.getInternalPerUnit());
-        unit.put("choices", itemValueDefinition.getPerUnit().getChoices());
-        obj.append("perUnit",perUnit);
+        if (itemValueDefinition.hasPerUnits()) {
+            JSONObject perUnit = new JSONObject();
+            perUnit.put("internalUnit", itemValueDefinition.getInternalPerUnit());
+            perUnit.put("choices", itemValueDefinition.getPerUnit().getChoices());
+            obj.append("perUnit", perUnit);
+        }
 
         obj.put("valueDefinition", itemValueDefinition.getValueDefinition().getJSONObject(false));
         if (detailed) {

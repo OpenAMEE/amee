@@ -38,5 +38,7 @@
     <orderEntry type="library" name="jscience" level="project" />
     <orderEntry type="library" name="joda" level="project" />
   </component>
+  <component name="ProjectRunConfigurationManager" />
+  <component name="libraryTable" />
 </module>
 

@@ -28,5 +28,7 @@
     <orderEntry type="library" name="freemarker" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
   </component>
+  <component name="ProjectRunConfigurationManager" />
+  <component name="libraryTable" />
 </module>
 
