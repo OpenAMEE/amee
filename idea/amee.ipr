@@ -475,6 +475,8 @@
         <root url="jar://$PROJECT_DIR$/../lib/spring/log4j/log4j.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/spring/aopalliance/aopalliance.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/javassist/javassist.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/aspectj/aspectjrt.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/spring/aspectj/aspectjweaver.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -587,14 +589,6 @@
     <library name="spring-integration">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/../lib/spring-integration/org.springframework.integration.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="aspectj">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../lib/aspectj/aspectjrt.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../lib/aspectj/aspectjweaver.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
