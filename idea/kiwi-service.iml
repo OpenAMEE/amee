@@ -29,7 +29,5 @@
     <orderEntry type="library" name="quartz" level="project" />
     <orderEntry type="library" name="spring-integration" level="project" />
   </component>
-  <component name="ProjectRunConfigurationManager" />
-  <component name="libraryTable" />
 </module>
 
