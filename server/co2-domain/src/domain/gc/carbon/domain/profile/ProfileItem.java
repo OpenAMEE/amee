@@ -65,6 +65,10 @@ public class ProfileItem extends Item implements BuildableProfileItem {
     @Transient
     private Builder builder;
 
+    @Transient
+    private String convertedAmount = "";
+
+
     //TODO - model amount unit as other units - internal and external chocies should be in db
     private static final PerUnit INTERNAL_AMOUNT_UNIT = PerUnit.valueOf("kg");
     private static final PerUnit INTERNAL_AMOUNT_PERUNIT = PerUnit.valueOf("year");
@@ -160,6 +164,20 @@ public class ProfileItem extends Item implements BuildableProfileItem {
             amount = ZERO;
         }
         this.amount = amount;
+    }
+
+    @Transient
+    public void setConvertedAmount(String convertedAmount) {
+        if (convertedAmount == null) {
+            convertedAmount = "";
+        }
+        this.convertedAmount = convertedAmount;
+    }
+
+
+    @Transient
+    public String getConvertedAmount() {
+        return convertedAmount;
     }
 
     @Transient

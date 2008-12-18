@@ -11,7 +11,7 @@ import java.util.Date;
 public abstract class BaseBrowser implements Serializable {
 
     protected PathItem pathItem;
-    protected StartEndDate startDate = new StartEndDate(Calendar.getInstance().getTime());
+    protected StartEndDate startDate = new StartEndDate(Calendar.getInstance().getTime()).minus("P10Y");
     protected StartEndDate endDate;
 
     public BaseBrowser() {

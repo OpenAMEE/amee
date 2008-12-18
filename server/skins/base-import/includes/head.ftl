@@ -16,7 +16,6 @@
 <script src="/scripts/control/livepipe.js" type="text/javascript"></script>
 <script src="/scripts/control/progressbar.js" type="text/javascript"></script>
 <script src="/scripts/control/window.js" type="text/javascript"></script>
-<script src="/scripts/control/control.modal.js" type="text/javascript"></script>
 <script src="/scripts/amee/resources.js" type="text/javascript"></script>
 <script src="/scripts/amee/diff.js" type="text/javascript"></script>
 

@@ -77,6 +77,13 @@ public class StartEndDate extends GCDate {
         return new StartEndDate(thisPlusPeriod.toDate());
     }
 
+    public StartEndDate minus(String duration) {
+        Period period = ISOPeriodFormat.standard().parsePeriod(duration);
+        DateTime thisPlusPeriod = new DateTime(getTime()).minus(period);
+        return new StartEndDate(thisPlusPeriod.toDate());
+    }
+
+
     public static boolean validate(String dateStr) {
         try {
             ISO_DATE_FORMAT.parse(dateStr);   
