@@ -16,15 +16,19 @@
                            http://www.springframework.org/schema/integration
                            http://www.springframework.org/schema/integration/spring-integration-1.0.xsd">
 
+    <!-- Annotations and other stuff -->
+
     <context:load-time-weaver/>
     <context:annotation-config/>
     <context:component-scan base-package="gc"/>
     <context:component-scan base-package="com.jellymold"/>
     <context:component-scan base-package="org.restlet.ext.seam"/>
+    <tx:annotation-driven mode="aspectj"/>
 
     <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"/>
+
+    <!-- Enable request scope -->
 
     <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
         <property name="scopes">
@@ -36,27 +40,52 @@
         </property>
     </bean>
 
+    <!-- DataSource, em/tx configuration -->
+    <!-- See: http://commons.apache.org/dbcp/configuration.html -->
+    <!-- See: http://dev.mysql.com/doc/refman/5.1/en/connector-j-reference-configuration-properties.html -->
+
     <bean id="ameeDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost:3306/amee"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/amee?autoReconnect=true&amp;autoReconnectForPools=true&amp;useCompression=true"/>
         <property name="username" value="amee"/>
         <property name="password" value="amee"/>
-        <property name="validationQuery" value="SELECT NOW()"/>
-        <property name="testOnReturn" value="true"/>
+        <property name="initialSize" value="10"/>
+        <property name="maxActive" value="250"/>
+        <property name="maxIdle" value="50"/>
+        <property name="minIdle" value="10"/>
+        <property name="maxWait" value="-1"/>
+        <property name="validationQuery" value="SELECT 1 FROM DUAL"/>
         <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="true"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="300"/>
+        <property name="minEvictableIdleTimeMillis" value="240000"/>
+        <property name="timeBetweenEvictionRunsMillis" value="1000"/>
     </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="ameeDataSource"/>
+        <property name="loadTimeWeaver">
+            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+        </property>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <tx:annotation-driven mode="aspectj"/>
+    <!-- Scheduler configuration -->
 
-    <!-- Event/Messaging Beans -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <!-- name used to publish applicationContext to Quartz Job instances, so they can call business services -->
+        <property name="applicationContextSchedulerContextKey">
+            <value>applicationContext</value>
+        </property>
+    </bean>
+
+    <!-- Event/messaging beans -->
+
     <springIntegration:annotation-config/>
 
     <springIntegration:gateway id="ObserveEventGateway"
