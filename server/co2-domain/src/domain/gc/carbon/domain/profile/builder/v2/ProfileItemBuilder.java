@@ -137,7 +137,7 @@ public class ProfileItemBuilder implements Builder {
         return element;
     }
 
-    private String getAmount(BuildableProfileItem item) {
+    public String getAmount(BuildableProfileItem item) {
         BigDecimal amount = item.getAmount();
         if (!returnUnit.equals(ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT)) {
             amount = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT.convert(amount, returnUnit);

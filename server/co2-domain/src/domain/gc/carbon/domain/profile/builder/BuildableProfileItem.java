@@ -34,6 +34,10 @@ public interface BuildableProfileItem extends BuildableItem {
 
     BigDecimal getAmount();
 
+    void setConvertedAmount(String convertedAmount);
+
+    String getConvertedAmount();
+
     APIObject getProfile();
 
     void setBuilder(Builder builder);

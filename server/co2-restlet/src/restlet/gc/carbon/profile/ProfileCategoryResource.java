@@ -19,9 +19,9 @@
  */
 package gc.carbon.profile;
 
+import gc.carbon.data.builder.BuildableCategoryResource;
 import gc.carbon.data.builder.ResourceBuilder;
 import gc.carbon.data.builder.ResourceBuilderFactory;
-import gc.carbon.data.builder.BuildableCategoryResource;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.acceptor.Acceptor;
@@ -41,7 +41,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component("profileCategoryResource")
 @Scope("prototype")
@@ -107,8 +110,12 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
             badRequest(getFault().toString());
         } else if (profileBrowser.getEnvironmentActions().isAllowView()) {
             Form form = getRequest().getResourceRef().getQueryAsForm();
+            String startDate = form.getFirstValue("startDate");
+
             profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
-            profileBrowser.setStartDate(form.getFirstValue("startDate"));
+            if (startDate != null) {
+                profileBrowser.setStartDate(form.getFirstValue("startDate"));
+            }
             profileBrowser.setEndDate(form.getFirstValue("endDate"));
             profileBrowser.setDuration(form.getFirstValue("duration"));
             profileBrowser.setSelectBy(form.getFirstValue("selectBy"));

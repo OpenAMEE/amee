@@ -1,9 +1,6 @@
 package gc.carbon.profile.builder.v2;
 
-import com.jellymold.sheet.Row;
-import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.cache.CacheableFactory;
 import com.jellymold.utils.domain.APIObject;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.data.builder.BuildableCategoryResource;
@@ -12,6 +9,7 @@ import gc.carbon.domain.data.builder.BuildableItemDefinition;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.builder.BuildableProfileItem;
 import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
+import gc.carbon.domain.Builder;
 import gc.carbon.profile.OnlyActiveProfileService;
 import gc.carbon.profile.ProRataProfileService;
 import gc.carbon.profile.ProfileService;
@@ -54,8 +52,6 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    private CacheableFactory sheetBuilder;
-
     private ProfileService profileService;
 
     BuildableCategoryResource resource;
@@ -63,7 +59,6 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
     public ProfileCategoryResourceBuilder(BuildableCategoryResource resource) {
         this.resource = resource;
         this.profileService = resource.getProfileService();
-        this.sheetBuilder = new ProfileSheetBuilder(profileService);
     }
 
     public JSONObject getJSONObject() throws JSONException {
@@ -124,7 +119,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             if (pager != null) {
                 obj.put("pager", pager.getJSONObject());
             }
-            
+
             // add CO2 amount
             obj.put("totalAmount", getTotalAmount(profileItems).toString());
 
@@ -282,46 +277,42 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         }
     }
 
-    @Deprecated
-    private Sheet getSheet() {
-        return profileService.getSheet(resource.getProfileBrowser(), sheetBuilder);
-    }
-
     public Map<String, Object> getTemplateValues() {
+
+        // profile items
+        List<? extends BuildableProfileItem> profileItems;
+        Pager pager;
+
+        if (resource.isGet()) {
+            // get profile items
+            profileItems = getProfileItems();
+
+            // set-up pager
+            pager = resource.getPager();
+            profileItems = pageResults(profileItems, pager);
+        } else {
+            profileItems = resource.getProfileItems();
+        }
+
+        // init builder to ensure units are represented correctly
+        for (BuildableProfileItem pi : profileItems) {
+            ProfileItemBuilder builder = new ProfileItemBuilder(pi);
+            pi.setConvertedAmount(builder.getAmount(pi));
+        }
+
         APIObject profile = resource.getProfile();
         APIObject dataCategory = resource.getDataCategory();
-        Sheet sheet = getSheet();
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("browser", resource.getProfileBrowser());
         values.put("profile", profile);
         values.put("dataCategory", dataCategory);
         values.put("node", dataCategory);
-        values.put("sheet", sheet);
-        if (sheet != null) {
-            values.put("totalAmount", getTotalAmount(sheet));
+        values.put("profileItems", profileItems);
+
+        if (!profileItems.isEmpty()) {
+            values.put("totalAmount", getTotalAmount(profileItems));
         }
         return values;
     }
 
-    @Deprecated
-    private BigDecimal getTotalAmount(Sheet sheet) {
-        BigDecimal totalAmount = ProfileItem.ZERO;
-        BigDecimal amount;
-        for (Row row : sheet.getRows()) {
-            try {
-                amount = row.findCell("amount").getValueAsBigDecimal();
-                amount = amount.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
-                if (amount.precision() > ProfileItem.PRECISION) {
-                    log.warn("getTotalAmount() - precision is too big: " + amount);
-                    // TODO: do something?
-                }
-            } catch (Exception e) {
-                // swallow
-                log.warn("getTotalAmount() - caught Exception: " + e);
-                amount = ProfileItem.ZERO;
-            }
-            totalAmount = totalAmount.add(amount);
-        }
-        return totalAmount;
-    }
 }
