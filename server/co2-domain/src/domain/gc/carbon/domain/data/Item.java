@@ -53,12 +53,14 @@ import java.util.*;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class Item implements PersistentObject, Pathable, BuildableItem {
 
+    public final static int NAME_SIZE = 255;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -77,7 +79,7 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private List<ItemValue> itemValues = new ArrayList<ItemValue>();
 
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
     @Column(name = "START_DATE")

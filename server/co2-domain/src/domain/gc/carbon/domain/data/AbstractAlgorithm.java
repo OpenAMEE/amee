@@ -24,24 +24,26 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class AbstractAlgorithm implements PersistentObject {
 
+    public final static int NAME_SIZE = 255;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
     private Environment environment;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     @Index(name = "NAME_IND")
     private String name = "";
 
     @Lob
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT", nullable = true)
     private String content = "";
 
     @Column(name = "CREATED")
