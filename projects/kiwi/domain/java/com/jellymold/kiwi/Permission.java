@@ -39,12 +39,15 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Permission implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
+    public final static int OBJECT_CLASS_SIZE = 255;
+    public final static int OBJECT_UID_SIZE = 12;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -59,11 +62,11 @@ public class Permission implements EnvironmentObject, DatedObject, Comparable, S
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @Column(name = "OBJECT_CLASS", length = 255, nullable = false)
+    @Column(name = "OBJECT_CLASS", length = OBJECT_CLASS_SIZE, nullable = false)
     @Index(name = "OBJECT_CLASS_IND")
     private String objectClass = "";
 
-    @Column(name = "OBJECT_UID", nullable = false, length = 12)
+    @Column(name = "OBJECT_UID", nullable = false, length = OBJECT_UID_SIZE)
     @Index(name = "OBJECT_UID_IND")
     private String objectUid = "";
 

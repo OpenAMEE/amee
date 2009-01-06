@@ -47,27 +47,32 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class App implements DatedObject, Comparable {
 
+    public final static int NAME_SIZE = 100;
+    public final static int DESCRIPTION_SIZE = 1000;
+    public final static int FILTER_NAMES_SIZE = 1000;
+    public final static int TARGET_BUILDER_SIZE = 255;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
-    @Column(name = "NAME", length = 100, nullable = false)
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "DESCRIPTION", length = 1000, nullable = false)
+    @Column(name = "DESCRIPTION", length = DESCRIPTION_SIZE, nullable = false)
     private String description = "";
 
     @Column(name = "AUTHENTICATION_REQUIRED", nullable = false)
     private Boolean authenticationRequired = false;
 
-    @Column(name = "FILTER_NAMES", length = 1000, nullable = false)
+    @Column(name = "FILTER_NAMES", length = FILTER_NAMES_SIZE, nullable = false)
     private String filterNames = "";
 
-    @Column(name = "TARGET_BUILDER", length = 255, nullable = false)
+    @Column(name = "TARGET_BUILDER", length = TARGET_BUILDER_SIZE, nullable = false)
     private String targetBuilder = "";
 
     @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

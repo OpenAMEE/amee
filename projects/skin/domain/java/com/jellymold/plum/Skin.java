@@ -20,12 +20,19 @@ import java.util.*;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Skin implements DatedObject, Serializable {
 
+    public final static int NAME_SIZE = 100;
+    public final static int PATH_SIZE = 100;
+    public final static int DESCRIPTION_SIZE = 1000;
+    public final static int SVN_URL_SIZE = 255;
+    public final static int SVN_USERNAME_SIZE = 255;
+    public final static int SVN_PASSWORD_SIZE = 255;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
@@ -37,23 +44,23 @@ public class Skin implements DatedObject, Serializable {
     @OrderBy("path")
     private List<Skin> children = new ArrayList<Skin>();
 
-    @Column(name = "NAME", length = 100, nullable = false)
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "PATH", length = 100, nullable = false)
+    @Column(name = "PATH", length = PATH_SIZE, nullable = false)
     @Index(name = "PATH_IND")
     private String path = "";
 
-    @Column(name = "DESCRIPTION", length = 1000)
+    @Column(name = "DESCRIPTION", length = DESCRIPTION_SIZE)
     private String description = "";
 
-    @Column(name = "SVN_URL", length = 255, nullable = false)
+    @Column(name = "SVN_URL", length = SVN_URL_SIZE, nullable = false)
     private String svnUrl = "";
 
-    @Column(name = "SVN_USERNAME", length = 255, nullable = false)
+    @Column(name = "SVN_USERNAME", length = SVN_USERNAME_SIZE, nullable = false)
     private String svnUsername = "";
 
-    @Column(name = "SVN_PASSWORD", length = 255, nullable = false)
+    @Column(name = "SVN_PASSWORD", length = SVN_PASSWORD_SIZE, nullable = false)
     private String svnPassword = "";
 
     @ManyToMany(fetch = FetchType.LAZY)

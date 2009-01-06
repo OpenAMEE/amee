@@ -54,35 +54,43 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Site implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
+    public final static int NAME_SIZE = 100;
+    public final static int DESCRIPTION_SIZE = 1000;
+    public final static int SERVER_NAME_SIZE = 255;
+    public final static int SERVER_ADDRESS_SIZE = 255;
+    public final static int SERVER_PORT_SIZE = 255;
+    public final static int SERVER_SCHEME_SIZE = 255;
+    public final static int AUTH_COOKIE_DOMAIN_SIZE = 255;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
     private Environment environment;
 
-    @Column(name = "NAME", length = 100, nullable = false)
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "DESCRIPTION", length = 1000, nullable = false)
+    @Column(name = "DESCRIPTION", length = DESCRIPTION_SIZE, nullable = false)
     private String description = "";
 
-    @Column(name = "SERVER_NAME", length = 255, nullable = false)
+    @Column(name = "SERVER_NAME", length = SERVER_NAME_SIZE, nullable = false)
     @Index(name = "SERVER_NAME_IND")
     private String serverName = "";
 
-    @Column(name = "SERVER_ADDRESS", length = 255, nullable = false)
+    @Column(name = "SERVER_ADDRESS", length = SERVER_ADDRESS_SIZE, nullable = false)
     private String serverAddress = "";
 
-    @Column(name = "SERVER_PORT", length = 255, nullable = false)
+    @Column(name = "SERVER_PORT", length = SERVER_PORT_SIZE, nullable = false)
     private String serverPort = "";
 
-    @Column(name = "SERVER_SCHEME", length = 255, nullable = false)
+    @Column(name = "SERVER_SCHEME", length = SERVER_SCHEME_SIZE, nullable = false)
     private String serverScheme = "http";
 
     @Column(name = "SECURE_AVAILABLE")
@@ -91,7 +99,7 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
     @Column(name = "CHECK_REMOTE_ADDRESS")
     private boolean checkRemoteAddress = false;
 
-    @Column(name = "AUTH_COOKIE_DOMAIN", length = 255, nullable = false)
+    @Column(name = "AUTH_COOKIE_DOMAIN", length = AUTH_COOKIE_DOMAIN_SIZE, nullable = false)
     private String authCookieDomain = "";
 
     @Column(name = "MAX_AUTH_DURATION", nullable = false)
