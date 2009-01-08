@@ -42,22 +42,25 @@ import java.util.*;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemDefinition implements PersistentObject, BuildableItemDefinition {
 
+    public final static int NAME_SIZE = 255;
+    public final static int DRILL_DOWN_SIZE = 255;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
     private Environment environment;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "DRILL_DOWN")
+    @Column(name = "DRILL_DOWN", length = DRILL_DOWN_SIZE, nullable = true)
     private String drillDown = "";
 
     @OneToMany(mappedBy = "itemDefinition", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -51,12 +51,18 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemValueDefinition implements PersistentObject, BuildableItemValueDefinition {
 
+    public final static int NAME_SIZE = 255;
+    public final static int PATH_SIZE = 255;
+    public final static int VALUE_SIZE = 255;
+    public final static int CHOICES_SIZE = 255;
+    public final static int ALLOWED_ROLES_SIZE = 255;
+            
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -79,18 +85,18 @@ public class ItemValueDefinition implements PersistentObject, BuildableItemValue
     @JoinColumn(name = "PER_UNIT_DEFINITION_ID")
     private UnitDefinition perUnit;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "PATH")
+    @Column(name = "PATH", length = PATH_SIZE, nullable = false)
     @Index(name = "PATH_IND")
     private String path = "";
 
-    @Column(name = "VALUE")
+    @Column(name = "VALUE", length = VALUE_SIZE, nullable = true)
     private String value = "";
 
     // Comma separated key/value pairs. Value is key if key not supplied. Example: "key=value,key=value" 
-    @Column(name = "CHOICES")
+    @Column(name = "CHOICES", length = CHOICES_SIZE, nullable = true)
     private String choices = "";
 
     @Column(name = "FROM_PROFILE")
@@ -101,7 +107,7 @@ public class ItemValueDefinition implements PersistentObject, BuildableItemValue
     @Index(name = "FROM_PROFILE_IND")
     private boolean fromData = false;
 
-    @Column(name = "ALLOWED_ROLES")
+    @Column(name = "ALLOWED_ROLES", length = ALLOWED_ROLES_SIZE, nullable = true)
     private String allowedRoles = "";
 
     @Column(name = "CREATED")

@@ -33,28 +33,34 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ScheduledTask implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
+    public final static int NAME_SIZE = 100;
+    public final static int COMPONENT_SIZE = 100;
+    public final static int METHOD_SIZE = 100;
+    public final static int CRON_SIZE = 100;
+    public final static int SERVERS_SIZE = 255;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
     private Environment environment;
 
-    @Column(name = "NAME", length = 100, nullable = false)
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "COMPONENT", length = 100, nullable = false)
+    @Column(name = "COMPONENT", length = COMPONENT_SIZE, nullable = false)
     private String component = "";
 
-    @Column(name = "METHOD", length = 100, nullable = false)
+    @Column(name = "METHOD", length = METHOD_SIZE, nullable = false)
     private String method = "";
 
-    @Column(name = "CRON", length = 100, nullable = false)
+    @Column(name = "CRON", length = CRON_SIZE, nullable = false)
     private String cron = "";
 
     @Column(name = "DURATION", nullable = false)
@@ -63,7 +69,7 @@ public class ScheduledTask implements EnvironmentObject, DatedObject, Comparable
     @Column(name = "RUN_ON_SHUTDOWN", nullable = false)
     private Boolean runOnShutdown = false;
 
-    @Column(name = "SERVERS", length = 255, nullable = false)
+    @Column(name = "SERVERS", length = SERVERS_SIZE, nullable = false)
     private String servers = "";
 
     @Column(name = "ENABLED", nullable = false)

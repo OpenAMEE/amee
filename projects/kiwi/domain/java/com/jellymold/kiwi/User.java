@@ -35,12 +35,19 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class User implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
+    public final static int USERNAME_SIZE = 20;
+    public final static int PASSWORD_SIZE = 20;
+    public final static int NAME_SIZE = 100;
+    public final static int NICK_NAME_SIZE = 100;
+    public final static int LOCATION_SIZE = 100;
+    public final static int EMAIL_SIZE = 255;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -53,24 +60,24 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     @Column(name = "USER_TYPE")
     private UserType type = UserType.STANDARD;
 
-    @Column(name = "USERNAME", length = 20, nullable = false)
+    @Column(name = "USERNAME", length = USERNAME_SIZE, nullable = false)
     @Index(name = "USERNAME_IND")
     private String username = "";
 
-    @Column(name = "PASSWORD", length = 20, nullable = false)
+    @Column(name = "PASSWORD", length = PASSWORD_SIZE, nullable = false)
     private String password = "";
 
-    @Column(name = "NAME", length = 100, nullable = false)
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "NICK_NAME", length = 100, nullable = false)
+    @Column(name = "NICK_NAME", length = NICK_NAME_SIZE, nullable = false)
     private String nickName = "";
 
-    @Column(name = "EMAIL", length = 255, nullable = false)
+    @Column(name = "EMAIL", length = EMAIL_SIZE, nullable = false)
     @Index(name = "EMAIL_IND")
     private String email = "";
 
-    @Column(name = "LOCATION", length = 100, nullable = false)
+    @Column(name = "LOCATION", length = LOCATION_SIZE, nullable = false)
     private String location = "";
 
     @Temporal(TemporalType.TIMESTAMP)

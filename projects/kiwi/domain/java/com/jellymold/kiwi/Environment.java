@@ -20,24 +20,29 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Environment implements DatedObject, Comparable, Serializable {
 
+    public final static int NAME_SIZE = 255;
+    public final static int PATH_SIZE = 255;
+    public final static int DESCRIPTION_SIZE = 1000;
+    public final static int OWNER_SIZE = 255;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
-    @Column(name = "NAME", length = 255, nullable = false)
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "PATH", length = 255, nullable = false)
+    @Column(name = "PATH", length = PATH_SIZE, nullable = false)
     private String path = "";
 
-    @Column(name = "DESCRIPTION", length = 1000, nullable = false)
+    @Column(name = "DESCRIPTION", length = DESCRIPTION_SIZE, nullable = false)
     private String description = "";
 
-    @Column(name = "OWNER", length = 255, nullable = false)
+    @Column(name = "OWNER", length = OWNER_SIZE, nullable = false)
     private String owner = "";
 
     @Column(name = "ITEMS_PER_PAGE", nullable = false)

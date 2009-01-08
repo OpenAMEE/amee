@@ -40,7 +40,9 @@ import java.util.Map;
 @DiscriminatorValue("DI")
 public class DataItem extends Item implements BuildableDataItem {
 
-    @Column(name = "PATH")
+    public final static int PATH_SIZE = 255;
+
+    @Column(name = "PATH", length = PATH_SIZE, nullable = true)
     @Index(name = "PATH_IND")
     private String path = "";
 
