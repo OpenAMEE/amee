@@ -20,16 +20,17 @@
 package gc.carbon.domain.mapper;
 
 import com.jellymold.kiwi.Environment;
-import com.jellymold.utils.domain.APIObject;
-import gc.carbon.domain.data.builder.BuildableItemValueDefinition;
+import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.ValueDefinition;
 
 import java.util.Date;
 
 public class LegacyItemValueDefinitionMapper extends LegacyDataMapper {
 
-    private BuildableItemValueDefinition itemValueDefinition;
+    private ItemValueDefinition itemValueDefinition;
 
-    public LegacyItemValueDefinitionMapper(BuildableItemValueDefinition itemValueDefinition) {
+    public LegacyItemValueDefinitionMapper(ItemValueDefinition itemValueDefinition) {
         this.itemValueDefinition = itemValueDefinition;
     }
 
@@ -85,7 +86,7 @@ public class LegacyItemValueDefinitionMapper extends LegacyDataMapper {
         return itemValueDefinition.getAllowedRoles();
     }
 
-    public APIObject getValueDefinition() {
+    public ValueDefinition getValueDefinition() {
         return itemValueDefinition.getValueDefinition();
     }
 
@@ -93,7 +94,7 @@ public class LegacyItemValueDefinitionMapper extends LegacyDataMapper {
         return itemValueDefinition.getEnvironment();
     }
 
-    public APIObject getItemDefinition() {
+    public ItemDefinition getItemDefinition() {
         return itemValueDefinition.getItemDefinition();
     }
 }

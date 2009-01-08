@@ -2,6 +2,7 @@ package com.jellymold.kiwi.auth;
 
 import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.User;
+import com.jellymold.kiwi.auth.AuthService;
 import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.BaseResource;
 import org.json.JSONException;

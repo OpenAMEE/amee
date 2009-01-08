@@ -1,12 +1,14 @@
 package com.jellymold.engine;
 
 import com.jellymold.kiwi.*;
-import com.jellymold.kiwi.auth.AuthFilter;
 import com.jellymold.kiwi.auth.GuestFilter;
+import com.jellymold.kiwi.auth.BasicAuthFilter;
+import com.jellymold.kiwi.auth.AuthFilter;
 import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.plum.admin.FreeMarkerConfigurationFilter;
 import com.jellymold.utils.ThreadBeanHolderFilter;
 import com.jellymold.utils.cache.CacheHelper;
+import com.jellymold.engine.EngineApplication;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.*;
@@ -163,6 +165,7 @@ public class Engine implements WrapperListener, Serializable {
             }
         }
 
+        
         // wrap VirtualHost creation in a Seam call
         springController.end();
 

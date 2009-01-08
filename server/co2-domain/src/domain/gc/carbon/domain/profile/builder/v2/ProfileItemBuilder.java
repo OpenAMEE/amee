@@ -19,14 +19,13 @@
  */
 package gc.carbon.domain.profile.builder.v2;
 
-import com.jellymold.utils.domain.APIObject;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.Builder;
 import gc.carbon.domain.Unit;
-import gc.carbon.domain.data.builder.BuildableDataItem;
+import gc.carbon.domain.data.DataItem;
+import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
-import gc.carbon.domain.profile.builder.BuildableProfileItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,15 +36,15 @@ import java.math.BigDecimal;
 
 public class ProfileItemBuilder implements Builder {
 
-    private BuildableProfileItem item;
+    private ProfileItem item;
     private Unit returnUnit = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT;
 
-    public ProfileItemBuilder(BuildableProfileItem item, Unit returnUnit) {
+    public ProfileItemBuilder(ProfileItem item, Unit returnUnit) {
         this.item = item;
         this.returnUnit = returnUnit;
     }
 
-    public ProfileItemBuilder(BuildableProfileItem item) {
+    public ProfileItemBuilder(ProfileItem item) {
         this.item = item;
     }
 
@@ -56,7 +55,7 @@ public class ProfileItemBuilder implements Builder {
 
         obj.put("name", item.getDisplayName());
         JSONArray itemValues = new JSONArray();
-        for (APIObject itemValue : item.getItemValues()) {
+        for (ItemValue itemValue : item.getItemValues()) {
             itemValues.put(itemValue.getJSONObject(false));
         }
         obj.put("itemValues", itemValues);
@@ -74,7 +73,7 @@ public class ProfileItemBuilder implements Builder {
 
         element.appendChild(APIUtils.getElement(document, "Name", item.getDisplayName()));
         Element itemValuesElem = document.createElement("ItemValues");
-        for (APIObject itemValue : item.getItemValues()) {
+        for (ItemValue itemValue : item.getItemValues()) {
             itemValuesElem.appendChild(itemValue.getElement(document, false));
         }
         element.appendChild(itemValuesElem);
@@ -99,7 +98,7 @@ public class ProfileItemBuilder implements Builder {
         obj.put("dataItem", item.getDataItem().getIdentityJSONObject());
 
         // DataItem
-        BuildableDataItem bDataItem = item.getDataItem();
+        DataItem bDataItem = item.getDataItem();
         JSONObject dataItemObj = bDataItem.getIdentityJSONObject();
         //TODO: can this obj definition be created from DataItem? (Avoid duplication of ItemValues!!)
         dataItemObj.put("Label", bDataItem.getLabel());
@@ -124,7 +123,7 @@ public class ProfileItemBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "EndDate", (item.getEndDate() != null) ? item.getEndDate().toString() : ""));
 
         // DataItem
-        BuildableDataItem bDataItem = item.getDataItem();
+        DataItem bDataItem = item.getDataItem();
         Element dataItemElement = bDataItem.getIdentityElement(document);
         //TODO: can this element definition be created from DataItem? (Avoid duplication of ItemValues!!)
         dataItemElement.appendChild(APIUtils.getElement(document, "Label", bDataItem.getLabel()));
@@ -137,7 +136,7 @@ public class ProfileItemBuilder implements Builder {
         return element;
     }
 
-    public String getAmount(BuildableProfileItem item) {
+    public String getAmount(ProfileItem item) {
         BigDecimal amount = item.getAmount();
         if (!returnUnit.equals(ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT)) {
             amount = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT.convert(amount, returnUnit);

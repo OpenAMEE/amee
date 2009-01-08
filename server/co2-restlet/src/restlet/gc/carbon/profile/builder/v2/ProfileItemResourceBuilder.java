@@ -1,17 +1,23 @@
 package gc.carbon.profile.builder.v2;
 
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.domain.profile.builder.BuildableProfileItem;
-import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
 import gc.carbon.data.builder.ResourceBuilder;
-import gc.carbon.data.builder.BuildableResource;
+import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
+import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.profile.ProfileItemResource;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.restlet.data.MediaType;
+import org.apache.abdera.model.*;
+import org.apache.xerces.dom.DocumentImpl;
 
-import java.util.Map;
+import javax.xml.namespace.QName;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Date;
 
 /**
  * This file is part of AMEE.
@@ -34,15 +40,15 @@ import java.util.HashMap;
  */
 public class ProfileItemResourceBuilder implements ResourceBuilder {
 
-    BuildableResource resource;
+    ProfileItemResource resource;
 
-    public ProfileItemResourceBuilder(BuildableResource resource) {
+    public ProfileItemResourceBuilder(ProfileItemResource resource) {
         this.resource = resource;
     }
 
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
-        BuildableProfileItem profileItem = resource.getProfileItem();
+        ProfileItem profileItem = resource.getProfileItem();
         setBuilder(profileItem);
         obj.put("profileItem", profileItem.getJSONObject());
         obj.put("path", resource.getFullPath());
@@ -52,7 +58,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
 
 
     public Element getElement(Document document) {
-        BuildableProfileItem profileItem = resource.getProfileItem();
+        ProfileItem profileItem = resource.getProfileItem();
         setBuilder(profileItem);
         Element element = document.createElement("ProfileItemResource");
         element.appendChild(profileItem.getElement(document));
@@ -62,7 +68,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
     }
 
     public Map<String, Object> getTemplateValues() {
-        BuildableProfileItem profileItem = resource.getProfileItem();
+        ProfileItem profileItem = resource.getProfileItem();
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("browser", resource.getProfileBrowser());
         values.put("profile", profileItem.getProfile());
@@ -71,7 +77,57 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
         return values;
     }
 
-    private void setBuilder(BuildableProfileItem pi) {
+
+
+
+    public org.apache.abdera.model.Element getAtomElement() {
+
+        AtomFeed atomFeed = AtomFeed.getInstance();
+
+        ProfileItem profileItem = resource.getProfileItem();
+
+        Entry entry = atomFeed.newEntry();
+        entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart") + "/?v=" + resource.getVersion());
+
+        Text title = atomFeed.newTitle(entry);
+        title.setText(profileItem.getDisplayName() + ", " + resource.getDataCategory().getDisplayName());
+        Text subtitle = atomFeed.newSubtitle(entry);
+        subtitle.setText(atomFeed.format(profileItem.getStartDate()) + ((profileItem.getEndDate() != null) ? " - " + atomFeed.format(profileItem.getEndDate()) : ""));
+
+        atomFeed.addLinks(entry, profileItem.getUid());
+
+        IRIElement eid = atomFeed.newID(entry);
+        eid.setText("urn:item:" + profileItem.getUid());
+
+        entry.setPublished(profileItem.getCreated());
+        entry.setUpdated(profileItem.getModified());
+
+        HCalendar content = new HCalendar();
+        content.addSummary(profileItem.getAmount() + " " + resource.getProfileBrowser().getAmountUnit().toString());
+        content.addStartDate(profileItem.getStartDate());
+        if (profileItem.getEndDate() != null) {
+            content.addEndDate(profileItem.getEndDate());
+        }
+        entry.setContentAsHtml(content.toString());
+
+        atomFeed.addStartDate(entry, profileItem.getStartDate().toString());
+        if (profileItem.getEndDate() != null) {
+            atomFeed.addEndDate(entry, profileItem.getEndDate().toString());
+        }
+
+        atomFeed.addAmount(entry, profileItem.getAmount().toString(), resource.getProfileBrowser().getAmountUnit().toString());
+
+        atomFeed.addItemValues(entry, profileItem.getItemValues());
+
+        Category cat = atomFeed.newItemCategory(entry);
+        cat.setTerm(profileItem.getDataItem().getUid());
+        cat.setLabel(profileItem.getDataItem().getItemDefinition().getName());
+
+        return entry;
+
+    }
+    
+    private void setBuilder(ProfileItem pi) {
         if (resource.getProfileBrowser().returnAmountInExternalUnit()) {
             pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getAmountUnit()));
         } else {

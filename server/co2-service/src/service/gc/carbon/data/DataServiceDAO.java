@@ -312,6 +312,20 @@ class DataServiceDAO implements Serializable {
         return dataItems;                                                     
     }
 
+    public List<DataItem> getDataItems(DataCategory dataCategory) {
+        List<DataItem> dataItems = entityManager.createQuery(
+                "SELECT DISTINCT di " +
+                        "FROM DataItem di " +
+                        "LEFT JOIN FETCH di.itemValues " +
+                        "WHERE di.itemDefinition.id = :itemDefinitionId " +
+                        "AND di.dataCategory = :dataCategory")
+                .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
+                .setParameter("dataCategory", dataCategory)
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", "query.dataService")
+                .getResultList();
+        return dataItems;
+    }
     public List<DataItem> getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
 
         String q = "SELECT DISTINCT di " +

@@ -20,9 +20,8 @@
 package gc.carbon.domain.profile.builder.v1;
 
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.domain.data.builder.BuildableItemValue;
 import gc.carbon.domain.data.builder.v1.ItemValueBuilder;
-import gc.carbon.domain.profile.builder.BuildableProfileItem;
+import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.Builder;
 import gc.carbon.domain.Unit;
@@ -41,13 +40,13 @@ public class ProfileItemBuilder implements Builder {
     private static final String DAY_DATE = "yyyyMMdd";
     private static DateFormat DAY_DATE_FMT = new SimpleDateFormat(DAY_DATE);
 
-    private BuildableProfileItem item;
+    private ProfileItem item;
     private Unit returnUnit = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT;
 
-    public ProfileItemBuilder(BuildableProfileItem item, Unit returnUnit) {
+    public ProfileItemBuilder(ProfileItem item, Unit returnUnit) {
         this.item = item;
         this.returnUnit = returnUnit;
-    }    public ProfileItemBuilder(BuildableProfileItem item) {
+    }    public ProfileItemBuilder(ProfileItem item) {
         this.item = item;
     }
 
@@ -55,7 +54,7 @@ public class ProfileItemBuilder implements Builder {
         obj.put("uid", item.getUid());
         obj.put("name", item.getDisplayName());
         JSONArray itemValues = new JSONArray();
-        for (BuildableItemValue itemValue : item.getItemValues()) {
+        for (ItemValue itemValue : item.getItemValues()) {
             itemValue.setBuilder(new ItemValueBuilder(itemValue));
             itemValues.put(itemValue.getJSONObject(false));
         }
@@ -73,7 +72,7 @@ public class ProfileItemBuilder implements Builder {
         element.setAttribute("uid", item.getUid());
         element.appendChild(APIUtils.getElement(document, "Name", item.getDisplayName()));
         Element itemValuesElem = document.createElement("ItemValues");
-        for (BuildableItemValue itemValue : item.getItemValues()) {
+        for (ItemValue itemValue : item.getItemValues()) {
             itemValue.setBuilder(new ItemValueBuilder(itemValue));
             itemValuesElem.appendChild(itemValue.getElement(document, false));
         }
@@ -113,7 +112,7 @@ public class ProfileItemBuilder implements Builder {
         return element;
     }
 
-    private String getAmount(BuildableProfileItem item) {
+    private String getAmount(ProfileItem item) {
         BigDecimal amount = item.getAmount();
         if (!returnUnit.equals(ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT)) {
             amount = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT.convert(amount, returnUnit);

@@ -35,6 +35,7 @@
     <orderEntry type="library" name="freemarker" level="project" />
     <orderEntry type="library" name="ehcache" level="project" />
     <orderEntry type="library" name="wrapper" level="project" />
+    <orderEntry type="library" name="java-mail" level="project" />
   </component>
 </module>
 

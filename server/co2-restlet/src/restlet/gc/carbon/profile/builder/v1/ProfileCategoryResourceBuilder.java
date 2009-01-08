@@ -1,29 +1,31 @@
 package gc.carbon.profile.builder.v1;
 
-import com.jellymold.utils.domain.APIUtils;
-import com.jellymold.utils.domain.APIObject;
-import com.jellymold.utils.Pager;
-import com.jellymold.utils.cache.CacheableFactory;
-import com.jellymold.sheet.Sheet;
 import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Row;
-import gc.carbon.domain.profile.builder.BuildableProfileItem;
-import gc.carbon.domain.profile.builder.v1.ProfileItemBuilder;
-import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.data.builder.BuildableCategoryResource;
+import com.jellymold.sheet.Sheet;
+import com.jellymold.utils.Pager;
+import com.jellymold.utils.cache.CacheableFactory;
+import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.data.builder.ResourceBuilder;
+import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.builder.v1.ProfileItemBuilder;
+import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.data.DataCategory;
 import gc.carbon.profile.ProfileService;
+import gc.carbon.profile.ProfileCategoryResource;
+import gc.carbon.profile.builder.v2.AtomFeed;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This file is part of AMEE.
@@ -52,9 +54,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
     private ProfileService profileService;
 
-    BuildableCategoryResource resource;
+    ProfileCategoryResource resource;
 
-    public ProfileCategoryResourceBuilder(BuildableCategoryResource resource) {
+    public ProfileCategoryResourceBuilder(ProfileCategoryResource resource) {
         this.resource = resource;
         this.profileService = resource.getProfileService();
         this.sheetBuilder = new ProfileSheetBuilder(profileService);
@@ -85,7 +87,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
             // add Data Categories via pathItem to children
             JSONArray dataCategories = new JSONArray();
-            for (APIObject pi : resource.getChildrenByType("DC")) {
+            for (PathItem pi : resource.getChildrenByType("DC")) {
                 dataCategories.put(pi.getJSONObject());
             }
             children.put("dataCategories", dataCategories);
@@ -112,13 +114,13 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
             if (!resource.getProfileItems().isEmpty()) {
                 if (resource.getProfileItems().size() == 1) {
-                    BuildableProfileItem pi = resource.getProfileItems().get(0);
+                    ProfileItem pi = resource.getProfileItems().get(0);
                     setBuilder(pi);
                     obj.put("profileItem", pi.getJSONObject());
                 } else {
                     JSONArray profileItems = new JSONArray();
                     obj.put("profileItems", profileItems);
-                    for (BuildableProfileItem pi : resource.getProfileItems()) {
+                    for (ProfileItem pi : resource.getProfileItems()) {
                         setBuilder(pi);
                         profileItems.put(pi.getJSONObject(false));
                     }
@@ -158,7 +160,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
             // add Profile Categories via pathItem
             org.w3c.dom.Element dataCategoriesElement = document.createElement("ProfileCategories");
-            for (APIObject pi : resource.getChildrenByType("DC")) {
+            for (PathItem pi : resource.getChildrenByType("DC")) {
                 dataCategoriesElement.appendChild(pi.getElement(document));
             }
             childrenElement.appendChild(dataCategoriesElement);
@@ -181,13 +183,13 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
             if (!resource.getProfileItems().isEmpty()) {
                 if (resource.getProfileItems().size() == 1) {
-                    BuildableProfileItem pi = resource.getProfileItems().get(0);
+                    ProfileItem pi = resource.getProfileItems().get(0);
                     setBuilder(pi);
                     element.appendChild(pi.getElement(document, false));
                 } else {
                     org.w3c.dom.Element profileItemsElement = document.createElement("ProfileItems");
                     element.appendChild(profileItemsElement);
-                    for (BuildableProfileItem pi : resource.getProfileItems()) {
+                    for (ProfileItem pi : resource.getProfileItems()) {
                         setBuilder(pi);
                         profileItemsElement.appendChild(pi.getElement(document, false));
                     }
@@ -198,7 +200,12 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         return element;
     }
 
-    private void setBuilder(BuildableProfileItem pi) {
+    //TODO - v1 builders should not need to implement atom feeds
+    public org.apache.abdera.model.Element getAtomElement() {
+        return AtomFeed.getInstance().newFeed();
+    }
+
+    private void setBuilder(ProfileItem pi) {
         if (resource.getProfileBrowser().returnAmountInExternalUnit()) {
             pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getAmountUnit()));
         } else {
@@ -211,8 +218,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
     }
 
     public Map<String, Object> getTemplateValues() {
-        APIObject profile = resource.getProfile();
-        APIObject dataCategory = resource.getDataCategory();
+        Profile profile = resource.getProfile();
+        DataCategory dataCategory = resource.getDataCategory();
         Sheet sheet = getSheet();
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("browser", resource.getProfileBrowser());

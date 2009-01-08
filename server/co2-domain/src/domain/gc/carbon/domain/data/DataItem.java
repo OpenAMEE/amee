@@ -23,7 +23,6 @@ import com.jellymold.sheet.Choice;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.EngineUtils;
 import gc.carbon.domain.ObjectType;
-import gc.carbon.domain.data.builder.BuildableDataItem;
 import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +37,7 @@ import java.util.Map;
 
 @Entity
 @DiscriminatorValue("DI")
-public class DataItem extends Item implements BuildableDataItem {
+public class DataItem extends Item {
 
     public final static int PATH_SIZE = 255;
 

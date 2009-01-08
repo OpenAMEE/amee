@@ -5,7 +5,6 @@ import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.Item;
 import gc.carbon.domain.data.ItemValue;
-import gc.carbon.domain.profile.builder.BuildableProfileItem;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -39,7 +38,7 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("PI")
-public class ProfileItem extends Item implements BuildableProfileItem {
+public class ProfileItem extends Item {
 
     // 999,999,999,999,999,999.999
     public final static int PRECISION = 18;

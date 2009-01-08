@@ -39,7 +39,7 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
 
     @Test
     public void testPostWithStartDate() throws Exception {
-        String startDate = "20100401T0000";
+        String startDate = "2010-04-01T00:00+0000";
         Form data = new Form();
         data.add("distance", "1000");
         data.add("startDate", startDate);
@@ -48,8 +48,8 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
 
     @Test
     public void testPostWithStartDateAndEndDate() throws Exception {
-        String startDate = "20100401T0000";
-        String endDate = "20100402T0000";
+        String startDate = "2010-04-01T00:00+0000";
+        String endDate = "2010-04-02T00:00+0000";
         Form data = new Form();
         data.add("startDate", startDate);
         data.add("endDate", endDate);
@@ -58,7 +58,7 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
 
     @Test
     public void testPostWithEndDate() throws Exception {
-        String endDate = "20100402T0000";
+        String endDate = "2010-04-02T00:00+0000";
         Form data = new Form();
         data.add("endDate", endDate);
         assertDateNodes(data, getDefaultDate(), endDate, "false");
@@ -73,8 +73,8 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
 
     @Test
     public void testPostWithStartDateAndDuration() throws Exception {
-        String startDate = "20100401T0000";
-        String endDate = "20100401T0030";
+        String startDate = "2010-04-01T00:00+0000";
+        String endDate = "2010-04-01T0:030+0000";
         Form data = new Form();
         data.add("startDate", startDate);
         data.add("duration", "PT30M");
@@ -84,7 +84,7 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
     @Test
     public void testPostWithEndAndEndDate() throws Exception {
         Form data = new Form();
-        data.add("endDate", "20100401T0000");
+        data.add("endDate", "2010-04-01T00:00+0000");
         data.add("end", "true");
         assertBadRequest(data);
     }
@@ -100,8 +100,8 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
     @Test
     public void testPostEndDateBeforeStartDate() throws Exception {
         Form data = new Form();
-        data.add("startDate", "20100402T0000");
-        data.add("endDate", "20100401T0000");
+        data.add("startDate", "2010-04-02T00:00+0000");
+        data.add("endDate", "2010-04-01T00:00+0000");
         assertBadRequest(data);
     }
 
@@ -163,7 +163,7 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
     }
 
     private String getDefaultDate() {
-        String ISO_DATE = "yyyyMMdd'T'HHmm";
+        String ISO_DATE = "yyyy-MM-dd'T'HH:mmZ";
         return new SimpleDateFormat(ISO_DATE).format(new Date());
     }
 }

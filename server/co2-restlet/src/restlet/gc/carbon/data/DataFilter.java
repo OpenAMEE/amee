@@ -19,8 +19,6 @@
  */
 package gc.carbon.data;
 
-import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.BaseFilter;
 import gc.carbon.domain.path.PathItem;
@@ -32,6 +30,7 @@ import org.restlet.Application;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Status;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
@@ -51,14 +50,14 @@ public class DataFilter extends BaseFilter {
     protected int beforeHandle(Request request, Response response) {
         log.debug("beforeHandle()");
         setVersion(request);
-        return rewrite(request);
+        return rewrite(request, response);
     }
 
     protected void afterHandle(Request request, Response response) {
         log.debug("afterHandle()");
     }
 
-    protected int rewrite(Request request) {
+    protected int rewrite(Request request, Response response) {
         log.debug("rewrite() - start data path rewrite");
         String path = null;
         Reference reference = request.getResourceRef();
@@ -78,11 +77,16 @@ public class DataFilter extends BaseFilter {
                 ThreadBeanHolder.set("pathItem", pathItem);
                 path = pathItem.getInternalPath() + suffix;
             }
-        }
-        if (path != null) {
-            // rewrite paths
-            request.getAttributes().put("previousResourceRef", reference.toString());
-            reference.setPath("/data" + path);
+
+            if (path != null) {
+                // rewrite paths
+                request.getAttributes().put("previousResourceRef", reference.toString());
+                reference.setPath("/data" + path);
+            } else {
+                response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                return STOP;
+            }
+
         }
         log.debug("rewrite() - end data path rewrite");
         return CONTINUE;

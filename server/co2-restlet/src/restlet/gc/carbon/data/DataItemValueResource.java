@@ -19,7 +19,6 @@
  */
 package gc.carbon.data;
 
-import gc.carbon.AMEEResource;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
 import org.apache.commons.logging.Log;
@@ -39,6 +38,7 @@ import org.w3c.dom.Element;
 import java.io.Serializable;
 import java.util.Map;
 
+//TODO - Move to builder model
 @Component
 @Scope("prototype")
 public class DataItemValueResource extends BaseDataResource implements Serializable {

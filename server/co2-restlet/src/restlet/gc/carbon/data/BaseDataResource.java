@@ -1,7 +1,6 @@
 package gc.carbon.data;
 
 import gc.carbon.AMEEResource;
-import gc.carbon.profile.ProfileBrowser;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;

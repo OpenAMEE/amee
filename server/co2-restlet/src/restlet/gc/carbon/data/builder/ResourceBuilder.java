@@ -7,6 +7,8 @@ import org.w3c.dom.Element;
 
 import java.util.Map;
 
+import gc.carbon.profile.builder.v2.AtomFeed;
+
 /**
  * This file is part of AMEE.
  * <p/>
@@ -33,4 +35,6 @@ public interface ResourceBuilder {
     public abstract Element getElement(Document document);
 
     public abstract Map<String, Object> getTemplateValues();
+
+    public abstract org.apache.abdera.model.Element getAtomElement();
 }

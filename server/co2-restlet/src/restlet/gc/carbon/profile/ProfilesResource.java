@@ -24,6 +24,8 @@ import com.jellymold.kiwi.Permission;
 import com.jellymold.kiwi.User;
 import com.jellymold.kiwi.auth.AuthService;
 import com.jellymold.utils.Pager;
+import gc.carbon.AMEEResource;
+import gc.carbon.domain.profile.Profile;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -44,9 +46,6 @@ import org.w3c.dom.Element;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
-import gc.carbon.domain.profile.Profile;
-import gc.carbon.AMEEResource;
 
 @Component("profilesResource")
 @Scope("prototype")

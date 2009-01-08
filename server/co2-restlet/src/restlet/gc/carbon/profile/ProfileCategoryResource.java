@@ -19,15 +19,11 @@
  */
 package gc.carbon.profile;
 
-import gc.carbon.data.builder.BuildableCategoryResource;
 import gc.carbon.data.builder.ResourceBuilder;
 import gc.carbon.data.builder.ResourceBuilderFactory;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.profile.acceptor.Acceptor;
-import gc.carbon.profile.acceptor.ProfileCategoryFormAcceptor;
-import gc.carbon.profile.acceptor.ProfileCategoryJSONAcceptor;
-import gc.carbon.profile.acceptor.ProfileCategoryXMLAcceptor;
+import gc.carbon.profile.acceptor.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -40,7 +36,6 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +43,7 @@ import java.util.Map;
 
 @Component("profileCategoryResource")
 @Scope("prototype")
-public class ProfileCategoryResource extends BaseProfileResource implements BuildableCategoryResource, Serializable {
+public class ProfileCategoryResource extends BaseProfileResource {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -74,6 +69,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
         acceptors.put(MediaType.APPLICATION_XML, new ProfileCategoryXMLAcceptor(this));
         acceptors.put(MediaType.APPLICATION_JSON, new ProfileCategoryJSONAcceptor(this));
         acceptors.put(MediaType.APPLICATION_WWW_FORM, new ProfileCategoryFormAcceptor(this));
+        acceptors.put(MediaType.APPLICATION_ATOM_XML, new ProfileCategoryAtomAcceptor(this));
     }
 
     @Override
@@ -94,6 +90,11 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
     }
 
     @Override
+    public org.apache.abdera.model.Element getAtomElement() {
+        return builder.getAtomElement();
+    }
+
+    @Override
     public JSONObject getJSONObject() throws JSONException {
         return builder.getJSONObject();
     }
@@ -106,9 +107,12 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
     @Override
     public void handleGet() {
         log.debug("handleGet()");
-        if (!validateParameters()) {
-            badRequest(getFault().toString());
-        } else if (profileBrowser.getEnvironmentActions().isAllowView()) {
+        if (profileBrowser.getEnvironmentActions().isAllowView()) {
+
+            if (!validateParameters()) {
+                return;
+            }
+
             Form form = getRequest().getResourceRef().getQueryAsForm();
             String startDate = form.getFirstValue("startDate");
 
@@ -121,6 +125,7 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
             profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
             profileBrowser.setMode(form.getFirstValue("mode"));
             profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
+
             super.handleGet();
         } else {
             notAuthorized();
@@ -162,8 +167,6 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
                     // return a response for API calls
                     super.handleGet();
                 }
-            } else {
-                badRequest();
             }
         } else {
             notAuthorized();
@@ -186,6 +189,8 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
             return acceptors.get(MediaType.APPLICATION_JSON);
         } else if (MediaType.APPLICATION_XML.includes(type)) {
             return acceptors.get(MediaType.APPLICATION_XML);
+        } else if (MediaType.APPLICATION_ATOM_XML.includes(type)) {
+            return acceptors.get(MediaType.APPLICATION_ATOM_XML);
         } else {
             return acceptors.get(MediaType.APPLICATION_WWW_FORM);
         }
@@ -210,12 +215,12 @@ public class ProfileCategoryResource extends BaseProfileResource implements Buil
         }
     }
 
-    public ProfileItem getProfileItem() {
-        return profileBrowser.getProfileItem();
+    public List<ProfileItem> getProfileItems() {
+        return profileItems;    
     }
 
-    public List<ProfileItem> getProfileItems() {
-        return profileItems;
+    public ProfileItem getProfileItem() {
+        return profileBrowser.getProfileItem();
     }
 
 }
