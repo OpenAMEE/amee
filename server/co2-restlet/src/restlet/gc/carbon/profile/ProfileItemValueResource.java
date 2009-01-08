@@ -21,20 +21,25 @@ package gc.carbon.profile;
 
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.AMEEResource;
-import gc.carbon.profile.ProfileSheetService;
-import gc.carbon.data.Calculator;
+import gc.carbon.APIVersion;
+import gc.carbon.profile.builder.v2.AtomFeed;
+import gc.carbon.profile.builder.v2.HCalendar;
+import gc.carbon.profile.acceptor.*;
 import gc.carbon.domain.data.ItemValue;
-import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Text;
+import org.apache.abdera.model.IRIElement;
+import org.apache.abdera.model.Category;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -44,6 +49,7 @@ import org.w3c.dom.Element;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.HashMap;
 
 @Component
 @Scope("prototype")
@@ -56,6 +62,8 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
 
     private ProfileBrowser profileBrowser;
 
+    private Map<MediaType, ItemValueAcceptor> acceptors;
+
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -63,6 +71,21 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
         profileBrowser.setProfileItemValueUid(request.getAttributes().get("valueUid").toString());
+        setAcceptors();
+    }
+
+    private void setAcceptors() {
+        acceptors = new HashMap<MediaType, ItemValueAcceptor>();
+        acceptors.put(MediaType.APPLICATION_WWW_FORM, new ProfileItemValueFormAcceptor(this));
+        acceptors.put(MediaType.APPLICATION_ATOM_XML, new ProfileItemValueAtomAcceptor(this));
+    }
+
+    public ItemValueAcceptor getAcceptor(MediaType type) {
+        if (MediaType.APPLICATION_ATOM_XML.includes(type)) {
+            return acceptors.get(MediaType.APPLICATION_ATOM_XML);
+        } else {
+            return acceptors.get(MediaType.APPLICATION_WWW_FORM);
+        }
     }
 
     @Override
@@ -108,6 +131,48 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
     }
 
     @Override
+    public org.apache.abdera.model.Element getAtomElement() {
+
+        ItemValue itemValue = profileBrowser.getProfileItemValue();
+
+        AtomFeed atomFeed = AtomFeed.getInstance();
+        Entry entry = atomFeed.newEntry();
+
+        entry.setBaseUri(getRequest().getAttributes().get("previousHierachicalPart") + "/?v=" + getRequest().getAttributes().get("apiVersion"));
+
+        Text title = atomFeed.newTitle(entry);
+        title.setText(itemValue.getDisplayName() + ", " + itemValue.getItem().getDisplayName());
+
+        atomFeed.addLinks(entry, itemValue.getPath());
+
+        IRIElement eid = atomFeed.newID(entry);
+        eid.setText("urn:itemValue:" + itemValue.getUid());
+
+        entry.setPublished(itemValue.getCreated());
+        entry.setUpdated(itemValue.getModified());
+
+        atomFeed.addItemValue(entry, itemValue);
+
+        StringBuilder content = new StringBuilder(itemValue.getName());
+        content.append("=");
+        content.append(itemValue.getValue().isEmpty() ? "N/A" : itemValue.getValue());
+        if (itemValue.hasUnits())
+            content.append(", unit=");
+            content.append(itemValue.getUnit());
+        if (itemValue.hasPerUnits())
+            content.append(", perUnit=");
+            content.append(itemValue.getPerUnit());
+        entry.setContent(content.toString());
+
+        Category cat = atomFeed.newItemValueCategory(entry);
+        cat.setTerm(itemValue.getItemValueDefinition().getUid());
+        cat.setLabel(itemValue.getItemValueDefinition().getItemDefinition().getName());
+
+        return entry;
+
+    }
+
+    @Override
     public void handleGet() {
         log.debug("handleGet()");
         if (profileBrowser.getProfileItemValueActions().isAllowView()) {
@@ -126,26 +191,9 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
         if (profileBrowser.getProfileItemValueActions().isAllowModify()) {
-            Form form = getForm();
-            ItemValue profileItemValue = profileBrowser.getProfileItemValue();
-            ProfileItem profileItem = profileBrowser.getProfileItem();
-            // are we updating this ProfileItemValue?
-            if (form.getFirstValue("value") != null) {
-                // update ProfileItemValue
-                profileItemValue.setValue(form.getFirstValue("value"));
-            }
-            if (form.getFirstValue("unit") != null) {
-                // update ProfileItemValue
-                profileItemValue.setUnit(form.getFirstValue("unit"));
-            }
-            if (form.getFirstValue("perUnit") != null) {
-                // update ProfileItemValue
-                profileItemValue.setPerUnit(form.getFirstValue("perUnit"));
-            }
-            // should recalculate now (regardless)
-            profileService.calculate(profileItem);
-            // path may have changed
-            profileService.clearCaches(profileBrowser);
+
+            getAcceptor(entity.getMediaType()).accept(entity);
+
             // all done
             if (isStandardWebBrowser()) {
                 success(profileBrowser.getFullPath());
@@ -156,5 +204,17 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
         } else {
             notAuthorized();
         }
+    }
+
+    public ProfileBrowser getProfileBrowser() {
+        return profileBrowser;
+    }
+
+    public ProfileService getProfileService() {
+        return profileService;
+    }
+
+    public APIVersion getVersion() {
+        return (APIVersion) getRequest().getAttributes().get("apiVersion");
     }
 }

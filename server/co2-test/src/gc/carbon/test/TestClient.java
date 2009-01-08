@@ -69,6 +69,10 @@ public class TestClient {
         Client client = new Client(Protocol.HTTP);
         Request request = new Request(Method.GET, reference);
         addHeaders(request);
+
+        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n30w");
+        request.setChallengeResponse(cr);
+
         System.out.println("Resource - " + request.getResourceRef());
         return client.handle(request);
     }
@@ -77,6 +81,10 @@ public class TestClient {
         Client client = new Client(Protocol.HTTP);
         Request request = new Request(Method.POST, reference, form.getWebRepresentation());
         addHeaders(request);
+
+        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n30w");
+        request.setChallengeResponse(cr);
+
         System.out.println("Resource - " + request.getResourceRef());
         System.out.println("Form - " + form.getMatrixString());
         return client.handle(request);
@@ -85,6 +93,10 @@ public class TestClient {
     public Response put(Form form) {
         Client client = new Client(Protocol.HTTP);
         Request request = new Request(Method.PUT, reference, form.getWebRepresentation());
+
+        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n30w");
+        request.setChallengeResponse(cr);
+
         addHeaders(request);
         System.out.println("Resource - " + request.getResourceRef());
         System.out.println("Form - " + form.getMatrixString());

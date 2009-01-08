@@ -2,9 +2,8 @@ package gc.carbon.profile.acceptor;
 
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
-import gc.carbon.profile.ProfileForm;
-import org.restlet.resource.Representation;
 import org.restlet.data.Form;
+import org.restlet.resource.Representation;
 
 import java.util.List;
 
@@ -27,15 +26,9 @@ import java.util.List;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public abstract class Acceptor {
+public interface Acceptor {
 
-    protected ProfileCategoryResource resource;
+    public List<ProfileItem> accept(Representation entity);
 
-    public Acceptor(ProfileCategoryResource resource) {
-        this.resource = resource;
-    }
-
-    public abstract List<ProfileItem> accept(Representation entity);
-
-    public abstract List<ProfileItem> accept(Form form);
+    public List<ProfileItem> accept(Form form);
 }

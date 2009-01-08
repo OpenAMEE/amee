@@ -64,7 +64,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
 
     @Test
     public void testPutWithStartDate() throws Exception {
-        String startDate = "20100401T0000";
+        String startDate = "2010-04-01T00:00+0000";
         Form data = new Form();
         data.add("distance", "1000");
         data.add("startDate", startDate);
@@ -73,8 +73,8 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
 
     @Test
     public void testPutWithStartDateAndEndDate() throws Exception {
-        String startDate = "20100401T0000";
-        String endDate = "20100402T0000";
+        String startDate = "2010-04-01T00:00+0000";
+        String endDate = "2010-04-02T00:00+0000";
         Form data = new Form();
         data.add("startDate", startDate);
         data.add("endDate", endDate);
@@ -83,7 +83,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
 
     @Test
     public void testPutWithEndDate() throws Exception {
-        String endDate = "20100402T0000";
+        String endDate = "2010-04-02T00:00+0000";
         Form data = new Form();
         data.add("endDate", endDate);
         assertDateNodes(data, getDefaultDate(), endDate, "false");
@@ -91,8 +91,8 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
 
     @Test
     public void testPutWithStartDateAndDuration() throws Exception {
-        String startDate = "20100401T0000";
-        String endDate = "20100401T0030";
+        String startDate = "2010-04-01T00:00+0000";
+        String endDate = "2010-04-01T00:30+0000";
         Form data = new Form();
         data.add("startDate", startDate);
         data.add("duration", "PT30M");
@@ -123,8 +123,8 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     public void testPutEndDateBeforeStartDate() throws Exception {
         Form data = new Form();
         client.addQueryParameter("v","2.0");
-        data.add("startDate", "20100402T0000");
-        data.add("endDate", "20100401T0000");
+        data.add("startDate", "2010-04-02T00:00+0000");
+        data.add("endDate", "2010-04-01T00:00+0000");
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
     }
@@ -177,7 +177,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     }
 
     private String getDefaultDate() {
-        String ISO_DATE = "yyyyMMdd'T'HHmm";
+        String ISO_DATE = "yyyy-MM-dd'T'HH:mmZ";
         return new SimpleDateFormat(ISO_DATE).format(new Date());
     }
 }

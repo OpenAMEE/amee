@@ -36,12 +36,13 @@ import java.util.List;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryJSONAcceptor extends Acceptor {
+public class ProfileCategoryJSONAcceptor implements Acceptor {
 
     private final Log log = LogFactory.getLog(getClass());
+    private ProfileCategoryResource resource;
 
     public ProfileCategoryJSONAcceptor(ProfileCategoryResource resource) {
-        super(resource);
+        this.resource = resource;
     }
 
     public List<ProfileItem> accept(Form form) {

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import gc.carbon.domain.Builder;
-import gc.carbon.domain.data.builder.BuildableItemValueDefinition;
+import gc.carbon.domain.data.ItemValueDefinition;
 
 /**
  * This file is part of AMEE.
@@ -29,9 +29,9 @@ import gc.carbon.domain.data.builder.BuildableItemValueDefinition;
  */
 public class ItemValueDefinitionBuilder implements Builder {
 
-    private BuildableItemValueDefinition itemValueDefinition;
+    private ItemValueDefinition itemValueDefinition;
 
-    public ItemValueDefinitionBuilder(BuildableItemValueDefinition itemValueDefinition) {
+    public ItemValueDefinitionBuilder(ItemValueDefinition itemValueDefinition) {
         this.itemValueDefinition = itemValueDefinition;
     }
 
@@ -55,7 +55,6 @@ public class ItemValueDefinitionBuilder implements Builder {
             obj.append("perUnit", perUnit);
         }
 
-        obj.put("valueDefinition", itemValueDefinition.getValueDefinition().getJSONObject(false));
         if (detailed) {
             obj.put("created", itemValueDefinition.getCreated());
             obj.put("modified", itemValueDefinition.getModified());
@@ -92,7 +91,6 @@ public class ItemValueDefinitionBuilder implements Builder {
 
         element.appendChild(APIUtils.getElement(document, "FromProfile", Boolean.toString(itemValueDefinition.isFromProfile())));
         element.appendChild(APIUtils.getElement(document, "FromData", Boolean.toString(itemValueDefinition.isFromData())));
-        element.appendChild(itemValueDefinition.getValueDefinition().getElement(document, false));
         if (detailed) {
             element.setAttribute("created", itemValueDefinition.getCreated().toString());
             element.setAttribute("modified", itemValueDefinition.getModified().toString());

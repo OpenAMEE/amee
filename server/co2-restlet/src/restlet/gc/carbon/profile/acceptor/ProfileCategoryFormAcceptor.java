@@ -1,5 +1,7 @@
 package gc.carbon.profile.acceptor;
 
+import com.jellymold.utils.APIFault;
+import gc.carbon.data.DataService;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
@@ -8,8 +10,6 @@ import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.domain.profile.ValidFromDate;
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileService;
-import gc.carbon.data.DataService;
-import gc.carbon.APIFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
@@ -39,15 +39,16 @@ import java.util.Map;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryFormAcceptor extends Acceptor {
+public class ProfileCategoryFormAcceptor implements Acceptor {
 
     private final Log log = LogFactory.getLog(getClass());
 
+    private ProfileCategoryResource resource;
     private ProfileService profileService;
     private DataService dataService;
 
     public ProfileCategoryFormAcceptor(ProfileCategoryResource resource) {
-        super(resource);
+        this.resource = resource;
         this.profileService = resource.getProfileService();
         this.dataService = resource.getDataService();
     }
@@ -82,11 +83,12 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                     profileItem = acceptProfileItem(form, profileItem);
                 } else {
                     log.warn("accept() - Data Item not found");
+                    resource.notFound();
                     profileItem = null;
                 }
             } else {
                 log.warn("accept() - dataItemUid not supplied");
-                profileItem = null;
+                resource.badRequest(APIFault.MISSING_PARAMETERS);
             }
         } else if (resource.getRequest().getMethod().equals(Method.PUT)) {
             // update ProfileItem
@@ -106,10 +108,12 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                     profileItem = acceptProfileItem(form, profileItem);
                 } else {
                     log.warn("accept() - Profile Item not found");
+                    resource.notFound();
                     profileItem = null;
                 }
             } else {
                 log.warn("accept() - profileItemUid not supplied");
+                resource.badRequest(APIFault.MISSING_PARAMETERS);
                 profileItem = null;
             }
         }
@@ -123,7 +127,6 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
     private ProfileItem acceptProfileItem(Form form, ProfileItem profileItem) {
 
         if (!resource.validateParameters()) {
-            resource.badRequest(resource.getFault().toString());
             return null;
         }
 
@@ -145,9 +148,8 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
                 }
             }
 
-            if (profileItem.getEndDate() != null &&
-                    profileItem.getEndDate().before(profileItem.getStartDate())) {
-                resource.badRequest(APIFault.INVALID_DATE_RANGE.toString());
+            if (profileItem.getEndDate() != null && profileItem.getEndDate().before(profileItem.getStartDate())) {
+                resource.badRequest(APIFault.INVALID_DATE_RANGE);
                 return null;
             }
         }
@@ -183,12 +185,12 @@ public class ProfileCategoryFormAcceptor extends Acceptor {
             } catch (IllegalArgumentException ex) {
                 log.warn("accept() - Bad parameter received");
                 profileService.remove(profileItem);
-                resource.badRequest(APIFault.INVALID_PARAMETERS.toString());
+                resource.badRequest(APIFault.INVALID_PARAMETERS);
                 profileItem = null;
             }
         } else {
             log.warn("accept() - Profile Item already exists");
-            resource.badRequest(APIFault.DUPLICATE_ITEM.toString());
+            resource.badRequest(APIFault.DUPLICATE_ITEM);
             return null;
         }
         return profileItem;

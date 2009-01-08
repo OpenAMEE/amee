@@ -23,7 +23,6 @@ import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import gc.carbon.domain.*;
-import gc.carbon.domain.data.builder.BuildableItemValue;
 import gc.carbon.domain.data.builder.v2.ItemValueBuilder;
 import gc.carbon.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
@@ -40,7 +39,7 @@ import java.util.Date;
 @Entity
 @Table(name = "ITEM_VALUE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ItemValue implements PersistentObject, Pathable, BuildableItemValue {
+public class ItemValue implements PersistentObject, Pathable {
 
     // 32767 because this is bigger than 255, smaller
     // than 65535 and fits into an exact number of bits
@@ -67,6 +66,7 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
     @Column(name = "VALUE", nullable = false, length = VALUE_SIZE)
     private String value = "";
 
+    
     @Column(name = "CREATED")
     private Date created = Calendar.getInstance().getTime();
 
@@ -147,6 +147,7 @@ public class ItemValue implements PersistentObject, Pathable, BuildableItemValue
     @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
+
     }
 
     @Transient

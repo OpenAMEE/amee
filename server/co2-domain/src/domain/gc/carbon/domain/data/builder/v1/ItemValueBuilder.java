@@ -2,8 +2,8 @@ package gc.carbon.domain.data.builder.v1;
 
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.Builder;
-import gc.carbon.domain.data.builder.BuildableItemValue;
-import gc.carbon.domain.data.builder.BuildableItemValueDefinition;
+import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.mapper.LegacyItemValueMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +34,7 @@ public class ItemValueBuilder implements Builder {
     private LegacyItemValueMapper itemValue;
     private Builder itemValueDefinitionRenderer;
     
-    public ItemValueBuilder(BuildableItemValue itemValue) {
+    public ItemValueBuilder(ItemValue itemValue) {
         this.itemValue = new LegacyItemValueMapper(itemValue);
         this.itemValueDefinitionRenderer = new ItemValueDefinitionBuilder(itemValue.getItemValueDefinition());
     }
@@ -45,7 +45,7 @@ public class ItemValueBuilder implements Builder {
         obj.put("path", itemValue.getPath());
         obj.put("name", itemValue.getName());
         obj.put("value", itemValue.getValue());
-        BuildableItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
+        ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
         itemValueDefinition.setBuilder(itemValueDefinitionRenderer);
         obj.put("itemValueDefinition", itemValueDefinition.getJSONObject(false));
         if (detailed) {
@@ -62,7 +62,7 @@ public class ItemValueBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "Path", itemValue.getPath()));
         element.appendChild(APIUtils.getElement(document, "Name", itemValue.getName()));
         element.appendChild(APIUtils.getElement(document, "Value", itemValue.getValue()));
-        BuildableItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
+        ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
         itemValueDefinition.setBuilder(itemValueDefinitionRenderer);
         element.appendChild(itemValueDefinition.getElement(document, false));
         if (detailed) {

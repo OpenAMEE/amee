@@ -1,8 +1,8 @@
 package gc.carbon.domain.mapper;
 
-import gc.carbon.domain.data.builder.BuildableItem;
-import gc.carbon.domain.data.builder.BuildableItemValue;
-import gc.carbon.domain.data.builder.BuildableItemValueDefinition;
+import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.data.Item;
+import gc.carbon.domain.data.ItemValue;
 
 import java.util.Date;
 
@@ -27,9 +27,9 @@ import java.util.Date;
  */
 public class LegacyItemValueMapper extends LegacyDataMapper {
  
-    private BuildableItemValue itemValue;
+    private ItemValue itemValue;
 
-    public LegacyItemValueMapper(BuildableItemValue itemValue) {
+    public LegacyItemValueMapper(ItemValue itemValue) {
         this.itemValue = itemValue;
     }
 
@@ -51,7 +51,7 @@ public class LegacyItemValueMapper extends LegacyDataMapper {
         }
     }
 
-    public BuildableItemValueDefinition getItemValueDefinition() {
+    public ItemValueDefinition getItemValueDefinition() {
         return itemValue.getItemValueDefinition();
     }
 
@@ -71,7 +71,7 @@ public class LegacyItemValueMapper extends LegacyDataMapper {
         return itemValue.getCreated();
     }
 
-    public BuildableItem getItem() {
+    public Item getItem() {
         return itemValue.getItem();
     }
 

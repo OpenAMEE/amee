@@ -50,7 +50,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
 
     private static boolean initialised = false;
 
-    private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMdd'T'HHmm");
+    private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mmZ");
 
     public ProfileCategoryGETTest(String name) throws Exception {
         super(name);
@@ -174,28 +174,6 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
         client.addQueryParameter("v","2.0");
         Status status = client.get().getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
-    }
-
-    @Test
-    public void testCorrectStartDateAndEndDateReturned() throws Exception {
-        client.addQueryParameter("startDate",startDate.toString(fmt));
-        client.addQueryParameter("endDate", endDate.toString(fmt));
-        client.addQueryParameter("v","2.0");
-        DomRepresentation rep = client.get().getEntityAsDom();
-        rep.write(System.out);
-        Document doc = rep.getDocument();
-        assertXpathEvaluatesTo(startDate.toString(fmt),"//StartDate", doc);
-        assertXpathEvaluatesTo(endDate.toString(fmt),"//EndDate", doc);
-    }
-
-    @Test
-    public void testCorrectStartDateReturned() throws Exception {
-        client.addQueryParameter("startDate", startDate.toString(fmt));
-        client.addQueryParameter("v","2.0");
-        DomRepresentation rep = client.get().getEntityAsDom();
-        Document doc = rep.getDocument();
-        assertXpathEvaluatesTo(startDate.toString(fmt),"//StartDate", doc);
-        assertXpathEvaluatesTo("","//EndDate", doc);
     }
 
     @Test

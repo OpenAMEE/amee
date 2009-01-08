@@ -47,6 +47,10 @@ public class BaseAuthFilter extends Filter {
             // next, look in header as token not found in cookie
             authToken = HeaderUtils.getHeaderFirstValue(AuthService.AUTH_TOKEN, request);
         }
+        if (authToken == null) {
+            //next, look in query string
+            authToken = request.getResourceRef().getQueryAsForm().getFirstValue(AuthService.AUTH_TOKEN);
+        }
         return authToken;
     }
 

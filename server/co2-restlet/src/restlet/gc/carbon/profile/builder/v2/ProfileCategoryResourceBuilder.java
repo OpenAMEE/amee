@@ -1,19 +1,19 @@
 package gc.carbon.profile.builder.v2;
 
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.domain.APIObject;
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.data.builder.BuildableCategoryResource;
 import gc.carbon.data.builder.ResourceBuilder;
-import gc.carbon.domain.data.builder.BuildableItemDefinition;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.profile.builder.BuildableProfileItem;
+import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
-import gc.carbon.domain.Builder;
-import gc.carbon.profile.OnlyActiveProfileService;
-import gc.carbon.profile.ProRataProfileService;
-import gc.carbon.profile.ProfileService;
-import gc.carbon.profile.SelectByProfileService;
+import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.path.PathItem;
+import gc.carbon.profile.*;
+import org.apache.abdera.model.*;
+import org.apache.abdera.ext.history.FeedPagingHelper;
+import org.apache.abdera.ext.opensearch.OpenSearchExtensionFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -23,10 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This file is part of AMEE.
@@ -54,9 +51,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
     private ProfileService profileService;
 
-    BuildableCategoryResource resource;
+    ProfileCategoryResource resource;
 
-    public ProfileCategoryResourceBuilder(BuildableCategoryResource resource) {
+    public ProfileCategoryResourceBuilder(ProfileCategoryResource resource) {
         this.resource = resource;
         this.profileService = resource.getProfileService();
     }
@@ -65,15 +62,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         JSONObject obj = new JSONObject();
 
-        // TODO - Move up to sibling
-        // Add APIVersion
-        obj.put("apiVersion", resource.getVersion().getJSONObject());
-
         // add objects
         obj.put("path", resource.getFullPath());
-        obj.put("startDate", resource.getStartDate());
-        obj.put("endDate", (resource.getEndDate() != null) ? resource.getEndDate().toString() : "");
-
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
@@ -87,13 +77,13 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         // add Data Categories via pathItem to children
         JSONArray dataCategories = new JSONArray();
-        for (APIObject pi : resource.getChildrenByType("DC")) {
+        for (PathItem pi : resource.getChildrenByType("DC")) {
             dataCategories.put(pi.getJSONObject());
         }
         obj.put("profileCategories", dataCategories);
 
         // profile items
-        List<? extends BuildableProfileItem> profileItems;
+        List<ProfileItem> profileItems;
         Pager pager = null;
 
         if (resource.isGet()) {
@@ -110,7 +100,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         if (!profileItems.isEmpty()) {
             JSONArray jsonProfileItems = new JSONArray();
             obj.put("profileItems", jsonProfileItems);
-            for (BuildableProfileItem pi : profileItems) {
+            for (ProfileItem pi : profileItems) {
                 pi.setBuilder(new ProfileItemBuilder(pi));
                 jsonProfileItems.put(pi.getJSONObject(false));
             }
@@ -128,7 +118,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             if (!profileItems.isEmpty()) {
                 JSONArray profileItemsJSonn = new JSONArray();
                 obj.put("profileItems", profileItems);
-                for (BuildableProfileItem pi : profileItems) {
+                for (ProfileItem pi : profileItems) {
                     setBuilder(pi);
                     profileItemsJSonn.put(pi.getJSONObject(false));
                 }
@@ -148,12 +138,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         // create element
         Element element = document.createElement("ProfileCategoryResource");
 
-        // Add APIVersion
-        element.appendChild(resource.getVersion().getElement(document));
-
         element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));
-        element.appendChild(APIUtils.getElement(document, "StartDate", resource.getStartDate().toString()));
-        element.appendChild(APIUtils.getElement(document, "EndDate", (resource.getEndDate() != null) ? resource.getEndDate().toString() : ""));
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
@@ -167,13 +152,13 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         // add Data Categories via pathItem to children
         Element dataCategoriesElement = document.createElement("ProfileCategories");
-        for (APIObject dc : resource.getChildrenByType("DC")) {
+        for (PathItem dc : resource.getChildrenByType("DC")) {
             dataCategoriesElement.appendChild(dc.getElement(document));
         }
         element.appendChild(dataCategoriesElement);
 
         // profile items
-        List<? extends BuildableProfileItem> profileItems;
+        List<ProfileItem> profileItems;
         Pager pager = null;
 
         if (resource.isGet()) {
@@ -188,9 +173,10 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         }
 
         if (!profileItems.isEmpty()) {
+
             Element profileItemsElement = document.createElement("ProfileItems");
             element.appendChild(profileItemsElement);
-            for (BuildableProfileItem pi : profileItems) {
+            for (ProfileItem pi : profileItems) {
                 setBuilder(pi);
                 profileItemsElement.appendChild(pi.getElement(document, false));
             }
@@ -209,7 +195,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         return element;
     }
 
-    private List<? extends BuildableProfileItem> pageResults(List<? extends BuildableProfileItem> profileItems, Pager pager) {
+    private List<ProfileItem> pageResults(List<ProfileItem> profileItems, Pager pager) {
         // set-up pager
         if (!(profileItems == null || profileItems.isEmpty())) {
             pager.setCurrentPage(resource.getPage());
@@ -224,9 +210,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         return profileItems;
     }
 
-    private List<? extends BuildableProfileItem> getProfileItems() {
-        BuildableItemDefinition itemDefinition;
-        List<? extends BuildableProfileItem> profileItems = new ArrayList<BuildableProfileItem>();
+    private List<ProfileItem> getProfileItems() {
+        ItemDefinition itemDefinition;
+        List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
 
         // must have ItemDefinition
         itemDefinition = resource.getProfileBrowser().getDataCategory().getItemDefinition();
@@ -247,11 +233,11 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         return profileItems;
     }
 
-    private BigDecimal getTotalAmount(List<? extends BuildableProfileItem> profileItems) {
+    private BigDecimal getTotalAmount(List<ProfileItem> profileItems) {
         BigDecimal totalAmount = ProfileItem.ZERO;
         BigDecimal amount;
 
-        for (BuildableProfileItem profileItem : profileItems) {
+        for (ProfileItem profileItem : profileItems) {
             try {
                 amount = profileItem.getAmount();
                 amount = amount.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
@@ -269,7 +255,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         return totalAmount;
     }
 
-    private void setBuilder(BuildableProfileItem pi) {
+    private void setBuilder(ProfileItem pi) {
         if (resource.getProfileBrowser().returnAmountInExternalUnit()) {
             pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getAmountUnit()));
         } else {
@@ -280,7 +266,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
     public Map<String, Object> getTemplateValues() {
 
         // profile items
-        List<? extends BuildableProfileItem> profileItems;
+        List<ProfileItem> profileItems;
         Pager pager;
 
         if (resource.isGet()) {
@@ -295,13 +281,13 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         }
 
         // init builder to ensure units are represented correctly
-        for (BuildableProfileItem pi : profileItems) {
+        for (ProfileItem pi : profileItems) {
             ProfileItemBuilder builder = new ProfileItemBuilder(pi);
             pi.setConvertedAmount(builder.getAmount(pi));
         }
 
-        APIObject profile = resource.getProfile();
-        APIObject dataCategory = resource.getDataCategory();
+        Profile profile = resource.getProfile();
+        DataCategory dataCategory = resource.getDataCategory();
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("browser", resource.getProfileBrowser());
         values.put("profile", profile);
@@ -315,4 +301,162 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         return values;
     }
 
+    public org.apache.abdera.model.Element getAtomElement() {
+        if (resource.isGet()) {
+            return getAtomElementForGet();
+        } else {
+            return getAtomElementForPost();
+        }
+    }
+
+    private org.apache.abdera.model.Element getAtomElementForGet() {
+
+        AtomFeed atomFeed = AtomFeed.getInstance();
+
+        final Feed feed = atomFeed.newFeed();
+        feed.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart") + "/?v=" + resource.getVersion());
+        feed.setTitle("Profile " + resource.getProfile().getDisplayName() + ", Category " + resource.getPathItem().getFullPath());
+
+        atomFeed.newID(feed).setText("urn:dataCategory:" + resource.getDataCategory().getUid());
+
+        atomFeed.addGenerator(feed, resource.getVersion());
+
+        atomFeed.addLinks(feed, feed.getBaseUri().toString());
+
+        Person author = atomFeed.newAuthor(feed);
+        author.setName(resource.getProfile().getDisplayPath());
+
+        Date lastModified = new Date(0);
+
+        List<ProfileItem> profileItems = getProfileItems();
+
+        atomFeed.addTotalAmount(feed, getTotalAmount(profileItems).toString(), resource.getProfileBrowser().getAmountUnit().toString());
+
+        //TODO - Is this the correct way to use the pager?
+        Pager pager = resource.getPager();
+        if (profileItems.size() > pager.getItemsPerPage()) {
+            profileItems = pageResults(profileItems, pager);
+            FeedPagingHelper.setNext(feed, feed.getBaseUri() + "?page=" + pager.getNextPage());
+            if (pager.getCurrentPage() != 1) {
+                FeedPagingHelper.setPrevious(feed, feed.getBaseUri() + "?page=" + pager.getPreviousPage());
+            }
+            FeedPagingHelper.setFirst(feed, feed.getBaseUri().toString());
+            FeedPagingHelper.setLast(feed, feed.getBaseUri() + "?page=" + pager.getLastPage());
+        }
+
+        if (resource.getProfileBrowser().isQuery())  {
+            feed.addExtension(OpenSearchExtensionFactory.ITEMS_PER_PAGE).setText("" + pager.getItemsPerPage());
+            feed.addExtension(OpenSearchExtensionFactory.START_INDEX).setText("1");
+            feed.addExtension(OpenSearchExtensionFactory.TOTAL_RESULTS).setText(""+ pager.getItems());
+            org.apache.abdera.model.Element query = feed.addExtension(OpenSearchExtensionFactory.QUERY);
+            query.setAttributeValue("role","request");
+            query.setAttributeValue(AtomFeed.Q_NAME_START_DATE,resource.getProfileBrowser().getStartDate().toString());
+            if (resource.getProfileBrowser().getEndDate() != null) {
+                query.setAttributeValue(AtomFeed.Q_NAME_END_DATE,resource.getProfileBrowser().getEndDate().toString());
+            }
+        }
+
+        for(ProfileItem profileItem : profileItems) {
+
+            Entry entry = feed.insertEntry();
+
+            Text title = atomFeed.newTitle(entry);
+            title.setText(profileItem.getDisplayName() + ", " + resource.getDataCategory().getDisplayName());
+            Text subtitle = atomFeed.newSubtitle(entry);
+            subtitle.setText(atomFeed.format(profileItem.getStartDate()) + ((profileItem.getEndDate() != null) ? " - " + atomFeed.format(profileItem.getEndDate()) : ""));
+
+            atomFeed.addLinks(entry, profileItem.getUid());
+
+            IRIElement eid = atomFeed.newID(entry);
+            eid.setText("urn:item:" + profileItem.getUid());
+
+            if (profileItem.getModified().after(lastModified))
+                lastModified = profileItem.getModified();
+
+            entry.setPublished(profileItem.getCreated());
+            entry.setUpdated(profileItem.getModified());
+
+            atomFeed.addStartDate(entry, profileItem.getStartDate().toString());
+
+            if (profileItem.getEndDate() != null) {
+                atomFeed.addEndDate(entry, profileItem.getEndDate().toString());
+            }
+
+            atomFeed.addAmount(entry, profileItem.getAmount().toString(), resource.getProfileBrowser().getAmountUnit().toString());
+
+            HCalendar content = new HCalendar();
+            content.addSummary(profileItem.getAmount() + " " + resource.getProfileBrowser().getAmountUnit().toString());
+            content.addStartDate(profileItem.getStartDate());
+
+            if (profileItem.getEndDate() != null) {
+                content.addEndDate(profileItem.getEndDate());
+            }
+
+            if (profileItem.getName() != null) {
+                atomFeed.addName(entry, profileItem.getName());
+            }
+
+            entry.setContentAsHtml(content.toString());
+
+            Category cat = atomFeed.newItemCategory(entry);
+            cat.setTerm(profileItem.getDataItem().getUid());
+            cat.setLabel(profileItem.getDataItem().getItemDefinition().getName());
+        }
+
+        feed.setUpdated(lastModified);
+
+        return feed;
+    }
+
+    private org.apache.abdera.model.Element getAtomElementForPost() {
+        AtomFeed atomFeed = AtomFeed.getInstance();
+
+        //TODO - Add batch support
+        ProfileItem profileItem = resource.getProfileItems().get(0);
+
+        Entry entry = atomFeed.newEntry();
+        entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart") + "/?v=" + resource.getVersion());
+
+        Text title = atomFeed.newTitle(entry);
+        title.setText(profileItem.getDisplayName() + ", " + resource.getDataCategory().getDisplayName());
+        Text subtitle = atomFeed.newSubtitle(entry);
+        subtitle.setText(atomFeed.format(profileItem.getStartDate()) + ((profileItem.getEndDate() != null) ? " - " + atomFeed.format(profileItem.getEndDate()) : ""));
+
+        atomFeed.addLinks(entry, profileItem.getUid());
+
+        IRIElement eid = atomFeed.newID(entry);
+        eid.setText("urn:item:" + profileItem.getUid());
+
+        entry.setPublished(profileItem.getCreated());
+        entry.setUpdated(profileItem.getModified());
+
+        HCalendar content = new HCalendar();
+        content.addSummary(profileItem.getAmount() + " " + resource.getProfileBrowser().getAmountUnit().toString());
+        content.addStartDate(profileItem.getStartDate());
+        if (profileItem.getEndDate() != null) {
+            content.addEndDate(profileItem.getEndDate());
+        }
+        entry.setContentAsHtml(content.toString());
+
+        atomFeed.addStartDate(entry, profileItem.getStartDate().toString());
+
+        if (profileItem.getEndDate() != null) {
+            atomFeed.addEndDate(entry, profileItem.getEndDate().toString());
+        }
+
+        if (profileItem.getName() != null) {
+            atomFeed.addName(entry, profileItem.getName());
+        }
+
+        atomFeed.addAmount(entry, profileItem.getAmount().toString(), resource.getProfileBrowser().getAmountUnit().toString());
+
+        atomFeed.addItemValues(entry, profileItem.getItemValues());
+
+        Category cat = atomFeed.newItemCategory(entry);
+        cat.setTerm(profileItem.getDataItem().getUid());
+        cat.setLabel(profileItem.getDataItem().getItemDefinition().getName());
+
+        return entry;
+    }
 }
+

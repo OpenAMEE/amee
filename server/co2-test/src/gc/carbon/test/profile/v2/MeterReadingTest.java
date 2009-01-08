@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class MeterReadingTest extends BaseProfileCategoryTest {
 
-    private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMdd'T'HHmm");
+    private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mmZ");
 
     private static List<String> readings = new ArrayList<String>();
 

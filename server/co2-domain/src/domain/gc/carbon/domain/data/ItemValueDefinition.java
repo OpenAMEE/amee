@@ -25,7 +25,6 @@ import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import gc.carbon.domain.*;
-import gc.carbon.domain.data.builder.BuildableItemValueDefinition;
 import gc.carbon.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -49,7 +48,7 @@ import java.util.List;
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ItemValueDefinition implements PersistentObject, BuildableItemValueDefinition {
+public class ItemValueDefinition implements PersistentObject {
 
     @Id
     @GeneratedValue

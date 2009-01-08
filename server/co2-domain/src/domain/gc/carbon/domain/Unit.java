@@ -2,11 +2,9 @@ package gc.carbon.domain;
 
 import gc.carbon.domain.profile.ProfileItem;
 
-import javax.measure.unit.SI;
 import javax.measure.DecimalMeasure;
 import java.math.BigDecimal;
 
-import com.jellymold.utils.domain.APIObject;
 import com.jellymold.utils.domain.APIUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

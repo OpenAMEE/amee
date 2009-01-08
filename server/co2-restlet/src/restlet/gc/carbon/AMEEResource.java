@@ -1,20 +1,22 @@
 package gc.carbon;
 
-import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.ThreadBeanHolder;
-import gc.carbon.APIVersion;
-import gc.carbon.data.DataBrowser;
 import gc.carbon.domain.path.PathItem;
-import gc.carbon.profile.ProfileBrowser;
+import gc.carbon.profile.ProfileConstants;
+import gc.carbon.profile.ProfileService;
+import gc.carbon.data.DataService;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -37,12 +39,19 @@ import java.util.Map;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public abstract class AMEEResource extends BaseResource implements BeanFactoryAware {
+@Component("AMEEResource")
+public class AMEEResource extends BaseResource implements BeanFactoryAware {
 
     protected APIVersion apiVersion;
     protected BeanFactory beanFactory;
     protected Environment environment;
     protected PathItem pathItem;
+
+    @Autowired
+    protected ProfileService profileService;
+
+    @Autowired
+    protected DataService dataService;
 
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -67,8 +76,18 @@ public abstract class AMEEResource extends BaseResource implements BeanFactoryAw
         pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
     }
 
+    public PathItem getPathItem() {
+        return pathItem;    
+    }
+
     public Environment getEnvironment() {
         return environment;
+    }
+
+
+    //TODO - Implementing here so that subclasses are not required to. Admin client templates will be phased out in time.
+    public String getTemplatePath() {
+        return null;
     }
 
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {

@@ -29,7 +29,7 @@ import org.restlet.resource.DomRepresentation;
  */
 public class BaseDataTest extends APITestCase {
 
-    protected static final DateTimeFormatter FMT = DateTimeFormat.forPattern("yyyyMMdd'T'HHmm");
+    protected static final DateTimeFormatter FMT = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mmZ");
     protected static final String CATEGORY = "/data/home/energy/quantity";
 
     protected TestClient client;

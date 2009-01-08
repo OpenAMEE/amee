@@ -84,8 +84,16 @@ public class DataService {
         return dao.getDataCategories(env);
     }
 
+    public List<DataItem> getDataItems(DataCategory dc, StartEndDate startDate) {
+        return getDataItems(dc, startDate, null);
+    }
+
     public List<DataItem> getDataItems(DataCategory dc, StartEndDate startDate, StartEndDate endDate) {
         return dao.getDataItems(dc, startDate, endDate);
+    }
+
+    public List<DataItem> getDataItems(DataCategory dc) {
+        return dao.getDataItems(dc);
     }
 
     public void persist(DataCategory dc) {

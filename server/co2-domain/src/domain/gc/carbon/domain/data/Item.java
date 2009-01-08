@@ -23,7 +23,6 @@ import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
-import gc.carbon.domain.data.builder.BuildableItem;
 import gc.carbon.domain.path.InternalValue;
 import gc.carbon.domain.path.Pathable;
 import gc.carbon.domain.profile.StartEndDate;
@@ -39,10 +38,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import javax.measure.unit.Unit;
-import javax.measure.unit.SI;
-import javax.measure.unit.NonSI;
-import javax.measure.quantity.Mass;
 import java.util.*;
 
 @Entity
@@ -51,7 +46,7 @@ import java.util.*;
 // TODO: add index to TYPE
 @DiscriminatorColumn(name = "TYPE", length = 3)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public abstract class Item implements PersistentObject, Pathable, BuildableItem {
+public abstract class Item implements PersistentObject, Pathable {
 
     @Id
     @GeneratedValue
@@ -119,6 +114,16 @@ public abstract class Item implements PersistentObject, Pathable, BuildableItem 
             itemValuesMap.put(itemValue.getDisplayPath(), itemValue);
         }
         return itemValuesMap;
+    }
+
+    public String getItemValuesString() {
+        StringBuilder builder = new StringBuilder();
+        List<ItemValue> itemValues = getItemValues();
+        builder.append(itemValues.get(0).getDisplayPath() +"=" + itemValues.get(0).getValue());
+        for (int i = 1; i < itemValues.size(); i++) {
+            builder.append(", "+itemValues.get(i).getDisplayPath() +"=" + itemValues.get(i).getValue());
+        }
+        return builder.toString();
     }
 
     @Transient

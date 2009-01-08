@@ -35,12 +35,13 @@ import java.util.List;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryXMLAcceptor extends Acceptor {
+public class ProfileCategoryXMLAcceptor implements Acceptor {
 
     private final Log log = LogFactory.getLog(getClass());
+    private ProfileCategoryResource resource;
 
     public ProfileCategoryXMLAcceptor(ProfileCategoryResource resource) {
-        super(resource);
+        this.resource = resource;
     }
 
     public List<ProfileItem> accept(Form form) {
