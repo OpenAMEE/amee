@@ -1,9 +1,10 @@
-package gc.carbon.data.builder;
+package gc.carbon.profile.builder;
 
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileItemResource;
 import gc.carbon.profile.builder.v2.ProfileCategoryResourceBuilder;
 import gc.carbon.profile.builder.v2.ProfileItemResourceBuilder;
+import gc.carbon.ResourceBuilder;
 
 /**
  * This file is part of AMEE.

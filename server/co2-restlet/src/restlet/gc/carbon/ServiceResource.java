@@ -134,6 +134,8 @@ public class ServiceResource extends AMEEResource {
                     cat.setLabel(di.getItemDefinition().getName() + " (" + di.getItemValuesString() + ")");
                 }
 
+                addCollections(pii, ws);
+                
             } else {
                 addCollections(pii, ws);
             }

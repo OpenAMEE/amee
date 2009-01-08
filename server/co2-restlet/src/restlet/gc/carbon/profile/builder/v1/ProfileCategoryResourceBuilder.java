@@ -6,7 +6,7 @@ import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.cache.CacheableFactory;
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.data.builder.ResourceBuilder;
+import gc.carbon.ResourceBuilder;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.builder.v1.ProfileItemBuilder;

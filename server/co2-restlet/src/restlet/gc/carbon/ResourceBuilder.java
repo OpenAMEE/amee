@@ -1,4 +1,4 @@
-package gc.carbon.data.builder;
+package gc.carbon;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -6,8 +6,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.util.Map;
-
-import gc.carbon.profile.builder.v2.AtomFeed;
 
 /**
  * This file is part of AMEE.

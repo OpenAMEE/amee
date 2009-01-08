@@ -2,7 +2,7 @@ package gc.carbon.profile.builder.v2;
 
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.data.builder.ResourceBuilder;
+import gc.carbon.ResourceBuilder;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
@@ -111,7 +111,10 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             }
 
             // add CO2 amount
-            obj.put("totalAmount", getTotalAmount(profileItems).toString());
+            JSONObject totalAmount = new JSONObject();
+            totalAmount.put("value", getTotalAmount(profileItems).toString());
+            totalAmount.put("unit", resource.getProfileBrowser().getAmountUnit());
+            obj.put("totalAmount", totalAmount);
 
         } else if (resource.isPost() || resource.isPut()) {
 
@@ -187,9 +190,11 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             }
 
             // add CO2 amount
-            element.appendChild(APIUtils.getElement(document,
+            Element totalAmount = APIUtils.getElement(document,
                     "TotalAmount",
-                    getTotalAmount(profileItems).toString()));
+                    getTotalAmount(profileItems).toString());
+            totalAmount.setAttribute("unit", resource.getProfileBrowser().getAmountUnit().toString());
+            element.appendChild(totalAmount);
 
         }
         return element;

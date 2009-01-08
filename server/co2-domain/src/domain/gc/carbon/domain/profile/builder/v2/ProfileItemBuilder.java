@@ -90,7 +90,7 @@ public class ProfileItemBuilder implements Builder {
 
         JSONObject amount = new JSONObject();
         amount.put("value", getAmount(item));
-        returnUnit.getJSONObject(amount);
+        amount.put("unit", returnUnit);
         obj.put("amount", amount);
 
         obj.put("startDate", item.getStartDate().toString());
@@ -115,10 +115,10 @@ public class ProfileItemBuilder implements Builder {
         buildElement(document, element, detailed);
 
         Element amount = document.createElement("Amount");
-        amount.appendChild(APIUtils.getElement(document, "Value", getAmount(item)));
-        returnUnit.getElement(amount, document);
+        amount.setTextContent(getAmount(item));
+        amount.setAttribute("unit", returnUnit.toString());
         element.appendChild(amount);
-
+        
         element.appendChild(APIUtils.getElement(document, "StartDate", item.getStartDate().toString()));
         element.appendChild(APIUtils.getElement(document, "EndDate", (item.getEndDate() != null) ? item.getEndDate().toString() : ""));
 

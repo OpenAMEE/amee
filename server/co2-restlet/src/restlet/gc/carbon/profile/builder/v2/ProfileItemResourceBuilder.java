@@ -1,23 +1,18 @@
 package gc.carbon.profile.builder.v2;
 
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.data.builder.ResourceBuilder;
+import gc.carbon.ResourceBuilder;
 import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.data.ItemValue;
 import gc.carbon.profile.ProfileItemResource;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.restlet.data.MediaType;
 import org.apache.abdera.model.*;
-import org.apache.xerces.dom.DocumentImpl;
 
-import javax.xml.namespace.QName;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Date;
 
 /**
  * This file is part of AMEE.

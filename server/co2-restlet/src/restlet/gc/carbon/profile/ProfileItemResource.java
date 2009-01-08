@@ -20,8 +20,8 @@
 package gc.carbon.profile;
 
 import gc.carbon.profile.acceptor.*;
-import gc.carbon.data.builder.ResourceBuilder;
-import gc.carbon.data.builder.ResourceBuilderFactory;
+import gc.carbon.profile.builder.ResourceBuilderFactory;
+import gc.carbon.ResourceBuilder;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import org.apache.commons.logging.Log;
