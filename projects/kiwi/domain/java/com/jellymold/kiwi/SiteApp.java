@@ -20,12 +20,15 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SiteApp implements EnvironmentObject, DatedObject {
 
+    public final static int URI_PATTERN_SIZE = 255;
+    public final static int SKIN_PATH_SIZE = 255;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -40,10 +43,10 @@ public class SiteApp implements EnvironmentObject, DatedObject {
     @JoinColumn(name = "SITE_ID")
     private Site site;
 
-    @Column(name = "URI_PATTERN", length = 255, nullable = false)
+    @Column(name = "URI_PATTERN", length = URI_PATTERN_SIZE, nullable = false)
     private String uriPattern = "";
 
-    @Column(name = "SKIN_PATH", length = 255, nullable = false)
+    @Column(name = "SKIN_PATH", length = SKIN_PATH_SIZE, nullable = false)
     private String skinPath = "";
 
     @Column(name = "DEFAULT_APP")

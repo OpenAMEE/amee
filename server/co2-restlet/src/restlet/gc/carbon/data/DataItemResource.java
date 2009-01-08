@@ -24,12 +24,8 @@ import com.jellymold.sheet.Choices;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
-import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
-import gc.carbon.AMEEResource;
-import gc.carbon.data.DataServiceDAO;
-import gc.carbon.data.DataSheetService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -51,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+//TODO - move to builder model
 @Component
 @Scope("prototype")
 public class DataItemResource extends BaseDataResource implements Serializable {

@@ -19,7 +19,6 @@
 */
 package gc.carbon.domain.path;
 
-import com.jellymold.utils.domain.APIObject;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.ObjectType;
 import org.json.JSONException;
@@ -33,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class PathItem implements APIObject, Serializable, Comparable {
+public class PathItem implements Serializable, Comparable {
 
     private PathItemGroup pathItemGroup = null;
     private Long id = 0L;

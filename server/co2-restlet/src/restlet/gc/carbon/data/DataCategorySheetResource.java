@@ -32,10 +32,7 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.util.Map;
 
-import gc.carbon.AMEEResource;
-import gc.carbon.data.DataSheetService;
-
-// TODO: set content type to CSV 
+// TODO - move to builder model
 
 @Component
 @Scope("prototype")

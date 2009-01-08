@@ -22,13 +22,13 @@ package gc.carbon.data;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
+import com.jellymold.utils.APIFault;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
-import gc.carbon.APIFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
@@ -51,10 +51,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * TODO: may be a more elegant way to handle incoming representations of different media types
- * TODO: may be better to break this class down into components that handle post/put and json/xml individually
- */
+//TODO - move to builder model
 @Component("dataCategoryResource")
 @Scope("prototype")
 public class DataCategoryResource extends BaseDataResource implements Serializable {
@@ -113,13 +110,6 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         obj.put("path", pathItem.getFullPath());
 
         if (isGet()) {
-
-            obj.put("startDate", dataBrowser.getStartDate());
-            if (dataBrowser.getEndDate() != null) {
-                obj.put("endDate", dataBrowser.getEndDate());
-            } else {
-                obj.put("endDate", "");
-            }
 
             // add DataCategory
             obj.put("dataCategory", dataBrowser.getDataCategory().getJSONObject());
@@ -185,13 +175,6 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
 
         if (isGet()) {
-
-            element.appendChild(APIUtils.getElement(document, "StartDate", dataBrowser.getStartDate().toString()));
-            if (dataBrowser.getEndDate() != null) {
-                element.appendChild(APIUtils.getElement(document, "EndDate", dataBrowser.getEndDate().toString()));
-            } else {
-                element.appendChild(APIUtils.getElement(document, "EndDate", ""));
-            }
 
             // add DataCategory
             element.appendChild(dataBrowser.getDataCategory().getElement(document));
@@ -561,7 +544,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         }
 
         if (dataItem.getEndDate() != null && dataItem.getEndDate().before(dataItem.getStartDate())) {
-            badRequest(APIFault.INVALID_DATE_RANGE.toString());
+            badRequest(APIFault.INVALID_DATE_RANGE);
             return null;
         }
 

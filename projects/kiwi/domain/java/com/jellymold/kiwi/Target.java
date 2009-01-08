@@ -21,12 +21,17 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Target implements DatedObject, Comparable, Serializable {
 
+    public final static int NAME_SIZE = 100;
+    public final static int DESCRIPTION_SIZE = 1000;
+    public final static int URI_PATTERN_SIZE = 1000;
+    public final static int TARGET_SIZE = 1000;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -36,16 +41,16 @@ public class Target implements DatedObject, Comparable, Serializable {
     @Column(name = "TYPE")
     private TargetType type = TargetType.SEAM_COMPONENT_RESOURCE;
 
-    @Column(name = "NAME", length = 100, nullable = false)
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "DESCRIPTION", length = 1000, nullable = false)
+    @Column(name = "DESCRIPTION", length = DESCRIPTION_SIZE, nullable = false)
     private String description = "";
 
-    @Column(name = "URI_PATTERN", length = 1000, nullable = false)
+    @Column(name = "URI_PATTERN", length = URI_PATTERN_SIZE, nullable = false)
     private String uriPattern = "";
 
-    @Column(name = "TARGET", length = 1000, nullable = false)
+    @Column(name = "TARGET", length = TARGET_SIZE, nullable = false)
     private String target = "";
 
     @Column(name = "DEFAULT_TARGET")

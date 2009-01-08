@@ -21,7 +21,6 @@ package gc.carbon.profile;
 
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.BaseFilter;
-import gc.carbon.profile.ProfileServiceDAO;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.path.PathItemGroup;
 import gc.carbon.domain.profile.Profile;
@@ -32,6 +31,7 @@ import org.restlet.Application;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Status;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
@@ -51,14 +51,15 @@ public class ProfileFilter extends BaseFilter {
     protected int beforeHandle(Request request, Response response) {
         log.debug("beforeHandle()");
         setVersion(request);
-        return rewrite(request);
+        setAccept(request);
+        return rewrite(request, response);
     }
 
     protected void afterHandle(Request request, Response response) {
         log.debug("afterHandle()");
     }
 
-    protected int rewrite(Request request) {
+    protected int rewrite(Request request, Response response) {
         log.info("rewrite() - start profile path rewrite");
         String path = null;
         Reference reference = request.getResourceRef();
@@ -91,11 +92,18 @@ public class ProfileFilter extends BaseFilter {
                     }
                 }
             }
-        }
-        if (path != null) {
-            // rewrite paths
-            request.getAttributes().put("previousResourceRef", reference.toString());
-            reference.setPath(path);
+
+            if (path != null) {
+                // rewrite paths
+                request.getAttributes().put("previousResourceRef", reference.toString());
+                //TODO - There must be a better way of doing this...
+                request.getAttributes().put("previousHierachicalPart", reference.getScheme() + ":" + reference.getHierarchicalPart().toString());
+                reference.setPath(path);
+            } else {
+                response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                return STOP;                
+            }
+
         }
         log.info("rewrite() - end profile path rewrite");
         return CONTINUE;

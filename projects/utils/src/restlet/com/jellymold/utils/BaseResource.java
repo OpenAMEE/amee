@@ -8,23 +8,27 @@ import freemarker.template.TemplateModelException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.dom.DocumentImpl;
+import org.apache.abdera.model.Feed;
+import org.apache.abdera.factory.Factory;
+import org.apache.abdera.Abdera;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.*;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.ext.json.JsonRepresentation;
-import org.restlet.resource.DomRepresentation;
-import org.restlet.resource.Representation;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.Variant;
+import org.restlet.resource.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.springframework.context.ApplicationContext;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.*;
+import java.io.Writer;
+import java.io.IOException;
 
-public abstract class BaseResource extends ComponentResource implements APIObject {
+public abstract class BaseResource extends ComponentResource {
 
     protected final Log log = LogFactory.getLog(getClass());
 
@@ -42,13 +46,11 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
 
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        List<Variant> varients = super.getVariants();
-        if (isStandardWebBrowser()) {
-            varients.add(new Variant(MediaType.TEXT_HTML));
-        } else {
-            varients.add(new Variant(MediaType.APPLICATION_XML));
-            varients.add(new Variant(MediaType.APPLICATION_JSON));
-        }
+        List<Variant> variants = super.getVariants();
+        variants.add(new Variant(MediaType.APPLICATION_ATOM_XML));
+        variants.add(new Variant(MediaType.APPLICATION_XML));
+        variants.add(new Variant(MediaType.APPLICATION_JSON));
+        variants.add(new Variant(MediaType.TEXT_HTML));
     }
 
     @Override
@@ -60,11 +62,12 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
             representation = getJsonRepresentation();
         } else if (variant.getMediaType().equals(MediaType.APPLICATION_XML)) {
             representation = getDomRepresentation();
+        } else if (variant.getMediaType().equals(MediaType.APPLICATION_ATOM_XML)) {
+            representation = getAtomRepresentation();
         } else {
             representation = super.represent(variant);
         }
         if (representation != null) {
-            // TODO: not sure why we're forcing this
             representation.setCharacterSet(CharacterSet.UTF_8);
             // TODO: need an option for this
             long oneDay = 1000L * 60L * 60L * 24L;
@@ -84,7 +87,7 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
                 MediaType.TEXT_HTML);
     }
 
-    protected Representation getJsonRepresentation() {
+    protected Representation getJsonRepresentation() throws ResourceException {
         try {
             return new JsonRepresentation(getJSONObject());
         } catch (JSONException e) {
@@ -94,12 +97,22 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
         }
     }
 
-    protected Representation getDomRepresentation() {
+    protected Representation getDomRepresentation() throws ResourceException {
         Document document = new DocumentImpl();
         Element element = document.createElement("Resources");
+        element.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns","http://schemas.amee.cc/2.0");
         element.appendChild(getElement(document));
         document.appendChild(element);
         return new DomRepresentation(MediaType.APPLICATION_XML, document);
+    }
+
+    protected Representation getAtomRepresentation() throws ResourceException {
+        final org.apache.abdera.model.Element atomElement = getAtomElement();
+        return new WriterRepresentation(MediaType.APPLICATION_ATOM_XML) {
+            public void write(Writer writer) throws IOException {
+                atomElement.writeTo(writer);
+            }
+        };
     }
 
     public abstract String getTemplatePath();
@@ -161,28 +174,24 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
         return parentPath;
     }
 
-    public JSONObject getJSONObject() throws JSONException {
+    public org.apache.abdera.model.Element getAtomElement() throws ResourceException {
+        throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
+    }
+
+    public JSONObject getJSONObject() throws JSONException, ResourceException {
         return getJSONObject(true);
     }
 
-    public JSONObject getJSONObject(boolean detailed) throws JSONException {
-        return new JSONObject();
+    public JSONObject getJSONObject(boolean detailed) throws JSONException, ResourceException {
+        throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
     }
 
-    public JSONObject getIdentityJSONObject() throws JSONException {
-        return new JSONObject();
-    }
-
-    public Element getElement(Document document) {
+    public Element getElement(Document document) throws ResourceException {
         return getElement(document, true);
     }
 
-    public Element getElement(Document document, boolean detailed) {
-        return document.createElement("Resource");
-    }
-
-    public Element getIdentityElement(Document document) {
-        return document.createElement("Resource");
+    public Element getElement(Document document, boolean detailed) throws ResourceException {
+        throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
     }
 
     public void setPage(Request request) {
@@ -252,24 +261,36 @@ public abstract class BaseResource extends ComponentResource implements APIObjec
     }
 
     public void notAuthorized() {
-        getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+        status(Status.CLIENT_ERROR_FORBIDDEN, null);
     }
 
     public void notFound() {
-        getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+        status(Status.CLIENT_ERROR_NOT_FOUND, null);
     }
 
     public void badRequest() {
-        getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        status(Status.CLIENT_ERROR_BAD_REQUEST, null);
     }
 
-    public void badRequest(String msg) {
-        log.debug("badRequest() - " + msg);
-        getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST, msg);
+    public void conflict(APIFault fault) {
+        status(Status.CLIENT_ERROR_CONFLICT, fault);
+    }
+
+    public void badRequest(APIFault fault) {
+        status(Status.CLIENT_ERROR_BAD_REQUEST, fault);
     }
 
     public void error() {
-        getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
+        status(Status.SERVER_ERROR_INTERNAL, null);
+    }
+
+    private void status(Status status, APIFault fault) {
+        log.debug("status() - status code " + status + " message: " + ((fault != null) ? fault.toString() : "<EMPTY>"));
+        if (fault != null) {
+            getResponse().setStatus(status, fault.toString());
+        } else {
+            getResponse().setStatus(status);
+        }
     }
 
     public Form getForm() {

@@ -25,13 +25,13 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import gc.carbon.domain.Builder;
-import gc.carbon.domain.data.builder.BuildableItemValue;
+import gc.carbon.domain.data.ItemValue;
 
 public class ItemValueBuilder implements Builder {
 
-    private BuildableItemValue itemValue;
+    private ItemValue itemValue;
 
-    public ItemValueBuilder(BuildableItemValue itemValue) {
+    public ItemValueBuilder(ItemValue itemValue) {
         this.itemValue = itemValue;
     }
 

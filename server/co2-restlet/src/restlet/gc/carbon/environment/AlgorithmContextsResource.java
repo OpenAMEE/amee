@@ -2,8 +2,8 @@ package gc.carbon.environment;
 
 import com.jellymold.utils.BaseResource;
 import gc.carbon.data.DataConstants;
-import gc.carbon.domain.data.AlgorithmContext;
 import gc.carbon.definition.DefinitionServiceDAO;
+import gc.carbon.domain.data.AlgorithmContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;

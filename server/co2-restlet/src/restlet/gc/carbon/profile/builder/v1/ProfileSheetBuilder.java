@@ -1,25 +1,23 @@
 package gc.carbon.profile.builder.v1;
 
-import com.jellymold.utils.cache.CacheableFactory;
-import com.jellymold.utils.ThreadBeanHolder;
-import com.jellymold.utils.ValueType;
+import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Column;
 import com.jellymold.sheet.Row;
 import com.jellymold.sheet.Sheet;
-import com.jellymold.sheet.Cell;
+import com.jellymold.utils.ThreadBeanHolder;
+import com.jellymold.utils.ValueType;
+import com.jellymold.utils.cache.CacheableFactory;
+import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.profile.ProfileBrowser;
+import gc.carbon.profile.ProfileService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
-
-import gc.carbon.profile.ProfileBrowser;
-import gc.carbon.profile.ProfileService;
-import gc.carbon.domain.data.builder.BuildableItemValue;
-import gc.carbon.domain.data.builder.BuildableItemDefinition;
-import gc.carbon.domain.data.builder.BuildableItemValueDefinition;
-import gc.carbon.domain.profile.builder.BuildableProfileItem;
-import gc.carbon.domain.profile.ProfileItem;
 
 public class ProfileSheetBuilder implements CacheableFactory {
 
@@ -37,9 +35,9 @@ public class ProfileSheetBuilder implements CacheableFactory {
 
             List<Column> columns;
             Row row;
-            Map<String, ? extends BuildableItemValue> itemValuesMap;
-            BuildableItemValue itemValue;
-            BuildableItemDefinition itemDefinition;
+            Map<String, ItemValue> itemValuesMap;
+            ItemValue itemValue;
+            ItemDefinition itemDefinition;
             Sheet sheet = null;
             ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowserForFactory");
 
@@ -53,7 +51,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
                 sheet = new Sheet();
                 sheet.setKey(getKey());
                 sheet.setLabel("ProfileItems");
-                for (BuildableItemValueDefinition itemValueDefinition : itemDefinition.getItemValueDefinitions()) {
+                for (ItemValueDefinition itemValueDefinition : itemDefinition.getItemValueDefinitions()) {
                     if (itemValueDefinition.isFromProfile()) {
                         new Column(sheet, itemValueDefinition.getPath(), itemValueDefinition.getName());
                     }
@@ -72,7 +70,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
 
                 // create rows and cells
                 columns = sheet.getColumns();
-                for (BuildableProfileItem profileItem : profileItems) {
+                for (ProfileItem profileItem : profileItems) {
                     itemValuesMap = profileItem.getItemValuesMap();
                     row = new Row(sheet, profileItem.getUid());
                     row.setLabel("ProfileItem");

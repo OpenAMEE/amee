@@ -2,7 +2,7 @@ package gc.carbon.domain.data.builder.v1;
 
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.Builder;
-import gc.carbon.domain.data.builder.BuildableItemValueDefinition;
+import gc.carbon.domain.data.ItemValueDefinition;
 import gc.carbon.domain.mapper.LegacyItemValueDefinitionMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +32,7 @@ public class ItemValueDefinitionBuilder implements Builder {
 
     private LegacyItemValueDefinitionMapper itemValueDefinition;
 
-    public ItemValueDefinitionBuilder(BuildableItemValueDefinition itemValueDefinition) {
+    public ItemValueDefinitionBuilder(ItemValueDefinition itemValueDefinition) {
         this.itemValueDefinition = new LegacyItemValueDefinitionMapper(itemValueDefinition);
     }
 

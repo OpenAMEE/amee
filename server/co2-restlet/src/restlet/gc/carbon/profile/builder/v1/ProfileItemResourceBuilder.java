@@ -1,17 +1,18 @@
 package gc.carbon.profile.builder.v1;
 
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.domain.profile.builder.BuildableProfileItem;
+import gc.carbon.ResourceBuilder;
 import gc.carbon.domain.profile.builder.v1.ProfileItemBuilder;
-import gc.carbon.data.builder.BuildableResource;
-import gc.carbon.data.builder.ResourceBuilder;
+import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.profile.ProfileItemResource;
+import gc.carbon.profile.builder.v2.AtomFeed;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This file is part of AMEE.
@@ -34,15 +35,15 @@ import java.util.HashMap;
  */
 public class ProfileItemResourceBuilder implements ResourceBuilder {
 
-    BuildableResource resource;
+    ProfileItemResource resource;
 
-    public ProfileItemResourceBuilder(BuildableResource resource) {
+    public ProfileItemResourceBuilder(ProfileItemResource resource) {
         this.resource = resource;
     }
 
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
-        BuildableProfileItem profileItem = resource.getProfileItem();
+        ProfileItem profileItem = resource.getProfileItem();
         setBuilder(profileItem);
         obj.put("profileItem", profileItem.getJSONObject());
         obj.put("path", resource.getFullPath());
@@ -52,7 +53,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
 
 
     public Element getElement(Document document) {
-        BuildableProfileItem profileItem = resource.getProfileItem();
+        ProfileItem profileItem = resource.getProfileItem();
         setBuilder(profileItem);
         Element element = document.createElement("ProfileItemResource");
         element.appendChild(profileItem.getElement(document));
@@ -62,7 +63,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
     }
 
     public Map<String, Object> getTemplateValues() {
-        BuildableProfileItem profileItem = resource.getProfileItem();
+        ProfileItem profileItem = resource.getProfileItem();
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("browser", resource.getProfileBrowser());
         values.put("profile", profileItem.getProfile());
@@ -71,7 +72,12 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
         return values;
     }
 
-    private void setBuilder(BuildableProfileItem pi) {
+    //TODO - v1 builders should not need to implement atom feeds
+    public org.apache.abdera.model.Element getAtomElement() {
+        return AtomFeed.getInstance().newFeed();
+    }
+
+    private void setBuilder(ProfileItem pi) {
         if (resource.getProfileBrowser().returnAmountInExternalUnit()) {
             pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getAmountUnit()));
         } else {

@@ -1,25 +1,23 @@
 package gc.carbon.profile;
 
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.domain.APIObject;
+import com.jellymold.utils.APIFault;
 import gc.carbon.AMEEResource;
 import gc.carbon.APIVersion;
-import gc.carbon.APIFault;
+import gc.carbon.data.DataService;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.StartEndDate;
-import gc.carbon.data.builder.BuildableResource;
-import gc.carbon.data.DataService;
+import gc.carbon.domain.path.PathItem;
+import org.joda.time.format.ISOPeriodFormat;
+import org.restlet.Context;
 import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.Context;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.joda.time.format.ISOPeriodFormat;
 
-import java.util.Set;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * This file is part of AMEE.
@@ -41,23 +39,14 @@ import java.util.Date;
  * Website http://www.amee.cc
  */
 @Component("baseProfileResource")
-public abstract class BaseProfileResource extends AMEEResource implements BuildableResource {
-
-    @Autowired
-    protected ProfileService profileService;
-
-    @Autowired
-    protected DataService dataService;
+public abstract class BaseProfileResource extends AMEEResource {
 
     protected ProfileForm form;
     protected ProfileBrowser profileBrowser;
 
-    private APIFault fault = APIFault.NULL;
-
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         this.profileBrowser = (ProfileBrowser) beanFactory.getBean("profileBrowser");
-
     }
 
     public Pager getPager() {
@@ -87,7 +76,7 @@ public abstract class BaseProfileResource extends AMEEResource implements Builda
         return pathItem.getParent() != null;
     }
 
-    public Set<? extends APIObject> getChildrenByType(String type) {
+    public Set<PathItem> getChildrenByType(String type) {
         return pathItem.getChildrenByType(type);
     }
 
@@ -107,14 +96,6 @@ public abstract class BaseProfileResource extends AMEEResource implements Builda
         return profileBrowser.getProfileDate();
     }
 
-    public Date getStartDate() {
-        return profileBrowser.getStartDate();
-    }
-
-    public Date getEndDate() {
-        return profileBrowser.getEndDate();
-    }
-
     public Profile getProfile() {
         return profileBrowser.getProfile();
     }
@@ -131,26 +112,26 @@ public abstract class BaseProfileResource extends AMEEResource implements Builda
     public boolean validateParameters() {
         if (getVersion().isVersionOne()) {
             if (containsCalendarParams()) {
-                fault = APIFault.INVALID_API_PARAMETERS;
+                badRequest(APIFault.INVALID_API_PARAMETERS);
                 return false;
             }
         } else {
             if (!validISODateTimeFormats()) {
-                fault = APIFault.INVALID_DATE_FORMAT;
+                badRequest(APIFault.INVALID_DATE_FORMAT);
                 return false;
             }
             if (isGET()) {
                 if (containsProfileDate()) {
-                    fault = APIFault.INVALID_API_PARAMETERS;
+                    badRequest(APIFault.INVALID_API_PARAMETERS);
                     return false;
                 }
                 if (proRateModeHasNoEndDate()) {
-                    fault = APIFault.INVALID_PRORATA_REQUEST;
+                    badRequest(APIFault.INVALID_PRORATA_REQUEST);
                     return false;
                 }
             } else {
                 if (containsValidFromOrEnd()) {
-                    fault = APIFault.INVALID_API_PARAMETERS;
+                    badRequest(APIFault.INVALID_API_PARAMETERS);
                     return false;
                 }
             }
@@ -199,9 +180,4 @@ public abstract class BaseProfileResource extends AMEEResource implements Builda
         return getForm().getNames().contains("validFrom") ||
                 getForm().getNames().contains("end");
     }
-
-    public APIFault getFault() {
-        return fault;
-    }
-
 }

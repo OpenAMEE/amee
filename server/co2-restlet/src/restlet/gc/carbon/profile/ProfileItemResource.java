@@ -19,23 +19,19 @@
  */
 package gc.carbon.profile;
 
-import gc.carbon.data.builder.ResourceBuilder;
-import gc.carbon.data.builder.ResourceBuilderFactory;
-import gc.carbon.domain.data.ItemValue;
+import gc.carbon.profile.acceptor.*;
+import gc.carbon.profile.builder.ResourceBuilderFactory;
+import gc.carbon.ResourceBuilder;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.profile.StartEndDate;
-import gc.carbon.domain.profile.ValidFromDate;
-import gc.carbon.APIFault;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
-import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.MediaType;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -46,7 +42,7 @@ import org.w3c.dom.Element;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.HashMap;
 
 @Component("profileItemResource")
 @Scope("prototype")
@@ -57,6 +53,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Autowired
     ProfileService profileService;
 
+    private Map<MediaType, Acceptor> acceptors;
     private ResourceBuilder builder;
 
     @Override
@@ -64,7 +61,14 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         super.init(context, request, response);
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
+        setAcceptors();
         setBuilderStrategy();
+    }
+
+    private void setAcceptors() {
+        acceptors = new HashMap<MediaType, Acceptor>();
+        acceptors.put(MediaType.APPLICATION_WWW_FORM, new ProfileItemFormAcceptor(this));
+        acceptors.put(MediaType.APPLICATION_ATOM_XML, new ProfileItemAtomAcceptor(this));
     }
 
     @Override
@@ -99,6 +103,11 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     @Override
+    public org.apache.abdera.model.Element getAtomElement() {
+        return builder.getAtomElement();    
+    }
+
+    @Override
     public void handleGet() {
         log.debug("handleGet()");
         if (profileBrowser.getProfileItemActions().isAllowView()) {
@@ -120,105 +129,29 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Override
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
-        if (profileBrowser.getProfileItemActions().isAllowModify()) {
-            Form form = getForm();
-            ProfileItem profileItem = profileBrowser.getProfileItem();
+        if (getProfileBrowser().getProfileItemActions().isAllowModify()) {
 
-            // ensure updated ProfileItem does not break rules for ProfileItems
-            ProfileItem profileItemCopy = profileItem.getCopy();
-            updateProfileItem(profileItemCopy, form);
-
-            // ensure endDate is not before startDate
-            if (profileItemCopy.getEndDate() != null &&
-                    profileItemCopy.getEndDate().before(profileItemCopy.getStartDate())) {
-                badRequest(APIFault.INVALID_DATE_RANGE.toString());
-                return;
-            }
-
-            if (profileService.isUnique(profileItemCopy)) {
-
-                // update persistent ProfileItem
-                updateProfileItem(profileItem, form);
-
-                // update ItemValues if supplied
-                Map<String, ItemValue> itemValues = profileItem.getItemValuesMap();
-                for (String name : form.getNames()) {
-                    ItemValue itemValue = itemValues.get(name);
-                    if (itemValue != null) {
-                        itemValue.setValue(form.getFirstValue(name));
-                        if (itemValue.hasUnits() && form.getNames().contains(name+"Unit")) {
-                            itemValue.setUnit(form.getFirstValue(name + "Unit"));
-                        }
-                        if (itemValue.hasPerUnits() && form.getNames().contains(name+"PerUnit")) {
-                            itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
-                        }
-                    }
-                }
-                log.debug("storeRepresentation() - ProfileItem updated");
-
-                // all done, need to recalculate and clear caches
-                profileService.calculate(profileItem);
-                profileService.clearCaches(profileBrowser);
-
+            List<ProfileItem> profileItems = getAcceptor(entity.getMediaType()).accept(entity);
+            if (!profileItems.isEmpty()) {
                 // do response
                 if (isStandardWebBrowser()) {
-                    success(profileBrowser.getFullPath());
+                    success(getProfileBrowser().getFullPath());
                 } else {
                     // return a response for API calls
                     super.handleGet();
                 }
-            } else {
-                log.warn("storeRepresentation() - ProfileItem NOT updated");
-                badRequest(APIFault.DUPLICATE_ITEM.toString());
             }
         } else {
             notAuthorized();
         }
+
     }
 
-    //TODO - parsing v1 and v2 params - see Acceptors which at least conditionally parse based on APIVersion. Ideal solution should be transparent tho.
-    protected void updateProfileItem(ProfileItem profileItem, Form form) {
-
-        Set<String> names = form.getNames();
-
-        if (!validateParameters()) {
-            badRequest(getFault().toString());
-        }
-
-        // update 'name' value
-        if (names.contains("name")) {
-            profileItem.setName(form.getFirstValue("name"));
-        }
-
-        // update 'startDate' value
-        if (names.contains("startDate")) {
-            profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
-        }
-
-        // update 'startDate' value
-        if (names.contains("validFrom")) {
-            profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
-        }
-
-        // update 'end' value
-        if (names.contains("end")) {
-            profileItem.setEnd(Boolean.valueOf(form.getFirstValue("end")));
-        }
-
-        // update 'endDate' value
-        if (names.contains("endDate")) {
-            if (StringUtils.isNotBlank(form.getFirstValue("endDate"))) {
-                profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
-            } else {
-                profileItem.setEndDate(null);
-            }
+    public Acceptor getAcceptor(MediaType type) {
+        if (MediaType.APPLICATION_ATOM_XML.includes(type)) {
+            return acceptors.get(MediaType.APPLICATION_ATOM_XML);
         } else {
-            // update 'duration' value
-            if (form.getNames().contains("duration")) {
-                profileItem.setDuration(form.getFirstValue("duration"));
-                StartEndDate endDate = profileItem.getStartDate().plus(form.getFirstValue("duration"));
-                profileItem.setEndDate(endDate);
-            }
+            return acceptors.get(MediaType.APPLICATION_WWW_FORM);
         }
     }
 

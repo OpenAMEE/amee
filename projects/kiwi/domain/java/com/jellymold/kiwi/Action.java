@@ -29,25 +29,29 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Action implements DatedObject, Comparable {
 
+    public final static int NAME_SIZE = 100;
+    public final static int DESCRIPTION_SIZE = 1000;
+    public final static int ACTION_KEY_SIZE = 100;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "APP_ID")
     private App app;
 
-    @Column(name = "NAME", length = 100, nullable = false)
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "DESCRIPTION", length = 1000, nullable = false)
+    @Column(name = "DESCRIPTION", length = DESCRIPTION_SIZE, nullable = false)
     private String description = "";
 
-    @Column(name = "ACTION_KEY", length = 100, nullable = false)
+    @Column(name = "ACTION_KEY", length = ACTION_KEY_SIZE, nullable = false)
     @Index(name = "ACTION_KEY_IND")
     private String key = ""; // TODO: validate to be in right format
 

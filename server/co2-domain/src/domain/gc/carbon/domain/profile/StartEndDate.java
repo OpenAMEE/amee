@@ -29,8 +29,8 @@ import java.util.Date;
  */
 public class StartEndDate extends GCDate {
 
-    public static final String ISO_DATE = "yyyyMMdd'T'HHmm";
-    //public static final String ISO_DATE = "yyyyMMdd'T'HHmmZ";
+    //public static final String ISO_DATE = "yyyyMMdd'T'HHmm";
+    public static final String ISO_DATE = "yyyy-MM-dd'T'HH:mmZ";
 
     public static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat(ISO_DATE);
 

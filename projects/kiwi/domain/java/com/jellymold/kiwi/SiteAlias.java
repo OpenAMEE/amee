@@ -36,12 +36,16 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SiteAlias implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
+    public final static int NAME_SIZE = 250;
+    public final static int DESCRIPTION_SIZE = 1000;
+    public final static int SERVER_ALIAS_SIZE = 250;
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
+    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -52,13 +56,13 @@ public class SiteAlias implements EnvironmentObject, DatedObject, Comparable, Se
     @JoinColumn(name = "SITE_ID")
     private Site site;
 
-    @Column(name = "NAME", length = 250, nullable = false)
+    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "DESCRIPTION", length = 1000, nullable = false)
+    @Column(name = "DESCRIPTION", length = DESCRIPTION_SIZE, nullable = false)
     private String description = "";
 
-    @Column(name = "SERVER_ALIAS", length = 250, nullable = false)
+    @Column(name = "SERVER_ALIAS", length = SERVER_ALIAS_SIZE, nullable = false)
     @Index(name = "SERVER_ALIAS_IND")
     private String serverAlias = "";
 

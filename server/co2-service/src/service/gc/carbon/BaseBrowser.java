@@ -8,10 +8,14 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.joda.time.DateTime;
+
 public abstract class BaseBrowser implements Serializable {
 
     protected PathItem pathItem;
-    protected StartEndDate startDate = new StartEndDate(Calendar.getInstance().getTime()).minus("P10Y");
+    private final StartEndDate epoch = new StartEndDate(new Date(0));
+
+    protected StartEndDate startDate;
     protected StartEndDate endDate;
 
     public BaseBrowser() {
@@ -37,7 +41,7 @@ public abstract class BaseBrowser implements Serializable {
     }
 
     public StartEndDate getStartDate() {
-        return startDate;
+        return (startDate != null ? startDate : epoch);
     }
 
     public StartEndDate getEndDate() {
@@ -51,5 +55,9 @@ public abstract class BaseBrowser implements Serializable {
 
     public void setStartDate(Date startDate) {
         this.startDate = new StartEndDate(startDate);
+    }
+
+    public boolean isQuery() {
+        return (startDate != null) || (endDate != null);
     }
 }

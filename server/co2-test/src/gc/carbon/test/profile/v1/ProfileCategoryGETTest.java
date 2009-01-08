@@ -34,7 +34,7 @@ import gc.carbon.test.profile.BaseProfileCategoryTest;
 public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
 
     private DateTimeFormatter VALID_FROM_FMT = DateTimeFormat.forPattern("yyyyMMdd");
-    private DateTimeFormatter START_DATE_FMT = DateTimeFormat.forPattern("yyyyMMdd'T'HHmm");
+    private DateTimeFormatter START_DATE_FMT = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mmZ");
 
 
     public ProfileCategoryGETTest(String name) throws Exception {

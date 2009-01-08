@@ -37,6 +37,7 @@ public class EngineApplication extends Application {
 
     public Restlet createRoot() {
         TargetBuilder targetBuilder;
+
         Router router = new Router(getContext());
         // get the SiteApp for this Application
         SiteService siteService = (SiteService) springContext.getBean("siteService");
@@ -115,3 +116,4 @@ public class EngineApplication extends Application {
         return springController;
     }
 }
+

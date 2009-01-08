@@ -19,8 +19,10 @@ public class AuthFilter extends BaseAuthFilter {
     }
 
     public int doHandle(Request request, Response response) {
+
         log.debug("do handle");
         int result;
+
         String authToken = authenticated(request);
         if (authToken != null) {
             // a user has been found and authenticated (even if this is just the guest user)
@@ -30,6 +32,8 @@ public class AuthFilter extends BaseAuthFilter {
             reject(request, response);
             result = STOP;
         }
+
         return result;
     }
+
 }

@@ -21,8 +21,6 @@ package gc.carbon.data;
 
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
-import gc.carbon.AMEEResource;
-import gc.carbon.data.DrillDownService;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemDefinition;
 import org.apache.commons.logging.Log;
@@ -46,8 +44,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-// TODO: need to define actions for this resource
-
+// TODO - need to define actions for this resource
+// TODO - move to builder resource
 @Component
 @Scope("prototype")
 public class DrillDownResource extends BaseDataResource implements Serializable {

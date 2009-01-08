@@ -19,15 +19,17 @@
  */
 package gc.carbon;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
 import org.restlet.Filter;
 import org.restlet.data.Request;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.restlet.data.MediaType;
+import org.restlet.data.Preference;
 
 import java.util.List;
 
-import gc.carbon.APIVersion;
+import com.jellymold.utils.MediaTypeUtils;
 
 public abstract class BaseFilter extends Filter {
 
@@ -46,6 +48,17 @@ public abstract class BaseFilter extends Filter {
             int last = segments.size() - 1;
             if (segments.get(last).length() == 0) {
                 segments.remove(last);
+            }
+        }
+    }
+
+    protected void setAccept(Request request) {
+        String accept = request.getResourceRef().getQueryAsForm().getFirstValue("accept");
+        if (accept != null) {
+            log.debug("setAccept() - accept: " + accept);
+            MediaType mediaType = MediaType.valueOf(accept);
+            if (mediaType != null) {
+                MediaTypeUtils.forceMediaType(mediaType, request);
             }
         }
     }

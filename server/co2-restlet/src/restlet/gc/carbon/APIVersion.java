@@ -7,8 +7,8 @@ import org.restlet.data.Form;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This file is part of AMEE.
