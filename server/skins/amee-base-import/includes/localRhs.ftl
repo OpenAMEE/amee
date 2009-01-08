@@ -79,16 +79,7 @@
 </script>
 
 <form id='api' onSubmit="return false;">
-<h2>API
-<!--
-<#if apiVersions??>
-    <select name='v'>
-        <#list apiVersions as v>
-          <option value='${v}'>${v}</option>
-        </#list>
-    </select>
-</#if>
--->
+<h2>API ${activeUser.apiVersion.version}
 </h2>
     <br/>
     <button name='showAPIJSON' type='button' onClick='showJSON(); return false;'>Show JSON</button>
