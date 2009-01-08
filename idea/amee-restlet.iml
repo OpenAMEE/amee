@@ -40,5 +40,6 @@
     <orderEntry type="library" name="abdera" level="project" />
     <orderEntry type="module" module-name="kiwi-restlet" />
   </component>
+  <component name="ProjectRunConfigurationManager" />
 </module>
 

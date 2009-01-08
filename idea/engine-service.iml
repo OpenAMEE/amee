@@ -37,5 +37,6 @@
     <orderEntry type="library" name="wrapper" level="project" />
     <orderEntry type="library" name="java-mail" level="project" />
   </component>
+  <component name="ProjectRunConfigurationManager" />
 </module>
 
