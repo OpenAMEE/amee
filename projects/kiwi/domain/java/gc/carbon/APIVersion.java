@@ -3,7 +3,6 @@ package gc.carbon;
 import com.jellymold.utils.domain.APIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.data.Form;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -34,29 +33,39 @@ public class APIVersion {
     public static final APIVersion ONE_ZERO = new APIVersion("1.0");
     public static final APIVersion TWO_ZERO = new APIVersion("2.0");
     private static final List<APIVersion> versions = new ArrayList<APIVersion>();
+
     static {
         versions.add(ONE_ZERO);
-        versions.add(TWO_ZERO);    
+        versions.add(TWO_ZERO);
     }
 
     private String version;
 
-    private APIVersion(String version) {
-        this.version = version;
+    /**
+     * Default constructor (initialises version to ONE_ZERO)
+     *
+     * @see #ONE_ZERO
+     */
+    public APIVersion() {
+        this.version = APIVersion.ONE_ZERO.version;
     }
 
-    public static APIVersion get(Form form) {
-        if ("2.0".equals(form.getFirstValue("v"))) {
-            return APIVersion.TWO_ZERO;
-        } else {
-            return APIVersion.ONE_ZERO;
-        }
+    public APIVersion(String version) {
+        this.version = version;
     }
 
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof APIVersion)) return false;
         return o.toString().equals(version);
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public String toString() {

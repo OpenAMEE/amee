@@ -1,14 +1,16 @@
 package gc.carbon.profile;
 
-import com.jellymold.utils.Pager;
+import com.jellymold.kiwi.User;
 import com.jellymold.utils.APIFault;
+import com.jellymold.utils.Pager;
+import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.AMEEResource;
 import gc.carbon.APIVersion;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.StartEndDate;
-import gc.carbon.domain.path.PathItem;
 import org.joda.time.format.ISOPeriodFormat;
 import org.restlet.Context;
 import org.restlet.data.Method;
@@ -29,11 +31,11 @@ import java.util.Set;
  * <p/>
  * AMEE is free software and is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * <p/>
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
@@ -65,7 +67,8 @@ public abstract class BaseProfileResource extends AMEEResource {
     }
 
     public APIVersion getVersion() throws IllegalArgumentException {
-        return (APIVersion) getRequest().getAttributes().get("apiVersion");
+        User user = (User) ThreadBeanHolder.get("user");
+        return user.getApiVersion();
     }
 
     public String getFullPath() {

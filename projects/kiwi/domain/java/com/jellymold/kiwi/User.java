@@ -19,6 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import gc.carbon.APIVersion;
+
 /**
  * A User represents a single person or entity who has authenticated access to an Environment.
  * <p/>
@@ -41,6 +43,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     public final static int NICK_NAME_SIZE = 100;
     public final static int LOCATION_SIZE = 100;
     public final static int EMAIL_SIZE = 255;
+    public final static int API_VERSION_SIZE = 3; 
 
     @Id
     @GeneratedValue
@@ -80,6 +83,12 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     @Column(name = "LOCATION", length = LOCATION_SIZE, nullable = false)
     private String location = "";
 
+    @Column(name = "API_VERSION", length = API_VERSION_SIZE, nullable = true)
+    private String apiVersion;
+
+    @Transient
+    private APIVersion apiVersionObj;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED")
     private Date created = null;
@@ -94,6 +103,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     public User() {
         super();
         setUid(UidGen.getUid());
+        getApiVersion();
     }
 
     public User(Environment environment) {
@@ -430,5 +440,23 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         if (groupNames != null) {
             this.groupNames = groupNames;
         }
+    }
+
+    public APIVersion getApiVersion() {
+        if (apiVersion == null) {
+            apiVersionObj = new APIVersion();
+            apiVersion = apiVersionObj.getVersion();
+        } else if (apiVersionObj == null || (!apiVersionObj.getVersion().equals(apiVersion))) {
+            apiVersionObj = new APIVersion(apiVersion);
+        }
+        return apiVersionObj;
+    }
+
+    public void setApiVersion(APIVersion apiVersionObj) {
+        if (apiVersionObj == null) {
+            this.apiVersionObj = new APIVersion();
+        }
+        this.apiVersionObj = apiVersionObj;
+        this.apiVersion = apiVersionObj.getVersion();
     }
 }

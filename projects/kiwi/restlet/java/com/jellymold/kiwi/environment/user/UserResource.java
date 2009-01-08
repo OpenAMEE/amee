@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
+import gc.carbon.APIVersion;
+
 @Component
 @Scope("prototype")
 public class UserResource extends BaseResource {
@@ -133,6 +135,9 @@ public class UserResource extends BaseResource {
                 }
                 if (form.getNames().contains("email")) {
                     user.setEmail(form.getFirstValue("email"));
+                }
+                if (form.getNames().contains("apiVersion")) {
+                    user.setApiVersion(new APIVersion(form.getFirstValue("apiVersion")));
                 }
                 success();
             } else {

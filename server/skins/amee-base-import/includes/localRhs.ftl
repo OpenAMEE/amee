@@ -46,9 +46,21 @@
         modal.open();
     }
 
-    function showJSON() {
+
+    function showJSON(successMethod, params) {
+        var localParams;
+        if (params) {
+            localParams = params;
+        } else {
+            localParams = $('api').serialize(getHash=true);
+        }
+
+        if (!successMethod) {
+            successMethod = showJSONResponse;
+        }
+
         new Ajax.Request(window.location.href,
-        {method: 'get', parameters: $('api').serialize(getHash=true), requestHeaders: ['Accept', 'application/json'], onSuccess: showJSONResponse});
+        {method: 'get', parameters: params, requestHeaders: ['Accept', 'application/json'], onSuccess: successMethod});
     }
 
     function showJSONResponse(t) {

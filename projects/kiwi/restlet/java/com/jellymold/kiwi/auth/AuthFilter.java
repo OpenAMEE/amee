@@ -5,6 +5,8 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import com.jellymold.utils.ThreadBeanHolder;
+import com.jellymold.kiwi.User;
 
 /**
  * AuthFilter will ensure that a User is authenticated before allowing the request to continue. If a User
@@ -27,6 +29,12 @@ public class AuthFilter extends BaseAuthFilter {
         if (authToken != null) {
             // a user has been found and authenticated (even if this is just the guest user)
             result = accept(request, response, authToken);
+
+            //TODO - Move legacy mapping logic to own filter
+            User user = (User) ThreadBeanHolder.get("user");
+            if (user.getApiVersion().isVersionOne()) {
+                request.getResourceRef().addQueryParameter("returnPerUnit","month");
+            }
         } else {
             // this will only be executed if a guest user is not found (really?)
             reject(request, response);
