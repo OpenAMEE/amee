@@ -32,7 +32,7 @@ public class AuthFilter extends BaseAuthFilter {
 
             //TODO - Move legacy mapping logic to own filter
             User user = (User) ThreadBeanHolder.get("user");
-            if (user.getApiVersion().isVersionOne()) {
+            if (user.getApiVersion() != null && user.getApiVersion().isVersionOne()) {
                 request.getResourceRef().addQueryParameter("returnPerUnit","month");
             }
         } else {

@@ -79,7 +79,9 @@
 </script>
 
 <form id='api' onSubmit="return false;">
-<h2>API ${activeUser.apiVersion.version}
+<#if activeUser.apiVersion??>
+    <h2>API ${activeUser.apiVersion.version}
+</#if>        
 </h2>
     <br/>
     <button name='showAPIJSON' type='button' onClick='showJSON(); return false;'>Show JSON</button>

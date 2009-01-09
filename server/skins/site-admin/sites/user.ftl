@@ -27,8 +27,8 @@ Modified: ${user.modified?datetime}<br/>
   Username: <input name='username' value='${user.username}' type='text' size='30'/><br/>
   Email Address: <input name='email' value='${user.email}' type='text' size='30'/><br/>
   API Version: <select name='apiVersion'> <br/>
-    <#list user.apiVersion.getVersions() as apiVersion>
-        <option value='${apiVersion.version}' <#if apiVersion.version == user.apiVersion.version>selected='selected'</#if>>${apiVersion.version}</option>
+    <#list apiVersions as apiVersion>
+        <option value='${apiVersion.version}' <#if user.apiVersion?? && apiVersion.version == user.apiVersion.version>selected='selected'</#if>>${apiVersion.version}</option>
     </#list>
   </select><br/>
   Type:  <select name='type'> <br/> 

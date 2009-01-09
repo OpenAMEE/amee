@@ -53,6 +53,10 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     @Autowired
     protected DataService dataService;
 
+    @Autowired
+    protected EnvironmentService environmentService;
+
+
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         apiVersion = (APIVersion) request.getAttributes().get("apiVersion");
@@ -97,7 +101,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
-        values.put("apiVersions", APIVersion.getVersions());
+        values.put("apiVersions", environmentService.getAPIVersions());
         return values;
     }
 }
