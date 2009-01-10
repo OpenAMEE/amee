@@ -1,14 +1,16 @@
 package gc.carbon.profile;
 
-import com.jellymold.utils.Pager;
+import com.jellymold.kiwi.User;
 import com.jellymold.utils.APIFault;
+import com.jellymold.utils.Pager;
+import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.AMEEResource;
 import gc.carbon.APIVersion;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.StartEndDate;
-import gc.carbon.domain.path.PathItem;
 import org.joda.time.format.ISOPeriodFormat;
 import org.restlet.Context;
 import org.restlet.data.Method;
@@ -65,7 +67,8 @@ public abstract class BaseProfileResource extends AMEEResource {
     }
 
     public APIVersion getVersion() throws IllegalArgumentException {
-        return (APIVersion) getRequest().getAttributes().get("apiVersion");
+        User user = (User) ThreadBeanHolder.get("user");
+        return user.getApiVersion();
     }
 
     public String getFullPath() {

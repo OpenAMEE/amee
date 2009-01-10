@@ -11,8 +11,8 @@
 Name: ${user.name}<br/>
 Username: ${user.username}<br/>
 Email: ${user.email}<br/>
-Created: ${user.created?string.short}<br/>
-Modified: ${user.modified?string.short}<br/>
+Created: ${user.created?datetime}<br/>
+Modified: ${user.modified?datetime}<br/>
 </p>
 </#if>
 <#if browser.userActions.allowModify>
@@ -26,6 +26,11 @@ Modified: ${user.modified?string.short}<br/>
   Name: <input name='name' value='${user.name}' type='text' size='30'/><br/>
   Username: <input name='username' value='${user.username}' type='text' size='30'/><br/>
   Email Address: <input name='email' value='${user.email}' type='text' size='30'/><br/>
+  API Version: <select name='apiVersion'> <br/>
+    <#list apiVersions as apiVersion>
+        <option value='${apiVersion.version}' <#if user.apiVersion?? && apiVersion.version == user.apiVersion.version>selected='selected'</#if>>${apiVersion.version}</option>
+    </#list>
+  </select><br/>
   Type:  <select name='type'> <br/> 
     <option value='STANDARD' <#if user.type == 'STANDARD'>selected='selected'</#if>>STANDARD</option>
     <option value='SUPER' <#if user.type == 'SUPER'>selected='selected'</#if>>SUPER</option>

@@ -18,6 +18,8 @@ import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.List;
 
+import gc.carbon.APIVersion;
+
 @Service
 public class EnvironmentService implements Serializable {
 
@@ -212,6 +214,36 @@ public class EnvironmentService implements Serializable {
         // all done, return results
         return scheduledTasks;
     }
+
+
+    public List<APIVersion> getAPIVersions() {
+        return getAPIVersions(getEnvironment());
+    }
+
+    public List<APIVersion> getAPIVersions(Environment environment) {
+        List<APIVersion> apiVersions = entityManager.createQuery(
+                        "FROM APIVersion apiv " +
+                        "WHERE apiv.environment.id = :environmentId " +
+                        "ORDER BY apiv.version")
+                .setParameter("environmentId", environment.getId())
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                .getResultList();
+        return apiVersions;
+    }
+
+    public APIVersion getAPIVersion(String version, Environment environment) {
+        return (APIVersion) entityManager.createQuery(
+                        "FROM APIVersion apiv " +
+                        "WHERE apiv.environment.id = :environmentId " +
+                        "AND apiv.version = :version")
+                .setParameter("environmentId", environment.getId())
+                .setParameter("version", version)
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                .getSingleResult();
+    }
+
 
     public void save(ScheduledTask scheduledTask) {
         entityManager.persist(scheduledTask);

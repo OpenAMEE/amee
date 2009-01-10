@@ -7,6 +7,9 @@ import com.jellymold.utils.BaseBrowser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import gc.carbon.APIVersion;
+
+import java.util.List;
 
 @Component
 @Scope("prototype")
@@ -284,4 +287,17 @@ public class EnvironmentBrowser extends BaseBrowser {
     public ResourceActions getScheduledTaskActions() {
         return scheduledTaskActions;
     }
+
+    public List<APIVersion> getApiVersions() {
+        return environmentService.getAPIVersions(getEnvironment());
+    }
+
+    public APIVersion getApiVersion(String version) {
+        return environmentService.getAPIVersion(version, getEnvironment());
+    }
+
+    public APIVersion getApiVersion(String version, Environment environment) {
+        return environmentService.getAPIVersion(version, environment);
+    }
+
 }

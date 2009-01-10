@@ -46,9 +46,21 @@
         modal.open();
     }
 
-    function showJSON() {
+
+    function showJSON(successMethod, params) {
+        var localParams;
+        if (params) {
+            localParams = params;
+        } else {
+            localParams = $('api').serialize(getHash=true);
+        }
+
+        if (!successMethod) {
+            successMethod = showJSONResponse;
+        }
+
         new Ajax.Request(window.location.href,
-        {method: 'get', parameters: $('api').serialize(getHash=true), requestHeaders: ['Accept', 'application/json'], onSuccess: showJSONResponse});
+        {method: 'get', parameters: params, requestHeaders: ['Accept', 'application/json'], onSuccess: successMethod});
     }
 
     function showJSONResponse(t) {
@@ -67,16 +79,9 @@
 </script>
 
 <form id='api' onSubmit="return false;">
-<h2>API
-<!--
-<#if apiVersions??>
-    <select name='v'>
-        <#list apiVersions as v>
-          <option value='${v}'>${v}</option>
-        </#list>
-    </select>
-</#if>
--->
+<#if activeUser.apiVersion??>
+    <h2>API ${activeUser.apiVersion.version}
+</#if>        
 </h2>
     <br/>
     <button name='showAPIJSON' type='button' onClick='showJSON(); return false;'>Show JSON</button>
