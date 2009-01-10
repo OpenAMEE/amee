@@ -3,6 +3,7 @@ package com.jellymold.kiwi;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.DatedObject;
 import com.jellymold.utils.domain.UidGen;
+import gc.carbon.APIVersion;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -79,6 +80,10 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
 
     @Column(name = "LOCATION", length = LOCATION_SIZE, nullable = false)
     private String location = "";
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "API_VERSION")
+    private APIVersion apiVersion;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED")
@@ -430,5 +435,19 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         if (groupNames != null) {
             this.groupNames = groupNames;
         }
+    }
+
+    /**
+     * @return returns the api version; if null a new APIVersion is returned
+     */
+    public APIVersion getApiVersion() {
+        return apiVersion;
+    }
+
+    public void setApiVersion(APIVersion apiVersion) {
+        if (apiVersion == null) {
+            this.apiVersion = new APIVersion(getEnvironment());
+        }
+        this.apiVersion = apiVersion;
     }
 }

@@ -5,6 +5,7 @@ import com.jellymold.kiwi.User;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
 import com.jellymold.kiwi.environment.SiteService;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,15 +22,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
+import gc.carbon.APIVersion;
+
+import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManager;
+
+import sun.rmi.runtime.Log;
+
 @Component
 @Scope("prototype")
 public class UserResource extends BaseResource {
 
+    @PersistenceContext
+    private EntityManager entityManager;
+    
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
     @Autowired
     private SiteService siteService;
+
+    @Autowired
+    protected EnvironmentService environmentService;
 
     public UserResource() {
         super();
@@ -62,6 +76,7 @@ public class UserResource extends BaseResource {
         values.put("browser", environmentBrowser);
         values.put("environment", environmentBrowser.getEnvironment());
         values.put("user", environmentBrowser.getUser());
+        values.put("apiVersions", environmentBrowser.getApiVersions());
         return values;
     }
 
@@ -133,6 +148,16 @@ public class UserResource extends BaseResource {
                 }
                 if (form.getNames().contains("email")) {
                     user.setEmail(form.getFirstValue("email"));
+                }
+                if (form.getNames().contains("apiVersion")) {
+                    user.setApiVersion(environmentBrowser.getApiVersion(
+                            form.getFirstValue("apiVersion"),
+                            environmentBrowser.getEnvironment()));
+                    if (user.getApiVersion() == null) {
+                        log.debug("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
+                        badRequest();
+                        return;
+                    }
                 }
                 success();
             } else {

@@ -14,6 +14,7 @@
         <class>com.jellymold.kiwi.SiteApp</class>
         <class>com.jellymold.kiwi.Target</class>
         <class>com.jellymold.kiwi.User</class>
+        <class>gc.carbon.APIVersion</class>
         <class>com.jellymold.plum.Skin</class>
         <class>gc.carbon.domain.UnitDefinition</class>
         <class>gc.carbon.domain.ValueDefinition</class>

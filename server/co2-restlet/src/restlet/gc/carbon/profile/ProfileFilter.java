@@ -50,7 +50,6 @@ public class ProfileFilter extends BaseFilter {
 
     protected int beforeHandle(Request request, Response response) {
         log.debug("beforeHandle()");
-        setVersion(request);
         setAccept(request);
         return rewrite(request, response);
     }
