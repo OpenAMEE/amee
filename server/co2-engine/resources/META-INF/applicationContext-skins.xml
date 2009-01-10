@@ -17,7 +17,6 @@
                 <entry key="app-admin" value-ref="appAdminSkin"/>
                 <entry key="cache-admin" value-ref="cacheAdminSkin"/>
                 <entry key="site-admin" value-ref="siteAdminSkin"/>
-                <entry key="skin-admin" value-ref="skinAdminSkin"/>
                 <entry key="account.skin" value-ref="accountSkin"/>
                 <entry key="client-import" value-ref="clientImportSkin"/>
                 <entry key="client-default" value-ref="clientDefaultSkin"/>
@@ -79,10 +78,6 @@
                 <ref local="adminImportSkin"/>
             </set>
         </property>
-    </bean>
-
-    <bean id="skinAdminSkin" class="com.jellymold.utils.skin.Skin">
-        <property name="path" value="skin-admin"/>
     </bean>
 
     <bean id="accountSkin" class="com.jellymold.utils.skin.Skin">
