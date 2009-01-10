@@ -115,7 +115,7 @@ public class ServiceResource extends AMEEResource {
 
         for (PathItem pii : pi.findChildrenByType("DC")) {
             //TODO - Check this is the best was of doing this with Dig
-            DataCategory dc = dataService.getDataCategory(getEnvironment(), pii.getUid());
+            DataCategory dc = dataService.getDataCategory(pii.getUid());
             if (dc.getItemDefinition() != null) {
 
                 Reference href = new Reference(getRequest().getResourceRef().getParentRef(), pii.getFullPath());

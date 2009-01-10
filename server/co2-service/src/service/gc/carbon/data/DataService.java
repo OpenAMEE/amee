@@ -60,20 +60,12 @@ public class DataService {
         dataSheetService.removeSheet(dc);
     }
 
-    public DataCategory getDataCategory(Environment env, String dataCategoryUid) {
-        return dao.getDataCategory(env, dataCategoryUid);
+    public DataCategory getDataCategory(String dataCategoryUid) {
+        return dao.getDataCategory(dataCategoryUid);
     }
 
-    public DataCategory getDataCategory(DataCategory parent, String dataCategoryUid) {
-        return dao.getDataCategory(parent, dataCategoryUid);
-    }
-
-    public DataItem getDataItem(Environment env, String dataItemUid) {
-        return dao.getDataItem(env, dataItemUid);
-    }
-
-    public DataItem getDataItem(DataCategory dc, String dataItemUid) {
-        return dao.getDataItem(dc, dataItemUid);
+    public DataItem getDataItem(String dataItemUid) {
+        return dao.getDataItem(dataItemUid);
     }
 
     public List<DataItem> getDataItems(Environment env) {

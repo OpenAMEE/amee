@@ -83,16 +83,12 @@ public class ProfileService {
         return dao.getProfiles(pager);
     }
 
-    public ItemValue getProfileItemValue(String profileItemUid, String profileItemValueUid) {
-        return dao.getProfileItemValue(profileItemUid, profileItemValueUid);
+    public ItemValue getProfileItemValue(String profileItemValueUid) {
+        return dao.getProfileItemValue(profileItemValueUid);
     }
 
-    public ProfileItem getProfileItem(String profileUid, String profileItemUid) {
-        return dao.getProfileItem(profileUid, profileItemUid);
-    }
-
-    public ProfileItem getProfileItem(String profileUid, String dataCategoryUid, String profileItemUid) {
-        return dao.getProfileItem(profileUid, dataCategoryUid, profileItemUid);
+    public ProfileItem getProfileItem(String profileItemUid) {
+        return dao.getProfileItem(profileItemUid);
     }
 
     public List<ProfileItem> getProfileItems(Profile p) {

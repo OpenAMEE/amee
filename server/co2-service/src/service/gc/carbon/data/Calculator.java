@@ -201,7 +201,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
         profileItem.appendInternalValues(values);
         Map<String, Object> returnValues = new HashMap<String, Object>();
         for (ItemValueDefinition ivd : values.keySet()) {
-            returnValues.put(ivd.getPath(), values.get(ivd).getValue());
+            returnValues.put(ivd.getCannonicalPath(), values.get(ivd).getValue());
         }
         return returnValues;
     }
@@ -214,7 +214,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
 
         Map<String, Object> returnValues = new HashMap<String, Object>();
         for (ItemValueDefinition ivd : values.keySet()) {
-            returnValues.put(ivd.getPath(), values.get(ivd).getValue());
+            returnValues.put(ivd.getCannonicalPath(), values.get(ivd).getValue());
         }
 
         return returnValues;

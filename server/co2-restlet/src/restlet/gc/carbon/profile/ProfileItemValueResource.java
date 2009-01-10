@@ -166,7 +166,7 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
 
         Category cat = atomFeed.newItemValueCategory(entry);
         cat.setTerm(itemValue.getItemValueDefinition().getUid());
-        cat.setLabel(itemValue.getItemValueDefinition().getItemDefinition().getName());
+        cat.setLabel(itemValue.getItemValueDefinition().getName());
 
         return entry;
 

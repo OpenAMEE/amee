@@ -117,7 +117,7 @@ public class ProfileBrowser extends BaseBrowser {
     public DataCategory getDataCategory() {
         if (dataCategory == null) {
             if (getDataCategoryUid() != null) {
-                dataCategory = dataService.getDataCategory(EnvironmentService.getEnvironment(), getDataCategoryUid());
+                dataCategory = dataService.getDataCategory(getDataCategoryUid());
             }
         }
         return dataCategory;
@@ -139,7 +139,7 @@ public class ProfileBrowser extends BaseBrowser {
     public ProfileItem getProfileItem() {
         if (profileItem == null) {
             if (profileItemUid != null) {
-                profileItem = profileService.getProfileItem(profile.getUid(), dataCategoryUid, profileItemUid);
+                profileItem = profileService.getProfileItem(profileItemUid);
             }
         }
         return profileItem;
@@ -160,8 +160,8 @@ public class ProfileBrowser extends BaseBrowser {
 
     public ItemValue getProfileItemValue() {
         if (profileItemValue == null) {
-            if ((profileItemUid != null) && (profileItemValueUid != null)) {
-                profileItemValue = profileService.getProfileItemValue(profileItemUid, profileItemValueUid);
+            if (profileItemValueUid != null) {
+                profileItemValue = profileService.getProfileItemValue(profileItemValueUid);
             }
         }
         return profileItemValue;

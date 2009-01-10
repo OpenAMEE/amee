@@ -69,14 +69,7 @@ public class ProfileCategoryFormAcceptor implements Acceptor {
             // new ProfileItem
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                // the root DataCategory has an empty path
-                if (dataCategory.getPath().length() == 0) {
-                    // allow any DataItem for any DataCategory
-                    dataItem = dataService.getDataItem(resource.getEnvironment(), uid);
-                } else {
-                    // only allow DataItems for specific DataCategory (not root)
-                    dataItem = dataService.getDataItem(dataCategory, uid);
-                }
+                dataItem = dataService.getDataItem(uid);
                 if (dataItem != null) {
                     // create new ProfileItem
                     profileItem = new ProfileItem(resource.getProfile(), dataItem);
@@ -94,15 +87,7 @@ public class ProfileCategoryFormAcceptor implements Acceptor {
             // update ProfileItem
             uid = form.getFirstValue("profileItemUid");
             if (uid != null) {
-                // find existing Profile Item
-                // the root DataCategory has an empty path
-                if (dataCategory.getPath().length() == 0) {
-                    // allow any ProfileItem for any DataCategory
-                    profileItem = profileService.getProfileItem(resource.getProfileBrowser().getProfile().getUid(), uid);
-                } else {
-                    // only allow ProfileItems for specific DataCategory (not root)
-                    profileItem = profileService.getProfileItem(resource.getProfileBrowser().getProfile().getUid(), dataCategory.getUid(), uid);
-                }
+                profileItem = profileService.getProfileItem(uid);
                 if (profileItem != null) {
                     // update existing Profile Item
                     profileItem = acceptProfileItem(form, profileItem);
@@ -123,7 +108,7 @@ public class ProfileCategoryFormAcceptor implements Acceptor {
 
         return profileItems;
     }
-
+                                                                          
     private ProfileItem acceptProfileItem(Form form, ProfileItem profileItem) {
 
         if (!resource.validateParameters()) {

@@ -38,6 +38,7 @@ import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 // TODO: add a way to define UI widget
 // TODO: add a way to define range of values
@@ -68,9 +69,8 @@ public class ItemValueDefinition implements PersistentObject {
     @JoinColumn(name = "ENVIRONMENT_ID")
     private Environment environment;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ITEM_DEFINITION_ID")
-    private ItemDefinition itemDefinition;
+    @ManyToMany(mappedBy="itemValueDefinitions")
+    private List<ItemDefinition> itemDefinitions;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "VALUE_DEFINITION_ID")
@@ -115,6 +115,17 @@ public class ItemValueDefinition implements PersistentObject {
     @Column(name = "MODIFIED")
     private Date modified = Calendar.getInstance().getTime();
 
+    @Column(name = "API_VERSION")
+    private String apiVersion;
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "ALIASED_TO")
+    private ItemValueDefinition aliasedTo;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ALIASED_TO")
+    private List<ItemValueDefinition> aliases;
+
     @Transient
     private Builder builder;
 
@@ -127,7 +138,7 @@ public class ItemValueDefinition implements PersistentObject {
     public ItemValueDefinition(ItemDefinition itemDefinition) {
         this();
         setEnvironment(itemDefinition.getEnvironment());
-        setItemDefinition(itemDefinition);
+        itemDefinitions.add(itemDefinition);
         itemDefinition.add(this);
     }
 
@@ -237,12 +248,8 @@ public class ItemValueDefinition implements PersistentObject {
         }
     }
 
-    public ItemDefinition getItemDefinition() {
-        return itemDefinition;
-    }
-
-    public void setItemDefinition(ItemDefinition itemDefinition) {
-        this.itemDefinition = itemDefinition;
+    public List<ItemDefinition> getItemDefinitions() {
+        return itemDefinitions;
     }
 
     public ValueDefinition getValueDefinition() {
@@ -387,6 +394,26 @@ public class ItemValueDefinition implements PersistentObject {
 
     public Unit getCompoundUnit() {
         return getInternalUnit().with(getInternalPerUnit());
+    }
+
+    public String getAPIVersion() {
+        return apiVersion;
+    }
+
+    public String getCannonicalPath() {
+        if (aliasedTo != null) {
+            return aliasedTo.getPath();  
+        } else {
+            return getPath();
+        }
+    }
+
+    public String getCannonicalName() {
+        if (aliasedTo != null) {
+            return aliasedTo.getName();
+        } else {
+            return getName();
+        }
     }
 
 }

@@ -4,7 +4,6 @@ import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.Builder;
 import gc.carbon.domain.data.ItemValueDefinition;
 import gc.carbon.domain.data.ItemValue;
-import gc.carbon.domain.mapper.LegacyItemValueMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -31,11 +30,11 @@ import org.w3c.dom.Element;
  */
 public class ItemValueBuilder implements Builder {
 
-    private LegacyItemValueMapper itemValue;
+    private ItemValue itemValue;
     private Builder itemValueDefinitionRenderer;
     
     public ItemValueBuilder(ItemValue itemValue) {
-        this.itemValue = new LegacyItemValueMapper(itemValue);
+        this.itemValue = itemValue;
         this.itemValueDefinitionRenderer = new ItemValueDefinitionBuilder(itemValue.getItemValueDefinition());
     }
 

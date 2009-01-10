@@ -7,6 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import gc.carbon.domain.Builder;
 import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.data.ItemDefinition;
 
 /**
  * This file is part of AMEE.
@@ -64,7 +65,13 @@ public class ItemValueDefinitionBuilder implements Builder {
             obj.put("fromData", itemValueDefinition.isFromData());
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
             obj.put("environment", itemValueDefinition.getEnvironment().getIdentityJSONObject());
-            obj.put("itemDefinition", itemValueDefinition.getItemDefinition().getIdentityJSONObject());
+
+            JSONObject itemDefinitions = new JSONObject();
+            for (ItemDefinition itemDefinition : itemValueDefinition.getItemDefinitions()) {
+                itemDefinitions.put("itemDefinition", itemDefinition.getIdentityJSONObject());
+            }
+            obj.put("itemDefinitions", itemDefinitions);
+
         }
         return obj;
     }
@@ -98,7 +105,11 @@ public class ItemValueDefinitionBuilder implements Builder {
             element.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getChoices()));
             element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
             element.appendChild(itemValueDefinition.getEnvironment().getIdentityElement(document));
-            element.appendChild(itemValueDefinition.getItemDefinition().getIdentityElement(document));
+            Element itemDefinitions = document.createElement("ItemDefinitions");
+            for (ItemDefinition itemDefinition : itemValueDefinition.getItemDefinitions()) {
+                itemDefinitions.appendChild(itemDefinition.getIdentityElement(document));
+            }
+            element.appendChild(itemDefinitions);
         }
         return element;
     }

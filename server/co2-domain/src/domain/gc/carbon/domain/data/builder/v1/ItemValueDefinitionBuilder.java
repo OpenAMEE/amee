@@ -3,7 +3,6 @@ package gc.carbon.domain.data.builder.v1;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.Builder;
 import gc.carbon.domain.data.ItemValueDefinition;
-import gc.carbon.domain.mapper.LegacyItemValueDefinitionMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -30,10 +29,10 @@ import org.w3c.dom.Element;
  */
 public class ItemValueDefinitionBuilder implements Builder {
 
-    private LegacyItemValueDefinitionMapper itemValueDefinition;
+    private ItemValueDefinition itemValueDefinition;
 
     public ItemValueDefinitionBuilder(ItemValueDefinition itemValueDefinition) {
-        this.itemValueDefinition = new LegacyItemValueDefinitionMapper(itemValueDefinition);
+        this.itemValueDefinition = itemValueDefinition;
     }
 
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
@@ -51,7 +50,8 @@ public class ItemValueDefinitionBuilder implements Builder {
                 obj.put("fromData", itemValueDefinition.isFromData());
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
             obj.put("environment", itemValueDefinition.getEnvironment().getIdentityJSONObject());
-            obj.put("itemDefinition", itemValueDefinition.getItemDefinition().getIdentityJSONObject());
+            // Use the fact that we kno v1 ItemValueDefinitions only have a single ItemValue
+            obj.put("itemDefinition", itemValueDefinition.getItemDefinitions().get(0).getIdentityJSONObject());
         }
         return obj;
     }
@@ -71,7 +71,8 @@ public class ItemValueDefinitionBuilder implements Builder {
             element.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getChoices()));
             element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
             element.appendChild(itemValueDefinition.getEnvironment().getIdentityElement(document));
-            element.appendChild(itemValueDefinition.getItemDefinition().getIdentityElement(document));
+            // Use the fact that we kno v1 ItemValueDefinitions only have a single ItemValue
+            element.appendChild(itemValueDefinition.getItemDefinitions().get(0).getIdentityElement(document));
         }
         return element;
     }

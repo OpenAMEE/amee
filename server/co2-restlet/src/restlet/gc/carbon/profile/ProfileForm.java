@@ -1,8 +1,6 @@
 package gc.carbon.profile;
 
 import gc.carbon.APIVersion;
-import gc.carbon.domain.mapper.LegacyDataMapper;
-import gc.carbon.domain.mapper.LegacyItemValueMapper;
 import org.restlet.data.Form;
 
 /**
@@ -48,21 +46,6 @@ public class ProfileForm extends Form {
 
     private void init(APIVersion apiVersion) {
         this.apiVersion = apiVersion;
-        if (apiVersion.isVersionOne()) {
-            mapLegacyParameters();
-        }
-    }
-
-    //TODO - Move mapping logic to filter
-    private void mapLegacyParameters() {
-        for (String name : getNames()) {
-            if (LegacyDataMapper.canMap(name)) {
-                add(LegacyItemValueMapper.getCurrentPath(name), getFirstValue(name));
-                add(LegacyItemValueMapper.getCurrentPath(name) + "Unit", LegacyDataMapper.getUnit(name));
-                add(LegacyItemValueMapper.getCurrentPath(name) + "PerUnit", LegacyDataMapper.getPerUnit(name));
-                removeFirst(name);
-            }
-        }
     }
 
     public APIVersion getVersion() {

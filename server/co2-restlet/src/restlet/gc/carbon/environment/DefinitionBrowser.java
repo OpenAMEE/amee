@@ -242,7 +242,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public ItemValueDefinition getItemValueDefinition() {
         if (itemValueDefinition == null) {
             if ((itemValueDefinitionUid != null) && (getItemDefinition() != null)) {
-                itemValueDefinition = definitionServiceDAO.getItemValueDefinition(getItemDefinition(), itemValueDefinitionUid);
+                itemValueDefinition = definitionServiceDAO.getItemValueDefinition(itemValueDefinitionUid);
             }
         }
         return itemValueDefinition;

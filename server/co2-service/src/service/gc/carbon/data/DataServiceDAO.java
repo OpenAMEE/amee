@@ -121,34 +121,11 @@ class DataServiceDAO implements Serializable {
 
     // DataCategories
 
-    public DataCategory getDataCategory(Environment environment, String uid) {
+    public DataCategory getDataCategory(String uid) {
         DataCategory dataCategory = null;
         List<DataCategory> dataCategories = entityManager.createQuery(
                 "FROM DataCategory dc " +
-                        "WHERE dc.uid = :uid " +
-                        "AND dc.environment = :environment")
-                .setParameter("uid", uid)
-                .setParameter("environment", environment)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.dataService")
-                .getResultList();
-        if (dataCategories.size() == 1) {
-            log.debug("found DataCategory");
-            dataCategory = dataCategories.get(0);
-        } else {
-            log.debug("DataCategory NOT found");
-        }
-        return dataCategory;
-    }
-
-    public DataCategory getDataCategory(DataCategory parentDataCategory, String uid) {
-        DataCategory dataCategory = null;
-        List<DataCategory> dataCategories = entityManager.createQuery(
-                "SELECT DISTINCT dc " +
-                        "FROM DataCategory dc " +
-                        "WHERE dc.dataCategory = :parentDataCategory " +
-                        "AND dc.uid = :uid")
-                .setParameter("parentDataCategory", parentDataCategory)
+                        "WHERE dc.uid = :uid ")
                 .setParameter("uid", uid)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.dataService")
@@ -204,15 +181,13 @@ class DataServiceDAO implements Serializable {
 
     // ItemValues
 
-    public ItemValue getItemValue(Item item, String uid) {
+    public ItemValue getItemValue(String uid) {
         ItemValue itemValue = null;
         List<ItemValue> itemValues;
         itemValues = entityManager.createQuery(
                 "FROM ItemValue iv " +
-                        "WHERE iv.uid = :uid " +
-                        "AND iv.item = :item")
+                        "WHERE iv.uid = :uid ")
                 .setParameter("uid", uid)
-                .setParameter("item", item)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.dataService")
                 .getResultList();
@@ -227,63 +202,14 @@ class DataServiceDAO implements Serializable {
 
     // DataItems
 
-    public Item getItem(Environment environment, String uid) {
-        DataItem dataItem = null;
-        List<DataItem> dataItems = entityManager.createQuery(
-                "SELECT DISTINCT di " +
-                        "FROM DataItem di " +
-                        "LEFT JOIN FETCH di.itemValues " +
-                        "WHERE di.uid = :uid " +
-                        "AND di.environment = :environment")
-                .setParameter("uid", uid)
-                .setParameter("environment", environment)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.dataService")
-                .getResultList();
-        if (dataItems.size() == 1) {
-            log.debug("found DataItem");
-            dataItem = dataItems.get(0);
-            checkDataItem(dataItem);
-        } else {
-            log.debug("DataItem NOT found");
-        }
-        return dataItem;
-    }
-
-    public DataItem getDataItem(DataCategory dataCategory, String uid) {
+    public DataItem getDataItem(String uid) {
         DataItem dataItem = null;
         List<DataItem> dataItems;
         dataItems = entityManager.createQuery(
                 "SELECT DISTINCT di " +
                         "FROM DataItem di " +
                         "LEFT JOIN FETCH di.itemValues " +
-                        "WHERE di.dataCategory = :dataCategory " +
-                        "AND di.uid = :uid")
-                .setParameter("dataCategory", dataCategory)
-                .setParameter("uid", uid)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.dataService")
-                .getResultList();
-        if (dataItems.size() == 1) {
-            log.debug("found DataItem");
-            dataItem = dataItems.get(0);
-            checkDataItem(dataItem);
-        } else {
-            log.debug("DataItem NOT found");
-        }
-        return dataItem;
-    }
-
-    public DataItem getDataItem(Environment environment, String uid) {
-        DataItem dataItem = null;
-        List<DataItem> dataItems;
-        dataItems = entityManager.createQuery(
-                "SELECT DISTINCT di " +
-                        "FROM DataItem di " +
-                        "LEFT JOIN FETCH di.itemValues " +
-                        "WHERE di.environment.id = :environmentId " +
-                        "AND di.uid = :uid")
-                .setParameter("environmentId", environment.getId())
+                        "WHERE di.uid = :uid")
                 .setParameter("uid", uid)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.dataService")
@@ -385,7 +311,7 @@ class DataServiceDAO implements Serializable {
                         "   FROM ItemValue iv " +
                         "   WHERE iv.item = :dataItem) " +
                         "AND ivd.fromData = :fromData " +
-                        "AND ivd.itemDefinition.id = :itemDefinitionId")
+                        "AND :itemDefinitionId MEMBER OF ivd.itemDefinitions")
                 .setParameter("dataItem", dataItem)
                 .setParameter("itemDefinitionId", dataItem.getItemDefinition().getId())
                 .setParameter("fromData", true)

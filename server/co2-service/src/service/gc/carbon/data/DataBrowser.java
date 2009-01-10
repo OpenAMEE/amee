@@ -96,7 +96,7 @@ public class DataBrowser extends BaseBrowser {
     public DataCategory getDataCategory() {
         if (dataCategory == null) {
             if (dataCategoryUid != null) {
-                dataCategory = dataServiceDAO.getDataCategory(EnvironmentService.getEnvironment(), dataCategoryUid);
+                dataCategory = dataServiceDAO.getDataCategory(dataCategoryUid);
             }
         }
         return dataCategory;
@@ -130,10 +130,7 @@ public class DataBrowser extends BaseBrowser {
     public DataItem getDataItem() {
         if (dataItem == null) {
             if (dataItemUid != null) {
-                Item item = dataServiceDAO.getItem(EnvironmentService.getEnvironment(), dataItemUid);
-                if (item instanceof DataItem) {
-                    dataItem = (DataItem) item;
-                }
+                dataItem = dataServiceDAO.getDataItem(dataItemUid);
             }
         }
         return dataItem;
@@ -155,8 +152,8 @@ public class DataBrowser extends BaseBrowser {
 
     public ItemValue getItemValue() {
         if (itemValue == null) {
-            if ((itemValueUid != null) && (getDataItem() != null)) {
-                itemValue = dataServiceDAO.getItemValue(dataItem, itemValueUid);
+            if (itemValueUid != null) {
+                itemValue = dataServiceDAO.getItemValue(itemValueUid);
             }
         }
         return itemValue;

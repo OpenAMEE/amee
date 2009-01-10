@@ -228,14 +228,12 @@ public class DefinitionServiceDAO implements Serializable {
 
     // ItemValueDefinitions
 
-    public ItemValueDefinition getItemValueDefinition(ItemDefinition itemDefinition, String uid) {
+    public ItemValueDefinition getItemValueDefinition(String uid) {
         ItemValueDefinition itemValueDefinition = null;
         List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
                 "FROM ItemValueDefinition ivd " +
-                        "WHERE ivd.uid = :uid " +
-                        "AND ivd.itemDefinition = :itemDefinition")
+                        "WHERE ivd.uid = :uid")
                 .setParameter("uid", uid)
-                .setParameter("itemDefinition", itemDefinition)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
                 .getResultList();

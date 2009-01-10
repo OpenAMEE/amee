@@ -300,33 +300,20 @@ class ProfileServiceDAO implements Serializable {
 
     // ProfileItems
 
-    public ProfileItem getProfileItem(String profileUid, String uid) {
-        return getProfileItem(profileUid, null, uid);
-    }
-
-    public ProfileItem getProfileItem(String profileUid, String dataCategoryUid, String uid) {
+    public ProfileItem getProfileItem(String uid) {
         ProfileItem profileItem = null;
         List<ProfileItem> profileItems;
         Query query;
-        String hql = "SELECT DISTINCT pi " +
+        String hql = "SELECT pi " +
                 "FROM ProfileItem pi " +
                 "LEFT JOIN FETCH pi.itemValues " +
-                "WHERE pi.profile.uid = :profileUid " +
-                "AND pi.uid = :uid";
-        if (dataCategoryUid != null) {
-            hql += " AND pi.dataCategory.uid = :dataCategoryUid";
-        }
+                "WHERE pi.uid = :uid";
         query = entityManager.createQuery(hql);
-        query.setParameter("profileUid", profileUid);
         query.setParameter("uid", uid.toUpperCase());
-        if (dataCategoryUid != null) {
-            query.setParameter("dataCategoryUid", dataCategoryUid);
-        }
         profileItems = query.getResultList();
         if (profileItems.size() == 1) {
             log.debug("found ProfileItem");
             profileItem = profileItems.get(0);
-            checkProfileItem(profileItem);
         } else {
             log.debug("ProfileItem NOT found");
         }
@@ -458,15 +445,13 @@ class ProfileServiceDAO implements Serializable {
 
     // ItemValues
 
-    public ItemValue getProfileItemValue(String profileItemUid, String uid) {
+    public ItemValue getProfileItemValue(String uid) {
         ItemValue profileItemValue = null;
         List<ItemValue> profileItemValues;
         profileItemValues = entityManager.createQuery(
                 "FROM ItemValue iv " +
                         "LEFT JOIN FETCH iv.item i " +
-                        "WHERE i.uid = :profileItemUid " +
-                        "AND iv.uid = :uid")
-                .setParameter("profileItemUid", profileItemUid)
+                        "WHERE iv.uid = :uid")
                 .setParameter("uid", uid)
                 .getResultList();
         if (profileItemValues.size() == 1) {
@@ -493,7 +478,7 @@ class ProfileServiceDAO implements Serializable {
                         "   FROM ItemValue iv " +
                         "   WHERE iv.item = :profileItem) " +
                         "AND ivd.fromProfile = :fromProfile " +
-                        "AND ivd.itemDefinition.id = :itemDefinitionId")
+                        "AND :itemDefinitionId MEMBER OF ivd.itemDefinitions")
                 .setParameter("profileItem", profileItem)
                 .setParameter("itemDefinitionId", profileItem.getItemDefinition().getId())
                 .setParameter("fromProfile", true)

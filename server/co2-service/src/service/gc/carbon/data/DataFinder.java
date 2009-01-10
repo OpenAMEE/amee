@@ -95,7 +95,7 @@ public class DataFinder implements Serializable {
         if (pig != null) {
             pi = pig.findByPath(path);
             if ((pi != null) && pi.getObjectType().equals(ObjectType.DC)) {
-                dataCategory = dataServiceDAO.getDataCategory(EnvironmentService.getEnvironment(), pi.getUid());
+                dataCategory = dataServiceDAO.getDataCategory(pi.getUid());
             }
         }
         return dataCategory;
