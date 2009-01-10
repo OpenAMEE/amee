@@ -47,7 +47,6 @@
     <orderEntry type="module" module-name="amee-restlet" />
     <orderEntry type="module" module-name="amee-service" />
     <orderEntry type="module" module-name="cache-restlet" />
-    <orderEntry type="module" module-name="cache-service" />
     <orderEntry type="module" module-name="engine-service" />
     <orderEntry type="module" module-name="idea" />
     <orderEntry type="module" module-name="kiwi-domain" />

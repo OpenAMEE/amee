@@ -268,7 +268,6 @@
       <module fileurl="file://$PROJECT_DIR$/amee-service.iml" filepath="$PROJECT_DIR$/amee-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/amee-test.iml" filepath="$PROJECT_DIR$/amee-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/cache-restlet.iml" filepath="$PROJECT_DIR$/cache-restlet.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cache-service.iml" filepath="$PROJECT_DIR$/cache-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/engine-service.iml" filepath="$PROJECT_DIR$/engine-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/htdocs.iml" filepath="$PROJECT_DIR$/htdocs.iml" />
       <module fileurl="file://$PROJECT_DIR$/idea.iml" filepath="$PROJECT_DIR$/idea.iml" />
