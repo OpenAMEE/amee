@@ -524,11 +524,8 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="memcached">
+    <library name="slf4j">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../lib/memcached/spy-2.4.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../lib/memcached/memcached-2.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../lib/memcached/hibernate-memcached-0.6.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/memcached/slf4j-log4j12-1.5.0.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/memcached/slf4j-api-1.5.0.jar!/" />
       </CLASSES>
