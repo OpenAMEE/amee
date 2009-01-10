@@ -18,6 +18,7 @@
       <sourceFolder url="file://$MODULE_DIR$/../projects/utils/src/ehcache" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../projects/utils/src/restlet" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../projects/utils/src/service" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/../projects/utils/main" />
       <excludeFolder url="file://$MODULE_DIR$/../projects/utils/src/memcached" />
     </content>
     <orderEntry type="inheritedJdk" />
