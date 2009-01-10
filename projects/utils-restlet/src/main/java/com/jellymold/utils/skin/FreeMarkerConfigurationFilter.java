@@ -1,6 +1,5 @@
-package com.jellymold.plum.admin;
+package com.jellymold.utils.skin;
 
-import com.jellymold.plum.FreeMarkerConfigurationService;
 import com.jellymold.utils.ThreadBeanHolder;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;

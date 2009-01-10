@@ -1,4 +1,4 @@
-package com.jellymold.plum;
+package com.jellymold.utils.skin;
 
 import com.jellymold.utils.cache.CacheHelper;
 import freemarker.template.Configuration;

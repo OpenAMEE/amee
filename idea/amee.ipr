@@ -276,9 +276,6 @@
       <module fileurl="file://$PROJECT_DIR$/kiwi-restlet.iml" filepath="$PROJECT_DIR$/kiwi-restlet.iml" />
       <module fileurl="file://$PROJECT_DIR$/kiwi-service.iml" filepath="$PROJECT_DIR$/kiwi-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/org.restlet.ext.seam.iml" filepath="$PROJECT_DIR$/org.restlet.ext.seam.iml" />
-      <module fileurl="file://$PROJECT_DIR$/plum-domain.iml" filepath="$PROJECT_DIR$/plum-domain.iml" />
-      <module fileurl="file://$PROJECT_DIR$/plum-restlet.iml" filepath="$PROJECT_DIR$/plum-restlet.iml" />
-      <module fileurl="file://$PROJECT_DIR$/plum-service.iml" filepath="$PROJECT_DIR$/plum-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/sheet-domain.iml" filepath="$PROJECT_DIR$/sheet-domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/skins.iml" filepath="$PROJECT_DIR$/skins.iml" />
     </modules>

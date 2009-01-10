@@ -4,8 +4,8 @@ import com.jellymold.kiwi.*;
 import com.jellymold.kiwi.auth.AuthFilter;
 import com.jellymold.kiwi.auth.GuestFilter;
 import com.jellymold.kiwi.environment.SiteService;
-import com.jellymold.plum.admin.FreeMarkerConfigurationFilter;
 import com.jellymold.utils.ThreadBeanHolderFilter;
+import com.jellymold.utils.skin.FreeMarkerConfigurationFilter;
 import com.jellymold.utils.cache.CacheHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,7 +84,9 @@ public class Engine implements WrapperListener, Serializable {
         log.debug("Starting Engine...");
 
         // initialise Spring ApplicationContext
-        springContext = new ClassPathXmlApplicationContext("META-INF/applicationContext.xml");
+        springContext = new ClassPathXmlApplicationContext(new String[]{
+                "META-INF/applicationContext.xml",
+                "META-INF/applicationContext-skins.xml"});
         // initialise SpringController (for controlling Spring)
         springController = (SpringController) springContext.getBean("springController");
         // startup Spring

@@ -1,4 +1,4 @@
-package com.jellymold.plum;
+package com.jellymold.utils.skin;
 
 import com.jellymold.utils.cache.CacheableFactory;
 import com.jellymold.utils.ThreadBeanHolder;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class FreeMarkerConfigurationFactory implements CacheableFactory {
 
     @Autowired
-    private SkinService skinService;
+    private SkinManager skinManager;
 
     public FreeMarkerConfigurationFactory() {
         super();
@@ -30,7 +30,7 @@ public class FreeMarkerConfigurationFactory implements CacheableFactory {
         Configuration configuration = null;
         String skinPath = getKey();
         if (skinPath != null) {
-            Skin skin = skinService.getSkin(skinPath);
+            Skin skin = skinManager.getSkin(skinPath);
             if (skin != null) {
                 configuration = new Configuration();
                 configuration.setEncoding(Locale.ENGLISH, "UTF-8");
