@@ -53,7 +53,6 @@
     <orderEntry type="module" module-name="plum-restlet" />
     <orderEntry type="module" module-name="plum-service" />
     <orderEntry type="module" module-name="sheet-domain" />
-    <orderEntry type="module" module-name="utils" />
     <orderEntry type="library" name="commons-cli" level="project" />
     <orderEntry type="library" name="ehcache" level="project" />
     <orderEntry type="library" name="freemarker" level="project" />
@@ -71,6 +70,7 @@
     <orderEntry type="library" name="spring-runtime" level="project" />
     <orderEntry type="library" name="wrapper" level="project" />
     <orderEntry type="library" name="quartz" level="project" />
+    <orderEntry type="library" name="amee-utils" level="project" />
   </component>
 </module>
 

@@ -281,7 +281,6 @@
       <module fileurl="file://$PROJECT_DIR$/plum-service.iml" filepath="$PROJECT_DIR$/plum-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/sheet-domain.iml" filepath="$PROJECT_DIR$/sheet-domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/skins.iml" filepath="$PROJECT_DIR$/skins.iml" />
-      <module fileurl="file://$PROJECT_DIR$/utils.iml" filepath="$PROJECT_DIR$/utils.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
@@ -650,6 +649,20 @@
     <library name="java-mail">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/../lib/java-mail/mail.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="amee-utils">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../lib/amee-maven/utils-1.0.0-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="amee-utils-restlet">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../lib/amee-maven/utils-restlet-1.0.0-SNAPSHOT.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

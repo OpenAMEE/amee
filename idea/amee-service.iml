@@ -27,7 +27,6 @@
     <orderEntry type="module" module-name="kiwi-service" />
     <orderEntry type="module" module-name="sheet-domain" />
     <orderEntry type="module" module-name="org.restlet.ext.seam" />
-    <orderEntry type="module" module-name="utils" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="global" level="project" />
     <orderEntry type="library" name="jee" level="project" />
@@ -38,6 +37,7 @@
     <orderEntry type="library" name="joda" level="project" />
     <orderEntry type="library" name="quartz" level="project" />
     <orderEntry type="library" name="spring-integration" level="project" />
+    <orderEntry type="library" name="amee-utils" level="project" />
   </component>
 </module>
 
