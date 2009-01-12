@@ -1,7 +1,6 @@
 package com.jellymold.kiwi.app;
 
 import com.jellymold.kiwi.App;
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
@@ -121,8 +120,8 @@ public class AppsResource extends BaseResource implements Serializable {
 
     // TODO: prevent duplicate instances
     @Override
-    public void post(Representation entity) {
-        log.debug("post");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation");
         if (appBrowser.getAppActions().isAllowCreate()) {
             Form form = getForm();
             // create new instance if submitted

@@ -3,7 +3,6 @@ package com.jellymold.kiwi.environment;
 import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.ThreadBeanHolder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -120,8 +119,8 @@ public class EnvironmentsResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void post(Representation entity) {
-        log.debug("post");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation");
         if (environmentBrowser.getEnvironmentActions().isAllowCreate()) {
             Form form = getForm();
             // create new instance if submitted

@@ -77,7 +77,7 @@ public class SignInResource extends BaseResource implements Serializable {
         Response response = getResponse();
         if (site.isSecureAvailable() && !request.getResourceRef().getSchemeProtocol().equals(Protocol.HTTPS)) {
             // bounce to HTTPS
-            response.setRedirectRef("https://" +
+            response.setLocationRef("https://" +
                     request.getResourceRef().getHostDomain() +
                     "/auth/signIn?next=" + AuthUtils.getNextUrl(request));
             response.setStatus(Status.REDIRECTION_FOUND);
@@ -90,15 +90,15 @@ public class SignInResource extends BaseResource implements Serializable {
         return true;
     }
 
-    public void post(Representation entity) {
-        put(entity);
+    public void acceptRepresentation(Representation entity) {
+        storeRepresentation(entity);
     }
 
     public boolean allowPut() {
         return true;
     }
 
-    public void put(Representation entity) {
+    public void storeRepresentation(Representation entity) {
         Form form = getForm();
         User sampleUser;
         String authToken;

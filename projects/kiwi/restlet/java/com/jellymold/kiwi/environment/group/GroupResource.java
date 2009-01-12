@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.group;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Group;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
@@ -98,7 +97,7 @@ public class GroupResource extends BaseResource {
 
     // TODO: prevent duplicates
     @Override
-    public void put(Representation entity) {
+    public void storeRepresentation(Representation entity) {
         log.debug("put");
         if (environmentBrowser.getGroupActions().isAllowModify()) {
             Form form = getForm();
@@ -123,7 +122,7 @@ public class GroupResource extends BaseResource {
 
     // TODO: do not allow delete affecting logged-in user...
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (environmentBrowser.getGroupActions().isAllowDelete()) {
             siteService.remove(environmentBrowser.getGroup());
             success();

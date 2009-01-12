@@ -1,8 +1,6 @@
 package com.jellymold.kiwi.environment.role;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
-import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.BaseResource;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,9 +18,6 @@ import java.util.Map;
 @Component
 @Scope("prototype")
 public class RoleActionResource extends BaseResource {
-
-    @Autowired
-    private SiteService siteService;
 
     @Autowired
     private EnvironmentBrowser environmentBrowser;
@@ -94,7 +89,7 @@ public class RoleActionResource extends BaseResource {
     }
 
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (environmentBrowser.getRoleActions().isAllowModify()) {
             environmentBrowser.getRole().remove(environmentBrowser.getAction());
             success();

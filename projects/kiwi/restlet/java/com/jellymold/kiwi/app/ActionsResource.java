@@ -1,7 +1,6 @@
 package com.jellymold.kiwi.app;
 
 import com.jellymold.kiwi.Action;
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
@@ -131,7 +130,7 @@ public class ActionsResource extends BaseResource implements Serializable {
 
     // TODO: prevent duplicate instances
     @Override
-    public void post(Representation entity) {
+    public void acceptRepresentation(Representation entity) {
         log.debug("post");
         if (appBrowser.getAppActions().isAllowModify()) {
             Form form = getForm();

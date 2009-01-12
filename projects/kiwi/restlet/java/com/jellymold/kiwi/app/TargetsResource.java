@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.app;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Target;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
@@ -131,7 +130,7 @@ public class TargetsResource extends BaseResource implements Serializable {
 
     // TODO: prevent duplicate instances
     @Override
-    public void post(Representation entity) {
+    public void acceptRepresentation(Representation entity) {
         log.debug("post");
         if (appBrowser.getAppActions().isAllowModify()) {
             Form form = getForm();

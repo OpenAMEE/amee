@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.user;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.User;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
@@ -111,8 +110,8 @@ public class UserUploadResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation");
         if (environmentBrowser.isAllowUserUpload()) {
             User cloneUser = null;
             boolean usersLoaded = false;

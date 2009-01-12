@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.site;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
@@ -98,7 +97,7 @@ public class SiteResource extends BaseResource {
 
     // TODO: prevent duplicate server names
     @Override
-    public void put(Representation entity) {
+    public void storeRepresentation(Representation entity) {
         log.debug("put");
         if (environmentBrowser.getSiteActions().isAllowModify()) {
             Form form = getForm();
@@ -165,7 +164,7 @@ public class SiteResource extends BaseResource {
 
     // TODO: Prevent deletion of the current site?!
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (environmentBrowser.getSiteActions().isAllowDelete()) {
             siteService.remove(environmentBrowser.getSite());
             success();

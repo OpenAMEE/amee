@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.user;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
 import com.jellymold.kiwi.environment.SiteService;
@@ -100,7 +99,7 @@ public class UserGroupResource extends BaseResource {
 
     // TODO: do not allow delete affecting logged-in user...
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (environmentBrowser.getUserActions().isAllowModify()) {
             siteService.remove(environmentBrowser.getGroupUser());
             success();
