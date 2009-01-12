@@ -58,7 +58,7 @@ public class APIVersion implements PersistentObject, DatedObject {
     @Column(name = "MODIFIED")
     private Date modified = null;
 
-    @Column(name = "VERSION", length = API_VERSION_SIZE, nullable = true)
+    @Column(name = "VERSION", length = API_VERSION_SIZE, nullable = false)
     private String version;
 
     /**
