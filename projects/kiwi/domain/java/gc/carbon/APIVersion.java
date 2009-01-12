@@ -51,11 +51,11 @@ public class APIVersion implements PersistentObject, DatedObject {
     private String uid = "";
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED")
+    @Column(name = "CREATED", nullable = false)
     private Date created = null;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED")
+    @Column(name = "MODIFIED", nullable = false)
     private Date modified = null;
 
     @Column(name = "VERSION", length = API_VERSION_SIZE, nullable = false)

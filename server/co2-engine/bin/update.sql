@@ -59,10 +59,10 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 CREATE TABLE `API_VERSION` (
   `ID` bigint(20) NOT NULL auto_increment,
-  `CREATED` datetime default NULL,
-  `MODIFIED` datetime default NULL,
+  `CREATED` datetime NOT NULL,
+  `MODIFIED` datetime NOT NULL,
   `UID` varchar(12) NOT NULL,
-  `VERSION` varchar(3) default NULL,
+  `VERSION` varchar(3) NOT NULL,
   PRIMARY KEY  (`ID`),
   UNIQUE KEY `UID` (`UID`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
