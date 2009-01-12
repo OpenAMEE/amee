@@ -19,8 +19,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="utils" />
     <orderEntry type="library" name="global" level="project" />
+    <orderEntry type="library" name="amee-utils" level="project" />
   </component>
 </module>
 

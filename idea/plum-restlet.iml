@@ -22,13 +22,14 @@
     <orderEntry type="module" module-name="kiwi-service" />
     <orderEntry type="module" module-name="plum-domain" />
     <orderEntry type="module" module-name="plum-service" />
-    <orderEntry type="module" module-name="utils" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="global" level="project" />
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="hibernate" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="freemarker" level="project" />
+    <orderEntry type="library" name="amee-utils" level="project" />
+    <orderEntry type="library" name="amee-utils-restlet" level="project" />
   </component>
 </module>
 

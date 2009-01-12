@@ -21,11 +21,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="cache-restlet" />
     <orderEntry type="module" module-name="kiwi-domain" />
-    <orderEntry type="module" module-name="kiwi-service" />
     <orderEntry type="module" module-name="kiwi-restlet" />
-    <orderEntry type="module" module-name="plum-restlet" />
-    <orderEntry type="module" module-name="plum-domain" />
-    <orderEntry type="module" module-name="utils" />
+    <orderEntry type="module" module-name="kiwi-service" />
     <orderEntry type="module" module-name="org.restlet.ext.seam" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="global" level="project" />
@@ -36,6 +33,8 @@
     <orderEntry type="library" name="ehcache" level="project" />
     <orderEntry type="library" name="wrapper" level="project" />
     <orderEntry type="library" name="java-mail" level="project" />
+    <orderEntry type="library" name="amee-utils" level="project" />
+    <orderEntry type="library" name="amee-utils-restlet" level="project" />
   </component>
 </module>
 

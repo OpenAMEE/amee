@@ -21,3 +21,6 @@ testng, 5.8-jdk15
 wrapper, macosx-universal-32-3.2.3
 xmlutil, 1.2
 spring-integration, 1.0.0
+jax-rs, ?
+java-mail, ? 
+abdera, ?

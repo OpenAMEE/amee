@@ -63,12 +63,11 @@ public class APIVersion implements EnvironmentObject, DatedObject {
     @Column(name = "MODIFIED")
     private Date modified = null;
 
-
     @Column(name = "VERSION", length = API_VERSION_SIZE, nullable = true)
     private String version;
 
     public APIVersion() {
-
+        super();
     }
     
     /**

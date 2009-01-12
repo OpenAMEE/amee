@@ -16,7 +16,12 @@
   </component>
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
-      <configuration />
+      <configuration>
+        <fileset id="fileset1" name="AMEE Engine" removed="false">
+          <file>file://$MODULE_DIR$/../server/co2-engine/resources/META-INF/applicationContext-skins.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/resources/META-INF/applicationContext.xml</file>
+        </fileset>
+      </configuration>
     </facet>
     <facet type="jpa" name="JPA">
       <configuration>
@@ -42,18 +47,13 @@
     <orderEntry type="module" module-name="amee-restlet" />
     <orderEntry type="module" module-name="amee-service" />
     <orderEntry type="module" module-name="cache-restlet" />
-    <orderEntry type="module" module-name="cache-service" />
     <orderEntry type="module" module-name="engine-service" />
     <orderEntry type="module" module-name="idea" />
     <orderEntry type="module" module-name="kiwi-domain" />
     <orderEntry type="module" module-name="kiwi-restlet" />
     <orderEntry type="module" module-name="kiwi-service" />
     <orderEntry type="module" module-name="org.restlet.ext.seam" />
-    <orderEntry type="module" module-name="plum-domain" />
-    <orderEntry type="module" module-name="plum-restlet" />
-    <orderEntry type="module" module-name="plum-service" />
     <orderEntry type="module" module-name="sheet-domain" />
-    <orderEntry type="module" module-name="utils" />
     <orderEntry type="library" name="commons-cli" level="project" />
     <orderEntry type="library" name="ehcache" level="project" />
     <orderEntry type="library" name="freemarker" level="project" />
@@ -64,13 +64,15 @@
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="jetty" level="project" />
     <orderEntry type="library" name="jscience" level="project" />
-    <orderEntry type="library" name="memcached" level="project" />
     <orderEntry type="library" name="mysql-connector-java" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="spring-runtime" level="project" />
     <orderEntry type="library" name="wrapper" level="project" />
     <orderEntry type="library" name="quartz" level="project" />
+    <orderEntry type="library" name="amee-utils" level="project" />
+    <orderEntry type="library" name="amee-utils-restlet" level="project" />
+    <orderEntry type="library" name="slf4j" level="project" />
   </component>
 </module>
 
