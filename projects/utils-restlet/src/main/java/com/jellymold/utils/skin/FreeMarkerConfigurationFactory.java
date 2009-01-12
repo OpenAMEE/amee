@@ -1,20 +1,19 @@
 package com.jellymold.utils.skin;
 
-import com.jellymold.utils.cache.CacheableFactory;
 import com.jellymold.utils.ThreadBeanHolder;
+import com.jellymold.utils.cache.CacheableFactory;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class FreeMarkerConfigurationFactory implements CacheableFactory {
@@ -54,7 +53,7 @@ public class FreeMarkerConfigurationFactory implements CacheableFactory {
         if (skin.getPath().length() > 0) {
 
             // work out path and get directory for this Skin
-            path = System.getProperty("jmSkinRoot", "/Development/JellyMoldClosed/skins") + "/" + skin.getPath();
+            path = System.getProperty("amee.SkinRoot", "/var/www/amee/skins") + "/" + skin.getPath();
             file = new File(path);
 
             // add loader for this Skin
