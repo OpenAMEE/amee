@@ -3,7 +3,12 @@
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 <script type="text/javascript">
 function profileCategoryLoaded() {
-  $("totalAmountPerMonth").innerHTML = this.resource.totalAmountPerMonth;
+  <#if activeUser.apiVersion.versionOne>
+    $("totalAmountPerMonth").innerHTML = this.resource.totalAmountPerMonth;
+  <#else>
+    Log.debug('delete');
+    $("tAmount").innerHTML = this.resource.tAmount;
+  </#if>
 }
 function profileItemDeleted() {
   Effect.Fade(this.resourceElem);
@@ -51,8 +56,6 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
   </p>
 </#if>
 <#if browser.profileItemActions.allowList>
-
-    <#assign visible = false />
 
     <#if activeUser.apiVersion.versionOne>
         <h2>Profile Items</h2>
@@ -121,7 +124,7 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
 
     // api call
     document.observe('dom:loaded', function() {
-        <#if !activeUser.apiVersion.versionOne>
+        <#if !activeUser.apiVersion.versionOne && browser.profileItemActions.allowList>
             showJSON(renderApiResponse, "");
         </#if>
     });
@@ -137,14 +140,7 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
         $("tHeading").innerHTML = heading;
 
         // create table headings
-        var headingRowElement = new Element('tr')
-                .insert(getHeadingRow('item'))
-                .insert(getHeadingRow(getUnit(json)))
-                .insert(getHeadingRow('Name'))
-                .insert(getHeadingRow('Valid From'))
-                .insert(getHeadingRow('Valid To'))
-                .insert(getHeadingRow('Actions'));
-       var tableElement = new Element('table', {id : 'tContent'}).insert(headingRowElement);
+       var tableElement = new Element('table', {id : 'tContent'}).insert(getHeadingElement(json));
 
        // create table details
        var detailRows = getDetailRows(json);
@@ -160,7 +156,17 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
         $("tAmount").replace(totalElement);
     }
 
-    function getHeadingRow(heading) {
+    function getHeadingElement(json) {
+        return new Element('tr')
+                .insert(getHeadingData('item'))
+                .insert(getHeadingData(getUnit(json)))
+                .insert(getHeadingData('Name'))
+                .insert(getHeadingData('Valid From'))
+                .insert(getHeadingData('Valid To'))
+                .insert(getHeadingData('Actions'));
+    }
+
+    function getHeadingData(heading) {
         return new Element('th').insert(heading);
     }
 
