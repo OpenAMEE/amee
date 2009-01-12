@@ -1,9 +1,8 @@
 package gc.carbon;
 
-import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.EnvironmentObject;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.DatedObject;
+import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -38,7 +37,7 @@ import java.util.Date;
 @Entity
 @Table(name = "API_VERSION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class APIVersion implements EnvironmentObject, DatedObject {
+public class APIVersion implements PersistentObject, DatedObject {
 
     public static final String ONE_ZERO = "1.0";
     public final static int API_VERSION_SIZE = 3;
@@ -51,39 +50,30 @@ public class APIVersion implements EnvironmentObject, DatedObject {
     @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
-
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED")
+    @Column(name = "CREATED", nullable = false)
     private Date created = null;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED")
+    @Column(name = "MODIFIED", nullable = false)
     private Date modified = null;
 
-    @Column(name = "VERSION", length = API_VERSION_SIZE, nullable = true)
+    @Column(name = "VERSION", length = API_VERSION_SIZE, nullable = false)
     private String version;
 
-    public APIVersion() {
-        super();
-    }
-    
     /**
      * Default constructor (initialises version to ONE_ZERO)
      *
-     * @param environment the environment
      * @see #ONE_ZERO
      */
-    public APIVersion(Environment environment) {
-        this(APIVersion.ONE_ZERO, environment);
+    public APIVersion() {
+        this(APIVersion.ONE_ZERO);
     }
 
-    public APIVersion(String version, Environment environment) {
+    public APIVersion(String version) {
+        super();
         this.version = version;
         setUid(UidGen.getUid());
-        setEnvironment(environment);
     }
 
     public boolean equals(Object o) {
@@ -163,16 +153,6 @@ public class APIVersion implements EnvironmentObject, DatedObject {
     public void setUid(String uid) {
         if (uid != null) {
             this.uid = uid;
-        }
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
         }
     }
 

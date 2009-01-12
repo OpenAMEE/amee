@@ -114,7 +114,7 @@ public class UserResource extends BaseResource {
     // TODO: prevent duplicate username/password and enforce unique username per environment?
     // TODO: password validation
     @Override
-    public void put(Representation entity) {
+    public void storeRepresentation(Representation entity) {
         log.debug("put");
         if (environmentBrowser.getUserActions().isAllowModify()) {
             Form form = getForm();
@@ -150,11 +150,9 @@ public class UserResource extends BaseResource {
                     user.setEmail(form.getFirstValue("email"));
                 }
                 if (form.getNames().contains("apiVersion")) {
-                    user.setApiVersion(environmentBrowser.getApiVersion(
-                            form.getFirstValue("apiVersion"),
-                            environmentBrowser.getEnvironment()));
+                    user.setApiVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
                     if (user.getApiVersion() == null) {
-                        log.debug("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
+                        log.error("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
                         badRequest();
                         return;
                     }
@@ -175,7 +173,7 @@ public class UserResource extends BaseResource {
 
     // TODO: do not allow delete affecting logged-in user...
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (environmentBrowser.getUserActions().isAllowDelete()) {
             siteService.remove(environmentBrowser.getUser());
             success();
