@@ -32,8 +32,8 @@ public class TestClient {
         Reference uri = new Reference(Protocol.HTTP, LOCAL_HOST_NAME + "/auth/signIn?method=put");
         Form form = new Form();
         form.add("next", "auth");
-        form.add("username", "admin");
-        form.add("password", "r41n80w");
+        form.add("username", "");
+        form.add("password", "");
         Representation rep = form.getWebRepresentation();
         Response response = client.post(uri, rep);
         if (response.getStatus().isRedirection()) {
