@@ -72,6 +72,7 @@ public class UsersResource extends BaseResource implements Serializable {
         values.put("environment", environmentBrowser.getEnvironment());
         values.put("users", users);
         values.put("pager", pager);
+        values.put("apiVersions", environmentBrowser.getApiVersions());
         return values;
     }
 
@@ -132,7 +133,7 @@ public class UsersResource extends BaseResource implements Serializable {
 
     // TODO: prevent duplicate instances
     @Override
-    public void post(Representation entity) {
+    public void acceptRepresentation(Representation entity) {
         User cloneUser;
         GroupUser newGroupUser;
         log.debug("post");
@@ -152,18 +153,24 @@ public class UsersResource extends BaseResource implements Serializable {
                     } else {
                         newUser.setType(UserType.STANDARD);
                     }
-                    siteService.save(newUser);
-                    // now clone user -> group memberships
-                    cloneUser = siteService.getUserByUid(
-                            environmentBrowser.getEnvironment(), form.getFirstValue("cloneUserUid"));
-                    if (cloneUser != null) {
-                        for (GroupUser groupUser : siteService.getGroupUsers(cloneUser)) {
-                            newGroupUser = new GroupUser(groupUser.getGroup(), newUser);
-                            for (Role role : groupUser.getRoles()) {
-                                newGroupUser.addRole(role);
+                    newUser.setApiVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
+                    if (newUser.getApiVersion() != null) {
+                        siteService.save(newUser);
+                        // now clone user -> group memberships
+                        cloneUser = siteService.getUserByUid(
+                                environmentBrowser.getEnvironment(), form.getFirstValue("cloneUserUid"));
+                        if (cloneUser != null) {
+                            for (GroupUser groupUser : siteService.getGroupUsers(cloneUser)) {
+                                newGroupUser = new GroupUser(groupUser.getGroup(), newUser);
+                                for (Role role : groupUser.getRoles()) {
+                                    newGroupUser.addRole(role);
+                                }
+                                siteService.save(newGroupUser);
                             }
-                            siteService.save(newGroupUser);
                         }
+                    } else {
+                        log.error("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
+                        newUser = null;
                     }
                 } else {
                     newUser = null;

@@ -81,7 +81,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     @Column(name = "LOCATION", length = LOCATION_SIZE, nullable = false)
     private String location = "";
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "API_VERSION")
     private APIVersion apiVersion;
 
@@ -446,7 +446,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
 
     public void setApiVersion(APIVersion apiVersion) {
         if (apiVersion == null) {
-            this.apiVersion = new APIVersion(getEnvironment());
+            this.apiVersion = new APIVersion();
         }
         this.apiVersion = apiVersion;
     }
