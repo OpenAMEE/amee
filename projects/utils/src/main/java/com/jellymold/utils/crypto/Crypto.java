@@ -5,16 +5,18 @@ import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.*;
 import javax.crypto.spec.DESedeKeySpec;
+import javax.crypto.spec.IvParameterSpec;
 import java.io.*;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.security.Security;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 
 public class Crypto {
 
     private final static String KEY_FILE = "amee.keyFile";
+    private static final byte[] salt = {
+            (byte) 0xc7, (byte) 0x73, (byte) 0x21, (byte) 0x8c,
+            (byte) 0x7e, (byte) 0xc8, (byte) 0xee, (byte) 0x99};
+    private static final IvParameterSpec iv = new javax.crypto.spec.IvParameterSpec(salt);
     private static Key key = null;
 
     public Crypto() {
@@ -39,10 +41,13 @@ public class Crypto {
         byte[] data = toBeEncrypted.getBytes();
         try {
             Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, Crypto.key);
+            cipher.init(Cipher.ENCRYPT_MODE, Crypto.key, Crypto.iv);
             byte[] result = cipher.doFinal(data);
             result = Base64.encodeBase64(result);
             return new String(result);
+        } catch (InvalidAlgorithmParameterException e) {
+            System.out.println("encrypt() caught InvalidAlgorithmParameterException: " + e.getMessage());
+            throw new CryptoException("InvalidAlgorithmParameterException ", e);
         } catch (InvalidKeyException e) {
             System.out.println("encrypt() caught InvalidKeyException: " + e.getMessage());
             throw new CryptoException("InvalidKeyException", e);
@@ -67,9 +72,13 @@ public class Crypto {
             Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
             byte[] data = toBeDecrypted.getBytes("UTF-8");
             data = Base64.decodeBase64(data);
-            cipher.init(Cipher.DECRYPT_MODE, Crypto.key);
+            cipher.init(Cipher.DECRYPT_MODE, Crypto.key, Crypto.iv);
             byte[] result = cipher.doFinal(data);
             return new String(result);
+        } catch (InvalidAlgorithmParameterException e) {
+            System.out.println("decrypt() caught InvalidAlgorithmParameterException: " + e.getMessage());
+            e.printStackTrace();
+            throw new CryptoException("InvalidAlgorithmParameterException: ", e);
         } catch (UnsupportedEncodingException e) {
             System.out.println("decrypt() caught UnsupportedEncodingException: " + e.getMessage());
             throw new CryptoException("UnsupportedEncodingException", e);
