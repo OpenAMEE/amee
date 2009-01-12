@@ -93,10 +93,10 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
     <#else>
         <h2 id="tHeading"></h2>
         <p>
-            <table id="tContent" name="tContent">
+            <table id="tContent">
             </table>
         </p>
-        <p id="tAmount" name="tAmount"></p>
+        <p id="tAmount"></p>
     </#if>
 
 </#if>
@@ -119,8 +119,6 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
     var drillDown = new DrillDown('/data${browser.pathItem.fullPath}');
     drillDown.loadDrillDown('');
 
-    var heading = "Profile Items";
-
     // api call
     document.observe('dom:loaded', function() {
         <#if !activeUser.apiVersion.versionOne>
@@ -128,19 +126,91 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
         </#if>
     });
 
+    // section heading
+    var heading = "Profile Items";
+
     function renderApiResponse(response) {
 
-        // Log.debug(response.responseJSON);
+        var json = response.responseJSON; 
 
         // set section heading
-//        $("tHeading").innerHTML = heading;
+        $("tHeading").innerHTML = heading;
 
-        // create table column labels
-//        Log.debug($("tHeading"));
-//        Log.debug($("tContent"));
-//        Log.debug($("tAmount"));
+        // create table headings
+        var headingRowElement = new Element('tr')
+                .insert(getHeadingRow('item'))
+                .insert(getHeadingRow(getUnit(json)))
+                .insert(getHeadingRow('Name'))
+                .insert(getHeadingRow('Valid From'))
+                .insert(getHeadingRow('Valid To'))
+                .insert(getHeadingRow('Actions'));
+       var tableElement = new Element('table', {id : 'tContent'}).insert(headingRowElement);
 
+       // create table details
+       var detailRows = getDetailRows(json);
+       for (i = 0 ; i < detailRows.length; i++) {
+           tableElement.insert(detailRows[i]);
+       }
 
+       // replace table
+       $("tContent").replace(tableElement)
+
+       // create total
+       var totalElement = new Element('p', {id : 'tAmount'}).insert("Total " + getUnit(json) + " " + json.totalAmount.value);
+        $("tAmount").replace(totalElement);
+    }
+
+    function getHeadingRow(heading) {
+        return new Element('th').insert(heading);
+    }
+
+    function getUnit(json) {
+        if (json.totalAmount) {
+            return json.totalAmount.unit;
+        }
+        return "Unknown Unit";
+    }
+    function getDetailRows(json) {
+        var rows = [];
+        if (json.profileItems) {
+            for (i = 0; i < json.profileItems.length; i++) {
+                var profileItem = json.profileItems[i];
+                var detailRow = new Element('tr', {id : profileItem.uid})
+                    .insert(new Element('td', {id: profileItem.dataItem.uid}).insert(profileItem.dataItem.Label))
+                    .insert(new Element('td').insert(profileItem.amount.value))
+                    .insert(new Element('td').insert(profileItem.name))
+                    .insert(new Element('td').insert(profileItem.startDate))
+                    .insert(new Element('td').insert(profileItem.endDate));
+
+                // create actions
+                detailRow.insert(getActionsTableData(${browser.profileItemActions.allowView?string}, ${browser.profileItemActions.allowDelete?string}, profileItem.uid));
+
+                // update array
+                rows[i] = detailRow;
+            }
+            return rows;
+        }
+        rows[0] = new Element("tr").insert(new Element("td"));
+        return rows;
+    }
+
+    function getActionsTableData(allowView, allowDelete, uid) {
+        var actions = new Element('td');
+        if (allowView) {
+            actions.insert(new Element('a', {href : window.location.href + "/" + uid})
+                .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
+        }
+
+        if (allowDelete) {
+            var dUrl = "'profileItem.uid','" + window.location.href + '/' + uid + "'";
+            actions.insert(new Element('input',
+                {
+                onClick : 'deleteProfileItem(' + dUrl + ') ; return false;',
+                type : 'image',
+                src : '/images/icons/page_delete.png',
+                title : 'Delete', alt : 'Delete', border : 0}));
+        }
+        return actions;
     }
 </script>
 
