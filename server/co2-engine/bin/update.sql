@@ -54,29 +54,11 @@ VALUES ('67', 'F613C476EADD', 'Algorithm Contexts Resource', '', '/{environmentU
         'algorithmContextResource', b'00000000', b'00000000', b'00000001', SYSDATE(), SYSDATE(), '4', '0');
 
 # Add API Version
-SET NAMES latin1;
-SET FOREIGN_KEY_CHECKS = 0;
-
-CREATE TABLE `API_VERSION` (
-  `ID` bigint(20) NOT NULL auto_increment,
-  `CREATED` datetime NOT NULL,
-  `MODIFIED` datetime NOT NULL,
-  `UID` varchar(12) NOT NULL,
-  `VERSION` varchar(3) NOT NULL,
-  PRIMARY KEY  (`ID`),
-  UNIQUE KEY `UID` (`UID`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
-
-
 INSERT INTO amee.API_VERSION (ID, CREATED, MODIFIED, UID, VERSION)
 VALUES	('1', SYSDATE(), SYSDATE(), '655B1AD17733', '1.0'),
  		('2', SYSDATE(), SYSDATE(), '4D2BAA6BB1BE', '2.0');
 
-ALTER TABLE amee.USER ADD COLUMN API_VERSION BIGINT (20) NOT NULL;
-
 UPDATE amee.USER set API_VERSION = 1;
-
-SET FOREIGN_KEY_CHECKS = 1;
 
 
 # Remove all profiles.
