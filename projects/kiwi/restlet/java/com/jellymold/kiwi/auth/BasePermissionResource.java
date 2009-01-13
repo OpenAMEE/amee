@@ -57,7 +57,7 @@ public abstract class BasePermissionResource extends BaseResource implements Ser
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation");
     }
 }

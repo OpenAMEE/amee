@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.group;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Group;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
@@ -134,7 +133,7 @@ public class GroupsResource extends BaseResource implements Serializable {
 
     // TODO: prevent duplicate instances
     @Override
-    public void post(Representation entity) {
+    public void acceptRepresentation(Representation entity) {
         log.debug("post");
         if (environmentBrowser.getGroupActions().isAllowCreate()) {
             Form form = getForm();

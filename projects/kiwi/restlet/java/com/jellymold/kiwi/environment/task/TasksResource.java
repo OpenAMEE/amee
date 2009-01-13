@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.task;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.ScheduledTask;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
@@ -136,8 +135,8 @@ public class TasksResource extends BaseResource implements Serializable {
 
     // TODO: prevent duplicate instances
     @Override
-    public void post(Representation entity) {
-        log.debug("post");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation");
         if (environmentBrowser.getScheduledTaskActions().isAllowCreate()) {
             Form form = getForm();
             // create new instance if submitted
@@ -168,8 +167,8 @@ public class TasksResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation");
         if (environmentBrowser.getScheduledTaskActions().isAllowModify()) {
             Form form = getForm();
             if (form.getNames().contains("restart")) {

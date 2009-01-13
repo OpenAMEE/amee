@@ -2,7 +2,6 @@ package com.jellymold.kiwi.environment.role;
 
 import com.jellymold.kiwi.Action;
 import com.jellymold.kiwi.App;
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Role;
 import com.jellymold.kiwi.app.AppService;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
@@ -127,7 +126,7 @@ public class RoleActionsResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void post(Representation entity) {
+    public void acceptRepresentation(Representation entity) {
         log.debug("post");
         if (environmentBrowser.getRoleActions().isAllowModify()) {
             Form form = getForm();

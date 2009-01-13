@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.user;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Group;
 import com.jellymold.kiwi.GroupUser;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
@@ -151,8 +150,8 @@ public class UserGroupsResource extends BaseResource implements Serializable {
 
     // TODO: prevent duplicate instances
     @Override
-    public void post(Representation entity) {
-        log.debug("post");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation");
         if (environmentBrowser.getUserActions().isAllowModify()) {
             Form form = getForm();
             // create new instance if submitted

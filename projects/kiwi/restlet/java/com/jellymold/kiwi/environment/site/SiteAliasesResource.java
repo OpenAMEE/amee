@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.site;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.SiteAlias;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
@@ -137,8 +136,8 @@ public class SiteAliasesResource extends BaseResource {
 
     // TODO: prevent duplicate instances
     @Override
-    public void post(Representation entity) {
-        log.debug("post");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation");
         if (environmentBrowser.getSiteAliasActions().isAllowModify()) {
             Form form = getForm();
             // create new instance if submitted
