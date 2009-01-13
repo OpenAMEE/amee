@@ -42,6 +42,18 @@ public class Crypto {
         }
     }
 
+    public static String getAsMD5AndBase64(String s) throws CryptoException {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(Crypto.salt);
+            md.update(s.getBytes());
+            return new String(Base64.encodeBase64(md.digest()));
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("initialise() caught NoSuchAlgorithmException: " + e.getMessage());
+            throw new CryptoException("NoSuchAlgorithmException", e);
+        }
+    }
+
     public static String encrypt(String toBeEncrypted) throws CryptoException {
         Crypto.initialise();
         byte[] data = toBeEncrypted.getBytes();
