@@ -94,7 +94,7 @@ public class ActionResource extends BaseResource {
 
     // TODO: prevent duplicates
     @Override
-    public void put(Representation entity) {
+    public void storeRepresentation(Representation entity) {
         log.debug("put");
         if (appBrowser.getAppActions().isAllowModify()) {
             Form form = getForm();
@@ -122,7 +122,7 @@ public class ActionResource extends BaseResource {
 
     // TODO: do not allow delete affecting logged-in user...
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (appBrowser.getAppActions().isAllowModify()) {
             appBrowser.getApp().remove(appBrowser.getAction());
             appService.remove(appBrowser.getAction());

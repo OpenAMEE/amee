@@ -1,7 +1,6 @@
 package com.jellymold.kiwi.environment.site;
 
 import com.jellymold.kiwi.App;
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.SiteApp;
 import com.jellymold.kiwi.app.AppService;
@@ -108,7 +107,7 @@ public class SiteAppResource extends BaseResource {
     }
 
     @Override
-    public void put(Representation entity) {
+    public void storeRepresentation(Representation entity) {
         log.debug("put");
         if (environmentBrowser.getSiteAppActions().isAllowModify()) {
             Form form = getForm();
@@ -145,7 +144,7 @@ public class SiteAppResource extends BaseResource {
     }
 
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (environmentBrowser.getSiteAppActions().isAllowDelete()) {
             Site site = environmentBrowser.getSite();
             SiteApp siteApp = environmentBrowser.getSiteApp();

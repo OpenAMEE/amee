@@ -289,15 +289,11 @@ public class EnvironmentBrowser extends BaseBrowser {
     }
 
     public List<APIVersion> getApiVersions() {
-        return environmentService.getAPIVersions(getEnvironment());
+        return environmentService.getAPIVersions();
     }
 
     public APIVersion getApiVersion(String version) {
-        return environmentService.getAPIVersion(version, getEnvironment());
-    }
-
-    public APIVersion getApiVersion(String version, Environment environment) {
-        return environmentService.getAPIVersion(version, environment);
+        return environmentService.getAPIVersion(version);
     }
 
 }

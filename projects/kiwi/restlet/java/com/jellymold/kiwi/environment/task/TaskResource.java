@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.task;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.ScheduledTask;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
@@ -98,7 +97,7 @@ public class TaskResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void put(Representation entity) {
+    public void storeRepresentation(Representation entity) {
         log.debug("put");
         if (environmentBrowser.getScheduledTaskActions().isAllowModify()) {
             Form form = getForm();
@@ -140,7 +139,7 @@ public class TaskResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (environmentBrowser.getScheduledTaskActions().isAllowDelete()) {
             environmentService.remove(environmentBrowser.getScheduledTask());
             success();

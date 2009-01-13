@@ -1,7 +1,6 @@
 package com.jellymold.kiwi.environment.site;
 
 import com.jellymold.kiwi.App;
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.SiteApp;
 import com.jellymold.kiwi.app.AppService;
@@ -143,8 +142,8 @@ public class SiteAppsResource extends BaseResource {
 
     // TODO: prevent duplicate instances
     @Override
-    public void post(Representation entity) {
-        log.debug("post");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation");
         if (environmentBrowser.getSiteAppActions().isAllowModify()) {
             Form form = getForm();
             // create new instance if submitted

@@ -89,8 +89,8 @@ public class EnvironmentResource extends BaseResource {
     }
 
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation");
         if (environmentBrowser.getEnvironmentActions().isAllowModify()) {
             Form form = getForm();
             Environment environment = environmentBrowser.getEnvironment();
@@ -124,7 +124,7 @@ public class EnvironmentResource extends BaseResource {
 
     // TODO: Prevent deletion of the current environment?!
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (environmentBrowser.getEnvironmentActions().isAllowDelete()) {
             environmentService.remove(environmentBrowser.getEnvironment());
             success();

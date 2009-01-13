@@ -217,27 +217,19 @@ public class EnvironmentService implements Serializable {
 
 
     public List<APIVersion> getAPIVersions() {
-        return getAPIVersions(getEnvironment());
-    }
-
-    public List<APIVersion> getAPIVersions(Environment environment) {
         List<APIVersion> apiVersions = entityManager.createQuery(
                         "FROM APIVersion apiv " +
-                        "WHERE apiv.environment.id = :environmentId " +
                         "ORDER BY apiv.version")
-                .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
                 .getResultList();
         return apiVersions;
     }
 
-    public APIVersion getAPIVersion(String version, Environment environment) {
+    public APIVersion getAPIVersion(String version) {
         return (APIVersion) entityManager.createQuery(
                         "FROM APIVersion apiv " +
-                        "WHERE apiv.environment.id = :environmentId " +
-                        "AND apiv.version = :version")
-                .setParameter("environmentId", environment.getId())
+                        "WHERE apiv.version = :version")
                 .setParameter("version", version)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")

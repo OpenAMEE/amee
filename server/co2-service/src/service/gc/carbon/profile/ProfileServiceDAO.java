@@ -29,7 +29,6 @@ import com.jellymold.utils.event.ObservedEvent;
 import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.profile.ProfileBrowser;
 import gc.carbon.APIVersion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.site;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.SiteAlias;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
@@ -103,8 +102,8 @@ public class SiteAliasResource extends BaseResource {
 
     // TODO: prevent duplicate server aliases
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation");
         if (environmentBrowser.getSiteAliasActions().isAllowModify()) {
             Form form = getForm();
             SiteAlias siteAlias = environmentBrowser.getSiteAlias();
@@ -130,7 +129,7 @@ public class SiteAliasResource extends BaseResource {
     }
 
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (environmentBrowser.getSiteAliasActions().isAllowDelete()) {
             Site site = environmentBrowser.getSite();
             SiteAlias siteAlias = environmentBrowser.getSiteAlias();

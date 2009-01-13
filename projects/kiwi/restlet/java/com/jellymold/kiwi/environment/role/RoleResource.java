@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.role;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Role;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
@@ -20,7 +19,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 @Component
 @Scope("prototype")
@@ -99,8 +97,8 @@ public class RoleResource extends BaseResource {
 
     // TODO: prevent duplicates
     @Override
-    public void put(Representation entity) {
-        log.debug("put");
+    public void storeRepresentation(Representation entity) {
+        log.debug("storeRepresentation");
         if (environmentBrowser.getRoleActions().isAllowModify()) {
             Form form = getForm();
             Role role = environmentBrowser.getRole();
@@ -124,7 +122,7 @@ public class RoleResource extends BaseResource {
 
     // TODO: do not allow delete affecting logged-in user...
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (environmentBrowser.getRoleActions().isAllowDelete()) {
             siteService.remove(environmentBrowser.getRole());
             success();

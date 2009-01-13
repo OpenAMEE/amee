@@ -5,6 +5,10 @@
     <content url="file://$MODULE_DIR$/../server/skins" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="amee-utils" level="project" />
   </component>
+  <component name="ProjectModuleManager" />
+  <component name="ProjectRunConfigurationManager" />
+  <component name="libraryTable" />
 </module>
 

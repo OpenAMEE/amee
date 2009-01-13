@@ -20,7 +20,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="kiwi-domain" />
-    <orderEntry type="module" module-name="utils" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="global" level="project" />
     <orderEntry type="library" name="jee" level="project" />
@@ -28,6 +27,10 @@
     <orderEntry type="library" name="javacsv" level="project" />
     <orderEntry type="library" name="quartz" level="project" />
     <orderEntry type="library" name="spring-integration" level="project" />
+    <orderEntry type="library" name="amee-utils" level="project" />
   </component>
+  <component name="ProjectModuleManager" />
+  <component name="ProjectRunConfigurationManager" />
+  <component name="libraryTable" />
 </module>
 

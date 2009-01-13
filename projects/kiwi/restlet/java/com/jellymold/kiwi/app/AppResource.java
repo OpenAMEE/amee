@@ -90,7 +90,7 @@ public class AppResource extends BaseResource {
 
     // TODO: prevent duplicate names
     @Override
-    public void put(Representation entity) {
+    public void storeRepresentation(Representation entity) {
         log.debug("put");
         if (appBrowser.getAppActions().isAllowModify()) {
             Form form = getForm();
@@ -121,7 +121,7 @@ public class AppResource extends BaseResource {
 
     // TODO: Prevent deletion of the current app?!
     @Override
-    public void delete() {
+    public void removeRepresentations() {
         if (appBrowser.getAppActions().isAllowDelete()) {
             appService.remove(appBrowser.getApp());
             success();

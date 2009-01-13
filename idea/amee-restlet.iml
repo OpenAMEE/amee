@@ -27,19 +27,21 @@
     <orderEntry type="module" module-name="kiwi-domain" />
     <orderEntry type="module" module-name="kiwi-service" />
     <orderEntry type="module" module-name="sheet-domain" />
-    <orderEntry type="module" module-name="utils" />
+    <orderEntry type="module" module-name="org.restlet.ext.seam" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="global" level="project" />
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="hibernate" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
-    <orderEntry type="module" module-name="org.restlet.ext.seam" />
     <orderEntry type="library" name="rhino" level="project" />
     <orderEntry type="library" name="jscience" level="project" />
     <orderEntry type="library" name="joda" level="project" />
     <orderEntry type="library" name="abdera" level="project" />
-    <orderEntry type="module" module-name="kiwi-restlet" />
+    <orderEntry type="library" name="amee-utils" level="project" />
+    <orderEntry type="library" name="amee-utils-restlet" level="project" />
   </component>
+  <component name="ProjectModuleManager" />
   <component name="ProjectRunConfigurationManager" />
+  <component name="libraryTable" />
 </module>
 

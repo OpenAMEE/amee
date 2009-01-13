@@ -1,6 +1,5 @@
 package com.jellymold.cache;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Column;
@@ -122,8 +121,8 @@ public class CacheResource extends BaseResource implements Serializable {
         return true;
     }
 
-    public void post(Representation entity) {
-        log.debug("post");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation");
         if (cacheAdmin.getCacheActions().isAllowModify()) {
             Form form = getForm();
             if (form.getNames().contains("invalidate")) {
@@ -208,7 +207,7 @@ public class CacheResource extends BaseResource implements Serializable {
     }
 
     private String getKey(String key, int i) {
-        String ret = "";
+        String ret;
         if (key.length() < 35) {
             ret = key;
         } else {

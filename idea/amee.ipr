@@ -84,6 +84,7 @@
       </facet-type>
     </autodetection-disabled>
   </component>
+  <component name="FacetManager" />
   <component name="IdProvider" IDEtalkID="6349106023250C09104C4869C5710834" />
   <component name="InspectionProjectProfileManager">
     <option name="PROJECT_PROFILE" value="Project Default" />
@@ -135,6 +136,7 @@
     <option name="FILTER_INFO" value="true" />
     <option name="CUSTOM_FILTER" />
   </component>
+  <component name="NewModuleRootManager" />
   <component name="Palette2">
     <group name="Swing">
       <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
@@ -268,7 +270,6 @@
       <module fileurl="file://$PROJECT_DIR$/amee-service.iml" filepath="$PROJECT_DIR$/amee-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/amee-test.iml" filepath="$PROJECT_DIR$/amee-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/cache-restlet.iml" filepath="$PROJECT_DIR$/cache-restlet.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cache-service.iml" filepath="$PROJECT_DIR$/cache-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/engine-service.iml" filepath="$PROJECT_DIR$/engine-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/htdocs.iml" filepath="$PROJECT_DIR$/htdocs.iml" />
       <module fileurl="file://$PROJECT_DIR$/idea.iml" filepath="$PROJECT_DIR$/idea.iml" />
@@ -276,12 +277,8 @@
       <module fileurl="file://$PROJECT_DIR$/kiwi-restlet.iml" filepath="$PROJECT_DIR$/kiwi-restlet.iml" />
       <module fileurl="file://$PROJECT_DIR$/kiwi-service.iml" filepath="$PROJECT_DIR$/kiwi-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/org.restlet.ext.seam.iml" filepath="$PROJECT_DIR$/org.restlet.ext.seam.iml" />
-      <module fileurl="file://$PROJECT_DIR$/plum-domain.iml" filepath="$PROJECT_DIR$/plum-domain.iml" />
-      <module fileurl="file://$PROJECT_DIR$/plum-restlet.iml" filepath="$PROJECT_DIR$/plum-restlet.iml" />
-      <module fileurl="file://$PROJECT_DIR$/plum-service.iml" filepath="$PROJECT_DIR$/plum-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/sheet-domain.iml" filepath="$PROJECT_DIR$/sheet-domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/skins.iml" filepath="$PROJECT_DIR$/skins.iml" />
-      <module fileurl="file://$PROJECT_DIR$/utils.iml" filepath="$PROJECT_DIR$/utils.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
@@ -528,11 +525,8 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="memcached">
+    <library name="slf4j">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../lib/memcached/spy-2.4.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../lib/memcached/memcached-2.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../lib/memcached/hibernate-memcached-0.6.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/memcached/slf4j-log4j12-1.5.0.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/memcached/slf4j-api-1.5.0.jar!/" />
       </CLASSES>
@@ -650,6 +644,20 @@
     <library name="java-mail">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/../lib/java-mail/mail.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="amee-utils">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../lib/amee-maven/utils-1.0.0-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="amee-utils-restlet">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../lib/amee-maven/utils-restlet-1.0.0-SNAPSHOT.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

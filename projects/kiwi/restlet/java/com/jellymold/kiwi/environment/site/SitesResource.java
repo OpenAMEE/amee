@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.site;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
@@ -133,7 +132,7 @@ public class SitesResource extends BaseResource implements Serializable {
 
     // TODO: prevent duplicate instances
     @Override
-    public void post(Representation entity) {
+    public void acceptRepresentation(Representation entity) {
         log.debug("post");
         if (environmentBrowser.getSiteActions().isAllowCreate()) {
             Form form = getForm();

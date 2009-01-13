@@ -19,17 +19,20 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="cache-service" />
     <orderEntry type="module" module-name="sheet-domain" />
     <orderEntry type="module" module-name="kiwi-domain" />
     <orderEntry type="module" module-name="kiwi-service" />
-    <orderEntry type="module" module-name="utils" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="global" level="project" />
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="hibernate" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="ehcache" level="project" />
+    <orderEntry type="library" name="amee-utils" level="project" />
+    <orderEntry type="library" name="amee-utils-restlet" level="project" />
   </component>
+  <component name="ProjectModuleManager" />
+  <component name="ProjectRunConfigurationManager" />
+  <component name="libraryTable" />
 </module>
 
