@@ -20,8 +20,8 @@
 package gc.engine;
 
 import com.jellymold.engine.Engine;
-import com.jellymold.kiwi.environment.ScheduledTaskManager;
 import com.jellymold.kiwi.UserPasswordToMD5;
+import com.jellymold.kiwi.environment.ScheduledTaskManager;
 import org.apache.commons.cli.*;
 
 public class GCEngine extends Engine {
@@ -167,7 +167,7 @@ public class GCEngine extends Engine {
                 new HelpFormatter().printHelp("java gc.engine.GCEngine", options);
                 System.exit(-1);
             }
-        }        
+        }
 
         if (line.hasOption(threadMaxIdleTimeMsOpt.getOpt())) {
             try {
@@ -234,10 +234,12 @@ public class GCEngine extends Engine {
         taskMan.setServerName(serverName);
         taskMan.onStart();
 
-        // TEMPORARY CODE!!!!
-//        UserPasswordToMD5 userPasswordToMD5 =
-//                (UserPasswordToMD5) springContext.getBean("userPasswordToMD5");
-//        userPasswordToMD5.updateUserPasswordToMD5(false);
+        if (System.getProperty("amee.userPasswordToMD5") != null) {
+            // TODO: TEMPORARY CODE!!!! Remove once all databases have been migrated. Get rid of UserPasswordToMD5 too.
+            UserPasswordToMD5 userPasswordToMD5 =
+                    (UserPasswordToMD5) springContext.getBean("userPasswordToMD5");
+            userPasswordToMD5.updateUserPasswordToMD5(false);
+        }
     }
 
     @Override

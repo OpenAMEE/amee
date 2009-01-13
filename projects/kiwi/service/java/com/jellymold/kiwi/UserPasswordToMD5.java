@@ -10,6 +10,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+/**
+ * TODO: TEMPORARY CODE!!!! Remove once all databases have been migrated.
+ */
 @Service
 public class UserPasswordToMD5 {
 

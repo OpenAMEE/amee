@@ -43,6 +43,7 @@ public class Crypto {
     }
 
     public static String getAsMD5AndBase64(String s) throws CryptoException {
+        Crypto.initialise();
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(Crypto.salt);

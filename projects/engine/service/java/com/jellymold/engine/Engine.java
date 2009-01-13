@@ -41,7 +41,6 @@ public class Engine implements WrapperListener, Serializable {
     protected static int ACCEPTOR_THREADS = 1;
     protected static int ACCEPT_QUEUE_SIZE = 0;
 
-
     private boolean initialise = false;
     private int ajpPort = AJP_PORT;
     protected String serverName;
