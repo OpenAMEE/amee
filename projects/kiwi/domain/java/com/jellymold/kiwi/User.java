@@ -40,7 +40,7 @@ import java.util.List;
 public class User implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
     public final static int USERNAME_SIZE = 20;
-    public final static int PASSWORD_SIZE = 20;
+    public final static int PASSWORD_SIZE = 40;
     public final static int NAME_SIZE = 100;
     public final static int NICK_NAME_SIZE = 100;
     public final static int LOCATION_SIZE = 100;
