@@ -41,6 +41,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
 
     public final static int USERNAME_SIZE = 20;
     public final static int PASSWORD_SIZE = 40;
+    public final static int PASSWORD_CLEAR_SIZE = 40;
     public final static int NAME_SIZE = 100;
     public final static int NICK_NAME_SIZE = 100;
     public final static int LOCATION_SIZE = 100;
@@ -409,9 +410,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
 
     @Transient
     public static String getAsMD5(String password) {
-        if (password == null) {
-            throw new IllegalArgumentException("Password value is null");
-        }
+        checkPassword(password, PASSWORD_CLEAR_SIZE);
         MessageDigest md;
         String md5;
         try {
@@ -429,10 +428,15 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     }
 
     public void setPassword(String password) {
-        if (password == null) {
-            password = "";
-        }
+        checkPassword(password, PASSWORD_SIZE);
         this.password = password.trim();
+    }
+
+    private static void checkPassword(String password, int size) {
+        if ((password == null) || password.isEmpty() || (password.length() > size)) {
+            throw new IllegalArgumentException(
+                    "Password must not be empty and must be <= " + size + " characters long.");
+        }
     }
 
     public Date getCreated() {
