@@ -67,19 +67,13 @@ public class ItemDefinition implements PersistentObject {
     @OrderBy("name")
     private Set<Algorithm> algorithms = new HashSet<Algorithm>();
 
-/*
-    @OneToMany(mappedBy = "itemDefinition", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("name")
-*/
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "ITEM_DEFINITION_ITEM_VALUE_DEFINITION",
         joinColumns = {@JoinColumn(name = "ITEM_DEFINITION_ID")},
         inverseJoinColumns = {@JoinColumn(name = "ITEM_VALUE_DEFINITION_ID")}
     )
-        private Set<ItemValueDefinition> itemValueDefinitions = new HashSet<ItemValueDefinition>();
+    private Set<ItemValueDefinition> itemValueDefinitions = new HashSet<ItemValueDefinition>();
 
     @Column(name = "CREATED")
     private Date created = Calendar.getInstance().getTime();

@@ -16,7 +16,6 @@
         <class>com.jellymold.kiwi.User</class>
         <class>gc.carbon.APIVersion</class>
         <class>com.jellymold.plum.Skin</class>
-        <class>gc.carbon.domain.UnitDefinition</class>
         <class>gc.carbon.domain.ValueDefinition</class>
         <class>gc.carbon.domain.data.AlgorithmContext</class>
         <class>gc.carbon.domain.data.Algorithm</class>
@@ -27,12 +26,13 @@
         <class>gc.carbon.domain.data.ItemValueDefinition</class>
         <class>gc.carbon.domain.profile.Profile</class>
         <class>gc.carbon.domain.profile.ProfileItem</class>
+        <class>gc.carbon.APIVersion</class>
         <properties>
             <!-- *** Hibernate Configuration *** -->
             <property name="hibernate.archive.autodetection" value="class"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.max_fetch_depth" value="3"/>
-            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="false"/>
             <property name="hibernate.use_sql_comments" value="true"/>
             <property name="hibernate.jdbc.batch_size" value="50"/>

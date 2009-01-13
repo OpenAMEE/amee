@@ -30,7 +30,6 @@ import org.json.JSONException;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-//TODO - Implement APIObject following rework of Unit domain model
 public class Unit {
 
     public static final Unit ONE = new Unit(javax.measure.unit.Unit.ONE);
@@ -54,6 +53,10 @@ public class Unit {
         return converted.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
     }
 
+    public boolean isCompatibleWith(String unit) {
+        return this.unit.isCompatible(javax.measure.unit.Unit.valueOf(unit));
+    }
+
     public boolean equals(Unit that) {
         return toUnit().equals(that.toUnit());
     }
@@ -66,14 +69,4 @@ public class Unit {
         return toUnit().toString();
     }
 
-
-    //TODO - Once amount is an IV and not a column in ITEM table this can be removed. It allow unit to added as a child of the amount element
-    public void getElement(Element parent, Document document) {
-        parent.appendChild(APIUtils.getElement(document, "Unit", toString()));
-    }
-
-    //TODO - Once amount is an IV and not a column in ITEM table this can be removed. It allow unit to added as a child of the amount JSONObject 
-    public void getJSONObject(JSONObject parent) throws JSONException {
-        parent.put("unit", toString());
-    }    
-}
+ }

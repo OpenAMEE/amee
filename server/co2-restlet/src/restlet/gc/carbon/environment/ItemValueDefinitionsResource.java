@@ -24,6 +24,7 @@ import gc.carbon.data.DataConstants;
 import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.ValueDefinition;
 import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.APIVersion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -85,6 +86,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("itemValueDefinitions", definitionBrowser.getItemDefinition().getItemValueDefinitions());
         values.put("valueDefinitions", valueDefinitions.isEmpty() ? null : valueDefinitions);
+        values.put("apiVersions", definitionServiceDAO.getAPIVersions(definitionBrowser.getEnvironment()));
         return values;
     }
 
@@ -150,10 +152,21 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
                 newItemValueDefinition.setName(form.getFirstValue("name"));
                 newItemValueDefinition.setPath(form.getFirstValue("path"));
                 newItemValueDefinition.setValue(form.getFirstValue("value"));
-                newItemValueDefinition.setChoices(form.getFirstValue("choices"));
                 newItemValueDefinition.setFromData(Boolean.valueOf(form.getFirstValue("fromData")));
                 newItemValueDefinition.setFromProfile(Boolean.valueOf(form.getFirstValue("fromProfile")));
                 newItemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
+                newItemValueDefinition.setUnit(form.getFirstValue("unit"));
+                newItemValueDefinition.setPerUnit(form.getFirstValue("perUnit"));
+
+                // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
+                List<APIVersion> apiVersions = definitionServiceDAO.getAPIVersions(definitionBrowser.getEnvironment());
+                for (APIVersion apiVersion : apiVersions) {
+                    String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
+                    if (version != null) {
+                        newItemValueDefinition.getAPIVersions().add(apiVersion);
+                    }
+                }
+
             }
             if (newItemValueDefinition != null) {
                 if (isStandardWebBrowser()) {

@@ -25,6 +25,7 @@ import com.jellymold.utils.event.ObserveEventService;
 import com.jellymold.utils.event.ObservedEvent;
 import gc.carbon.domain.ValueDefinition;
 import gc.carbon.domain.data.*;
+import gc.carbon.APIVersion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -332,5 +333,19 @@ public class DefinitionServiceDAO implements Serializable {
         }
         // remove ValueDefinition
         entityManager.remove(valueDefinition);
+    }
+
+    public APIVersion getAPIVersion(String id) {
+        return entityManager.find(APIVersion.class, id);    
+    }
+
+    public List<APIVersion> getAPIVersions(Environment environment) {
+        return entityManager.createQuery(
+                "FROM APIVersion v " +
+                "WHERE v.environment = :environment")
+                .setParameter("environment", environment)
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                .getResultList();
     }
 }

@@ -43,24 +43,17 @@ public class ItemValueDefinitionBuilder implements Builder {
         obj.put("name", itemValueDefinition.getName());
 
         if (itemValueDefinition.hasUnits()) {
-            JSONObject unit = new JSONObject();
-            unit.put("internalUnit", itemValueDefinition.getInternalUnit());
-            unit.put("choices", itemValueDefinition.getUnit().getChoices());
-            obj.append("unit", unit);
+            obj.put("unit", itemValueDefinition.getUnit());
         }
 
         if (itemValueDefinition.hasPerUnits()) {
-            JSONObject perUnit = new JSONObject();
-            perUnit.put("internalUnit", itemValueDefinition.getInternalPerUnit());
-            perUnit.put("choices", itemValueDefinition.getPerUnit().getChoices());
-            obj.append("perUnit", perUnit);
+            obj.put("perUnit", itemValueDefinition.getPerUnit());
         }
 
         if (detailed) {
             obj.put("created", itemValueDefinition.getCreated());
             obj.put("modified", itemValueDefinition.getModified());
             obj.put("value", itemValueDefinition.getValue());
-            obj.put("choices", itemValueDefinition.getChoices());
             obj.put("fromProfile", itemValueDefinition.isFromProfile());
             obj.put("fromData", itemValueDefinition.isFromData());
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
@@ -82,19 +75,13 @@ public class ItemValueDefinitionBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "Path", itemValueDefinition.getPath()));
         element.appendChild(APIUtils.getElement(document, "Name", itemValueDefinition.getName()));
 
-        Element unit = document.createElement("Unit");
         if (itemValueDefinition.hasUnits()) {
-            unit.appendChild(APIUtils.getElement(document, "InternalUnit", itemValueDefinition.getInternalUnit().toString()));
-            unit.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getUnit().getChoices()));
+            element.appendChild(APIUtils.getElement(document, "Unit", itemValueDefinition.getUnit().toString()));
         }
-        element.appendChild(unit);
 
-        Element perUnit = document.createElement("PerUnit");
         if (itemValueDefinition.hasPerUnits()) {
-            perUnit.appendChild(APIUtils.getElement(document, "InternalUnit", itemValueDefinition.getInternalPerUnit().toString()));
-            perUnit.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getPerUnit().getChoices()));
+            element.appendChild(APIUtils.getElement(document, "PerUnit", itemValueDefinition.getPerUnit().toString()));
         }
-        element.appendChild(perUnit);
 
         element.appendChild(APIUtils.getElement(document, "FromProfile", Boolean.toString(itemValueDefinition.isFromProfile())));
         element.appendChild(APIUtils.getElement(document, "FromData", Boolean.toString(itemValueDefinition.isFromData())));
@@ -102,7 +89,6 @@ public class ItemValueDefinitionBuilder implements Builder {
             element.setAttribute("created", itemValueDefinition.getCreated().toString());
             element.setAttribute("modified", itemValueDefinition.getModified().toString());
             element.appendChild(APIUtils.getElement(document, "Value", itemValueDefinition.getValue()));
-            element.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getChoices()));
             element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
             element.appendChild(itemValueDefinition.getEnvironment().getIdentityElement(document));
             Element itemDefinitions = document.createElement("ItemDefinitions");

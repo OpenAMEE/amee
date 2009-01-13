@@ -45,7 +45,6 @@ public class ItemValueDefinitionBuilder implements Builder {
             obj.put("created", itemValueDefinition.getCreated());
             obj.put("modified", itemValueDefinition.getModified());
             obj.put("value", itemValueDefinition.getValue());
-            obj.put("choices", itemValueDefinition.getChoices());
             obj.put("fromProfile", itemValueDefinition.isFromProfile());
                 obj.put("fromData", itemValueDefinition.isFromData());
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
@@ -68,7 +67,6 @@ public class ItemValueDefinitionBuilder implements Builder {
             element.setAttribute("created", itemValueDefinition.getCreated().toString());
             element.setAttribute("modified", itemValueDefinition.getModified().toString());
             element.appendChild(APIUtils.getElement(document, "Value", itemValueDefinition.getValue()));
-            element.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getChoices()));
             element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
             element.appendChild(itemValueDefinition.getEnvironment().getIdentityElement(document));
             // Use the fact that we kno v1 ItemValueDefinitions only have a single ItemValue

@@ -146,7 +146,7 @@ public class ProfileCategoryFormAcceptor implements Acceptor {
         if (profileService.isUnique(profileItem)) {
 
             // save newProfileItem and do calculations
-            profileService.persist(profileItem);
+            profileService.persist(profileItem, resource.getVersion());
 
             // clear caches
             profileService.clearCaches(resource.getProfileBrowser());

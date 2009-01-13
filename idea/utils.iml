@@ -34,4 +34,6 @@
     <orderEntry type="library" name="spring-integration" level="project" />
     <orderEntry type="library" name="abdera" level="project" />
   </component>
+  <component name="ProjectRunConfigurationManager" />
 </module>
+

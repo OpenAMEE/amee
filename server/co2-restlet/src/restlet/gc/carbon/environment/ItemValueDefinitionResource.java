@@ -23,6 +23,7 @@ import com.jellymold.utils.BaseResource;
 import gc.carbon.data.DataConstants;
 import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.APIVersion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -41,6 +42,8 @@ import org.w3c.dom.Element;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
+import java.util.HashSet;
 
 // TODO: Add ValueDefinition choice.
 
@@ -81,6 +84,7 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
         values.put("environment", definitionBrowser.getEnvironment());
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("itemValueDefinition", definitionBrowser.getItemValueDefinition());
+        values.put("apiVersions", definitionServiceDAO.getAPIVersions(definitionBrowser.getEnvironment()));
         return values;
     }
 
@@ -127,11 +131,13 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
                 itemValueDefinition.setPath(form.getFirstValue("path"));
             }
             if (names.contains("value")) {
-                // TODO: validation based on ValueType - pass to ValueType?
                 itemValueDefinition.setValue(form.getFirstValue("value"));
             }
-            if (names.contains("choices")) {
-                itemValueDefinition.setChoices(form.getFirstValue("choices"));
+            if (names.contains("unit")) {
+                itemValueDefinition.setUnit(form.getFirstValue("unit"));
+            }
+            if (names.contains("perUnit")) {
+                itemValueDefinition.setUnit(form.getFirstValue("perUnit"));
             }
             if (names.contains("fromProfile")) {
                 itemValueDefinition.setFromProfile(Boolean.valueOf(form.getFirstValue("fromProfile")));
@@ -141,6 +147,18 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
             }
             if (names.contains("allowedRoles")) {
                 itemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
+            }
+
+            // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
+            // Remove any versions that have not been sumbitted.
+            List<APIVersion> apiVersions = definitionServiceDAO.getAPIVersions(definitionBrowser.getEnvironment());
+            for (APIVersion apiVersion : apiVersions) {
+                String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
+                if (version != null) {
+                    itemValueDefinition.getAPIVersions().add(apiVersion);
+                } else {
+                    itemValueDefinition.getAPIVersions().remove(apiVersion);
+                }
             }
             success();
         } else {

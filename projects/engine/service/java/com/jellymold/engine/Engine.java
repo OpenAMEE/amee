@@ -210,6 +210,7 @@ public class Engine implements WrapperListener, Serializable {
         // only add AuthFilter if required
         if (addAuthFilter) {
             filters.add(new AuthFilter(engineApplication));
+            //filters.add(new BasicAuthFilter(engineApplication));
         } else {
             filters.add(new GuestFilter(engineApplication));
         }

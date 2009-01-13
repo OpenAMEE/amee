@@ -72,12 +72,4 @@ public class PerUnit extends Unit {
     public String toString() {
         return string;
     }
-
-    public void getElement(Element parent, Document document) {
-        parent.appendChild(APIUtils.getElement(document, "PerUnit", toString()));
-    }
-
-    public void getJSONObject(JSONObject parent) throws JSONException {
-        parent.put("perUnit", toString());
-    }
 }

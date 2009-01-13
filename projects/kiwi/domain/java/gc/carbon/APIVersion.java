@@ -63,16 +63,17 @@ public class APIVersion implements EnvironmentObject, DatedObject {
     @Column(name = "MODIFIED")
     private Date modified = null;
 
-
     @Column(name = "VERSION", length = API_VERSION_SIZE, nullable = true)
     private String version;
 
-    public APIVersion() {
+    @ManyToMany(mappedBy = "apiVersions")
+    private Set<ItemValueDefinition> itemValueDefinition;
 
+    public APIVersion() {
     }
     
     /**
-     * Default constructor (initialises version to ONE_ZERO)
+     * This constructor initialises version to ONE_ZERO
      *
      * @param environment the environment
      * @see #ONE_ZERO
@@ -91,6 +92,10 @@ public class APIVersion implements EnvironmentObject, DatedObject {
         return this == o || o instanceof APIVersion && o.toString().equals(version);
     }
 
+    public int hashCode() {
+        return toString().hashCode();
+    }
+    
     public String getVersion() {
         return version;
     }

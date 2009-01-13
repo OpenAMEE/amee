@@ -26,6 +26,7 @@ import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import gc.carbon.domain.*;
 import gc.carbon.domain.data.builder.v2.ItemValueDefinitionBuilder;
+import gc.carbon.APIVersion;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -35,10 +36,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 // TODO: add a way to define UI widget
 // TODO: add a way to define range of values
@@ -69,20 +67,18 @@ public class ItemValueDefinition implements PersistentObject {
     @JoinColumn(name = "ENVIRONMENT_ID")
     private Environment environment;
 
-    @ManyToMany(mappedBy="itemValueDefinitions")
+    @ManyToMany(mappedBy="itemValueDefinitions", fetch = FetchType.LAZY)
     private List<ItemDefinition> itemDefinitions;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "VALUE_DEFINITION_ID")
     private ValueDefinition valueDefinition;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "UNIT_DEFINITION_ID")
-    private UnitDefinition unit;
+    @Column(name = "UNIT")
+    private String unit;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "PER_UNIT_DEFINITION_ID")
-    private UnitDefinition perUnit;
+    @Column(name = "PER_UNIT")
+    private String perUnit;
 
     @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
@@ -93,10 +89,6 @@ public class ItemValueDefinition implements PersistentObject {
 
     @Column(name = "VALUE", length = VALUE_SIZE, nullable = true)
     private String value = "";
-
-    // Comma separated key/value pairs. Value is key if key not supplied. Example: "key=value,key=value" 
-    @Column(name = "CHOICES", length = CHOICES_SIZE, nullable = true)
-    private String choices = "";
 
     @Column(name = "FROM_PROFILE")
     @Index(name = "FROM_PROFILE_IND")
@@ -115,16 +107,21 @@ public class ItemValueDefinition implements PersistentObject {
     @Column(name = "MODIFIED")
     private Date modified = Calendar.getInstance().getTime();
 
-    @Column(name = "API_VERSION")
-    private String apiVersion;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "ITEM_VALUE_DEFINITION_API_VERSION",
+        joinColumns = {@JoinColumn(name = "ITEM_VALUE_DEFINITION_ID")},
+        inverseJoinColumns = {@JoinColumn(name = "API_VERSION_ID")}
+    )
+    private Set<APIVersion> apiVersions = new HashSet<APIVersion>();
     
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ALIASED_TO")
-    private ItemValueDefinition aliasedTo;
+    private ItemValueDefinition aliasedTo = null;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "ALIASED_TO")
-    private List<ItemValueDefinition> aliases;
+    private List<ItemValueDefinition> aliases = new ArrayList<ItemValueDefinition>();
 
     @Transient
     private Builder builder;
@@ -165,16 +162,6 @@ public class ItemValueDefinition implements PersistentObject {
             // TODO: more validations, based on ValueDefinition
         }
         return value;
-    }
-
-    @Transient
-    public boolean isChoicesAvailable() {
-        return getChoices().length() > 0;
-    }
-
-    @Transient
-    public List<Choice> getChoiceList() {
-        return Choice.parseChoices(getChoices());
     }
 
     @Transient
@@ -293,17 +280,6 @@ public class ItemValueDefinition implements PersistentObject {
         this.value = value;
     }
 
-    public String getChoices() {
-        return choices;
-    }
-
-    public void setChoices(String choices) {
-        if (choices == null) {
-            choices = "";
-        }
-        this.choices = choices;
-    }
-
     public boolean isFromProfile() {
         return fromProfile;
     }
@@ -352,28 +328,20 @@ public class ItemValueDefinition implements PersistentObject {
         return ObjectType.IVD;
     }
 
-    public void setPerUnit(UnitDefinition perUnitDefinition) {
-        this.perUnit = perUnitDefinition;
+    public void setPerUnit(String perUnit) {
+        this.perUnit = perUnit;
     }
 
-    public void setUnit(UnitDefinition unitDefinition) {
-        this.unit = unitDefinition;
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
-    public UnitDefinition getUnit() {
-        return unit;
+    public Unit getUnit() {
+        return Unit.valueOf(unit);
     }
 
-    public UnitDefinition getPerUnit() {
-        return perUnit;
-    }
-
-    public Unit getInternalUnit() {
-        return (hasUnits()) ? Unit.valueOf(unit.getInternalUnit()) : Unit.ONE;
-    }
-
-    public PerUnit getInternalPerUnit() {
-        return (hasPerUnits()) ? PerUnit.valueOf(perUnit.getInternalUnit()) : PerUnit.ONE;
+    public PerUnit getPerUnit() {
+        return PerUnit.valueOf(perUnit);
     }
 
     public boolean hasUnits() {
@@ -384,20 +352,36 @@ public class ItemValueDefinition implements PersistentObject {
         return perUnit != null;
     }
 
-    public boolean isValidUnit(String u) {
-        return unit.contains(u);
+    public boolean isValidUnit(String unit) {
+        return getUnit().isCompatibleWith(unit);
     }
 
-    public boolean isValidPerUnit(String pu) {
-        return perUnit.contains(pu);
+    public boolean isValidPerUnit(String perUnit) {
+        return getPerUnit().isCompatibleWith(perUnit);
     }
 
     public Unit getCompoundUnit() {
-        return getInternalUnit().with(getInternalPerUnit());
+        return getUnit().with(getPerUnit());
     }
 
-    public String getAPIVersion() {
-        return apiVersion;
+    public Set<APIVersion> getAPIVersions() {
+        return apiVersions;
+    }
+
+    public void setAPIVersions(Set<APIVersion> apiVersions) {
+        this.apiVersions = apiVersions;
+    }
+
+    public boolean includedInAPIVersion(APIVersion apiVersion) {
+        return apiVersions.contains(apiVersion);
+    }
+
+    public ItemValueDefinition getAliased() {
+        return aliasedTo;
+    }
+
+    public List<ItemValueDefinition> getAliases() {
+        return aliases;    
     }
 
     public String getCannonicalPath() {

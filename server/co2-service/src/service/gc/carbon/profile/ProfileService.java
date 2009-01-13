@@ -9,6 +9,7 @@ import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.data.Calculator;
+import gc.carbon.APIVersion;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.cache.CacheableFactory;
 import com.jellymold.utils.Pager;
@@ -62,9 +63,9 @@ public class ProfileService {
         profileSheetService.removeSheets(profileBrowser);
     }
 
-    public void persist(ProfileItem pi) {
+    public void persist(ProfileItem pi, APIVersion apiVersion) {
         em.persist(pi);
-        dao.checkProfileItem(pi);
+        dao.checkProfileItem(pi, apiVersion);
     }
 
     public void persist(Profile p) {

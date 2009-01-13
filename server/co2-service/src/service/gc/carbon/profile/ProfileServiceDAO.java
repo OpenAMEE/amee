@@ -30,6 +30,7 @@ import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileBrowser;
+import gc.carbon.APIVersion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.ext.seam.SpringController;
@@ -469,7 +470,7 @@ class ProfileServiceDAO implements Serializable {
 
     // check Profile Item objects
 
-    public void checkProfileItem(ProfileItem profileItem) {
+    public void checkProfileItem(ProfileItem profileItem, APIVersion apiVersion) {
         // find ItemValueDefinitions not currently implemented in this Item
         List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
                 "FROM ItemValueDefinition ivd " +
@@ -478,9 +479,11 @@ class ProfileServiceDAO implements Serializable {
                         "   FROM ItemValue iv " +
                         "   WHERE iv.item = :profileItem) " +
                         "AND ivd.fromProfile = :fromProfile " +
-                        "AND :itemDefinitionId MEMBER OF ivd.itemDefinitions")
+                        "AND :itemDefinitionId MEMBER OF ivd.itemDefinitions " +
+                        "AND :apiVersion MEMBER OF ivd.apiVersions")
                 .setParameter("profileItem", profileItem)
-                .setParameter("itemDefinitionId", profileItem.getItemDefinition().getId())
+                .setParameter("itemDefinitionId", profileItem.getItemDefinition())
+                .setParameter("apiVersion", apiVersion)
                 .setParameter("fromProfile", true)
                 .getResultList();
         if (itemValueDefinitions.size() > 0) {
