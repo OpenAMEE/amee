@@ -45,7 +45,7 @@ public class UserLoader implements Serializable {
                         user.setUsername(username);
                         user.setUid(reader.get("uid"));
                         user.setName(reader.get("name"));
-                        user.setPassword(reader.get("password"));
+                        user.setPasswordInClear(reader.get("password"));
                         user.setEmail(reader.get("email"));
                         siteService.save(user);
                         if (cloneUser != null) {

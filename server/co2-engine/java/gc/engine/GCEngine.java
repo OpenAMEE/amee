@@ -21,6 +21,7 @@ package gc.engine;
 
 import com.jellymold.engine.Engine;
 import com.jellymold.kiwi.environment.ScheduledTaskManager;
+import com.jellymold.kiwi.UserPasswordToMD5;
 import org.apache.commons.cli.*;
 
 public class GCEngine extends Engine {
@@ -80,6 +81,11 @@ public class GCEngine extends Engine {
         ScheduledTaskManager taskMan = (ScheduledTaskManager) springContext.getBean("scheduledTaskManager");
         taskMan.setServerName(serverName);
         taskMan.onStart();
+
+        // TEMPORARY CODE!!!!
+//        UserPasswordToMD5 userPasswordToMD5 =
+//                (UserPasswordToMD5) springContext.getBean("userPasswordToMD5");
+//        userPasswordToMD5.updateUserPasswordToMD5(false);
     }
 
     @Override

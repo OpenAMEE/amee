@@ -4,6 +4,7 @@ import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.DatedObject;
 import com.jellymold.utils.domain.UidGen;
 import gc.carbon.APIVersion;
+import org.apache.commons.codec.binary.Base64;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -15,6 +16,8 @@ import org.w3c.dom.Element;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -109,7 +112,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     public User(Environment environment, String username, String password, String name, String nickName, String location) {
         this(environment);
         setUsername(username);
-        setPassword(password);
+        setPasswordInClear(password);
         setName(name);
         setNickName(nickName);
         setLocation(location);
@@ -223,7 +226,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     public void populate(org.dom4j.Element element) {
         setUid(element.attributeValue("uid"));
         setUsername(element.elementText("Username"));
-        setPassword(element.elementText("Password"));
+        setPasswordInClear(element.elementText("Password"));
         setName(element.elementText("Name"));
         setNickName(element.elementText("NickName"));
         setEmail(element.elementText("Email"));
@@ -402,6 +405,27 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
 
     public String getPassword() {
         return password;
+    }
+
+    @Transient
+    public static String getAsMD5(String password) {
+        if (password == null) {
+            throw new IllegalArgumentException("Password value is null");
+        }
+        MessageDigest md;
+        String md5;
+        try {
+            md = MessageDigest.getInstance("MD5");
+            md5 = new String(Base64.encodeBase64(md.digest(password.getBytes())));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        return md5;
+    }
+
+    @Transient
+    public void setPasswordInClear(String password) {
+        setPassword(User.getAsMD5(password));
     }
 
     public void setPassword(String password) {

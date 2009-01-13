@@ -166,6 +166,7 @@ public class AuthService implements Serializable {
         // try to find user based on 'sampleUser' User 'template'
         User user = getUserByUsername(sampleUser.getUsername());
         if (user != null) {
+            log.debug("comparing passwords: '" + user.getPassword() + "' = '" + sampleUser.getPassword() + "'");
             if (user.getPassword().equals(sampleUser.getPassword())) {
                 log.debug("user authenticated and signed in: " + sampleUser.getUsername());
                 ThreadBeanHolder.set("user", user);

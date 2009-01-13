@@ -94,7 +94,7 @@ public class AuthResource extends BaseResource implements Serializable {
             String nextUrl = AuthUtils.getNextUrl(getRequest(), getForm());
             user = new User();
             user.setUsername(form.getFirstValue("username"));
-            user.setPassword(form.getFirstValue("password"));
+            user.setPasswordInClear(form.getFirstValue("password"));
             authToken = authService.authenticate(user, getRequest().getClientInfo().getAddress());
             if (authToken != null) {
                 // signed in

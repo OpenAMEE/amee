@@ -143,7 +143,7 @@ public class UserResource extends BaseResource {
                 if (form.getNames().contains("password")) {
                     String password = form.getFirstValue("password");
                     if ((password != null) && password.length() > 0) {
-                        user.setPassword(password);
+                        user.setPasswordInClear(password);
                     }
                 }
                 if (form.getNames().contains("email")) {

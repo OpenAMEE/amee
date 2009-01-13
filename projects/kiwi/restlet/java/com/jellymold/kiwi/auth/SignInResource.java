@@ -107,7 +107,7 @@ public class SignInResource extends BaseResource implements Serializable {
             String nextUrl = AuthUtils.getNextUrl(getRequest(), getForm());
             sampleUser = new User();
             sampleUser.setUsername(form.getFirstValue("username"));
-            sampleUser.setPassword(form.getFirstValue("password"));
+            sampleUser.setPasswordInClear(form.getFirstValue("password"));
             authToken = authService.authenticate(sampleUser, getRequest().getClientInfo().getAddress());
             if (authToken != null) {
                 // signed in
