@@ -49,8 +49,7 @@ public class ItemValueDefinitionBuilder implements Builder {
                 obj.put("fromData", itemValueDefinition.isFromData());
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
             obj.put("environment", itemValueDefinition.getEnvironment().getIdentityJSONObject());
-            // Use the fact that we kno v1 ItemValueDefinitions only have a single ItemValue
-            obj.put("itemDefinition", itemValueDefinition.getItemDefinitions().get(0).getIdentityJSONObject());
+            obj.put("itemDefinition", itemValueDefinition.getItemDefinition().getIdentityJSONObject());
         }
         return obj;
     }
@@ -69,8 +68,7 @@ public class ItemValueDefinitionBuilder implements Builder {
             element.appendChild(APIUtils.getElement(document, "Value", itemValueDefinition.getValue()));
             element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
             element.appendChild(itemValueDefinition.getEnvironment().getIdentityElement(document));
-            // Use the fact that we kno v1 ItemValueDefinitions only have a single ItemValue
-            element.appendChild(itemValueDefinition.getItemDefinitions().get(0).getIdentityElement(document));
+            element.appendChild(itemValueDefinition.getItemDefinition().getIdentityElement(document));
         }
         return element;
     }

@@ -42,7 +42,6 @@ import java.util.Map;
 @Component("AMEEResource")
 public class AMEEResource extends BaseResource implements BeanFactoryAware {
 
-    protected APIVersion apiVersion;
     protected BeanFactory beanFactory;
     protected Environment environment;
     protected PathItem pathItem;
@@ -59,7 +58,6 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
 
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        apiVersion = (APIVersion) request.getAttributes().get("apiVersion");
         environment = EnvironmentService.getEnvironment();
         setPathItem();
     }

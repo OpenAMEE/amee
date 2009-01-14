@@ -3,7 +3,6 @@ package gc.carbon.profile.acceptor;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
-import gc.carbon.profile.ProfileForm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
@@ -63,7 +62,7 @@ public class ProfileCategoryXMLAcceptor implements Acceptor {
                     if (profileItemsElem != null) {
                         for (Object o1 : profileItemsElem.elements("ProfileItem")) {
                             profileItemElem = (Element) o1;
-                            form = new ProfileForm(resource.getVersion());
+                            form = new Form();
                             for (Object o2 : profileItemElem.elements()) {
                                 profileItemValueElem = (Element) o2;
                                 form.add(profileItemValueElem.getName(), profileItemValueElem.getText());

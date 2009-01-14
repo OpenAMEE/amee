@@ -43,7 +43,7 @@
             <td>Start Date</td>
             <#if browser.profileItemActions.allowModify>
                 <td><input name='startDate' value='${startEndDate(profileItem.startDate)}' type='text' size='13'/>
-                    (yyyymmddThhmm)<br/>
+                    (yyyy-MM-dd'T'HH:mmZ)<br/>
                     <#else>
                 <td>${profileItem.startDate?datetime}</td>
             </#if>
@@ -52,7 +52,7 @@
             <td>End Date</td>
             <#if browser.profileItemActions.allowModify>
                 <td><input name='endDate' value='<#if profileItem.endDate??>${startEndDate(profileItem.endDate)}</#if>' type='text' size='13'/>
-                    (yyyymmddThhmm)<br/>
+                    (yyyy-MM-dd'T'HH:mmZ)<br/>
                     <#else>
                 <td><#if profileItem.endDate??>${profileItem.endDate?datetime}<#else>None</#if></td>
             </#if>

@@ -1,6 +1,7 @@
 package com.jellymold.utils;
 
 import com.jellymold.utils.domain.APIObject;
+import com.jellymold.utils.skin.FreeMarkerConfigurationService;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateHashModel;
@@ -78,8 +79,13 @@ public abstract class BaseResource extends ComponentResource {
     }
 
     protected Representation getHtmlRepresentation() {
-        Configuration configuration = (Configuration)
-                getRequest().getAttributes().get("freeMarkerConfiguration");
+
+        Configuration configuration;
+        ApplicationContext springContext = (ApplicationContext) getRequest().getAttributes().get("springContext");
+        FreeMarkerConfigurationService freeMarkerConfigurationService =
+                (FreeMarkerConfigurationService) springContext.getBean("freeMarkerConfigurationService");
+        configuration = freeMarkerConfigurationService.getConfiguration();
+
         return new TemplateRepresentation(
                 getTemplatePath(),
                 configuration,

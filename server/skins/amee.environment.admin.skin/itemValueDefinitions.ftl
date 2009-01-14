@@ -64,8 +64,14 @@ function deleteItemValueDefinition(itemValueDefinitionUid) {
       PerUnit: <input name='perUnit' type='text' size='10'/><br/>
       API Version:
       <#list apiVersions as v>
-        ${v.version}<input type="checkbox" name="apiversion-${v.version}" value="true">
-      </#list>
+        ${v.version}<input type="checkbox" name="apiversion-${v.version}" value="">
+      </#list><br>
+      Alias To: <select name='aliasedTo'>
+        <option value='' selected>None</option>
+        <#list itemValueDefinitions as ivd>
+            <option value='${ivd.uid}'>${ivd.name}</option>
+        </#list>
+      </select>
       <br/><br/>
       <input type='submit' value='Create'/>
     </form>

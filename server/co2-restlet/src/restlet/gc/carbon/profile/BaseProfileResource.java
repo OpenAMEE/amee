@@ -43,7 +43,6 @@ import java.util.Set;
 @Component("baseProfileResource")
 public abstract class BaseProfileResource extends AMEEResource {
 
-    protected ProfileForm form;
     protected ProfileBrowser profileBrowser;
 
     public void init(Context context, Request request, Response response) {
@@ -53,17 +52,6 @@ public abstract class BaseProfileResource extends AMEEResource {
 
     public Pager getPager() {
         return getPager(getItemsPerPage());
-    }
-
-    public void setForm(ProfileForm form) {
-        this.form = form;
-    }
-
-    public ProfileForm getForm() throws IllegalArgumentException {
-        if (form == null) {
-            form = new ProfileForm(super.getForm(), getVersion());
-        }
-        return form;
     }
 
     public APIVersion getVersion() throws IllegalArgumentException {

@@ -4,6 +4,7 @@ import com.jellymold.kiwi.auth.AuthUtils;
 import com.jellymold.kiwi.auth.AuthService;
 import com.jellymold.utils.MediaTypeUtils;
 import com.jellymold.utils.ThreadBeanHolder;
+import com.jellymold.utils.skin.FreeMarkerConfigurationService;
 import freemarker.template.Configuration;
 import org.restlet.Application;
 import org.restlet.data.MediaType;
@@ -29,9 +30,14 @@ public class EngineStatusService extends StatusService {
     @Override
     public Representation getRepresentation(Status status, Request request, Response response) {
         if (MediaTypeUtils.isStandardWebBrowser(request)) {
-            Configuration configuration = (Configuration)
-                    request.getAttributes().get("freeMarkerConfiguration");
-            ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
+
+            Configuration configuration;
+            ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
+
+            FreeMarkerConfigurationService freeMarkerConfigurationService =
+                    (FreeMarkerConfigurationService) springContext.getBean("freeMarkerConfigurationService");
+            configuration = freeMarkerConfigurationService.getConfiguration();
+
             Map<String, Object> values = new HashMap<String, Object>();
             values.put("status", status);
             // values below are mirrored in BaseResource and SkinRenderResource

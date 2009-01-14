@@ -20,6 +20,7 @@
 package gc.carbon.environment;
 
 import com.jellymold.utils.BaseResource;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import gc.carbon.data.DataConstants;
 import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.ItemValueDefinition;
@@ -57,6 +58,9 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
+    private EnvironmentService environmentService;
+
+    @Autowired
     private DefinitionBrowser definitionBrowser;
 
     @Override
@@ -84,7 +88,7 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
         values.put("environment", definitionBrowser.getEnvironment());
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("itemValueDefinition", definitionBrowser.getItemValueDefinition());
-        values.put("apiVersions", definitionServiceDAO.getAPIVersions(definitionBrowser.getEnvironment()));
+        values.put("apiVersions", environmentService.getAPIVersions());
         return values;
     }
 
@@ -137,7 +141,7 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
                 itemValueDefinition.setUnit(form.getFirstValue("unit"));
             }
             if (names.contains("perUnit")) {
-                itemValueDefinition.setUnit(form.getFirstValue("perUnit"));
+                itemValueDefinition.setPerUnit(form.getFirstValue("perUnit"));
             }
             if (names.contains("fromProfile")) {
                 itemValueDefinition.setFromProfile(Boolean.valueOf(form.getFirstValue("fromProfile")));
@@ -148,10 +152,13 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
             if (names.contains("allowedRoles")) {
                 itemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
             }
+            if (names.contains("aliasedTo")) {
+                itemValueDefinition.setAliasedTo(definitionServiceDAO.getItemValueDefinition(form.getFirstValue("aliasedTo")));
+            }
 
             // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
             // Remove any versions that have not been sumbitted.
-            List<APIVersion> apiVersions = definitionServiceDAO.getAPIVersions(definitionBrowser.getEnvironment());
+            List<APIVersion> apiVersions = environmentService.getAPIVersions();
             for (APIVersion apiVersion : apiVersions) {
                 String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
                 if (version != null) {

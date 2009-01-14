@@ -311,7 +311,7 @@ class DataServiceDAO implements Serializable {
                         "   FROM ItemValue iv " +
                         "   WHERE iv.item = :dataItem) " +
                         "AND ivd.fromData = :fromData " +
-                        "AND :itemDefinitionId MEMBER OF ivd.itemDefinitions")
+                        "AND ivd.itemDefinition.id = :itemDefinitionId")
                 .setParameter("dataItem", dataItem)
                 .setParameter("itemDefinitionId", dataItem.getItemDefinition().getId())
                 .setParameter("fromData", true)

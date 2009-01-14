@@ -46,6 +46,7 @@ import com.jellymold.utils.ThreadBeanHolder;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 import java.io.Writer;
 import java.io.IOException;
 
@@ -87,7 +88,7 @@ public class ServiceResource extends AMEEResource {
 
         Workspace ws = ATOM_FEED.newWorkspace(service);
 
-        ws.setBaseUri(getRequest().getResourceRef().getBaseRef().getParentRef().toString() + "?" + getRequest().getAttributes().get("apiVersion"));
+        ws.setBaseUri(getRequest().getResourceRef().getBaseRef().getParentRef().toString());
         ws.setTitle("DataCategories");
 
         String path = getRequest().getResourceRef().getRelativeRef().getPath();
@@ -113,34 +114,41 @@ public class ServiceResource extends AMEEResource {
 
     private void addCollections(PathItem pi, Workspace ws) {
 
-        for (PathItem pii : pi.findChildrenByType("DC")) {
-            //TODO - Check this is the best was of doing this with Dig
-            DataCategory dc = dataService.getDataCategory(pii.getUid());
-            if (dc.getItemDefinition() != null) {
-
-                Reference href = new Reference(getRequest().getResourceRef().getParentRef(), pii.getFullPath());
-                href.addQueryParameter("v",getRequest().getAttributes().get("apiVersion").toString());
-
-                Collection col = ATOM_FEED.newCollection(ws);
-                col.setHref(href.toString().substring(1));
-                col.setTitle(pii.getFullPath());
-                col.setAcceptsEntry();
-
-                Categories cats = ATOM_FEED.newItemCategories(col);
-                cats.setFixed(true);
-                for (DataItem di : new OnlyActiveDataService(dataService).getDataItems(dc, new StartEndDate(new Date()))) {
-                    Category cat = ATOM_FEED.newCategory(cats);
-                    cat.setTerm(di.getUid());
-                    cat.setLabel(di.getItemDefinition().getName() + " (" + di.getItemValuesString() + ")");
-                }
-
-                addCollections(pii, ws);
-                
-            } else {
-                addCollections(pii, ws);
-            }
+        Set<PathItem> pathItems = pi.findChildrenByType("DC");
+        if (pathItems.isEmpty()) {
+            addCollection(ws, pi, false);
+        } else {
+            for (PathItem pii : pi.findChildrenByType("DC")) {
+                addCollection(ws, pii, true);
+           }
         }
+    }
 
+    //TODO - Check this is the best was of doing this with Dig
+    private void addCollection(Workspace ws, PathItem pii, boolean recurse) {
+        DataCategory dc = dataService.getDataCategory(pii.getUid());
+        if (dc.getItemDefinition() != null) {
+
+            Reference href = new Reference(getRequest().getResourceRef().getParentRef(), pii.getFullPath());
+
+            Collection col = ATOM_FEED.newCollection(ws);
+            col.setHref(href.toString().substring(1));
+            col.setTitle(pii.getFullPath());
+            col.setAcceptsEntry();
+
+            Categories cats = ATOM_FEED.newItemCategories(col);
+            cats.setFixed(true);
+            for (DataItem di : new OnlyActiveDataService(dataService).getDataItems(dc, new StartEndDate(new Date()))) {
+                Category cat = ATOM_FEED.newCategory(cats);
+                cat.setTerm(di.getUid());
+                cat.setLabel(di.getItemDefinition().getName() + " (" + di.getItemValuesString() + ")");
+            }
+            if (recurse)
+                addCollections(pii, ws);
+        } else {
+            if (recurse)
+                addCollections(pii, ws);
+        }
     }
 
 }

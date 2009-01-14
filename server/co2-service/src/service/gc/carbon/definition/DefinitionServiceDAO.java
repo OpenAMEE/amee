@@ -335,17 +335,4 @@ public class DefinitionServiceDAO implements Serializable {
         entityManager.remove(valueDefinition);
     }
 
-    public APIVersion getAPIVersion(String id) {
-        return entityManager.find(APIVersion.class, id);    
-    }
-
-    public List<APIVersion> getAPIVersions(Environment environment) {
-        return entityManager.createQuery(
-                "FROM APIVersion v " +
-                "WHERE v.environment = :environment")
-                .setParameter("environment", environment)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
-                .getResultList();
-    }
 }

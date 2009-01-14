@@ -148,9 +148,9 @@
         <div class="nameCol">Date(s):<br/><span style="font-size:12; font-weight:bold; color:silver;">optional</span></div>
         <div class="valueCol">
             <div class="nameCol">Start:</div> <input name='startDate' value='' type='text' size='20' />
-            <span style="font-size:12; font-weight:bold; color:silver;">format (yyyyMMdd'T'HHmm)</span><br/>
+            <span style="font-size:12; font-weight:bold; color:silver;">format (yyyy-MM-dd'T'HH:mmZ)</span><br/>
             <div class="nameCol">End:</div> <input name='endDate' value='' type='text' size='20' />
-            <span style="font-size:12; font-weight:bold; color:silver;">format (yyyyMMdd'T'HHmm)</span>
+            <span style="font-size:12; font-weight:bold; color:silver;">format (yyyy-MM-dd'T'HH:mmZ)</span>
         </div><br/><br/><br/><hr>
 
         <div name="testResult" id="testResult" style="visibility:visible;">

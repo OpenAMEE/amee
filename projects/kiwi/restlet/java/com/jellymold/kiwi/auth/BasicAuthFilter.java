@@ -6,6 +6,9 @@ import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.jellymold.utils.ThreadBeanHolder;
@@ -13,6 +16,8 @@ import com.jellymold.kiwi.User;
 
 
 /**
+ * Basic Authentication Filter.
+ * 
  * This file is part of AMEE.
  * <p/>
  * AMEE is free software; you can redistribute it and/or modify
@@ -33,27 +38,29 @@ import com.jellymold.kiwi.User;
  */
 public class BasicAuthFilter extends Guard {
 
-    private final Log log = LogFactory.getLog(getClass());
-
     public BasicAuthFilter(Application application) {
         super(application.getContext(), ChallengeScheme.HTTP_BASIC, "AMEE");
-        getSecrets().put("admin","r41n30w".toCharArray());
     }
 
     @Override
-    public boolean authorize(Request request) {
+    public int doHandle(Request request, Response response) {
+        if (request.getChallengeResponse() != null) {
+            return super.doHandle(request, response);
+        } else {
+            getNext().handle(request, response);
+            return CONTINUE;
+        }
+    }
+
+    @Override
+    public boolean checkSecret(Request request, String identifer, char[] secret) {
+        User user = new User();
+        user.setUsername(identifer);
+        user.setPassword(new String(secret));
 
         ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
         AuthService authService = (AuthService) springContext.getBean("authService");
-
-        User user = authService.getUserByUsername(request.getChallengeResponse().getIdentifier());
-        if (user != null) {
-            log.debug("user authenticated and signed in: " + user.getUsername());
-            ThreadBeanHolder.set("user", user);
-            authService.getAndExportGroups();
-            return true;
-        } else {
-            return false;
-        }
+        return authService.authenticate(user);
     }
+
 }

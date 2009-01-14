@@ -58,13 +58,7 @@ public class ItemValueDefinitionBuilder implements Builder {
             obj.put("fromData", itemValueDefinition.isFromData());
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
             obj.put("environment", itemValueDefinition.getEnvironment().getIdentityJSONObject());
-
-            JSONObject itemDefinitions = new JSONObject();
-            for (ItemDefinition itemDefinition : itemValueDefinition.getItemDefinitions()) {
-                itemDefinitions.put("itemDefinition", itemDefinition.getIdentityJSONObject());
-            }
-            obj.put("itemDefinitions", itemDefinitions);
-
+            obj.put("itemDefinition", itemValueDefinition.getItemDefinition().getIdentityJSONObject());
         }
         return obj;
     }
@@ -91,11 +85,7 @@ public class ItemValueDefinitionBuilder implements Builder {
             element.appendChild(APIUtils.getElement(document, "Value", itemValueDefinition.getValue()));
             element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
             element.appendChild(itemValueDefinition.getEnvironment().getIdentityElement(document));
-            Element itemDefinitions = document.createElement("ItemDefinitions");
-            for (ItemDefinition itemDefinition : itemValueDefinition.getItemDefinitions()) {
-                itemDefinitions.appendChild(itemDefinition.getIdentityElement(document));
-            }
-            element.appendChild(itemDefinitions);
+            element.appendChild(itemValueDefinition.getItemDefinition().getIdentityElement(document));
         }
         return element;
     }

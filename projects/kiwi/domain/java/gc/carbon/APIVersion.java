@@ -61,12 +61,6 @@ public class APIVersion implements PersistentObject, DatedObject {
     @Column(name = "VERSION", length = API_VERSION_SIZE, nullable = true)
     private String version;
 
-    @ManyToMany(mappedBy = "apiVersions")
-    private Set<ItemValueDefinition> itemValueDefinition;
-
-    public APIVersion() {
-    }
-    
     /**
      * This constructor initialises version to ONE_ZERO
      *

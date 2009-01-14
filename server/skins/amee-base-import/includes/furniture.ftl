@@ -1,3 +1,3 @@
 <#function startEndDate date>
-    <#return date?string("yyyyMMdd'T'HHmm")/>
+    <#return date?string("yyyy-MM-dd'T'HH:mmZ")/>
 </#function>

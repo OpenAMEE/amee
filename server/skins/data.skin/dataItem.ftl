@@ -45,8 +45,8 @@
   <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
     Name: <input name='name' value='${dataItem.name}' type='text' size='30'/><br/>
     Path: <input name='path' value='${dataItem.path}' type='text' size='30'/><br/>
-    StartDate: <input name='startDate' value='${startEndDate(dataItem.startDate)}' type='text' size='13'/> (yyyymmddThhmm)<br/>
-    EndDate: <input name='endDate' value='<#if dataItem.endDate??>${startEndDate(dataItem.endDate)}</#if>' type='text' size='13'/> (yyyymmddThhmm)<br/><br/>
+    StartDate: <input name='startDate' value='${startEndDate(dataItem.startDate)}' type='text' size='13'/> (yyyy-MM-dd'T'HH:mmZ)<br/>
+    EndDate: <input name='endDate' value='<#if dataItem.endDate??>${startEndDate(dataItem.endDate)}</#if>' type='text' size='13'/> (yyyy-MM-dd'T'HH:mmZ)<br/><br/>
     <input type='submit' value='Update'/>
   </form>
   </p>

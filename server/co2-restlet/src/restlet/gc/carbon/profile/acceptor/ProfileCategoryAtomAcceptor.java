@@ -2,7 +2,6 @@ package gc.carbon.profile.acceptor;
 
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
-import gc.carbon.profile.ProfileForm;
 import gc.carbon.profile.builder.v2.AtomFeed;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,8 +61,7 @@ public class ProfileCategoryAtomAcceptor implements Acceptor {
                 List<Category> categories = entry.getCategories();
                 if (!categories.isEmpty()) {
 
-                    Form form = new ProfileForm(resource.getVersion());
-
+                    Form form = new Form();
                     addDataItem(form, categories);
                     addParameter(form, entry, AtomFeed.Q_NAME_START_DATE);
                     addParameter(form, entry, AtomFeed.Q_NAME_END_DATE);

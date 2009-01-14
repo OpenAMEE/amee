@@ -21,10 +21,13 @@ public class AuthFilter extends BaseAuthFilter {
     }
 
     public int doHandle(Request request, Response response) {
+        log.debug("doHandle()");
 
-        log.debug("do handle");
+        // Authentication has already been performed upstream so just continue without any further processing
+        if (ThreadBeanHolder.get("user") != null)
+            return super.doHandle(request, response);
+        
         int result;
-
         String authToken = authenticated(request);
         if (authToken != null) {
             // a user has been found and authenticated (even if this is just the guest user)

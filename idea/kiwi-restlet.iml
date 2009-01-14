@@ -29,8 +29,5 @@
     <orderEntry type="library" name="amee-utils" level="project" />
     <orderEntry type="library" name="amee-utils-restlet" level="project" />
   </component>
-  <component name="ProjectModuleManager" />
-  <component name="ProjectRunConfigurationManager" />
-  <component name="libraryTable" />
 </module>
 

@@ -108,7 +108,7 @@ public class SignInResource extends BaseResource implements Serializable {
             sampleUser = new User();
             sampleUser.setUsername(form.getFirstValue("username"));
             sampleUser.setPassword(form.getFirstValue("password"));
-            authToken = authService.authenticate(sampleUser, getRequest().getClientInfo().getAddress());
+            authToken = authService.authenticateAndGenerateAuthToken(sampleUser, getRequest().getClientInfo().getAddress());
             if (authToken != null) {
                 // signed in
                 AuthUtils.addAuthCookie(getResponse(), authToken);

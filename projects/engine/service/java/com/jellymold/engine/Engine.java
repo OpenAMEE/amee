@@ -3,6 +3,7 @@ package com.jellymold.engine;
 import com.jellymold.kiwi.*;
 import com.jellymold.kiwi.auth.AuthFilter;
 import com.jellymold.kiwi.auth.GuestFilter;
+import com.jellymold.kiwi.auth.BasicAuthFilter;
 import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.ThreadBeanHolderFilter;
 import com.jellymold.utils.skin.FreeMarkerConfigurationFilter;
@@ -206,11 +207,11 @@ public class Engine implements WrapperListener, Serializable {
         filters.add(new ThreadBeanHolderFilter());
         filters.add(new SpringFilter(engineApplication, springController, springContext));
         filters.add(new SiteFilter(engineApplication, engineApplication.getName()));
-        filters.add(new FreeMarkerConfigurationFilter(engineApplication));
+        //filters.add(new FreeMarkerConfigurationFilter(engineApplication));
         // only add AuthFilter if required
         if (addAuthFilter) {
+            filters.add(new BasicAuthFilter(engineApplication));
             filters.add(new AuthFilter(engineApplication));
-            //filters.add(new BasicAuthFilter(engineApplication));
         } else {
             filters.add(new GuestFilter(engineApplication));
         }

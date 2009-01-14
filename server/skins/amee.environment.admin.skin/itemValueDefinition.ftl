@@ -24,16 +24,22 @@
   Get value from admin? <select name='fromData'><option value='false'<#if !itemValueDefinition.fromData> selected</#if>>No</option><option value='true'<#if itemValueDefinition.fromData> selected</#if>>Yes</option></select><br/>
   Get value from user? <select name='fromProfile'><option value='false'<#if !itemValueDefinition.fromProfile> selected</#if>>No</option><option value='true'<#if itemValueDefinition.fromProfile> selected</#if>>Yes</option></select><br/>
   Allowed roles: <input name='allowedRoles' <#if itemValueDefinition.allowedRoles??>value='${itemValueDefinition.allowedRoles}'</#if> type='text' size='30'/><br/>
-  <#if itemValueDefinition.hasUnits()>
-    Unit: <input name='unit' value='${itemValueDefinition.unit}' type='text' size="10"/><br/>
-  </#if>
-  <#if itemValueDefinition.hasPerUnits()>
-    PerUnit: <input name='perUnit' value='${itemValueDefinition.perUnit}' type='text' size="10"/><br/>
-  </#if>
+  Unit: <input name='unit' value='<#if itemValueDefinition.hasUnits()>${itemValueDefinition.unit}</#if>' type='text' size="10"/><br/>
+  PerUnit: <input name='perUnit' value='<#if itemValueDefinition.hasPerUnits()>${itemValueDefinition.perUnit}</#if>' type='text' size="10"/><br/>
   API Version:
   <#list apiVersions as v>
     ${v.version}<input type="checkbox" name="apiversion-${v.version}" value="true" <#if itemValueDefinition.includedInAPIVersion(v)>checked</#if>>
-  </#list>
+  </#list><br/>
+  Alias To: <select name='aliasedTo'>
+    <#if !itemValueDefinition.aliasedTo??>
+        <option value='' selected>None</option>
+    </#if>
+    <#list itemDefinition.itemValueDefinitions as ivd>
+        <#if itemValueDefinition.uid != ivd.uid>
+            <option value='${ivd.uid}' <#if itemValueDefinition.aliasedTo?? && itemValueDefinition.aliasedTo.uid == ivd.uid>selected</#if>>${ivd.name}</option>
+        </#if>
+    </#list>
+  </select>
   <br/><br/>
   <input type='submit' value='Update'/>
   </form>

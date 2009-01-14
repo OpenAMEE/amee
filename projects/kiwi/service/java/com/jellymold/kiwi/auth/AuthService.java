@@ -159,7 +159,7 @@ public class AuthService implements Serializable {
         return null;
     }
 
-    public String authenticate(User sampleUser, String remoteAddress) {
+    public boolean authenticate(User sampleUser) {
         // signed out by default
         reset();
         signOut();
@@ -167,16 +167,24 @@ public class AuthService implements Serializable {
         User user = getUserByUsername(sampleUser.getUsername());
         if (user != null) {
             if (user.getPassword().equals(sampleUser.getPassword())) {
-                log.debug("user authenticated and signed in: " + sampleUser.getUsername());
+                log.debug("authenticate() - user authenticated and signed in: " + sampleUser.getUsername());
                 ThreadBeanHolder.set("user", user);
                 getAndExportGroups();
-                return AuthToken.createToken(user, remoteAddress);
+                return true;
             } else {
-                log.debug("user NOT authenticated, bad password: " + sampleUser.getUsername());
-                return null;
+                log.debug("authenticate() - user NOT authenticated, bad password: " + sampleUser.getUsername());
+                return false;
             }
         } else {
-            log.debug("user NOT authenticated, not found: " + sampleUser.getUsername());
+            log.debug("authenticate() - user NOT authenticated, not found: " + sampleUser.getUsername());
+            return false;
+        }
+    }
+
+    public String authenticateAndGenerateAuthToken(User sampleUser, String remoteAddress) {
+        if (authenticate(sampleUser)) {
+            return AuthToken.createToken((User) ThreadBeanHolder.get("user"), remoteAddress);
+        } else {
             return null;
         }
     }

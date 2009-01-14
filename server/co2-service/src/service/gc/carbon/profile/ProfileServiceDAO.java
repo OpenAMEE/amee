@@ -478,10 +478,10 @@ class ProfileServiceDAO implements Serializable {
                         "   FROM ItemValue iv " +
                         "   WHERE iv.item = :profileItem) " +
                         "AND ivd.fromProfile = :fromProfile " +
-                        "AND :itemDefinitionId MEMBER OF ivd.itemDefinitions " +
+                        "AND ivd.itemDefinition.id = :itemDefinitionId  " +
                         "AND :apiVersion MEMBER OF ivd.apiVersions")
                 .setParameter("profileItem", profileItem)
-                .setParameter("itemDefinitionId", profileItem.getItemDefinition())
+                .setParameter("itemDefinitionId", profileItem.getItemDefinition().getId())
                 .setParameter("apiVersion", apiVersion)
                 .setParameter("fromProfile", true)
                 .getResultList();

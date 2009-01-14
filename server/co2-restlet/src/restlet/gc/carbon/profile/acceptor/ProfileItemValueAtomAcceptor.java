@@ -1,10 +1,6 @@
 package gc.carbon.profile.acceptor;
 
-import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.data.ItemValue;
-import gc.carbon.profile.ProfileCategoryResource;
-import gc.carbon.profile.ProfileForm;
-import gc.carbon.profile.ProfileItemResource;
 import gc.carbon.profile.ProfileItemValueResource;
 import gc.carbon.profile.builder.v2.AtomFeed;
 import org.apache.commons.logging.Log;
@@ -15,10 +11,7 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Parameter;
 import org.restlet.resource.Representation;
 
-import javax.xml.namespace.QName;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This file is part of AMEE.
@@ -61,7 +54,7 @@ public class ProfileItemValueAtomAcceptor implements ItemValueAcceptor {
                 Document<Entry> doc = AtomFeed.getInstance().parse(entity.getStream());
                 Entry entry = doc.getRoot();
 
-                Form form = new ProfileForm(resource.getVersion());
+                Form form = new Form();
 
                 Element value = entry.getFirstChild(AtomFeed.Q_NAME_VALUE);
 

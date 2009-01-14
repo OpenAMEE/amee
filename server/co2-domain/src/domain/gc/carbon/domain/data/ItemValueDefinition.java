@@ -67,8 +67,9 @@ public class ItemValueDefinition implements PersistentObject {
     @JoinColumn(name = "ENVIRONMENT_ID")
     private Environment environment;
 
-    @ManyToMany(mappedBy="itemValueDefinitions", fetch = FetchType.LAZY)
-    private List<ItemDefinition> itemDefinitions;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ITEM_DEFINITION_ID")
+    private ItemDefinition itemDefinition;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "VALUE_DEFINITION_ID")
@@ -89,6 +90,10 @@ public class ItemValueDefinition implements PersistentObject {
 
     @Column(name = "VALUE", length = VALUE_SIZE, nullable = true)
     private String value = "";
+
+    // Comma separated key/value pairs. Value is key if key not supplied. Example: "key=value,key=value"
+    @Column(name = "CHOICES")
+    private String choices = "";
 
     @Column(name = "FROM_PROFILE")
     @Index(name = "FROM_PROFILE_IND")
@@ -135,7 +140,7 @@ public class ItemValueDefinition implements PersistentObject {
     public ItemValueDefinition(ItemDefinition itemDefinition) {
         this();
         setEnvironment(itemDefinition.getEnvironment());
-        itemDefinitions.add(itemDefinition);
+        setItemDefinition(itemDefinition);
         itemDefinition.add(this);
     }
 
@@ -162,6 +167,16 @@ public class ItemValueDefinition implements PersistentObject {
             // TODO: more validations, based on ValueDefinition
         }
         return value;
+    }
+
+    @Transient
+    public boolean isChoicesAvailable() {
+        return getChoices().length() > 0;
+    }
+
+    @Transient
+    public List<Choice> getChoiceList() {
+        return Choice.parseChoices(getChoices());
     }
 
     @Transient
@@ -235,8 +250,12 @@ public class ItemValueDefinition implements PersistentObject {
         }
     }
 
-    public List<ItemDefinition> getItemDefinitions() {
-        return itemDefinitions;
+    public ItemDefinition getItemDefinition() {
+        return itemDefinition;
+    }
+
+    public void setItemDefinition(ItemDefinition itemDefinition) {
+        this.itemDefinition = itemDefinition;
     }
 
     public ValueDefinition getValueDefinition() {
@@ -278,6 +297,17 @@ public class ItemValueDefinition implements PersistentObject {
             value = "";
         }
         this.value = value;
+    }
+
+    public String getChoices() {
+        return choices;
+    }
+
+    public void setChoices(String choices) {
+        if (choices == null) {
+            choices = "";
+        }
+        this.choices = choices;
     }
 
     public boolean isFromProfile() {
@@ -376,8 +406,12 @@ public class ItemValueDefinition implements PersistentObject {
         return apiVersions.contains(apiVersion);
     }
 
-    public ItemValueDefinition getAliased() {
+    public ItemValueDefinition getAliasedTo() {
         return aliasedTo;
+    }
+
+    public void setAliasedTo(ItemValueDefinition ivd) {
+        this.aliasedTo = ivd;    
     }
 
     public List<ItemValueDefinition> getAliases() {

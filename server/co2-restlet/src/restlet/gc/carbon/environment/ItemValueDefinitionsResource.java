@@ -20,6 +20,7 @@
 package gc.carbon.environment;
 
 import com.jellymold.utils.BaseResource;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import gc.carbon.data.DataConstants;
 import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.ValueDefinition;
@@ -58,6 +59,9 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
+    @Autowired
+    private EnvironmentService environmentService;
+
     private ItemValueDefinition newItemValueDefinition;
 
     @Override
@@ -86,7 +90,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("itemValueDefinitions", definitionBrowser.getItemDefinition().getItemValueDefinitions());
         values.put("valueDefinitions", valueDefinitions.isEmpty() ? null : valueDefinitions);
-        values.put("apiVersions", definitionServiceDAO.getAPIVersions(definitionBrowser.getEnvironment()));
+        values.put("apiVersions", environmentService.getAPIVersions());
         return values;
     }
 
@@ -157,9 +161,11 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
                 newItemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
                 newItemValueDefinition.setUnit(form.getFirstValue("unit"));
                 newItemValueDefinition.setPerUnit(form.getFirstValue("perUnit"));
-
+                if (form.getFirstValue("aliasedTo") != null) {
+                    newItemValueDefinition.setAliasedTo(definitionServiceDAO.getItemValueDefinition(form.getFirstValue("aliasedTo")));
+                }
                 // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
-                List<APIVersion> apiVersions = definitionServiceDAO.getAPIVersions(definitionBrowser.getEnvironment());
+                List<APIVersion> apiVersions = environmentService.getAPIVersions();
                 for (APIVersion apiVersion : apiVersions) {
                     String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
                     if (version != null) {

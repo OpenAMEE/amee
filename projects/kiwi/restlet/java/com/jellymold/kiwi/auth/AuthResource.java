@@ -95,7 +95,7 @@ public class AuthResource extends BaseResource implements Serializable {
             user = new User();
             user.setUsername(form.getFirstValue("username"));
             user.setPassword(form.getFirstValue("password"));
-            authToken = authService.authenticate(user, getRequest().getClientInfo().getAddress());
+            authToken = authService.authenticateAndGenerateAuthToken(user, getRequest().getClientInfo().getAddress());
             if (authToken != null) {
                 // signed in
                 AuthUtils.addAuthCookie(getResponse(), authToken);

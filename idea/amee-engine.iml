@@ -74,8 +74,5 @@
     <orderEntry type="library" name="amee-utils-restlet" level="project" />
     <orderEntry type="library" name="slf4j" level="project" />
   </component>
-  <component name="ProjectModuleManager" />
-  <component name="ProjectRunConfigurationManager" />
-  <component name="libraryTable" />
 </module>
 

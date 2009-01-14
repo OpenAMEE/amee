@@ -138,7 +138,7 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
         AtomFeed atomFeed = AtomFeed.getInstance();
         Entry entry = atomFeed.newEntry();
 
-        entry.setBaseUri(getRequest().getAttributes().get("previousHierachicalPart") + "/?v=" + getRequest().getAttributes().get("apiVersion"));
+        entry.setBaseUri(getRequest().getAttributes().get("previousHierachicalPart").toString());
 
         Text title = atomFeed.newTitle(entry);
         title.setText(itemValue.getDisplayName() + ", " + itemValue.getItem().getDisplayName());
@@ -212,9 +212,5 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
 
     public ProfileService getProfileService() {
         return profileService;
-    }
-
-    public APIVersion getVersion() {
-        return (APIVersion) getRequest().getAttributes().get("apiVersion");
     }
 }

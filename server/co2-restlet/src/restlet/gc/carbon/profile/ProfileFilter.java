@@ -92,6 +92,10 @@ public class ProfileFilter extends BaseFilter {
                 }
             }
 
+            //TODO - Quick fix to allow /service paths
+            if (!segments.isEmpty() && segments.get(0).equals("service"))
+                return CONTINUE;
+            
             if (path != null) {
                 // rewrite paths
                 request.getAttributes().put("previousResourceRef", reference.toString());
