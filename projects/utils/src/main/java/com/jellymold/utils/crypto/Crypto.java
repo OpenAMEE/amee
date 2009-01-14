@@ -13,11 +13,10 @@ import java.security.spec.InvalidKeySpecException;
 public class Crypto {
 
     private final static String KEY_FILE = "amee.keyFile";
-    private static final byte[] salt = {
-            (byte) 0xc7, (byte) 0x73, (byte) 0x21, (byte) 0x8c,
-            (byte) 0x7e, (byte) 0xc8, (byte) 0xee, (byte) 0x99};
-    private static final IvParameterSpec iv = new javax.crypto.spec.IvParameterSpec(salt);
+    private final static String SALT_FILE = "amee.saltFile";
+    private static byte[] salt = null;
     private static Key key = null;
+    private static IvParameterSpec iv = null;
 
     public Crypto() {
         super();
@@ -27,12 +26,32 @@ public class Crypto {
         if (Crypto.key == null) {
             Security.addProvider(new SunJCE());
             String keyFileName = System.getProperty(KEY_FILE);
-            if (keyFileName != null) {
-                File file = new File(keyFileName);
-                if (file.isFile()) {
-                    Crypto.key = Crypto.readKeyFromFile(file);
+            String saltFileName = System.getProperty(SALT_FILE);
+            if ((keyFileName != null) && (saltFileName != null)) {
+                File keyFile = new File(keyFileName);
+                File saltFile = new File(saltFileName);
+                if (keyFile.isFile() && saltFile.isFile()) {
+                    Crypto.key = Crypto.readKeyFromFile(keyFile);
+                    Crypto.salt = Crypto.readSaltFromFile(saltFile);
+                    Crypto.iv = new javax.crypto.spec.IvParameterSpec(Crypto.salt);
                 }
             }
+            if ((Crypto.key == null) || (Crypto.iv == null)) {
+                throw new RuntimeException("Could not create Key or IvParameterSpec instances. Check key and salt files.");
+            }
+        }
+    }
+
+    public static String getAsMD5AndBase64(String s) throws CryptoException {
+        Crypto.initialise();
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(Crypto.salt);
+            md.update(s.getBytes());
+            return new String(Base64.encodeBase64(md.digest()));
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("initialise() caught NoSuchAlgorithmException: " + e.getMessage());
+            throw new CryptoException("NoSuchAlgorithmException", e);
         }
     }
 
@@ -173,6 +192,30 @@ public class Crypto {
         }
 
         return key;
+    }
+
+
+    public static byte[] readSaltFromFile(File file) throws CryptoException {
+
+        DataInputStream input;
+        byte[] salt;
+
+        try {
+            // read salt byte array from file
+            input = new DataInputStream(new FileInputStream(file));
+            salt = new byte[(int) file.length()];
+            input.readFully(salt);
+            input.close();
+            // must be 8 bytes
+            if (salt.length != 8) {
+                throw new RuntimeException("Salt from '" + file.getAbsolutePath() + "' is not 8 bytes.");
+            }
+        } catch (IOException e) {
+            System.out.println("readKeyFromFile() caught IOException: " + e.getMessage());
+            throw new CryptoException("IOException", e);
+        }
+
+        return salt;
     }
 
     private static SecretKey getNewKey() throws CryptoException {

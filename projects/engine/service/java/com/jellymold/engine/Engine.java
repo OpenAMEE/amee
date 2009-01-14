@@ -33,12 +33,25 @@ public class Engine implements WrapperListener, Serializable {
     protected SpringController springController;
     protected Component container;
 
+    protected static int AJP_PORT = 8010;
+    protected static int MAX_THREADS = 700;
+    protected static int MIN_THREADS = 200;
+    protected static int THREAD_MAX_IDLE_TIME_MS = 30000;
+    protected static int LOW_THREADS = 25;
+    protected static int LOW_RESOURCE_MAX_IDLE_TIME_MS = 2500;
+    protected static int ACCEPTOR_THREADS = 1;
+    protected static int ACCEPT_QUEUE_SIZE = 0;
+
     private boolean initialise = false;
-    private int ajpPort = 8010;
+    private int ajpPort = AJP_PORT;
     protected String serverName;
-    private int maxThreads = 700;
-    private int minThreads = 200;
-    private int threadMaxIdleTimeMs = 30000;
+    private int maxThreads = MAX_THREADS;
+    private int minThreads = MIN_THREADS;
+    private int threadMaxIdleTimeMs = THREAD_MAX_IDLE_TIME_MS;
+    private int lowThreads = LOW_THREADS;
+    private int lowResourceMaxIdleTimeMs = LOW_RESOURCE_MAX_IDLE_TIME_MS;
+    private int acceptorThreads = ACCEPTOR_THREADS;
+    private int acceptQueueSize = ACCEPT_QUEUE_SIZE;
 
     public Engine() {
         super();
@@ -55,13 +68,32 @@ public class Engine implements WrapperListener, Serializable {
         this.ajpPort = ajpPort;
     }
 
-    public Engine(boolean initialise, int ajpPort, int maxThreads, int minThreads, int threadMaxIdleTimeMs) {
-        this();
-        this.initialise = initialise;
-        this.ajpPort = ajpPort;
+    public Engine(boolean initialise, int ajpPort, String serverName, int maxThreads, int minThreads, int threadMaxIdleTimeMs) {
+        this(initialise,  ajpPort, serverName);
         this.maxThreads = maxThreads;
         this.minThreads = minThreads;
         this.threadMaxIdleTimeMs = threadMaxIdleTimeMs;
+    }
+
+    public Engine(boolean initialise, int ajpPort, String serverName, int maxThreads, int minThreads,
+                  int threadMaxIdleTimeMs, int lowThreads, int lowResourceMaxIdleTimeMs, int acceptorThreads,
+                  int acceptQueueSize) {
+        this(initialise,  ajpPort, serverName, maxThreads, minThreads, threadMaxIdleTimeMs);
+        if (threadMaxIdleTimeMs > 0) {
+            this.threadMaxIdleTimeMs = threadMaxIdleTimeMs;
+        }
+        if (lowThreads > 0) {
+            this.lowThreads = lowThreads;
+        }
+        if (lowResourceMaxIdleTimeMs > 0) {
+            this.lowResourceMaxIdleTimeMs = lowResourceMaxIdleTimeMs;
+        }
+        if (acceptorThreads > -1) {
+            this.acceptorThreads = acceptorThreads;
+        }
+        if (acceptQueueSize > -1) {
+            this.acceptQueueSize = acceptQueueSize;
+        }
     }
 
     public Engine(boolean initialise, int ajpPort, String serverName) {
@@ -120,7 +152,11 @@ public class Engine implements WrapperListener, Serializable {
         ajpServer.getContext().getParameters().add("minThreads", "" + minThreads); // default is 1
         ajpServer.getContext().getParameters().add("maxThreads", "" + maxThreads); // default is 255
         ajpServer.getContext().getParameters().add("threadMaxIdleTimeMs", "" + threadMaxIdleTimeMs); // default is 60000
-        // more params here: http://www.restlet.org/documentation/1.0/ext/com/noelios/restlet/ext/jetty/JettyServerHelper
+        ajpServer.getContext().getParameters().add("lowThreads", "" + lowThreads); // default is 25
+        ajpServer.getContext().getParameters().add("lowResourceMaxIdleTimeMs", "" + lowResourceMaxIdleTimeMs); // default is 2500
+        ajpServer.getContext().getParameters().add("acceptorThreads", "" + acceptorThreads); // default is 1
+        ajpServer.getContext().getParameters().add("acceptQueueSize", "" + acceptQueueSize); // default is 0
+        // more params here: http://www.restlet.org/documentation/1.1/ext/com/noelios/restlet/ext/jetty/JettyServerHelper.html
         // advice here: http://jetty.mortbay.org/jetty5/doc/optimization.html (what about Jetty 6?)
 
         // configure file client

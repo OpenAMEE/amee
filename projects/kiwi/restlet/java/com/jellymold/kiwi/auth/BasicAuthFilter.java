@@ -56,7 +56,7 @@ public class BasicAuthFilter extends Guard {
     public boolean checkSecret(Request request, String identifer, char[] secret) {
         User user = new User();
         user.setUsername(identifer);
-        user.setPassword(new String(secret));
+        user.setPasswordInClear(new String(secret));
 
         ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
         AuthService authService = (AuthService) springContext.getBean("authService");

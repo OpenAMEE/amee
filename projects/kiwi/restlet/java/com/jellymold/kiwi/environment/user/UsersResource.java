@@ -146,7 +146,7 @@ public class UsersResource extends BaseResource implements Serializable {
                     newUser = new User(environmentBrowser.getEnvironment());
                     newUser.setName(form.getFirstValue("name"));
                     newUser.setUsername(form.getFirstValue("username"));
-                    newUser.setPassword(form.getFirstValue("password"));
+                    newUser.setPasswordInClear(form.getFirstValue("password"));
                     newUser.setEmail(form.getFirstValue("email"));
                     if (form.getFirstValue("superUser") != null) {
                         newUser.setType(UserType.SUPER);

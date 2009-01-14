@@ -1,5 +1,7 @@
 package com.jellymold.kiwi;
 
+import com.jellymold.utils.crypto.Crypto;
+import com.jellymold.utils.crypto.CryptoException;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.DatedObject;
 import com.jellymold.utils.domain.UidGen;
@@ -37,7 +39,8 @@ import java.util.List;
 public class User implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
     public final static int USERNAME_SIZE = 20;
-    public final static int PASSWORD_SIZE = 20;
+    public final static int PASSWORD_SIZE = 40;
+    public final static int PASSWORD_CLEAR_SIZE = 40;
     public final static int NAME_SIZE = 100;
     public final static int NICK_NAME_SIZE = 100;
     public final static int LOCATION_SIZE = 100;
@@ -109,7 +112,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     public User(Environment environment, String username, String password, String name, String nickName, String location) {
         this(environment);
         setUsername(username);
-        setPassword(password);
+        setPasswordInClear(password);
         setName(name);
         setNickName(nickName);
         setLocation(location);
@@ -223,7 +226,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     public void populate(org.dom4j.Element element) {
         setUid(element.attributeValue("uid"));
         setUsername(element.elementText("Username"));
-        setPassword(element.elementText("Password"));
+        setPasswordInClear(element.elementText("Password"));
         setName(element.elementText("Name"));
         setNickName(element.elementText("NickName"));
         setEmail(element.elementText("Email"));
@@ -404,11 +407,25 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         return password;
     }
 
-    public void setPassword(String password) {
-        if (password == null) {
-            password = "";
+    @Transient
+    public void setPasswordInClear(String password) {
+        try {
+            setPassword(Crypto.getAsMD5AndBase64(password));
+        } catch (CryptoException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    public void setPassword(String password) {
+        checkPassword(password, PASSWORD_SIZE);
         this.password = password.trim();
+    }
+
+    private static void checkPassword(String password, int size) {
+        if ((password == null) || password.isEmpty() || (password.length() > size)) {
+            throw new IllegalArgumentException(
+                    "Password must not be empty and must be <= " + size + " characters long.");
+        }
     }
 
     public Date getCreated() {
