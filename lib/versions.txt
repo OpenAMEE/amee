@@ -23,4 +23,4 @@ xmlutil, 1.2
 spring-integration, 1.0.0
 jax-rs, ?
 java-mail, ? 
-abdera, ?
+abdera, 0.3.0
