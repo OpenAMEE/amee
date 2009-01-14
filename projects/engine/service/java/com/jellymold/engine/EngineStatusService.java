@@ -1,7 +1,7 @@
 package com.jellymold.engine;
 
-import com.jellymold.kiwi.auth.AuthUtils;
 import com.jellymold.kiwi.auth.AuthService;
+import com.jellymold.kiwi.auth.AuthUtils;
 import com.jellymold.utils.MediaTypeUtils;
 import com.jellymold.utils.ThreadBeanHolder;
 import freemarker.template.Configuration;
@@ -29,20 +29,23 @@ public class EngineStatusService extends StatusService {
     @Override
     public Representation getRepresentation(Status status, Request request, Response response) {
         if (MediaTypeUtils.isStandardWebBrowser(request)) {
-            Configuration configuration = (Configuration)
-                    request.getAttributes().get("freeMarkerConfiguration");
+            Configuration configuration = (Configuration) request.getAttributes().get("freeMarkerConfiguration");
             ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
-            Map<String, Object> values = new HashMap<String, Object>();
-            values.put("status", status);
-            // values below are mirrored in BaseResource and SkinRenderResource
-            values.put("authService", springContext.getBean("authService"));
-            values.put("activeUser", AuthService.getUser());
-            values.put("activeGroup", ThreadBeanHolder.get("group"));
-            values.put("activeSite", ThreadBeanHolder.get("site"));
-            values.put("activeApp", ThreadBeanHolder.get("app"));
-            values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));
-            // find a Template Representation
-            return getTemplateRepresentation(status, request, configuration, values);
+            if ((configuration != null) && (springContext != null)) {
+                Map<String, Object> values = new HashMap<String, Object>();
+                values.put("status", status);
+                // values below are mirrored in BaseResource and SkinRenderResource
+                values.put("authService", springContext.getBean("authService"));
+                values.put("activeUser", AuthService.getUser());
+                values.put("activeGroup", ThreadBeanHolder.get("group"));
+                values.put("activeSite", ThreadBeanHolder.get("site"));
+                values.put("activeApp", ThreadBeanHolder.get("app"));
+                values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));
+                // find a Template Representation
+                return getTemplateRepresentation(status, request, configuration, values);
+            } else {
+                return super.getRepresentation(status, request, response);
+            }
         } else {
             // just return status code for API calls
             return new StringRepresentation("");

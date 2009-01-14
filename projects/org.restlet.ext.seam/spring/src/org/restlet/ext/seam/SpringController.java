@@ -18,21 +18,16 @@ import javax.persistence.PersistenceException;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * The count allows for begin to be called more than once but only one EntityManager and transaction
- * will ever be active in the same thread. GET requests may not require a transaction at first but
- * could 'declaratively' start a transaction later ('begin(true)').
- */
 @Service
 public class SpringController extends EntityManagerFactoryAccessor {
 
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-    private ThreadLocal<Integer> count = new ThreadLocal<Integer>();
-    private ThreadLocal<TransactionStatus> transactionStatus = new ThreadLocal<TransactionStatus>();
     private boolean manageTransactions;
     private TransactionAttribute transactionAttribute = new DefaultTransactionAttribute();
+    private ThreadLocal<TransactionStatus> transactionStatus = new ThreadLocal<TransactionStatus>();
+    private ThreadLocal<Boolean> transactionRollback = new ThreadLocal<Boolean>();
 
     public SpringController() {
         super();
@@ -64,11 +59,7 @@ public class SpringController extends EntityManagerFactoryAccessor {
 
     public void begin(boolean withTransaction) {
         logger.info(">>> BEGIN");
-        if (TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
-            // do not modify the EntityManager: just mark the request accordingly
-            Integer count = getCount();
-            setCount(count + 1);
-        } else {
+        if (!TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
             logger.debug("Opening JPA EntityManager in SpringController");
             try {
                 EntityManager em = createEntityManager();
@@ -76,6 +67,8 @@ public class SpringController extends EntityManagerFactoryAccessor {
             } catch (PersistenceException ex) {
                 throw new DataAccessResourceFailureException("Could not create JPA EntityManager", ex);
             }
+        } else {
+            logger.debug("JPA EntityManager already open");
         }
         if (withTransaction && manageTransactions) {
             beginTransaction();
@@ -84,50 +77,44 @@ public class SpringController extends EntityManagerFactoryAccessor {
 
     public void end() {
         commitOrRollbackTransaction();
-        Integer count = getCount();
-        if (count > 0) {
-            // Do not modify the EntityManager: just clear the marker.
-            setCount(count - 1);
-        } else {
+        if (TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
+            logger.debug("Closing JPA EntityManager in SpringController");
             EntityManagerHolder emHolder =
                     (EntityManagerHolder) TransactionSynchronizationManager.unbindResourceIfPossible(getEntityManagerFactory());
-            logger.debug("Closing JPA EntityManager in SpringController");
-            EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
+            if (emHolder != null) {
+                EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
+            }
         }
         logger.info("<<< END");
     }
 
-    protected Integer getCount() {
-        Integer count = this.count.get();
-        if (count == null) {
-            count = 0;
-        }
-        logger.debug("count: " + count);
-        return count;
-    }
-
-    protected void setCount(Integer count) {
-        this.count.set(count);
-        logger.debug("count: " + count);
-    }
-
     public void beginTransaction() {
         if (manageTransactions && (transactionStatus.get() == null)) {
-            logger.info(">>> OPEN TRANSACTION");
             transactionStatus.set(transactionManager.getTransaction(transactionAttribute));
+            if (!transactionStatus.get().isNewTransaction()) {
+                logger.error("Transaction already open.");
+                throw new RuntimeException("Transaction already open.");
+            }
+            logger.info(">>> TRANSACTION OPENED");
         }
     }
 
     public void commitOrRollbackTransaction() {
         if (manageTransactions && (transactionStatus.get() != null)) {
-            if (transactionStatus.get().isRollbackOnly()) {
-                logger.info("<<< ROLLBACK TRANSACTION");
+            if (!transactionStatus.get().isCompleted()) {
+                if (transactionRollback.get() != null) {
+                    transactionManager.rollback(transactionStatus.get());
+                    logger.info("<<< TRANSACTION ROLLED BACK");
+                } else {
+                    transactionManager.commit(transactionStatus.get());
+                    logger.info("<<< TRANSACTION COMMITTED");
+                }
             } else {
-                logger.info("<<< COMMIT TRANSACTION");
+                logger.info("<<< TRANSACTION ALREADY COMPLETED");
             }
-            transactionManager.commit(transactionStatus.get());
             transactionStatus.set(null);
         }
+        transactionRollback.set(null);
     }
 
     /**
@@ -152,8 +139,8 @@ public class SpringController extends EntityManagerFactoryAccessor {
      */
     public void afterHandle(boolean success) {
         logger.info("<<< AFTER HANDLE");
-        if (!success && (transactionStatus.get() != null)) {
-            transactionStatus.get().setRollbackOnly();
+        if (!success) {
+            transactionRollback.set(true);
         }
         commitOrRollbackTransaction();
     }

@@ -5,8 +5,8 @@ import com.jellymold.kiwi.auth.AuthFilter;
 import com.jellymold.kiwi.auth.GuestFilter;
 import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.ThreadBeanHolderFilter;
-import com.jellymold.utils.skin.FreeMarkerConfigurationFilter;
 import com.jellymold.utils.cache.CacheHelper;
+import com.jellymold.utils.skin.FreeMarkerConfigurationFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.*;
@@ -68,7 +68,7 @@ public class Engine implements WrapperListener, Serializable {
     }
 
     public Engine(boolean initialise, int ajpPort, String serverName, int maxThreads, int minThreads, int threadMaxIdleTimeMs) {
-        this(initialise,  ajpPort, serverName);
+        this(initialise, ajpPort, serverName);
         this.maxThreads = maxThreads;
         this.minThreads = minThreads;
         this.threadMaxIdleTimeMs = threadMaxIdleTimeMs;
@@ -77,7 +77,7 @@ public class Engine implements WrapperListener, Serializable {
     public Engine(boolean initialise, int ajpPort, String serverName, int maxThreads, int minThreads,
                   int threadMaxIdleTimeMs, int lowThreads, int lowResourceMaxIdleTimeMs, int acceptorThreads,
                   int acceptQueueSize) {
-        this(initialise,  ajpPort, serverName, maxThreads, minThreads, threadMaxIdleTimeMs);
+        this(initialise, ajpPort, serverName, maxThreads, minThreads, threadMaxIdleTimeMs);
         if (threadMaxIdleTimeMs > 0) {
             this.threadMaxIdleTimeMs = threadMaxIdleTimeMs;
         }
@@ -133,7 +133,7 @@ public class Engine implements WrapperListener, Serializable {
             log.debug("...initialised");
         }
 
-        // wrap start callback in Seam call
+        // wrap start callback
         springController.begin(true);
         onStart();
         springController.end();
@@ -142,6 +142,7 @@ public class Engine implements WrapperListener, Serializable {
         container = new Component();
         container.getContext().getAttributes().put("springContext", springContext);
         container.getContext().getAttributes().put("springController", springController);
+        container.setStatusService(new EngineStatusService(true));
 
         // configure AJP server
         Server ajpServer = container.getServers().add(Protocol.AJP, ajpPort);
@@ -161,10 +162,10 @@ public class Engine implements WrapperListener, Serializable {
         // configure file client
         container.getClients().add(Protocol.FILE);
 
-        // wrap VirtualHost creation in a Seam call
+        // wrap VirtualHost creation
         springController.begin(true);
 
-        // JBoss Seam wrapper
+        // Spring wrapper
         ConnectorService connectorService = new SpringConnectorService(springController);
 
         // create a VirtualHost per Site
@@ -201,8 +202,7 @@ public class Engine implements WrapperListener, Serializable {
             }
         }
 
-
-        // wrap VirtualHost creation in a Seam call
+        // wrap VirtualHost creation
         springController.end();
 
         try {
