@@ -143,8 +143,6 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
                 itemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
             }
             success();
-            Integer x = null;
-            x.byteValue();
         } else {
             notAuthorized();
         }
