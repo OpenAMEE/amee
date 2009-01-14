@@ -7,7 +7,6 @@ import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import org.springframework.transaction.interceptor.TransactionAttribute;
@@ -19,13 +18,19 @@ import javax.persistence.PersistenceException;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * The count allows for begin to be called more than once but only one EntityManager and transaction
+ * will ever be active in the same thread. GET requests may not require a transaction at first but
+ * could 'declaratively' start a transaction later ('begin(true)').
+ */
 @Service
-    public class SpringController extends EntityManagerFactoryAccessor {
+public class SpringController extends EntityManagerFactoryAccessor {
 
     @Autowired
     private PlatformTransactionManager transactionManager;
 
     private ThreadLocal<Integer> count = new ThreadLocal<Integer>();
+    private ThreadLocal<TransactionStatus> transactionStatus = new ThreadLocal<TransactionStatus>();
     private boolean manageTransactions;
     private TransactionAttribute transactionAttribute = new DefaultTransactionAttribute();
 
@@ -62,8 +67,7 @@ import java.util.Properties;
         if (TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
             // do not modify the EntityManager: just mark the request accordingly
             Integer count = getCount();
-            int newCount = (count != null) ? count + 1 : 1;
-            setCount(newCount);
+            setCount(count + 1);
         } else {
             logger.debug("Opening JPA EntityManager in SpringController");
             try {
@@ -81,16 +85,12 @@ import java.util.Properties;
     public void end() {
         commitOrRollbackTransaction();
         Integer count = getCount();
-        if (count != null) {
+        if (count > 0) {
             // Do not modify the EntityManager: just clear the marker.
-            if (count > 1) {
-                setCount(count - 1);
-            } else {
-                setCount(null);
-            }
+            setCount(count - 1);
         } else {
             EntityManagerHolder emHolder =
-                    (EntityManagerHolder) TransactionSynchronizationManager.unbindResource(getEntityManagerFactory());
+                    (EntityManagerHolder) TransactionSynchronizationManager.unbindResourceIfPossible(getEntityManagerFactory());
             logger.debug("Closing JPA EntityManager in SpringController");
             EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
         }
@@ -111,29 +111,22 @@ import java.util.Properties;
         logger.debug("count: " + count);
     }
 
-
     public void beginTransaction() {
-        if (manageTransactions) {
-            TransactionStatus transactionStatus = null;
-            try {
-                transactionStatus = transactionManager.getTransaction(transactionAttribute);
-            } catch (TransactionException e) {
-                // TODO: do something
-            }
-            if (!transactionStatus.isNewTransaction()) {
-                // TODO: do something?
-            }
+        if (manageTransactions && (transactionStatus.get() == null)) {
+            logger.info(">>> OPEN TRANSACTION");
+            transactionStatus.set(transactionManager.getTransaction(transactionAttribute));
         }
     }
 
     public void commitOrRollbackTransaction() {
-        if (manageTransactions) {
-            try {
-                TransactionStatus transactionStatus = transactionManager.getTransaction(transactionAttribute);
-                transactionManager.commit(transactionStatus);
-            } catch (TransactionException e) {
-                // TODO: do something
+        if (manageTransactions && (transactionStatus.get() != null)) {
+            if (transactionStatus.get().isRollbackOnly()) {
+                logger.info("<<< ROLLBACK TRANSACTION");
+            } else {
+                logger.info("<<< COMMIT TRANSACTION");
             }
+            transactionManager.commit(transactionStatus.get());
+            transactionStatus.set(null);
         }
     }
 
@@ -157,8 +150,11 @@ import java.util.Properties;
     /**
      * Called after Filter.doHandle
      */
-    public void afterHandle() {
+    public void afterHandle(boolean success) {
         logger.info("<<< AFTER HANDLE");
+        if (!success && (transactionStatus.get() != null)) {
+            transactionStatus.get().setRollbackOnly();
+        }
         commitOrRollbackTransaction();
     }
 

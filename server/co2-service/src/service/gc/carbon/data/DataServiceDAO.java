@@ -27,13 +27,12 @@ import com.jellymold.utils.event.ObservedEvent;
 import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
-import gc.carbon.data.DataSheetService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.ext.seam.SpringController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -73,7 +72,7 @@ class DataServiceDAO implements Serializable {
 
     // Handle events
 
-    @ServiceActivator(inputChannel="beforeEnvironmentDelete")
+    @ServiceActivator(inputChannel = "beforeEnvironmentDelete")
     public void beforeEnvironmentDelete(ObservedEvent oe) {
         log.debug("beforeEnvironmentDelete");
         // delete root DataCategories
@@ -88,7 +87,7 @@ class DataServiceDAO implements Serializable {
         }
     }
 
-    @ServiceActivator(inputChannel="beforeItemDefinitionDelete")
+    @ServiceActivator(inputChannel = "beforeItemDefinitionDelete")
     public void beforeItemDefinitionDelete(ObservedEvent oe) {
         ItemDefinition itemDefinition = (ItemDefinition) oe.getPayload();
         log.debug("beforeItemDefinitionDelete");
@@ -108,7 +107,7 @@ class DataServiceDAO implements Serializable {
                 .executeUpdate();
     }
 
-    @ServiceActivator(inputChannel="beforeItemValueDefinitionDelete")
+    @ServiceActivator(inputChannel = "beforeItemValueDefinitionDelete")
     public void beforeItemValueDefinitionDelete(ObservedEvent oe) {
         log.debug("beforeItemValueDefinitionDelete");
         // remove ItemValues (from DataItems and ProfileItems)
@@ -309,7 +308,7 @@ class DataServiceDAO implements Serializable {
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.dataService")
                 .getResultList();
-        return dataItems;                                                     
+        return dataItems;
     }
 
     public List<DataItem> getDataItems(DataCategory dataCategory) {
@@ -326,6 +325,7 @@ class DataServiceDAO implements Serializable {
                 .getResultList();
         return dataItems;
     }
+
     public List<DataItem> getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
 
         String q = "SELECT DISTINCT di " +
@@ -394,7 +394,7 @@ class DataServiceDAO implements Serializable {
                 .getResultList();
         if (itemValueDefinitions.size() > 0) {
             // ensure transaction has been started
-            springController.beginTransaction();
+            springController.begin(true);
             // create missing ItemValues
             for (ItemValueDefinition ivd : itemValueDefinitions) {
                 entityManager.persist(new ItemValue(ivd, dataItem, ""));

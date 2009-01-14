@@ -499,7 +499,7 @@ class ProfileServiceDAO implements Serializable {
                 .getResultList();
         if (itemValueDefinitions.size() > 0) {
             // ensure transaction has been started
-            springController.beginTransaction();
+            springController.begin(true);
             // create missing ItemValues
             for (ItemValueDefinition ivd : itemValueDefinitions) {
                 // start default value with value from ItemValueDefinition

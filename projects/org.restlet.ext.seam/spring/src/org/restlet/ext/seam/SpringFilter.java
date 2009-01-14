@@ -26,7 +26,7 @@ public class SpringFilter extends Filter {
             springController.beforeHandle();
             super.doHandle(request, response);
         } finally {
-            springController.afterHandle();
+            springController.afterHandle(!response.getStatus().isError());
         }
         return CONTINUE;
     }
