@@ -63,7 +63,7 @@ import java.util.Properties;
             // do not modify the EntityManager: just mark the request accordingly
             Integer count = getCount();
             int newCount = (count != null) ? count + 1 : 1;
-            setCount(newCount);
+                setCount(newCount);
         } else {
             logger.debug("Opening JPA EntityManager in SpringController");
             try {

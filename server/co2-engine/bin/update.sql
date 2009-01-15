@@ -33,33 +33,7 @@ UPDATE amee.APP SET TARGET_BUILDER = '';
 UPDATE amee.SITE SET SERVER_ADDRESS = '', SERVER_PORT = '', SERVER_SCHEME = '', SECURE_AVAILABLE = 0;
 DELETE FROM amee.TARGET WHERE TARGET='skinRenderResource';
 
-<<<<<<< HEAD:server/co2-engine/bin/update.sql
-# Fix Skins
-DROP TABLE amee.SKIN_FILE;
-DROP TABLE amee.SKIN_FILE_VERSION;
-UPDATE amee.SKIN SET PATH = 'base-import' WHERE ID=1;
-UPDATE amee.SKIN SET PATH = 'amee-base-import' WHERE ID=2;
-UPDATE amee.SKIN SET PATH = 'admin-import' WHERE ID=3;
-UPDATE amee.SKIN SET PATH = 'admin-default' WHERE ID=4;
-update amee.SITE_APP set SKIN_PATH = 'admin-default' where SKIN_PATH = 'default.admin.skin';                            
-UPDATE amee.SKIN SET PATH = 'app-admin' WHERE ID=5;
-UPDATE amee.SITE_APP set SKIN_PATH = 'app-admin' WHERE SKIN_PATH = 'app.admin.skin';
-UPDATE amee.SKIN SET PATH = 'cache-admin' WHERE ID=6;
-UPDATE amee.SITE_APP set SKIN_PATH = 'cache-admin' WHERE SKIN_PATH = 'cache.skin';
-UPDATE amee.SKIN SET PATH = 'site-admin' WHERE ID=7;
-UPDATE amee.SITE_APP set SKIN_PATH = 'site-admin' WHERE SKIN_PATH = 'site.admin.skin';
-UPDATE amee.SKIN SET PATH = 'skin-admin' WHERE ID=8;
-UPDATE amee.SITE_APP set SKIN_PATH = 'skin-admin' WHERE SKIN_PATH = 'skin.admin.skin';
-UPDATE amee.SKIN SET PATH = 'client-import' WHERE ID=10;
-UPDATE amee.SITE_APP set SKIN_PATH = 'client-default' WHERE SKIN_PATH = 'default.client.skin';
-UPDATE amee.SKIN SET PATH = 'client-default' WHERE ID=11;
-UPDATE amee.SITE_APP set SKIN_PATH = 'client-default' WHERE SKIN_PATH = 'default.client.skin';
-UPDATE amee.SKIN SET PATH = 'auth' WHERE ID=12;
-
-# Fix AMEE
-=======
 # Fix Items
->>>>>>> dc9d61719b69049a188e5d4043c71be65cced7eb:server/co2-engine/bin/update.sql
 ALTER TABLE amee.ITEM DROP COLUMN START_DATE;
 ALTER TABLE amee.ITEM CHANGE VALID_FROM START_DATE DATETIME;
 UPDATE amee.ITEM SET START_DATE = CREATED WHERE START_DATE IS NULL AND TYPE='DI';
@@ -120,3 +94,6 @@ ALTER TABLE amee.ITEM DROP COLUMN PER_UNIT;
 
 # CORRECT PATH AND NAME FOR KWH
 update ITEM_VALUE_DEFINITION set PATH='kWh', NAME='kWh' where PATH='kW';
+
+# Drop redundant VERSION column in USER table
+ALTER TABLE `amee`.`USER` DROP COLUMN `VERSION`;

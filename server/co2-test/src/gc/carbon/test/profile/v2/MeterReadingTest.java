@@ -54,7 +54,7 @@ public class MeterReadingTest extends BaseProfileCategoryTest {
         initDB();
 
         client = new TestClient(PROFILE,"/home/energy/electricity");
-        client.addQueryParameter("v","2.0");
+
 
         DateTime readingDate = startDate.minusHours(1);
         while(readingDate.isBefore(endDate.plusHours(1))) {

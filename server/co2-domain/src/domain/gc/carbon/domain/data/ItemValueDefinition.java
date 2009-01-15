@@ -367,11 +367,11 @@ public class ItemValueDefinition implements PersistentObject {
     }
 
     public Unit getUnit() {
-        return Unit.valueOf(unit);
+        return (unit != null) ? Unit.valueOf(unit) : Unit.ONE;
     }
 
     public PerUnit getPerUnit() {
-        return PerUnit.valueOf(perUnit);
+        return (perUnit != null) ? PerUnit.valueOf(perUnit) : PerUnit.ONE;
     }
 
     public boolean hasUnits() {

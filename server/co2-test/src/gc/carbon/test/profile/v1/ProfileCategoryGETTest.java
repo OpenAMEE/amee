@@ -86,7 +86,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
         Element e = (Element) XPath.selectSingleNode(new DOMBuilder().build(rep.getDocument()).getRootElement(), "//ProfileItem[@uid='" + uid + "']/amountPerMonth");
         String amount = e.getText();        
 
-        client.addQueryParameter("v","2.0");
+        
         client.addQueryParameter("startDate", START_DATE_FMT.print(startDate));
         rep.write(System.out);
         rep = client.get().getEntityAsDom();

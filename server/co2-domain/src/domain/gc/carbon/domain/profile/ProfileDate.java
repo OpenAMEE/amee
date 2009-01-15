@@ -1,5 +1,7 @@
 package gc.carbon.domain.profile;
 
+import org.joda.time.DateTime;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -44,12 +46,8 @@ public class ProfileDate extends GCDate {
     }
 
     protected long defaultDate() {
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        cal.clear();
-        cal.set(year, month, 1);
-        return cal.getTimeInMillis();
+        DateTime dt = new DateTime();
+        return dt.dayOfMonth().withMinimumValue().getMillis();
     }
 
     protected void setDefaultDateStr() {

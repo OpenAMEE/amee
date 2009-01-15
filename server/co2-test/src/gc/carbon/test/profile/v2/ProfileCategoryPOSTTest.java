@@ -34,7 +34,6 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
 
     public ProfileCategoryPOSTTest(String name) throws Exception {
         super(name);
-        client.setAPIVersion("2.0");
     }
 
     @Test
@@ -57,14 +56,6 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
     }
 
     @Test
-    public void testPostWithEndDate() throws Exception {
-        String endDate = "2010-04-02T00:00+0000";
-        Form data = new Form();
-        data.add("endDate", endDate);
-        assertDateNodes(data, getDefaultDate(), endDate, "false");
-    }
-
-    @Test
     public void testPostWithEnd() throws Exception {
         Form data = new Form();
         data.add("end", "true");
@@ -74,7 +65,7 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
     @Test
     public void testPostWithStartDateAndDuration() throws Exception {
         String startDate = "2010-04-01T00:00+0000";
-        String endDate = "2010-04-01T0:030+0000";
+        String endDate = "2010-04-01T00:30+0000";
         Form data = new Form();
         data.add("startDate", startDate);
         data.add("duration", "PT30M");
@@ -137,33 +128,34 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
     }
 
     private void assertDistanceNode(Form data, String unit, String perUnit) throws Exception {
-        Document doc = doPost(data).getEntityAsDom().getDocument();
+        DomRepresentation rep = doPost(data).getEntityAsDom();
+        rep.write(System.out);
+        Document doc = rep.getDocument();
         assertXpathEvaluatesTo("distance", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/Path", doc);
         assertXpathEvaluatesTo("Distance", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/Name", doc);
         assertXpathEvaluatesTo(perUnit, "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/PerUnit", doc);
         assertXpathEvaluatesTo(unit, "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/Unit", doc);
         assertXpathEvaluatesTo("distance", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Path", doc);
         assertXpathEvaluatesTo("Distance", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Name", doc);
-        assertXpathEvaluatesTo("year", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit/InternalUnit", doc);
-        assertXpathEvaluatesTo("km", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Unit/InternalUnit", doc);
+        assertXpathEvaluatesTo("year", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit", doc);
+        assertXpathEvaluatesTo("km", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Unit", doc);
 
     }
 
     private void assertDateNodes(Form data, String startDate, String endDate, String end) throws Exception {
-        client.addQueryParameter("v","2.0");
+
         DomRepresentation rep = doPost(data).getEntityAsDom();
         rep.write(System.out);
         Document doc = rep.getDocument();
-        assertXpathEvaluatesTo(startDate, "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/StartDate", doc);
+        assertXpathEvaluatesTo(FMT.format(FMT.parse(startDate)), "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/StartDate", doc);
         if (endDate != null) {
-            assertXpathEvaluatesTo(endDate, "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/EndDate", doc);
+            assertXpathEvaluatesTo(FMT.format(FMT.parse(endDate)), "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/EndDate", doc);
         } else {
             assertXpathEvaluatesTo("", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/EndDate", doc);
         }
     }
 
     private String getDefaultDate() {
-        String ISO_DATE = "yyyy-MM-dd'T'HH:mmZ";
-        return new SimpleDateFormat(ISO_DATE).format(new Date());
+        return FMT.format(new Date());
     }
 }

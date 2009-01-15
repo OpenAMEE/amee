@@ -628,6 +628,7 @@
         <root url="jar://$PROJECT_DIR$/../lib/abdera/0.3.0/lib/wstx-asl-3.2.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/abdera/0.3.0/lib/log4j-1.2.14.jar!/" />
         <root url="jar://$PROJECT_DIR$/../lib/abdera/0.3.0/lib/jaxen-1.1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../lib/abdera/0.3.0/ext/abdera.extensions.main.0.3.0-incubating.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

@@ -32,8 +32,8 @@ public class TestClient {
         Reference uri = new Reference(Protocol.HTTP, LOCAL_HOST_NAME + "/auth/signIn?method=put");
         Form form = new Form();
         form.add("next", "auth");
-        form.add("username", "");
-        form.add("password", "");
+        form.add("username", "admin");
+        form.add("password", "r41n80w");
         Representation rep = form.getWebRepresentation();
         Response response = client.post(uri, rep);
         if (response.getStatus().isRedirection()) {
@@ -43,10 +43,6 @@ public class TestClient {
 
     public void addQueryParameter(String param, String value) {
         reference.addQueryParameter(param, value);
-    }
-
-    public void setAPIVersion(String v) {
-        reference.addQueryParameter("v", v);
     }
 
     public void setMediaType(MediaType mediaType) {
@@ -70,7 +66,7 @@ public class TestClient {
         Request request = new Request(Method.GET, reference);
         addHeaders(request);
 
-        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n30w");
+        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n80w");
         request.setChallengeResponse(cr);
 
         System.out.println("Resource - " + request.getResourceRef());
@@ -82,7 +78,7 @@ public class TestClient {
         Request request = new Request(Method.POST, reference, form.getWebRepresentation());
         addHeaders(request);
 
-        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n30w");
+        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n80w");
         request.setChallengeResponse(cr);
 
         System.out.println("Resource - " + request.getResourceRef());
@@ -94,7 +90,7 @@ public class TestClient {
         Client client = new Client(Protocol.HTTP);
         Request request = new Request(Method.PUT, reference, form.getWebRepresentation());
 
-        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n30w");
+        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n80w");
         request.setChallengeResponse(cr);
 
         addHeaders(request);

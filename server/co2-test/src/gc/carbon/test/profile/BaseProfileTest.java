@@ -3,6 +3,8 @@ package gc.carbon.test.profile;
 import gc.carbon.test.APITestCase;
 import gc.carbon.test.TestClient;
 
+import java.text.SimpleDateFormat;
+
 /**
  * This file is part of AMEE.
  * <p/>
@@ -34,6 +36,9 @@ public class BaseProfileTest extends APITestCase {
     protected static final String DATA_CATEGORY_UID = "4F6CBCEE95F7";
 
     protected TestClient client;
+
+    protected String ISO_DATE = "yyyy-MM-dd'T'HH:mmZ";
+    protected SimpleDateFormat FMT = new SimpleDateFormat(ISO_DATE);
 
     public BaseProfileTest() {
         super();    

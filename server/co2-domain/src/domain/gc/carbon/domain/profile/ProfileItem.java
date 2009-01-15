@@ -73,7 +73,6 @@ public class ProfileItem extends Item {
     private static final PerUnit INTERNAL_AMOUNT_PERUNIT = PerUnit.valueOf("year");
     public static final Unit INTERNAL_COMPOUND_AMOUNT_UNIT = CompoundUnit.valueOf(INTERNAL_AMOUNT_UNIT,INTERNAL_AMOUNT_PERUNIT);
 
-
     public ProfileItem() {
         super();
     }
@@ -202,6 +201,7 @@ public class ProfileItem extends Item {
         return ObjectType.PI;
     }
 
+    //TODO - Review this logic
     public boolean hasPerUnits() {
         List<ItemValue> itemValues = getItemValues();
         for (ItemValue iv : itemValues) {

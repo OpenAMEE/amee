@@ -36,7 +36,7 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
         Form data = new Form();
         data.add("distancePerUnit", "month");
         data.add("distance", "1000");
-        client.addQueryParameter("v","2.0");
+
         Document doc = doPost(data).getEntityAsDom().getDocument();
         assertXpathEvaluatesTo("3174.000", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Value", doc);
         assertXpathEvaluatesTo("1000", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue/Value", doc);
@@ -47,7 +47,7 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
         Form data = new Form();
         data.add("distanceUnit", "mi");
         data.add("distance", "1000");
-        client.addQueryParameter("v","2.0");
+
         Document doc = doPost(data).getEntityAsDom().getDocument();
         assertXpathEvaluatesTo("425.671", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Value", doc);
         assertXpathEvaluatesTo("1000", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue/Value", doc);
@@ -59,7 +59,7 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
         data.add("distanceUnit", "mi");
         data.add("distancePerUnit", "month");
         data.add("distance", "1000");
-        client.addQueryParameter("v","2.0");
+
         Document doc = doPost(data).getEntityAsDom().getDocument();
         assertXpathEvaluatesTo("5108.058", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Value", doc);
         assertXpathEvaluatesTo("1000", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue/Value", doc);
@@ -69,7 +69,7 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
     public void testPostWithReturnUnitAsTonUK() throws Exception {
         Form data = new Form();
         data.add("distance", "1000");
-        client.addQueryParameter("v","2.0");
+
         client.addQueryParameter("returnUnit","ton_uk");
         DomRepresentation rep = doPost(data).getEntityAsDom();
         rep.write(System.out);        
@@ -84,7 +84,7 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
     public void testPostWithReturnPerUnitAsMonth() throws Exception {
         Form data = new Form();
         data.add("distance", "1000");
-        client.addQueryParameter("v","2.0");
+
         client.addQueryParameter("returnPerUnit","month");
         DomRepresentation rep = doPost(data).getEntityAsDom();
         rep.write(System.out);
@@ -99,7 +99,7 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
     public void testPostWithReturnUnitAsTonUKAndReturnPerUnitAsMonth() throws Exception {
         Form data = new Form();
         data.add("distance", "1000");
-        client.addQueryParameter("v","2.0");
+
         client.addQueryParameter("returnUnit","ton_uk");
         client.addQueryParameter("returnPerUnit","month");
         DomRepresentation rep = doPost(data).getEntityAsDom();

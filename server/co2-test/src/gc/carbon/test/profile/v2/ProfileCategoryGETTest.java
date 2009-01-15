@@ -92,14 +92,14 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
         }
         data.add("distance","1000");
         data.add("dataItemUid",DATA_CATEGORY_UID);
-        client.addQueryParameter("v","2.0");
+
         return client.createProfileItem(data);
     }
 
     @Test
     public void testStartDateAfterAllEndDates() throws Exception {
         client.addQueryParameter("startDate", startDate.plusDays(100).toString(fmt));
-        client.addQueryParameter("v","2.0");
+
         DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathExists("//ProfileItem[@uid='" + before_and_ongoing + "']", doc);
@@ -111,7 +111,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
     @Test
     public void testStartDateBeforeAllEndDates() throws Exception {
         client.addQueryParameter("startDate", startDate.toString(fmt));
-        client.addQueryParameter("v","2.0");
+
         DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + outside_and_before + "']", doc);
@@ -122,7 +122,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
     public void testStartDateAndEndDate() throws Exception {
         client.addQueryParameter("startDate", startDate.toString(fmt));
         client.addQueryParameter("endDate", endDate.toString(fmt));
-        client.addQueryParameter("v","2.0");
+
         DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + outside_and_before + "']", doc);
@@ -135,7 +135,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
     public void testStartDateAndDuration() throws Exception {
         client.addQueryParameter("startDate",startDate.toString(fmt));
         client.addQueryParameter("duration",ISOPeriodFormat.standard().print(duration));
-        client.addQueryParameter("v","2.0");
+
         DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + outside_and_before + "']", doc);
@@ -148,7 +148,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
     public void testSelectByStart() throws Exception {
         client.addQueryParameter("selectBy","start");
         client.addQueryParameter("startDate",startDate.toString(fmt));
-        client.addQueryParameter("v","2.0");
+
         DomRepresentation rep = client.get().getEntityAsDom();
         rep.write(System.out);
         Document doc = rep.getDocument();
@@ -161,7 +161,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
     public void testSelectByEnd() throws Exception {
         client.addQueryParameter("selectBy","end");
         client.addQueryParameter("startDate",startDate.toString(fmt));
-        client.addQueryParameter("v","2.0");
+
         DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + after_and_outside + "']", doc);
@@ -171,7 +171,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
     @Test
     public void testInValidProfileDateRequest() throws Exception {
         client.addQueryParameter("profileDate","201004");
-        client.addQueryParameter("v","2.0");
+
         Status status = client.get().getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
     }
@@ -192,7 +192,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
         System.out.println("inside_and_ongoing2_named : " + inside_and_ongoing2_named);
 
         client.addQueryParameter("startDate", startDate.toString(fmt));
-        client.addQueryParameter("v","2.0");
+
         DomRepresentation rep = client.get().getEntityAsDom();
         Document doc = rep.getDocument();
         assertXpathNotExists("//ProfileItem[@uid='" + before_and_ongoing_named + "']", doc);

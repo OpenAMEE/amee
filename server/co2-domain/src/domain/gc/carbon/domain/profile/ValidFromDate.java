@@ -4,6 +4,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.Calendar;
+
 /**
  * This file is part of AMEE.
  * <p/>
@@ -41,8 +43,12 @@ public class ValidFromDate extends GCDate {
     }
 
     protected long defaultDate() {
-        DateTime dt = new DateTime();
-        return dt.dayOfMonth().withMinimumValue().getMillis();
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        cal.clear();
+        cal.set(year, month, 1);
+        return cal.getTimeInMillis();
     }
 
     protected void setDefaultDateStr() {

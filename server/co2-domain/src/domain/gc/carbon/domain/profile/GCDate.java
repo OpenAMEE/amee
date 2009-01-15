@@ -48,15 +48,8 @@ public abstract class GCDate extends java.util.Date {
 
     protected abstract void setDefaultDateStr();
 
-    protected long defaultDate() {
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        cal.clear();
-        cal.set(year, month, 1);
-        return cal.getTimeInMillis();
-    }
-
+    protected abstract long defaultDate();
+    
     public String toString() {
         return dateStr;    
     }

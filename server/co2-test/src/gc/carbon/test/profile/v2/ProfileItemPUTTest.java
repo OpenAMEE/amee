@@ -102,7 +102,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     @Test
     public void testPutWithEndAndEndDate() throws Exception {
         Form data = new Form();
-        client.addQueryParameter("v","2.0");
+
         data.add("endDate", "20100401T0000");
         data.add("end", "true");
         Status status = doPut(data).getStatus();
@@ -112,7 +112,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     @Test
     public void testPutWithEndAndDuration() throws Exception {
         Form data = new Form();
-        client.addQueryParameter("v","2.0");
+
         data.add("duration", "PT30M");
         data.add("end", "true");
         Status status = doPut(data).getStatus();
@@ -122,7 +122,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     @Test
     public void testPutEndDateBeforeStartDate() throws Exception {
         Form data = new Form();
-        client.addQueryParameter("v","2.0");
+
         data.add("startDate", "2010-04-02T00:00+0000");
         data.add("endDate", "2010-04-01T00:00+0000");
         Status status = doPut(data).getStatus();
@@ -132,7 +132,7 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     @Test
     public void testPutWithValidFrom() throws Exception {
         Form data = new Form();
-        client.addQueryParameter("v","2.0");
+
         data.add("validFrom", "20100401");
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
@@ -141,27 +141,27 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     @Test
     public void testPutWithEnd() throws Exception {
         Form data = new Form();
-        client.addQueryParameter("v","2.0");
+
         data.add("end", "true");
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());
     }
 
     private void assertDateNodes(Form data, String startDate, String endDate, String end) throws Exception {
-        client.addQueryParameter("v","2.0");
+
         DomRepresentation rep = doPut(data).getEntityAsDom();
         rep.write(System.out);
         Document doc = rep.getDocument();
-        assertXpathEvaluatesTo(startDate, "/Resources/ProfileItemResource/ProfileItem/StartDate", doc);
+        assertXpathEvaluatesTo(FMT.format(FMT.parse(startDate)), "/Resources/ProfileItemResource/ProfileItem/StartDate", doc);
         if (endDate != null) {
-            assertXpathEvaluatesTo(endDate, "/Resources/ProfileItemResource/ProfileItem/EndDate", doc);
+            assertXpathEvaluatesTo(FMT.format(FMT.parse(endDate)), "/Resources/ProfileItemResource/ProfileItem/EndDate", doc);
         } else {
             assertXpathEvaluatesTo("", "/Resources/ProfileItemResource/ProfileItem/EndDate", doc);
         }
     }
 
     private void assertDistanceNode(Form data, String unit, String perUnit) throws Exception {
-        client.addQueryParameter("v","2.0");
+
         DomRepresentation rep = doPut(data).getEntityAsDom();
         rep.write(System.out);
         Document doc = rep.getDocument();
@@ -177,7 +177,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     }
 
     private String getDefaultDate() {
-        String ISO_DATE = "yyyy-MM-dd'T'HH:mmZ";
-        return new SimpleDateFormat(ISO_DATE).format(new Date());
+        return FMT.format(new Date());
     }
 }

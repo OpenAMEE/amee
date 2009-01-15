@@ -29,7 +29,6 @@ import java.util.Date;
  */
 public class StartEndDate extends GCDate {
 
-    //public static final String ISO_DATE = "yyyyMMdd'T'HHmm";
     public static final String ISO_DATE = "yyyy-MM-dd'T'HH:mmZ";
 
     public static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat(ISO_DATE);
@@ -54,7 +53,7 @@ public class StartEndDate extends GCDate {
             DateTime requestedDate = new DateTime(ISO_DATE_FORMAT.parse(dateStr));
             if (floor) {
                 DateTime dateFlooredToPreceeding30Mins = requestedDate.withMinuteOfHour( (requestedDate.getMinuteOfHour() < 30) ? 0 : 30);
-                return dateFlooredToPreceeding30Mins.toDate().getTime();
+                return dateFlooredToPreceeding30Mins.secondOfMinute().withMinimumValue().getMillis();
             } else {
                 return requestedDate.toDate().getTime();
             }
@@ -68,7 +67,8 @@ public class StartEndDate extends GCDate {
     }
 
     protected long defaultDate() {
-        return new Date().getTime();
+        DateTime defaultDate = new DateTime().withMinuteOfHour( (new DateTime().getMinuteOfHour() < 30) ? 0 : 30);
+        return defaultDate.secondOfMinute().withMinimumValue().getMillis();
     }
 
     public StartEndDate plus(String duration) {

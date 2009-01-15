@@ -218,6 +218,7 @@ public class ProfileBrowser extends BaseBrowser {
         return !amountUnit.equals(ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT);
     }
 
+    //TODO - There is a documented work item to model return amount as an ItemValue. In the short-term, move to constants.
     public void setAmountReturnUnit(String returnUnit, String returnPerUnit) {
 
         if (returnUnit == null)
