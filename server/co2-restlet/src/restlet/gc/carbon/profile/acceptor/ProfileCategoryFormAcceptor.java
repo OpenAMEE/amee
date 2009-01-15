@@ -138,10 +138,10 @@ public class ProfileCategoryFormAcceptor implements Acceptor {
 
         } else {
             profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
-            if (form.getNames().contains("endDate")) {
+            if (form.getNames().contains("endDate") && form.getFirstValue("endDate") != null) {
                 profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
             } else {
-                if (form.getNames().contains("duration")) {
+                if (form.getNames().contains("duration") && form.getFirstValue("duration") != null) {
                     profileItem.setDuration(form.getFirstValue("duration"));
                     StartEndDate endDate = profileItem.getStartDate().plus(form.getFirstValue("duration"));
                     profileItem.setEndDate(endDate);
