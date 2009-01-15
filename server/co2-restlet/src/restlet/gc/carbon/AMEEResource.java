@@ -1,21 +1,29 @@
 package gc.carbon;
 
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.User;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.domain.path.PathItem;
-import gc.carbon.profile.ProfileConstants;
 import gc.carbon.profile.ProfileService;
+import com.jellymold.utils.BaseResource;
 import gc.carbon.data.DataService;
 import org.restlet.Context;
+import org.restlet.resource.Representation;
+import org.restlet.resource.ResourceException;
+import org.restlet.resource.DomRepresentation;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.MediaType;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.apache.xerces.dom.DocumentImpl;
 
 import java.util.Map;
 
@@ -61,6 +69,17 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         setPathItem();
     }
 
+    protected Representation getDomRepresentation() throws ResourceException {
+        Document document = new DocumentImpl();
+        Element element = document.createElement("Resources");
+        if (!getVersion().isVersionOne()) {
+            element.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns","http://schemas.amee.cc/2.0");
+        }
+        element.appendChild(getElement(document));
+        document.appendChild(element);
+        return new DomRepresentation(MediaType.APPLICATION_XML, document);
+    }
+
     public int getItemsPerPage() {
         int itemsPerPage = EnvironmentService.getEnvironment().getItemsPerPage();
         String itemsPerPageStr = getRequest().getResourceRef().getQueryAsForm().getFirstValue("itemsPerPage");
@@ -100,5 +119,10 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         Map<String, Object> values = super.getTemplateValues();
         values.put("apiVersions", environmentService.getAPIVersions());
         return values;
+    }
+
+    public APIVersion getVersion() {
+        User user = (User) ThreadBeanHolder.get("user");
+        return user.getApiVersion();
     }
 }

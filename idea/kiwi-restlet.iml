@@ -28,6 +28,8 @@
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="amee-utils" level="project" />
     <orderEntry type="library" name="amee-utils-restlet" level="project" />
+    <orderEntry type="library" name="utils" level="project" />
+    <orderEntry type="library" name="utils-restlet" level="project" />
   </component>
 </module>
 
