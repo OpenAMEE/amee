@@ -189,9 +189,8 @@ public abstract class Item implements PersistentObject, Pathable {
 
     @PrePersist
     public void onCreate() {
-        Date now = Calendar.getInstance().getTime();
-        setCreated(now);
-        setModified(now);
+        setCreated(Calendar.getInstance().getTime());
+        setModified(getCreated());
     }
 
     @PreUpdate

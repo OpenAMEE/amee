@@ -7,7 +7,6 @@ import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import org.springframework.transaction.interceptor.TransactionAttribute;
@@ -20,14 +19,15 @@ import java.util.Map;
 import java.util.Properties;
 
 @Service
-    public class SpringController extends EntityManagerFactoryAccessor {
+public class SpringController extends EntityManagerFactoryAccessor {
 
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-    private ThreadLocal<Integer> count = new ThreadLocal<Integer>();
     private boolean manageTransactions;
     private TransactionAttribute transactionAttribute = new DefaultTransactionAttribute();
+    private ThreadLocal<TransactionStatus> transactionStatus = new ThreadLocal<TransactionStatus>();
+    private ThreadLocal<Boolean> transactionRollback = new ThreadLocal<Boolean>();
 
     public SpringController() {
         super();
@@ -50,28 +50,25 @@ import java.util.Properties;
     }
 
     public void startup() {
-        logger.info(">>> STARTUP");
+        logger.debug("startup() - >>> STARTUP");
     }
 
     public void shutdown() {
-        logger.info("<<< SHUTDOWN");
+        logger.debug("shutdown() - <<< SHUTDOWN");
     }
 
     public void begin(boolean withTransaction) {
-        logger.info(">>> BEGIN");
-        if (TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
-            // do not modify the EntityManager: just mark the request accordingly
-            Integer count = getCount();
-            int newCount = (count != null) ? count + 1 : 1;
-                setCount(newCount);
-        } else {
-            logger.debug("Opening JPA EntityManager in SpringController");
+        logger.debug("begin() - >>> BEGIN");
+        if (!TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
+            logger.debug("begin() - Opening JPA EntityManager in SpringController");
             try {
                 EntityManager em = createEntityManager();
                 TransactionSynchronizationManager.bindResource(getEntityManagerFactory(), new EntityManagerHolder(em));
             } catch (PersistenceException ex) {
                 throw new DataAccessResourceFailureException("Could not create JPA EntityManager", ex);
             }
+        } else {
+            logger.debug("begin() - JPA EntityManager already open");
         }
         if (withTransaction && manageTransactions) {
             beginTransaction();
@@ -80,61 +77,44 @@ import java.util.Properties;
 
     public void end() {
         commitOrRollbackTransaction();
-        Integer count = getCount();
-        if (count != null) {
-            // Do not modify the EntityManager: just clear the marker.
-            if (count > 1) {
-                setCount(count - 1);
-            } else {
-                setCount(null);
-            }
-        } else {
+        if (TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
+            logger.debug("end() - Closing JPA EntityManager in SpringController");
             EntityManagerHolder emHolder =
-                    (EntityManagerHolder) TransactionSynchronizationManager.unbindResource(getEntityManagerFactory());
-            logger.debug("Closing JPA EntityManager in SpringController");
-            EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
+                    (EntityManagerHolder) TransactionSynchronizationManager.unbindResourceIfPossible(getEntityManagerFactory());
+            if (emHolder != null) {
+                EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
+            }
         }
-        logger.info("<<< END");
+        logger.debug("end() - <<< END");
     }
-
-    protected Integer getCount() {
-        Integer count = this.count.get();
-        if (count == null) {
-            count = 0;
-        }
-        logger.debug("count: " + count);
-        return count;
-    }
-
-    protected void setCount(Integer count) {
-        this.count.set(count);
-        logger.debug("count: " + count);
-    }
-
 
     public void beginTransaction() {
-        if (manageTransactions) {
-            TransactionStatus transactionStatus = null;
-            try {
-                transactionStatus = transactionManager.getTransaction(transactionAttribute);
-            } catch (TransactionException e) {
-                // TODO: do something
+        if (manageTransactions && (transactionStatus.get() == null)) {
+            transactionStatus.set(transactionManager.getTransaction(transactionAttribute));
+            if (!transactionStatus.get().isNewTransaction()) {
+                logger.error("beginTransaction() - Transaction already open.");
+                throw new RuntimeException("Transaction already open.");
             }
-            if (!transactionStatus.isNewTransaction()) {
-                // TODO: do something?
-            }
+            logger.debug("beginTransaction() - >>> TRANSACTION OPENED");
         }
     }
 
     public void commitOrRollbackTransaction() {
-        if (manageTransactions) {
-            try {
-                TransactionStatus transactionStatus = transactionManager.getTransaction(transactionAttribute);
-                transactionManager.commit(transactionStatus);
-            } catch (TransactionException e) {
-                // TODO: do something
+        if (manageTransactions && (transactionStatus.get() != null)) {
+            if (!transactionStatus.get().isCompleted()) {
+                if (transactionRollback.get() != null) {
+                    transactionManager.rollback(transactionStatus.get());
+                    logger.warn("commitOrRollbackTransaction() - <<< TRANSACTION ROLLED BACK");
+                } else {
+                    transactionManager.commit(transactionStatus.get());
+                    logger.debug("commitOrRollbackTransaction() - <<< TRANSACTION COMMITTED");
+                }
+            } else {
+                logger.warn("commitOrRollbackTransaction() - <<< TRANSACTION ALREADY COMPLETED");
             }
+            transactionStatus.set(null);
         }
+        transactionRollback.set(null);
     }
 
     /**
@@ -143,7 +123,7 @@ import java.util.Properties;
      * @param withTransaction specify whether a transaction should be used
      */
     public void beforeToRequest(boolean withTransaction) {
-        logger.info(">>> BEFORE TO REQUEST");
+        logger.debug("beforeToRequest() - >>> BEFORE TO REQUEST");
         begin(withTransaction);
     }
 
@@ -151,14 +131,17 @@ import java.util.Properties;
      * Called before Filter.doHandle
      */
     public void beforeHandle() {
-        logger.info(">>> BEFORE HANDLE");
+        logger.debug("beforeHandle() - >>> BEFORE HANDLE");
     }
 
     /**
      * Called after Filter.doHandle
      */
-    public void afterHandle() {
-        logger.info("<<< AFTER HANDLE");
+    public void afterHandle(boolean success) {
+        logger.debug("afterHandle() - <<< AFTER HANDLE");
+        if (!success) {
+            transactionRollback.set(true);
+        }
         commitOrRollbackTransaction();
     }
 
@@ -166,21 +149,21 @@ import java.util.Properties;
      * Called after ConnectorService.beforeSend
      */
     public void beforeSend() {
-        logger.info(">>> BEFORE SEND");
+        logger.debug("beforeSend() - >>> BEFORE SEND");
     }
 
     /**
      * Called after ConnectorService.afterSend
      */
     public void afterSend() {
-        logger.info("<<< AFTER SEND");
+        logger.debug("afterSend() - <<< AFTER SEND");
     }
 
     /**
      * Called after HttpConverter.commit
      */
     public void afterCommit() {
-        logger.info("<<< AFTER COMMIT");
+        logger.debug("afterCommit() - <<< AFTER COMMIT");
         end();
     }
 

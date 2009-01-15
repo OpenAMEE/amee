@@ -304,7 +304,7 @@ class ProfileServiceDAO implements Serializable {
         ProfileItem profileItem = null;
         List<ProfileItem> profileItems;
         Query query;
-        String hql = "SELECT pi " +
+        String hql = "SELECT DISTINCT pi " +
                 "FROM ProfileItem pi " +
                 "LEFT JOIN FETCH pi.itemValues " +
                 "WHERE pi.uid = :uid";
@@ -312,10 +312,10 @@ class ProfileServiceDAO implements Serializable {
         query.setParameter("uid", uid.toUpperCase());
         profileItems = query.getResultList();
         if (profileItems.size() == 1) {
-            log.debug("found ProfileItem");
+            log.warn("getProfileItem() - found ProfileItem");
             profileItem = profileItems.get(0);
         } else {
-            log.debug("ProfileItem NOT found");
+            log.debug("getProfileItem() - ProfileItem NOT found");
         }
         return profileItem;
     }
@@ -486,8 +486,13 @@ class ProfileServiceDAO implements Serializable {
                 .setParameter("fromProfile", true)
                 .getResultList();
         if (itemValueDefinitions.size() > 0) {
-            // ensure transaction has been started
-            springController.beginTransaction();
+
+            //The following is only required for calls during GETs.
+            //I have removed calls to checkProfileItem during GETs so this is out-commented.
+            // Remember to re-add if this is changed [SM]
+            //ensure transaction has been started
+            //springController.begin(true);
+            
             // create missing ItemValues
             for (ItemValueDefinition ivd : itemValueDefinitions) {
                 // start default value with value from ItemValueDefinition

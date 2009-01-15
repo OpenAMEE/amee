@@ -1,7 +1,8 @@
-package com.jellymold.utils;
+package gc.carbon;
 
-import com.jellymold.utils.domain.APIObject;
 import com.jellymold.utils.skin.FreeMarkerConfigurationService;
+import com.jellymold.utils.*;
+import com.jellymold.kiwi.User;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateHashModel;
@@ -9,9 +10,6 @@ import freemarker.template.TemplateModelException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.dom.DocumentImpl;
-import org.apache.abdera.model.Feed;
-import org.apache.abdera.factory.Factory;
-import org.apache.abdera.Abdera;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -23,8 +21,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.springframework.context.ApplicationContext;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.*;
 import java.io.Writer;
 import java.io.IOException;
@@ -106,7 +102,9 @@ public abstract class BaseResource extends ComponentResource {
     protected Representation getDomRepresentation() throws ResourceException {
         Document document = new DocumentImpl();
         Element element = document.createElement("Resources");
-        element.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns","http://schemas.amee.cc/2.0");
+        if (!getVersion().isVersionOne()) {
+            element.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns","http://schemas.amee.cc/2.0");
+        }
         element.appendChild(getElement(document));
         document.appendChild(element);
         return new DomRepresentation(MediaType.APPLICATION_XML, document);
@@ -334,4 +332,11 @@ public abstract class BaseResource extends ComponentResource {
     public boolean isPostOrPut() {
         return isPost() || isPut();
     }
+
+    public APIVersion getVersion() {
+        User user = (User) ThreadBeanHolder.get("user");
+        return user.getApiVersion();
+    }
+
+
 }

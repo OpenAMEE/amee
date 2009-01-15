@@ -29,6 +29,10 @@ public class BaseProfileCategoryTest extends BaseProfileTest {
         super(s);
     }
 
+    public BaseProfileCategoryTest(String s, String user, String password, String profile) throws Exception {
+        super(s, user, password, profile);
+    }
+
     public Response doPost(Form data) throws Exception {
 
         Form form = new Form();

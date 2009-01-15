@@ -13,9 +13,19 @@ public class TestClient {
     private static final String LOCAL_HOST_NAME = "local.stage.co2.dgen.net";
     private Reference reference = new Reference(Protocol.HTTP, LOCAL_HOST_NAME);
     private String path;
+    private String username = "admin";
+    private String password = "r41n80w";
 
     private Series<CookieSetting> cookieSettings;
     private MediaType mediaType;
+
+    public TestClient(String profile, String username, String password, String category) throws IOException {
+        this.username = username;
+        this.password = password;
+        authenticate();
+        setMediaType(MediaType.APPLICATION_XML);
+        setPath("/profiles/" + profile + category);
+    }
 
     public TestClient(String profile, String category) throws IOException {
         this("/profiles/" + profile + category);
@@ -32,8 +42,8 @@ public class TestClient {
         Reference uri = new Reference(Protocol.HTTP, LOCAL_HOST_NAME + "/auth/signIn?method=put");
         Form form = new Form();
         form.add("next", "auth");
-        form.add("username", "admin");
-        form.add("password", "r41n80w");
+        form.add("username", username);
+        form.add("password",  password);
         Representation rep = form.getWebRepresentation();
         Response response = client.post(uri, rep);
         if (response.getStatus().isRedirection()) {
@@ -66,9 +76,6 @@ public class TestClient {
         Request request = new Request(Method.GET, reference);
         addHeaders(request);
 
-        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n80w");
-        request.setChallengeResponse(cr);
-
         System.out.println("Resource - " + request.getResourceRef());
         return client.handle(request);
     }
@@ -78,9 +85,6 @@ public class TestClient {
         Request request = new Request(Method.POST, reference, form.getWebRepresentation());
         addHeaders(request);
 
-        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n80w");
-        request.setChallengeResponse(cr);
-
         System.out.println("Resource - " + request.getResourceRef());
         System.out.println("Form - " + form.getMatrixString());
         return client.handle(request);
@@ -89,9 +93,6 @@ public class TestClient {
     public Response put(Form form) {
         Client client = new Client(Protocol.HTTP);
         Request request = new Request(Method.PUT, reference, form.getWebRepresentation());
-
-        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "r41n80w");
-        request.setChallengeResponse(cr);
 
         addHeaders(request);
         System.out.println("Resource - " + request.getResourceRef());

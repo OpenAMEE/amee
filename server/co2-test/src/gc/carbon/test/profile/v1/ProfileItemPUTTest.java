@@ -29,12 +29,12 @@ import com.sun.org.apache.xalan.internal.xsltc.DOM;
  */
 public class ProfileItemPUTTest extends BaseProfileItemTest {
 
-    public ProfileItemPUTTest() {
-        super();
-    }
+    private static String username = "amee";
+    private static String password = "amee4amee";
+    private static String profile = "428353BFFA71";
 
     public ProfileItemPUTTest(String name) throws Exception {
-        super(name);
+        super(name, username, password, profile);
         initDB();
     }
 

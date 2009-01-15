@@ -462,9 +462,8 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     }
 
     public void setApiVersion(APIVersion apiVersion) {
-        if (apiVersion == null) {
-            this.apiVersion = new APIVersion();
+        if (apiVersion != null) {
+            this.apiVersion = apiVersion;
         }
-        this.apiVersion = apiVersion;
     }
 }

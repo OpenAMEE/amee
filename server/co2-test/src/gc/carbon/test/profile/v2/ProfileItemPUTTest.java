@@ -82,14 +82,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     }
 
     @Test
-    public void testPutWithEndDate() throws Exception {
-        String endDate = "2010-04-02T00:00+0000";
-        Form data = new Form();
-        data.add("endDate", endDate);
-        assertDateNodes(data, getDefaultDate(), endDate, "false");
-    }
-
-    @Test
     public void testPutWithStartDateAndDuration() throws Exception {
         String startDate = "2010-04-01T00:00+0000";
         String endDate = "2010-04-01T00:30+0000";
@@ -165,14 +157,14 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         DomRepresentation rep = doPut(data).getEntityAsDom();
         rep.write(System.out);
         Document doc = rep.getDocument();
-        assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Path", doc);
-        assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Name", doc);
-        assertXpathEvaluatesTo(perUnit, "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/PerUnit", doc);
-        assertXpathEvaluatesTo(unit, "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Unit", doc);
-        assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Path", doc);
-        assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Name", doc);
-        assertXpathEvaluatesTo("year", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit/InternalUnit", doc);
-        assertXpathEvaluatesTo("km", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Unit/InternalUnit", doc);
+        assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/Path", doc);
+        assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/Name", doc);
+        assertXpathEvaluatesTo(perUnit, "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/PerUnit", doc);
+        assertXpathEvaluatesTo(unit, "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/Unit", doc);
+        assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/ItemValueDefinition/Path", doc);
+        assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/ItemValueDefinition/Name", doc);
+        assertXpathEvaluatesTo("year", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/ItemValueDefinition/PerUnit", doc);
+        assertXpathEvaluatesTo("km", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/ItemValueDefinition/Unit", doc);
 
     }
 

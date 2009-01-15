@@ -94,10 +94,6 @@ public class DataService {
 
     public void persist(DataItem di) {
         em.persist(di);
-        check(di);
-    }
-
-    private void check(DataItem di) {
         dao.checkDataItem(di);
     }
 

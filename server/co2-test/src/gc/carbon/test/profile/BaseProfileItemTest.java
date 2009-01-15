@@ -33,6 +33,10 @@ public class BaseProfileItemTest extends BaseProfileTest {
         super(s);
     }
 
+    public BaseProfileItemTest(String s, String username, String password, String profile) throws Exception {
+        super(s, username, password, profile);
+    }
+
     protected Response doPut(Form data) throws Exception {
         data.add("dataItemUid",DATA_CATEGORY_UID);
         data.add("name", UidGen.getUid());

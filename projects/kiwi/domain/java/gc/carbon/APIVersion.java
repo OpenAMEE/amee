@@ -39,7 +39,7 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class APIVersion implements PersistentObject, DatedObject {
 
-    public static final String ONE_ZERO = "1.0";
+    public static final APIVersion ONE = new APIVersion("1.0");
     public final static int API_VERSION_SIZE = 3;
 
     @Id
@@ -61,13 +61,7 @@ public class APIVersion implements PersistentObject, DatedObject {
     @Column(name = "VERSION", length = API_VERSION_SIZE, nullable = true)
     private String version;
 
-    /**
-     * This constructor initialises version to ONE_ZERO
-     *
-     * @see #ONE_ZERO
-     */
     public APIVersion() {
-        this(APIVersion.ONE_ZERO);
     }
 
     public APIVersion(String version) {
@@ -127,9 +121,8 @@ public class APIVersion implements PersistentObject, DatedObject {
     }
 
     public boolean isVersionOne() {
-        return version.equals(ONE_ZERO);
+        return this.equals(ONE);
     }
-
 
     @PrePersist
     public void onCreate() {

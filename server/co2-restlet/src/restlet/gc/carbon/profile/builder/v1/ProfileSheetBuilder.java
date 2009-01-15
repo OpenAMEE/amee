@@ -13,6 +13,7 @@ import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileBrowser;
 import gc.carbon.profile.ProfileService;
+import gc.carbon.APIVersion;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -52,7 +53,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
                 sheet.setKey(getKey());
                 sheet.setLabel("ProfileItems");
                 for (ItemValueDefinition itemValueDefinition : itemDefinition.getItemValueDefinitions()) {
-                    if (itemValueDefinition.isFromProfile()) {
+                    if (itemValueDefinition.isFromProfile() && itemValueDefinition.includedInAPIVersion(APIVersion.ONE)) {
                         new Column(sheet, itemValueDefinition.getPath(), itemValueDefinition.getName());
                     }
                 }

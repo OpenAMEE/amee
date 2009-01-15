@@ -44,6 +44,11 @@ public class BaseProfileTest extends APITestCase {
         super();    
     }
 
+    public BaseProfileTest(String s, String user, String password, String profile) throws Exception {
+        super(s);
+        client = new TestClient(profile, user, password, CATEGORY);
+    }
+
     public BaseProfileTest(String s) throws Exception {
         super(s);
         client = new TestClient(PROFILE, CATEGORY);

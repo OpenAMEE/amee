@@ -38,7 +38,7 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
         data.add("distance", "1000");
 
         Document doc = doPost(data).getEntityAsDom().getDocument();
-        assertXpathEvaluatesTo("3174.000", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Value", doc);
+        assertXpathEvaluatesTo("3174.000", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount", doc);
         assertXpathEvaluatesTo("1000", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue/Value", doc);
     }
 
@@ -49,7 +49,7 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
         data.add("distance", "1000");
 
         Document doc = doPost(data).getEntityAsDom().getDocument();
-        assertXpathEvaluatesTo("425.671", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Value", doc);
+        assertXpathEvaluatesTo("425.671", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount", doc);
         assertXpathEvaluatesTo("1000", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue/Value", doc);
     }
 
@@ -61,7 +61,7 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
         data.add("distance", "1000");
 
         Document doc = doPost(data).getEntityAsDom().getDocument();
-        assertXpathEvaluatesTo("5108.058", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Value", doc);
+        assertXpathEvaluatesTo("5108.058", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount", doc);
         assertXpathEvaluatesTo("1000", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/ItemValues/ItemValue/Value", doc);
     }
 
@@ -75,9 +75,8 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
         rep.write(System.out);        
         Document doc = rep.getDocument();
 
-        assertXpathEvaluatesTo("0.260", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Value", doc);
-        assertXpathEvaluatesTo("ton_uk", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Unit", doc);
-        assertXpathEvaluatesTo("year", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/PerUnit", doc);
+        assertXpathEvaluatesTo("0.260", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount", doc);
+        assertXpathEvaluatesTo("ton_uk/year", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/@unit", doc);
     }
 
     @Test
@@ -90,9 +89,8 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
         rep.write(System.out);
         Document doc = rep.getDocument();
 
-        assertXpathEvaluatesTo("22.042", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Value", doc);
-        assertXpathEvaluatesTo("kg", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Unit", doc);
-        assertXpathEvaluatesTo("month", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/PerUnit", doc);
+        assertXpathEvaluatesTo("22.042", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount", doc);
+        assertXpathEvaluatesTo("kg/month", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/@unit", doc);
     }
 
     @Test
@@ -106,8 +104,7 @@ public class ProfileCategoryTest extends BaseProfileCategoryTest {
         rep.write(System.out);
         Document doc = rep.getDocument();
 
-        assertXpathEvaluatesTo("0.022", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Value", doc);
-        assertXpathEvaluatesTo("ton_uk", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/Unit", doc);
-        assertXpathEvaluatesTo("month", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/PerUnit", doc);
+        assertXpathEvaluatesTo("0.022", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount", doc);
+        assertXpathEvaluatesTo("ton_uk/month", "/Resources/ProfileCategoryResource/ProfileItems/ProfileItem/Amount/@unit", doc);
     }
 }

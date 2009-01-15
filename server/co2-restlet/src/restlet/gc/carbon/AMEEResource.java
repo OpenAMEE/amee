@@ -2,7 +2,6 @@ package gc.carbon;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.environment.EnvironmentService;
-import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.domain.path.PathItem;

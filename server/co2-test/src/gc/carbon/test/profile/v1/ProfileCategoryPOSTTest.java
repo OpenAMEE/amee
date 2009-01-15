@@ -26,8 +26,12 @@ import gc.carbon.test.profile.BaseProfileCategoryTest;
  */
 public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
 
+    private static String username = "amee";
+    private static String password = "amee4amee";
+    private static String profile = "428353BFFA71";
+
     public ProfileCategoryPOSTTest(String name) throws Exception {
-        super(name);
+        super(name, username, password, profile);
     }
 
     private void doAssertSimilarXML(Form data) throws Exception {
@@ -52,7 +56,7 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
         doAssertSimilarXML(data);
     }
 
-    @Test
+/*    @Test
     public void testPostWithValidFromAndDistanceAndUnit() throws Exception {
         Form data = new Form();
         data.add("validFrom", "20500101");
@@ -78,7 +82,7 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
         data.add("distanceUnit", "km");
         data.add("distancePerUnit", "month");
         doAssertSimilarXML(data);
-    }
+    }*/
 
     public void testPostWithValidFrom() throws Exception {
         Form data = new Form();

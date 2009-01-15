@@ -54,11 +54,6 @@ public abstract class BaseProfileResource extends AMEEResource {
         return getPager(getItemsPerPage());
     }
 
-    public APIVersion getVersion() throws IllegalArgumentException {
-        User user = (User) ThreadBeanHolder.get("user");
-        return user.getApiVersion();
-    }
-
     public String getFullPath() {
         return pathItem.getFullPath();
     }

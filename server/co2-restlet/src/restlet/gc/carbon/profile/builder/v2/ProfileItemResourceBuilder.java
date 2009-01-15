@@ -82,7 +82,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
         ProfileItem profileItem = resource.getProfileItem();
 
         Entry entry = atomFeed.newEntry();
-        entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart") + "/?v=" + resource.getVersion());
+        entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
 
         Text title = atomFeed.newTitle(entry);
         title.setText(profileItem.getDisplayName() + ", " + resource.getDataCategory().getDisplayName());

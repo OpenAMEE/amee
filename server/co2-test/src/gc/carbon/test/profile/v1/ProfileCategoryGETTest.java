@@ -11,6 +11,7 @@ import org.jdom.xpath.XPath;
 import org.jdom.input.DOMBuilder;
 import org.jdom.Element;
 import gc.carbon.test.profile.BaseProfileCategoryTest;
+import gc.carbon.test.TestClient;
 
 /**
  * This file is part of AMEE.
@@ -36,9 +37,12 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
     private DateTimeFormatter VALID_FROM_FMT = DateTimeFormat.forPattern("yyyyMMdd");
     private DateTimeFormatter START_DATE_FMT = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mmZ");
 
+    private static String username = "amee";
+    private static String password = "amee4amee";
+    private static String profile = "428353BFFA71";
 
     public ProfileCategoryGETTest(String name) throws Exception {
-        super(name);
+        super(name, username, password, profile);
     }
 
     public void setUp() throws Exception {
@@ -75,23 +79,4 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
         assertEquals("Should be Bad Request",400,status.getCode());
     }
 
-    @Test
-    public void testIdenticalAPIResponsesWithV1Data() throws Exception {
-        DateTime startDate = new DateTime();
-
-        String uid = create(startDate);
-        client.addQueryParameter("validFrom", VALID_FROM_FMT.print(startDate));
-        DomRepresentation rep = client.get().getEntityAsDom();
-        assertXpathExists("//ProfileItem[@uid='" + uid + "']", rep.getDocument());
-        Element e = (Element) XPath.selectSingleNode(new DOMBuilder().build(rep.getDocument()).getRootElement(), "//ProfileItem[@uid='" + uid + "']/amountPerMonth");
-        String amount = e.getText();        
-
-        
-        client.addQueryParameter("startDate", START_DATE_FMT.print(startDate));
-        rep.write(System.out);
-        rep = client.get().getEntityAsDom();
-        assertXpathExists("//ProfileItem[@uid='" + uid + "']", rep.getDocument());
-        e = (Element) XPath.selectSingleNode(new DOMBuilder().build(rep.getDocument()).getRootElement(), "//ProfileItem[@uid='" + uid + "']/amount");
-        assertEquals("Amount should be equal",amount,e.getText());
-    }
 }

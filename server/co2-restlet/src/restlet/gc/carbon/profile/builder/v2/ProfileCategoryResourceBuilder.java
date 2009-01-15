@@ -319,7 +319,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         AtomFeed atomFeed = AtomFeed.getInstance();
 
         final Feed feed = atomFeed.newFeed();
-        feed.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart") + "/?v=" + resource.getVersion());
+        feed.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
         feed.setTitle("Profile " + resource.getProfile().getDisplayName() + ", Category " + resource.getPathItem().getFullPath());
 
         atomFeed.newID(feed).setText("urn:dataCategory:" + resource.getDataCategory().getUid());
@@ -420,7 +420,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         ProfileItem profileItem = resource.getProfileItems().get(0);
 
         Entry entry = atomFeed.newEntry();
-        entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart") + "/?v=" + resource.getVersion());
+        entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
 
         Text title = atomFeed.newTitle(entry);
         title.setText(profileItem.getDisplayName() + ", " + resource.getDataCategory().getDisplayName());

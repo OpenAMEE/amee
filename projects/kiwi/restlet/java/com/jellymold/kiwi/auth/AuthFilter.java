@@ -33,11 +33,6 @@ public class AuthFilter extends BaseAuthFilter {
             // a user has been found and authenticated (even if this is just the guest user)
             result = accept(request, response, authToken);
 
-            //TODO - Move legacy mapping logic to own filter
-            User user = (User) ThreadBeanHolder.get("user");
-            if (user.getApiVersion() != null && user.getApiVersion().isVersionOne()) {
-                request.getResourceRef().addQueryParameter("returnPerUnit","month");
-            }
         } else {
             // this will only be executed if a guest user is not found (really?)
             reject(request, response);
