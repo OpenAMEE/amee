@@ -51,8 +51,6 @@
         var localParams;
         if (params) {
             localParams = params;
-        } else {
-            localParams = $('api').serialize(getHash=true);
         }
 
         if (!successMethod) {
