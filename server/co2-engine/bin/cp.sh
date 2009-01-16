@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Source folder
-SRC="/Development/AMEE.git"
+SRC="/Development/AMEE/amee"
 
 # Destination folder
 DST="/Development/AMEE.deploy"

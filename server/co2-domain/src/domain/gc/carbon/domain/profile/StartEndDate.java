@@ -58,7 +58,7 @@ public class StartEndDate extends GCDate {
                 return requestedDate.toDate().getTime();
             }
         } catch (ParseException e) {
-            throw new RuntimeException("Invalid date format: " + dateStr);
+            throw new RuntimeException("parseStr() - Invalid date format: " + dateStr);
         }
     }
 
