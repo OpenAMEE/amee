@@ -101,7 +101,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             JSONArray jsonProfileItems = new JSONArray();
             obj.put("profileItems", jsonProfileItems);
             for (ProfileItem pi : profileItems) {
-                pi.setBuilder(new ProfileItemBuilder(pi));
+                setBuilder(pi);
                 jsonProfileItems.put(pi.getJSONObject(false));
             }
 
