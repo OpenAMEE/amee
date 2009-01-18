@@ -269,40 +269,12 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
     }
 
     public Map<String, Object> getTemplateValues() {
-
-        // profile items
-        List<ProfileItem> profileItems;
-        Pager pager;
-
-        if (resource.isGet()) {
-            // get profile items
-            profileItems = getProfileItems();
-
-            // set-up pager
-            pager = resource.getPager();
-            profileItems = pageResults(profileItems, pager);
-        } else {
-            profileItems = resource.getProfileItems();
-        }
-
-        // init builder to ensure units are represented correctly
-        for (ProfileItem pi : profileItems) {
-            ProfileItemBuilder builder = new ProfileItemBuilder(pi);
-            pi.setConvertedAmount(builder.getAmount(pi));
-        }
-
         Profile profile = resource.getProfile();
         DataCategory dataCategory = resource.getDataCategory();
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("browser", resource.getProfileBrowser());
         values.put("profile", profile);
         values.put("dataCategory", dataCategory);
-        values.put("node", dataCategory);
-        values.put("profileItems", profileItems);
-
-        if (!profileItems.isEmpty()) {
-            values.put("totalAmount", getTotalAmount(profileItems));
-        }
         return values;
     }
 

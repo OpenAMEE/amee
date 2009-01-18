@@ -1,4 +1,5 @@
 <#include 'profileCommon.ftl'>
+<#include '/includes/furniture.ftl'>
 <#include '/includes/before_content.ftl'>
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -6,7 +7,6 @@ function profileCategoryLoaded() {
   <#if activeUser.apiVersion.versionOne>
     $("totalAmountPerMonth").innerHTML = this.resource.totalAmountPerMonth;
   <#else>
-    Log.debug('delete');
     $("tAmount").innerHTML = this.resource.tAmount;
   </#if>
 }
@@ -35,25 +35,32 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
    Environment: ${dataCategory.environment.name}<br/>
    Data Category UID: ${dataCategory.uid}<br/>
 </p>
-<#assign children = browser.pathItem.findChildrenByType('DC')>
-<#if 0 != children?size>
-  <h2>Profile Categories</h2>
-  <p>
-  <table>
-  <tr>
-    <th>Path</th>
-    <th>Actions</th>
-  </tr>
-  <#list children as pi>
-    <tr>
-      <td>${pi.name}</td>
-      <td>
-          <#if browser.profileActions.allowView><a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
-      </td>
-    </tr>
-  </#list>
-  </table>
-  </p>
+<#if activeUser.apiVersion.versionOne>
+    <#assign children = browser.pathItem.findChildrenByType('DC')>
+    <#if 0 != children?size>
+      <h2>Profile Categories</h2>
+      <p>
+      <table>
+      <tr>
+        <th>Path</th>
+        <th>Actions</th>
+      </tr>
+      <#list children as pi>
+        <tr>
+          <td>${pi.name}</td>
+          <td>
+              <#if browser.profileActions.allowView><a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
+          </td>
+        </tr>
+      </#list>
+      </table>
+      </p>
+    </#if>
+<#else>
+    <h2 id="apiCategoryHeading"></h2>
+    <p>
+        <table id="apiCategoryContent" />
+    </p>
 </#if>
 <#if browser.profileItemActions.allowList>
 
@@ -94,12 +101,13 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
             <p>Total kgCO2 Per Month: <span id="totalAmountPerMonth">${totalAmountPerMonth}</span></p>
         </#if>
     <#else>
-        <h2 id="tHeading"></h2>
+        <h2 id="apiHeading"></h2>
         <p>
-            <table id="tContent">
+            <table id="apiContent">
             </table>
         </p>
-        <p id="tAmount"></p>
+        <p id="apiTAmount"></p>
+        <div id="apiPager"></div>
     </#if>
 
 </#if>
@@ -108,7 +116,7 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
   <#if browser.profileItemActions.allowCreate>
     <h2>Create Profile Item</h2>
     <p>
-    <form onSubmit="return false;">
+    <form id="createProfileFrm" onSubmit="return false;">
     <div id="createProfileItemDiv">
     </div>
     </form>
@@ -119,105 +127,26 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
 <script type='text/javascript'>
 
     // update drill down
-    var drillDown = new DrillDown('/data${browser.pathItem.fullPath}');
+    var drillDown = new DrillDown('/data${browser.pathItem.fullPath}', '${activeUser.apiVersion.version}', "${getDateFormat(activeUser.apiVersion.version)}");
     drillDown.loadDrillDown('');
 
     // api call
-    document.observe('dom:loaded', function() {
-        <#if !activeUser.apiVersion.versionOne && browser.profileItemActions.allowList>
-            showJSON(renderApiResponse, "");
-        </#if>
-    });
-
-    // section heading
-    var heading = "Profile Items";
-
-    function renderApiResponse(response) {
-
-        var json = response.responseJSON; 
-
-        // set section heading
-        $("tHeading").innerHTML = heading;
-
-        // create table headings
-       var tableElement = new Element('table', {id : 'tContent'}).insert(getHeadingElement(json));
-
-       // create table details
-       var detailRows = getDetailRows(json);
-       for (i = 0 ; i < detailRows.length; i++) {
-           tableElement.insert(detailRows[i]);
-       }
-
-       // replace table
-       $("tContent").replace(tableElement)
-
-       // create total
-       var totalElement = new Element('p', {id : 'tAmount'}).insert("Total " + getUnit(json) + " " + json.totalAmount.value);
-        $("tAmount").replace(totalElement);
-    }
-
-    function getHeadingElement(json) {
-        return new Element('tr')
-                .insert(getHeadingData('item'))
-                .insert(getHeadingData(getUnit(json)))
-                .insert(getHeadingData('Name'))
-                .insert(getHeadingData('Valid From'))
-                .insert(getHeadingData('Valid To'))
-                .insert(getHeadingData('Actions'));
-    }
-
-    function getHeadingData(heading) {
-        return new Element('th').insert(heading);
-    }
-
-    function getUnit(json) {
-        if (json.totalAmount) {
-            return json.totalAmount.unit;
-        }
-        return "Unknown Unit";
-    }
-    function getDetailRows(json) {
-        var rows = [];
-        if (json.profileItems) {
-            for (i = 0; i < json.profileItems.length; i++) {
-                var profileItem = json.profileItems[i];
-                var detailRow = new Element('tr', {id : profileItem.uid})
-                    .insert(new Element('td', {id: profileItem.dataItem.uid}).insert(profileItem.dataItem.Label))
-                    .insert(new Element('td').insert(profileItem.amount.value))
-                    .insert(new Element('td').insert(profileItem.name))
-                    .insert(new Element('td').insert(profileItem.startDate))
-                    .insert(new Element('td').insert(profileItem.endDate));
-
-                // create actions
-                detailRow.insert(getActionsTableData(${browser.profileItemActions.allowView?string}, ${browser.profileItemActions.allowDelete?string}, profileItem.uid));
-
-                // update array
-                rows[i] = detailRow;
-            }
-            return rows;
-        }
-        rows[0] = new Element("tr").insert(new Element("td"));
-        return rows;
-    }
-
-    function getActionsTableData(allowView, allowDelete, uid) {
-        var actions = new Element('td');
-        if (allowView) {
-            actions.insert(new Element('a', {href : window.location.href + "/" + uid})
-                .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
-        }
-
-        if (allowDelete) {
-            var dUrl = "'profileItem.uid','" + window.location.href + '/' + uid + "'";
-            actions.insert(new Element('input',
-                {
-                onClick : 'deleteProfileItem(' + dUrl + ') ; return false;',
-                type : 'image',
-                src : '/images/icons/page_delete.png',
-                title : 'Delete', alt : 'Delete', border : 0}));
-        }
-        return actions;
-    }
+    <#if !activeUser.apiVersion.versionOne && browser.profileItemActions.allowList>
+        var profileCategoryApiService = new ProfileCategoryApiService(
+            {
+                heading : "Profile Items",
+                headingElementName : "apiHeading",
+                contentElementName : "apiContent",
+                tAmountElementName : 'apiTAmount',
+                pagerElementName : 'apiPager',
+                headingCategory : 'Profile Categories',
+                headingCategoryElementName : 'apiCategoryHeading',
+                headingContentElementName : "apiCategoryContent",
+                allowView : ${browser.profileItemActions.allowView?string},
+                allowDelete : ${browser.profileItemActions.allowDelete?string}
+            });
+        profileCategoryApiService.apiRequest();
+    </#if>
 </script>
 
 

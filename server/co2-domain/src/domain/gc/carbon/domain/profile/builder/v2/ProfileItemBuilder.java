@@ -60,8 +60,8 @@ public class ProfileItemBuilder implements Builder {
         }
         obj.put("itemValues", itemValues);
         if (detailed) {
-            obj.put("environment", item.getEnvironment().getIdentityJSONObject());
-            obj.put("itemDefinition", item.getItemDefinition().getIdentityJSONObject());
+            obj.put("environment", item.getEnvironment().getJSONObject(false));
+            obj.put("itemDefinition", item.getItemDefinition().getJSONObject(false));
             obj.put("dataCategory", item.getDataCategory().getIdentityJSONObject());
         }
     }
