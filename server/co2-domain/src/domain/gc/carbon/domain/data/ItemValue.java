@@ -260,9 +260,6 @@ public class ItemValue implements PersistentObject, Pathable {
         if (!itemValueDefinition.isValidUnit(unit)) {
             throw new IllegalArgumentException();
         }
-        if (unit.length() > UNIT_SIZE) {
-            unit = unit.substring(0, UNIT_SIZE - 1);
-        }
         this.unit = unit;
     }
 
@@ -273,9 +270,6 @@ public class ItemValue implements PersistentObject, Pathable {
     public void setPerUnit(String perUnit) throws IllegalArgumentException {
         if (!itemValueDefinition.isValidPerUnit(perUnit)) {
             throw new IllegalArgumentException();
-        }
-        if (perUnit.length() > PER_UNIT_SIZE) {
-            perUnit = perUnit.substring(0, PER_UNIT_SIZE - 1);
         }
         this.perUnit = perUnit;
     }

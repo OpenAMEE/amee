@@ -42,7 +42,6 @@ public abstract class BaseResource extends ComponentResource {
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         List<Variant> variants = super.getVariants();
-        variants.add(new Variant(MediaType.APPLICATION_ATOM_XML));
         variants.add(new Variant(MediaType.APPLICATION_XML));
         variants.add(new Variant(MediaType.APPLICATION_JSON));
         variants.add(new Variant(MediaType.TEXT_HTML));
