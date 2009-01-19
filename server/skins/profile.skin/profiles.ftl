@@ -6,7 +6,7 @@ function deleteProfile(profileUid) {
   resourceUrl = '/profiles/' + profileUid + '?method=delete';
   resourceElem = $('Elem_' + profileUid);
   resourceType = 'Profile'; 
-  var deleteResource = new DeleteResource()
+  var deleteResource = new DeleteResource();
   deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
 }
 </script>
@@ -67,7 +67,7 @@ Profile.prototype = {
   addProfileSuccess: function(t) {
     window.location.href = window.location.href;
   }
-}
+};
 var p = new Profile();
 </script>
 
@@ -75,7 +75,7 @@ var p = new Profile();
   <h2>Create Profile</h2>
   <p>
   <form onSubmit="return false;">
-  <input type='button' value='Create Profile' onClick='p.addProfile()'/>
+  <input type='button' value='Create Profile' onClick='p.addProfile();'/>
   </form>
   </p>
 </#if>
