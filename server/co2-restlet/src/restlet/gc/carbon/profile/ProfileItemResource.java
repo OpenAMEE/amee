@@ -32,6 +32,7 @@ import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.MediaType;
+import org.restlet.data.Form;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -111,6 +112,8 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     public void handleGet() {
         log.debug("handleGet()");
         if (profileBrowser.getProfileItemActions().isAllowView()) {
+            Form form = getRequest().getResourceRef().getQueryAsForm();
+            profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
             super.handleGet();
         } else {
             notAuthorized();

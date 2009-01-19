@@ -44,6 +44,8 @@ public class ItemValueBuilder implements Builder {
         obj.put("unit",itemValue.getUnit());
         obj.put("perUnit",itemValue.getPerUnit());
         obj.put("itemValueDefinition", itemValue.getItemValueDefinition().getJSONObject(false));
+        obj.put("displayName", itemValue.getDisplayName());
+        obj.put("displayPath", itemValue.getDisplayPath());
         if (detailed) {
             obj.put("created", itemValue.getCreated());
             obj.put("modified", itemValue.getModified());

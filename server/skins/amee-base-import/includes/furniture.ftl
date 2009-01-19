@@ -4,7 +4,7 @@
 
 <#function getDateFormat apiVersion>
     <#if apiVersion == "1.0">
-        <#return "yyyymmddThhmm"/>
+        <#return "yyyyMMdd"/>
     <#else>
         <#return "yyyy-MM-dd'T'HH:mmZ"/>
     </#if>
