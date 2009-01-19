@@ -116,6 +116,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
             Form form = getRequest().getResourceRef().getQueryAsForm();
             String startDate = form.getFirstValue("startDate");
 
+            //TODO - It would have more clarity and would be more robust to only retrieve parameters relevant to the apiVersion of the user
             profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
             if (startDate != null) {
                 profileBrowser.setStartDate(form.getFirstValue("startDate"));

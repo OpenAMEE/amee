@@ -13,6 +13,7 @@ import org.restlet.Context;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.DomRepresentation;
+import org.restlet.resource.Variant;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.MediaType;
@@ -26,6 +27,7 @@ import org.w3c.dom.Element;
 import org.apache.xerces.dom.DocumentImpl;
 
 import java.util.Map;
+import java.util.List;
 
 /**
  * This file is part of AMEE.
@@ -66,6 +68,11 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         environment = EnvironmentService.getEnvironment();
+        //TODO - This logic should be part of BaseResource. Move once package reorg allows this.
+        // Set the default MediaType response to be atom+xml for all versions > 1.0
+        if (!getVersion().isVersionOne()) {
+            super.getVariants().add(0,new Variant(MediaType.APPLICATION_ATOM_XML));
+        }
         setPathItem();
     }
 

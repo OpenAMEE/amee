@@ -593,7 +593,9 @@
         <root url="jar://$PROJECT_DIR$/../lib/abdera/0.3.0/ext/abdera.extensions.main.0.3.0-incubating.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="file://$PROJECT_DIR$/../projects/utils-restlet/src/main/java" />
+      </SOURCES>
     </library>
     <library name="java-mail">
       <CLASSES>

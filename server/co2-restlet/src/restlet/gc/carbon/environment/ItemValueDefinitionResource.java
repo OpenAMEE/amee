@@ -46,8 +46,6 @@ import java.util.Set;
 import java.util.List;
 import java.util.HashSet;
 
-// TODO: Add ValueDefinition choice.
-
 @Component
 @Scope("prototype")
 public class ItemValueDefinitionResource extends BaseResource implements Serializable {

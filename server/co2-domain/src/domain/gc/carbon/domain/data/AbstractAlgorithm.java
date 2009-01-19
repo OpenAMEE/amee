@@ -19,7 +19,6 @@ import java.util.Date;
 @Entity
 @Inheritance
 @Table(name = "ALGORITHM")
-// TODO: add index to TYPE
 @DiscriminatorColumn(name = "TYPE", length = 3)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class AbstractAlgorithm implements PersistentObject {
@@ -67,7 +66,7 @@ public abstract class AbstractAlgorithm implements PersistentObject {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
         obj.put("name", getName());
-        obj.put("content", getContent()); // TODO: need to escape this?
+        obj.put("content", getContent());
         if (detailed) {
             obj.put("created", getCreated());
             obj.put("modified", getModified());
@@ -92,7 +91,7 @@ public abstract class AbstractAlgorithm implements PersistentObject {
         Element element = document.createElement(getElementName());
         element.setAttribute("uid", getUid());
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
-        element.appendChild(APIUtils.getElement(document, "Content", getContent())); // TODO: need to escape this?
+        element.appendChild(APIUtils.getElement(document, "Content", getContent()));
         if (detailed) {
             element.setAttribute("created", getCreated().toString());
             element.setAttribute("modified", getModified().toString());
