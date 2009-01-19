@@ -335,6 +335,10 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         for(ProfileItem profileItem : profileItems) {
 
+            //TODO: replace with generic profile item solution for atom
+            setBuilder(profileItem);
+            ProfileItemBuilder profileItemBuilder = ((ProfileItemBuilder) profileItem.getBuilder());
+            
             Entry entry = feed.insertEntry();
 
             Text title = atomFeed.newTitle(entry);
@@ -359,10 +363,12 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
                 atomFeed.addEndDate(entry, profileItem.getEndDate().toString());
             }
 
-            atomFeed.addAmount(entry, profileItem.getAmount().toString(), resource.getProfileBrowser().getAmountUnit().toString());
+            //TODO: replace with generic profile item solution for atom
+            atomFeed.addAmount(entry, profileItemBuilder.getAmount(profileItem), resource.getProfileBrowser().getAmountUnit().toString());
 
             HCalendar content = new HCalendar();
-            content.addSummary(profileItem.getAmount() + " " + resource.getProfileBrowser().getAmountUnit().toString());
+            //TODO: replace with generic profile item solution for atom
+            content.addSummary(profileItemBuilder.getAmount(profileItem) + " " + resource.getProfileBrowser().getAmountUnit().toString());
             content.addStartDate(profileItem.getStartDate());
 
             if (profileItem.getEndDate() != null) {
@@ -391,6 +397,10 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         //TODO - Add batch support
         ProfileItem profileItem = resource.getProfileItems().get(0);
 
+        //TODO: replace with generic profile item solution for atom
+        setBuilder(profileItem);
+        ProfileItemBuilder profileItemBuilder = ((ProfileItemBuilder) profileItem.getBuilder());
+
         Entry entry = atomFeed.newEntry();
         entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
 
@@ -408,7 +418,12 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         entry.setUpdated(profileItem.getModified());
 
         HCalendar content = new HCalendar();
-        content.addSummary(profileItem.getAmount() + " " + resource.getProfileBrowser().getAmountUnit().toString());
+
+        //TODO: replace with generic profile item solution for atom
+        atomFeed.addAmount(entry, profileItemBuilder.getAmount(profileItem), resource.getProfileBrowser().getAmountUnit().toString());
+
+        //TODO: replace with generic profile item solution for atom
+        content.addSummary(profileItemBuilder.getAmount(profileItem) + " " + resource.getProfileBrowser().getAmountUnit().toString());
         content.addStartDate(profileItem.getStartDate());
         if (profileItem.getEndDate() != null) {
             content.addEndDate(profileItem.getEndDate());
@@ -425,7 +440,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             atomFeed.addName(entry, profileItem.getName());
         }
 
-        atomFeed.addAmount(entry, profileItem.getAmount().toString(), resource.getProfileBrowser().getAmountUnit().toString());
+        //TODO: replace with generic profile item solution for atom
+        atomFeed.addAmount(entry, profileItemBuilder.getAmount(profileItem), resource.getProfileBrowser().getAmountUnit().toString());
 
         atomFeed.addItemValues(entry, profileItem.getItemValues());
 

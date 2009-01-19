@@ -89,6 +89,11 @@ public class ProfileItem extends Item {
         setDataItem(dataItem);
     }
 
+    // TODO: remove access to this method (temp fix for atom)
+    public Builder getBuilder() {
+        return this.builder;
+    }
+
     public void setBuilder(Builder builder) {
         this.builder = builder;
     }
