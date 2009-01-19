@@ -36,6 +36,10 @@ public class StartEndDate extends GCDate {
 
     private boolean floor = true;
 
+    public StartEndDate() {
+        this(new Date());    
+    }
+
     public StartEndDate(String dateStr) {
         super(dateStr);
     }

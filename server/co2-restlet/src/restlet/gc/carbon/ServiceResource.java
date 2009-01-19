@@ -138,7 +138,7 @@ public class ServiceResource extends AMEEResource {
 
             Categories cats = ATOM_FEED.newItemCategories(col);
             cats.setFixed(true);
-            for (DataItem di : new OnlyActiveDataService(dataService).getDataItems(dc, new StartEndDate(new Date()))) {
+            for (DataItem di : new OnlyActiveDataService(dataService).getDataItems(dc, new StartEndDate())) {
                 Category cat = ATOM_FEED.newCategory(cats);
                 cat.setTerm(di.getUid());
                 cat.setLabel(di.getItemDefinition().getName() + " (" + di.getItemValuesString() + ")");
