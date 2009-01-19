@@ -86,26 +86,26 @@ DrillDown.prototype = {
             } else {
                 div.appendChild(new Element('input', {type : 'hidden', name : 'dataItemUid', value : this.uid}));
                 div.appendChild(document.createTextNode('Start Date: '));
-                var startDateInput = new Element('input', {type : 'text', name : 'startDate', id : 'startDate'});
+                var startDateInput = new Element('input', {type : 'text', name : 'startDate', id : 'startDate', style : 'margin-left:20px'});
 
                 div.appendChild(startDateInput);
-                div.appendChild(document.createTextNode("(" + this.dateFormat + ")"));
+                div.appendChild(document.createTextNode("  (" + this.dateFormat + ")"));
                 div.appendChild(document.createElement('br'));
 
                 div.appendChild(document.createTextNode('End Date: '));
-                var endDateInput = new Element('input', {type : 'text', name : 'endDate', id : 'endDate'});
+                var endDateInput = new Element('input', {type : 'text', name : 'endDate', id : 'endDate', style : 'margin-left:25px'});
                 div.appendChild(endDateInput);
-                div.appendChild(document.createTextNode("(" + this.dateFormat + ")"));
+                div.appendChild(document.createTextNode("  (" + this.dateFormat + ")"));
                 div.appendChild(document.createElement('br'));
 
                 div.appendChild(document.createTextNode('Duration: '));
-                var durationInput = new Element('input', {type : 'text', name : 'duration', id : 'duration'});
+                var durationInput = new Element('input', {type : 'text', name : 'duration', id : 'duration', style : 'margin-left:31px'});
                 div.appendChild(durationInput);
-                div.appendChild(document.createTextNode("(e.g PT30M [30 mins])"));
+                div.appendChild(document.createTextNode("  (e.g PT30M [30 mins])"));
                 div.appendChild(document.createElement('br'));
 
                 div.appendChild(document.createTextNode('Name: '));
-                var nameInput = new Element('input', {type : 'text', name : 'name', id : 'name'});
+                var nameInput = new Element('input', {type : 'text', name : 'name', id : 'name', style : 'margin-left:49px'});
                 div.appendChild(nameInput);
                 div.appendChild(document.createElement('br'));
             }
