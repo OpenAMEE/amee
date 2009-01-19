@@ -94,8 +94,8 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
         IRIElement eid = atomFeed.newID(entry);
         eid.setText("urn:item:" + profileItem.getUid());
 
-        entry.setPublished(profileItem.getCreated());
-        entry.setUpdated(profileItem.getModified());
+        entry.setPublished(profileItem.getStartDate());
+        entry.setUpdated(profileItem.getStartDate());
 
         HCalendar content = new HCalendar();
         content.addSummary(profileItem.getAmount() + " " + resource.getProfileBrowser().getAmountUnit().toString());

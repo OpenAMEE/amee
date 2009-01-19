@@ -2,6 +2,7 @@ package gc.carbon.domain.profile;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
+import org.joda.time.LocalTime;
 import org.joda.time.format.ISOPeriodFormat;
 
 import java.text.ParseException;
@@ -52,8 +53,7 @@ public class StartEndDate extends GCDate {
         try {
             DateTime requestedDate = new DateTime(ISO_DATE_FORMAT.parse(dateStr));
             if (floor) {
-                DateTime dateFlooredToPreceeding30Mins = requestedDate.withMinuteOfHour( (requestedDate.getMinuteOfHour() < 30) ? 0 : 30);
-                return dateFlooredToPreceeding30Mins.secondOfMinute().withMinimumValue().getMillis();
+                return requestedDate.secondOfMinute().withMinimumValue().getMillis();
             } else {
                 return requestedDate.toDate().getTime();
             }
@@ -67,8 +67,7 @@ public class StartEndDate extends GCDate {
     }
 
     protected long defaultDate() {
-        DateTime defaultDate = new DateTime().withMinuteOfHour( (new DateTime().getMinuteOfHour() < 30) ? 0 : 30);
-        return defaultDate.secondOfMinute().withMinimumValue().getMillis();
+        return new DateTime().secondOfMinute().withMinimumValue().getMillis();
     }
 
     public StartEndDate plus(String duration) {

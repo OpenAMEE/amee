@@ -319,6 +319,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         AtomFeed atomFeed = AtomFeed.getInstance();
 
         final Feed feed = atomFeed.newFeed();
+        feed.sortEntriesByUpdated(true);
+        
         feed.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
         feed.setTitle("Profile " + resource.getProfile().getDisplayName() + ", Category " + resource.getPathItem().getFullPath());
 
@@ -363,7 +365,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         for(ProfileItem profileItem : profileItems) {
 
-            Entry entry = feed.insertEntry();
+            Entry entry = feed.addEntry();
 
             Text title = atomFeed.newTitle(entry);
             title.setText(profileItem.getDisplayName() + ", " + resource.getDataCategory().getDisplayName());
@@ -375,11 +377,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             IRIElement eid = atomFeed.newID(entry);
             eid.setText("urn:item:" + profileItem.getUid());
 
-            if (profileItem.getModified().after(lastModified))
-                lastModified = profileItem.getModified();
-
-            entry.setPublished(profileItem.getCreated());
-            entry.setUpdated(profileItem.getModified());
+            entry.setPublished(profileItem.getStartDate());
+            entry.setUpdated(profileItem.getStartDate());
 
             atomFeed.addStartDate(entry, profileItem.getStartDate().toString());
 
@@ -406,6 +405,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             Category cat = atomFeed.newItemCategory(entry);
             cat.setTerm(profileItem.getDataItem().getUid());
             cat.setLabel(profileItem.getDataItem().getItemDefinition().getName());
+
+            if (profileItem.getModified().after(lastModified))
+                lastModified = profileItem.getModified();
         }
 
         feed.setUpdated(lastModified);
@@ -432,8 +434,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         IRIElement eid = atomFeed.newID(entry);
         eid.setText("urn:item:" + profileItem.getUid());
 
-        entry.setPublished(profileItem.getCreated());
-        entry.setUpdated(profileItem.getModified());
+        entry.setPublished(profileItem.getStartDate());
+        entry.setUpdated(profileItem.getStartDate());
 
         HCalendar content = new HCalendar();
         content.addSummary(profileItem.getAmount() + " " + resource.getProfileBrowser().getAmountUnit().toString());
