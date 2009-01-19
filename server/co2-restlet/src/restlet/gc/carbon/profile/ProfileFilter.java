@@ -112,7 +112,6 @@ public class ProfileFilter extends BaseFilter {
         return CONTINUE;
     }
 
-    // TODO: add more reserved paths
     protected boolean matchesReservedPaths(String segment) {
         return (segment.equalsIgnoreCase("stats") ||
                 segment.equalsIgnoreCase("js"));

@@ -60,7 +60,6 @@ public class PathItemService implements Serializable {
         return (PathItemGroup) cacheHelper.getCacheable(profilePIGFactory);
     }
 
-    // TODO:
     public void removePathItemGroup(Profile profile) {
         cacheHelper.remove("ProfilePIGs", profile.getUid());
     }

@@ -100,7 +100,6 @@ public class ProfileItemBuilder implements Builder {
         // DataItem
         DataItem bDataItem = item.getDataItem();
         JSONObject dataItemObj = bDataItem.getIdentityJSONObject();
-        //TODO: can this obj definition be created from DataItem? (Avoid duplication of ItemValues!!)
         dataItemObj.put("Label", bDataItem.getLabel());
         obj.put("dataItem", dataItemObj);
 
@@ -125,7 +124,6 @@ public class ProfileItemBuilder implements Builder {
         // DataItem
         DataItem bDataItem = item.getDataItem();
         Element dataItemElement = bDataItem.getIdentityElement(document);
-        //TODO: can this element definition be created from DataItem? (Avoid duplication of ItemValues!!)
         dataItemElement.appendChild(APIUtils.getElement(document, "Label", bDataItem.getLabel()));
 
         element.appendChild(dataItemElement);
