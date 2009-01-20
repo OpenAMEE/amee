@@ -52,23 +52,30 @@ function deleteProfile(profileUid) {
 </#if>
 
 <script type='text/javascript'>
-var Profile = Class.create();
-Profile.prototype = {
-  initialize: function() {
-  },
-  addProfile: function() {
-    var myAjax = new Ajax.Request(window.location.href, {
-      method: 'post',
-      parameters: 'profile=true',
-      requestHeaders: ['Accept', 'application/json'],
-      onSuccess: this.addProfileSuccess.bind(this)
-    });
-  },
-  addProfileSuccess: function(t) {
-    window.location.href = window.location.href;
-  }
-};
-var p = new Profile();
+    var Profile = Class.create();
+    Profile.prototype = {
+      initialize: function() {
+      },
+      addProfile: function() {
+        var myAjax = new Ajax.Request(window.location.href, {
+          method: 'post',
+          parameters: 'profile=true',
+          requestHeaders: ['Accept', 'application/json'],
+          onSuccess: this.addProfileSuccess.bind(this)
+        });
+      },
+      addProfileSuccess: function(t) {
+        window.location.href = window.location.href;
+      }
+    };
+    var p = new Profile();
+
+    <#if !activeUser.apiVersion.versionOne>
+        document.observe('dom:loaded', function() {
+            // hide n/a atom option
+            $('showAPIATOM').style.visibility = "hidden";
+        });
+    </#if>
 </script>
 
 <#if browser.profileActions.allowCreate>

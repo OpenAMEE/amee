@@ -1,3 +1,5 @@
+<div id="modal" class="columnBlock paddingTopBottom clearfix" style="overflow: auto; text-align: left;"></div>
+        
 <#if node??>
 <h2>Details</h2>
 <table>
@@ -37,15 +39,22 @@
 <script type='text/javascript'>
 
     function showApiResult(message) {
-        var modal = new Control.Modal(false, {
-            contents: '<div class="columnBlock paddingTopBottom clearfix" style="overflow: auto; text-align: left;">' + message + '</div>',
-            width: 600,
-            height: 300
-        });
-        
+        // prep element
+        var modalElement = new Element('div', {id : 'modal', class : 'columnBlock paddingTopBottom clearfix', style : 'overflow: auto; text-align: left;'});
+        $('modal').replace(modalElement);
+
+        // set-up modal and open
+        var modal = new Control.Modal($('modal'),{
+             overlayOpacity: 0.75,
+             className: 'modal',
+             width: 600,
+             height: 300,
+             fade: true
+         });
+
+        modal.container.insert(message);
         modal.open();
     }
-
 
     function showJSON(successMethod, params) {
         var localParams;
@@ -74,6 +83,15 @@
         showApiResult(t.responseText.escapeHTML());
     }
 
+    function showATOM() {
+        new Ajax.Request(window.location.href,
+        {method: 'get', parameters: $('api').serialize(getHash=true), requestHeaders: ['Accept', 'application/atom+xml'], onSuccess: showATOMResponse});
+    }
+
+    function showATOMResponse(t) {
+        showApiResult(t.responseText.escapeHTML());
+    }
+
 </script>
 
 <form id='api' onSubmit="return false;">
@@ -82,8 +100,10 @@
 </#if>        
 </h2>
     <br/>
-    <button name='showAPIJSON' type='button' onClick='showJSON(); return false;'>Show JSON</button>
+    <button id="showAPIJSON" name='showAPIJSON' type='button' onClick='showJSON(); return false;'>Show JSON</button>
     <br/><br/>
-    <button name='showAPIXML' type='button' onClick='showXML(); return false;'>Show XML</button>
+    <button id="showAPIXML" name='showAPIXML' type='button' onClick='showXML(); return false;'>Show XML</button>
+    <br/><br/>
+    <button id="showAPIATOM" name='showAPIATOM' type='button' onClick='showATOM(); return false;'>Show ATOM</button>
 </form>
 </p>
