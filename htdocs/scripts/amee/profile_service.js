@@ -414,12 +414,12 @@ ApiService.prototype = {
         var actions = new Element('td');
 
         if (this.allowView) {
-            actions.insert(new Element('a', {href : window.location.href + "/" + uid})
+            actions.insert(new Element('a', {href : this.getUrl(uid)})
                 .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
         }
 
         if (this.allowDelete) {
-            var dUrl = "'" + urlKey + "','" + window.location.href + '/' + uid + "'";
+            var dUrl = "'" + urlKey + "','" + this.getUrl(uid) + "'";
             actions.insert(new Element('input',
                 {
                 onClick : dMethod + '(' + dUrl + ') ; return false;',
@@ -429,14 +429,14 @@ ApiService.prototype = {
         }
         return actions;
     },
-    getCategoryActionsTableData: function(path) {
-        var actions = new Element('td');
+    getUrl: function(params) {
+        var url = window.location.href;
 
-        if (this.allowView) {
-            actions.insert(new Element('a', {href : window.location.href + "/" + path})
-                .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
+        if (params) {
+            return url.substring(0, (url.length - window.location.search.length)) + "/" + params + window.location.search;
+        } else {
+            return url;
         }
-        return actions;
     }
 };
 
@@ -490,6 +490,15 @@ var ProfileCategoryApiService = Class.create(ApiService, ({
         }
         rows[0] = new Element("tr").insert(new Element("td"));
         return rows;
+    },
+    getCategoryActionsTableData: function(path) {
+        var actions = new Element('td');
+
+        if (this.allowView) {
+            actions.insert(new Element('a', {href : this.getUrl(path)})
+                .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
+        }
+        return actions;
     }
 }));
 
@@ -644,7 +653,15 @@ var ProfileItemApiService = Class.create(ApiService, ({
         return new Element('th').insert(heading);
     },
     updateProfileItem: function() {
-        var myAjax = new Ajax.Request(window.location.href + "?method=put", {
+
+        var method;
+        if (window.location.search == "") {
+            method = "?method=put";
+        } else {
+            method = "&method=put";
+        }
+
+        var myAjax = new Ajax.Request(window.location.href + method, {
             method: 'post',
             parameters: $('inputForm').serialize(),
             requestHeaders: ['Accept', 'application/json'],
