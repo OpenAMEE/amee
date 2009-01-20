@@ -100,10 +100,10 @@
 </#if>        
 </h2>
     <br/>
-    <button name='showAPIJSON' type='button' onClick='showJSON(); return false;'>Show JSON</button>
+    <button id="showAPIJSON" name='showAPIJSON' type='button' onClick='showJSON(); return false;'>Show JSON</button>
     <br/><br/>
-    <button name='showAPIXML' type='button' onClick='showXML(); return false;'>Show XML</button>
+    <button id="showAPIXML" name='showAPIXML' type='button' onClick='showXML(); return false;'>Show XML</button>
     <br/><br/>
-    <button name='showAPIATOM' type='button' onClick='showATOM(); return false;'>Show ATOM</button>
+    <button id="showAPIATOM" name='showAPIATOM' type='button' onClick='showATOM(); return false;'>Show ATOM</button>
 </form>
 </p>
