@@ -14,7 +14,6 @@
 <script src="/scripts/prototype/prototype.js" type="text/javascript"></script>
 <script src="/scripts/scriptaculous/scriptaculous.js?load=effects,builder,controls" type="text/javascript"></script>
 <script src="/scripts/control/livepipe.js" type="text/javascript"></script>
-<script src="/scripts/control/progressbar.js" type="text/javascript"></script>
 <script src="/scripts/control/window.js" type="text/javascript"></script>
 <script src="/scripts/amee/resources.js" type="text/javascript"></script>
 <script src="/scripts/amee/diff.js" type="text/javascript"></script>

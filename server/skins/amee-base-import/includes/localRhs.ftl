@@ -1,3 +1,5 @@
+<div id="modal" class="columnBlock paddingTopBottom clearfix" style="overflow: auto; text-align: left;"></div>
+        
 <#if node??>
 <h2>Details</h2>
 <table>
@@ -37,15 +39,22 @@
 <script type='text/javascript'>
 
     function showApiResult(message) {
-        var modal = new Control.Modal(false, {
-            contents: '<div class="columnBlock paddingTopBottom clearfix" style="overflow: auto; text-align: left;">' + message + '</div>',
-            width: 600,
-            height: 300
-        });
-        
+        // prep element
+        var modalElement = new Element('div', {id : 'modal', class : 'columnBlock paddingTopBottom clearfix', style : 'overflow: auto; text-align: left;'});
+        $('modal').replace(modalElement);
+
+        // set-up modal and open
+        var modal = new Control.Modal($('modal'),{
+             overlayOpacity: 0.75,
+             className: 'modal',
+             width: 600,
+             height: 300,
+             fade: true
+         });
+
+        modal.container.insert(message);
         modal.open();
     }
-
 
     function showJSON(successMethod, params) {
         var localParams;
