@@ -286,6 +286,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         }
     }
 
+    // Generate the Atom feed in response to a GET request to a ProfileCategory.
+    // The request may contains query (search) parameters which may constrain and modify the returned ProfileItems.
     private org.apache.abdera.model.Element getAtomElementForGet() {
 
         AtomFeed atomFeed = AtomFeed.getInstance();
@@ -300,7 +302,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         atomFeed.addGenerator(feed, resource.getVersion());
 
-        atomFeed.addLinks(feed, feed.getBaseUri().toString());
+        atomFeed.addLinks(feed, "");
 
         Person author = atomFeed.newAuthor(feed);
         author.setName(resource.getProfile().getDisplayPath());
@@ -313,7 +315,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         //TODO - Is this the correct way to use the pager?
         Pager pager = resource.getPager();
-        if (profileItems.size() > pager.getItemsPerPage()) {
+        int numOfProfileItems = profileItems.size();
+        if (numOfProfileItems > pager.getItemsPerPage()) {
             profileItems = pageResults(profileItems, pager);
             FeedPagingHelper.setNext(feed, feed.getBaseUri() + "?page=" + pager.getNextPage());
             if (pager.getCurrentPage() != 1) {
@@ -323,10 +326,14 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             FeedPagingHelper.setLast(feed, feed.getBaseUri() + "?page=" + pager.getLastPage());
         }
 
+        // If the GET contained query (search) parameters, add OpenSearch elements describing the query and the results.
         if (resource.getProfileBrowser().isQuery())  {
-            feed.addExtension(OpenSearchExtensionFactory.ITEMS_PER_PAGE).setText("" + pager.getItemsPerPage());
-            feed.addExtension(OpenSearchExtensionFactory.START_INDEX).setText("1");
-            feed.addExtension(OpenSearchExtensionFactory.TOTAL_RESULTS).setText(""+ pager.getItems());
+
+            if (numOfProfileItems > pager.getItemsPerPage()) {
+                feed.addExtension(OpenSearchExtensionFactory.ITEMS_PER_PAGE).setText("" + pager.getItemsPerPage());
+                feed.addExtension(OpenSearchExtensionFactory.START_INDEX).setText("1");
+                feed.addExtension(OpenSearchExtensionFactory.TOTAL_RESULTS).setText(""+ pager.getItems());
+            }
             org.apache.abdera.model.Element query = feed.addExtension(OpenSearchExtensionFactory.QUERY);
             query.setAttributeValue("role","request");
             query.setAttributeValue(AtomFeed.Q_NAME_START_DATE,resource.getProfileBrowser().getStartDate().toString());
@@ -335,6 +342,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             }
         }
 
+        // Add all ProfileItems as Entries in the Atom feed.
         for(ProfileItem profileItem : profileItems) {
 
             Entry entry = feed.addEntry();
@@ -365,7 +373,10 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             //TODO: replace with generic profile item solution for atom
             atomFeed.addAmount(entry, profileItemBuilder.getAmount(profileItem), resource.getProfileBrowser().getAmountUnit().toString());
 
+            atomFeed.addItemValuesWithLinks(entry, profileItem.getItemValues(), profileItem.getUid());
+
             HCalendar content = new HCalendar();
+
             //TODO: replace with generic profile item solution for atom
             content.addSummary(profileItemBuilder.getAmount(profileItem) + " " + resource.getProfileBrowser().getAmountUnit().toString());
             content.addStartDate(profileItem.getStartDate());
@@ -383,7 +394,6 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             Category cat = atomFeed.newItemCategory(entry);
             cat.setTerm(profileItem.getDataItem().getUid());
             cat.setLabel(profileItem.getDataItem().getItemDefinition().getName());
-
             if (profileItem.getModified().after(lastModified))
                 lastModified = profileItem.getModified();
         }
@@ -393,6 +403,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         return feed;
     }
 
+    // Generate the Atom feed in reponse to a POST to a ProfileCategory.
+    // The feed will contain a single Atom Entry representing the new ProfileItem.
     private org.apache.abdera.model.Element getAtomElementForPost() {
         AtomFeed atomFeed = AtomFeed.getInstance();
 
@@ -407,7 +419,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
 
         Text title = atomFeed.newTitle(entry);
-        title.setText(profileItem.getDisplayName() + ", " + resource.getDataCategory().getDisplayName());
+        title.setText(profileItem.getDisplayName());
         Text subtitle = atomFeed.newSubtitle(entry);
         subtitle.setText(atomFeed.format(profileItem.getStartDate()) + ((profileItem.getEndDate() != null) ? " - " + atomFeed.format(profileItem.getEndDate()) : ""));
 
@@ -445,7 +457,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         //TODO: replace with generic profile item solution for atom
         atomFeed.addAmount(entry, profileItemBuilder.getAmount(profileItem), resource.getProfileBrowser().getAmountUnit().toString());
 
-        atomFeed.addItemValues(entry, profileItem.getItemValues());
+        atomFeed.addItemValuesWithLinks(entry, profileItem.getItemValues(), profileItem.getUid());
 
         Category cat = atomFeed.newItemCategory(entry);
         cat.setTerm(profileItem.getDataItem().getUid());

@@ -175,26 +175,30 @@ public class AtomFeed {
         extension.setAttributeValue("unit", unit);
     }
 
-    public void addItemValues(Entry entry, List<ItemValue> itemValues) {
+    public void addItemValuesWithLinks(Entry entry, List<ItemValue> itemValues, String parentPath) {
         for (ItemValue itemValue : itemValues) {
             Element extension = entry.addExtension(Q_NAME_ITEM_VALUE);
-            addItemValue(extension, itemValue, true);
+            addItemValue(extension, itemValue, parentPath);
         }
     }
 
     public void addItemValue(Element element, ItemValue itemValue) {
-        addItemValue(element, itemValue, false);
+        addItemValue(element, itemValue, null);
     }
 
-    public void addItemValue(Element element, ItemValue itemValue, boolean includeLink) {
+    private void addItemValue(Element element, ItemValue itemValue, String parentPath) {
 
         factory.newExtensionElement(Q_NAME_NAME, element).setText(itemValue.getName());
         String value = (itemValue.getValue().isEmpty() ? "N/A" : itemValue.getValue());
         factory.newExtensionElement(Q_NAME_VALUE, element).setText(value);
 
-        if (includeLink) {
+        // A non-Null parent path signifies that the ItemValue should include a link element. This would be the case
+        // when an ItemValue is being included within an Item or DataCategory feed.
+        if (parentPath != null) {
             Link l = factory.newLink(element);
-            l.setHref(itemValue.getPath());
+            if (parentPath.length() > 0)
+                parentPath = parentPath + "/";
+            l.setHref(parentPath + itemValue.getPath());
             l.setRel(AMEE_ITEM_VALUE_SCHEME);
         }
 
