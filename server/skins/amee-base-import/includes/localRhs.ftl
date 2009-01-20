@@ -74,6 +74,15 @@
         showApiResult(t.responseText.escapeHTML());
     }
 
+    function showATOM() {
+        new Ajax.Request(window.location.href,
+        {method: 'get', parameters: $('api').serialize(getHash=true), requestHeaders: ['Accept', 'application/atom+xml'], onSuccess: showATOMResponse});
+    }
+
+    function showATOMResponse(t) {
+        showApiResult(t.responseText.escapeHTML());
+    }
+
 </script>
 
 <form id='api' onSubmit="return false;">
@@ -85,5 +94,7 @@
     <button name='showAPIJSON' type='button' onClick='showJSON(); return false;'>Show JSON</button>
     <br/><br/>
     <button name='showAPIXML' type='button' onClick='showXML(); return false;'>Show XML</button>
+    <br/><br/>
+    <button name='showAPIATOM' type='button' onClick='showATOM(); return false;'>Show ATOM</button>
 </form>
 </p>
