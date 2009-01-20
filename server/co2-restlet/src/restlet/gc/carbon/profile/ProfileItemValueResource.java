@@ -141,9 +141,9 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
         entry.setBaseUri(getRequest().getAttributes().get("previousHierachicalPart").toString());
 
         Text title = atomFeed.newTitle(entry);
-        title.setText(itemValue.getDisplayName() + ", " + itemValue.getItem().getDisplayName());
+        title.setText(itemValue.getDisplayName());
 
-        atomFeed.addLinks(entry, itemValue.getPath());
+        atomFeed.addLinks(entry, "");
 
         IRIElement eid = atomFeed.newID(entry);
         eid.setText("urn:itemValue:" + itemValue.getUid());
