@@ -28,7 +28,8 @@ public enum APIFault {
     INVALID_DATE_FORMAT,
     INVALID_DATE_RANGE,
     INVALID_PRORATA_REQUEST,
-    DUPLICATE_ITEM;
+    DUPLICATE_ITEM,
+    INVALID_UNIT;
 
     private String[] strings = {
         "",
@@ -38,7 +39,8 @@ public enum APIFault {
         "A request was received with one or more datetime parameters having an invalid format.",
         "A request was received with an invalid date range.",
         "A prorata request was received without a recognised bounded date range.",
-        "A POST or PUT request was received which would have resulted in a duplicate resource being created."
+        "A POST or PUT request was received which would have resulted in a duplicate resource being created.",
+        "A request was received with an invalid unit."
     };
 
     public String getString() {

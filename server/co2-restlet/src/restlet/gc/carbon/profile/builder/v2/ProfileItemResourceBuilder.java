@@ -4,6 +4,7 @@ import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.ResourceBuilder;
 import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.Unit;
 import gc.carbon.profile.ProfileItemResource;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +46,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
         JSONObject obj = new JSONObject();
         ProfileItem profileItem = resource.getProfileItem();
         setBuilder(profileItem);
-        obj.put("profileItem", profileItem.getJSONObject());
+        obj.put("profileItem", profileItem.getJSONObject(true));
         obj.put("path", resource.getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
         return obj;
@@ -56,7 +57,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
         ProfileItem profileItem = resource.getProfileItem();
         setBuilder(profileItem);
         Element element = document.createElement("ProfileItemResource");
-        element.appendChild(profileItem.getElement(document));
+        element.appendChild(profileItem.getElement(document, true));
         element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
@@ -73,17 +74,14 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
     }
 
 
-
-
     public org.apache.abdera.model.Element getAtomElement() {
 
         AtomFeed atomFeed = AtomFeed.getInstance();
 
         ProfileItem profileItem = resource.getProfileItem();
 
-        //TODO: replace with generic profile item solution for atom
-        setBuilder(profileItem);
-        ProfileItemBuilder profileItemBuilder = ((ProfileItemBuilder) profileItem.getBuilder());
+        Unit returnUnit = resource.getProfileBrowser().getReturnUnit();
+        String amount = profileItem.getAmount(returnUnit).toString();
 
         Entry entry = atomFeed.newEntry();
         entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
@@ -103,8 +101,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
 
         HCalendar content = new HCalendar();
 
-        //TODO: replace with generic profile item solution for atom
-        content.addSummary(profileItemBuilder.getAmount(profileItem) + " " + resource.getProfileBrowser().getAmountUnit().toString());
+        content.addSummary(amount + " " + returnUnit.toString());
 
         content.addStartDate(profileItem.getStartDate());
         if (profileItem.getEndDate() != null) {
@@ -117,8 +114,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
             atomFeed.addEndDate(entry, profileItem.getEndDate().toString());
         }
 
-        //TODO: replace with generic profile item solution for atom
-        atomFeed.addAmount(entry, profileItemBuilder.getAmount(profileItem), resource.getProfileBrowser().getAmountUnit().toString());
+        atomFeed.addAmount(entry, amount.toString(), returnUnit.toString());
 
         atomFeed.addItemValuesWithLinks(entry, profileItem.getItemValues(), "");
 
@@ -131,8 +127,8 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
     }
     
     private void setBuilder(ProfileItem pi) {
-        if (resource.getProfileBrowser().returnAmountInExternalUnit()) {
-            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getAmountUnit()));
+        if (resource.getProfileBrowser().returnInExternalUnit()) {
+            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getReturnUnit()));
         } else {
             pi.setBuilder(new ProfileItemBuilder(pi));
         }

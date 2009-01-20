@@ -127,7 +127,6 @@ public class ProfileCategoryFormAcceptor implements Acceptor {
                 profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
             } else {
                 if (form.getNames().contains("duration") && form.getFirstValue("duration") != null) {
-                    profileItem.setDuration(form.getFirstValue("duration"));
                     StartEndDate endDate = profileItem.getStartDate().plus(form.getFirstValue("duration"));
                     profileItem.setEndDate(endDate);
                 }
@@ -163,8 +162,8 @@ public class ProfileCategoryFormAcceptor implements Acceptor {
                         }
                         if (itemValue.hasPerUnits() && form.getNames().contains(name+"PerUnit")) {
                             itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
-                        }
                     }
+                }
                 }
                 profileService.calculate(profileItem);
             } catch (IllegalArgumentException ex) {

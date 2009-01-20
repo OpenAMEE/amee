@@ -9,6 +9,7 @@ import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.Unit;
 import gc.carbon.profile.*;
 import org.apache.abdera.model.*;
 import org.apache.abdera.ext.history.FeedPagingHelper;
@@ -113,7 +114,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             // add CO2 amount
             JSONObject totalAmount = new JSONObject();
             totalAmount.put("value", getTotalAmount(profileItems).toString());
-            totalAmount.put("unit", resource.getProfileBrowser().getAmountUnit());
+            totalAmount.put("unit", resource.getProfileBrowser().getReturnUnit());
             obj.put("totalAmount", totalAmount);
 
         } else if (resource.isPost() || resource.isPut()) {
@@ -193,7 +194,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             Element totalAmount = APIUtils.getElement(document,
                     "TotalAmount",
                     getTotalAmount(profileItems).toString());
-            totalAmount.setAttribute("unit", resource.getProfileBrowser().getAmountUnit().toString());
+            totalAmount.setAttribute("unit", resource.getProfileBrowser().getReturnUnit().toString());
             element.appendChild(totalAmount);
 
         }
@@ -261,8 +262,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
     }
 
     private void setBuilder(ProfileItem pi) {
-        if (resource.getProfileBrowser().returnAmountInExternalUnit()) {
-            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getAmountUnit()));
+        if (resource.getProfileBrowser().returnInExternalUnit()) {
+            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getReturnUnit()));
         } else {
             pi.setBuilder(new ProfileItemBuilder(pi));
         }
@@ -311,7 +312,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         List<ProfileItem> profileItems = getProfileItems();
 
-        atomFeed.addTotalAmount(feed, getTotalAmount(profileItems).toString(), resource.getProfileBrowser().getAmountUnit().toString());
+        atomFeed.addTotalAmount(feed, getTotalAmount(profileItems).toString(), resource.getProfileBrowser().getReturnUnit().toString());
 
         //TODO - Is this the correct way to use the pager?
         Pager pager = resource.getPager();
@@ -342,17 +343,17 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             }
         }
 
+        Unit returnUnit = resource.getProfileBrowser().getReturnUnit();
+
         // Add all ProfileItems as Entries in the Atom feed.
         for(ProfileItem profileItem : profileItems) {
 
+            String amount = profileItem.getAmount(returnUnit).toString();
+
             Entry entry = feed.addEntry();
 
-            //TODO: replace with generic profile item solution for atom
-            setBuilder(profileItem);
-            ProfileItemBuilder profileItemBuilder = ((ProfileItemBuilder) profileItem.getBuilder());
-            
             Text title = atomFeed.newTitle(entry);
-            title.setText(profileItem.getDisplayName() + ", " + resource.getDataCategory().getDisplayName());
+            title.setText(profileItem.getDisplayName());
             Text subtitle = atomFeed.newSubtitle(entry);
             subtitle.setText(atomFeed.format(profileItem.getStartDate()) + ((profileItem.getEndDate() != null) ? " - " + atomFeed.format(profileItem.getEndDate()) : ""));
 
@@ -370,15 +371,13 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
                 atomFeed.addEndDate(entry, profileItem.getEndDate().toString());
             }
 
-            //TODO: replace with generic profile item solution for atom
-            atomFeed.addAmount(entry, profileItemBuilder.getAmount(profileItem), resource.getProfileBrowser().getAmountUnit().toString());
+            atomFeed.addAmount(entry, amount, returnUnit.toString());
 
             atomFeed.addItemValuesWithLinks(entry, profileItem.getItemValues(), profileItem.getUid());
 
             HCalendar content = new HCalendar();
 
-            //TODO: replace with generic profile item solution for atom
-            content.addSummary(profileItemBuilder.getAmount(profileItem) + " " + resource.getProfileBrowser().getAmountUnit().toString());
+            content.addSummary(amount + " " + returnUnit.toString());
             content.addStartDate(profileItem.getStartDate());
 
             if (profileItem.getEndDate() != null) {
@@ -393,6 +392,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
             Category cat = atomFeed.newItemCategory(entry);
             cat.setTerm(profileItem.getDataItem().getUid());
+
             cat.setLabel(profileItem.getDataItem().getItemDefinition().getName());
             if (profileItem.getModified().after(lastModified))
                 lastModified = profileItem.getModified();
@@ -406,14 +406,14 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
     // Generate the Atom feed in reponse to a POST to a ProfileCategory.
     // The feed will contain a single Atom Entry representing the new ProfileItem.
     private org.apache.abdera.model.Element getAtomElementForPost() {
+
         AtomFeed atomFeed = AtomFeed.getInstance();
 
         //TODO - Add batch support
         ProfileItem profileItem = resource.getProfileItems().get(0);
 
-        //TODO: replace with generic profile item solution for atom
-        setBuilder(profileItem);
-        ProfileItemBuilder profileItemBuilder = ((ProfileItemBuilder) profileItem.getBuilder());
+        Unit returnUnit = resource.getProfileBrowser().getReturnUnit();
+        String amount = profileItem.getAmount(returnUnit).toString();
 
         Entry entry = atomFeed.newEntry();
         entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
@@ -433,11 +433,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         HCalendar content = new HCalendar();
 
-        //TODO: replace with generic profile item solution for atom
-        atomFeed.addAmount(entry, profileItemBuilder.getAmount(profileItem), resource.getProfileBrowser().getAmountUnit().toString());
+        atomFeed.addAmount(entry, amount, returnUnit.toString());
 
-        //TODO: replace with generic profile item solution for atom
-        content.addSummary(profileItemBuilder.getAmount(profileItem) + " " + resource.getProfileBrowser().getAmountUnit().toString());
+        content.addSummary(profileItem.getAmount(returnUnit) + " " + returnUnit.toString());
         content.addStartDate(profileItem.getStartDate());
         if (profileItem.getEndDate() != null) {
             content.addEndDate(profileItem.getEndDate());
@@ -454,8 +452,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             atomFeed.addName(entry, profileItem.getName());
         }
 
-        //TODO: replace with generic profile item solution for atom
-        atomFeed.addAmount(entry, profileItemBuilder.getAmount(profileItem), resource.getProfileBrowser().getAmountUnit().toString());
+        atomFeed.addAmount(entry, amount, returnUnit.toString());
 
         atomFeed.addItemValuesWithLinks(entry, profileItem.getItemValues(), profileItem.getUid());
 

@@ -49,19 +49,17 @@ public class ProfileItemValueFormAcceptor implements ItemValueAcceptor {
 
         ItemValue profileItemValue = resource.getProfileBrowser().getProfileItemValue();
         ProfileItem profileItem = resource.getProfileBrowser().getProfileItem();
-        // are we updating this ProfileItemValue?
+
         if (form.getFirstValue("value") != null) {
-            // update ProfileItemValue
             profileItemValue.setValue(form.getFirstValue("value"));
         }
         if (form.getFirstValue("unit") != null) {
-            // update ProfileItemValue
             profileItemValue.setUnit(form.getFirstValue("unit"));
         }
         if (form.getFirstValue("perUnit") != null) {
-            // update ProfileItemValue
             profileItemValue.setPerUnit(form.getFirstValue("perUnit"));
         }
+        // TODO - Only recalculate if necessary
         // should recalculate now (regardless)
         profileService.calculate(profileItem);
         // path may have changed

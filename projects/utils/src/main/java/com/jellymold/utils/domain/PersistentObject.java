@@ -1,6 +1,6 @@
 package com.jellymold.utils.domain;
 
-public interface PersistentObject extends APIObject {
+public interface PersistentObject {
 
     public final static int UID_SIZE = 12;
 

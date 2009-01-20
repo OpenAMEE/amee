@@ -85,9 +85,6 @@ public abstract class Item implements PersistentObject, Pathable {
     @Index(name = "END_DATE_IND")
     protected Date endDate;
 
-    @Transient
-    protected Duration duration;
-
     @Column(name = "CREATED")
     private Date created = Calendar.getInstance().getTime();
 
@@ -129,18 +126,8 @@ public abstract class Item implements PersistentObject, Pathable {
     }
 
     @Transient
-    public JSONObject getJSONObject() throws JSONException {
-        return getJSONObject(true);
-    }
-
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return APIUtils.getIdentityJSONObject(this);
-    }
-
-    @Transient
-    public Element getElement(Document document) {
-        return getElement(document, true);
     }
 
     @Transient
@@ -292,16 +279,6 @@ public abstract class Item implements PersistentObject, Pathable {
         }
     }
 
-    //TODO - Remove these calls. Domain objects should not implement APIObject...
-
-    public JSONObject getJSONObject(boolean b) throws JSONException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public Element getElement(Document document, boolean b) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public StartEndDate getStartDate() {
         return new StartEndDate(startDate);
     }
@@ -323,10 +300,10 @@ public abstract class Item implements PersistentObject, Pathable {
     }
 
     public Duration getDuration() {
-        return duration;
-    }
-
-    public void setDuration(String duration) {
-        this.duration = ISOPeriodFormat.standard().parsePeriod(duration).toStandardDuration();
+        if (endDate != null) {
+             return new Duration(startDate.getTime(), endDate.getTime());
+        } else {
+            return null;
+        }
     }
 }

@@ -20,7 +20,6 @@
 package gc.carbon.profile;
 
 import com.jellymold.kiwi.ResourceActions;
-import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.BaseBrowser;
 import gc.carbon.data.DataService;
@@ -37,8 +36,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.util.Calendar;
 import java.util.Date;
 
 @Component("profileBrowser")
@@ -76,7 +73,7 @@ public class ProfileBrowser extends BaseBrowser {
     private Date profileDate = new ProfileDate();
 
     // Return Unit
-    private Unit amountUnit = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT;
+    private Unit returnUnit = ProfileItem.INTERNAL_RETURN_UNIT;
     
     // Filters
     private String selectBy;
@@ -210,27 +207,27 @@ public class ProfileBrowser extends BaseBrowser {
         return getSelectBy() != null;
     }
 
-    public Unit getAmountUnit() {
-        return amountUnit;
+    public Unit getReturnUnit() {
+        return returnUnit;
     }
 
-    public boolean returnAmountInExternalUnit() {
-        return !amountUnit.equals(ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT);
+    public boolean returnInExternalUnit() {
+        return !returnUnit.equals(ProfileItem.INTERNAL_RETURN_UNIT);
     }
 
     //TODO - There is a documented work item to model return amount as an ItemValue. In the short-term, move to constants.
     public void setAmountReturnUnit(String returnUnit, String returnPerUnit) {
 
         if (returnUnit == null)
-            returnUnit = "kg";
+            returnUnit = ProfileItem.INTERNAL_AMOUNT_UNIT.toString();
 
         Unit unit = Unit.valueOf(returnUnit);
 
         if (returnPerUnit == null)
-            returnPerUnit = "year";
+            returnPerUnit = ProfileItem.INTERNAL_AMOUNT_PERUNIT.toString();
         PerUnit perUnit = PerUnit.valueOf(returnPerUnit);
 
-        amountUnit = CompoundUnit.valueOf(unit, perUnit);
+        this.returnUnit = CompoundUnit.valueOf(unit, perUnit);
     }
 
 }

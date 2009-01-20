@@ -3,6 +3,7 @@ package gc.carbon.domain.profile;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.LocalTime;
+import org.joda.time.Duration;
 import org.joda.time.format.ISOPeriodFormat;
 
 import java.text.ParseException;

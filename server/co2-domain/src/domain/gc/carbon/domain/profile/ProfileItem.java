@@ -4,7 +4,6 @@ import gc.carbon.domain.*;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.Item;
-import gc.carbon.domain.data.ItemValue;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -14,7 +13,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.math.MathContext;
-import java.util.List;
 
 /**
  * This file is part of AMEE.
@@ -67,11 +65,10 @@ public class ProfileItem extends Item {
     @Transient
     private String convertedAmount = "";
 
-
     //TODO - model amount unit as other units - internal and external chocies should be in db
-    private static final PerUnit INTERNAL_AMOUNT_UNIT = PerUnit.valueOf("kg");
-    private static final PerUnit INTERNAL_AMOUNT_PERUNIT = PerUnit.valueOf("year");
-    public static final Unit INTERNAL_COMPOUND_AMOUNT_UNIT = CompoundUnit.valueOf(INTERNAL_AMOUNT_UNIT,INTERNAL_AMOUNT_PERUNIT);
+    public static final PerUnit INTERNAL_AMOUNT_UNIT = PerUnit.valueOf("kg");
+    public static final PerUnit INTERNAL_AMOUNT_PERUNIT = PerUnit.valueOf("year");
+    public static final Unit INTERNAL_RETURN_UNIT = CompoundUnit.valueOf(INTERNAL_AMOUNT_UNIT,INTERNAL_AMOUNT_PERUNIT);
 
     public ProfileItem() {
         super();
@@ -87,11 +84,6 @@ public class ProfileItem extends Item {
         super(dataCategory, dataItem.getItemDefinition());
         setProfile(profile);
         setDataItem(dataItem);
-    }
-
-    // TODO: remove access to this method (temp fix for atom)
-    public Builder getBuilder() {
-        return this.builder;
     }
 
     public void setBuilder(Builder builder) {
@@ -162,6 +154,15 @@ public class ProfileItem extends Item {
         return amount;
     }
 
+    @SuppressWarnings("unchecked")
+    public BigDecimal getAmount(Unit returnUnit) {
+        if (!returnUnit.equals(INTERNAL_RETURN_UNIT)) {
+            return INTERNAL_RETURN_UNIT.convert(getAmount(), returnUnit);
+        } else {
+            return getAmount();
+        }
+    }
+
     public void setAmount(BigDecimal amount) {
         if (amount == null) {
             amount = ZERO;
@@ -206,14 +207,4 @@ public class ProfileItem extends Item {
         return ObjectType.PI;
     }
 
-    //TODO - Review this logic
-    public boolean hasPerUnits() {
-        List<ItemValue> itemValues = getItemValues();
-        for (ItemValue iv : itemValues) {
-            if (iv.hasPerUnits()) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

@@ -107,7 +107,7 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
             obj.put("selections", selectionsJSONArray);
             obj.put("choices", choices.getJSONObject());
         }
-        obj.put("dataCategory", dataCategory.getJSONObject());
+        obj.put("dataCategory", dataCategory.getJSONObject(true));
         return obj;
     }
 

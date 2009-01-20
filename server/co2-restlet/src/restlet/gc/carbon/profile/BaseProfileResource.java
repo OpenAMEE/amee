@@ -1,11 +1,8 @@
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.User;
 import com.jellymold.utils.APIFault;
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.AMEEResource;
-import gc.carbon.APIVersion;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.path.PathItem;

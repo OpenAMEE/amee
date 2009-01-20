@@ -108,7 +108,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         Choices userValueChoices = dataServiceDAO.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         JSONObject obj = new JSONObject();
-        obj.put("dataItem", dataItem.getJSONObject());
+        obj.put("dataItem", dataItem.getJSONObject(true));
         obj.put("path", pathItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
         obj.put("amountPerMonth", calculator.calculate(dataItem, userValueChoices));
@@ -121,7 +121,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         Choices userValueChoices = dataServiceDAO.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         Element element = document.createElement("DataItemResource");
-        element.appendChild(dataItem.getElement(document));
+        element.appendChild(dataItem.getElement(document, true));
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
         element.appendChild(userValueChoices.getElement(document));
         element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
@@ -171,8 +171,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
                 dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
             } else {
                 if (form.getNames().contains("duration")) {
-                    dataItem.setDuration(form.getFirstValue("duration"));
-                    StartEndDate endDate = ((StartEndDate) dataItem.getStartDate()).plus(form.getFirstValue("duration"));
+                    StartEndDate endDate = dataItem.getStartDate().plus(form.getFirstValue("duration"));
                     dataItem.setEndDate(endDate);
                 }
             }

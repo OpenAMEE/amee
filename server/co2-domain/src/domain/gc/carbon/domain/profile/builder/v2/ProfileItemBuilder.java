@@ -37,7 +37,7 @@ import java.math.BigDecimal;
 public class ProfileItemBuilder implements Builder {
 
     private ProfileItem item;
-    private Unit returnUnit = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT;
+    private Unit returnUnit = ProfileItem.INTERNAL_RETURN_UNIT;
 
     public ProfileItemBuilder(ProfileItem item, Unit returnUnit) {
         this.item = item;
@@ -89,7 +89,7 @@ public class ProfileItemBuilder implements Builder {
         buildElement(obj, detailed);
 
         JSONObject amount = new JSONObject();
-        amount.put("value", getAmount(item));
+        amount.put("value", item.getAmount(returnUnit));
         amount.put("unit", returnUnit);
         obj.put("amount", amount);
 
@@ -114,7 +114,7 @@ public class ProfileItemBuilder implements Builder {
         buildElement(document, element, detailed);
 
         Element amount = document.createElement("Amount");
-        amount.setTextContent(getAmount(item));
+        amount.setTextContent(item.getAmount(returnUnit).toString());
         amount.setAttribute("unit", returnUnit.toString());
         element.appendChild(amount);
         
@@ -132,14 +132,6 @@ public class ProfileItemBuilder implements Builder {
             element.appendChild(item.getProfile().getIdentityElement(document));
         }
         return element;
-    }
-
-    public String getAmount(ProfileItem item) {
-        BigDecimal amount = item.getAmount();
-        if (!returnUnit.equals(ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT)) {
-            amount = ProfileItem.INTERNAL_COMPOUND_AMOUNT_UNIT.convert(amount, returnUnit);
-        }
-        return amount.toString();
     }
 
 }

@@ -4,8 +4,6 @@ import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.measure.Measure;
 import javax.measure.quantity.Duration;
@@ -59,7 +57,7 @@ public class ProRataProfileService extends ProfileService {
 
             Interval interval = requestInterval;
 
-            if (pi.hasPerUnits()) {
+            if (hasPerUnitValues(pi)) {
 
                 ProfileItem pic = pi.getCopy();
 
@@ -124,4 +122,13 @@ public class ProRataProfileService extends ProfileService {
         return getInterval(startDate, endDate).toDurationMillis();
     }
 
+    private boolean hasPerUnitValues(ProfileItem pi) {
+        List<ItemValue> itemValues = pi.getItemValues();
+        for (ItemValue iv : itemValues) {
+            if (iv.hasPerUnits()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

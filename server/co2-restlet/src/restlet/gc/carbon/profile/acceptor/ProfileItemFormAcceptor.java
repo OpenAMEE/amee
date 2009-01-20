@@ -147,7 +147,6 @@ public class ProfileItemFormAcceptor implements Acceptor {
         } else {
             // update 'duration' value
             if (form.getNames().contains("duration")) {
-                profileItem.setDuration(form.getFirstValue("duration"));
                 StartEndDate endDate = profileItem.getStartDate().plus(form.getFirstValue("duration"));
                 profileItem.setEndDate(endDate);
             }

@@ -45,7 +45,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
         JSONObject obj = new JSONObject();
         ProfileItem profileItem = resource.getProfileItem();
         setBuilder(profileItem);
-        obj.put("profileItem", profileItem.getJSONObject());
+        obj.put("profileItem", profileItem.getJSONObject(true));
         obj.put("path", resource.getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
         return obj;
@@ -56,7 +56,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
         ProfileItem profileItem = resource.getProfileItem();
         setBuilder(profileItem);
         Element element = document.createElement("ProfileItemResource");
-        element.appendChild(profileItem.getElement(document));
+        element.appendChild(profileItem.getElement(document, true));
         element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
@@ -78,8 +78,8 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
     }
 
     private void setBuilder(ProfileItem pi) {
-        if (resource.getProfileBrowser().returnAmountInExternalUnit()) {
-            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getAmountUnit()));
+        if (resource.getProfileBrowser().returnInExternalUnit()) {
+            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getReturnUnit()));
         } else {
             pi.setBuilder(new ProfileItemBuilder(pi));
         }

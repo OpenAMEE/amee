@@ -116,7 +116,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
                 if (resource.getProfileItems().size() == 1) {
                     ProfileItem pi = resource.getProfileItems().get(0);
                     setBuilder(pi);
-                    obj.put("profileItem", pi.getJSONObject());
+                    obj.put("profileItem", pi.getJSONObject(true));
                 } else {
                     JSONArray profileItems = new JSONArray();
                     obj.put("profileItems", profileItems);
@@ -206,8 +206,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
     }
 
     private void setBuilder(ProfileItem pi) {
-        if (resource.getProfileBrowser().returnAmountInExternalUnit()) {
-            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getAmountUnit()));
+        if (resource.getProfileBrowser().returnInExternalUnit()) {
+            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getReturnUnit()));
         } else {
             pi.setBuilder(new ProfileItemBuilder(pi));
         }

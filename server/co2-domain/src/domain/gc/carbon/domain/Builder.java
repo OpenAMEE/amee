@@ -29,4 +29,5 @@ public interface Builder {
     JSONObject getJSONObject(boolean detailed) throws JSONException;
 
     Element getElement(Document document, boolean detailed);
+
 }

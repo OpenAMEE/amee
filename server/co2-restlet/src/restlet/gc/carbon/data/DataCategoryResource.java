@@ -112,7 +112,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         if (isGet()) {
 
             // add DataCategory
-            obj.put("dataCategory", dataBrowser.getDataCategory().getJSONObject());
+            obj.put("dataCategory", dataBrowser.getDataCategory().getJSONObject(true));
 
             // list child Data Categories and child Data Items
             JSONObject children = new JSONObject();
@@ -144,7 +144,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
             // DataCategories
             if (dataCategory != null) {
-                obj.put("dataCategory", dataCategory.getJSONObject());
+                obj.put("dataCategory", dataCategory.getJSONObject(true));
             } else if (dataCategories != null) {
                 JSONArray dataCategories = new JSONArray();
                 obj.put("dataCategories", dataCategories);
@@ -155,7 +155,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
             // DataItems
             if (dataItem != null) {
-                obj.put("dataItem", dataItem.getJSONObject());
+                obj.put("dataItem", dataItem.getJSONObject(true));
             } else if (dataItems != null) {
                 JSONArray dataItems = new JSONArray();
                 obj.put("dataItems", dataItems);
@@ -177,7 +177,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         if (isGet()) {
 
             // add DataCategory
-            element.appendChild(dataBrowser.getDataCategory().getElement(document));
+            element.appendChild(dataBrowser.getDataCategory().getElement(document, true));
 
             // list child Data Categories and child Data Items
             Element childrenElement = document.createElement("Children");
@@ -537,7 +537,6 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
         } else {
             if (form.getNames().contains("duration")) {
-                dataItem.setDuration(form.getFirstValue("duration"));
                 StartEndDate endDate = startDate.plus(form.getFirstValue("duration"));
                 dataItem.setEndDate(endDate);
             }
