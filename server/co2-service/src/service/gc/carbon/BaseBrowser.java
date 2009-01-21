@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 public abstract class BaseBrowser implements Serializable {
 
     protected PathItem pathItem;
-    private final StartEndDate epoch = new StartEndDate();
+    private final StartEndDate epoch = new StartEndDate(new Date(0));
 
     protected StartEndDate startDate;
     protected StartEndDate endDate;
