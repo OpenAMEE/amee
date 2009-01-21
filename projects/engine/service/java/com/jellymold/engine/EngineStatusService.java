@@ -66,7 +66,7 @@ public class EngineStatusService extends StatusService {
             Configuration configuration,
             Map<String, Object> values) {
 
-        if ((request.getHostRef().toString() + "/").equals(request.getOriginalRef().toString())) {
+        if (request.getResourceRef().getPath().equals("/")) {
             return new TemplateRepresentation("default.ftl", configuration, values, MediaType.TEXT_HTML);
         } else if (status.equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
             values.put("next", AuthUtils.getNextUrl(request));
