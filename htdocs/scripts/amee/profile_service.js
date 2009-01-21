@@ -30,7 +30,7 @@ DrillDown.prototype = {
     initialize: function(fullPath, apiVersion, dateFormat) {
         this.fullPath = fullPath;
         this.apiVersion = apiVersion || '1.0';
-        this.dateFormat = dateFormat || 'yyyymmddThhmm';
+        this.dateFormat = dateFormat || 'date format not specified';
 		var selectName = null;
 		var selections = null;
 		var uid = null;
@@ -65,6 +65,10 @@ DrillDown.prototype = {
         // store stuff locally
         this.selectName = obj.choices.name;
   	    this.selections = obj.selections;
+
+        // reset heading 
+        $("createProfileHeading").innerHTML="Create Profile Item";
+
 		// get and reset our div
 		var div = $("createProfileItemDiv");
 		div.innerHTML = '';
@@ -210,7 +214,7 @@ Pager.prototype = {
         var prevPageLink;
 
         // the 'Page X of X' element
-        pageXofX = new Element('span')
+        pageXofX = new Element('h4')
                 .update('Page ' + this.currentPage + ' of ' + this.lastPage);
         // element for all the links
         links = new Element('p');
@@ -221,7 +225,8 @@ Pager.prototype = {
 //            links.insert(new Element('li').insert(prevPageLink));
 //        }
         // page number links
-        for (page = 1; page <= this.lastPage; page++) {
+
+        for (page = 1; (page <= this.lastPage) && this.lastPage ; page++) {
             if (this.lastPage <= 10) {
                 links.insert(this.getPageLink(page, this.currentPage === page));
             } else {
@@ -285,11 +290,18 @@ ApiService.prototype = {
         this.contentElementName = params.contentElementName || "apiContent";
         this.tAmountElementName = params.tAmountElementName || "apiTAmount";
         this.pagerElementName = params.pagerElementName || "apiPager";
+        this.apiVersion = params.apiVersion || '1.0';
+        this.drillDown = params.drillDown || false;
 
         // api category items
         this.headingCategory = params.headingCategory || "";
         this.headingCategoryElementName = params.headingCategoryElementName || 'apiCategoryHeading';
         this.headingContentElementName = params.headingContentElementName || "apiCategoryContent";
+
+        // api data category items
+        this.dataHeadingCategory = params.dataHeadingCategory || "";
+        this.dataHeadingCategoryElementName = params.dataHeadingCategoryElementName || 'apiDataCategoryHeading';
+        this.dataContentElementName = params.dataHeadingContentElementName || 'apiDataCategoryContent';
 
         // permissions
         this.allowView = params.allowView || false;
@@ -297,6 +309,13 @@ ApiService.prototype = {
         this.allowModify = params.allowModify || false;
 
         this.pager = null;
+    },
+    getDateFormat: function() {
+        if (this.apiVersion == "1.0") {
+            return "yyyyMMdd";
+        } else {
+            return "yyyy-MM-dd'T'HH:mmZ";
+        }
     },
     apiRequest: function(params) {
         var localParams;
@@ -313,12 +332,14 @@ ApiService.prototype = {
             });
     },
     processApiResponse: function(response) {
+        this.renderDataCategoryApiResponse(response);
         this.renderApiResponse(response);
     },
     renderApiResponse: function(response) {
 
         var json = response.responseJSON;
 
+        // profile items
         if (json.profileItems.length > 0) {
             // update elements
             this.headingElement = $(this.headingElementName);
@@ -376,6 +397,60 @@ ApiService.prototype = {
 
             // replace table
             this.headingContentElement.replace(tableElement);
+        }
+    },
+    renderDataCategoryApiResponse: function(response) {
+
+        var json = response.responseJSON;
+
+        // data category information and drill down
+        if (json.dataCategory) {
+
+            var dataCategory = json.dataCategory;
+
+            // update elements
+            this.dataHeadingCategoryElement = $(this.dataHeadingCategoryElementName);
+            this.dataContentElement = $(this.dataContentElementName);
+
+
+            // set section heading
+            if (this.dataHeadingCategoryElement) {
+                this.dataHeadingCategoryElement.innerHTML = this.dataHeadingCategory;
+            }
+
+            if (this.dataContentElement) {
+                // set section details
+                var pElement = new Element('p', {id : this.dataContentElementName});
+
+                pElement.appendChild(document.createTextNode("Name: " + dataCategory.name));
+                if (dataCategory.path) {
+                    pElement.insert(new Element("br"));
+                    pElement.appendChild(document.createTextNode("Path: " + dataCategory.path));
+                }
+
+                pElement.insert(new Element("br"));
+                pElement.appendChild(document.createTextNode("Full Path: " + window.location.pathname));
+
+                if (dataCategory.itemDefinition) {
+                    pElement.insert(new Element("br"));
+                    pElement.appendChild(document.createTextNode("Item Definition: " + dataCategory.itemDefinition.name));
+                }
+
+                if (json.environment) {
+                    pElement.insert(new Element("br"));
+                    pElement.appendChild(document.createTextNode("Environment: " + json.environment.name));
+                }
+
+                pElement.insert(new Element("br"));
+                pElement.appendChild(document.createTextNode("Data Category UID: " + dataCategory.uid));
+
+
+                this.dataContentElement.replace(pElement);
+            }
+
+            if (this.drillDown && json.path) {
+                new DrillDown("/data" + json.path, this.apiVersion, this.getDateFormat()).loadDrillDown('');
+            }
         }
     },
     getPagerElements: function() {
@@ -543,7 +618,8 @@ var ProfileItemApiService = Class.create(ApiService, ({
                     var tableRow;
 
                     var newRow = new Element("tr");
-                    var dataLabel = new Element("td").insert(new Element('a', {href : window.location.href + "/" + itemValue.displayPath}).update(itemValue.displayName));
+                    var dataLabel = new Element("td").insert(
+                            new Element('a', {href : window.location.href + "/" + itemValue.displayPath}).update(itemValue.displayName));
                     var dataInfo = new Element('td');
                     var inputValue = new Element('input', {type : 'text', name : itemValue.displayPath, value : itemValue.value, size : 30});
                     dataInfo.insert(inputValue);
@@ -661,6 +737,8 @@ var ProfileItemApiService = Class.create(ApiService, ({
             method = "&method=put";
         }
 
+        $('updateStatusSubmit').innerHTML='';
+
         var myAjax = new Ajax.Request(window.location.href + method, {
             method: 'post',
             parameters: $('inputForm').serialize(),
@@ -670,11 +748,12 @@ var ProfileItemApiService = Class.create(ApiService, ({
         });
     },
     updateProfileItemSuccess: function(response) {
-        $('errorSubmit').replace(new Element('div', {id : 'errorSubmit'}));
-        //window.location.href = window.location.href;
+        // update elements and status
+        $('updateStatusSubmit').replace(new Element('div', {id : 'updateStatusSubmit'}).insert(new Element('b').update('UPDATED!')));
+        this.renderApiResponse(response);
     },
     updateProfileItemFail: function(response) {
-        $('errorSubmit').replace(new Element('div', {id : 'errorSubmit'}).insert(new Element('b').update('ERROR!')));
+        $('updateStatusSubmit').replace(new Element('div', {id : 'updateStatusSubmit'}).insert(new Element('b').update('ERROR!')));
     }
 
 }));

@@ -73,6 +73,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             obj.put("profile", resource.getProfile().getJSONObject());
         }
 
+        // add environment
+        obj.put("environment", resource.getEnvironment().getJSONObject(true));
+
         // add Data Category
         obj.put("dataCategory", resource.getDataCategory().getIdentityJSONObject());
 
@@ -151,6 +154,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             element.appendChild(resource.getProfile().getElement(document));
         }
 
+        // add environment
+        element.appendChild(resource.getEnvironment().getElement(document, true));
+        
         // add DataCategory
         element.appendChild(resource.getDataCategory().getIdentityElement(document));
 

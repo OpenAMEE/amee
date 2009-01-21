@@ -27,15 +27,16 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
 </script>
 <h1>Profile Category</h1>
 <#include 'profileTrail.ftl'>
-<h2>Profile Category Details</h2>
-<p>Name: ${dataCategory.name}<br/>
-   <#if dataCategory.path != ''>Path: ${dataCategory.path}<br/></#if>
-   Full Path: ${browser.fullPath}<br/>
-   <#if dataCategory.itemDefinition??>Item Definition: ${dataCategory.itemDefinition.name}<br/></#if>
-   Environment: ${dataCategory.environment.name}<br/>
-   Data Category UID: ${dataCategory.uid}<br/>
-</p>
 <#if activeUser.apiVersion.versionOne>
+    <h2>Profile Category Details</h2>
+    <p>Name: ${dataCategory.name}<br/>
+       <#if dataCategory.path != ''>Path: ${dataCategory.path}<br/></#if>
+       Full Path: ${browser.fullPath}<br/>
+       <#if dataCategory.itemDefinition??>Item Definition: ${dataCategory.itemDefinition.name}<br/></#if>
+       Environment: ${dataCategory.environment.name}<br/>
+       Data Category UID: ${dataCategory.uid}<br/>
+    </p>
+
     <#assign children = browser.pathItem.findChildrenByType('DC')>
     <#if 0 != children?size>
       <h2>Profile Categories</h2>
@@ -57,6 +58,9 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
       </p>
     </#if>
 <#else>
+    <h2 id="apiDataCategoryHeading"></h2>
+    <p id="apiDataCategoryContent"></p>
+
     <h2 id="apiCategoryHeading"></h2>
     <p>
         <table id="apiCategoryContent" />
@@ -114,7 +118,7 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
 
 <#if dataCategory.itemDefinition??>
   <#if browser.profileItemActions.allowCreate>
-    <h2>Create Profile Item</h2>
+    <h2 id="createProfileHeading"></h2>
     <p>
     <form id="createProfileFrm" onSubmit="return false;">
     <div id="createProfileItemDiv">
@@ -125,27 +129,31 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
 </#if>
 
 <script type='text/javascript'>
-
-    // update drill down
-    var drillDown = new DrillDown('/data${browser.pathItem.fullPath}', '${activeUser.apiVersion.version}', "${getDateFormat(activeUser.apiVersion.version)}");
-    drillDown.loadDrillDown('');
-
     // api call
     <#if !activeUser.apiVersion.versionOne && browser.profileItemActions.allowList>
-        var profileCategoryApiService = new ProfileCategoryApiService(
-            {
-                heading : "Profile Items",
-                headingElementName : "apiHeading",
-                contentElementName : "apiContent",
-                tAmountElementName : 'apiTAmount',
-                pagerElementName : 'apiPager',
-                headingCategory : 'Profile Categories',
-                headingCategoryElementName : 'apiCategoryHeading',
-                headingContentElementName : "apiCategoryContent",
-                allowView : ${browser.profileItemActions.allowView?string},
-                allowDelete : ${browser.profileItemActions.allowDelete?string}
-            });
-        profileCategoryApiService.apiRequest();
+
+        document.observe('dom:loaded', function() {
+            var profileCategoryApiService = new ProfileCategoryApiService(
+                {
+                    heading : "Profile Items",
+                    headingElementName : "apiHeading",
+                    contentElementName : "apiContent",
+                    tAmountElementName : 'apiTAmount',
+                    pagerElementName : 'apiPager',
+                    headingCategory : 'Profile Categories',
+                    headingCategoryElementName : 'apiCategoryHeading',
+                    headingContentElementName : "apiCategoryContent",
+                    dataHeadingCategory : 'Profile Category Details',
+                    dataHeadingCategoryElementName : 'apiDataCategoryHeading',
+                    dataContentElementName : "apiDataCategoryContent",
+                    apiVersion : '2.0',
+                    drillDown : true,
+                    allowView : ${browser.profileItemActions.allowView?string},
+                    allowModify : ${browser.profileItemActions.allowModify?string},
+                    allowDelete : ${browser.profileItemActions.allowDelete?string}
+                });
+                profileCategoryApiService.apiRequest();
+        });
     </#if>
 </script>
 

@@ -115,7 +115,7 @@
             <table id="inputTable">
             </table>
             <br/>
-            <div id="inputSubmit"></div><div id="errorSubmit"></div>
+            <div id="inputSubmit"></div><div id="updateStatusSubmit"></div>
         </form>
     </p>
 </#if>
@@ -123,7 +123,6 @@
 
     // api call
     <#if !activeUser.apiVersion.versionOne>
-        //showJSON(renderApiResponse);
         var profileItemApiService = new ProfileItemApiService(
             {
                 allowView : ${browser.profileItemActions.allowView?string},
