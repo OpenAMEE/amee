@@ -5,7 +5,6 @@ import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.joda.time.DateTime;
@@ -13,7 +12,7 @@ import org.joda.time.DateTime;
 public abstract class BaseBrowser implements Serializable {
 
     protected PathItem pathItem;
-    private final StartEndDate epoch = new StartEndDate(new Date(0));
+    private final StartEndDate startOfMonth = new StartEndDate(getStartOfMonthDate());
 
     protected StartEndDate startDate;
     protected StartEndDate endDate;
@@ -41,7 +40,7 @@ public abstract class BaseBrowser implements Serializable {
     }
 
     public StartEndDate getStartDate() {
-        return (startDate != null ? startDate : epoch);
+        return (startDate != null ? startDate : startOfMonth);
     }
 
     public StartEndDate getEndDate() {
@@ -59,5 +58,9 @@ public abstract class BaseBrowser implements Serializable {
 
     public boolean isQuery() {
         return (startDate != null) || (endDate != null);
+    }
+
+    private String getStartOfMonthDate() {
+        return StartEndDate.ISO_DATE_FORMAT.format(new DateTime().dayOfMonth().withMinimumValue().getMillis());
     }
 }
