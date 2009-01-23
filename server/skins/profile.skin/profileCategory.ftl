@@ -1,6 +1,7 @@
 <#include 'profileCommon.ftl'>
 <#include '/includes/furniture.ftl'>
 <#include '/includes/before_content.ftl'>
+<script src="/scripts/amee/api_service.js" type="text/javascript"></script>
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 <script type="text/javascript">
 function profileCategoryLoaded() {
