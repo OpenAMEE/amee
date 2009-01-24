@@ -108,6 +108,10 @@ public class ProfileService {
         return profileSheetService.getSheet(browser, sheetFactory);
     }
 
+    public Sheet getSheet(ProfileBrowser browser, DataCategory dataCategory, CacheableFactory sheetFactory) {
+        return profileSheetService.getSheet(browser, dataCategory, sheetFactory);
+    }
+
     public boolean isUnique(ProfileItem pi) {
         return !dao.equivilentProfileItemExists(pi);
     }

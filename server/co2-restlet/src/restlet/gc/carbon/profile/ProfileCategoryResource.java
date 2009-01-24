@@ -20,10 +20,11 @@
 package gc.carbon.profile;
 
 import gc.carbon.ResourceBuilder;
-import gc.carbon.profile.builder.ResourceBuilderFactory;
+import gc.carbon.domain.ObjectType;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.acceptor.*;
+import gc.carbon.profile.builder.ResourceBuilderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -50,6 +51,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
     private ResourceBuilder builder;
     private Map<MediaType, Acceptor> acceptors;
+    private boolean recurse = false;
 
     @Override
     public void init(Context context, Request request, Response response) {
@@ -58,6 +60,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
         setPage(request);
         setAcceptors();
         setBuilderStrategy();
+        recurse = request.getResourceRef().getQueryAsForm().getFirstValue("recurse", "false").equals("true");
     }
 
     private void setBuilderStrategy() {
@@ -74,7 +77,9 @@ public class ProfileCategoryResource extends BaseProfileResource {
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (profileBrowser.getDataCategory() != null);
+        return super.isValid() &&
+                (profileBrowser.getDataCategory() != null) &&
+                (pathItem.getObjectType().equals(ObjectType.DC));
     }
 
     @Override
@@ -217,11 +222,14 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     public List<ProfileItem> getProfileItems() {
-        return profileItems;    
+        return profileItems;
     }
 
     public ProfileItem getProfileItem() {
         return profileBrowser.getProfileItem();
     }
 
+    public boolean isRecurse() {
+        return recurse;
+    }
 }

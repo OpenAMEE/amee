@@ -1,24 +1,25 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package gc.carbon.domain.path;
 
+import com.jellymold.utils.domain.APIObject;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.ObjectType;
 import org.json.JSONException;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class PathItem implements Serializable, Comparable {
+public class PathItem implements APIObject, Serializable, Comparable {
 
     private PathItemGroup pathItemGroup = null;
     private Long id = 0L;
@@ -73,7 +74,11 @@ public class PathItem implements Serializable, Comparable {
     }
 
     public Element getElement(Document document) {
-        Element element = document.createElement(getObjectType().getLabel());
+        return getElement(document, getObjectType().getLabel());
+    }
+
+    public Element getElement(Document document, String name) {
+        Element element = document.createElement(name);
         element.setAttribute("uid", getUid());
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         element.appendChild(APIUtils.getElement(document, "Path", getPath()));
@@ -92,20 +97,20 @@ public class PathItem implements Serializable, Comparable {
 
     public boolean equals(Object o) {
         PathItem other = (PathItem) o;
-        return getPath().equalsIgnoreCase(other.getPath());
+        return getFullPath().equalsIgnoreCase(other.getFullPath());
     }
 
     public int compareTo(Object o) {
         PathItem other = (PathItem) o;
-        return getPath().compareToIgnoreCase(other.getPath());
+        return getFullPath().compareToIgnoreCase(other.getFullPath());
     }
 
     public int hashCode() {
-        return getPath().toLowerCase().hashCode();
+        return getFullPath().toLowerCase().hashCode();
     }
 
     public String toString() {
-        return getPath();
+        return getFullPath();
     }
 
     public void add(PathItem child) {
@@ -207,6 +212,25 @@ public class PathItem implements Serializable, Comparable {
             }
         }
         return childrenByType;
+    }
+
+    public boolean hasChildrenByType(ObjectType type) {
+        return hasChildrenByType(type, false);
+    }
+
+    public boolean hasChildrenByType(ObjectType type, boolean recurse) {
+        boolean result = false;
+        for (PathItem pi : getChildren()) {
+            if (pi.getObjectType().equals(type)) {
+                result = true;
+                break;
+            }
+            if (recurse && pi.hasChildrenByType(type, recurse)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     public String getInternalPath() {

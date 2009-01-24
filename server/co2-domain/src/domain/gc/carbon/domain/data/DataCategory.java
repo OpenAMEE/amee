@@ -116,6 +116,11 @@ public class DataCategory implements PersistentObject, Pathable {
     }
 
     @Transient
+    public JSONObject getJSONObject() throws JSONException {
+        return getJSONObject(true);
+    }
+
+    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
