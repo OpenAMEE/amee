@@ -77,7 +77,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(getItemsPerPage());
         List<Profile> profiles = profileService.getProfiles(pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -91,7 +91,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<Profile> profiles = profileService.getProfiles(pager);
             pager.setCurrentPage(getPage());
             JSONArray profilesJSONArray = new JSONArray();
@@ -110,7 +110,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ProfilesResource");
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<Profile> profiles = profileService.getProfiles(pager);
             pager.setCurrentPage(getPage());
             Element profilesElement = document.createElement("Profiles");
