@@ -18,7 +18,12 @@ function profileItemDeleted() {
   profileCategoryResource.load();
 }
 function deleteProfileItem(profileItemUid, profileItemPath) {
-  resourceUrl = profileItemPath + '?method=delete';
+  if (profileItemPath && profileItemPath.indexOf("/") > -1) {
+    resourceUrl = profileItemPath + '&method=delete';
+  } else {
+    resourceUrl = profileItemPath + '?method=delete';
+  }
+  Log.debug(resourceUrl);
   resourceElem = $('Elem_' + profileItemUid);
   resourceType = 'Profile Item';
   var deleteResource = new DeleteResource()
@@ -61,11 +66,6 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
 <#else>
     <h2 id="apiDataCategoryHeading"></h2>
     <p id="apiDataCategoryContent"></p>
-
-    <h2 id="apiCategoryHeading"></h2>
-    <p>
-        <table id="apiCategoryContent" />
-    </p>
 </#if>
 <#if browser.profileItemActions.allowList>
 
@@ -107,12 +107,10 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
         </#if>
     <#else>
         <h2 id="apiHeading"></h2>
-        <p>
-            <table id="apiContent">
-            </table>
-        </p>
+        <div id="apiTopPager"></div>
+        <table id="apiContent"></table>
         <p id="apiTAmount"></p>
-        <div id="apiPager"></div>
+        <div id="apiBottomPager"></div>
     </#if>
 
 </#if>
@@ -120,12 +118,10 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
 <#if dataCategory.itemDefinition??>
   <#if browser.profileItemActions.allowCreate>
     <h2 id="createProfileHeading"></h2>
-    <p>
     <form id="createProfileFrm" onSubmit="return false;">
     <div id="createProfileItemDiv">
     </div>
     </form>
-    </p>
   </#if>
 </#if>
 
@@ -140,10 +136,9 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
                     headingElementName : "apiHeading",
                     contentElementName : "apiContent",
                     tAmountElementName : 'apiTAmount',
-                    pagerElementName : 'apiPager',
+                    pagerTopElementName : 'apiTopPager',
+                    pagerBtmElementName : 'apiBottomPager',
                     headingCategory : 'Profile Categories',
-                    headingCategoryElementName : 'apiCategoryHeading',
-                    headingContentElementName : "apiCategoryContent",
                     dataHeadingCategory : 'Profile Category Details',
                     dataHeadingCategoryElementName : 'apiDataCategoryHeading',
                     dataContentElementName : "apiDataCategoryContent",

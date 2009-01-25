@@ -30,7 +30,7 @@ Pager.prototype = {
             this.itemsFound = 0;
         }
         this.apiService = params.apiService;
-        this.pagerElementName = this.apiService.pagerElementName || 'apiPager';
+        this.pagerElementName = params.pagerElementName || 'apiPager';
     },
     // Rendering elements
     getElements: function() {
@@ -44,7 +44,7 @@ Pager.prototype = {
     },
     getPagerElement: function() {
         var formElement = new Element("form", {id : this.pagerElementName});
-        var pagerDiv = new Element('div', {class : 'border textDiv padding'});
+        var pagerDiv = new Element('div').addClassName("border textDiv padding");
         var previousElement;
         var nextElement;
         var pageElement;
@@ -66,8 +66,6 @@ Pager.prototype = {
         pagerDiv.insert(nextElement);
 
         // pages
-        pagerDiv.insert(' Showing ' + this.from + ' to ' + (this.start + this.itemsFound) + ' of ' + this.items + '.  Page ');
-
         pageElement = new Element('select', {id : 'pageElement'});
         for (page = 1; (page <= this.lastPage) && this.lastPage ; page++) {
             var optionElement;
@@ -78,10 +76,12 @@ Pager.prototype = {
             }
             pageElement.insert(optionElement);
         }
+        pagerDiv.insert(' Page ');
         pagerDiv.insert(pageElement);
+        pagerDiv.insert(' of ' + this.lastPage);
         pageElement.observe('change', this.doPageItemLinkClick.bindAsEventListener(this));
 
-        pagerDiv.insert(' of ' + this.lastPage);
+        pagerDiv.insert('. Showing ' + this.from + ' to ' + (this.start + this.itemsFound) + ' of ' + this.items + '.');
 
         formElement.insert(pagerDiv);
         return formElement;
@@ -129,14 +129,14 @@ ApiService.prototype = {
         this.headingElementName = params.headingElementName || "apiHeading";
         this.contentElementName = params.contentElementName || "apiContent";
         this.tAmountElementName = params.tAmountElementName || "apiTAmount";
-        this.pagerElementName = params.pagerElementName || "apiPager";
+        this.pagerTopElementName = params.pagerTopElementName || "apiTopPager";
+        this.pagerBtmElementName = params.pagerBtmElementName || "apiBottomPager";
+        
         this.apiVersion = params.apiVersion || '1.0';
         this.drillDown = params.drillDown || false;
 
         // api category items
         this.headingCategory = params.headingCategory || "";
-        this.headingCategoryElementName = params.headingCategoryElementName || 'apiCategoryHeading';
-        this.headingContentElementName = params.headingContentElementName || "apiCategoryContent";
 
         // api data category items
         this.dataHeadingCategory = params.dataHeadingCategory || "";
@@ -144,6 +144,7 @@ ApiService.prototype = {
         this.dataContentElementName = params.dataHeadingContentElementName || 'apiDataCategoryContent';
 
         // permissions
+        this.allowList = params.allowList || false;
         this.allowView = params.allowView || false;
         this.allowDelete = params.allowDelete || false;
         this.allowModify = params.allowModify || false;
@@ -179,64 +180,37 @@ ApiService.prototype = {
 
         var json = response.responseJSON;
 
-        // profile items
-        if (json.profileItems.length > 0) {
-            // update elements
-            this.headingElement = $(this.headingElementName);
-            this.contentElement = $(this.contentElementName);
-            this.totalAmountElement = $(this.tAmountElementName);
-            this.pagerElement = $(this.pagerElementName);
+        // update elements
+        this.headingElement = $(this.headingElementName);
+        this.contentElement = $(this.contentElementName);
+        this.totalAmountElement = $(this.tAmountElementName);
+        this.pagerTopElement = $(this.pagerTopElementName);
+        this.pagerBtmElement = $(this.pagerBtmElementName);
 
-            this.pager = new Pager({json : response.responseJSON.pager, apiService : this});
+        // set section heading
+        this.headingElement.innerHTML = this.heading;
 
-            // set section heading
-            this.headingElement.innerHTML = this.heading;
+        // create table headings
+        var tableElement = new Element('table', {id : this.contentElementName}).insert(this.getHeadingElement(json));
 
-            // create table headings
-            var tableElement = new Element('table', {id : this.contentElementName}).insert(this.getHeadingElement(json));
+        // create table details
+        var detailRows = this.getDetailRows(json);
+        for (var i = 0; i < detailRows.length; i++) {
+            tableElement.insert(detailRows[i]);
+        }
 
-            // create table details
-            var detailRows = this.getDetailRows(json);
-            for (var i = 0; i < detailRows.length; i++) {
-                tableElement.insert(detailRows[i]);
-            }
+        // replace table
+        this.contentElement.replace(tableElement);
 
-            // replace table
-            this.contentElement.replace(tableElement);
+        // replace pager(s)
+        if (this.pagerTopElement) {
+            this.pager = new Pager({json : response.responseJSON.pager, apiService : this, pagerElementName : this.pagerTopElementName});
+            this.pagerTopElement.replace(this.getPagerElements());
+        }
 
-            // create total
-            var totalElement;
-            if (json.totalAmount.value) {
-                totalElement = new Element('p', {id : this.tAmountElementName}).insert("Total "
-                        + this.getUnit(json) + " "
-                        + json.totalAmount.value);
-            } else {
-                totalElement = new Element('p', {id : this.tAmountElementName}).insert("Total ");
-            }
-            // replace total amount
-            this.totalAmountElement.replace(totalElement);
-
-            // replace pager
-            this.pagerElement.replace(this.getPagerElements());
-        } else if (json.profileCategories.length > 0) {
-            // update elements
-            this.headingCategoryElement = $(this.headingCategoryElementName);
-            this.headingContentElement = $(this.headingContentElementName);
-
-            // set section heading
-            this.headingCategoryElement.innerHTML = this.headingCategory;
-
-            // create table headings
-            var tableElement = new Element('table', {id : this.contentElementName}).insert(this.getHeadingCategoryElement());
-
-            // create table details
-            var detailRows = this.getCategoryDetailRows(json);
-            for (var i = 0; i < detailRows.length; i++) {
-                tableElement.insert(detailRows[i]);
-            }
-
-            // replace table
-            this.headingContentElement.replace(tableElement);
+        if (this.pagerTopElement) {
+            this.pager = new Pager({json : response.responseJSON.pager, apiService : this, pagerElementName : this.pagerBtmElementName});
+            this.pagerBtmElement.replace(this.getPagerElements());
         }
     },
     renderDataCategoryApiResponse: function(response) {
@@ -297,18 +271,8 @@ ApiService.prototype = {
         return this.pager.getPagerElement();
     },
     getHeadingElement: function(json) {
-        return new Element('tr')
-                .insert(this.getHeadingData('item'))
-                .insert(this.getHeadingData(this.getUnit(json)))
-                .insert(this.getHeadingData('Name'))
-                .insert(this.getHeadingData('Start Date'))
-                .insert(this.getHeadingData('End Date'))
-                .insert(this.getHeadingData('Actions'));
-    },
-    getHeadingCategoryElement: function() {
-        return new Element('tr')
-                .insert(this.getHeadingData('Path'))
-                .insert(this.getHeadingData('Actions'));
+        // implementation required
+        return "";
     },
     getHeadingData: function(heading) {
         return new Element('th').insert(heading);
@@ -320,10 +284,9 @@ ApiService.prototype = {
         return "Unknown Unit";
     },
     getDetailRows: function(json) {
-        // implementation required
-    },
-    getCategoryDetailRows: function(json) {
-        // implementation required
+        var rows = [];
+        rows[0] = new Element("tr").insert(new Element("td"));
+        return rows;
     },
     getActionsTableData: function(urlKey, dMethod, uid) {
         var actions = new Element('td');

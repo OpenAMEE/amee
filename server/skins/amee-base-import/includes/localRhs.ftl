@@ -40,7 +40,8 @@
 
     function showApiResult(message) {
         // prep element
-        var modalElement = new Element('div', {id : 'modal', class : 'columnBlock paddingTopBottom clearfix', style : 'overflow: auto; text-align: left;'});
+        var modalElement = new Element('div', {id : 'modal', style : 'overflow: auto; text-align: left;'});
+        modalElement.addClassName('columnBlock paddingTopBottom clearfix');
         $('modal').replace(modalElement);
 
         // set-up modal and open
@@ -106,4 +107,3 @@
     <br/><br/>
     <button id="showAPIATOM" name='showAPIATOM' type='button' onClick='showATOM(); return false;'>Show ATOM</button>
 </form>
-</p>

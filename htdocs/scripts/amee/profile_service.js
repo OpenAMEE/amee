@@ -159,10 +159,73 @@ DrillDown.prototype = {
     }
 };
 
-var ProfileCategoryApiService = Class.create(ApiService, ({
+var ProfileItemsApiService = Class.create(ApiService, ({
+    // Initialization
+    initialize: function($super, params) {
+        $super(params);
+    },
+    renderApiResponse: function($super, response) {
+
+        var json = response.responseJSON;
+
+        $super(response);
+
+        // update elements
+        this.totalAmountElement = $(this.tAmountElementName);
+
+        // create total
+        var totalElement;
+        if (json.totalAmount.value) {
+            totalElement = new Element('p', {id : this.tAmountElementName}).insert("Total "
+                    + this.getUnit(json) + " "
+                    + json.totalAmount.value);
+        } else {
+            totalElement = new Element('p', {id : this.tAmountElementName}).insert("Total ");
+        }
+        // replace total amount
+        this.totalAmountElement.replace(totalElement);
+    },
+    getHeadingElement: function(json) {
+        return new Element('tr')
+                .insert(this.getHeadingData('item'))
+                .insert(this.getHeadingData(this.getUnit(json)))
+                .insert(this.getHeadingData('Name'))
+                .insert(this.getHeadingData('Start Date'))
+                .insert(this.getHeadingData('End Date'))
+                .insert(this.getHeadingData('Actions'));
+    }
+}));
+
+var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
         // Initialization
     initialize: function($super, params) {
         $super(params);
+    },
+    renderApiResponse: function($super, response) {
+        var json = response.responseJSON;
+
+        if (json.profileItems.length > 0) {
+            $super(response);
+        } else if (json.profileCategories.length > 0) {
+            // update elements
+            this.headingCategoryElement = $(this.headingElementName);
+            this.headingContentElement = $(this.headingElementName);
+
+            // set section heading
+            this.headingCategoryElement.innerHTML = this.headingCategory;
+
+            // create table headings
+            var tableElement = new Element('table', {id : this.contentElementName}).insert(this.getHeadingCategoryElement());
+
+            // create table details
+            var detailRows = this.getCategoryDetailRows(json);
+            for (var i = 0; i < detailRows.length; i++) {
+                tableElement.insert(detailRows[i]);
+            }
+
+            // replace table
+            this.headingContentElement.replace(tableElement);
+        }
     },
     getActionsTableData: function($super, uid) {
         return $super("profileItem.uid", "deleteProfileItem", uid);
@@ -189,6 +252,11 @@ var ProfileCategoryApiService = Class.create(ApiService, ({
         }
         rows[0] = new Element("tr").insert(new Element("td"));
         return rows;
+    },
+    getHeadingCategoryElement: function() {
+        return new Element('tr')
+                .insert(this.getHeadingData('Path'))
+                .insert(this.getHeadingData('Actions'));
     },
     getCategoryDetailRows: function(json) {
         var rows = [];
@@ -263,7 +331,7 @@ var ProfileItemApiService = Class.create(ApiService, ({
 
                     var newRow = new Element("tr");
                     var dataLabel = new Element("td").insert(
-                            new Element('a', {href : window.location.href + "/" + itemValue.displayPath}).update(itemValue.displayName));
+                            new Element('a', {href : this.getUrl(itemValue.displayPath) }).update(itemValue.displayName));
                     var dataInfo = new Element('td');
                     var inputValue = new Element('input', {type : 'text', name : itemValue.displayPath, value : itemValue.value, size : 30});
                     dataInfo.insert(inputValue);
@@ -400,4 +468,70 @@ var ProfileItemApiService = Class.create(ApiService, ({
         $('updateStatusSubmit').replace(new Element('div', {id : 'updateStatusSubmit'}).insert(new Element('b').update('ERROR!')));
     }
 
+}));
+
+
+var ProfilesApiService = Class.create(ApiService, ({
+        // Initialization
+    initialize: function($super, params) {
+        $super(params);
+    },
+    renderApiResponse: function($super, response) {
+        $super(response);
+    },
+    renderDataCategoryApiResponse: function(response) {
+        
+    },
+    renderApiResponse: function($super, response) {
+        var json = response.responseJSON;
+        $super(response);
+    },
+    getHeadingElement: function(json) {
+        return new Element('tr')
+                .insert(this.getHeadingData('Path'))
+                .insert(this.getHeadingData('Group'))
+               .insert(this.getHeadingData('User'))
+               .insert(this.getHeadingData('Created'))
+               .insert(this.getHeadingData('Actions'));
+    },
+    getActionsTableData: function(dMethod, uid) {
+        var actions = new Element('td');
+
+        if (this.allowView) {
+            actions.insert(new Element('a', {href : this.getUrl(uid)})
+                .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
+        }
+
+        if (this.allowDelete) {
+            actions.insert(new Element('input',
+                {
+                onClick : dMethod + '("' + uid + '") ; return false;',
+                type : 'image',
+                src : '/images/icons/page_delete.png',
+                title : 'Delete', alt : 'Delete', border : 0}));
+        }
+        return actions;
+    },
+    getDetailRows: function($super, json) {
+        if (json.profiles) {
+            var rows = [];
+            for (var i = 0; i < json.profiles.length; i++) {
+                var profile = json.profiles[i];
+                var detailRow = new Element('tr', {id : 'Elem_' + profile.uid})
+                    .insert(new Element('td').insert(profile.path))
+                    .insert(new Element('td').insert(profile.permission.group.name))
+                    .insert(new Element('td').insert(profile.permission.user.username))
+                    .insert(new Element('td').insert(profile.created));
+
+                // create actions
+                detailRow.insert(this.getActionsTableData('deleteProfile', profile.path));
+
+                // update array
+                rows[i] = detailRow;
+            }
+            return rows;
+        } else {
+            return $super(json);
+        }
+    }    
 }));
