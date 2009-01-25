@@ -309,6 +309,7 @@ public class AuthService implements Serializable {
         }
     }
 
+    @SuppressWarnings(value = "unchecked")
     public User getUserByUid(String userUid) {
         Site site = (Site) ThreadBeanHolder.get("site");
         List<User> users = entityManager.createQuery(
@@ -329,6 +330,7 @@ public class AuthService implements Serializable {
         return null;
     }
 
+    @SuppressWarnings(value = "unchecked")
     public User getUserByUsername(String username) {
         Site site = (Site) ThreadBeanHolder.get("site");
         List<User> users = entityManager.createQuery(
@@ -349,6 +351,7 @@ public class AuthService implements Serializable {
         return null;
     }
 
+    @SuppressWarnings(value = "unchecked")
     public List<GroupUser> getGroupUsersByUser(User user) {
         List<GroupUser> groupUsers = entityManager.createQuery(
                 "SELECT DISTINCT gu " +
@@ -428,6 +431,7 @@ public class AuthService implements Serializable {
         return (Group) ThreadBeanHolder.get("group");
     }
 
+    @SuppressWarnings(value = "unchecked")
     public static List<GroupUser> getGroupUsers() {
         return (List<GroupUser>) ThreadBeanHolder.get("groupUsers");
     }
