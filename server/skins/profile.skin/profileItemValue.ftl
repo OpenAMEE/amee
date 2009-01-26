@@ -20,6 +20,32 @@
         Created: ${profileItemValue.created?datetime}<br/>
         Modified: ${profileItemValue.modified?datetime}<br/>
     </p>
+
+    <#if browser.profileItemValueActions.allowModify>
+        <h2>Update Profile Item Value</h2>
+        <p>
+        <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+            Value:
+            <#if profileItemValue.itemValueDefinition.choicesAvailable>
+                <select name='value'>
+                    <#list profileItemValue.itemValueDefinition.choiceList as choice>
+                        <option value='${choice.value}'<#if profileItemValue.value == choice.value>
+                                selected</#if>>${choice.name}</option>
+                    </#list>
+                </select>
+            <#else>
+                <input name='value' value='${profileItemValue.value}' type='text' size="30"/><br/>
+                <#if profileItemValue.hasUnits()>
+                    Unit: <input name='unit' value='${profileItemValue.unit}' type='text' size="30"/><br/>
+                </#if>
+                <#if profileItemValue.hasPerUnits()>
+                    PerUnit: <input name='perUnit' value='${profileItemValue.perUnit}' type='text' size="30"/><br/>
+                </#if>
+            </#if><br/><br/>
+            <input type='submit' value='Update'/>
+        </form>
+        </p>
+    </#if>
 <#else>
     <h2>Profile Item Value Details</h2>
     <p>
@@ -34,31 +60,14 @@
         <span id="created"></span>
         <span id="modified"></span>
     </p>
-</#if>
 
-<#if browser.profileItemValueActions.allowModify>
     <h2>Update Profile Item Value</h2>
     <p>
-    <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
-        Value:
-        <#if profileItemValue.itemValueDefinition.choicesAvailable>
-            <select name='value'>
-                <#list profileItemValue.itemValueDefinition.choiceList as choice>
-                    <option value='${choice.value}'<#if profileItemValue.value == choice.value>
-                            selected</#if>>${choice.name}</option>
-                </#list>
-            </select>
-        <#else>
-            <input name='value' value='${profileItemValue.value}' type='text' size="30"/><br/>
-            <#if profileItemValue.hasUnits()>
-                Unit: <input name='unit' value='${profileItemValue.unit}' type='text' size="30"/><br/>
-            </#if>
-            <#if profileItemValue.hasPerUnits()>
-                PerUnit: <input name='perUnit' value='${profileItemValue.perUnit}' type='text' size="30"/><br/>
-            </#if>
-        </#if><br/><br/>
-        <input type='submit' value='Update'/>
-    </form>
+        <form id="inputForm" action='#' method='POST' enctype='application/x-www-form-urlencoded'>
+            <span id="inputValues"></span>
+            <br/>
+            <div id="inputSubmit"></div><div id="updateStatusSubmit"></div>
+        </form>
     </p>
 </#if>
 

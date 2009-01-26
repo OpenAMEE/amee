@@ -544,8 +544,6 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
     renderApiResponse: function(response) {
         var json = response.responseJSON;
 
-        Log.debug(json);
-
         if (json.itemValue) {
             var itemValue = json.itemValue;
 
@@ -564,8 +562,76 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
             $('modified').replace(this.getInfoElement('modified','Modified', itemValue.modified));
         }
 
+        // render form
+        var inputValuesElement = new Element('span', {id : 'inputValues'});
+
+        if (itemValue.itemValueDefinition.choices && this.allowModify) {
+            var choices = itemValue.itemValueDefinition.choices.split(",");
+            var selectElement = new Element('select', {name : 'value'});
+            var selectedOption = false;
+            for (var i = 0; i < choices.length; i++) {
+                selectedOption = itemValue.value == choices[i];
+                selectElement.insert(new Element('option', {value : choices[i], selected : selectedOption}).update(choices[i]));
+            }
+            inputValuesElement.insert('Value: ');
+            inputValuesElement.insert(selectElement);
+            inputValuesElement.insert(new Element('br'));
+        } else {
+            this.addFormInfoElement('Value: ', inputValuesElement, 'value', itemValue.value, 30);
+
+            if (itemValue.unit) {
+                this.addFormInfoElement('Unit: ', inputValuesElement, 'unit', itemValue.unit, 30);
+            }
+
+            if (itemValue.perUnit) {
+                this.addFormInfoElement('PerUnit: ', inputValuesElement, 'perUnit', itemValue.perUnit, 30);
+            }
+        }
+
+        $('inputValues').replace(inputValuesElement);
+
+        if(this.allowModify) {
+            var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
+            $("inputSubmit").replace(btnSubmit);
+            Event.observe(btnSubmit, "click", this.updateProfileItemValue.bind(this));
+        }
     },
     processApiResponse: function(response) {
         this.renderApiResponse(response);
+    },
+    addFormInfoElement: function(label, pElement, name, info, size) {
+        pElement.insert(label);
+        if (this.allowModify) {
+            pElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size}));
+        } else {
+            pElement.insert(info);
+        }
+        pElement.insert(new Element('br'));
+    },
+    updateProfileItemValue: function() {
+        var method;
+        if (window.location.search == "") {
+            method = "?method=put";
+        } else {
+            method = "&method=put";
+        }
+
+        $('updateStatusSubmit').innerHTML='';
+
+        var myAjax = new Ajax.Request(window.location.href + method, {
+            method: 'post',
+            parameters: $('inputForm').serialize(),
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.updateProfileItemValueSuccess.bind(this),
+            onFailure: this.updateProfileItemValueFail.bind(this)
+        });
+    },
+    updateProfileItemValueSuccess: function(response) {
+        // update elements and status
+        $('updateStatusSubmit').replace(new Element('div', {id : 'updateStatusSubmit'}).insert(new Element('b').update('UPDATED!')));
+        this.renderApiResponse(response);
+    },
+    updateProfileItemValueFail: function(response) {
+        $('updateStatusSubmit').replace(new Element('div', {id : 'updateStatusSubmit'}).insert(new Element('b').update('ERROR!')));
     }
 }));

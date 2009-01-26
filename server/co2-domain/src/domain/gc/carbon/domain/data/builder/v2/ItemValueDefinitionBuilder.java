@@ -50,6 +50,10 @@ public class ItemValueDefinitionBuilder implements Builder {
             obj.put("perUnit", itemValueDefinition.getPerUnit());
         }
 
+        if (itemValueDefinition.isChoicesAvailable()) {
+            obj.put("choices", itemValueDefinition.getChoices());
+        }
+
         if (detailed) {
             obj.put("created", itemValueDefinition.getCreated());
             obj.put("modified", itemValueDefinition.getModified());
