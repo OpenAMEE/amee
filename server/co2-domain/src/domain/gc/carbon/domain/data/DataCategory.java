@@ -129,7 +129,7 @@ public class DataCategory implements PersistentObject, Pathable {
         if (detailed) {
             obj.put("created", getCreated().toString());
             obj.put("modified", getModified().toString());
-            obj.put("environment", getEnvironment().getIdentityJSONObject());
+            obj.put("environment", getEnvironment().getJSONObject(false));
             if (getDataCategory() != null) {
                 obj.put("dataCategory", getDataCategory().getIdentityJSONObject());
             }

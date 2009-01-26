@@ -77,7 +77,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         obj.put("environment", resource.getEnvironment().getJSONObject(true));
 
         // add Data Category
-        obj.put("dataCategory", resource.getDataCategory().getIdentityJSONObject());
+        obj.put("dataCategory", resource.getDataCategory().getJSONObject(true));
 
         // add Data Categories via pathItem to children
         JSONArray dataCategories = new JSONArray();

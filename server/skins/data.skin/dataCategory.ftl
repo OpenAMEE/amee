@@ -1,80 +1,97 @@
 <#include 'dataCommon.ftl'>
 <#include '/includes/before_content.ftl'>
+<script src="/scripts/amee/api_service.js" type="text/javascript"></script>
+<script src="/scripts/amee/data_service.js" type="text/javascript"></script>
 <script type="text/javascript">
 function deleteDataCategory(dataCategoryUid, dataCategoryPath) {
   resourceUrl = dataCategoryPath + '?method=delete';
   resourceElem = $('Elem_' + dataCategoryUid);
   resourceType = 'Data Category'; 
-  var deleteResource = new DeleteResource()
+  var deleteResource = new DeleteResource();
   deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
 }
 function deleteDataItem(uid, dataItemPath) {
   resourceUrl = dataItemPath + '?method=delete';
   resourceElem = $('Elem_' + uid);
   resourceType = 'Data Item'; 
-  var deleteResource = new DeleteResource()
+  var deleteResource = new DeleteResource();
   deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
 }
 </script>
 <h1>Data Category</h1>
 <#include 'dataTrail.ftl'>
 <#assign children = browser.pathItem.findChildrenByType('DC')>
-<h2>Data Category Details</h2>
-<p>Name: ${dataCategory.name}<br/>
-   <#if dataCategory.path != ''>Path: ${dataCategory.path}<br/></#if>
-   Full Path: ${browser.fullPath}<br/>
-   <#if dataCategory.itemDefinition??>Item Definition: ${dataCategory.itemDefinition.name}<br/></#if>
-   Environment: ${dataCategory.environment.name}<br/>
-   UID: ${dataCategory.uid}<br/>
-   Created: ${dataCategory.created?string.short}<br/>
-   Modified: ${dataCategory.modified?string.short}<br/>
-</p>
-<#if 0 != children?size>
-  <h2>Data Categories</h2>
-  <p>
-  <table>
-  <tr>
-    <th>Path</th>
-    <th>Actions</th>
-  </tr>
-  <#list children as pi>
-    <tr id='Elem_${pi.uid}'>
-      <td>${pi.name}</td>
-      <td>
-          <#if browser.dataCategoryActions.allowView><a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
-          <#if browser.dataCategoryActions.allowDelete><input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
-      </td>
-    </tr>
-  </#list>
-  </table>
-  </p>
+
+<#if activeUser.apiVersion.versionOne>
+    <h2>Data Category Details</h2>
+    <p>Name: ${dataCategory.name}<br/>
+       <#if dataCategory.path != ''>Path: ${dataCategory.path}<br/></#if>
+       Full Path: ${browser.fullPath}<br/>
+       <#if dataCategory.itemDefinition??>Item Definition: ${dataCategory.itemDefinition.name}<br/></#if>
+       Environment: ${dataCategory.environment.name}<br/>
+       UID: ${dataCategory.uid}<br/>
+       Created: ${dataCategory.created?string.short}<br/>
+       Modified: ${dataCategory.modified?string.short}<br/>
+    </p>
+
+    <#if 0 != children?size>
+      <h2>Data Categories</h2>
+      <p>
+      <table>
+      <tr>
+        <th>Path</th>
+        <th>Actions</th>
+      </tr>
+      <#list children as pi>
+        <tr id='Elem_${pi.uid}'>
+          <td>${pi.name}</td>
+          <td>
+              <#if browser.dataCategoryActions.allowView><a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
+              <#if browser.dataCategoryActions.allowDelete><input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
+          </td>
+        </tr>
+      </#list>
+      </table>
+      </p>
+    </#if>
+
+    <#if sheet?? && 0 != sheet.rows?size>
+      <h2>Data Items</h2>
+      <p>
+      <#assign pagerItemsLabel = 'data items'>
+      <#assign pagerName = 'pagerTop'>
+      <#assign pagerUrl = basePath>
+      <#include '/includes/pager.ftl'>
+      <table>
+      <tr>
+        <th>Item</th>
+        <th>Actions</th>
+      </tr>
+      <#list sheet.rows as row>
+        <tr id='Elem_${row.uid}'>
+          <td>${row.findCell('label')}</td>
+          <td>
+              <#if browser.dataItemActions.allowView><a href='${basePath}/${row.findCell('path')}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
+              <#if browser.dataItemActions.allowDelete><input type="image" onClick="deleteDataItem('${row.uid}', '${basePath}/${row.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
+          </td>
+        </tr>
+      </#list>
+      </table>
+      <#assign pagerName = 'pagerBottom'>
+      <#include '/includes/pager.ftl'>
+      </p>
+    </#if>
+<#else>
+    <h2 id="apiDataCategoryHeading"></h2>
+    <p id="apiDataCategoryContent"></p>
+
+    <h2 id="apiHeading"></h2>
+    <div id="apiTopPager"></div>
+    <table id="apiContent"></table>
+    <div id="apiBottomPager"></div>
 </#if>
-<#if sheet?? && 0 != sheet.rows?size>
-  <h2>Data Items</h2>
-  <p>
-  <#assign pagerItemsLabel = 'data items'>
-  <#assign pagerName = 'pagerTop'>
-  <#assign pagerUrl = basePath>
-  <#include '/includes/pager.ftl'>
-  <table>
-  <tr>
-    <th>Item</th>
-    <th>Actions</th>
-  </tr>
-  <#list sheet.rows as row>
-    <tr id='Elem_${row.uid}'>
-      <td>${row.findCell('label')}</td>
-      <td>
-          <#if browser.dataItemActions.allowView><a href='${basePath}/${row.findCell('path')}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
-          <#if browser.dataItemActions.allowDelete><input type="image" onClick="deleteDataItem('${row.uid}', '${basePath}/${row.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
-      </td>
-    </tr>
-  </#list>
-  </table>
-  <#assign pagerName = 'pagerBottom'>
-  <#include '/includes/pager.ftl'>
-  </p>
-</#if>
+
+
 <#if browser.dataCategoryActions.allowCreate || browser.dataItemActions.allowCreate>
   <h2>Create</h2>
   <p>
@@ -115,4 +132,34 @@ function deleteDataItem(uid, dataItemPath) {
   </form>
   </p>
 </#if>
+
+<script type='text/javascript'>
+    // api call
+    <#if !activeUser.apiVersion.versionOne>
+
+        document.observe('dom:loaded', function() {
+            var dataCategoryApiService = new DataCategoryApiService(
+                {
+                    heading : "Data Items",
+                    headingElementName : "apiHeading",
+                    contentElementName : "apiContent",
+                    tAmountElementName : 'apiTAmount',
+                    pagerTopElementName : 'apiTopPager',
+                    pagerBtmElementName : 'apiBottomPager',
+                    headingCategory : 'Data Categories',
+                    dataHeadingCategory : 'Data Category Details',
+                    dataHeadingCategoryElementName : 'apiDataCategoryHeading',
+                    dataContentElementName : "apiDataCategoryContent",
+                    apiVersion : '2.0',
+                    drillDown : false,
+                    allowList : ${browser.dataCategoryActions.allowList?string},
+                    allowView : ${browser.dataCategoryActions.allowView?string},
+                    allowModify : ${browser.dataCategoryActions.allowModify?string},
+                    allowDelete : ${browser.dataCategoryActions.allowDelete?string}
+                });
+                dataCategoryApiService.apiRequest();
+        });
+    </#if>
+</script>
+
 <#include '/includes/after_content.ftl'>

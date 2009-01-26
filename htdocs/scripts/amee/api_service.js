@@ -176,7 +176,7 @@ ApiService.prototype = {
         this.renderDataCategoryApiResponse(response);
         this.renderApiResponse(response);
     },
-    renderApiResponse: function(response) {
+    renderApiResponse: function(response, pagerJSON) {
 
         var json = response.responseJSON;
 
@@ -203,13 +203,16 @@ ApiService.prototype = {
         this.contentElement.replace(tableElement);
 
         // replace pager(s)
+        if (!pagerJSON) {
+            pagerJSON = response.responseJSON.pager;
+        }
         if (this.pagerTopElement) {
-            this.pager = new Pager({json : response.responseJSON.pager, apiService : this, pagerElementName : this.pagerTopElementName});
+            this.pager = new Pager({json : pagerJSON, apiService : this, pagerElementName : this.pagerTopElementName});
             this.pagerTopElement.replace(this.getPagerElements());
         }
 
         if (this.pagerTopElement) {
-            this.pager = new Pager({json : response.responseJSON.pager, apiService : this, pagerElementName : this.pagerBtmElementName});
+            this.pager = new Pager({json : pagerJSON, apiService : this, pagerElementName : this.pagerBtmElementName});
             this.pagerBtmElement.replace(this.getPagerElements());
         }
     },
@@ -250,18 +253,28 @@ ApiService.prototype = {
                     pElement.appendChild(document.createTextNode("Item Definition: " + dataCategory.itemDefinition.name));
                 }
 
-                if (json.environment) {
+                if (json.environment || dataCategory.environment) {
+                    var env;
+                    if (json.environment) {
+                        env = json.environment;
+                    } else {
+                        env = dataCategory.environment;
+                    }
                     pElement.insert(new Element("br"));
-                    pElement.appendChild(document.createTextNode("Environment: " + json.environment.name));
+                    pElement.appendChild(document.createTextNode("Environment: " + env.name));
                 }
 
                 pElement.insert(new Element("br"));
                 pElement.appendChild(document.createTextNode("Data Category UID: " + dataCategory.uid));
 
+                pElement.insert(new Element("br"));
+                pElement.appendChild(document.createTextNode("Created: " + dataCategory.created));
+
+                pElement.insert(new Element("br"));
+                pElement.appendChild(document.createTextNode("Modifed: " + dataCategory.modified));
 
                 this.dataContentElement.replace(pElement);
             }
-
             if (this.drillDown && json.path) {
                 new DrillDown("/data" + json.path, this.apiVersion, this.getDateFormat()).loadDrillDown('');
             }
