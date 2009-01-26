@@ -148,6 +148,7 @@ ApiService.prototype = {
         this.allowView = params.allowView || false;
         this.allowDelete = params.allowDelete || false;
         this.allowModify = params.allowModify || false;
+        this.allowCreate = params.allowCreate || false;
 
         this.pager = null;
     },

@@ -114,6 +114,13 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             // add DataCategory
             obj.put("dataCategory", dataBrowser.getDataCategory().getJSONObject(true));
 
+            // add ItemDefinition list
+            JSONArray itemDefinitions = new JSONArray();
+            for (ItemDefinition iDefinition : dataBrowser.getItemDefinitions()) {
+                itemDefinitions.put(iDefinition.getJSONObject(false));
+            }
+            obj.put("itemDefinitions", itemDefinitions);
+
             // list child Data Categories and child Data Items
             JSONObject children = new JSONObject();
 

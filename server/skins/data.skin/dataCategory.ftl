@@ -81,6 +81,65 @@ function deleteDataItem(uid, dataItemPath) {
       <#include '/includes/pager.ftl'>
       </p>
     </#if>
+
+    <#if browser.dataCategoryActions.allowModify>
+      <h2>Update Data Category</h2>
+      <p>
+      <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+        Name: <input name='name' value='${dataCategory.name}' type='text' size='30'/><br/>
+        Path: <input name='path' value='${dataCategory.path}' type='text' size='30'/><br/>
+        Item Definition: <select name='itemDefinitionUid'>
+          <option value=''>(No Item Definition)</option>
+          <#list browser.itemDefinitions as id>
+            <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
+          </#list>
+        </select><br/><br/>
+        <input type='submit' value='Update'/>
+      </form>
+      </p>
+    </#if>
+
+    <#if browser.dataCategoryActions.allowCreate || browser.dataItemActions.allowCreate>
+      <h2>Create</h2>
+      <p>
+      <form action='${basePath}' method='POST' enctype='application/x-www-form-urlencoded'>
+        Type: <select id='newObjectType' name='newObjectType'>
+          <#if browser.dataCategoryActions.allowCreate>
+            <option value="DC">Data Category</option>
+          </#if>
+          <#if itemDefinition?? && browser.dataItemActions.allowCreate>
+            <option value="DI">Data Item (for ${itemDefinition.name})</option>
+          </#if>
+        </select><br/>
+        Name: <input name='name' value='' type='text' size='30'/><br/>
+        Path: <input name='path' value='' type='text' size='30'/><br/>
+        Item Definition: <select name='itemDefinitionUid'>
+          <option value=''>(No Item Definition)</option>
+          <#list browser.itemDefinitions as id>
+            <option value='${id.uid}'>${id.name}</option>
+          </#list>
+        </select><br/><br/>
+        <input type='submit' value='Create'/>
+      </form>
+      </p>
+    </#if>
+
+    <#if browser.dataCategoryActions.allowModify>
+      <h2>Update Data Category</h2>
+      <p>
+      <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+        Name: <input name='name' value='${dataCategory.name}' type='text' size='30'/><br/>
+        Path: <input name='path' value='${dataCategory.path}' type='text' size='30'/><br/>
+        Item Definition: <select name='itemDefinitionUid'>
+          <option value=''>(No Item Definition)</option>
+          <#list browser.itemDefinitions as id>
+            <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
+          </#list>
+        </select><br/><br/>
+        <input type='submit' value='Update'/>
+      </form>
+      </p>
+    </#if>
 <#else>
     <h2 id="apiDataCategoryHeading"></h2>
     <p id="apiDataCategoryContent"></p>
@@ -89,48 +148,10 @@ function deleteDataItem(uid, dataItemPath) {
     <div id="apiTopPager"></div>
     <table id="apiContent"></table>
     <div id="apiBottomPager"></div>
-</#if>
 
+    <div id="apiCreateDataCategory"></div>
 
-<#if browser.dataCategoryActions.allowCreate || browser.dataItemActions.allowCreate>
-  <h2>Create</h2>
-  <p>
-  <form action='${basePath}' method='POST' enctype='application/x-www-form-urlencoded'>
-    Type: <select id='newObjectType' name='newObjectType'>
-      <#if browser.dataCategoryActions.allowCreate>
-        <option value="DC">Data Category</option>
-      </#if>
-      <#if itemDefinition?? && browser.dataItemActions.allowCreate>
-        <option value="DI">Data Item (for ${itemDefinition.name})</option>
-      </#if>
-    </select><br/>
-    Name: <input name='name' value='' type='text' size='30'/><br/>
-    Path: <input name='path' value='' type='text' size='30'/><br/>
-    Item Definition: <select name='itemDefinitionUid'>
-      <option value=''>(No Item Definition)</option>
-      <#list browser.itemDefinitions as id>
-        <option value='${id.uid}'>${id.name}</option>
-      </#list>
-    </select><br/><br/>
-    <input type='submit' value='Create'/>
-  </form>
-  </p>
-</#if>
-<#if browser.dataCategoryActions.allowModify>
-  <h2>Update Data Category</h2>
-  <p>
-  <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
-    Name: <input name='name' value='${dataCategory.name}' type='text' size='30'/><br/>
-    Path: <input name='path' value='${dataCategory.path}' type='text' size='30'/><br/>
-    Item Definition: <select name='itemDefinitionUid'>
-      <option value=''>(No Item Definition)</option>
-      <#list browser.itemDefinitions as id>
-        <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
-      </#list>
-    </select><br/><br/>
-    <input type='submit' value='Update'/>
-  </form>
-  </p>
+    <div id="apiUpdateDataCategory"></div><div id="apiUpdateSubmitStatus"></div>
 </#if>
 
 <script type='text/javascript'>
@@ -152,10 +173,13 @@ function deleteDataItem(uid, dataItemPath) {
                     dataContentElementName : "apiDataCategoryContent",
                     apiVersion : '2.0',
                     drillDown : false,
+                    updateCategory: true,
+                    createCategory: true,
                     allowList : ${browser.dataCategoryActions.allowList?string},
                     allowView : ${browser.dataCategoryActions.allowView?string},
                     allowModify : ${browser.dataCategoryActions.allowModify?string},
-                    allowDelete : ${browser.dataCategoryActions.allowDelete?string}
+                    allowDelete : ${browser.dataCategoryActions.allowDelete?string},
+                    allowCreate : ${browser.dataCategoryActions.allowCreate?string}
                 });
                 dataCategoryApiService.apiRequest();
         });

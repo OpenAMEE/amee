@@ -2,6 +2,14 @@ var DataCategoryApiService = Class.create(ApiService, ({
         // Initialization
     initialize: function($super, params) {
         $super(params);
+        this.updateCategory = params.updateCategory || false;
+        this.createCategory = params.createCategory || false;
+
+        this.updateFormName = 'apiUpdateForm';
+        this.createFormName = 'apiCreateForm';
+
+        this.updateFormStatusName = 'apiUpdateSubmitStatus';
+        this.createFormStatusName = 'apiCreateSubmitStatus';
     },
     renderApiResponse: function($super, response) {
         var json = response.responseJSON;
@@ -30,7 +38,61 @@ var DataCategoryApiService = Class.create(ApiService, ({
             this.headingContentElement.replace(tableElement);
         }
 
+        if (this.createCategory) {
+            $('apiCreateDataCategory').replace(this.getCreateCategoryElement('apiCreateDataCategory'));
+        }
+
+        if (this.updateCategory) {
+            $('apiUpdateDataCategory').replace(this.getUpdateCategoryElement('apiUpdateDataCategory', json.dataCategory));
+        }
     },
+    getCreateCategoryElement: function(id) {
+        var createCatElement = new Element('div', {id : id});
+
+        if(this.allowModify) {
+
+
+        }
+        return createCatElement;
+
+    },
+    getUpdateCategoryElement: function(id, dataCategory) {
+
+        var updateCatElement = new Element('div', {id : id});
+
+        if(this.allowModify) {
+            updateCatElement.insert(new Element('h2').update('Update Data Category'));
+
+            var formElement = new Element('form', {action : "#", id : this.updateFormName});
+            var pElement = new Element('p');
+
+            this.addFormInfoElement('Name: ', formElement, 'name', dataCategory.name, 30, 'margin-left:20px');
+            this.addFormInfoElement('Path: ', formElement, 'path', dataCategory.path, 30, 'margin-left:28px');
+
+            //TODO: itemDefinition
+//            Item Definition: <select name='itemDefinitionUid'>
+//              <option value=''>(No Item Definition)</option>
+//              <#list browser.itemDefinitions as id>
+//                <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
+//              </#list>
+//            </select><br/><br/>
+
+            var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
+            formElement.insert(btnSubmit);
+            Event.observe(btnSubmit, "click", this.updateDataCategory.bind(this));
+            
+            pElement.insert(formElement);
+            updateCatElement.insert(pElement);
+
+        }
+        return updateCatElement;
+    },
+    addFormInfoElement: function(label, pElement, name, info, size, style) {
+        pElement.insert(label);
+        pElement.insert(new Element('input', {name : name, value : info, size : size, style : style}));
+        pElement.insert(new Element('br'));
+    },
+
     getHeadingElement: function(json) {
         return new Element('tr')
                 .insert(this.getHeadingData('Item'))
@@ -53,7 +115,8 @@ var DataCategoryApiService = Class.create(ApiService, ({
             return rows;
         } else {
             return $super(json);
-        }    },
+        }
+    },
     getHeadingCategoryElement: function() {
         return new Element('tr')
                 .insert(this.getHeadingData('Path'))
@@ -99,5 +162,31 @@ var DataCategoryApiService = Class.create(ApiService, ({
 
 
         return actions;
+    },
+    updateDataCategory: function() {
+        var method;
+        if (window.location.search == "") {
+            method = "?method=put";
+        } else {
+            method = "&method=put";
+        }
+
+        $(this.updateFormStatusName).innerHTML='';
+
+        var myAjax = new Ajax.Request(window.location.href + method, {
+            method: 'put',
+            parameters: $(this.updateFormName).serialize(),
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.updateDataCategorySuccess.bind(this),
+            onFailure: this.updateDataCategoryFail.bind(this)
+        });
+    },
+    updateDataCategorySuccess: function() {
+        // update elements and status
+        $(this.updateFormStatusName).replace(new Element('div', {id : this.updateFormStatusName}).insert(new Element('b').update('UPDATED!')));
+        window.location.href = window.location.href;
+    },
+    updateDataCategoryFail: function() {
+        $(this.updateFormStatusName).replace(new Element('div', {id : this.updateFormStatusName}).insert(new Element('b').update('ERROR!')));
     }
 }));
