@@ -131,6 +131,9 @@ public abstract class Item implements PersistentObject, Pathable {
     }
 
     @Transient
+    public abstract JSONObject getJSONObject(boolean detailed) throws JSONException;
+
+    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }

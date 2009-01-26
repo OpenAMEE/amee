@@ -535,3 +535,37 @@ var ProfilesApiService = Class.create(ApiService, ({
         }
     }    
 }));
+
+var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
+        // Initialization
+    initialize: function($super, params) {
+        $super(params);
+    },
+    renderApiResponse: function(response) {
+        var json = response.responseJSON;
+
+        Log.debug(json);
+
+        if (json.itemValue) {
+            var itemValue = json.itemValue;
+
+            // render info
+            if (itemValue.value != '') {
+                $('value').replace(this.getInfoElement('value','Value', itemValue.value));
+            }
+            $('fullPath').replace(this.getInfoElement('fullPath','Full Path', window.location.pathname));
+            $('dataItemLabel').replace(this.getInfoElement('dataItemLabel','Data Item Label', itemValue.item.dataItem.Label));
+            $('itemValueDefinition').replace(this.getInfoElement('itemValueDefinition','Item Value Definition', itemValue.itemValueDefinition.name));
+            $('valueDefinition').replace(this.getInfoElement('valueDefinition','Value Definition', itemValue.itemValueDefinition.valueDefinition.name));
+            $('valueType').replace(this.getInfoElement('valueType','Value Type', itemValue.itemValueDefinition.valueDefinition.valueType));
+            $('environment').replace(this.getInfoElement('environment','Environment', itemValue.item.environment.name));
+            $('uid').replace(this.getInfoElement('uid','UID', itemValue.uid));
+            $('created').replace(this.getInfoElement('created','Created', itemValue.created));
+            $('modified').replace(this.getInfoElement('modified','Modified', itemValue.modified));
+        }
+
+    },
+    processApiResponse: function(response) {
+        this.renderApiResponse(response);
+    }
+}));

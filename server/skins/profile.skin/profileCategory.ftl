@@ -144,6 +144,7 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
                     dataContentElementName : "apiDataCategoryContent",
                     apiVersion : '2.0',
                     drillDown : true,
+                    allowList : ${browser.profileItemActions.allowList?string},
                     allowView : ${browser.profileItemActions.allowView?string},
                     allowModify : ${browser.profileItemActions.allowModify?string},
                     allowDelete : ${browser.profileItemActions.allowDelete?string}

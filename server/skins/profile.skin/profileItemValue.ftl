@@ -1,22 +1,40 @@
 <#include 'profileCommon.ftl'>
 <#include '/includes/before_content.ftl'>
+<script src="/scripts/amee/api_service.js" type="text/javascript"></script>
+<script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 
 <h1>Profile Item Value</h1>
 
 <#include 'profileTrail.ftl'>
 
-<h2>Profile Item Value Details</h2>
-<p><#if profileItemValue.value != ''>Value: ${profileItemValue.value}<br/></#if>
-    Full Path: ${browser.fullPath}<br/>
-    Data Item Label: ${profileItemValue.item.dataItem.label}<br/>
-    Item Value Definition: ${profileItemValue.itemValueDefinition.name}<br/>
-    Value Definition: ${profileItemValue.itemValueDefinition.valueDefinition.name}<br/>
-    Value Type: ${profileItemValue.itemValueDefinition.valueDefinition.valueType}<br/>
-    Environment: ${profileItemValue.item.environment.name}<br/>
-    UID: ${profileItemValue.uid}<br/>
-    Created: ${profileItemValue.created?datetime}<br/>
-    Modified: ${profileItemValue.modified?datetime}<br/>
-</p>
+<#if activeUser.apiVersion.versionOne>
+    <h2>Profile Item Value Details</h2>
+    <p><#if profileItemValue.value != ''>Value: ${profileItemValue.value}<br/></#if>
+        Full Path: ${browser.fullPath}<br/>
+        Data Item Label: ${profileItemValue.item.dataItem.label}<br/>
+        Item Value Definition: ${profileItemValue.itemValueDefinition.name}<br/>
+        Value Definition: ${profileItemValue.itemValueDefinition.valueDefinition.name}<br/>
+        Value Type: ${profileItemValue.itemValueDefinition.valueDefinition.valueType}<br/>
+        Environment: ${profileItemValue.item.environment.name}<br/>
+        UID: ${profileItemValue.uid}<br/>
+        Created: ${profileItemValue.created?datetime}<br/>
+        Modified: ${profileItemValue.modified?datetime}<br/>
+    </p>
+<#else>
+    <h2>Profile Item Value Details</h2>
+    <p>
+        <span id="value"></span>
+        <span id="fullPath"></span>
+        <span id="dataItemLabel"></span>
+        <span id="itemValueDefinition"></span>
+        <span id="valueDefinition"></span>
+        <span id="valueType"></span>
+        <span id="environment"></span>
+        <span id="uid"></span>
+        <span id="created"></span>
+        <span id="modified"></span>
+    </p>
+</#if>
 
 <#if browser.profileItemValueActions.allowModify>
     <h2>Update Profile Item Value</h2>
@@ -43,5 +61,20 @@
     </form>
     </p>
 </#if>
+
+<script type='text/javascript'>
+
+    // api call
+    <#if !activeUser.apiVersion.versionOne>
+        var profileItemValueApiService = new ProfileItemValueApiService(
+            {
+                allowList : ${browser.profileItemActions.allowList?string},
+                allowView : ${browser.profileItemActions.allowView?string},
+                allowDelete : ${browser.profileItemActions.allowDelete?string},
+                allowModify : ${browser.profileItemActions.allowModify?string}
+            });
+        profileItemValueApiService.apiRequest();
+    </#if>
+</script>
 
 <#include '/includes/after_content.ftl'>

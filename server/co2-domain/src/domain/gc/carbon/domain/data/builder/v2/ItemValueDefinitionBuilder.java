@@ -59,6 +59,7 @@ public class ItemValueDefinitionBuilder implements Builder {
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
             obj.put("environment", itemValueDefinition.getEnvironment().getIdentityJSONObject());
             obj.put("itemDefinition", itemValueDefinition.getItemDefinition().getIdentityJSONObject());
+            obj.put("valueDefinition", itemValueDefinition.getValueDefinition().getJSONObject());
         }
         return obj;
     }
@@ -86,6 +87,7 @@ public class ItemValueDefinitionBuilder implements Builder {
             element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
             element.appendChild(itemValueDefinition.getEnvironment().getIdentityElement(document));
             element.appendChild(itemValueDefinition.getItemDefinition().getIdentityElement(document));
+            element.appendChild(itemValueDefinition.getValueDefinition().getElement(document));
         }
         return element;
     }
