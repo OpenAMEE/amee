@@ -174,7 +174,7 @@ var DataCategoryApiService = Class.create(ApiService, ({
         $(this.updateFormStatusName).innerHTML='';
 
         var myAjax = new Ajax.Request(window.location.href + method, {
-            method: 'put',
+            method: 'post',
             parameters: $(this.updateFormName).serialize(),
             requestHeaders: ['Accept', 'application/json'],
             onSuccess: this.updateDataCategorySuccess.bind(this),
