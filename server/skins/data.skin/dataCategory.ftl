@@ -123,23 +123,6 @@ function deleteDataItem(uid, dataItemPath) {
       </form>
       </p>
     </#if>
-
-    <#if browser.dataCategoryActions.allowModify>
-      <h2>Update Data Category</h2>
-      <p>
-      <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
-        Name: <input name='name' value='${dataCategory.name}' type='text' size='30'/><br/>
-        Path: <input name='path' value='${dataCategory.path}' type='text' size='30'/><br/>
-        Item Definition: <select name='itemDefinitionUid'>
-          <option value=''>(No Item Definition)</option>
-          <#list browser.itemDefinitions as id>
-            <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
-          </#list>
-        </select><br/><br/>
-        <input type='submit' value='Update'/>
-      </form>
-      </p>
-    </#if>
 <#else>
     <h2 id="apiDataCategoryHeading"></h2>
     <p id="apiDataCategoryContent"></p>

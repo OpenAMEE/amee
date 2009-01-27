@@ -282,7 +282,7 @@ ApiService.prototype = {
         }
     },
     getPagerElements: function() {
-        return this.pager.getPagerElement();
+        return this.pager.getElements();
     },
     getHeadingElement: function(json) {
         // implementation required

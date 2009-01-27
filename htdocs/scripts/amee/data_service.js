@@ -43,7 +43,7 @@ var DataCategoryApiService = Class.create(ApiService, ({
         }
 
         if (this.updateCategory) {
-            $('apiUpdateDataCategory').replace(this.getUpdateCategoryElement('apiUpdateDataCategory', json.dataCategory));
+            $('apiUpdateDataCategory').replace(this.getUpdateCategoryElement('apiUpdateDataCategory', json));
         }
     },
     getCreateCategoryElement: function(id) {
@@ -56,26 +56,35 @@ var DataCategoryApiService = Class.create(ApiService, ({
         return createCatElement;
 
     },
-    getUpdateCategoryElement: function(id, dataCategory) {
+    getUpdateCategoryElement: function(id, json) {
 
+        var dataCategory = json.dataCategory;
+        var itemDefinitions = json.itemDefinitions;
         var updateCatElement = new Element('div', {id : id});
 
         if(this.allowModify) {
             updateCatElement.insert(new Element('h2').update('Update Data Category'));
 
             var formElement = new Element('form', {action : "#", id : this.updateFormName});
+            var selectElement = new Element('select', {name : 'itemDefinitionUid'});
             var pElement = new Element('p');
 
             this.addFormInfoElement('Name: ', formElement, 'name', dataCategory.name, 30, 'margin-left:20px');
             this.addFormInfoElement('Path: ', formElement, 'path', dataCategory.path, 30, 'margin-left:28px');
 
-            //TODO: itemDefinition
-//            Item Definition: <select name='itemDefinitionUid'>
-//              <option value=''>(No Item Definition)</option>
-//              <#list browser.itemDefinitions as id>
-//                <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
-//              </#list>
-//            </select><br/><br/>
+            // item definitions
+            selectElement.insert(new Element('option', {value : ''}).update('(No Item Definition)'));
+            formElement.insert('Item Definition: ');
+            for (var i = 0; i < itemDefinitions.length; i++) {
+                var itemDefinition = itemDefinitions[i];
+                var option = new Element('option', {value : itemDefinition.uid}).update(itemDefinition.name);
+
+                if (dataCategory.itemDefinition && dataCategory.itemDefinition.uid == itemDefinition.uid) {
+                    option.selected = true;
+                }
+                selectElement.insert(option);
+            }
+            formElement.insert(selectElement).insert(new Element('br')).insert(new Element('br'));
 
             var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
             formElement.insert(btnSubmit);
