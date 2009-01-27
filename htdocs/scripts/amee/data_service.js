@@ -10,10 +10,11 @@ var DataCategoryApiService = Class.create(ApiService, ({
 
         this.updateFormStatusName = 'apiUpdateSubmitStatus';
         this.createFormStatusName = 'apiCreateSubmitStatus';
+
+        this.allowItemCreate = params.allowItemCreate || false;
     },
     renderApiResponse: function($super, response) {
         var json = response.responseJSON;
-        Log.debug(json);
 
         if (json.children.dataItems.rows) {
             $super(response, json.children.pager);
@@ -39,38 +40,75 @@ var DataCategoryApiService = Class.create(ApiService, ({
         }
 
         if (this.createCategory) {
-            $('apiCreateDataCategory').replace(this.getCreateCategoryElement('apiCreateDataCategory'));
+            $('apiCreateDataCategory').replace(this.getCreateCategoryElement('apiCreateDataCategory', json));
         }
 
         if (this.updateCategory) {
             $('apiUpdateDataCategory').replace(this.getUpdateCategoryElement('apiUpdateDataCategory', json));
         }
     },
-    getCreateCategoryElement: function(id) {
+    getCreateCategoryElement: function(id, json) {
         var createCatElement = new Element('div', {id : id});
 
-        if(this.allowModify) {
+        if(this.allowCreate || this.allowItemCreate) {
+            createCatElement.insert(new Element('h2').update('Create Data Category'));
 
+            var dataCategory = json.dataCategory;
+            var itemDefinitions = json.itemDefinitions;
+            
+            var formElement = new Element('form', {action : "#", id : this.createFormName});
+            var typeSelectElement = new Element('select', {id : 'newObjectType', name : 'newObjectType', style : 'margin-left:52px'});
+            var selectElement = new Element('select', {name : 'itemDefinitionUid'});
+            var pElement = new Element('p');
 
+            formElement.insert('Type: ');
+            if (this.allowCreate) {
+                typeSelectElement.insert(new Element('option', {value : 'DC'}).update('Data Category'));
+            }
+            if (dataCategory.itemDefinition && this.allowItemCreate) {
+                typeSelectElement.insert(new Element('option', {value : 'DI'}).update('Data Item (for' + dataCategory.itemDefinition.name + ')'));
+            }
+            formElement.insert(typeSelectElement).insert(new Element('br'));
+
+            this.addFormInfoElement('Name: ', formElement, 'name', '', 30, 'margin-left:46px');
+            this.addFormInfoElement('Path: ', formElement, 'path', '', 30, 'margin-left:54px');
+
+            // item definitions
+            selectElement.insert(new Element('option', {value : ''}).update('(No Item Definition)'));
+            formElement.insert('Item Definition: ');
+            for (var i = 0; i < itemDefinitions.length; i++) {
+                var itemDefinition = itemDefinitions[i];
+                selectElement.insert(new Element('option', {value : itemDefinition.uid}).update(itemDefinition.name));
+            }
+            formElement.insert(selectElement).insert(new Element('br')).insert(new Element('br'));
+
+            // sumbit and event
+            var btnSubmit = new Element('input', {type : 'button', value : 'Create'});
+            formElement.insert(btnSubmit);
+            Event.observe(btnSubmit, "click", this.createDataCategory.bind(this));
+
+            pElement.insert(formElement);
+            createCatElement.insert(pElement);
         }
         return createCatElement;
 
     },
     getUpdateCategoryElement: function(id, json) {
 
-        var dataCategory = json.dataCategory;
-        var itemDefinitions = json.itemDefinitions;
         var updateCatElement = new Element('div', {id : id});
 
         if(this.allowModify) {
             updateCatElement.insert(new Element('h2').update('Update Data Category'));
 
+            var dataCategory = json.dataCategory;
+            var itemDefinitions = json.itemDefinitions;
+
             var formElement = new Element('form', {action : "#", id : this.updateFormName});
             var selectElement = new Element('select', {name : 'itemDefinitionUid'});
             var pElement = new Element('p');
 
-            this.addFormInfoElement('Name: ', formElement, 'name', dataCategory.name, 30, 'margin-left:20px');
-            this.addFormInfoElement('Path: ', formElement, 'path', dataCategory.path, 30, 'margin-left:28px');
+            this.addFormInfoElement('Name: ', formElement, 'name', dataCategory.name, 30, 'margin-left:46px');
+            this.addFormInfoElement('Path: ', formElement, 'path', dataCategory.path, 30, 'margin-left:54px');
 
             // item definitions
             selectElement.insert(new Element('option', {value : ''}).update('(No Item Definition)'));
@@ -86,6 +124,7 @@ var DataCategoryApiService = Class.create(ApiService, ({
             }
             formElement.insert(selectElement).insert(new Element('br')).insert(new Element('br'));
 
+            // sumbit and event
             var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
             formElement.insert(btnSubmit);
             Event.observe(btnSubmit, "click", this.updateDataCategory.bind(this));
@@ -98,7 +137,7 @@ var DataCategoryApiService = Class.create(ApiService, ({
     },
     addFormInfoElement: function(label, pElement, name, info, size, style) {
         pElement.insert(label);
-        pElement.insert(new Element('input', {name : name, value : info, size : size, style : style}));
+        pElement.insert(new Element('input', {id : pElement.id + "-" + name, name : name, value : info, size : size, style : style}));
         pElement.insert(new Element('br'));
     },
 
@@ -172,23 +211,89 @@ var DataCategoryApiService = Class.create(ApiService, ({
 
         return actions;
     },
-    updateDataCategory: function() {
-        var method;
-        if (window.location.search == "") {
-            method = "?method=put";
-        } else {
-            method = "&method=put";
+    apiServiceCall: function(method, params) {
+        if (!params) {
+            var params = {};
+        }
+        if (!method) {
+            method = '';
+        }
+        params.requestHeaders = ['Accept', 'application/json'];
+        params.method = 'post';
+        new Ajax.Request(window.location.href + method, params);
+    },
+    createDataCategory: function() {
+        var elementList = [$(this.createFormName + "-name"), $(this.createFormName + "-path")];
+
+        $(this.createFormStatusName).innerHTML='';
+        this.resetStyles(elementList)
+
+        if (this.validateDataCategory(elementList)) {
+            this.resetStyles(elementList)
+            var params = {
+                parameters: $(this.createFormName).serialize(),
+                onSuccess: this.createDataCategorySuccess.bind(this),
+                onFailure: this.createDataCategoryFail.bind(this)
+            };
+            this.apiServiceCall(null, params);
         }
 
-        $(this.updateFormStatusName).innerHTML='';
+    },
+    createDataCategorySuccess: function() {
+        // update elements and status
+        $(this.createFormStatusName).replace(new Element('div', {id : this.createFormStatusName}).insert(new Element('b').update('CREATED!')));
+        window.location.href = window.location.href;
+    },
+    createDataCategoryFail: function() {
+        $(this.createFormStatusName).replace(new Element('div', {id : this.createFormStatusName}).insert(new Element('b').update('ERROR!')));
+    },
+    validateDataCategory: function(elementList) {
 
-        var myAjax = new Ajax.Request(window.location.href + method, {
-            method: 'post',
-            parameters: $(this.updateFormName).serialize(),
-            requestHeaders: ['Accept', 'application/json'],
-            onSuccess: this.updateDataCategorySuccess.bind(this),
-            onFailure: this.updateDataCategoryFail.bind(this)
-        });
+        var rtnValue = true;
+
+        for (var i = 0; i < elementList.length; i++) {
+            var inElement = elementList[i];
+            if (inElement.value.replace(/^\s+|\s+$/g, '') == '') {
+                inElement.setStyle({
+                    borderColor : 'red',
+                    borderWidth : '2px',
+                    borderStyle : 'solid'
+                });
+                rtnValue = false;
+            }
+
+        }
+        return rtnValue;
+    },
+    resetStyles: function(elementList) {
+        for (var i = 0; i < elementList.length; i++) {
+            elementList[i].setStyle({
+                borderColor : '',
+                borderWidth : '',
+                borderStyle : ''
+            });
+        }
+    },
+    updateDataCategory: function() {
+        $(this.updateFormStatusName).innerHTML='';
+        var elementList = [$(this.updateFormName + "-name"), $(this.updateFormName + "-path")];
+
+        if (this.validateDataCategory(elementList)) {
+            this.resetStyles(elementList)
+            var method;
+            if (window.location.search == "") {
+                method = "?method=put";
+            } else {
+                method = "&method=put";
+            }
+
+            var params = {
+                parameters: $(this.updateFormName).serialize(),
+                onSuccess: this.updateDataCategorySuccess.bind(this),
+                onFailure: this.updateDataCategoryFail.bind(this)
+            };
+            this.apiServiceCall(method, params);
+        }
     },
     updateDataCategorySuccess: function() {
         // update elements and status

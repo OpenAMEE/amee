@@ -31,6 +31,7 @@ import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -451,6 +452,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         DataCategory thisDataCategory;
 
         thisDataCategory = dataBrowser.getDataCategory();
+
         if (getRequest().getMethod().equals(Method.POST)) {
             if (dataBrowser.getDataCategoryActions().isAllowCreate()) {
                 // new DataCategory
@@ -462,7 +464,13 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                         dataCategory.setItemDefinition(itemDefinition);
                     }
                 }
-                dataCategory = acceptDataCategory(form, dataCategory);
+                dataCategory = populateDataCategory(form, dataCategory);
+
+                if (!validDataCategory(dataCategory)) {
+                    badRequest();
+                } else {
+                    dataCategory = acceptDataCategory(form, dataCategory);
+                }
             } else {
                 notAuthorized();
             }
@@ -473,7 +481,13 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 if (uid != null) {
                     dataCategory = dataService.getDataCategory(uid);
                     if (dataCategory != null) {
-                        dataCategory = acceptDataCategory(form, dataCategory);
+                        dataCategory = populateDataCategory(form, dataCategory);
+
+                        if (!validDataCategory(dataCategory)) {
+                            badRequest();
+                        } else {
+                            dataCategory = acceptDataCategory(form, dataCategory);
+                        }
                     }
                 }
             } else {
@@ -483,9 +497,20 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         return dataCategory;
     }
 
-    private DataCategory acceptDataCategory(Form form, DataCategory dataCategory) {
+    private boolean validDataCategory(DataCategory dataCategory) {
+        if (StringUtils.isBlank(dataCategory.getName()) || StringUtils.isBlank(dataCategory.getPath())) {
+            return false;
+        }
+        return true;
+    }
+
+    private DataCategory populateDataCategory(Form form, DataCategory dataCategory) {
         dataCategory.setName(form.getFirstValue("name"));
         dataCategory.setPath(form.getFirstValue("path"));
+        return dataCategory;
+    }
+
+    private DataCategory acceptDataCategory(Form form, DataCategory dataCategory) {
         dataService.persist(dataCategory);
         return dataCategory;
     }

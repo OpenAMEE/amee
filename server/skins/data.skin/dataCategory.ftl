@@ -132,9 +132,9 @@ function deleteDataItem(uid, dataItemPath) {
     <table id="apiContent"></table>
     <div id="apiBottomPager"></div>
 
-    <div id="apiCreateDataCategory"></div>
+    <div id="apiUpdateDataCategory"></div><div id="apiUpdateSubmitStatus"></div><br/>
 
-    <div id="apiUpdateDataCategory"></div><div id="apiUpdateSubmitStatus"></div>
+    <div id="apiCreateDataCategory"></div><div id="apiCreateSubmitStatus"></div>
 </#if>
 
 <script type='text/javascript'>
@@ -162,7 +162,8 @@ function deleteDataItem(uid, dataItemPath) {
                     allowView : ${browser.dataCategoryActions.allowView?string},
                     allowModify : ${browser.dataCategoryActions.allowModify?string},
                     allowDelete : ${browser.dataCategoryActions.allowDelete?string},
-                    allowCreate : ${browser.dataCategoryActions.allowCreate?string}
+                    allowCreate : ${browser.dataCategoryActions.allowCreate?string},
+                    allowItemCreate : ${browser.dataItemActions.allowCreate?string}
                 });
                 dataCategoryApiService.apiRequest();
         });
