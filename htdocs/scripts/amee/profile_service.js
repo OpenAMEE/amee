@@ -44,7 +44,7 @@ DrillDown.prototype = {
 	    });
 	},
 	addProfileItemSuccess: function(response) {
-		window.location.href = window.location.href;
+		processApiResponse
 	},
     loadDrillDown: function(params) {
 		var url = this.fullPath + '/drill';
@@ -159,7 +159,24 @@ DrillDown.prototype = {
     }
 };
 
-var ProfileItemsApiService = Class.create(ApiService, ({
+var BaseProfileApiService = Class.create(ApiService, ({
+    // Initialization
+    initialize: function($super, params) {
+        $super(params);
+    },
+    getTrailRootPath: function() {
+        return 'profiles';
+    },
+    getTrailOtherPaths: function(json) {
+        if (json.profile) {
+            return [json.profile.uid];
+        } else {
+            return [];
+        }
+    }
+}));
+
+var ProfileItemsApiService = Class.create(BaseProfileApiService, ({
     // Initialization
     initialize: function($super, params) {
         $super(params);
@@ -289,7 +306,7 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
     }
 }));
 
-var ProfileItemApiService = Class.create(ApiService, ({
+var ProfileItemApiService = Class.create(BaseProfileApiService, ({
         // Initialization
     initialize: function($super, params) {
         $super(params);
@@ -467,11 +484,10 @@ var ProfileItemApiService = Class.create(ApiService, ({
     updateProfileItemFail: function(response) {
         $('updateStatusSubmit').replace(new Element('div', {id : 'updateStatusSubmit'}).insert(new Element('b').update('ERROR!')));
     }
-
 }));
 
 
-var ProfilesApiService = Class.create(ApiService, ({
+var ProfilesApiService = Class.create(BaseProfileApiService, ({
         // Initialization
     initialize: function($super, params) {
         $super(params);
@@ -533,7 +549,7 @@ var ProfilesApiService = Class.create(ApiService, ({
         } else {
             return $super(json);
         }
-    }    
+    }
 }));
 
 var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({

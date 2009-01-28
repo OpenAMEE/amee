@@ -13,6 +13,9 @@ var DataCategoryApiService = Class.create(ApiService, ({
 
         this.allowItemCreate = params.allowItemCreate || false;
     },
+    getTrailRootPath: function() {
+        return 'data';
+    },
     renderApiResponse: function($super, response) {
         var json = response.responseJSON;
 

@@ -175,10 +175,68 @@ ApiService.prototype = {
     },
     processApiResponse: function(response) {
         this.renderDataCategoryApiResponse(response);
+        this.renderTrail(response);
         this.renderApiResponse(response);
     },
-    renderApiResponse: function(response, pagerJSON) {
+    renderTrail : function(response) {
+        var json = response.responseJSON;
+        var rootPath = this.getTrailRootPath();
+        var otherPaths = this.getTrailOtherPaths(json);
+        var linkPath = '';
+        var apiTrailElement = $('apiTrail');
 
+        if (apiTrailElement) {
+            // reset
+            apiTrailElement.update('');
+
+            // root path
+            if (rootPath != '') {
+                apiTrailElement.insert(new Element('a', {href : '/' + this.getUrlWithSearch(rootPath)}).update(this.titleCase(rootPath)));
+                linkPath = "/" + rootPath;
+            }
+
+            // other path
+            if (otherPaths && otherPaths.length > 0) {
+                for (var i = 0; i < otherPaths.length; i++) {
+                    var otherPath = otherPaths[i];
+                    linkPath = linkPath + "/" + otherPath;
+                    apiTrailElement.insert(" / ");
+                    apiTrailElement.insert(new Element('a', {href : this.getUrlWithSearch(linkPath)}).update(otherPath));
+                }
+
+            }
+        }
+
+        if (json.path && apiTrailElement) {
+            var pathItems = json.path.split("/");
+
+            // path items
+            for (var i = 0; i < pathItems.length; i++) {
+                var pathItem = pathItems[i];
+                if (pathItem == "") {
+                    continue;
+                }
+                linkPath = linkPath + "/" + pathItem;
+                apiTrailElement.insert(" / ");
+                apiTrailElement.insert(new Element('a', {href : this.getUrlWithSearch(linkPath)}).update(this.titleCase(pathItem)));
+            }
+        }
+    },
+    getUrlWithSearch: function(path) {
+        return path + window.location.search;
+    },
+    titleCase: function(inStr) {
+        var outStr = inStr.substr(0,1).toUpperCase();
+        outStr = outStr + inStr.substr(1, inStr.length - 1);
+        return outStr;
+    },
+    getTrailRootPath: function() {
+        return '';
+    },
+    getTrailOtherPaths: function(json) {
+        return [];
+    },
+    renderApiResponse: function(response, pagerJSON) {
         var json = response.responseJSON;
 
         // update elements
