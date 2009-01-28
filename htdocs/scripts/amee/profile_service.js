@@ -217,6 +217,8 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
         // Initialization
     initialize: function($super, params) {
         $super(params);
+        // api category items
+        this.headingCategory = params.headingCategory || "";
     },
     renderApiResponse: function($super, response) {
         var json = response.responseJSON;

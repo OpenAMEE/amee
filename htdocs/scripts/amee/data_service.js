@@ -1,16 +1,70 @@
-var DataCategoryApiService = Class.create(ApiService, ({
-        // Initialization
+var BaseDataApiService  = Class.create(ApiService, ({
+    // Initialization
     initialize: function($super, params) {
         $super(params);
-        this.updateCategory = params.updateCategory || false;
-        this.createCategory = params.createCategory || false;
-
         this.updateFormName = 'apiUpdateForm';
         this.createFormName = 'apiCreateForm';
 
         this.updateFormStatusName = 'apiUpdateSubmitStatus';
         this.createFormStatusName = 'apiCreateSubmitStatus';
+    },
+    getTrailRootPath: function() {
+        return 'data';
+    },
+    apiServiceCall: function(method, params) {
+        if (!params) {
+            var params = {};
+        }
+        if (!method) {
+            method = '';
+        }
+        params.requestHeaders = ['Accept', 'application/json'];
+        params.method = 'post';
+        new Ajax.Request(window.location.href + method, params);
+    },
+    addFormInfoElement: function(label, pElement, name, info, size, style, otherInfo) {
+        pElement.insert(label);
+        pElement.insert(new Element('input', {id : pElement.id + "-" + name, name : name, value : info, size : size, style : style}));
+        if (otherInfo) {
+            pElement.insert(otherInfo);
+        }
+        pElement.insert(new Element('br'));
+    },
+    resetStyles: function(elementList) {
+        for (var i = 0; i < elementList.length; i++) {
+            elementList[i].setStyle({
+                borderColor : '',
+                borderWidth : '',
+                borderStyle : ''
+            });
+        }
+    },
+    validateElementList: function(elementList) {
 
+        var rtnValue = true;
+
+        for (var i = 0; i < elementList.length; i++) {
+            var inElement = elementList[i];
+            if (inElement.value.replace(/^\s+|\s+$/g, '') == '') {
+                inElement.setStyle({
+                    borderColor : 'red',
+                    borderWidth : '2px',
+                    borderStyle : 'solid'
+                });
+                rtnValue = false;
+            }
+
+        }
+        return rtnValue;
+    }
+}));
+
+var DataCategoryApiService = Class.create(BaseDataApiService, ({
+    // Initialization
+    initialize: function($super, params) {
+        $super(params);
+        this.updateCategory = params.updateCategory || false;
+        this.createCategory = params.createCategory || false;
         this.allowItemCreate = params.allowItemCreate || false;
     },
     getTrailRootPath: function() {
@@ -138,12 +192,6 @@ var DataCategoryApiService = Class.create(ApiService, ({
         }
         return updateCatElement;
     },
-    addFormInfoElement: function(label, pElement, name, info, size, style) {
-        pElement.insert(label);
-        pElement.insert(new Element('input', {id : pElement.id + "-" + name, name : name, value : info, size : size, style : style}));
-        pElement.insert(new Element('br'));
-    },
-
     getHeadingElement: function(json) {
         return new Element('tr')
                 .insert(this.getHeadingData('Item'))
@@ -214,24 +262,13 @@ var DataCategoryApiService = Class.create(ApiService, ({
 
         return actions;
     },
-    apiServiceCall: function(method, params) {
-        if (!params) {
-            var params = {};
-        }
-        if (!method) {
-            method = '';
-        }
-        params.requestHeaders = ['Accept', 'application/json'];
-        params.method = 'post';
-        new Ajax.Request(window.location.href + method, params);
-    },
     createDataCategory: function() {
         var elementList = [$(this.createFormName + "-name"), $(this.createFormName + "-path")];
 
         $(this.createFormStatusName).innerHTML='';
         this.resetStyles(elementList)
 
-        if (this.validateDataCategory(elementList)) {
+        if (this.validateElementList(elementList)) {
             this.resetStyles(elementList)
             var params = {
                 parameters: $(this.createFormName).serialize(),
@@ -250,38 +287,11 @@ var DataCategoryApiService = Class.create(ApiService, ({
     createDataCategoryFail: function() {
         $(this.createFormStatusName).replace(new Element('div', {id : this.createFormStatusName}).insert(new Element('b').update('ERROR!')));
     },
-    validateDataCategory: function(elementList) {
-
-        var rtnValue = true;
-
-        for (var i = 0; i < elementList.length; i++) {
-            var inElement = elementList[i];
-            if (inElement.value.replace(/^\s+|\s+$/g, '') == '') {
-                inElement.setStyle({
-                    borderColor : 'red',
-                    borderWidth : '2px',
-                    borderStyle : 'solid'
-                });
-                rtnValue = false;
-            }
-
-        }
-        return rtnValue;
-    },
-    resetStyles: function(elementList) {
-        for (var i = 0; i < elementList.length; i++) {
-            elementList[i].setStyle({
-                borderColor : '',
-                borderWidth : '',
-                borderStyle : ''
-            });
-        }
-    },
     updateDataCategory: function() {
         $(this.updateFormStatusName).innerHTML='';
         var elementList = [$(this.updateFormName + "-name"), $(this.updateFormName + "-path")];
 
-        if (this.validateDataCategory(elementList)) {
+        if (this.validateElementList(elementList)) {
             this.resetStyles(elementList)
             var method;
             if (window.location.search == "") {
@@ -304,6 +314,186 @@ var DataCategoryApiService = Class.create(ApiService, ({
         window.location.href = window.location.href;
     },
     updateDataCategoryFail: function() {
+        $(this.updateFormStatusName).replace(new Element('div', {id : this.updateFormStatusName}).insert(new Element('b').update('ERROR!')));
+    }
+}));
+
+var DataItemApiService = Class.create(BaseDataApiService, ({
+        // Initialization
+    initialize: function($super, params) {
+        $super(params);
+        this.dataHeadingItem = params.dataHeadingItem || 'Data Item Details';
+        this.dataHeadingItemElementName = params.dataHeadingItemElementName || 'apiDataItemHeading';
+        this.dataContentElementName = params.dataContentElementName || "apiDataItemContent";
+
+        this.updateItem = params.updateItem || false;
+    },
+    renderApiResponse: function($super, response) {
+        var json = response.responseJSON;
+
+        if (json.dataItem) {
+            this.renderDataItemApiResponse(json.dataItem);
+        }
+        $super(response);
+        if (this.updateItem && json.dataItem) {
+            $('apiUpdateDataItem').replace(this.getUpdateItemElement('apiUpdateDataItem', json.dataItem));
+        }
+
+    },
+    renderDataItemApiResponse: function(dataItem) {
+        // update elements
+        this.dataHeadingItemElement = $(this.dataHeadingItemElementName);
+        this.dataContentElement = $(this.dataContentElementName);
+
+        // set section heading
+        if (this.dataHeadingItemElement) {
+            this.dataHeadingItemElement.innerHTML = this.dataHeadingItem;
+        }
+
+        // set section details
+        var pElement = new Element('p', {id : this.dataContentElementName});
+
+        if (dataItem.name) {
+            pElement.appendChild(document.createTextNode("Name: " + dataItem.name));
+            pElement.insert(new Element("br"));
+        }
+
+        if (dataItem.path) {
+            pElement.insert(new Element("br"));
+            pElement.appendChild(document.createTextNode("Path: " + dataItem.path));
+        }
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Start Date: " + dataItem.startDate));
+
+        pElement.insert(new Element("br"));
+        if (dataItem.endDate) {
+            pElement.appendChild(document.createTextNode("End Date: " + dataItem.endDate));
+        } else {
+            pElement.appendChild(document.createTextNode("End Date: None"));
+        }
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Full Path: " + window.location.pathname));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Label: " + dataItem.label));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Item Definition: " + dataItem.itemDefinition.name));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Environment: " + dataItem.environment.name));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("UID: " + dataItem.uid));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Created: " + dataItem.created));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Modified: " + dataItem.modified));
+
+
+        this.dataContentElement.replace(pElement);
+    },
+    getHeadingElement: function(json) {
+        return new Element('tr')
+                .insert(this.getHeadingData('Name'))
+                .insert(this.getHeadingData('Value Definition'))
+                .insert(this.getHeadingData('Value Type'))
+                .insert(this.getHeadingData('Value'))
+                .insert(this.getHeadingData('Actions'));
+    },
+    getDetailRows: function(json) {
+        var rows = [];
+
+        if (json.dataItem.itemValues) {
+            var itemValues = json.dataItem.itemValues;
+            for (var i = 0; i < itemValues.length; i++) {
+                var itemValue = itemValues[i];
+
+                var detailRow = new Element('tr', {id : 'Elem_' + itemValue.uid})
+                    .insert(new Element('td').insert(itemValue.itemValueDefinition.name))
+                    .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.name))
+                    .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.valueType))
+                    .insert(new Element('td').insert(itemValue.value));
+
+                // create actions
+                detailRow.insert(this.getActionsTableData('', '', itemValue.displayPath));
+
+                // update array
+                rows[i] = detailRow;
+            }
+        }
+        return rows;
+    },
+    getUpdateItemElement: function(id, dataItem) {
+
+        var updateItemElement = new Element('div', {id : id});
+
+        if(this.allowModify) {
+            var dateFormat = " (" + this.getDateFormat() + ")";
+            var formElement = new Element('form', {action : "#", id : this.updateFormName});
+            var pElement = new Element('p');
+
+            updateItemElement.insert(new Element('h2').update('Update Data Item'));
+
+            this.addFormInfoElement('Name: ', formElement, 'name', dataItem.name, 30, 'margin-left:21px');
+            this.addFormInfoElement('Path: ', formElement, 'path', dataItem.path, 30, 'margin-left:29px');
+            this.addFormInfoElement('StartDate: ', formElement, 'startDate', dataItem.startDate, 30, 'margin-left:2px', dateFormat);
+
+            var endDate = "";
+            if (dataItem.endDate) {
+                endDate = dataItem.endDate;
+            }
+
+            this.addFormInfoElement('EndDate: ', formElement, 'endDate', endDate, 30, 'margin-left:6px', dateFormat);
+
+            pElement.insert(formElement);
+            updateItemElement.insert(pElement);
+
+            formElement.insert(new Element('br')).insert(new Element('br'));
+
+            // sumbit and event
+            var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
+            formElement.insert(btnSubmit);
+            Event.observe(btnSubmit, "click", this.updateDataItem.bind(this));
+
+            pElement.insert(formElement);
+            updateItemElement.insert(pElement);
+        }
+        return updateItemElement;
+    },
+    updateDataItem: function() {
+        $(this.updateFormStatusName).innerHTML='';
+        var elementList = [$(this.updateFormName + "-name"), $(this.updateFormName + "-path")];
+        this.resetStyles(elementList)
+
+        if (this.validateElementList(elementList)) {
+            this.resetStyles(elementList)
+            var method;
+            if (window.location.search == "") {
+                method = "?method=put";
+            } else {
+                method = "&method=put";
+            }
+
+            var params = {
+                parameters: $(this.updateFormName).serialize(),
+                onSuccess: this.updateDataItemSuccess.bind(this),
+                onFailure: this.updateDataItemFail.bind(this)
+            };
+            this.apiServiceCall(method, params);
+        }
+
+    },
+    updateDataItemSuccess: function() {
+        // update elements and status
+        $(this.updateFormStatusName).replace(new Element('div', {id : this.updateFormStatusName}).insert(new Element('b').update('UPDATED!')));
+        //window.location.href = window.location.href;
+    },
+    updateDataItemFail: function() {
         $(this.updateFormStatusName).replace(new Element('div', {id : this.updateFormStatusName}).insert(new Element('b').update('ERROR!')));
     }
 }));

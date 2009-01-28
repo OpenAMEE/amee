@@ -135,9 +135,6 @@ ApiService.prototype = {
         this.apiVersion = params.apiVersion || '1.0';
         this.drillDown = params.drillDown || false;
 
-        // api category items
-        this.headingCategory = params.headingCategory || "";
-
         // api data category items
         this.dataHeadingCategory = params.dataHeadingCategory || "";
         this.dataHeadingCategoryElementName = params.dataHeadingCategoryElementName || 'apiDataCategoryHeading';
@@ -242,7 +239,6 @@ ApiService.prototype = {
         // update elements
         this.headingElement = $(this.headingElementName);
         this.contentElement = $(this.contentElementName);
-        this.totalAmountElement = $(this.tAmountElementName);
         this.pagerTopElement = $(this.pagerTopElementName);
         this.pagerBtmElement = $(this.pagerBtmElementName);
 
@@ -278,6 +274,7 @@ ApiService.prototype = {
     renderDataCategoryApiResponse: function(response) {
 
         var json = response.responseJSON;
+
 
         // data category information and drill down
         if (json.dataCategory) {

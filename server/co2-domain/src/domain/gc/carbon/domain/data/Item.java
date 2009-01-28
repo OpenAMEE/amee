@@ -150,8 +150,8 @@ public abstract class Item implements PersistentObject, Pathable {
         if (detailed) {
             obj.put("created", getCreated());
             obj.put("modified", getModified());
-            obj.put("environment", getEnvironment().getIdentityJSONObject());
-            obj.put("itemDefinition", getItemDefinition().getIdentityJSONObject());
+            obj.put("environment", getEnvironment().getJSONObject());
+            obj.put("itemDefinition", getItemDefinition().getJSONObject());
             obj.put("dataCategory", getDataCategory().getIdentityJSONObject());
         }
     }
