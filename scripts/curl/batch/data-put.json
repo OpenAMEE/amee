@@ -1,0 +1,6 @@
+{"dataCategories": [
+	{"dataCategoryUid": "E4AA9BB7984D", "name": "Diggy", "path": "diggy"}],
+ "dataItems": [
+    {"dataItemUid":"691B8DBF3057", "device": "Aardvark Processor", "rating": "E", "kWhPerYear": "221", "source": "Lo lo land"},
+    {"dataItemUid":"919732CEAE49", "device": "Aardvark Processor", "rating": "F", "kWhPerYear": "122", "source": "Lo lo land"}]}
+

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ProfileCategory>
+	<ProfileItems>
+	    <ProfileItem>
+	        <profileItemUid>E02E1B3754D4</profileItemUid>
+	        <validFrom>20080801</validFrom>
+	        <currencyGBPPerMonth>3</currencyGBPPerMonth>
+	    </ProfileItem>
+	    <ProfileItem>
+	        <profileItemUid>3E7AC0459A65</profileItemUid>
+	        <validFrom>20080801</validFrom>
+	        <currencyGBPPerMonth>2</currencyGBPPerMonth>
+	    </ProfileItem>
+	</ProfileItems>
+</ProfileCategory>

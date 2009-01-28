@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataCategory>
+	<DataCategories>
+    	<DataCategory>
+			<dataCategoryUid>E4AA9BB7984D</dataCategoryUid>
+			<name>ww</name>
+			<path>oo</path>
+    	</DataCategory>
+	</DataCategories>	<DataItems>
+    	<DataItem>
+			<dataItemUid>691B8DBF3057</dataItemUid>
+        	<device>Aardvark Processor</device>
+			<rating>A</rating>
+			<kWhPerYear>888</kWhPerYear>
+			<source>Le la land</source>
+    	</DataItem>
+    	<DataItem>
+			<dataItemUid>919732CEAE49</dataItemUid>
+			<device>Aardvark Processor</device>
+			<rating>B</rating>
+			<kWhPerYear>999</kWhPerYear>
+			<source>La lo land</source>
+    	</DataItem>
+	</DataItems>
+</DataCategory>
