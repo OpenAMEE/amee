@@ -1,0 +1,3 @@
+namespace :mysql do
+
+end
