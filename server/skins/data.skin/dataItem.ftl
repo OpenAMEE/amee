@@ -4,8 +4,6 @@
 <script src="/scripts/amee/api_service.js" type="text/javascript"></script>
 <script src="/scripts/amee/data_service.js" type="text/javascript"></script>
 
-
-
 <h1>Data Item</h1>
 <#include 'dataTrail.ftl'>
 
@@ -76,7 +74,7 @@
     <#if !activeUser.apiVersion.versionOne>
 
         document.observe('dom:loaded', function() {
-            var dataCategoryApiService = new DataItemApiService(
+            var dataItemApiService = new DataItemApiService(
                 {
                     heading : "Item Values",
                     headingElementName : "apiHeading",
@@ -91,7 +89,7 @@
                     allowModify : ${browser.dataItemActions.allowModify?string},
                     allowCreate : ${browser.dataItemActions.allowCreate?string},
                 });
-                dataCategoryApiService.apiRequest();
+                dataItemApiService.apiRequest();
         });
     </#if>
 </script>

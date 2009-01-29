@@ -32,11 +32,13 @@ var BaseDataApiService  = Class.create(ApiService, ({
     },
     resetStyles: function(elementList) {
         for (var i = 0; i < elementList.length; i++) {
-            elementList[i].setStyle({
-                borderColor : '',
-                borderWidth : '',
-                borderStyle : ''
-            });
+            if (elementList[i]) {
+                elementList[i].setStyle({
+                    borderColor : '',
+                    borderWidth : '',
+                    borderStyle : ''
+                });
+            }
         }
     },
     validateElementList: function(elementList) {
@@ -45,15 +47,16 @@ var BaseDataApiService  = Class.create(ApiService, ({
 
         for (var i = 0; i < elementList.length; i++) {
             var inElement = elementList[i];
-            if (inElement.value.replace(/^\s+|\s+$/g, '') == '') {
-                inElement.setStyle({
-                    borderColor : 'red',
-                    borderWidth : '2px',
-                    borderStyle : 'solid'
-                });
-                rtnValue = false;
+            if (inElement) {
+                if (inElement.value.replace(/^\s+|\s+$/g, '') == '') {
+                    inElement.setStyle({
+                        borderColor : 'red',
+                        borderWidth : '2px',
+                        borderStyle : 'solid'
+                    });
+                    rtnValue = false;
+                }
             }
-
         }
         return rtnValue;
     }
@@ -66,9 +69,6 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         this.updateCategory = params.updateCategory || false;
         this.createCategory = params.createCategory || false;
         this.allowItemCreate = params.allowItemCreate || false;
-    },
-    getTrailRootPath: function() {
-        return 'data';
     },
     renderApiResponse: function($super, response) {
         var json = response.responseJSON;
@@ -206,7 +206,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
                     .insert(new Element('td').insert(dataItem.label));
 
                 // create actions
-                detailRow.insert(this.getActionsTableData(dataItem.path, 'deleteDataItem', dataItem.uid));
+                detailRow.insert(this.getActionsTableData(dataItem.path, 'deleteDataItem', dataItem.uid, dataItem.path));
 
                 // update array
                 rows[i] = detailRow;
@@ -327,11 +327,16 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         this.dataContentElementName = params.dataContentElementName || "apiDataItemContent";
 
         this.updateItem = params.updateItem || false;
+
+        var uid;
+        var path;
     },
     renderApiResponse: function($super, response) {
         var json = response.responseJSON;
+        this.path = json.path;
 
         if (json.dataItem) {
+            this.uid = json.dataItem.uid;
             this.renderDataItemApiResponse(json.dataItem);
         }
         $super(response);
@@ -465,9 +470,32 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         }
         return updateItemElement;
     },
-    updateDataItem: function() {
+    getParentPath: function() {
+        var pathItems = this.path.split("/");
+        var linkPath = '';
+        var rootPath = this.getTrailRootPath();
+
+        // root path
+        if (rootPath != '') {
+            linkPath = "/" + rootPath;
+        }
+
+        // path items
+        for (var i = 0; i < pathItems.length - 1; i++) {
+            var pathItem = pathItems[i];
+            if (pathItem == "") {
+                continue;
+            }
+            linkPath = linkPath + "/" + pathItem;
+        }
+        return linkPath;
+    },
+    updateDataItem: function(event, elementList) {
         $(this.updateFormStatusName).innerHTML='';
-        var elementList = [$(this.updateFormName + "-name"), $(this.updateFormName + "-path")];
+
+        if (!elementList) {
+            elementList = [];
+        }
         this.resetStyles(elementList)
 
         if (this.validateElementList(elementList)) {
@@ -491,9 +519,139 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
     updateDataItemSuccess: function() {
         // update elements and status
         $(this.updateFormStatusName).replace(new Element('div', {id : this.updateFormStatusName}).insert(new Element('b').update('UPDATED!')));
-        //window.location.href = window.location.href;
+        
+        var pathElement = $(this.updateFormName + "-path");
+        if (pathElement && pathElement.value != '') {
+            window.location.href = this.getParentPath() + "/" + $(this.updateFormName + "-path").value;
+        } else {
+            window.location.href =  this.getParentPath() + "/" + this.uid;
+        }
     },
     updateDataItemFail: function() {
         $(this.updateFormStatusName).replace(new Element('div', {id : this.updateFormStatusName}).insert(new Element('b').update('ERROR!')));
+    }
+}));
+
+
+var DataItemValueApiService = Class.create(DataItemApiService, ({
+    // Initialization
+    initialize: function($super, params) {
+        $super(params);
+    },
+    renderApiResponse: function($super, response) {
+        var json = response.responseJSON;
+        this.uid = json.itemValue.uid;
+
+        if (json.itemValue) {
+            this.renderDataItemValueApiResponse(json.itemValue);
+        }
+
+        if (this.updateItem && json.itemValue) {
+            $('apiUpdateDataItemValue').replace(this.getUpdateItemValueElement('apiUpdateDataItemValue', json.itemValue));
+        }
+
+    },
+    renderDataItemValueApiResponse: function(itemValue) {
+        // update elements
+        this.dataHeadingItemElement = $(this.dataHeadingItemElementName);
+        this.dataContentElement = $(this.dataContentElementName);
+
+        // set section heading
+        if (this.dataHeadingItemElement) {
+            this.dataHeadingItemElement.innerHTML = this.dataHeadingItem;
+        }
+
+        // set section details
+        var pElement = new Element('p', {id : this.dataContentElementName});
+
+        pElement.appendChild(document.createTextNode("Value: " + itemValue.name));
+        pElement.insert(new Element("br"));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Full Path: " + window.location.pathname));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Item Definition: " + itemValue.itemValueDefinition.name));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Value Definition: " + itemValue.itemValueDefinition.valueDefinition.name));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Value Type: " + itemValue.itemValueDefinition.valueDefinition.valueType));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Item: " + itemValue.item.label));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Environment: " + itemValue.item.environment.name));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("UID: " + itemValue.uid));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Created: " + itemValue.created));
+
+        pElement.insert(new Element("br"));
+        pElement.appendChild(document.createTextNode("Modified: " + itemValue.modified));
+
+        this.dataContentElement.replace(pElement);
+    },
+    updateDataItem: function($super) {
+        $super(null, [$(this.updateFormName + "-value")]);
+    },
+    getUpdateItemValueElement: function(id, itemValue) {
+
+        var updateItemElement = new Element('div', {id : id});
+
+        if(this.allowModify) {
+            var formElement = new Element('form', {action : "#", id : this.updateFormName});
+            var pElement = new Element('p');
+
+            updateItemElement.insert(new Element('h2').update('Update Data Item Value'));
+
+            if (itemValue.itemValueDefinition.choices) {
+
+                var selectElement = new Element('select', {name : 'value'});
+                var choices = itemValue.itemValueDefinition.choices.split(",");
+                
+                for (var i = 0; i < choices.length; i++) {
+                    var choice = choices[i];
+                    var optionElement = new Element('option', {value : choice}).update(choice);
+                    if (itemValue.value == choice) {
+                        optionElement.selected = true;    
+                    }
+                    selectElement.insert(optionElement);
+                }
+                formElement.insert('Value: ');
+                formElement.insert(selectElement);
+            } else {
+                this.addFormInfoElement('Value: ', formElement, 'value', itemValue.value, 30, 'margin-left:12px');
+                if (itemValue.unit) {
+                    this.addFormInfoElement('Unit: ', formElement, 'unit', itemValue.unit, 30, 'margin-left:21px');
+                }
+                if (itemValue.perUnit) {
+                    this.addFormInfoElement('PerUnit: ', formElement, 'perUnit', itemValue.perUnit, 30, 'margin-left:1px');
+                }
+            }
+            pElement.insert(formElement);
+            updateItemElement.insert(pElement);
+
+            formElement.insert(new Element('br')).insert(new Element('br'));
+
+            // sumbit and event
+            var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
+            formElement.insert(btnSubmit);
+            Event.observe(btnSubmit, "click", this.updateDataItem.bind(this));
+
+            pElement.insert(formElement);
+            updateItemElement.insert(pElement);
+        }
+        return updateItemElement;
+    },
+    updateDataItemSuccess: function() {
+        // update elements and status
+        $(this.updateFormStatusName).replace(new Element('div', {id : this.updateFormStatusName}).insert(new Element('b').update('UPDATED!')));
+
+        window.location.href = window.location.href;
     }
 }));

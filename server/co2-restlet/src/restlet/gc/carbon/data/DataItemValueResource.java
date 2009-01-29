@@ -38,6 +38,8 @@ import org.w3c.dom.Element;
 import java.io.Serializable;
 import java.util.Map;
 
+import com.jellymold.utils.domain.APIUtils;
+
 //TODO - Move to builder model
 @Component
 @Scope("prototype")
@@ -79,6 +81,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         JSONObject obj = new JSONObject();
         obj.put("itemValue", dataBrowser.getItemValue().getJSONObject());
         obj.put("dataItem", dataBrowser.getDataItem().getIdentityJSONObject());
+        obj.put("path", pathItem.getFullPath());
         return obj;
     }
 
@@ -87,6 +90,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         Element element = document.createElement("DataItemValueResource");
         element.appendChild(dataBrowser.getItemValue().getElement(document));
         element.appendChild(dataBrowser.getDataItem().getIdentityElement(document));
+        element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
         return element;
     }
 

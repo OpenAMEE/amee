@@ -357,11 +357,13 @@ ApiService.prototype = {
         rows[0] = new Element("tr").insert(new Element("td"));
         return rows;
     },
-    getActionsTableData: function(urlKey, dMethod, uid) {
+    getActionsTableData: function(urlKey, dMethod, uid, optViewPath) {
         var actions = new Element('td');
 
         if (this.allowView) {
-            actions.insert(new Element('a', {href : this.getUrl(uid)})
+            var eUrl = optViewPath || uid;
+            
+            actions.insert(new Element('a', {href : this.getUrl(eUrl)})
                 .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
         }
 
@@ -378,9 +380,12 @@ ApiService.prototype = {
     },
     getUrl: function(params) {
         var url = window.location.href;
-
         if (params) {
-            return url.substring(0, (url.length - window.location.search.length)) + "/" + params + window.location.search;
+            url = url.substring(0, (url.length - window.location.search.length));
+            if (!url.endsWith("/")) {
+                url = url + "/";
+            }
+            return url +  params + window.location.search;
         } else {
             return url;
         }
