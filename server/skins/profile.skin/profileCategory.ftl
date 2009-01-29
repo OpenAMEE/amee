@@ -18,12 +18,11 @@ function profileItemDeleted() {
   profileCategoryResource.load();
 }
 function deleteProfileItem(profileItemUid, profileItemPath) {
-  if (profileItemPath && profileItemPath.indexOf("/") > -1) {
+  if (profileItemPath && profileItemPath.indexOf("?") > -1) {
     resourceUrl = profileItemPath + '&method=delete';
   } else {
     resourceUrl = profileItemPath + '?method=delete';
   }
-  Log.debug(resourceUrl);
   resourceElem = $('Elem_' + profileItemUid);
   resourceType = 'Profile Item';
   var deleteResource = new DeleteResource()
@@ -63,13 +62,8 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
       </table>
       </p>
     </#if>
-<#else>
-    <h2 id="apiDataCategoryHeading"></h2>
-    <p id="apiDataCategoryContent"></p>
-</#if>
-<#if browser.profileItemActions.allowList>
 
-    <#if activeUser.apiVersion.versionOne>
+    <#if browser.profileItemActions.allowList>
         <h2>Profile Items</h2>
         <p>
             <table>
@@ -105,14 +99,16 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
         <#if totalAmountPerMonth??>
             <p>Total kgCO2 Per Month: <span id="totalAmountPerMonth">${totalAmountPerMonth}</span></p>
         </#if>
-    <#else>
-        <h2 id="apiHeading"></h2>
-        <div id="apiTopPager"></div>
-        <table id="apiContent"></table>
-        <p id="apiTAmount"></p>
-        <div id="apiBottomPager"></div>
     </#if>
+<#else>
+    <h2 id="apiDataCategoryHeading"></h2>
+    <p id="apiDataCategoryContent"></p>
 
+    <h2 id="apiHeading"></h2>
+    <div id="apiTopPager"></div>
+    <table id="apiContent"></table>
+    <p id="apiTAmount"></p>
+    <div id="apiBottomPager"></div>
 </#if>
 
 <#if dataCategory.itemDefinition??>
@@ -143,11 +139,7 @@ function deleteProfileItem(profileItemUid, profileItemPath) {
                     dataHeadingCategoryElementName : 'apiDataCategoryHeading',
                     dataContentElementName : "apiDataCategoryContent",
                     apiVersion : '2.0',
-                    drillDown : true,
-                    allowList : ${browser.profileItemActions.allowList?string},
-                    allowView : ${browser.profileItemActions.allowView?string},
-                    allowModify : ${browser.profileItemActions.allowModify?string},
-                    allowDelete : ${browser.profileItemActions.allowDelete?string}
+                    drillDown : true
                 });
                 profileCategoryApiService.apiRequest();
         });

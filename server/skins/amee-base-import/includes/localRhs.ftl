@@ -1,39 +1,41 @@
 <div id="modal" class="columnBlock paddingTopBottom clearfix" style="overflow: auto; text-align: left;"></div>
-        
-<#if node??>
-<h2>Details</h2>
-<table>
-    <#if node.displayName??>
+
+<#if activeUser.apiVersion?? && activeUser.apiVersion.versionOne>
+    <#if node??>
+    <h2>Details</h2>
+    <table>
+        <#if node.displayName??>
+            <tr>
+                <td>Name:</td>
+                <td>${node.displayName}</td>
+            </tr>
+        </#if>
+        <#if node.displayPath??>
+            <tr>
+                <td>Path:</td>
+                <td>${node.displayPath}</td>
+            </tr>
+        </#if>
+            <tr>
+                <td>UID:</td>
+                <td>${node.uid}</td>
+            </tr>
+        <#if node.amount??>
+            <tr>
+                <td>Amount:</td>
+                <td>${node.amount}</td>
+            </tr>
+        </#if>
         <tr>
-            <td>Name:</td>
-            <td>${node.displayName}</td>
+            <td>Created:</td>
+            <td>${node.created?datetime}</td>
         </tr>
+        <tr>
+            <td>Modified:</td>
+            <td>${node.modified?datetime}</td>
+        </tr>
+    </table>
     </#if>
-    <#if node.displayPath??>
-        <tr>
-            <td>Path:</td>
-            <td>${node.displayPath}</td>
-        </tr>
-    </#if>
-        <tr>
-            <td>UID:</td>
-            <td>${node.uid}</td>
-        </tr>
-    <#if node.amount??>
-        <tr>
-            <td>Amount:</td>
-            <td>${node.amount}</td>
-        </tr>
-    </#if>
-    <tr>
-        <td>Created:</td>
-        <td>${node.created?datetime}</td>
-    </tr>
-    <tr>
-        <td>Modified:</td>
-        <td>${node.modified?datetime}</td>
-    </tr>
-</table>
 </#if>
 
 <script type='text/javascript'>

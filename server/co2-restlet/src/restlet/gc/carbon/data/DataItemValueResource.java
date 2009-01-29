@@ -79,6 +79,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
+        obj.put("actions", getActions(dataBrowser.getDataItemActions()));
         obj.put("itemValue", dataBrowser.getItemValue().getJSONObject());
         obj.put("dataItem", dataBrowser.getDataItem().getIdentityJSONObject());
         obj.put("path", pathItem.getFullPath());

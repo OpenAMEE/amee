@@ -70,6 +70,13 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         this.createCategory = params.createCategory || false;
         this.allowItemCreate = params.allowItemCreate || false;
     },
+    updatePermissions: function($super, response) {
+        $super(response);
+        var dataItemActions = response.responseJSON.dataItemActions;
+        if (dataItemActions) {
+            this.allowItemCreate = dataItemActions.allowCreate;
+        }
+    },
     renderApiResponse: function($super, response) {
         var json = response.responseJSON;
 
@@ -333,6 +340,7 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
     },
     renderApiResponse: function($super, response) {
         var json = response.responseJSON;
+
         this.path = json.path;
 
         if (json.dataItem) {
@@ -541,7 +549,7 @@ var DataItemValueApiService = Class.create(DataItemApiService, ({
     renderApiResponse: function($super, response) {
         var json = response.responseJSON;
         this.uid = json.itemValue.uid;
-
+        
         if (json.itemValue) {
             this.renderDataItemValueApiResponse(json.itemValue);
         }

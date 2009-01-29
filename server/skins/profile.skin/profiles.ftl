@@ -94,11 +94,7 @@ function deleteProfile(profileUid) {
                     pagerTopElementName : 'apiTopPager',
                     pagerBtmElementName : 'apiBottomPager',
                     apiVersion : '2.0',
-                    drillDown : false,
-                    allowList : ${browser.profileItemActions.allowList?string},
-                    allowView : ${browser.profileItemActions.allowView?string},
-                    allowModify : ${browser.profileItemActions.allowModify?string},
-                    allowDelete : ${browser.profileItemActions.allowDelete?string}
+                    drillDown : false
                 });
             profilesApiService.apiRequest();
         });

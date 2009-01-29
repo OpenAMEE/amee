@@ -75,13 +75,7 @@
 
     // api call
     <#if !activeUser.apiVersion.versionOne>
-        var profileItemValueApiService = new ProfileItemValueApiService(
-            {
-                allowList : ${browser.profileItemActions.allowList?string},
-                allowView : ${browser.profileItemActions.allowView?string},
-                allowDelete : ${browser.profileItemActions.allowDelete?string},
-                allowModify : ${browser.profileItemActions.allowModify?string}
-            });
+        var profileItemValueApiService = new ProfileItemValueApiService();
         profileItemValueApiService.apiRequest();
     </#if>
 </script>

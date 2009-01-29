@@ -31,5 +31,4 @@ public abstract class BaseDataResource extends AMEEResource {
         super.init(context, request, response);
         this.dataBrowser = (DataBrowser) beanFactory.getBean("dataBrowser");
     }
-
 }

@@ -100,6 +100,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
             }
             obj.put("profiles", profilesJSONArray);
             obj.put("pager", pager.getJSONObject());
+            obj.put("actions", getActions(profileBrowser.getProfileActions()));
         } else if (getRequest().getMethod().equals(Method.POST)) {
             obj.put("profile", newProfile.getJSONObject());
         }

@@ -84,10 +84,7 @@
                     dataContentElementName : "apiDataItemContent",
                     apiVersion : '2.0',
                     drillDown : false,
-                    updateItem: true,
-                    allowView : ${browser.dataItemActions.allowView?string},
-                    allowModify : ${browser.dataItemActions.allowModify?string},
-                    allowCreate : ${browser.dataItemActions.allowCreate?string},
+                    updateItem: true
                 });
                 dataItemApiService.apiRequest();
         });

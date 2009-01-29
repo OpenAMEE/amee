@@ -2,6 +2,7 @@ package gc.carbon;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.User;
+import com.jellymold.kiwi.ResourceActions;
 import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.ThreadBeanHolder;
@@ -25,6 +26,8 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.apache.xerces.dom.DocumentImpl;
+import org.json.JSONObject;
+import org.json.JSONException;
 
 import java.util.Map;
 import java.util.List;
@@ -132,4 +135,15 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         User user = (User) ThreadBeanHolder.get("user");
         return user.getApiVersion();
     }
+
+    protected JSONObject getActions(ResourceActions rActions) throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("allowList", rActions.isAllowList());
+        obj.put("allowView", rActions.isAllowView());
+        obj.put("allowCreate", rActions.isAllowCreate());
+        obj.put("allowModify", rActions.isAllowModify());
+        obj.put("allowDelete", rActions.isAllowDelete());
+        return obj;
+    }
+
 }

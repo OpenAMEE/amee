@@ -27,10 +27,11 @@ ProfileCategoryResource.prototype = {
 
 var DrillDown = Class.create();
 DrillDown.prototype = {
-    initialize: function(fullPath, apiVersion, dateFormat) {
+    initialize: function(fullPath, apiVersion, dateFormat, allowCreate) {
         this.fullPath = fullPath;
         this.apiVersion = apiVersion || '1.0';
         this.dateFormat = dateFormat || 'date format not specified';
+        this.allowCreate = allowCreate || false; 
 		var selectName = null;
 		var selections = null;
 		var uid = null;
@@ -44,18 +45,20 @@ DrillDown.prototype = {
 	    });
 	},
 	addProfileItemSuccess: function(response) {
-		processApiResponse
+		window.location.href = window.location.href;
 	},
     loadDrillDown: function(params) {
-		var url = this.fullPath + '/drill';
-		if (params != '') {
-			url = url + '?' + params;
-		}
-        var myAjax = new Ajax.Request(url, {
-            method: 'get',
-			requestHeaders: ['Accept', 'application/json'],
-            onSuccess: this.loadDrillDownSuccess.bind(this)
-        });
+        if (this.allowCreate) {
+            var url = this.fullPath + '/drill';
+            if (params != '') {
+                url = url + '?' + params;
+            }
+            var myAjax = new Ajax.Request(url, {
+                method: 'get',
+                requestHeaders: ['Accept', 'application/json'],
+                onSuccess: this.loadDrillDownSuccess.bind(this)
+            });
+        }
     },
     loadDrillDownSuccess: function(response) {
         var obj = eval('(' + response.responseText + ')');
@@ -219,12 +222,32 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
         $super(params);
         // api category items
         this.headingCategory = params.headingCategory || "";
+
+        var itemAllowList = false;
+        var itemAllowView = false;
+        var itemAllowCreate = false;
+        var itemAllowModify = false;
+        var itemAllowDelete = false;
+
+    },
+    updatePermissions: function($super, response) {
+        $super(response);
+        var profileItemActions = response.responseJSON.profileItemActions;
+        if (profileItemActions) {
+            this.itemAllowList = profileItemActions.allowList;
+            this.itemAllowView = profileItemActions.allowView;
+            this.itemAllowCreate = profileItemActions.allowCreate;
+            this.itemAllowModify = profileItemActions.allowModify;
+            this.itemAllowDelete = profileItemActions.allowDelete;
+        }
     },
     renderApiResponse: function($super, response) {
         var json = response.responseJSON;
 
         if (json.profileItems.length > 0) {
-            $super(response);
+            if (this.itemAllowList) {
+                $super(response);
+            }
         } else if (json.profileCategories.length > 0) {
             // update elements
             this.headingCategoryElement = $(this.headingElementName);
@@ -245,6 +268,15 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
             // replace table
             this.headingContentElement.replace(tableElement);
         }
+    },
+    getActionsAllowView: function() {
+        return this.itemAllowView;
+    },
+    getActionsAllowCreate : function() {
+        return this.itemAllowCreate;
+    },
+    getActionsAllowDelete: function() {
+        return this.itemAllowDelete;
     },
     getActionsTableData: function($super, uid) {
         return $super("profileItem.uid", "deleteProfileItem", uid);
@@ -595,14 +627,14 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
             inputValuesElement.insert(selectElement);
             inputValuesElement.insert(new Element('br'));
         } else {
-            this.addFormInfoElement('Value: ', inputValuesElement, 'value', itemValue.value, 30);
+            this.addFormInfoElement('Value: ', inputValuesElement, 'value', itemValue.value, 30, 'margin-left:23px');
 
             if (itemValue.unit) {
-                this.addFormInfoElement('Unit: ', inputValuesElement, 'unit', itemValue.unit, 30);
+                this.addFormInfoElement('Unit: ', inputValuesElement, 'unit', itemValue.unit, 30, 'margin-left:34px');
             }
 
             if (itemValue.perUnit) {
-                this.addFormInfoElement('PerUnit: ', inputValuesElement, 'perUnit', itemValue.perUnit, 30);
+                this.addFormInfoElement('PerUnit: ', inputValuesElement, 'perUnit', itemValue.perUnit, 30, 'margin-left:9px');
             }
         }
 
@@ -615,12 +647,18 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
         }
     },
     processApiResponse: function(response) {
+        this.renderTrail(response);
+        this.updatePermissions(response);
         this.renderApiResponse(response);
     },
-    addFormInfoElement: function(label, pElement, name, info, size) {
+    addFormInfoElement: function(label, pElement, name, info, size, style) {
         pElement.insert(label);
         if (this.allowModify) {
-            pElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size}));
+            if (style) {
+                pElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size, style : style}));
+            } else {
+                pElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size}));
+            }
         } else {
             pElement.insert(info);
         }

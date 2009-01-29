@@ -117,6 +117,7 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
         obj.put("itemValue", profileBrowser.getProfileItemValue().getJSONObject(true));
         obj.put("path", pathItem.getFullPath());
         obj.put("profile", profileBrowser.getProfile().getIdentityJSONObject());
+        obj.put("actions", getActions(profileBrowser.getProfileItemValueActions()));
         return obj;
     }
 

@@ -97,7 +97,9 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        return builder.getJSONObject();
+        JSONObject obj = builder.getJSONObject();
+        obj.put("actions", getActions(profileBrowser.getProfileItemActions()));
+        return obj;
     }
 
     @Override

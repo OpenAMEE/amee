@@ -155,13 +155,7 @@ function deleteDataItem(uid, dataItemPath) {
                     apiVersion : '2.0',
                     drillDown : false,
                     updateCategory: true,
-                    createCategory: true,
-                    allowList : ${browser.dataCategoryActions.allowList?string},
-                    allowView : ${browser.dataCategoryActions.allowView?string},
-                    allowModify : ${browser.dataCategoryActions.allowModify?string},
-                    allowDelete : ${browser.dataCategoryActions.allowDelete?string},
-                    allowCreate : ${browser.dataCategoryActions.allowCreate?string},
-                    allowItemCreate : ${browser.dataItemActions.allowCreate?string}
+                    createCategory: true
                 });
                 dataCategoryApiService.apiRequest();
         });

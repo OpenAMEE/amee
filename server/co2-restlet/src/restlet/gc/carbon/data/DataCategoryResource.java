@@ -23,6 +23,7 @@ import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.APIFault;
+import com.jellymold.kiwi.ResourceActions;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemDefinition;
@@ -114,6 +115,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
             // add DataCategory
             obj.put("dataCategory", dataBrowser.getDataCategory().getJSONObject(true));
+            obj.put("actions", getActions(dataBrowser.getDataCategoryActions()));
+            obj.put("dataItemActions", getActions(dataBrowser.getDataItemActions()));
 
             // add ItemDefinition list
             JSONArray itemDefinitions = new JSONArray();

@@ -124,6 +124,11 @@ Pager.prototype = {
 var ApiService = Class.create();
 ApiService.prototype = {
     initialize: function(params) {
+
+        if (!params) {
+            params = {};
+        }
+
         // api items
         this.heading = params.heading || "";
         this.headingElementName = params.headingElementName || "apiHeading";
@@ -131,7 +136,7 @@ ApiService.prototype = {
         this.tAmountElementName = params.tAmountElementName || "apiTAmount";
         this.pagerTopElementName = params.pagerTopElementName || "apiTopPager";
         this.pagerBtmElementName = params.pagerBtmElementName || "apiBottomPager";
-        
+
         this.apiVersion = params.apiVersion || '1.0';
         this.drillDown = params.drillDown || false;
 
@@ -170,9 +175,20 @@ ApiService.prototype = {
                 onSuccess: this.processApiResponse.bind(this)
             });
     },
+    updatePermissions: function(response) {
+        var actions = response.responseJSON.actions;
+        if (actions) {
+            this.allowList = actions.allowList;
+            this.allowView = actions.allowView;
+            this.allowDelete = actions.allowDelete;
+            this.allowModify = actions.allowModify;
+            this.allowCreate = actions.allowCreate;
+        }
+    },
     processApiResponse: function(response) {
-        this.renderDataCategoryApiResponse(response);
         this.renderTrail(response);
+        this.updatePermissions(response);
+        this.renderDataCategoryApiResponse(response);
         this.renderApiResponse(response);
     },
     renderTrail : function(response) {
@@ -332,7 +348,7 @@ ApiService.prototype = {
                 this.dataContentElement.replace(pElement);
             }
             if (this.drillDown && json.path) {
-                new DrillDown("/data" + json.path, this.apiVersion, this.getDateFormat()).loadDrillDown('');
+                var dDown = new DrillDown("/data" + json.path, this.apiVersion, this.getDateFormat(), this.getActionsAllowCreate()).loadDrillDown('');
             }
         }
     },
@@ -360,14 +376,14 @@ ApiService.prototype = {
     getActionsTableData: function(urlKey, dMethod, uid, optViewPath) {
         var actions = new Element('td');
 
-        if (this.allowView) {
+        if (this.getActionsAllowView()) {
             var eUrl = optViewPath || uid;
             
             actions.insert(new Element('a', {href : this.getUrl(eUrl)})
                 .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
         }
 
-        if (this.allowDelete) {
+        if (this.getActionsAllowDelete()) {
             var dUrl = "'" + urlKey + "','" + this.getUrl(uid) + "'";
             actions.insert(new Element('input',
                 {
@@ -377,6 +393,15 @@ ApiService.prototype = {
                 title : 'Delete', alt : 'Delete', border : 0}));
         }
         return actions;
+    },
+    getActionsAllowView: function() {
+        return this.allowView;
+    },
+    getActionsAllowCreate : function() {
+        return this.allowCreate;
+    },
+    getActionsAllowDelete: function() {
+        return this.allowDelete;
     },
     getUrl: function(params) {
         var url = window.location.href;

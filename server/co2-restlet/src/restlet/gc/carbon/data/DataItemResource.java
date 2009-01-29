@@ -22,6 +22,7 @@ package gc.carbon.data;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
 import com.jellymold.utils.domain.APIUtils;
+import com.jellymold.kiwi.ResourceActions;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.StartEndDate;
@@ -108,6 +109,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         Choices userValueChoices = dataServiceDAO.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         JSONObject obj = new JSONObject();
+        obj.put("actions", getActions(dataBrowser.getDataItemActions()));        
         obj.put("dataItem", dataItem.getJSONObject(true));
         obj.put("path", pathItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
