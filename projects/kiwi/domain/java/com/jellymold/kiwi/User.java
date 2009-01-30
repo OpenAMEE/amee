@@ -85,7 +85,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     private String location = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "API_VERSION")
+    @JoinColumn(name = "API_VERSION_ID")
     private APIVersion apiVersion;
 
     @Temporal(TemporalType.TIMESTAMP)

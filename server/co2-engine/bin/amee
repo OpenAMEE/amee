@@ -270,7 +270,7 @@ fi
 # Build the lock file clause.  Only create a lock file if the lock directory exists on this platform.
 LOCKPROP=
 if [ -d $LOCKDIR ]
-then
+then                        
     if [ -w $LOCKDIR ]
     then
         LOCKPROP=wrapper.lockfile=\"$LOCKFILE\"
