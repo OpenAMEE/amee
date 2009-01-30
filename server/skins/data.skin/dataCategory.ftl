@@ -142,6 +142,9 @@ function deleteDataItem(uid, dataItemPath) {
     <#if !activeUser.apiVersion.versionOne>
 
         document.observe('dom:loaded', function() {
+            // hide n/a atom option
+            $('showAPIATOM').style.visibility = "hidden";
+
             var dataCategoryApiService = new DataCategoryApiService(
                 {
                     heading : "Data Items",

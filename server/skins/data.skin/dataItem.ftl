@@ -74,6 +74,9 @@
     <#if !activeUser.apiVersion.versionOne>
 
         document.observe('dom:loaded', function() {
+            // hide n/a atom option
+            $('showAPIATOM').style.visibility = "hidden";
+            
             var dataItemApiService = new DataItemApiService(
                 {
                     heading : "Item Values",
