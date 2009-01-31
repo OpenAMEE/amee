@@ -1,8 +1,8 @@
 namespace :mysql do
 
-# ddl_1.sql
-# dml.sql
-# ddl_2.sql
-# migration.rb
+  desc "Migrate AMEE Databases"
+  task :migrate, roles => :db do
+    # To be implemented...
+  end
 
 end

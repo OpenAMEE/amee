@@ -22,26 +22,26 @@ set :deploy_to, "/var/www/apps/#{application}"
 # your SCM below:
 # set :scm, :subversion
 set :scm, :git
-set :scm_command, "/opt/local/bin/git"
+set :scm_command, "/usr/bin/git"
 
 # The deployment user. This should exist in the scm and on each of the deployed-to hosts
 set :user, "deploy"
-set :scm_passphrase, "deploy"
 
 # Source code and build locations
 set :src_dir, "/Development/AMEE/amee"
-set(:package_dir) { "/Development/AMEE/amee.deploy/#{stage}" }
+set :package_dir, "/Development/AMEE/amee.deploy"
 
 # Override Capistrano tasks
 deploy.task :start, :roles => :app do
-  amee.start
+  #amee.start
 end
 
 deploy.task  :stop, :roles => :app do
+  #amee.stop
 end
 
 deploy.task :restart, :roles => :app do
-  amee.restart
+  #amee.restart
 end
 
 deploy.task :migrate, :roles => :db, :only => { :primary => true } do

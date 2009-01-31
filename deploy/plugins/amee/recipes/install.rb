@@ -20,8 +20,11 @@ namespace :install do
   desc "Build the AMEE deployment package"  
   task :prepare do
 
+    # Switch the the correct branch
+    system("git checkout #{branch}")
+    
     # Remove the previous install artifacts
-    FileUtils.remove_dir(package_dir, true)
+    FileUtils.rm_r Dir.glob("#{package_dir}/*")
 
     # Create bin
     puts "Creating new deployment bin directory #{package_dir}/bin"
@@ -48,14 +51,25 @@ namespace :install do
     FileUtils.mkdir_p("#{package_dir}/lib")
     FileUtils.cp_r "#{src_dir}/lib/.","#{package_dir}/lib"  
 
+    # Create db
+    puts "Creating new deployment db directory #{package_dir}/db"
+    FileUtils.mkdir_p("#{package_dir}/db")
+    FileUtils.cp_r "#{src_dir}/db/.","#{package_dir}/db"
+    
   end
 
   desc "Send the package to Git repository"
   task :git do
-    system("cd #{package_dir}")
+
+    pwd = Dir.pwd
+    Dir.chdir(package_dir)
+
     system("git add .")
     system("git commit -m 'Capistrano install on #{Time.now}'")
     system("git push")
+
+    Dir.chdir(pwd)
+    
   end
   
 end
