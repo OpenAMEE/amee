@@ -134,7 +134,12 @@ public class ProfileItemFormAcceptor implements Acceptor {
 
         // update 'end' value
         if (names.contains("end")) {
-            profileItem.setEnd(Boolean.valueOf(form.getFirstValue("end")));
+            boolean end = Boolean.valueOf(form.getFirstValue("end"));
+            if (end) {
+                profileItem.setEndDate(profileItem.getStartDate());
+            } else {
+               profileItem.setEndDate(null); 
+            }
         }
 
         // update 'endDate' value

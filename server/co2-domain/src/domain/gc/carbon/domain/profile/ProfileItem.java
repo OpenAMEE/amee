@@ -53,9 +53,6 @@ public class ProfileItem extends Item {
     @JoinColumn(name = "DATA_ITEM_ID")
     private DataItem dataItem;
 
-    @Column(name = "END")
-    private Boolean end = false;
-
     @Column(name = "AMOUNT", precision = PRECISION, scale = SCALE)
     private BigDecimal amount = ZERO;
 
@@ -99,7 +96,6 @@ public class ProfileItem extends Item {
         ProfileItem profileItem = new ProfileItem(getProfile(), getDataCategory(), getDataItem());
         profileItem.setStartDate(getStartDate());
         profileItem.setEndDate(getEndDate());
-        profileItem.setEnd(isEnd());
         profileItem.setAmount(getAmount());
         profileItem.setName(getName());
         profileItem.setCreated(getCreated());
@@ -143,11 +139,7 @@ public class ProfileItem extends Item {
     }
 
     public boolean isEnd() {
-        return end;
-    }
-
-    public void setEnd(boolean end) {
-        this.end = end;
+        return startDate.equals(endDate);
     }
 
     public BigDecimal getAmount() {

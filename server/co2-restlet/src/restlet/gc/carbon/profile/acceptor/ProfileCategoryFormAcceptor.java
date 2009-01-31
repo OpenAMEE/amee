@@ -119,8 +119,10 @@ public class ProfileCategoryFormAcceptor implements Acceptor {
         if (resource.getVersion().isVersionOne()) {
 
             profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
-            profileItem.setEnd(Boolean.valueOf(form.getFirstValue("end")));
-
+            boolean end = Boolean.valueOf(form.getFirstValue("end"));
+            if (end) {
+                profileItem.setEndDate(profileItem.getStartDate());
+            }
         } else {
             profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
             if (form.getNames().contains("endDate") && form.getFirstValue("endDate") != null) {
