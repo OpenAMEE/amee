@@ -1,0 +1,31 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+<title>Error 406 The resource identified by the request is only capable of generating response entities which have content characteristics not acceptable according to the accept headers sent in the request</title>
+</head>
+<body>
+<h2>HTTP ERROR: 406</h2><pre>The resource identified by the request is only capable of generating response entities which have content characteristics not acceptable according to the accept headers sent in the request</pre>
+<p>RequestURI=/profiles/B74EC806243F/service/home/energy</p>
+<p><i><small><a href="http://jetty.mortbay.org">Powered by jetty://</a></small></i></p>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+</body>
+</html>

@@ -1,0 +1,6 @@
+{"dataCategories": [
+	{"name": "Dig2", "path": "dig2"}],
+ "dataItems": [
+    {"device": "Aardvark Processor", "rating": "E", "kWhPerYear": "190", "source": "La la land"},
+    {"device": "Aardvark Processor", "rating": "F", "kWhPerYear": "200", "source": "La la land"}]}
+

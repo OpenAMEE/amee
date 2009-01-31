@@ -1,0 +1,10 @@
+HTTP/1.1 302 FOUND
+Date: Fri, 16 Jan 2009 09:26:08 GMT
+Server: Apache/2.2.9 (Debian) DAV/2 SVN/1.5.1 mod_jk/1.2.26 PHP/5.2.6-5 with Suhosin-Patch mod_python/3.3.1 Python/2.5.2
+Content-Length: 0
+Set-Cookie: authToken=dCa0WzIaOAdZa1Oog0FNF4550JbEbEqwa23JYMWvHhuE8ztMn/AOGONB/LZKhZMcl3MVmDQ73D1L0vMVMVbj5+ESbV9ydCxQCXQpcNkNMwa/1aDa0NXUow==; Path=/
+Location: http://dev.amee.com/auth
+Accept-Ranges: bytes
+authToken: dCa0WzIaOAdZa1Oog0FNF4550JbEbEqwa23JYMWvHhuE8ztMn/AOGONB/LZKhZMcl3MVmDQ73D1L0vMVMVbj5+ESbV9ydCxQCXQpcNkNMwa/1aDa0NXUow==
+Content-Type: text/plain
+

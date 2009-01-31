@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xml:base="http://local.stage.co2.dgen.net/profiles/B74EC806243F/home/energy/electricity/A3BE0064FA9B/kWh">
+  <title type="text">kWh, new post 2</title>
+  <link href="" type="application/atom+xml" rel="edit"/>
+  <link href="" type="application/json" rel="alternate"/>
+  <link href="" type="application/xml" rel="alternate"/>
+  <id>urn:itemValue:A3BE0064FA9B</id>
+  <published>2009-01-03T18:51:20.000Z</published>
+  <updated>2009-01-03T20:17:14.000Z</updated>
+  <amee:name xmlns:amee="http://schemas.amee.cc/2.0">kWh</amee:name>
+  <amee:value xmlns:amee="http://schemas.amee.cc/2.0">50</amee:value>
+  <amee:perUnit xmlns:amee="http://schemas.amee.cc/2.0">month</amee:perUnit>
+  <content type="text">kWh=200, perUnit=year</content>
+  <category scheme="http://schemas.amee.cc/2.0#itemValue" term="D89B4DF7E9CC" label="Electricity"/>
+</entry>

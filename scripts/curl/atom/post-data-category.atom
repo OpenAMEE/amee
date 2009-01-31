@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:amee="http://schemas.amee.cc/2.0">
+  <id>urn:item:</id>
+  <category scheme="http://schemas.amee.cc/2.0#item" term="A3BE0064FA9B" label="Electricity"/>
+  <amee:startDate>2009-11-27T00:04+0000</amee:startDate>
+  <amee:endDate>2009-11-28T01:00+0000</amee:endDate>
+  <amee:name>new-post-3</amee:name>
+  <amee:itemValue>
+    <amee:name>kWh</amee:name>
+    <amee:value>100</amee:value>
+    <amee:perUnit>month</amee:perUnit>
+  </amee:itemValue>
+</entry>

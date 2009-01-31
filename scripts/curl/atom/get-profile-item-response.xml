@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:amee="http://schemas.amee.cc/2.0" xml:lang="en-US" xml:base="http://local.stage.co2.dgen.net/profiles/B74EC806243F/home/energy/electricity/A3BE0064FA9B">
+  <title type="text">new-post-3</title>
+  <subtitle type="text">Fri, 27 Nov 2009 00:04:00 GMT - Sat, 28 Nov 2009 01:00:00 GMT</subtitle>
+  <link href="" type="application/atom+xml" rel="edit"/>
+  <link href="" type="application/json" rel="alternate"/>
+  <link href="" type="application/xml" rel="alternate"/>
+  <id>urn:item:A3BE0064FA9B</id>
+  <published>2009-11-27T00:04:00.000Z</published>
+  <updated>2009-11-27T00:04:00.000Z</updated>
+  <content type="html">&lt;div class="vevent"&gt;&lt;div class="summary"&gt;3.125 kg/month&lt;/div&gt;&lt;abbr class="dtstart" title="2009-11-27T00:04+0000"&gt; Fri, 27 Nov 2009 00:04:00 GMT&lt;/abbr&gt; - &lt;abbr class="dtend" title="2009-11-28T01:00+0000"&gt; Sat, 28 Nov 2009 01:00:00 GMT&lt;/abbr&gt;&lt;/div&gt;</content>
+  <amee:startDate>2009-11-27T00:04+0000</amee:startDate>
+  <amee:endDate>2009-11-28T01:00+0000</amee:endDate>
+  <amee:amount unit="kg/month">3.125</amee:amount>
+  <amee:itemValue>
+    <amee:name>kWh</amee:name>
+    <amee:value>100</amee:value>
+    <link href="kWh" rel="http://schemas.amee.cc/2.0#itemValue"/>
+    <amee:perUnit>year</amee:perUnit>
+  </amee:itemValue>
+  <category scheme="http://schemas.amee.cc/2.0#item" term="D462562FCB92" label="Electricity"/>
+</entry>

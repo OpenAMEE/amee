@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataCategory>
+	<DataCategories>
+    	<DataCategory>
+			<name>ddd</name>
+			<path>ppp</path>
+    	</DataCategory>
+	</DataCategories>
+	<DataItems>
+    	<DataItem>
+        	<device>Aardvark Processor</device>
+			<rating>A</rating>
+			<kWhPerYear>160</kWhPerYear>
+			<source>La la land</source>
+    	</DataItem>
+    	<DataItem>
+        	<device>Aardvark Processor</device>
+			<rating>B</rating>
+			<kWhPerYear>180</kWhPerYear>
+			<source>La la land</source>
+    	</DataItem>
+	</DataItems>
+</DataCategory>
