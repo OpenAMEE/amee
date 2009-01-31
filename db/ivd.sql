@@ -1,0 +1,1 @@
+'distanceKmPerMonth','km','month','Distance','distance','km','month'
