@@ -3,8 +3,10 @@ namespace :install do
   desc "Package AMEE and install into the SCM"
   task :default do
     check
-    prepare
+    begin_install
+    package
     git
+    end_install
   end
   
   desc "Check install dependencies"
@@ -26,14 +28,18 @@ namespace :install do
     
   end
   
-  desc "Build the AMEE deployment package"  
-  task :prepare do
-
+  task :begin_install do
     # Switch the the correct branch
+    @pwd = Dir.pwd
+    Dir.chdir(package_dir)
     system("git checkout #{branch}")
     
     # Remove the previous install artifacts
     FileUtils.rm_r Dir.glob("#{package_dir}/*")
+  end
+  
+  desc "Build the AMEE deployment package"  
+  task :package do
 
     # Create bin
     puts "Creating new deployment bin directory #{package_dir}/bin"
@@ -69,16 +75,13 @@ namespace :install do
 
   desc "Send the package to Git repository"
   task :git do
-
-    pwd = Dir.pwd
-    Dir.chdir(package_dir)
-
     system("git add .")
     system("git commit -m 'Capistrano install on #{Time.now}'")
     system("git push")
+  end
 
-    Dir.chdir(pwd)
-    
+  task :end_install do
+    Dir.chdir(@pwd)
   end
   
 end
