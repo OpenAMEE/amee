@@ -9,12 +9,21 @@ namespace :install do
   
   desc "Check install dependencies"
   task :check do
-
+    
+    # Check package directory has been checked-out from Git repository
     if !File.directory?(package_dir)
       puts "ERROR: Abandoning install - #{package_dir} does not exist. Please clone the release Git respository before continuing."
       exit
     end
-  
+
+    # Check that local repository contains no local modifications
+    status = `git status | tail -1`
+    if !status.include?("nothing to commit")
+      puts "ERROR: Abandoning install - #{src_dir} contains local modifications."
+      exit
+    end
+    
+    
   end
   
   desc "Build the AMEE deployment package"  

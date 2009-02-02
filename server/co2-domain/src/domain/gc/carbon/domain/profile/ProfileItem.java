@@ -138,8 +138,8 @@ public class ProfileItem extends Item {
         }
     }
 
-    public boolean isEnd() {
-        return startDate.equals(endDate);
+    public boolean isEnd() {      
+        return (endDate !=null) && (startDate.compareTo(endDate) == 0);
     }
 
     public BigDecimal getAmount() {

@@ -24,6 +24,10 @@ set :deploy_to, "/var/www/apps/#{application}"
 set :scm, :git
 set :scm_command, "/usr/bin/git"
 
+# Sudo command on remote machine
+set :sudo, "/usr/bin/sudo"
+set :use_sudo, false
+   
 # The deployment user. This should exist in the scm and on each of the deployed-to hosts
 set :user, "deploy"
 
@@ -33,17 +37,18 @@ set :package_dir, "/Development/AMEE/amee.deploy"
 
 # Override Capistrano tasks
 deploy.task :start, :roles => :app do
-  #amee.start
+  amee.start
 end
 
 deploy.task  :stop, :roles => :app do
-  #amee.stop
+  amee.stop
 end
 
 deploy.task :restart, :roles => :app do
-  #amee.restart
+  amee.restart
 end
 
 deploy.task :migrate, :roles => :db, :only => { :primary => true } do
   mysql.migrate
 end
+

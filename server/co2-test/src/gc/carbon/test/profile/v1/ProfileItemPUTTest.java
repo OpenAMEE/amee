@@ -45,12 +45,42 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
     }
 
     @Test
+    public void testPutWithEndIsFalse() throws Exception {
+        Form data = new Form();
+        data.add("end", "true");
+        data.add("distanceKmPerMonth","1000");
+        doPut(data).getEntityAsDom();
+
+        data = new Form();
+        data.add("end", "false");
+        DomRepresentation rep = client.put(data).getEntityAsDom();
+        rep.write(System.out);
+        Document doc = rep.getDocument();
+        assertXpathEvaluatesTo("false", "/Resources/ProfileItemResource/ProfileItem/End", doc);
+        assertXpathEvaluatesTo("264.500", "/Resources/ProfileItemResource/ProfileItem/AmountPerMonth", doc);
+    }
+
+    /**
+
+    @Test
+    public void testPutWithEndIsTrue() throws Exception {
+        Form data = new Form();
+        data.add("end", "true");
+        DomRepresentation rep = doPut(data).getEntityAsDom();
+        rep.write(System.out);
+        Document doc = rep.getDocument();
+        assertXpathEvaluatesTo("true", "/Resources/ProfileItemResource/ProfileItem/End", doc);
+        assertXpathEvaluatesTo("0.000", "/Resources/ProfileItemResource/ProfileItem/AmountPerMonth", doc);
+    }
+
+    @Test
     public void testPutWithValidFromAndDistanceKmPerMonth() throws Exception {
         Form data = new Form();
         data.add("validFrom", "20500101");
         data.add("distanceKmPerMonth", "1000");
         doAssertSimilarXML(data);
     }
+
 
     @Test
     public void testPutWithStartDate() throws Exception {
@@ -76,5 +106,5 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         assertEquals("Should be Bad Request",400,status.getCode());
     }
 
-
+       */
 }

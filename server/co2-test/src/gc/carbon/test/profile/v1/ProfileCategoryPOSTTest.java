@@ -48,14 +48,6 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
         doAssertSimilarXML(data);
     }
 
-    @Test
-    public void testPostWithValidFromAndDistance() throws Exception {
-        Form data = new Form();
-        data.add("validFrom", "20500101");
-        data.add("distance", "1000");
-        doAssertSimilarXML(data);
-    }
-
 /*    @Test
     public void testPostWithValidFromAndDistanceAndUnit() throws Exception {
         Form data = new Form();
@@ -89,5 +81,13 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
         data.add("validFrom", "20500101");
         Document doc = doPost(data).getEntityAsDom().getDocument();
         assertXpathEvaluatesTo("20500101", "/Resources/ProfileCategoryResource/ProfileItem/ValidFrom", doc);
+    }
+
+    public void testPostWithEnd() throws Exception {
+        Form data = new Form();
+         data.add("end", "true");
+         Document doc = doPost(data).getEntityAsDom().getDocument();
+         assertXpathEvaluatesTo("true", "/Resources/ProfileCategoryResource/ProfileItem/End", doc);
+         assertXpathEvaluatesTo("0.000", "/Resources/ProfileCategoryResource/ProfileItem/AmountPerMonth", doc);
     }
 }
