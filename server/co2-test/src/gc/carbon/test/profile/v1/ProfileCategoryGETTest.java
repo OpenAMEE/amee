@@ -35,11 +35,10 @@ import gc.carbon.test.TestClient;
 public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
 
     private DateTimeFormatter VALID_FROM_FMT = DateTimeFormat.forPattern("yyyyMMdd");
-    private DateTimeFormatter START_DATE_FMT = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mmZ");
 
-    private static String username = "amee";
-    private static String password = "amee4amee";
-    private static String profile = "428353BFFA71";
+    private static String username = "admin";
+    private static String password = "r41n80w";
+    private static String profile = "B74EC806243F";
 
     public ProfileCategoryGETTest(String name) throws Exception {
         super(name, username, password, profile);

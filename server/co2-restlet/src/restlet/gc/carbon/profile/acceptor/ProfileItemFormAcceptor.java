@@ -81,10 +81,10 @@ public class ProfileItemFormAcceptor implements Acceptor {
                 ItemValue itemValue = itemValues.get(name);
                 if (itemValue != null) {
                     itemValue.setValue(form.getFirstValue(name));
-                    if (itemValue.hasUnits() && form.getNames().contains(name+"Unit")) {
+                    if (itemValue.hasUnit() && form.getNames().contains(name+"Unit")) {
                         itemValue.setUnit(form.getFirstValue(name + "Unit"));
                     }
-                    if (itemValue.hasPerUnits() && form.getNames().contains(name+"PerUnit")) {
+                    if (itemValue.hasPerUnit() && form.getNames().contains(name+"PerUnit")) {
                         itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
                     }
                 }

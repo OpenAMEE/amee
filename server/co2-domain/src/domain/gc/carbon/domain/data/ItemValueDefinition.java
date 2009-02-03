@@ -121,11 +121,11 @@ public class ItemValueDefinition implements PersistentObject {
     private Set<APIVersion> apiVersions = new HashSet<APIVersion>();
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ALIASED_TO")
+    @JoinColumn(name = "ALIASED_TO_ID")
     private ItemValueDefinition aliasedTo = null;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ALIASED_TO")
+    @JoinColumn(name = "ALIASED_TO_ID")
     private List<ItemValueDefinition> aliases = new ArrayList<ItemValueDefinition>();
 
     @Transient
@@ -392,6 +392,14 @@ public class ItemValueDefinition implements PersistentObject {
 
     public Unit getCompoundUnit() {
         return getUnit().with(getPerUnit());
+    }
+
+    public Unit getCanonicalCompoundUnit() {
+        if (aliasedTo != null) {
+            return aliasedTo.getCompoundUnit();
+        } else {
+            return getCompoundUnit();
+        }
     }
 
     public Set<APIVersion> getAPIVersions() {

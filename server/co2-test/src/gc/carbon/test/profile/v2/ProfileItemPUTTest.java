@@ -157,14 +157,14 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         DomRepresentation rep = doPut(data).getEntityAsDom();
         rep.write(System.out);
         Document doc = rep.getDocument();
-        assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/Path", doc);
-        assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/Name", doc);
-        assertXpathEvaluatesTo(perUnit, "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/PerUnit", doc);
-        assertXpathEvaluatesTo(unit, "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/Unit", doc);
-        assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/ItemValueDefinition/Path", doc);
-        assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/ItemValueDefinition/Name", doc);
-        assertXpathEvaluatesTo("year", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/ItemValueDefinition/PerUnit", doc);
-        assertXpathEvaluatesTo("km", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[4]/ItemValueDefinition/Unit", doc);
+        assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Path", doc);
+        assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Name", doc);
+        assertXpathEvaluatesTo(perUnit, "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/PerUnit", doc);
+        assertXpathEvaluatesTo(unit, "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/Unit", doc);
+        assertXpathEvaluatesTo("distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Path", doc);
+        assertXpathEvaluatesTo("Distance", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Name", doc);
+        assertXpathEvaluatesTo("year", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/PerUnit", doc);
+        assertXpathEvaluatesTo("km", "/Resources/ProfileItemResource/ProfileItem/ItemValues/ItemValue[1]/ItemValueDefinition/Unit", doc);
 
     }
 

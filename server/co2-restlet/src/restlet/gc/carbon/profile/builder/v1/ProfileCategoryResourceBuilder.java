@@ -283,11 +283,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
     }
 
     private void setBuilder(ProfileItem pi) {
-        if (resource.getProfileBrowser().returnInExternalUnit()) {
-            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getReturnUnit()));
-        } else {
-            pi.setBuilder(new ProfileItemBuilder(pi));
-        }
+        pi.setBuilder(new ProfileItemBuilder(pi));
     }
 
     private Sheet getSheet(DataCategory dataCategory) {

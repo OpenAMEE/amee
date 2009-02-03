@@ -122,18 +122,21 @@ public class ProfileCategoryResource extends BaseProfileResource {
             }
 
             Form form = getRequest().getResourceRef().getQueryAsForm();
-            String startDate = form.getFirstValue("startDate");
 
-            //TODO - It would have more clarity and would be more robust to only retrieve parameters relevant to the apiVersion of the user
-            profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
-            if (startDate != null) {
-                profileBrowser.setStartDate(form.getFirstValue("startDate"));
+            if (getVersion().isVersionOne()) {
+                profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
+
+            } else {
+                String startDate = form.getFirstValue("startDate");
+                if (startDate != null) {
+                    profileBrowser.setStartDate(form.getFirstValue("startDate"));
+                }
+                profileBrowser.setEndDate(form.getFirstValue("endDate"));
+                profileBrowser.setDuration(form.getFirstValue("duration"));
+                profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
+                profileBrowser.setMode(form.getFirstValue("mode"));
+                profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
             }
-            profileBrowser.setEndDate(form.getFirstValue("endDate"));
-            profileBrowser.setDuration(form.getFirstValue("duration"));
-            profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
-            profileBrowser.setMode(form.getFirstValue("mode"));
-            profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
 
             super.handleGet();
         } else {

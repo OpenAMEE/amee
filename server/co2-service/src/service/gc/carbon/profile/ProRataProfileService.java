@@ -57,7 +57,7 @@ public class ProRataProfileService extends ProfileService {
 
             Interval interval = requestInterval;
 
-            if (hasPerUnitValues(pi)) {
+            if (hasPerTimeValues(pi)) {
 
                 ProfileItem pic = pi.getCopy();
 
@@ -72,7 +72,7 @@ public class ProRataProfileService extends ProfileService {
                 }
 
                 for (ItemValue iv : pi.getItemValues()) {
-                    if(iv.hasPerUnits() && iv.getValue().length() > 0) {
+                    if(iv.hasPerUnit() && iv.getValue().length() > 0) {
                         pic.add(getProRatedItemValue(interval, iv));
                     } else {
                         pic.add(iv.getCopy());
@@ -122,10 +122,10 @@ public class ProRataProfileService extends ProfileService {
         return getInterval(startDate, endDate).toDurationMillis();
     }
 
-    private boolean hasPerUnitValues(ProfileItem pi) {
+    private boolean hasPerTimeValues(ProfileItem pi) {
         List<ItemValue> itemValues = pi.getItemValues();
         for (ItemValue iv : itemValues) {
-            if (iv.hasPerUnits()) {
+            if (iv.hasPerUnit() && iv.getPerUnit().isTime()) {
                 return true;
             }
         }

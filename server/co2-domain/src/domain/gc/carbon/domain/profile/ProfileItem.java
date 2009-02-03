@@ -10,6 +10,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
+import javax.measure.unit.SI;
+import javax.measure.unit.NonSI;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.math.MathContext;
@@ -62,9 +64,8 @@ public class ProfileItem extends Item {
     @Transient
     private String convertedAmount = "";
 
-    //TODO - model amount unit as other units - internal and external chocies should be in db
-    public static final PerUnit INTERNAL_AMOUNT_UNIT = PerUnit.valueOf("kg");
-    public static final PerUnit INTERNAL_AMOUNT_PERUNIT = PerUnit.valueOf("year");
+    public static final Unit INTERNAL_AMOUNT_UNIT = new Unit(SI.KILOGRAM);
+    public static final PerUnit INTERNAL_AMOUNT_PERUNIT = new PerUnit(NonSI.YEAR);
     public static final Unit INTERNAL_RETURN_UNIT = CompoundUnit.valueOf(INTERNAL_AMOUNT_UNIT,INTERNAL_AMOUNT_PERUNIT);
 
     public ProfileItem() {

@@ -39,7 +39,7 @@ public class Unit {
         return new Unit(javax.measure.unit.Unit.valueOf(unit));
     }
 
-    protected Unit(javax.measure.unit.Unit unit) {
+    public Unit(javax.measure.unit.Unit unit) {
         this.unit = unit;
     }
 

@@ -45,7 +45,7 @@ public class APITestCase extends XMLTestCase {
 
     protected void initDB() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/amee", "amee", "amee");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/amee_orig", "root", "root");
         PreparedStatement statement = conn.prepareStatement("DELETE FROM ITEM WHERE TYPE = 'PI'");
         statement.execute();
     }

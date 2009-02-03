@@ -25,6 +25,7 @@ import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.Builder;
 import gc.carbon.domain.Unit;
+import gc.carbon.domain.PerUnit;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +34,6 @@ import org.w3c.dom.Element;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.math.BigDecimal;
 
 public class ProfileItemBuilder implements Builder {
 
@@ -41,15 +41,11 @@ public class ProfileItemBuilder implements Builder {
     private static DateFormat DAY_DATE_FMT = new SimpleDateFormat(DAY_DATE);
 
     private ProfileItem item;
-    private Unit returnUnit = ProfileItem.INTERNAL_RETURN_UNIT;
 
-    public ProfileItemBuilder(ProfileItem item, Unit returnUnit) {
-        this.item = item;
-        this.returnUnit = returnUnit;
-    }    public ProfileItemBuilder(ProfileItem item) {
+    public ProfileItemBuilder(ProfileItem item) {
         this.item = item;
     }
-
+    
     public void buildElement(JSONObject obj, boolean detailed) throws JSONException {
         obj.put("uid", item.getUid());
         obj.put("name", item.getDisplayName());
@@ -89,7 +85,7 @@ public class ProfileItemBuilder implements Builder {
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);
-        obj.put("amountPerMonth", item.getAmount(returnUnit));
+        obj.put("amountPerMonth", item.getAmount());
         obj.put("validFrom", DAY_DATE_FMT.format(item.getStartDate()));
         obj.put("end", Boolean.toString(item.isEnd()));
         obj.put("dataItem", item.getDataItem().getIdentityJSONObject());
@@ -102,7 +98,16 @@ public class ProfileItemBuilder implements Builder {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ProfileItem");
         buildElement(document, element, detailed);
-        element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount(returnUnit).toString()));
+        PerUnit timePerUnit = getItemPerUnitTime();
+
+        // Convert the CO2 amount into expected V1 units. The algos always return CO2 amounts in kg/year.
+        if (timePerUnit.equals(ProfileItem.INTERNAL_AMOUNT_PERUNIT)) {
+            element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
+        } else {
+            element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
+                ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), timePerUnit).toString()));
+        }
+
         element.appendChild(APIUtils.getElement(document, "ValidFrom", DAY_DATE_FMT.format(item.getStartDate())));
         element.appendChild(APIUtils.getElement(document, "End", Boolean.toString(item.isEnd())));
         element.appendChild(item.getDataItem().getIdentityElement(document));
@@ -110,5 +115,17 @@ public class ProfileItemBuilder implements Builder {
             element.appendChild(item.getProfile().getIdentityElement(document));
         }
         return element;
+    }
+
+    // Find the PerUnit corresponding to the duration of this Item. This will be used to convert the internal CO2 amount period (Years)
+    // into the desired period.
+    // The assumption is that in V1, only one such PerUnit exists per-ItemDefinition.
+    private PerUnit getItemPerUnitTime() {
+        for (ItemValue iv : item.getItemValues()) {
+            if (iv.getItemValueDefinition().isFromProfile() && iv.hasPerUnit() && iv.getPerUnit().isTime()) {
+                return iv.getPerUnit();
+            }
+        }
+        return null;
     }
 }

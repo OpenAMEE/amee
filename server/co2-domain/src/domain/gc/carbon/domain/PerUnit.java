@@ -10,6 +10,7 @@ import org.json.JSONException;
 import static javax.measure.unit.SI.MILLI;
 import static javax.measure.unit.SI.SECOND;
 import javax.measure.unit.NonSI;
+import javax.measure.unit.Dimension;
 import javax.measure.DecimalMeasure;
 
 import com.jellymold.utils.domain.APIUtils;
@@ -51,7 +52,7 @@ public class PerUnit extends Unit {
         return new PerUnit(duration);
     }
 
-    private PerUnit(javax.measure.unit.Unit unit) {
+    public PerUnit(javax.measure.unit.Unit unit) {
         super(unit);
         this.string = unit.toString();
     }
@@ -61,10 +62,22 @@ public class PerUnit extends Unit {
         this.string = ISOPeriodFormat.standard().print(duration.toPeriod());
     }
 
-    public BigDecimal convert(BigDecimal decimal, PerUnit targetUnit) {
-        DecimalMeasure dm = DecimalMeasure.valueOf(decimal, toUnit());
-        return dm.to(targetUnit.toUnit(), ProfileItem.CONTEXT).getValue();
+    /**
+     * Convert a decimal value from X/PerT1 to X/PerT2.
+     *
+     * @param decimal - the BigDecimal value to be converted
+     * @param targetPerUnit - the target PerUnit of the converted decimal
+     * @return the decimal value in the targetPerUnit
+     */
+    public BigDecimal convert(BigDecimal decimal, PerUnit targetPerUnit) {
+        DecimalMeasure dm = DecimalMeasure.valueOf(decimal, toUnit().inverse());
+        return dm.to(targetPerUnit.toUnit().inverse(), ProfileItem.CONTEXT).getValue();
     }
+
+    public boolean isTime() {
+        return toUnit().getDimension().equals(Dimension.TIME);    
+    }
+
     public javax.measure.unit.Unit toUnit() {
         return unit;
     }

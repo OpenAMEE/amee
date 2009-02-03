@@ -21,12 +21,9 @@ package gc.carbon.profile;
 
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.AMEEResource;
-import gc.carbon.APIVersion;
 import gc.carbon.profile.builder.v2.AtomFeed;
-import gc.carbon.profile.builder.v2.HCalendar;
 import gc.carbon.profile.acceptor.*;
 import gc.carbon.domain.data.ItemValue;
-import gc.carbon.domain.profile.ProfileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.abdera.model.Entry;
@@ -36,7 +33,6 @@ import org.apache.abdera.model.Category;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
-import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.MediaType;
@@ -157,10 +153,10 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
         StringBuilder content = new StringBuilder(itemValue.getName());
         content.append("=");
         content.append(itemValue.getValue().isEmpty() ? "N/A" : itemValue.getValue());
-        if (itemValue.hasUnits())
+        if (itemValue.hasUnit())
             content.append(", unit=");
             content.append(itemValue.getUnit());
-        if (itemValue.hasPerUnits())
+        if (itemValue.hasPerUnit())
             content.append(", perUnit=");
             content.append(itemValue.getPerUnit());
         entry.setContent(content.toString());

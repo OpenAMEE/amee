@@ -1,10 +1,10 @@
 HTTP/1.1 302 FOUND
-Date: Fri, 16 Jan 2009 09:26:08 GMT
-Server: Apache/2.2.9 (Debian) DAV/2 SVN/1.5.1 mod_jk/1.2.26 PHP/5.2.6-5 with Suhosin-Patch mod_python/3.3.1 Python/2.5.2
+Date: Mon, 02 Feb 2009 14:14:51 GMT
+Server: Apache/2.2.9 (Unix) mod_ssl/2.2.9 OpenSSL/0.9.7l DAV/2 mod_jk/1.2.25
 Content-Length: 0
-Set-Cookie: authToken=dCa0WzIaOAdZa1Oog0FNF4550JbEbEqwa23JYMWvHhuE8ztMn/AOGONB/LZKhZMcl3MVmDQ73D1L0vMVMVbj5+ESbV9ydCxQCXQpcNkNMwa/1aDa0NXUow==; Path=/
-Location: http://dev.amee.com/auth
+Set-Cookie: authToken=LFy9eXYnUkmOY+hRzBcWzVaXkLl0oh28fXwOE9TEfMN0pxozPm0wFEezgxurliP9XtdSR8t7jR7PuZoQ79S95OyYCD+Sbv/W/QSEDFkCspY=; Path=/
+Location: http://local.stage.co2.dgen.net/auth
 Accept-Ranges: bytes
-authToken: dCa0WzIaOAdZa1Oog0FNF4550JbEbEqwa23JYMWvHhuE8ztMn/AOGONB/LZKhZMcl3MVmDQ73D1L0vMVMVbj5+ESbV9ydCxQCXQpcNkNMwa/1aDa0NXUow==
+authToken: LFy9eXYnUkmOY+hRzBcWzVaXkLl0oh28fXwOE9TEfMN0pxozPm0wFEezgxurliP9XtdSR8t7jR7PuZoQ79S95OyYCD+Sbv/W/QSEDFkCspY=
 Content-Type: text/plain
 

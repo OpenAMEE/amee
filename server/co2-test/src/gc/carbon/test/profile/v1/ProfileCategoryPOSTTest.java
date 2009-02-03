@@ -26,9 +26,9 @@ import gc.carbon.test.profile.BaseProfileCategoryTest;
  */
 public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
 
-    private static String username = "amee";
-    private static String password = "amee4amee";
-    private static String profile = "428353BFFA71";
+    private static String username = "admin";
+    private static String password = "r41n80w";
+    private static String profile = "B74EC806243F";
 
     public ProfileCategoryPOSTTest(String name) throws Exception {
         super(name, username, password, profile);
@@ -47,34 +47,6 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
         data.add("distanceKmPerMonth", "1000");
         doAssertSimilarXML(data);
     }
-
-/*    @Test
-    public void testPostWithValidFromAndDistanceAndUnit() throws Exception {
-        Form data = new Form();
-        data.add("validFrom", "20500101");
-        data.add("distance", "1000");
-        data.add("distanceUnit", "km");
-        doAssertSimilarXML(data);
-    }
-
-    @Test
-    public void testPostWithValidFromAndDistanceAndPerUnit() throws Exception {
-        Form data = new Form();
-        data.add("validFrom", "20500101");
-        data.add("distance", "1000");
-        data.add("distancePerUnit", "month");
-        doAssertSimilarXML(data);
-    }
-
-    @Test
-    public void testPostWithValidFromAndDistanceAndUnitAndPerUnit() throws Exception {
-        Form data = new Form();
-        data.add("validFrom", "20500101");
-        data.add("distance", "1000");
-        data.add("distanceUnit", "km");
-        data.add("distancePerUnit", "month");
-        doAssertSimilarXML(data);
-    }*/
 
     public void testPostWithValidFrom() throws Exception {
         Form data = new Form();

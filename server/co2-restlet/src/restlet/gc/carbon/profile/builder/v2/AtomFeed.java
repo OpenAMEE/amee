@@ -202,9 +202,9 @@ public class AtomFeed {
             l.setRel(AMEE_ITEM_VALUE_SCHEME);
         }
 
-        if (itemValue.hasUnits())
+        if (itemValue.hasUnit())
             factory.newExtensionElement(Q_NAME_UNIT, element).setText(itemValue.getUnit().toString());
-        if (itemValue.hasPerUnits())
+        if (itemValue.hasPerUnit())
             factory.newExtensionElement(Q_NAME_PER_UNIT, element).setText(itemValue.getPerUnit().toString());
     }
 

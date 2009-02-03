@@ -29,9 +29,9 @@ import com.sun.org.apache.xalan.internal.xsltc.DOM;
  */
 public class ProfileItemPUTTest extends BaseProfileItemTest {
 
-    private static String username = "amee";
-    private static String password = "amee4amee";
-    private static String profile = "428353BFFA71";
+    private static String username = "admin";
+    private static String password = "r41n80w";
+    private static String profile = "B74EC806243F";
 
     public ProfileItemPUTTest(String name) throws Exception {
         super(name, username, password, profile);
@@ -59,8 +59,6 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         assertXpathEvaluatesTo("false", "/Resources/ProfileItemResource/ProfileItem/End", doc);
         assertXpathEvaluatesTo("264.500", "/Resources/ProfileItemResource/ProfileItem/AmountPerMonth", doc);
     }
-
-    /**
 
     @Test
     public void testPutWithEndIsTrue() throws Exception {
@@ -105,6 +103,4 @@ public class ProfileItemPUTTest extends BaseProfileItemTest {
         Status status = doPut(data).getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
     }
-
-       */
 }

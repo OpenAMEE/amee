@@ -278,11 +278,11 @@ public class ItemValue implements PersistentObject, Pathable {
         return getUnit().with(getPerUnit());
     }
 
-    public boolean hasUnits() {
+    public boolean hasUnit() {
         return itemValueDefinition.hasUnits();
     }
 
-    public boolean hasPerUnits() {
+    public boolean hasPerUnit() {
         return itemValueDefinition.hasPerUnits();
     }
 
@@ -300,9 +300,9 @@ public class ItemValue implements PersistentObject, Pathable {
         clone.setValue(getValue());
         clone.setItemValueDefinition(getItemValueDefinition());
         clone.setItem(getItem());
-        if (hasUnits())
+        if (hasUnit())
             clone.setUnit(getUnit().toString());
-        if (hasPerUnits())
+        if (hasPerUnit())
             clone.setPerUnit(getPerUnit().toString());
         return clone;
     }

@@ -49,6 +49,6 @@ deploy.task :restart, :roles => :app do
 end
 
 deploy.task :migrate, :roles => :db, :only => { :primary => true } do
-  mysql.migrate
+  #mysql.migrate
 end
 

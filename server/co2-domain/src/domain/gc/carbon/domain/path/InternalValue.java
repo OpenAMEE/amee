@@ -7,7 +7,7 @@ import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.Unit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import javax.measure.DecimalMeasure;
+
 import java.math.BigDecimal;
 
 /**
@@ -84,10 +84,10 @@ public class InternalValue {
 
         BigDecimal decimal = convertStringToDecimal(iv.getUsableValue());
 
-        if (!iv.hasUnits() && !iv.hasPerUnits())
+        if (!iv.hasUnit() && !iv.hasPerUnit())
             return decimal;
 
-        Unit internalUnit = iv.getItemValueDefinition().getCompoundUnit();
+        Unit internalUnit = iv.getItemValueDefinition().getCanonicalCompoundUnit();
         Unit externalUnit = iv.getCompoundUnit();
         if (!externalUnit.equals(internalUnit)) {
             decimal = externalUnit.convert(decimal, internalUnit);

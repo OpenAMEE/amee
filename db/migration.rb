@@ -20,7 +20,7 @@ end
 # JDBC Parameters
 
 @host = "localhost"
-@database = "amee_new"
+@database = "amee_v2_0"
 @url = "jdbc:mysql://#{@host}/#{@database}"
 @user = "root"
 @pswd = "root"
@@ -61,19 +61,21 @@ def migrate_pi
     stmt = conn.create_statement()
 
     # Get a count of rows to be updated
-    rs = stmt.execute_query("select count(ID) as c from ITEM where TYPE = 'PI' and END is FALSE")
+    rs = stmt.execute_query("select count(ID) as c from ITEM where TYPE = 'PI' and END is TRUE")
     rs.first()
     before_count = rs.getInt("c")
     puts "migrate_pi - updating #{before_count} rows"
     
     # Select all ProfileItems where end is true
-    query = "update ITEM set START_DATE = END_DATE where TYPE = 'PI' and END is FALSE"
+    query = "update ITEM set END_DATE = START_DATE where TYPE = 'PI' and END is TRUE"
     after_count = stmt.executeUpdate(query)
     puts "migrate_pi - updated #{after_count} rows"
 
-  rescue => err
-    puts "migrate_pi - exception: #{err} : #{err.backtrace}"
+    # Drop the END column following migration to END_DATE
+    stmt.execute("ALTER TABLE ITEM DROP COLUMN END")
+    
   ensure
+    puts "Finished ITEM migrations"
     rs.close
     stmt.close
     conn.close
@@ -97,7 +99,7 @@ def migrate_ivd
     insert_old_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},1)"
     insert_new_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES(LAST_INSERT_ID(),2)"
 
-    file = File.new("ivd.sql","r")
+    file = File.new("ivd.csv","r")
     while(line = file.gets)
       # Row order: OLD_PATH, OLD_UNIT, OLD_PER_UNIT, NEW_NAME, NEW_PATH, NEW_UNIT, NEW_PER_UNIT
       old_path, old_unit, old_per_unit, new_name, new_path, new_unit, new_per_unit = line.split(",")
@@ -131,7 +133,7 @@ def migrate_ivd
         query = insert_old_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
         puts query
         stmt.addBatch(query)
-
+        
       end
       
       unless @dryrun
@@ -144,9 +146,61 @@ def migrate_ivd
               
     end
 
-  rescue => err
-    puts "ivd - exception: #{err} : #{err.backtrace}"
+    # Add all other ITEM_VALUE_DEFINITION_ID - API_VERSION_ID pairs into ITEM_VALUE_DEFINITION_API_VERSION
+    insert_old_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},1)"
+    insert_new_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},2)"
+    query = "SELECT ID FROM ITEM_VALUE_DEFINITION WHERE ID NOT IN (SELECT ITEM_VALUE_DEFINITION_ID FROM ITEM_VALUE_DEFINITION_API_VERSION)"
+    puts query
+    rs = stmt.executeQuery(query)
+    while(rs.next())
+      item_value_definition_id = rs.getInt("ID").to_s
+      query = insert_old_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
+      puts query
+      stmt.addBatch(query)
+      query = insert_new_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
+      puts query
+      stmt.addBatch(query)
+    end
+    stmt.executeBatch()
+    conn.commit()
+
   ensure
+    puts "Finished ITEM_VALUE_DEFINITION migrations"
+    rs.close
+    stmt.close
+    conn.close
+  end
+
+end
+
+def migrate_ivd2 
+  puts "Starting ITEM_VALUE_DEFINITION migrations"
+
+  begin
+    conn = JavaSql::DriverManager.get_connection(@url, @user, @pswd)
+    stmt = conn.create_statement(JavaSql::ResultSet::TYPE_SCROLL_SENSITIVE, JavaSql::ResultSet::CONCUR_UPDATABLE)
+    conn.setAutoCommit(false)
+
+    # Add all other ITEM_VALUE_DEFINITION_ID - API_VERSION_ID pairs into ITEM_VALUE_DEFINITION_API_VERSION
+    insert_old_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},1)"
+    insert_new_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},2)"
+    query = "SELECT ID FROM ITEM_VALUE_DEFINITION WHERE ID NOT IN (SELECT ITEM_VALUE_DEFINITION_ID FROM ITEM_VALUE_DEFINITION_API_VERSION)"
+    puts query
+    rs = stmt.executeQuery(query)
+    while(rs.next())
+      item_value_definition_id = rs.getInt("ID").to_s
+      query = insert_old_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
+      puts query
+      stmt.addBatch(query)
+      query = insert_new_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
+      puts query
+      stmt.addBatch(query)
+    end
+    stmt.executeBatch()
+    conn.commit()
+
+  ensure
+    puts "Finished ITEM_VALUE_DEFINITION migrations"
     rs.close
     stmt.close
     conn.close
@@ -158,13 +212,12 @@ end
 def run_sql(file) 
   puts "Starting #{file} migrations"
   system("mysql #{@database} < #{file}")
+  puts "Finished #{file} migrations"
 end
 
-
 # Run the migrations
-run_sql("ddl_1.sql")
+run_sql("ddl.sql")
 migrate_ivd
-#run_sql("dml.sql")
-#migrate_pi
-#run_sql("ddl_2.sql")
-
+#migrate_ivd2
+run_sql("dml.sql")
+migrate_pi

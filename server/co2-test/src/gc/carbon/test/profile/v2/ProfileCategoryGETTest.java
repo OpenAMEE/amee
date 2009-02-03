@@ -16,7 +16,8 @@ import com.jellymold.utils.domain.UidGen;
 /**
  * This file is part of AMEE.
  * <p/>
- * AMEE is free software; you can redistribute it and/or modify
+ * AMEE is free software; you can redistribute it and/or mo
+ * dify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
@@ -101,6 +102,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
         client.addQueryParameter("startDate", startDate.plusDays(100).toString(fmt));
 
         DomRepresentation rep = client.get().getEntityAsDom();
+        rep.write(System.out);
         Document doc = rep.getDocument();
         assertXpathExists("//ProfileItem[@uid='" + before_and_ongoing + "']", doc);
         assertXpathExists("//ProfileItem[@uid='" + inside_and_ongoing + "']", doc);
@@ -175,7 +177,6 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
         Status status = client.get().getStatus();
         assertEquals("Should be Bad Request",400,status.getCode());
     }
-
     @Test
     public void testSupercededNotReturned() throws Exception {
 
@@ -200,5 +201,5 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
         assertXpathExists("//ProfileItem[@uid='" + on_and_ongoing_named + "']", doc);
         assertXpathExists("//ProfileItem[@uid='" + inside_and_ongoing_named + "']", doc);
         assertXpathExists("//ProfileItem[@uid='" + inside_and_ongoing2_named + "']", doc);
-    }
+    }   
 }
