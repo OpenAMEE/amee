@@ -20,11 +20,11 @@ UPDATE ALGORITHM set TYPE='AL';
 # TARGET
 DELETE FROM TARGET WHERE TARGET='skinRenderResource';
 INSERT INTO TARGET
-(ID, UID, NAME, DESCRIPTION, URI_PATTERN, TARGET, DEFAULT_TARGET, DIRECTORY_TARGET, ENABLED, CREATED, MODIFIED, APP_ID, TYPE)
-VALUES ('67', 'F613C476EADD', 'Algorithm Contexts Resource', '', '/{environmentUid}/algorithmContexts',
-        'algorithmContextsResource', b'00000000', b'00000000', b'00000001', SYSDATE(), SYSDATE(), '4', '0'),
-       ('68', '21F188A4937F', 'Algorithm Context Resource', '', '/{environmentUid}/algorithmContexts/{algorithmContentUid}',
-        'algorithmContextResource', b'00000000', b'00000000', b'00000001', SYSDATE(), SYSDATE(), '4', '0');
+(UID, NAME, DESCRIPTION, URI_PATTERN, TARGET, DEFAULT_TARGET, ENABLED, CREATED, MODIFIED, APP_ID, TYPE)
+VALUES ('F613C476EADD', 'Algorithm Contexts Resource', '', '/{environmentUid}/algorithmContexts',
+        'algorithmContextsResource', b'00000000', b'00000001', SYSDATE(), SYSDATE(), '4', '0'),
+       ('21F188A4937F', 'Algorithm Context Resource', '', '/{environmentUid}/algorithmContexts/{algorithmContentUid}',
+        'algorithmContextResource', b'00000000', b'00000001', SYSDATE(), SYSDATE(), '4', '0');
 
 # API_VERSION
 INSERT INTO API_VERSION (ID, CREATED, MODIFIED, UID, VERSION)

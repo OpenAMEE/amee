@@ -23,7 +23,7 @@ end
 @database = "amee_v2_0"
 @url = "jdbc:mysql://#{@host}/#{@database}"
 @user = "root"
-@pswd = "root"
+@pswd = "buy4b1gf4n"
 
 Java::com.mysql.jdbc.Driver
 
@@ -74,6 +74,10 @@ def migrate_pi
     # Drop the END column following migration to END_DATE
     stmt.execute("ALTER TABLE ITEM DROP COLUMN END")
     
+  rescue => err
+    puts err
+    break
+  
   ensure
     puts "Finished ITEM migrations"
     rs.close
@@ -161,9 +165,16 @@ def migrate_ivd
       puts query
       stmt.addBatch(query)
     end
-    stmt.executeBatch()
-    conn.commit()
 
+    unless @dryrun
+      stmt.executeBatch()
+      conn.commit()
+    end
+
+  rescue => err
+    puts err
+    break
+  
   ensure
     puts "Finished ITEM_VALUE_DEFINITION migrations"
     rs.close
@@ -199,6 +210,10 @@ def migrate_ivd2
     stmt.executeBatch()
     conn.commit()
 
+  rescue => err
+    puts err
+    break
+  
   ensure
     puts "Finished ITEM_VALUE_DEFINITION migrations"
     rs.close
@@ -218,6 +233,5 @@ end
 # Run the migrations
 run_sql("ddl.sql")
 migrate_ivd
-#migrate_ivd2
 run_sql("dml.sql")
 migrate_pi
