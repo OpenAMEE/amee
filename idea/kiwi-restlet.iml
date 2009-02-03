@@ -15,7 +15,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../projects/kiwi/restlet">
       <sourceFolder url="file://$MODULE_DIR$/../projects/kiwi/restlet/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../projects/kiwi/restlet/resources" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

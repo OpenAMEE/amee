@@ -38,7 +38,7 @@ namespace :install do
     FileUtils.rm_r Dir.glob("#{package_dir}/*")
     
     # Copy amee intellij-built libs to src lib folder
-    puts "Copying amee intellij-built libs to src lib directory #{src_dir}/lib"
+    puts "Copying amee intellij-built libs to src lib directory #{src_dir}/lib/amee"
     FileUtils.cp_r "#{src_dir}/output/lib/.","#{src_dir}/lib/amee"  
      
   end

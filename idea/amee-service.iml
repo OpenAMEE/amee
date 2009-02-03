@@ -17,7 +17,6 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$/../server/co2-service">
-      <sourceFolder url="file://$MODULE_DIR$/../server/co2-service/src/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../server/co2-service/src/service" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />

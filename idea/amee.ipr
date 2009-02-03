@@ -632,7 +632,9 @@
         <root url="jar://$PROJECT_DIR$/../lib/amee-maven/utils-restlet-1.0.0-SNAPSHOT.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="file://$PROJECT_DIR$/../projects/utils-restlet/src/main/java" />
+      </SOURCES>
     </library>
   </component>
 </project>

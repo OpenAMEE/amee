@@ -18,8 +18,8 @@
     <facet type="Spring" name="Spring">
       <configuration>
         <fileset id="fileset1" name="AMEE Engine" removed="false">
-          <file>file://$MODULE_DIR$/../server/co2-engine/resources/META-INF/applicationContext-skins.xml</file>
-          <file>file://$MODULE_DIR$/../server/co2-engine/resources/META-INF/applicationContext.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-skins.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext.xml</file>
         </fileset>
       </configuration>
     </facet>
@@ -38,6 +38,7 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$/../server/co2-engine">
+      <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/conf" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/resources" isTestSource="false" />
     </content>

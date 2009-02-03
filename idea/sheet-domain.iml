@@ -15,7 +15,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../projects/sheet/domain">
       <sourceFolder url="file://$MODULE_DIR$/../projects/sheet/domain/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../projects/sheet/domain/resources" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

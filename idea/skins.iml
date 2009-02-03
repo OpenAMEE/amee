@@ -6,6 +6,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="amee-utils" level="project" />
+    <orderEntry type="library" name="utils-restlet" level="project" />
   </component>
 </module>
 

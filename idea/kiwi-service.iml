@@ -15,7 +15,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../projects/kiwi/service">
       <sourceFolder url="file://$MODULE_DIR$/../projects/kiwi/service/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../projects/kiwi/service/resources" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

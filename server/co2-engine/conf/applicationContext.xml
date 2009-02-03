@@ -16,8 +16,10 @@
                            http://www.springframework.org/schema/integration
                            http://www.springframework.org/schema/integration/spring-integration-1.0.xsd">
 
-    <!-- Annotations and other stuff -->
+    <!-- Placeholder property configuration -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
 
+    <!-- Annotations and other stuff -->
     <context:load-time-weaver/>
     <context:annotation-config/>
     <context:component-scan base-package="gc"/>
@@ -29,7 +31,6 @@
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
     <!-- Enable request scope -->
-
     <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
         <property name="scopes">
             <map>
@@ -43,13 +44,12 @@
     <!-- DataSource, em/tx configuration -->
     <!-- See: http://commons.apache.org/dbcp/configuration.html -->
     <!-- See: http://dev.mysql.com/doc/refman/5.1/en/connector-j-reference-configuration-properties.html -->
-
     <bean id="ameeDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="url"
-                  value="jdbc:mysql://localhost:3306/amee_orig?autoReconnect=true&amp;autoReconnectForPools=true&amp;useCompression=true"/>
-        <property name="username" value="amee"/>
-        <property name="password" value="amee"/>
+                  value="jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?autoReconnect=true&amp;autoReconnectForPools=true&amp;useCompression=true"/>
+        <property name="username" value="${DB_USERNAME}"/>
+        <property name="password" value="${DB_PSWD}"/>
         <property name="initialSize" value="10"/>
         <property name="maxActive" value="250"/>
         <property name="maxIdle" value="50"/>
@@ -77,7 +77,6 @@
     </bean>
 
     <!-- Scheduler configuration -->
-
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <!-- name used to publish applicationContext to Quartz Job instances, so they can call business services -->
         <property name="applicationContextSchedulerContextKey">
@@ -86,7 +85,6 @@
     </bean>
 
     <!-- Event/messaging beans -->
-
     <springIntegration:annotation-config/>
 
     <springIntegration:gateway id="ObserveEventGateway"
@@ -104,5 +102,7 @@
     <springIntegration:channel id="beforeItemDefinitionDelete"/>
     <springIntegration:channel id="beforeItemValueDefinitionDelete"/>
     <springIntegration:channel id="beforeValueDefinitionDelete"/>
+
+
 
 </beans>
