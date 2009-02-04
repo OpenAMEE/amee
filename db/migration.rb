@@ -93,7 +93,6 @@ end
 @url = "jdbc:mysql://#{@host}/#{@database}"
 Java::com.mysql.jdbc.Driver
 puts "Running migration using url: #{@url}, user: #{@user}, password: #{@pswd}" 
-exit
 
 # Migration ProfileItems where end is true
 def migrate_pi
