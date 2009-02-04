@@ -1,8 +1,36 @@
+# == Synopsis
+#
+# AMEE Database Migration Script. 
+#
+# Defaults:
+#   servername=localhost
+#   database=amee
+#   username=amee
+#   password=amee
+#
+# == Usage
+#
+# -h, --help:
+#    show help
+#
+# -s, --server [servername]:
+#    the database server on which to perform the migrations 
+#
+# -d, --database [database]:
+#    the database to migrate 
+#
+# -u, --user [username]:
+#    the login username  
+#
+# -p, --password [password]:
+#    the login password  
+#
 require 'java'
 require '../lib/amee-maven/utils-1.0.0-SNAPSHOT.jar'
 require '../lib/mysql/mysql-connector-java.jar'
 require 'getoptlong'
-
+require 'rdoc/usage'
+    
 # Java packages
 
 module JavaLang
@@ -17,31 +45,40 @@ module JM
   include_package 'com.jellymold.utils.domain' 
 end
 
-# JDBC Parameters
-
-@host = "localhost"
-@database = "amee_v2_0"
-@url = "jdbc:mysql://#{@host}/#{@database}"
-@user = "root"
-@pswd = "buy4b1gf4n"
-
-Java::com.mysql.jdbc.Driver
+# JDBC Default Parameters
+@host="localhost"
+@database = "amee"
+@user = "amee"
+@pswd = "amee"
 
 # Parse command line arguments
-
 parser = GetoptLong.new
 
+# Warning, dryrun is experimental and should only be used with knowledge of the migration script
 parser.set_options(
+  ["-h", "--help", GetoptLong::NO_ARGUMENT],
+  ["-s","--server", GetoptLong::REQUIRED_ARGUMENT],
+  ["-d","--database", GetoptLong::REQUIRED_ARGUMENT],
+  ["-u","--user", GetoptLong::REQUIRED_ARGUMENT],
+  ["-p","--password", GetoptLong::REQUIRED_ARGUMENT],
   ["--dryrun", GetoptLong::NO_ARGUMENT]
 )
 
 loop do
   begin
     opt, arg = parser.get
-
     break if not opt
-
     case opt
+      when "-h"
+        RDoc::usage
+      when "-s"
+        @host = arg
+      when "-d"
+        @database = arg
+      when "-u"
+        @user = arg
+      when "-p"
+        @pswd = arg
       when "--dryrun"
         @dryrun = true
     end   
@@ -51,6 +88,12 @@ loop do
     break
   end
 end
+
+# JDBC Parameters
+@url = "jdbc:mysql://#{@host}/#{@database}"
+Java::com.mysql.jdbc.Driver
+puts "Running migration using url: #{@url}, user: #{@user}, password: #{@pswd}" 
+exit
 
 # Migration ProfileItems where end is true
 def migrate_pi
