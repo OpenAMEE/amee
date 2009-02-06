@@ -2,8 +2,8 @@
 . auth.sh
 
 . curl.conf
-#amee_url="/data/transport/car/generic/4F6CBCEE95F7"
-amee_url="/data/transport/car/generic"
+amee_url="/data/home/heating/27B64C547280"
+amee_url="data/transport/car/generic/drill"
 
 curl -H "Accept:application/xml" \
 	-H "ItemsPerPage:100" \

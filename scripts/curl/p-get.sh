@@ -2,7 +2,7 @@
 . auth.sh
 
 . curl.conf
-amee_url="/profiles/4B63A2E1B1E4"
+amee_url="/profiles/${amee_profile}"
 
 curl -H "Accept:application/xml" \
 	-b .cookies \

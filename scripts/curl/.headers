@@ -1,10 +1,10 @@
 HTTP/1.1 302 FOUND
-Date: Mon, 02 Feb 2009 14:14:51 GMT
+Date: Wed, 04 Feb 2009 17:09:14 GMT
 Server: Apache/2.2.9 (Unix) mod_ssl/2.2.9 OpenSSL/0.9.7l DAV/2 mod_jk/1.2.25
 Content-Length: 0
-Set-Cookie: authToken=LFy9eXYnUkmOY+hRzBcWzVaXkLl0oh28fXwOE9TEfMN0pxozPm0wFEezgxurliP9XtdSR8t7jR7PuZoQ79S95OyYCD+Sbv/W/QSEDFkCspY=; Path=/
+Set-Cookie: authToken=QVLZnIab6/hY3jMH9R7rkt1druAQ5QYs450rTmUmGqHZXMEHA0R1LtD2vmSq2JeHmJszDz1Rg9YAKNKgfUMGXhblaoZG48uAeZXF20rW2O8=; Path=/
 Location: http://local.stage.co2.dgen.net/auth
 Accept-Ranges: bytes
-authToken: LFy9eXYnUkmOY+hRzBcWzVaXkLl0oh28fXwOE9TEfMN0pxozPm0wFEezgxurliP9XtdSR8t7jR7PuZoQ79S95OyYCD+Sbv/W/QSEDFkCspY=
+authToken: QVLZnIab6/hY3jMH9R7rkt1druAQ5QYs450rTmUmGqHZXMEHA0R1LtD2vmSq2JeHmJszDz1Rg9YAKNKgfUMGXhblaoZG48uAeZXF20rW2O8=
 Content-Type: text/plain
 

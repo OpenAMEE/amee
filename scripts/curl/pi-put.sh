@@ -7,8 +7,8 @@
 . curl.conf
 data="numberOwned=2"
 type="xml"
-#amee_url="/profiles/B74EC806243F/home/appliances/computers/generic/056CC619C7D6?method=put"
-amee_url="/profiles/B74EC806243F/home/energy/electricity/F8D1BED7C9A8?method=put"
+#amee_url="/profiles/${amee_profile}/home/appliances/computers/generic/056CC619C7D6?method=put"
+amee_url="/profiles/${amee_profile}/home/energy/electricity/F8D1BED7C9A8?method=put"
 
 curl -H "Accept:application/${type}" \
 	-b .cookies \
