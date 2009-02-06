@@ -268,7 +268,7 @@ end
 # Load and run SQL commands
 def run_sql(file) 
   puts "Starting #{file} migrations"
-  system("mysql #{@database} < #{file}")
+  system("mysql -u#{@user} -p#{@pswd} -D#{@database} < #{file}")
   puts "Finished #{file} migrations"
 end
 
