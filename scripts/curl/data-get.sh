@@ -3,7 +3,7 @@
 
 # Notes:
 . curl.conf
-amee_url="/data/home/heating"
+amee_url="/data/home/energy/quantity"
 type="xml"
 
 curl -H "Accept:application/${type}" \

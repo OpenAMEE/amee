@@ -39,10 +39,38 @@ public class OnlyActiveDataService extends DataService {
 
     public List<DataItem> getDataItems(final DataCategory dataCategory, final StartEndDate startDate, final StartEndDate endDate) {
 
-       List<DataItem> requestedItems;
-
         final List<DataItem> dataItems = delegatee.getDataItems(dataCategory, startDate, endDate);
-        requestedItems = (List) CollectionUtils.select(dataItems, new Predicate() {
+
+        List<DataItem> requestedItems = new ArrayList<DataItem>();
+
+        for(String type : getDistinctLabels(dataItems)) {
+            List<DataItem> itemsByLabel = getItemsByLabel(dataItems, type);
+            requestedItems.addAll(getActiveItems(itemsByLabel, startDate));
+        }
+
+        return requestedItems;
+    }
+
+
+    private Set<String> getDistinctLabels(List<DataItem> dataItems) {
+        Set<String> labels = new HashSet<String>();
+        for (DataItem di : dataItems) {
+            labels.add(di.getLabel());
+        }
+        return labels;
+    }
+
+    private List<DataItem> getItemsByLabel(List<DataItem> dataItems, final String type) {
+        return (List) CollectionUtils.select(dataItems, new Predicate() {
+              public boolean evaluate(Object o) {
+                  DataItem di = (DataItem) o;
+                  return type.equals(di.getLabel());
+              }
+          });
+    }
+
+    private List<DataItem> getActiveItems(final List<DataItem> dataItems, final StartEndDate startDate) {
+        return (List) CollectionUtils.select(dataItems, new Predicate() {
             public boolean evaluate(Object o) {
                 DataItem di = (DataItem) o;
                 for (DataItem dataItem : dataItems) {
@@ -54,6 +82,5 @@ public class OnlyActiveDataService extends DataService {
                 return true;
             }
         });
-        return requestedItems;
     }
 }
