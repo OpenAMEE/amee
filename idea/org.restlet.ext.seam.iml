@@ -24,6 +24,7 @@
     <orderEntry type="library" name="global" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="jee" level="project" />
+    <orderEntry type="library" name="spring-runtime" level="project" />
   </component>
 </module>
 
