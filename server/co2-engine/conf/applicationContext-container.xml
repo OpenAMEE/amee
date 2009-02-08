@@ -43,6 +43,7 @@
         <property name="hostDomain" value="live.co2.dgen.net|stage.co2.dgen.net|local.stage.co2.dgen.net"/>
         <property name="attachments">
             <map>
+                <entry key="" value-ref="defaultApplication"/>
                 <entry key="/auth" value-ref="authApplication"/>
                 <entry key="/data" value-ref="dataApplication"/>
                 <entry key="/profiles" value-ref="profilesApplication"/>
@@ -55,6 +56,7 @@
         <property name="hostDomain" value="admin.stage.co2.dgen.net|local.admin.stage.co2.dgen.net"/>
         <property name="attachments">
             <map>
+                <entry key="" value-ref="defaultApplication"/>
                 <entry key="/auth" value-ref="authApplication"/>
                 <entry key="/environments" value-ref="environmentsApplication"/>
                 <entry key="/apps" value-ref="appsApplication"/>
