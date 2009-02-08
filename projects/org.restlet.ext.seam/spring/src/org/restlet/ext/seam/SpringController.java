@@ -88,7 +88,7 @@ public class SpringController extends EntityManagerFactoryAccessor {
         logger.debug("end() - <<< END");
     }
 
-    public void beginTransaction() {
+    private void beginTransaction() {
         if (manageTransactions && (transactionStatus.get() == null)) {
             transactionStatus.set(transactionManager.getTransaction(transactionAttribute));
             if (!transactionStatus.get().isNewTransaction()) {
@@ -99,7 +99,7 @@ public class SpringController extends EntityManagerFactoryAccessor {
         }
     }
 
-    public void commitOrRollbackTransaction() {
+    private void commitOrRollbackTransaction() {
         if (manageTransactions && (transactionStatus.get() != null)) {
             if (!transactionStatus.get().isCompleted()) {
                 if (transactionRollback.get() != null) {
@@ -118,7 +118,7 @@ public class SpringController extends EntityManagerFactoryAccessor {
     }
 
     /**
-     * Called before HttpConverter.toRequest
+     * 1) Called before HttpConverter.toRequest
      *
      * @param withTransaction specify whether a transaction should be used
      */
@@ -128,14 +128,14 @@ public class SpringController extends EntityManagerFactoryAccessor {
     }
 
     /**
-     * Called before Filter.doHandle
+     * 2) Called before Filter.doHandle
      */
     public void beforeHandle() {
         logger.debug("beforeHandle() - >>> BEFORE HANDLE");
     }
 
     /**
-     * Called after Filter.doHandle
+     * 3) Called after Filter.doHandle
      */
     public void afterHandle(boolean success) {
         logger.debug("afterHandle() - <<< AFTER HANDLE");
@@ -146,21 +146,21 @@ public class SpringController extends EntityManagerFactoryAccessor {
     }
 
     /**
-     * Called after ConnectorService.beforeSend
+     * 4) Called after ConnectorService.beforeSend
      */
     public void beforeSend() {
         logger.debug("beforeSend() - >>> BEFORE SEND");
     }
 
     /**
-     * Called after ConnectorService.afterSend
+     * 5) Called after ConnectorService.afterSend
      */
     public void afterSend() {
         logger.debug("afterSend() - <<< AFTER SEND");
     }
 
     /**
-     * Called after HttpConverter.commit
+     * 6) Called after HttpConverter.commit
      */
     public void afterCommit() {
         logger.debug("afterCommit() - <<< AFTER COMMIT");
