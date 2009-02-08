@@ -43,6 +43,7 @@
         <property name="hostDomain" value="live.co2.dgen.net|stage.co2.dgen.net|local.stage.co2.dgen.net"/>
         <property name="attachments">
             <map>
+                <entry key="/auth" value-ref="authApplication"/>
                 <entry key="/profiles" value-ref="profilesApplication"/>
             </map>
         </property>

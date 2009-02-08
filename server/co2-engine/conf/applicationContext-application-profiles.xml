@@ -24,7 +24,7 @@
                                 <property name="next">
                                     <bean class="com.jellymold.kiwi.SiteFilter">
                                         <constructor-arg index="0" ref="profilesApplication"/>
-                                        <!-- UID below is from the Profiles SiteApp for live.co2.dgen.net -->
+                                        <!-- UID below is from the /profiles SiteApp for live.co2.dgen.net -->
                                         <constructor-arg index="1" value="56E0F9C115DE"/>
                                         <property name="next">
                                             <bean class="com.jellymold.kiwi.auth.BasicAuthFilter">
