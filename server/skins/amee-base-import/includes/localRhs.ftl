@@ -107,5 +107,7 @@
     <br/><br/>
     <button id="showAPIXML" name='showAPIXML' type='button' onClick='showXML(); return false;'>Show XML</button>
     <br/><br/>
-    <button id="showAPIATOM" name='showAPIATOM' type='button' onClick='showATOM(); return false;'>Show ATOM</button>
+    <#if !activeUser.apiVersion.versionOne>
+        <button id="showAPIATOM" name='showAPIATOM' type='button' onClick='showATOM(); return false;'>Show ATOM</button>
+    </#if>
 </form>

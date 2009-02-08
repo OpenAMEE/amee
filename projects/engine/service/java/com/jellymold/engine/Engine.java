@@ -16,6 +16,7 @@ import org.restlet.ext.seam.SpringController;
 import org.restlet.ext.seam.SpringFilter;
 import org.restlet.ext.seam.SpringServerConverter;
 import org.restlet.service.ConnectorService;
+import org.restlet.service.LogService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.tanukisoftware.wrapper.WrapperListener;
@@ -24,6 +25,10 @@ import org.tanukisoftware.wrapper.WrapperManager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
 
 public class Engine implements WrapperListener, Serializable {
 
@@ -163,6 +168,19 @@ public class Engine implements WrapperListener, Serializable {
         // Spring wrapper
         ConnectorService connectorService = new SpringConnectorService(springController);
 
+        // Configure Restlet logging to log on a single line
+        LogService logService = container.getLogService();
+        logService.setLogFormat("[IP:{cia}] [M:{m}] [S:{S}] [PATH:{rp}] [UA:{cig}] [REF:{fp}]");
+        Logger logger = Logger.getLogger("org.restlet");
+        ConsoleHandler ch = new ConsoleHandler();
+        ch.setFormatter(new Formatter() {
+            public String format(LogRecord record) {
+              return "[org.restlet]" + record.getMessage() + "\n";
+            }
+        });
+        logger.setUseParentHandlers(false);
+        logger.addHandler(ch);
+ 
         // create a VirtualHost per Site
         SiteService siteService = (SiteService) springContext.getBean("siteService");
         List<Site> sites = siteService.getSites();

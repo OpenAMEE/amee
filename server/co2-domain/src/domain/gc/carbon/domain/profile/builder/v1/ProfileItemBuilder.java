@@ -100,8 +100,8 @@ public class ProfileItemBuilder implements Builder {
         buildElement(document, element, detailed);
         PerUnit timePerUnit = getItemPerUnitTime();
 
-        // Convert the CO2 amount into expected V1 units. The algos always return CO2 amounts in kg/year.
-        if (timePerUnit.equals(ProfileItem.INTERNAL_AMOUNT_PERUNIT)) {
+        // Ensure the CO2 amount is in the expected V1 units. The algos always return CO2 amounts in kg/year.
+        if (timePerUnit == null || timePerUnit.equals(ProfileItem.INTERNAL_AMOUNT_PERUNIT)) {
             element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
         } else {
             element.appendChild(APIUtils.getElement(document, "AmountPerMonth",

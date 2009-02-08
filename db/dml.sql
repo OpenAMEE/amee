@@ -45,4 +45,8 @@ UPDATE USER SET STATUS = 0;
 UPDATE USER SET USER_TYPE = 0;
 UPDATE USER SET USER_TYPE = 3 WHERE USERNAME = 'root';
 
+# SKINS
+UPDATE SITE_APP SET SKIN_PATH = 'client-default' WHERE SKIN_PATH = 'default.client.skin';
+UPDATE SITE_APP SET SKIN_PATH = 'admin-default' WHERE SKIN_PATH = 'default.admin.skin';
+
 COMMIT;

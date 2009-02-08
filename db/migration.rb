@@ -48,8 +48,8 @@ end
 # JDBC Default Parameters
 @host="localhost"
 @database = "amee"
-@user = "amee"
-@pswd = "amee"
+@user = "root"
+@pswd = "root"
 
 # Parse command line arguments
 parser = GetoptLong.new

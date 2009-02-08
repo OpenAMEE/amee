@@ -19,21 +19,15 @@
  */
 package gc.carbon;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
 import org.restlet.Filter;
 import org.restlet.data.Request;
 import org.restlet.data.MediaType;
-import org.restlet.data.Preference;
-
 import java.util.List;
 
 import com.jellymold.utils.MediaTypeUtils;
 
 public abstract class BaseFilter extends Filter {
-
-    private final Log log = LogFactory.getLog(getClass());
 
     public BaseFilter() {
         super();
@@ -55,7 +49,6 @@ public abstract class BaseFilter extends Filter {
     protected void setAccept(Request request) {
         String accept = request.getResourceRef().getQueryAsForm().getFirstValue("accept");
         if (accept != null) {
-            log.debug("setAccept() - accept: " + accept);
             MediaType mediaType = MediaType.valueOf(accept);
             if (mediaType != null) {
                 MediaTypeUtils.forceMediaType(mediaType, request);
