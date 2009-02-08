@@ -1,6 +1,5 @@
 package gc.engine;
 
-import com.jellymold.engine.EngineStatusService;
 import org.restlet.*;
 import org.restlet.ext.seam.SpringController;
 import org.restlet.ext.jaxrs.JaxRsApplication;

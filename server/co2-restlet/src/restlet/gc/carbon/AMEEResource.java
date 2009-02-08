@@ -67,7 +67,6 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     @Autowired
     protected EnvironmentService environmentService;
 
-
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         environment = EnvironmentService.getEnvironment();
@@ -145,5 +144,4 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         obj.put("allowDelete", rActions.isAllowDelete());
         return obj;
     }
-
 }

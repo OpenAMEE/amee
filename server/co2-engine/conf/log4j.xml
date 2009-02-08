@@ -12,41 +12,36 @@
 
     <!-- ############### Hibernate logging ################# -->
 
-    <!--
-    <category name="org.hibernate">
+    <!--category name="org.hibernate">
         <priority value="INFO"/>
-    </category>
-    <category name="org.hibernate.SQL">
+    </category-->
+    <!--category name="org.hibernate.SQL">
         <priority value="TRACE"/>
-    </category>
-    <category name="org.hibernate.type">
+    </category-->
+    <!--category name="org.hibernate.type">
         <priority value="TRACE"/>
-    </category>
-    <category name="org.hibernate.loader">
+    </category-->
+    <!--category name="org.hibernate.loader">
         <priority value="TRACE"/>
-    </category>
-    <category name="org.hibernate.cache">
+    </category-->
+    <!--category name="org.hibernate.cache">
         <priority value="TRACE"/>
-    </category>
-
-    -->
+    </category-->
 
     <!-- ############### Spring logging ################# -->
 
-    <!--
-
-    <category name="org.springframework">
+    <!--category name="org.springframework">
         <priority value="DEBUG"/>
-    </category>
+    </category-->
 
-    -->
-    
     <!-- ############### AMEE logging ################### -->
+
     <category name="gc.carbon">
         <priority value="DEBUG"/>
     </category>
 
     <!-- ############### Jelly Mold logging ################### -->
+
     <category name="com.jellymold">
         <priority value="DEBUG"/>
     </category>
@@ -56,6 +51,7 @@
     </category>
 
     <!-- ############### Default logging ################### -->
+    
     <root>
         <priority value="INFO"/>
         <appender-ref ref="CONSOLE"/>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+
+    <bean id="ameeContainer" class="org.restlet.ext.spring.SpringComponent">
+        <property name="server" ref="ameeServer"/>
+        <property name="hosts">
+            <list>
+                <ref local="ameeHost"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ameeServer" class="org.restlet.ext.spring.SpringServer">
+        <constructor-arg value="http"/>
+        <constructor-arg value="3000"/>
+        <property name="parameters">
+            <props>
+                <prop key="key1">value1</prop>
+                <prop key="key2">value2</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="ameeHost" class="org.restlet.ext.spring.SpringHost">
+        <constructor-arg ref="ameeContainer"/>
+        <property name="hostDomain" value="live.co2.dgen.net|local.stage.co2.dgen.net"/>
+        <property name="attachments">
+            <map>
+                <entry key="/" value-ref="ameeApplication"/>
+            </map>
+        </property>
+    </bean>
+
+</beans>

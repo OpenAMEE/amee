@@ -26,14 +26,13 @@ import org.apache.commons.cli.*;
 
 public class GCEngine extends Engine {
 
-    public GCEngine(boolean initialise, int ajpPort, String serverName) {
-        super(initialise, ajpPort, serverName);
+    public GCEngine(int ajpPort, String serverName) {
+        super(ajpPort, serverName);
     }
 
     /**
      * Constructor
      *
-     * @param initialise               true if engine should be initialised
      * @param ajpPort                  ajp setting: port
      * @param maxThreads               Jetty setting: Maximum threads waiting to service requests.
      * @param minThreads               Jetty setting: Minimum threads that will service requests.
@@ -43,10 +42,25 @@ public class GCEngine extends Engine {
      * @param acceptorThreads          Jetty setting: Number of acceptor threads to set.
      * @param acceptQueueSize          Jetty setting: Size of the accept queue.
      */
-    public GCEngine(boolean initialise, int ajpPort, String serverName, int maxThreads, int minThreads, int threadMaxIdleTimeMs,
-                    int lowThreads, int lowResourceMaxIdleTimeMs, int acceptorThreads, int acceptQueueSize) {
-        super(initialise, ajpPort, serverName, maxThreads, minThreads, threadMaxIdleTimeMs, lowThreads,
-                lowResourceMaxIdleTimeMs, acceptorThreads, acceptQueueSize);
+    public GCEngine(
+            int ajpPort,
+            String serverName,
+            int maxThreads,
+            int minThreads,
+            int threadMaxIdleTimeMs,
+            int lowThreads,
+            int lowResourceMaxIdleTimeMs,
+            int acceptorThreads,
+            int acceptQueueSize) {
+        super(ajpPort,
+                serverName,
+                maxThreads,
+                minThreads,
+                threadMaxIdleTimeMs,
+                lowThreads,
+                lowResourceMaxIdleTimeMs,
+                acceptorThreads,
+                acceptQueueSize);
     }
 
     public static void main(String[] args) {
@@ -215,7 +229,7 @@ public class GCEngine extends Engine {
         }
 
         Engine.start(
-                new GCEngine(false,
+                new GCEngine(
                         ajpPort,
                         serverName,
                         maxThreads,
