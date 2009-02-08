@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Service
-public class SpringController extends EntityManagerFactoryAccessor {
+public class TransactionController extends EntityManagerFactoryAccessor {
 
     @Autowired
     private PlatformTransactionManager transactionManager;
@@ -29,7 +29,7 @@ public class SpringController extends EntityManagerFactoryAccessor {
     private ThreadLocal<TransactionStatus> transactionStatus = new ThreadLocal<TransactionStatus>();
     private ThreadLocal<Boolean> transactionRollback = new ThreadLocal<Boolean>();
 
-    public SpringController() {
+    public TransactionController() {
         super();
         manageTransactions = true;
     }
@@ -49,27 +49,9 @@ public class SpringController extends EntityManagerFactoryAccessor {
         super.setJpaPropertyMap(jpaProperties);
     }
 
-    public void startup() {
-        logger.debug("startup() - >>> STARTUP");
-    }
-
-    public void shutdown() {
-        logger.debug("shutdown() - <<< SHUTDOWN");
-    }
-
     public void begin(boolean withTransaction) {
         logger.debug("begin() - >>> BEGIN");
-        if (!TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
-            logger.debug("begin() - Opening JPA EntityManager in SpringController");
-            try {
-                EntityManager em = createEntityManager();
-                TransactionSynchronizationManager.bindResource(getEntityManagerFactory(), new EntityManagerHolder(em));
-            } catch (PersistenceException ex) {
-                throw new DataAccessResourceFailureException("Could not create JPA EntityManager", ex);
-            }
-        } else {
-            logger.debug("begin() - JPA EntityManager already open");
-        }
+        openEntityManager();
         if (withTransaction && manageTransactions) {
             beginTransaction();
         }
@@ -77,14 +59,7 @@ public class SpringController extends EntityManagerFactoryAccessor {
 
     public void end() {
         commitOrRollbackTransaction();
-        if (TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
-            logger.debug("end() - Closing JPA EntityManager in SpringController");
-            EntityManagerHolder emHolder =
-                    (EntityManagerHolder) TransactionSynchronizationManager.unbindResourceIfPossible(getEntityManagerFactory());
-            if (emHolder != null) {
-                EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
-            }
-        }
+        closeEntityManager();
         logger.debug("end() - <<< END");
     }
 
@@ -115,6 +90,31 @@ public class SpringController extends EntityManagerFactoryAccessor {
             transactionStatus.set(null);
         }
         transactionRollback.set(null);
+    }
+
+    public void openEntityManager() {
+        if (!TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
+            logger.debug("begin() - Opening JPA EntityManager in TransactionController");
+            try {
+                EntityManager em = createEntityManager();
+                TransactionSynchronizationManager.bindResource(getEntityManagerFactory(), new EntityManagerHolder(em));
+            } catch (PersistenceException ex) {
+                throw new DataAccessResourceFailureException("Could not create JPA EntityManager", ex);
+            }
+        } else {
+            logger.debug("begin() - JPA EntityManager already open");
+        }
+    }
+
+    public void closeEntityManager() {
+        if (TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
+            logger.debug("end() - Closing JPA EntityManager in TransactionController");
+            EntityManagerHolder emHolder =
+                    (EntityManagerHolder) TransactionSynchronizationManager.unbindResourceIfPossible(getEntityManagerFactory());
+            if (emHolder != null) {
+                EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
+            }
+        }
     }
 
     /**

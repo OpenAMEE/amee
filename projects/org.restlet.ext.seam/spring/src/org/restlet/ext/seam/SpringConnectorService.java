@@ -5,22 +5,22 @@ import org.restlet.service.ConnectorService;
 
 public class SpringConnectorService extends ConnectorService {
 
-    private SpringController springController;
+    private TransactionController transactionController;
 
     private SpringConnectorService() {
         super();
     }
 
-    public SpringConnectorService(SpringController springController) {
+    public SpringConnectorService(TransactionController transactionController) {
         this();
-        this.springController = springController;
+        this.transactionController = transactionController;
     }
 
     public void beforeSend(Representation entity) {
-        springController.beforeSend();
+        transactionController.beforeSend();
     }
 
     public void afterSend(Representation entity) {
-        springController.afterSend();
+        transactionController.afterSend();
     }
 }

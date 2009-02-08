@@ -6,7 +6,7 @@ import com.jellymold.kiwi.TargetBuilder;
 import com.jellymold.kiwi.TargetType;
 import com.jellymold.kiwi.environment.SiteService;
 import org.restlet.*;
-import org.restlet.ext.seam.SpringController;
+import org.restlet.ext.seam.TransactionController;
 import org.restlet.ext.spring.SpringBeanFinder;
 import org.springframework.context.ApplicationContext;
 
@@ -15,7 +15,7 @@ import java.util.Set;
 public class EngineApplication extends Application {
 
     private ApplicationContext springContext;
-    private SpringController springController;
+    private TransactionController transactionController;
     private String filterNames = "";
 
     public EngineApplication() {
@@ -32,12 +32,11 @@ public class EngineApplication extends Application {
         setName(name);
         setStatusService(new EngineStatusService(true));
         this.springContext = (ApplicationContext) parentContext.getAttributes().get("springContext");
-        this.springController = (SpringController) parentContext.getAttributes().get("springController");
+        this.transactionController = (TransactionController) parentContext.getAttributes().get("transactionController");
     }
 
     public Restlet createRoot() {
         TargetBuilder targetBuilder;
-
         Router router = new Router(getContext());
         // get the SiteApp for this Application
         SiteService siteService = (SiteService) springContext.getBean("siteService");
@@ -112,8 +111,8 @@ public class EngineApplication extends Application {
         return springContext;
     }
 
-    public SpringController getSpringController() {
-        return springController;
+    public TransactionController getTransactionController() {
+        return transactionController;
     }
 }
 

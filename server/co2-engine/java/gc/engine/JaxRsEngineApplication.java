@@ -1,15 +1,14 @@
 package gc.engine;
 
-import com.jellymold.engine.EngineStatusService;
 import org.restlet.*;
-import org.restlet.ext.seam.SpringController;
+import org.restlet.ext.seam.TransactionController;
 import org.restlet.ext.jaxrs.JaxRsApplication;
 import org.springframework.context.ApplicationContext;
 
 public class JaxRsEngineApplication extends JaxRsApplication {
 
     private ApplicationContext springContext;
-    private SpringController springController;
+    private TransactionController transactionController;
     private String filterNames = "";
 
     public JaxRsEngineApplication() {
@@ -19,7 +18,7 @@ public class JaxRsEngineApplication extends JaxRsApplication {
     public JaxRsEngineApplication(Context parentContext) {
         super(parentContext.createChildContext());
         this.springContext = (ApplicationContext) parentContext.getAttributes().get("springContext");
-        this.springController = (SpringController) parentContext.getAttributes().get("springController");
+        this.transactionController = (TransactionController) parentContext.getAttributes().get("transactionController");
     }
 
     public String getFilterNames() {
@@ -37,7 +36,7 @@ public class JaxRsEngineApplication extends JaxRsApplication {
         return springContext;
     }
 
-    public SpringController getSpringController() {
-        return springController;
+    public TransactionController getTransactionController() {
+        return transactionController;
     }
 }

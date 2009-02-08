@@ -63,6 +63,7 @@
         <property name="removeAbandonedTimeout" value="300"/>
         <property name="minEvictableIdleTimeMillis" value="240000"/>
         <property name="timeBetweenEvictionRunsMillis" value="1000"/>
+        <property name="defaultAutoCommit" value="false"/>
     </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -74,7 +75,10 @@
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <property name="dataSource" ref="ameeDataSource"/>
+        <property name="jpaDialect" ref="jpaDialect"/>
     </bean>
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
 
     <!-- Scheduler configuration -->
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
@@ -102,7 +106,5 @@
     <springIntegration:channel id="beforeItemDefinitionDelete"/>
     <springIntegration:channel id="beforeItemValueDefinitionDelete"/>
     <springIntegration:channel id="beforeValueDefinitionDelete"/>
-
-
 
 </beans>

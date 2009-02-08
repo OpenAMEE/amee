@@ -31,7 +31,7 @@
             <!-- See: http://www.hibernate.org/hib_docs/reference/en/html/configuration-optional.html -->
             <!-- See: http://www.hibernate.org/hib_docs/v3/api/org/hibernate/cfg/Settings.html -->
             <property name="hibernate.archive.autodetection" value="class"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLInnoDBDialect"/>
             <property name="hibernate.max_fetch_depth" value="3"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="false"/>

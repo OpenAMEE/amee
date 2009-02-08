@@ -108,7 +108,7 @@ public class ProfileCategoryFormAcceptor implements Acceptor {
 
         return profileItems;
     }
-                                                                          
+
     private ProfileItem acceptProfileItem(Form form, ProfileItem profileItem) {
 
         if (!resource.validateParameters()) {
@@ -159,13 +159,13 @@ public class ProfileCategoryFormAcceptor implements Acceptor {
                     ItemValue itemValue = itemValues.get(name);
                     if (itemValue != null) {
                         itemValue.setValue(form.getFirstValue(name));
-                        if (itemValue.hasUnit() && form.getNames().contains(name+"Unit")) {
+                        if (itemValue.hasUnit() && form.getNames().contains(name + "Unit")) {
                             itemValue.setUnit(form.getFirstValue(name + "Unit"));
                         }
-                        if (itemValue.hasPerUnit() && form.getNames().contains(name+"PerUnit")) {
+                        if (itemValue.hasPerUnit() && form.getNames().contains(name + "PerUnit")) {
                             itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
+                        }
                     }
-                }
                 }
                 profileService.calculate(profileItem);
             } catch (IllegalArgumentException ex) {

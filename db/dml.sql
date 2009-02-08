@@ -1,5 +1,11 @@
 BEGIN;
 
+# SITE_APP
+UPDATE SITE_APP SET SKIN_PATH = 'client-default' WHERE SKIN_PATH = 'default.client.skin';
+UPDATE SITE_APP SET SKIN_PATH = 'admin-default' WHERE SKIN_PATH = 'default.admin.skin';
+UPDATE SITE_APP SET SKIN_PATH = 'app-admin' WHERE SKIN_PATH = 'app.admin.skin';
+UPDATE SITE_APP SET SKIN_PATH = 'site-admin' WHERE SKIN_PATH = 'site.admin.skin';
+
 # ENVIRONMENT 
 UPDATE ENVIRONMENT SET ITEMS_PER_FEED = 10;
 UPDATE ENVIRONMENT SET OWNER = '';

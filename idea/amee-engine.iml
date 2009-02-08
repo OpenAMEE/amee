@@ -20,6 +20,10 @@
         <fileset id="fileset1" name="AMEE Engine" removed="false">
           <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-skins.xml</file>
           <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-container.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-restlet.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-vhosts.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-application.xml</file>
         </fileset>
       </configuration>
     </facet>
