@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.restlet.*;
 import org.restlet.data.Protocol;
 import org.restlet.ext.seam.SpringConnectorService;
-import org.restlet.ext.seam.SpringController;
+import org.restlet.ext.seam.TransactionController;
 import org.restlet.ext.seam.SpringFilter;
 import org.restlet.ext.seam.SpringServerConverter;
 import org.restlet.service.ConnectorService;
@@ -35,7 +35,7 @@ public class Engine implements WrapperListener, Serializable {
     private final Log log = LogFactory.getLog(getClass());
 
     protected ApplicationContext springContext;
-    protected SpringController springController;
+    protected TransactionController transactionController;
     protected Component container;
 
     protected static int AJP_PORT = 8010;
@@ -130,43 +130,30 @@ public class Engine implements WrapperListener, Serializable {
                 "applicationContext-container.xml",
                 "applicationContext-skins.xml"});
 
-        // initialise SpringController (for controlling Spring)
-        springController = (SpringController) springContext.getBean("springController");
+        // initialise TransactionController (for controlling Spring)
+        transactionController = (TransactionController) springContext.getBean("transactionController");
 
         // wrap start callback
-        springController.begin(true);
+        transactionController.begin(true);
         onStart();
-        springController.end();
+        transactionController.end();
 
         // create the Restlet container and add Spring stuff
-        container = new Component();
+        container = ((Component) springContext.getBean("ameeContainer"));
         container.getContext().getAttributes().put("springContext", springContext);
-        container.getContext().getAttributes().put("springController", springController);
+        container.getContext().getAttributes().put("transactionController", transactionController);
         container.setStatusService(new EngineStatusService(true));
 
         // configure AJP server
-        Server ajpServer = container.getServers().add(Protocol.AJP, ajpPort);
+        Server ajpServer = ((Server) springContext.getBean("ameeServer"));
         ajpServer.getContext().getAttributes().put("springContext", springContext);
-        ajpServer.getContext().getAttributes().put("springController", springController);
-        ajpServer.getContext().getParameters().add("converter", SpringServerConverter.class.getName());
-        ajpServer.getContext().getParameters().add("minThreads", "" + minThreads); // default is 1
-        ajpServer.getContext().getParameters().add("maxThreads", "" + maxThreads); // default is 255
-        ajpServer.getContext().getParameters().add("threadMaxIdleTimeMs", "" + threadMaxIdleTimeMs); // default is 60000
-        ajpServer.getContext().getParameters().add("lowThreads", "" + lowThreads); // default is 25
-        ajpServer.getContext().getParameters().add("lowResourceMaxIdleTimeMs", "" + lowResourceMaxIdleTimeMs); // default is 2500
-        ajpServer.getContext().getParameters().add("acceptorThreads", "" + acceptorThreads); // default is 1
-        ajpServer.getContext().getParameters().add("acceptQueueSize", "" + acceptQueueSize); // default is 0
-        // more params here: http://www.restlet.org/documentation/1.1/ext/com/noelios/restlet/ext/jetty/JettyServerHelper.html
-        // advice here: http://jetty.mortbay.org/jetty5/doc/optimization.html (what about Jetty 6?)
-
-        // configure file client
-        container.getClients().add(Protocol.FILE);
+        ajpServer.getContext().getAttributes().put("transactionController", transactionController);
 
         // wrap VirtualHost creation
-        springController.begin(true);
+        transactionController.begin(true);
 
         // Spring wrapper
-        ConnectorService connectorService = new SpringConnectorService(springController);
+        ConnectorService connectorService = new SpringConnectorService(transactionController);
 
         // Configure Restlet logging to log on a single line
         LogService logService = container.getLogService();
@@ -175,12 +162,12 @@ public class Engine implements WrapperListener, Serializable {
         ConsoleHandler ch = new ConsoleHandler();
         ch.setFormatter(new Formatter() {
             public String format(LogRecord record) {
-              return "[org.restlet]" + record.getMessage() + "\n";
+                return "[org.restlet]" + record.getMessage() + "\n";
             }
         });
         logger.setUseParentHandlers(false);
         logger.addHandler(ch);
- 
+
         // create a VirtualHost per Site
         SiteService siteService = (SiteService) springContext.getBean("siteService");
         List<Site> sites = siteService.getSites();
@@ -216,12 +203,11 @@ public class Engine implements WrapperListener, Serializable {
         }
 
         // wrap VirtualHost creation
-        springController.end();
+        transactionController.end();
 
         try {
             // get things going
-            // container.start();
-            ((Component) springContext.getBean("ameeContainer")).start();
+            container.start();
             log.debug("...Engine started.");
         } catch (Exception e) {
             log.fatal("caught Exception: " + e);
@@ -250,7 +236,7 @@ public class Engine implements WrapperListener, Serializable {
         List<Filter> filters = new ArrayList<Filter>();
         // add standard Filters
         filters.add(new ThreadBeanHolderFilter());
-        filters.add(new SpringFilter(engineApplication, springController, springContext));
+        filters.add(new SpringFilter(engineApplication, transactionController, springContext));
         filters.add(new SiteFilter(engineApplication, engineApplication.getName()));
         //filters.add(new FreeMarkerConfigurationFilter(engineApplication));
         // only add AuthFilter if required

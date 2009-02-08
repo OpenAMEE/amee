@@ -8,20 +8,20 @@ import org.restlet.Context;
 
 public class SpringServerConverter extends HttpServerConverter {
 
-    private SpringController springController;
+    private TransactionController transactionController;
 
     public SpringServerConverter(Context context) {
         super(context);
-        springController = (SpringController) context.getAttributes().get("springController");
+        transactionController = (TransactionController) context.getAttributes().get("transactionController");
     }
 
     public HttpRequest toRequest(HttpServerCall httpCall) {
-        springController.beforeToRequest(!"GET".equalsIgnoreCase(httpCall.getMethod()));
+        transactionController.beforeToRequest(!"GET".equalsIgnoreCase(httpCall.getMethod()));
         return super.toRequest(httpCall);
     }
 
     public void commit(HttpResponse response) {
         super.commit(response);
-        springController.afterCommit();
+        transactionController.afterCommit();
     }
 }

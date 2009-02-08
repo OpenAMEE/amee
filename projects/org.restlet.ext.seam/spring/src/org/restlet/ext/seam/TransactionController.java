@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Service
-public class SpringController extends EntityManagerFactoryAccessor {
+public class TransactionController extends EntityManagerFactoryAccessor {
 
     @Autowired
     private PlatformTransactionManager transactionManager;
@@ -29,7 +29,7 @@ public class SpringController extends EntityManagerFactoryAccessor {
     private ThreadLocal<TransactionStatus> transactionStatus = new ThreadLocal<TransactionStatus>();
     private ThreadLocal<Boolean> transactionRollback = new ThreadLocal<Boolean>();
 
-    public SpringController() {
+    public TransactionController() {
         super();
         manageTransactions = true;
     }
@@ -94,7 +94,7 @@ public class SpringController extends EntityManagerFactoryAccessor {
 
     public void openEntityManager() {
         if (!TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
-            logger.debug("begin() - Opening JPA EntityManager in SpringController");
+            logger.debug("begin() - Opening JPA EntityManager in TransactionController");
             try {
                 EntityManager em = createEntityManager();
                 TransactionSynchronizationManager.bindResource(getEntityManagerFactory(), new EntityManagerHolder(em));
@@ -108,7 +108,7 @@ public class SpringController extends EntityManagerFactoryAccessor {
 
     public void closeEntityManager() {
         if (TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
-            logger.debug("end() - Closing JPA EntityManager in SpringController");
+            logger.debug("end() - Closing JPA EntityManager in TransactionController");
             EntityManagerHolder emHolder =
                     (EntityManagerHolder) TransactionSynchronizationManager.unbindResourceIfPossible(getEntityManagerFactory());
             if (emHolder != null) {

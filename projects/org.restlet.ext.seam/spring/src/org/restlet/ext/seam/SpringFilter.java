@@ -8,22 +8,22 @@ import org.springframework.context.ApplicationContext;
 
 public class SpringFilter extends Filter {
 
-    private SpringController springController;
+    private TransactionController transactionController;
     private ApplicationContext springContext;
 
-    public SpringFilter(Application application, SpringController springController, ApplicationContext springContext) {
+    public SpringFilter(Application application, TransactionController transactionController, ApplicationContext springContext) {
         super(application.getContext(), application);
-        this.springController = springController;
+        this.transactionController = transactionController;
         this.springContext = springContext;
     }
 
     protected int doHandle(Request request, Response response) {
         try {
             request.getAttributes().put("springContext", springContext);
-            springController.beforeHandle();
+            transactionController.beforeHandle();
             return super.doHandle(request, response);
         } finally {
-            springController.afterHandle(!response.getStatus().isError());
+            transactionController.afterHandle(!response.getStatus().isError());
         }
     }
 }

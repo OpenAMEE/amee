@@ -32,7 +32,7 @@ import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.APIVersion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.restlet.ext.seam.SpringController;
+import org.restlet.ext.seam.TransactionController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -64,7 +64,7 @@ class ProfileServiceDAO implements Serializable {
     private EntityManager entityManager;
 
     @Autowired
-    private SpringController springController;
+    private TransactionController transactionController;
 
     public ProfileServiceDAO() {
         super();
@@ -491,7 +491,7 @@ class ProfileServiceDAO implements Serializable {
             //I have removed calls to checkProfileItem during GETs so this is out-commented.
             // Remember to re-add if this is changed [SM]
             //ensure transaction has been started
-            //springController.begin(true);
+            //transactionController.begin(true);
             
             // create missing ItemValues
             for (ItemValueDefinition ivd : itemValueDefinitions) {
