@@ -41,6 +41,7 @@ public class ItemValueDefinitionBuilder implements Builder {
         obj.put("uid", itemValueDefinition.getUid());
         obj.put("path", itemValueDefinition.getPath());
         obj.put("name", itemValueDefinition.getName());
+        obj.put("valueDefinition", itemValueDefinition.getValueDefinition().getJSONObject());
 
         if (itemValueDefinition.hasUnits()) {
             obj.put("unit", itemValueDefinition.getUnit());
@@ -63,7 +64,6 @@ public class ItemValueDefinitionBuilder implements Builder {
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
             obj.put("environment", itemValueDefinition.getEnvironment().getIdentityJSONObject());
             obj.put("itemDefinition", itemValueDefinition.getItemDefinition().getIdentityJSONObject());
-            obj.put("valueDefinition", itemValueDefinition.getValueDefinition().getJSONObject());
         }
         return obj;
     }
@@ -73,6 +73,7 @@ public class ItemValueDefinitionBuilder implements Builder {
         element.setAttribute("uid", itemValueDefinition.getUid());
         element.appendChild(APIUtils.getElement(document, "Path", itemValueDefinition.getPath()));
         element.appendChild(APIUtils.getElement(document, "Name", itemValueDefinition.getName()));
+        element.appendChild(itemValueDefinition.getValueDefinition().getElement(document));
 
         if (itemValueDefinition.hasUnits()) {
             element.appendChild(APIUtils.getElement(document, "Unit", itemValueDefinition.getUnit().toString()));
@@ -91,7 +92,6 @@ public class ItemValueDefinitionBuilder implements Builder {
             element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
             element.appendChild(itemValueDefinition.getEnvironment().getIdentityElement(document));
             element.appendChild(itemValueDefinition.getItemDefinition().getIdentityElement(document));
-            element.appendChild(itemValueDefinition.getValueDefinition().getElement(document));
         }
         return element;
     }
