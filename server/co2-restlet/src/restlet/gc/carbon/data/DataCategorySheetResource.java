@@ -32,7 +32,8 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.util.Map;
 
-// TODO - move to builder model
+// TODO: is this actually used by anybody?
+// TODO: move to builder model
 
 @Component
 @Scope("prototype")

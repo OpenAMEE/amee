@@ -6,34 +6,34 @@
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-    <bean id="profilesApplication" class="org.restlet.Application">
-        <property name="root" ref="profilesRoot"/>
+    <bean id="dataApplication" class="org.restlet.Application">
+        <property name="root" ref="dataRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
         <property name="connectorService" ref="transactionConnectorService"/>
     </bean>
 
-    <bean id="profilesRoot" class="org.restlet.ext.spring.SpringRouter">
+    <bean id="dataRoot" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
             <map>
                 <entry key="">
                     <bean class="com.jellymold.utils.ThreadBeanHolderFilter">
                         <property name="next">
                             <bean class="org.restlet.ext.seam.SpringFilter">
-                                <constructor-arg index="0" ref="profilesApplication"/>
+                                <constructor-arg index="0" ref="dataApplication"/>
                                 <constructor-arg index="1" ref="transactionController"/>
                                 <property name="next">
                                     <bean class="com.jellymold.kiwi.SiteFilter">
-                                        <constructor-arg index="0" ref="profilesApplication"/>
-                                        <constructor-arg index="1" value="Profile Administration"/>
+                                        <constructor-arg index="0" ref="dataApplication"/>
+                                        <constructor-arg index="1" value="Data Administration"/>
                                         <property name="next">
                                             <bean class="com.jellymold.kiwi.auth.BasicAuthFilter">
-                                                <constructor-arg index="0" ref="profilesApplication"/>
+                                                <constructor-arg index="0" ref="dataApplication"/>
                                                 <property name="next">
                                                     <bean class="com.jellymold.kiwi.auth.AuthFilter">
-                                                        <constructor-arg index="0" ref="profilesApplication"/>
+                                                        <constructor-arg index="0" ref="dataApplication"/>
                                                         <property name="next">
-                                                            <bean class="gc.carbon.profile.ProfileFilter">
-                                                                <property name="next" ref="profilesRouter"/>
+                                                            <bean class="gc.carbon.data.DataFilter">
+                                                                <property name="next" ref="dataRouter"/>
                                                             </bean>
                                                         </property>
                                                     </bean>
@@ -50,27 +50,33 @@
         </property>
     </bean>
 
-    <bean id="profilesRouter" class="org.restlet.ext.spring.SpringRouter">
+    <bean id="dataRouter" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
             <map>
-                <entry key="">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="profilesResource"/>
-                    </bean>
-                </entry>
                 <entry key="/categories/{categoryUid}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="profileCategoryResource"/>
+                        <lookup-method name="createResource" bean="dataCategoryResource"/>
+                    </bean>
+                </entry>
+                <entry key="/categories/{categoryUid}/drill">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="drillDownResource"/>
                     </bean>
                 </entry>
                 <entry key="/categories/{categoryUid}/items/{itemUid}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="profileItemResource"/>
+                        <lookup-method name="createResource" bean="dataItemResource"/>
                     </bean>
                 </entry>
                 <entry key="/categories/{categoryUid}/items/{itemUid}/values/{valueUid}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="profileItemValueResource"/>
+                        <lookup-method name="createResource" bean="dataItemValueResource"/>
+                    </bean>
+                </entry>
+                <!-- TODO: is this actually used by anybody? -->
+                <entry key="/categories/{categoryUid}/sheet">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="dataCategorySheetResource"/>
                     </bean>
                 </entry>
             </map>

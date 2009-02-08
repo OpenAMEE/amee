@@ -28,7 +28,7 @@ public class SiteService implements Serializable {
 
     @Autowired(required = true)
     private ObserveEventService observeEventService;
-    
+
     public SiteService() {
         super();
     }
@@ -214,6 +214,24 @@ public class SiteService implements Serializable {
 
     // SiteApps
 
+    public SiteApp getSiteApp(Site site, String appName) {
+        SiteApp siteApp = null;
+        List<SiteApp> siteApps = entityManager.createQuery(
+                "SELECT sa FROM SiteApp sa, App a " +
+                        "WHERE sa.site.id = :siteId " +
+                        "AND sa.app.id = a.id " +
+                        "AND a.name = :appName")
+                .setParameter("siteId", site.getId())
+                .setParameter("appName", appName)
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", "query.siteService")
+                .getResultList();
+        if (siteApps.size() == 1) {
+            siteApp = siteApps.get(0);
+        }
+        return siteApp;
+    }
+
     public SiteApp getSiteAppByUid(Site site, String siteAppUid) {
         SiteApp siteApp = null;
         List<SiteApp> siteApps = entityManager.createQuery(
@@ -231,7 +249,6 @@ public class SiteService implements Serializable {
         return siteApp;
     }
 
-    // TODO: scope to something?
     public SiteApp getSiteAppByUid(String siteAppUid) {
         SiteApp siteApp = null;
         List<SiteApp> siteApps = entityManager.createQuery(

@@ -28,33 +28,32 @@ public class SiteFilter extends Filter {
 
     protected int doHandle(Request request, Response response) {
         log.debug("do handle");
-        int result = CONTINUE;
         String host = request.getResourceRef().getHostDomain();
         // insert host and SiteApp UID into Request and Seam event context
         request.getAttributes().put("host", host);
-        request.getAttributes().put("siteAppUid", this.applicationName);
         ThreadBeanHolder.set("host", host);
-        ThreadBeanHolder.set("siteAppUid", this.applicationName);
         // get the Site for this request
         ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
         SiteService siteService = (SiteService) springContext.getBean("siteService");
         Site site = siteService.getSiteByHost(host);
         if (site != null) {
-            // globally useful values
-            ThreadBeanHolder.set("springContext", springContext);
-            ThreadBeanHolder.set("environment", site.getEnvironment());
-            // set details about the SiteApp & App being visited
-            SiteApp siteApp = siteService.getSiteAppByUid(this.applicationName);
-            ThreadBeanHolder.set("site", site);
-            ThreadBeanHolder.set("siteApp", siteApp);
-            ThreadBeanHolder.set("app", siteApp.getApp());
-            ThreadBeanHolder.set("skinPath", siteApp.getSkinPath());
-            super.doHandle(request, response);
-        } else {
-            response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-            result = STOP;
+            SiteApp siteApp = siteService.getSiteApp(site, this.applicationName);
+            if (siteApp != null) {
+                // siteAppUid is used by SiteAppResource 
+                request.getAttributes().put("siteAppUid", siteApp.getUid());
+                // globally useful values
+                ThreadBeanHolder.set("springContext", springContext);
+                ThreadBeanHolder.set("environment", site.getEnvironment());
+                // set details about the SiteApp & App being visited
+                ThreadBeanHolder.set("site", site);
+                ThreadBeanHolder.set("siteApp", siteApp);
+                ThreadBeanHolder.set("app", siteApp.getApp());
+                ThreadBeanHolder.set("skinPath", siteApp.getSkinPath());
+                return super.doHandle(request, response);
+            }
         }
-        return result;
+        response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        return STOP;
     }
 
     protected void afterHandle(Request request, Response response) {

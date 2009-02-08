@@ -54,9 +54,6 @@ public class DataBrowser extends BaseBrowser {
     private String dataCategoryUid = null;
     private ResourceActions dataCategoryActions = new ResourceActions("dataCategory");
 
-    // upload
-    private Boolean allowDataUpload = null;
-
     // DataItems
     private DataItem dataItem = null;
     private String dataItemUid = null;
@@ -108,13 +105,6 @@ public class DataBrowser extends BaseBrowser {
 
     public ResourceActions getDataCategoryActions() {
         return dataCategoryActions;
-    }
-
-    public boolean isAllowDataUpload() {
-        if (allowDataUpload == null) {
-            allowDataUpload = authService.isSuperUser() || authService.hasActions(DataConstants.ACTION_DATA_UPLOAD);
-        }
-        return allowDataUpload;
     }
 
     // DataItems

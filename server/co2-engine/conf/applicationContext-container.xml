@@ -14,7 +14,7 @@
         <property name="hosts">
             <list>
                 <ref local="ameeHost"/>
-                <!--ref local="ameeAdminHost"/-->
+                <ref local="ameeAdminHost"/>
             </list>
         </property>
     </bean>
@@ -44,6 +44,7 @@
         <property name="attachments">
             <map>
                 <entry key="/auth" value-ref="authApplication"/>
+                <entry key="/data" value-ref="dataApplication"/>
                 <entry key="/profiles" value-ref="profilesApplication"/>
             </map>
         </property>
@@ -54,7 +55,8 @@
         <property name="hostDomain" value="admin.stage.co2.dgen.net|local.admin.stage.co2.dgen.net"/>
         <property name="attachments">
             <map>
-                <!--entry key="/" value-ref="ameeAdminApplication"/-->
+                <entry key="/auth" value-ref="authApplication"/>
+                <entry key="/environments" value-ref="environmentsApplication"/>
             </map>
         </property>
     </bean>
