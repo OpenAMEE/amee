@@ -4,12 +4,11 @@ import gc.carbon.profile.ProfileService;
 import gc.carbon.profile.ProfileItemValueResource;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.data.ItemValue;
+import gc.carbon.profile.acceptor.ItemValueAcceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.resource.Representation;
 import org.restlet.data.Form;
-
-import java.util.List;
 
 /**
  * This file is part of AMEE.

@@ -2,6 +2,7 @@ package gc.carbon.profile.acceptor;
 
 import com.jellymold.utils.APIFault;
 import gc.carbon.data.DataService;
+import gc.carbon.profile.acceptor.ProfileAcceptor;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
@@ -39,7 +40,7 @@ import java.util.Map;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryFormAcceptor implements Acceptor {
+public class ProfileCategoryFormAcceptor implements ProfileAcceptor {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -60,11 +61,9 @@ public class ProfileCategoryFormAcceptor implements Acceptor {
     public List<ProfileItem> accept(Form form) {
 
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
-        DataCategory dataCategory;
         DataItem dataItem;
         ProfileItem profileItem = null;
         String uid;
-        dataCategory = resource.getDataCategory();
         if (resource.getRequest().getMethod().equals(Method.POST)) {
             // new ProfileItem
             uid = form.getFirstValue("dataItemUid");

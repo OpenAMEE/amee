@@ -155,7 +155,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         return user.getApiVersion();
     }
 
-    protected JSONObject getActions(ResourceActions rActions) throws JSONException {
+    public JSONObject getActions(ResourceActions rActions) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("allowList", rActions.isAllowList());
         obj.put("allowView", rActions.isAllowView());

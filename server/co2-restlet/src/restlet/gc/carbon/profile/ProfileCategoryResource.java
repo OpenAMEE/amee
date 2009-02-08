@@ -20,11 +20,12 @@
 package gc.carbon.profile;
 
 import gc.carbon.ResourceBuilder;
+import gc.carbon.profile.acceptor.ProfileAcceptor;
 import gc.carbon.domain.ObjectType;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.acceptor.*;
-import gc.carbon.profile.builder.ResourceBuilderFactory;
+import gc.carbon.ResourceBuilderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -50,7 +51,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
 
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
     private ResourceBuilder builder;
-    private Map<MediaType, Acceptor> acceptors;
+    private Map<MediaType, ProfileAcceptor> acceptors;
     private boolean recurse = false;
 
     @Override
@@ -68,7 +69,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     private void setAcceptors() {
-        acceptors = new HashMap<MediaType, Acceptor>();
+        acceptors = new HashMap<MediaType, ProfileAcceptor>();
         acceptors.put(MediaType.APPLICATION_XML, new ProfileCategoryXMLAcceptor(this));
         acceptors.put(MediaType.APPLICATION_JSON, new ProfileCategoryJSONAcceptor(this));
         acceptors.put(MediaType.APPLICATION_WWW_FORM, new ProfileCategoryFormAcceptor(this));
@@ -116,16 +117,12 @@ public class ProfileCategoryResource extends BaseProfileResource {
     public void handleGet() {
         log.debug("handleGet()");
         if (profileBrowser.getEnvironmentActions().isAllowView()) {
-
             if (!validateParameters()) {
                 return;
             }
-
             Form form = getRequest().getResourceRef().getQueryAsForm();
-
             if (getVersion().isVersionOne()) {
                 profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
-
             } else {
                 String startDate = form.getFirstValue("startDate");
                 if (startDate != null) {
@@ -196,7 +193,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
         return getAcceptor(entity.getMediaType()).accept(entity);
     }
 
-    public Acceptor getAcceptor(MediaType type) {
+    public ProfileAcceptor getAcceptor(MediaType type) {
         if (MediaType.APPLICATION_JSON.includes(type)) {
             return acceptors.get(MediaType.APPLICATION_JSON);
         } else if (MediaType.APPLICATION_XML.includes(type)) {

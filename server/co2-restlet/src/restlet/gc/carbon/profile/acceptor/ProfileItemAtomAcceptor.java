@@ -3,6 +3,7 @@ package gc.carbon.profile.acceptor;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileItemResource;
 import gc.carbon.profile.builder.v2.AtomFeed;
+import gc.carbon.profile.acceptor.ProfileAcceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.abdera.model.*;
@@ -35,7 +36,7 @@ import java.util.List;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileItemAtomAcceptor implements Acceptor {
+public class ProfileItemAtomAcceptor implements ProfileAcceptor {
 
     private final Log log = LogFactory.getLog(getClass());
     private ProfileItemResource resource;
