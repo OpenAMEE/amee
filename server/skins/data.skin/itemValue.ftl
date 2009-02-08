@@ -33,10 +33,10 @@
         </select>
       <#else>
         <input name='value' value='${itemValue.value}' type='text' size="30"/><br/>
-        <#if itemValue.hasUnits()>
+        <#if itemValue.hasUnit()>
             Unit: <input name='unit' value='${itemValue.unit}' type='text' size="30"/><br/>
         </#if>
-        <#if itemValue.hasPerUnits()>
+        <#if itemValue.hasPerUnit()>
             PerUnit: <input name='perUnit' value='${itemValue.perUnit}' type='text' size="30"/><br/>
         </#if>
       </#if><br/><br/>
