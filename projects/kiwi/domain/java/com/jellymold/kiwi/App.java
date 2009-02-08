@@ -50,7 +50,6 @@ public class App implements DatedObject, Comparable {
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
     public final static int FILTER_NAMES_SIZE = 1000;
-    public final static int TARGET_BUILDER_SIZE = 255;
 
     @Id
     @GeneratedValue
@@ -71,9 +70,6 @@ public class App implements DatedObject, Comparable {
 
     @Column(name = "FILTER_NAMES", length = FILTER_NAMES_SIZE, nullable = false)
     private String filterNames = "";
-
-    @Column(name = "TARGET_BUILDER", length = TARGET_BUILDER_SIZE, nullable = false)
-    private String targetBuilder = "";
 
     @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -163,7 +159,6 @@ public class App implements DatedObject, Comparable {
         obj.put("name", getName());
         obj.put("description", getDescription());
         obj.put("filterNames", getFilterNames());
-        obj.put("targetBuilder", getTargetBuilder());
         obj.put("allowClientCache", getAllowClientCache());
         if (detailed) {
             obj.put("created", getCreated());
@@ -189,7 +184,6 @@ public class App implements DatedObject, Comparable {
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         element.appendChild(APIUtils.getElement(document, "Description", getDescription()));
         element.appendChild(APIUtils.getElement(document, "FilterNames", getFilterNames()));
-        element.appendChild(APIUtils.getElement(document, "TargetBuilder", getTargetBuilder()));
         element.appendChild(APIUtils.getElement(document, "AllowClientCache", "" + getAllowClientCache()));
         if (detailed) {
             element.setAttribute("created", getCreated().toString());
@@ -211,7 +205,6 @@ public class App implements DatedObject, Comparable {
         setName(element.elementText("Name"));
         setDescription(element.elementText("Description"));
         setFilterNames(element.elementText("FilterNames"));
-        setTargetBuilder(element.elementText("TargetBuilder"));
         setAllowClientCache(Boolean.parseBoolean(element.elementText("AllowClientCache")));
     }
 
@@ -289,17 +282,6 @@ public class App implements DatedObject, Comparable {
             filterNames = "";
         }
         this.filterNames = filterNames;
-    }
-
-    public String getTargetBuilder() {
-        return targetBuilder;
-    }
-
-    public void setTargetBuilder(String targetBuilder) {
-        if (targetBuilder == null) {
-            targetBuilder = "";
-        }
-        this.targetBuilder = targetBuilder;
     }
 
     public Boolean getAllowClientCache() {

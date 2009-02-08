@@ -2,7 +2,6 @@ package com.jellymold.engine;
 
 import com.jellymold.kiwi.SiteApp;
 import com.jellymold.kiwi.Target;
-import com.jellymold.kiwi.TargetBuilder;
 import com.jellymold.kiwi.TargetType;
 import com.jellymold.kiwi.environment.SiteService;
 import org.restlet.*;
@@ -36,7 +35,6 @@ public class EngineApplication extends Application {
     }
 
     public Restlet createRoot() {
-        TargetBuilder targetBuilder;
         Router router = new Router(getContext());
         // get the SiteApp for this Application
         SiteService siteService = (SiteService) springContext.getBean("siteService");
@@ -44,24 +42,8 @@ public class EngineApplication extends Application {
         if ((siteApp != null) && (siteApp.getApp() != null)) {
             // bind Restlets based on App Targets
             bindTargets(router, siteApp.getApp().getTargets());
-            // bind Restlets based on dynamically created App Targets
-            targetBuilder = getTargetBuilder(siteApp);
-            if (targetBuilder != null) {
-                bindTargets(router, targetBuilder.getTargets());
-            }
         }
         return router;
-    }
-
-    public TargetBuilder getTargetBuilder(SiteApp siteApp) {
-        TargetBuilder targetBuilder = null;
-        if (!siteApp.getApp().getTargetBuilder().isEmpty()) {
-            targetBuilder = (TargetBuilder) springContext.getBean(siteApp.getApp().getTargetBuilder());
-            if (targetBuilder != null) {
-                targetBuilder.setEnvironment(siteApp.getEnvironment());
-            }
-        }
-        return targetBuilder;
     }
 
     protected void bindTargets(Router router, Set<Target> targets) {
