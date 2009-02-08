@@ -124,7 +124,6 @@ public class ServiceResource extends AMEEResource {
         }
     }
 
-    //TODO - Check this is the best was of doing this with Dig
     private void addCollection(Workspace ws, PathItem pii, boolean recurse) {
         DataCategory dc = dataService.getDataCategory(pii.getUid());
         if (dc.getItemDefinition() != null) {
