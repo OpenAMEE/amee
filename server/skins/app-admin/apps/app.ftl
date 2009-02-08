@@ -12,7 +12,6 @@ Modified: ${app.modified?string.short}<br/>
 <h2>Manage</h2>
 <p>
 <a href='/apps/${app.uid}/actions'>Actions</a><br/>
-<a href='/apps/${app.uid}/targets'>Targets</a><br/>
 </p>
 <#if browser.appActions.allowModify>
   <h2>Update App</h2>
