@@ -30,19 +30,13 @@ function deleteSiteApp(siteUid, siteAppUid) {
 <table>
 <tr>
   <th>App</th>
-  <th>URI Pattern</th>
   <th>Skin Path</th>
-  <th>Default</th>
-  <th>Enabled</th>
   <th></th>
 </tr>
 <#list siteApps as sa>
   <tr id='Elem_${sa.uid}'>
     <td>${sa.app.name}</td>
-    <td>${sa.uriPattern}</td>
     <td>${sa.skinPath}</td>
-    <td><#if sa.defaultApp>Yes<#else>No</#if></td>
-    <td><#if sa.enabled>Yes<#else>No</#if></td>
     <td>
         <#if browser.siteAppActions.allowView><a href='/environments/${environment.uid}/sites/${site.uid}/apps/${sa.uid}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
         <#if browser.siteAppActions.allowDelete><input type="image" onClick="deleteSiteApp('${site.uid}', '${sa.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
@@ -66,14 +60,7 @@ App: <select id="appUid" name="appUid">
         <option value="${app.uid}">${app.name}</option>
     </#list>
 </select><br/>
-URI Pattern: <input name='uriPattern' type='text' size='60'/><br/>
 Skin Path: <input name='skinPath' type='text' size='60'/><br/>
-Default:
-  Yes <input type="radio" name="defaultApp" value="true">
-  No <input type="radio" name="defaultApp" value="false"><br/>
-Enabled:
-  Yes <input type="radio" name="enabled" value="true">
-  No <input type="radio" name="enabled" value="false"><br/><br/>
 <input type='submit' value="Create Site App"/><br/>
 </form>
 </p>

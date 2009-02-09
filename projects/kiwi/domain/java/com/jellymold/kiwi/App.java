@@ -47,7 +47,6 @@ public class App implements DatedObject, Comparable {
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
-    public final static int FILTER_NAMES_SIZE = 1000;
 
     @Id
     @GeneratedValue
@@ -62,12 +61,6 @@ public class App implements DatedObject, Comparable {
 
     @Column(name = "DESCRIPTION", length = DESCRIPTION_SIZE, nullable = false)
     private String description = "";
-
-    @Column(name = "AUTHENTICATION_REQUIRED", nullable = false)
-    private Boolean authenticationRequired = false;
-
-    @Column(name = "FILTER_NAMES", length = FILTER_NAMES_SIZE, nullable = false)
-    private String filterNames = "";
 
     @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -142,7 +135,6 @@ public class App implements DatedObject, Comparable {
         obj.put("uid", getUid());
         obj.put("name", getName());
         obj.put("description", getDescription());
-        obj.put("filterNames", getFilterNames());
         obj.put("allowClientCache", getAllowClientCache());
         if (detailed) {
             obj.put("created", getCreated());
@@ -167,7 +159,6 @@ public class App implements DatedObject, Comparable {
         element.setAttribute("uid", getUid());
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         element.appendChild(APIUtils.getElement(document, "Description", getDescription()));
-        element.appendChild(APIUtils.getElement(document, "FilterNames", getFilterNames()));
         element.appendChild(APIUtils.getElement(document, "AllowClientCache", "" + getAllowClientCache()));
         if (detailed) {
             element.setAttribute("created", getCreated().toString());
@@ -188,7 +179,6 @@ public class App implements DatedObject, Comparable {
         setUid(element.attributeValue("uid"));
         setName(element.elementText("Name"));
         setDescription(element.elementText("Description"));
-        setFilterNames(element.elementText("FilterNames"));
         setAllowClientCache(Boolean.parseBoolean(element.elementText("AllowClientCache")));
     }
 
@@ -241,31 +231,6 @@ public class App implements DatedObject, Comparable {
             description = "";
         }
         this.description = description;
-    }
-
-    public Boolean getAuthenticationRequired() {
-        return authenticationRequired;
-    }
-
-    public Boolean isAuthenticationRequired() {
-        return authenticationRequired;
-    }
-
-    public void setAuthenticationRequired(Boolean authenticationRequired) {
-        if (authenticationRequired != null) {
-            this.authenticationRequired = authenticationRequired;
-        }
-    }
-
-    public String getFilterNames() {
-        return filterNames;
-    }
-
-    public void setFilterNames(String filterNames) {
-        if (filterNames == null) {
-            filterNames = "";
-        }
-        this.filterNames = filterNames;
     }
 
     public Boolean getAllowClientCache() {

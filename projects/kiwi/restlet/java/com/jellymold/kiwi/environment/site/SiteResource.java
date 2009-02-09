@@ -109,18 +109,6 @@ public class SiteResource extends BaseResource {
             if (form.getNames().contains("description")) {
                 site.setDescription(form.getFirstValue("description"));
             }
-            if (form.getNames().contains("serverName")) {
-                site.setServerName(form.getFirstValue("serverName"));
-            }
-            if (form.getNames().contains("serverAddress")) {
-                site.setServerAddress(form.getFirstValue("serverAddress"));
-            }
-            if (form.getNames().contains("serverPort")) {
-                site.setServerPort(form.getFirstValue("serverPort"));
-            }
-            if (form.getNames().contains("serverScheme")) {
-                site.setServerScheme(form.getFirstValue("serverScheme"));
-            }
             if (form.getNames().contains("authCookieDomain")) {
                 site.setAuthCookieDomain(form.getFirstValue("authCookieDomain"));
             }

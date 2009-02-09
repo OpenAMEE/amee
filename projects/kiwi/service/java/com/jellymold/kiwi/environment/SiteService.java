@@ -68,7 +68,7 @@ public class SiteService implements Serializable {
     }
 
     public List<Site> getSites(Environment environment, Pager pager) {
-        String orderBy = "serverName";
+        String orderBy = "name";
         if (pager != null) {
             // count all sites
             long count = (Long) entityManager.createQuery(
@@ -106,7 +106,7 @@ public class SiteService implements Serializable {
     }
 
     public List<Site> getSites() {
-        String orderBy = "serverName";
+        String orderBy = "name";
         List<Site> sites = entityManager.createQuery(
                 "SELECT s " +
                         "FROM Site s " +
@@ -205,8 +205,7 @@ public class SiteService implements Serializable {
         Query query = entityManager.createQuery(
                 "SELECT sa " +
                         "FROM SiteApp sa " +
-                        "WHERE sa.site.id = :siteId " +
-                        "ORDER BY sa.uriPattern")
+                        "WHERE sa.site.id = :siteId")
                 .setParameter("siteId", site.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.siteService");

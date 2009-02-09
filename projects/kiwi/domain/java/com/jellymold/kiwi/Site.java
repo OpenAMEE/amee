@@ -54,10 +54,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
-    public final static int SERVER_NAME_SIZE = 255;
-    public final static int SERVER_ADDRESS_SIZE = 255;
-    public final static int SERVER_PORT_SIZE = 255;
-    public final static int SERVER_SCHEME_SIZE = 255;
     public final static int AUTH_COOKIE_DOMAIN_SIZE = 255;
 
     @Id
@@ -78,19 +74,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
     @Column(name = "DESCRIPTION", length = DESCRIPTION_SIZE, nullable = false)
     private String description = "";
 
-    @Column(name = "SERVER_NAME", length = SERVER_NAME_SIZE, nullable = false)
-    @Index(name = "SERVER_NAME_IND")
-    private String serverName = "";
-
-    @Column(name = "SERVER_ADDRESS", length = SERVER_ADDRESS_SIZE, nullable = false)
-    private String serverAddress = "";
-
-    @Column(name = "SERVER_PORT", length = SERVER_PORT_SIZE, nullable = false)
-    private String serverPort = "";
-
-    @Column(name = "SERVER_SCHEME", length = SERVER_SCHEME_SIZE, nullable = false)
-    private String serverScheme = "http";
-
     @Column(name = "SECURE_AVAILABLE")
     private boolean secureAvailable = false;
 
@@ -108,7 +91,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
 
     @OneToMany(mappedBy = "site", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("uriPattern")
     private Set<SiteApp> siteApps = new HashSet<SiteApp>();
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -146,18 +128,18 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
         if (this == o) return true;
         if (!(o instanceof Site)) return false;
         Site site = (Site) o;
-        return getServerName().equalsIgnoreCase(site.getServerName());
+        return getName().equalsIgnoreCase(site.getName());
     }
 
     public int compareTo(Object o) throws ClassCastException {
         if (this == o) return 0;
         if (equals(o)) return 0;
         Site site = (Site) o;
-        return getServerName().compareToIgnoreCase(site.getServerName());
+        return getName().compareToIgnoreCase(site.getName());
     }
 
     public int hashCode() {
-        return getServerName().toLowerCase().hashCode();
+        return getName().toLowerCase().hashCode();
     }
 
     @Transient
@@ -171,10 +153,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
         obj.put("uid", getUid());
         obj.put("name", getName());
         obj.put("description", getDescription());
-        obj.put("serverName", getServerName());
-        obj.put("serverAddress", getServerAddress());
-        obj.put("serverPort", getServerPort());
-        obj.put("serverScheme", getServerScheme());
         obj.put("secureAvailable", isSecureAvailable());
         obj.put("checkRemoteAddress", isCheckRemoteAddress());
         obj.put("maxAuthDuration", getMaxAuthDuration());
@@ -203,10 +181,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
         element.setAttribute("uid", getUid());
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         element.appendChild(APIUtils.getElement(document, "Description", getDescription()));
-        element.appendChild(APIUtils.getElement(document, "ServerName", getServerName()));
-        element.appendChild(APIUtils.getElement(document, "ServerAddress", getServerAddress()));
-        element.appendChild(APIUtils.getElement(document, "ServerPort", getServerPort()));
-        element.appendChild(APIUtils.getElement(document, "ServerScheme", getServerScheme()));
         element.appendChild(APIUtils.getElement(document, "SecureAvailable", "" + isSecureAvailable()));
         element.appendChild(APIUtils.getElement(document, "CheckRemoteAddress", "" + isCheckRemoteAddress()));
         element.appendChild(APIUtils.getElement(document, "MaxAuthDuration", "" + getMaxAuthDuration()));
@@ -229,10 +203,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
         setUid(element.attributeValue("uid"));
         setName(element.elementText("Name"));
         setDescription(element.elementText("Description"));
-        setServerName(element.elementText("ServerName"));
-        setServerAddress(element.elementText("ServerAddress"));
-        setServerPort(element.elementText("ServerPort"));
-        setServerScheme(element.elementText("ServerScheme"));
         setSecureAvailable(element.elementText("SecureAvailable"));
         setCheckRemoteAddress(element.elementText("CheckRemoteAddress"));
         setMaxAuthDuration(element.elementText("MaxAuthDuration"));
@@ -298,50 +268,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
             description = "";
         }
         this.description = description;
-    }
-
-    public String getServerName() {
-        return serverName;
-    }
-
-    public void setServerName(String serverName) {
-        if (serverName == null) {
-            serverName = "";
-        }
-        this.serverName = serverName;
-    }
-
-    public String getServerAddress() {
-        return serverAddress;
-    }
-
-    public void setServerAddress(String serverAddress) {
-        if (serverAddress == null) {
-            serverAddress = "";
-        }
-        this.serverAddress = serverAddress;
-    }
-
-    public String getServerPort() {
-        return serverPort;
-    }
-
-    public void setServerPort(String serverPort) {
-        if (serverPort == null) {
-            serverPort = "";
-        }
-        this.serverPort = serverPort;
-    }
-
-    public String getServerScheme() {
-        return serverScheme;
-    }
-
-    public void setServerScheme(String serverScheme) {
-        if (serverScheme == null) {
-            serverScheme = "";
-        }
-        this.serverScheme = serverScheme;
     }
 
     public boolean isSecureAvailable() {

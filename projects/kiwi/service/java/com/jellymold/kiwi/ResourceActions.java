@@ -10,10 +10,6 @@ import java.io.Serializable;
 
 public class ResourceActions implements Serializable {
 
-    // TODO: usage of AuthService here is odd
-
-    private final Log log = LogFactory.getLog(getClass());
-
     public final static String ACTION_VIEW = ".view";
     public final static String ACTION_CREATE = ".create";
     public final static String ACTION_MODIFY = ".modify";
@@ -32,7 +28,16 @@ public class ResourceActions implements Serializable {
     String resourceDeleteAction;
     String resourceListAction;
 
+    public ResourceActions() {
+        super();
+    }
+
     public ResourceActions(String resource) {
+        this();
+        setResource(resource);
+    }
+
+    public void setResource(String resource) {
         this.resourceViewAction = resource + ACTION_VIEW;
         this.resourceCreateAction = resource + ACTION_CREATE;
         this.resourceModifyAction = resource + ACTION_MODIFY;
