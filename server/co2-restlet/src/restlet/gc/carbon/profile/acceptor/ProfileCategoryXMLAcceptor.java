@@ -3,6 +3,7 @@ package gc.carbon.profile.acceptor;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileCategoryResource;
+import gc.carbon.profile.acceptor.ProfileAcceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
@@ -34,7 +35,7 @@ import java.util.List;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileCategoryXMLAcceptor implements Acceptor {
+public class ProfileCategoryXMLAcceptor implements ProfileAcceptor {
 
     private final Log log = LogFactory.getLog(getClass());
     private ProfileCategoryResource resource;

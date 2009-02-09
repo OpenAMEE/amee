@@ -6,6 +6,7 @@ import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.domain.profile.ValidFromDate;
 import gc.carbon.domain.data.ItemValue;
+import gc.carbon.profile.acceptor.ProfileAcceptor;
 import com.jellymold.utils.APIFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ProfileItemFormAcceptor implements Acceptor {
+public class ProfileItemFormAcceptor implements ProfileAcceptor {
 
     private final Log log = LogFactory.getLog(getClass());
     private ProfileItemResource resource;
@@ -52,7 +53,7 @@ public class ProfileItemFormAcceptor implements Acceptor {
         return accept(resource.getForm());
     }
 
-    //TODO - PI Acceptor is returning a collection of PIs - this reflect the Acceptor's original usage with PC. Move to seperate acceptor (done this for PIV)
+    //TODO - PI ProfileAcceptor is returning a collection of PIs - this reflect the ProfileAcceptor's original usage with PC. Move to seperate acceptor (done this for PIV)
     public List<ProfileItem> accept(Form form) {
 
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();

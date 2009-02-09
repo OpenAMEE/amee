@@ -46,7 +46,7 @@ public class ItemValueDefinitionBuilder implements Builder {
             obj.put("modified", itemValueDefinition.getModified());
             obj.put("value", itemValueDefinition.getValue());
             obj.put("fromProfile", itemValueDefinition.isFromProfile());
-                obj.put("fromData", itemValueDefinition.isFromData());
+            obj.put("fromData", itemValueDefinition.isFromData());
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
             obj.put("environment", itemValueDefinition.getEnvironment().getIdentityJSONObject());
             obj.put("itemDefinition", itemValueDefinition.getItemDefinition().getIdentityJSONObject());

@@ -19,17 +19,15 @@
  */
 package gc.carbon.data;
 
-import com.jellymold.sheet.Sheet;
-import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.APIFault;
-import com.jellymold.kiwi.ResourceActions;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValue;
-import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.ResourceBuilder;
+import gc.carbon.ResourceBuilderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.lang.StringUtils;
@@ -48,12 +46,8 @@ import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-//TODO - move to builder model
 @Component("dataCategoryResource")
 @Scope("prototype")
 public class DataCategoryResource extends BaseDataResource implements Serializable {
@@ -68,11 +62,18 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     private DataItem dataItem;
     private List<DataItem> dataItems;
 
+    private ResourceBuilder builder;
+
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         setPage(request);
+        setBuilderStrategy();
+    }
+
+    private void setBuilderStrategy() {
+        builder = ResourceBuilderFactory.createDataCategoryBuilder(this);
     }
 
     @Override
@@ -87,165 +88,33 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        DataCategory dataCategory = dataBrowser.getDataCategory();
-        Sheet sheet = dataService.getSheet(dataBrowser);
         Map<String, Object> values = super.getTemplateValues();
-        values.put("browser", dataBrowser);
-        values.put("dataCategory", dataCategory);
-        values.put("itemDefinition", dataCategory.getItemDefinition());
-        values.put("node", dataCategory);
-        if (sheet != null) {
-            Pager pager = getPager(getItemsPerPage());
-            sheet = Sheet.getCopy(sheet, pager);
-            pager.setCurrentPage(getPage());
-            values.put("sheet", sheet);
-            values.put("pager", pager);
-        }
+        values.putAll(builder.getTemplateValues());
         return values;
     }
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-
-        // create JSON object
-        JSONObject obj = new JSONObject();
-        obj.put("path", pathItem.getFullPath());
-
-        if (isGet()) {
-
-            // add DataCategory
-            obj.put("dataCategory", dataBrowser.getDataCategory().getJSONObject(true));
-            obj.put("actions", getActions(dataBrowser.getDataCategoryActions()));
-            obj.put("dataItemActions", getActions(dataBrowser.getDataItemActions()));
-
-            // add ItemDefinition list
-            JSONArray itemDefinitions = new JSONArray();
-            for (ItemDefinition iDefinition : dataBrowser.getItemDefinitions()) {
-                itemDefinitions.put(iDefinition.getJSONObject(false));
-            }
-            obj.put("itemDefinitions", itemDefinitions);
-
-            // list child Data Categories and child Data Items
-            JSONObject children = new JSONObject();
-
-            // add Data Categories via pathItem to children
-            JSONArray dataCategories = new JSONArray();
-            for (PathItem pi : pathItem.getChildrenByType("DC")) {
-                dataCategories.put(pi.getJSONObject());
-            }
-            children.put("dataCategories", dataCategories);
-
-            // add Sheet containing Data Items
-            Sheet sheet = dataService.getSheet(dataBrowser);
-            if (sheet != null) {
-                Pager pager = getPager(getItemsPerPage());
-                sheet = Sheet.getCopy(sheet, pager);
-                pager.setCurrentPage(getPage());
-                children.put("dataItems", sheet.getJSONObject());
-                children.put("pager", pager.getJSONObject());
-            } else {
-                children.put("dataItems", new JSONObject());
-                children.put("pager", new JSONObject());
-            }
-
-            // add children
-            obj.put("children", children);
-
-        } else if (getRequest().getMethod().equals(Method.POST) || getRequest().getMethod().equals(Method.PUT)) {
-
-            // DataCategories
-            if (dataCategory != null) {
-                obj.put("dataCategory", dataCategory.getJSONObject(true));
-            } else if (dataCategories != null) {
-                JSONArray dataCategories = new JSONArray();
-                obj.put("dataCategories", dataCategories);
-                for (DataCategory dc : this.dataCategories) {
-                    dataCategories.put(dc.getJSONObject(false));
-                }
-            }
-
-            // DataItems
-            if (dataItem != null) {
-                obj.put("dataItem", dataItem.getJSONObject(true));
-            } else if (dataItems != null) {
-                JSONArray dataItems = new JSONArray();
-                obj.put("dataItems", dataItems);
-                for (DataItem di : this.dataItems) {
-                    dataItems.put(di.getJSONObject(false));
-                }
-            }
-        }
-
-        return obj;
+        return builder.getJSONObject();
     }
 
     @Override
     public Element getElement(Document document) {
-
-        Element element = document.createElement("DataCategoryResource");
-        element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
-
-        if (isGet()) {
-
-            // add DataCategory
-            element.appendChild(dataBrowser.getDataCategory().getElement(document, true));
-
-            // list child Data Categories and child Data Items
-            Element childrenElement = document.createElement("Children");
-            element.appendChild(childrenElement);
-
-            // add Data Categories
-            Element dataCategoriesElement = document.createElement("DataCategories");
-            for (PathItem pi : pathItem.getChildrenByType("DC")) {
-                dataCategoriesElement.appendChild(pi.getElement(document));
-            }
-            childrenElement.appendChild(dataCategoriesElement);
-
-            // list child Data Items via sheet
-            Sheet sheet = dataService.getSheet(dataBrowser);
-            if (sheet != null) {
-                Pager pager = getPager(getItemsPerPage());
-                sheet = Sheet.getCopy(sheet, pager);
-                pager.setCurrentPage(getPage());
-                childrenElement.appendChild(sheet.getElement(document, false));
-                childrenElement.appendChild(pager.getElement(document));
-            }
-
-        } else if (getRequest().getMethod().equals(Method.POST) || getRequest().getMethod().equals(Method.PUT)) {
-
-            // DataCategories
-            if (dataCategory != null) {
-                element.appendChild(dataCategory.getElement(document, false));
-            } else if (dataCategories != null) {
-                Element dataItemsElement = document.createElement("DataCategories");
-                element.appendChild(dataItemsElement);
-                for (DataCategory dc : dataCategories) {
-                    dataItemsElement.appendChild(dc.getElement(document, false));
-                }
-            }
-
-            // DataItems
-            if (dataItem != null) {
-                element.appendChild(dataItem.getElement(document, false));
-            } else if (dataItems != null) {
-                Element dataItemsElement = document.createElement("DataItems");
-                element.appendChild(dataItemsElement);
-                for (DataItem di : dataItems) {
-                    dataItemsElement.appendChild(di.getElement(document, false));
-                }
-            }
-        }
-
-        return element;
+        return builder.getElement(document);
     }
 
     @Override
     public void handleGet() {
         log.debug("handleGet()");
         if (dataBrowser.getDataCategoryActions().isAllowView()) {
-            Form form = getRequest().getResourceRef().getQueryAsForm();
-            dataBrowser.setStartDate(form.getFirstValue("startDate"));
-            dataBrowser.setEndDate(form.getFirstValue("endDate"));
+            if (!getVersion().isVersionOne()) {
+                Form form = getRequest().getResourceRef().getQueryAsForm();
+                String startDate = form.getFirstValue("startDate");
+                if (startDate != null) {
+                    dataBrowser.setStartDate(form.getFirstValue("startDate"));
+                }
+                dataBrowser.setEndDate(form.getFirstValue("endDate"));
+            }
             super.handleGet();
         } else {
             notAuthorized();
@@ -274,12 +143,13 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         acceptOrStore(entity);
     }
 
-    // TODO: may be a more elegant way to handle incoming representations of different media types
     public void acceptOrStore(Representation entity) {
         log.debug("acceptOrStore()");
         DataCategory thisDataCategory = dataBrowser.getDataCategory();
+
         dataItems = new ArrayList<DataItem>();
         dataCategories = new ArrayList<DataCategory>();
+
         MediaType mediaType = entity.getMediaType();
         if (MediaType.APPLICATION_XML.includes(mediaType)) {
             acceptXML(entity);
@@ -292,6 +162,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 acceptFormPut(getForm());
             }
         }
+
         if ((dataCategory != null) || (dataItem != null) || !dataCategories.isEmpty() || !dataItems.isEmpty()) {
             // clear caches
             dataService.clearCaches(thisDataCategory);
@@ -318,7 +189,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         JSONObject itemJSON;
         try {
             rootJSON = new JSONObject(entity.getText());
-            if (rootJSON.has("acceptJSON() - dataCategories")) {
+            if (rootJSON.has("dataCategories")) {
                 dataCategoriesJSON = rootJSON.getJSONArray("dataCategories");
                 for (int i = 0; i < dataCategoriesJSON.length(); i++) {
                     itemJSON = dataCategoriesJSON.getJSONObject(i);
@@ -639,5 +510,29 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         } else {
             notAuthorized();
         }
+    }
+
+    public DataService getDataService() {
+        return dataService;
+    }
+
+    public DataBrowser getDataBrowser() {
+        return dataBrowser;
+    }
+
+    public DataCategory getDataCategory() {
+        return dataCategory;
+    }
+
+    public List<DataCategory> getDataCategories() {
+        return dataCategories;
+    }
+
+    public DataItem getDataItem() {
+        return dataItem;
+    }
+
+    public List<DataItem> getDataItems() {
+        return dataItems;
     }
 }

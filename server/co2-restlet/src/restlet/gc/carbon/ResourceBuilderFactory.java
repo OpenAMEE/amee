@@ -1,10 +1,10 @@
-package gc.carbon.profile.builder;
+package gc.carbon;
 
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileItemResource;
-import gc.carbon.profile.builder.v2.ProfileCategoryResourceBuilder;
-import gc.carbon.profile.builder.v2.ProfileItemResourceBuilder;
 import gc.carbon.ResourceBuilder;
+import gc.carbon.data.DataCategoryResource;
+import gc.carbon.data.builder.DataCategoryResourceBuilder;
 
 /**
  * This file is part of AMEE.
@@ -31,7 +31,7 @@ public class ResourceBuilderFactory {
         if (resource.getVersion().isVersionOne()) {
             return new gc.carbon.profile.builder.v1.ProfileCategoryResourceBuilder(resource);
         } else {
-            return new ProfileCategoryResourceBuilder(resource);
+            return new gc.carbon.profile.builder.v2.ProfileCategoryResourceBuilder(resource);
         }
     }
 
@@ -39,7 +39,12 @@ public class ResourceBuilderFactory {
         if (resource.getVersion().isVersionOne()) {
             return new gc.carbon.profile.builder.v1.ProfileItemResourceBuilder(resource);
         } else {
-            return new ProfileItemResourceBuilder(resource);
+            return new gc.carbon.profile.builder.v2.ProfileItemResourceBuilder(resource);
         }
     }
+
+    public static ResourceBuilder createDataCategoryBuilder(DataCategoryResource resource) {
+        return new DataCategoryResourceBuilder(resource);
+    }
+
 }

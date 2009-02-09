@@ -35,10 +35,10 @@
                 </select>
             <#else>
                 <input name='value' value='${profileItemValue.value}' type='text' size="30"/><br/>
-                <#if profileItemValue.hasUnits()>
+                <#if profileItemValue.hasUnit()>
                     Unit: <input name='unit' value='${profileItemValue.unit}' type='text' size="30"/><br/>
                 </#if>
-                <#if profileItemValue.hasPerUnits()>
+                <#if profileItemValue.hasPerUnit()>
                     PerUnit: <input name='perUnit' value='${profileItemValue.perUnit}' type='text' size="30"/><br/>
                 </#if>
             </#if><br/><br/>

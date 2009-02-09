@@ -20,8 +20,9 @@
 package gc.carbon.profile;
 
 import gc.carbon.profile.acceptor.*;
-import gc.carbon.profile.builder.ResourceBuilderFactory;
+import gc.carbon.ResourceBuilderFactory;
 import gc.carbon.ResourceBuilder;
+import gc.carbon.profile.acceptor.ProfileAcceptor;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import org.apache.commons.logging.Log;
@@ -54,7 +55,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Autowired
     ProfileService profileService;
 
-    private Map<MediaType, Acceptor> acceptors;
+    private Map<MediaType, ProfileAcceptor> acceptors;
     private ResourceBuilder builder;
 
     @Override
@@ -69,7 +70,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     private void setAcceptors() {
-        acceptors = new HashMap<MediaType, Acceptor>();
+        acceptors = new HashMap<MediaType, ProfileAcceptor>();
         acceptors.put(MediaType.APPLICATION_WWW_FORM, new ProfileItemFormAcceptor(this));
         acceptors.put(MediaType.APPLICATION_ATOM_XML, new ProfileItemAtomAcceptor(this));
     }
@@ -153,7 +154,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     }
 
-    public Acceptor getAcceptor(MediaType type) {
+    public ProfileAcceptor getAcceptor(MediaType type) {
         if (MediaType.APPLICATION_ATOM_XML.includes(type)) {
             return acceptors.get(MediaType.APPLICATION_ATOM_XML);
         } else {

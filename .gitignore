@@ -3,3 +3,5 @@
 output/
 lib/restlet-1.1.1
 .DS_Store
+scripts/curl/.headers
+scripts/curl/.cookies

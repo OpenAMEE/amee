@@ -1,6 +1,7 @@
 package gc.carbon.profile.acceptor;
 
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.data.Item;
 import gc.carbon.profile.ProfileCategoryResource;
 import org.restlet.data.Form;
 import org.restlet.resource.Representation;
@@ -26,7 +27,7 @@ import java.util.List;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public interface Acceptor {
+public interface ProfileAcceptor {
 
     public List<ProfileItem> accept(Representation entity);
 

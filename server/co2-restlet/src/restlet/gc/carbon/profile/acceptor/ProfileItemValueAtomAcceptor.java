@@ -3,6 +3,7 @@ package gc.carbon.profile.acceptor;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.profile.ProfileItemValueResource;
 import gc.carbon.profile.builder.v2.AtomFeed;
+import gc.carbon.profile.acceptor.ItemValueAcceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.abdera.model.*;

@@ -21,6 +21,7 @@ package gc.carbon.profile;
 
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.AMEEResource;
+import gc.carbon.profile.acceptor.ItemValueAcceptor;
 import gc.carbon.profile.builder.v2.AtomFeed;
 import gc.carbon.profile.acceptor.*;
 import gc.carbon.domain.data.ItemValue;

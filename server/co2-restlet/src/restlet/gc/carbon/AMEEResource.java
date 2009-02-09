@@ -31,6 +31,7 @@ import org.json.JSONException;
 
 import java.util.Map;
 import java.util.List;
+import java.io.IOException;
 
 /**
  * This file is part of AMEE.
@@ -78,14 +79,33 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     }
 
     protected Representation getDomRepresentation() throws ResourceException {
-        Document document = new DocumentImpl();
-        Element element = document.createElement("Resources");
-        if (!getVersion().isVersionOne()) {
-            element.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns","http://schemas.amee.cc/2.0");
+        Representation domRepresentation;
+        try {
+            domRepresentation = new DomRepresentation(MediaType.APPLICATION_XML) {
+                Document doc = null;
+                public Document getDocument() throws IOException {
+                    if (doc == null) {
+                        doc = new DocumentImpl();
+                        try {
+                            Element element = doc.createElement("Resources");
+                            if (!getVersion().isVersionOne()) {
+                                element.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns","http://schemas.amee.cc/2.0");
+                            }
+
+                            element.appendChild(getElement(doc));
+                            doc.appendChild(element);
+                        } catch (ResourceException ex) {
+                            throw new IOException(ex);
+                        }
+                    }
+                    return doc;
+                }
+            };
+
+        } catch (IOException e) {
+            throw new ResourceException(e);
         }
-        element.appendChild(getElement(document));
-        document.appendChild(element);
-        return new DomRepresentation(MediaType.APPLICATION_XML, document);
+        return domRepresentation;
     }
 
     public int getItemsPerPage() {
@@ -134,7 +154,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         return user.getApiVersion();
     }
 
-    protected JSONObject getActions(ResourceActions rActions) throws JSONException {
+    public JSONObject getActions(ResourceActions rActions) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("allowList", rActions.isAllowList());
         obj.put("allowView", rActions.isAllowView());

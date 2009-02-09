@@ -5,8 +5,8 @@
 # dataItemUid is the DataItem id NOT the ITEM_DEFINITION id.
 # ValidFrom defaults to 1st day of current month.
 . curl.conf
-type="atom+xml"
-amee_url="/profiles/${amee_profile}/transport/car/generic/65EF5B4592AC"
+type="xml"
+amee_url="/profiles/${amee_profile}/home/water/B8463F21A9FB"
 #amee_url="/profiles/${amee_profile}"
 
 curl -H "Accept:application/${type}" \
