@@ -1,10 +1,7 @@
 package com.jellymold.kiwi;
 
 import com.jellymold.kiwi.auth.AuthService;
-import com.jellymold.utils.ThreadBeanHolder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 
@@ -16,17 +13,20 @@ public class ResourceActions implements Serializable {
     public final static String ACTION_DELETE = ".delete";
     public final static String ACTION_LIST = ".list";
 
-    Boolean view = null;
-    Boolean create = null;
-    Boolean modify = null;
-    Boolean delete = null;
-    Boolean list = null;
+    @Autowired
+    private AuthService authService;
 
-    String resourceViewAction;
-    String resourceCreateAction;
-    String resourceModifyAction;
-    String resourceDeleteAction;
-    String resourceListAction;
+    private Boolean view = null;
+    private Boolean create = null;
+    private Boolean modify = null;
+    private Boolean delete = null;
+    private Boolean list = null;
+
+    private String resourceViewAction;
+    private String resourceCreateAction;
+    private String resourceModifyAction;
+    private String resourceDeleteAction;
+    private String resourceListAction;
 
     public ResourceActions() {
         super();
@@ -47,8 +47,6 @@ public class ResourceActions implements Serializable {
 
     public boolean isAllowView() {
         if (view == null) {
-            ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
-            AuthService authService = (AuthService) springContext.getBean("authService");
             view = authService.isSuperUser() || (
                     authService.hasActions(resourceViewAction) &&
                             authService.isAllowView());
@@ -58,8 +56,6 @@ public class ResourceActions implements Serializable {
 
     public boolean isAllowCreate() {
         if (create == null) {
-            ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
-            AuthService authService = (AuthService) springContext.getBean("authService");
             create = authService.isSuperUser() ||
                     (authService.hasActions(resourceCreateAction) &&
                             authService.isAllowModify());
@@ -69,8 +65,6 @@ public class ResourceActions implements Serializable {
 
     public boolean isAllowModify() {
         if (modify == null) {
-            ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
-            AuthService authService = (AuthService) springContext.getBean("authService");
             modify = authService.isSuperUser() ||
                     (authService.hasActions(resourceModifyAction) &&
                             authService.isAllowModify());
@@ -80,8 +74,6 @@ public class ResourceActions implements Serializable {
 
     public boolean isAllowDelete() {
         if (delete == null) {
-            ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
-            AuthService authService = (AuthService) springContext.getBean("authService");
             delete = authService.isSuperUser() ||
                     (authService.hasActions(resourceDeleteAction) &&
                             authService.isAllowModify());
@@ -91,8 +83,6 @@ public class ResourceActions implements Serializable {
 
     public boolean isAllowList() {
         if (list == null) {
-            ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
-            AuthService authService = (AuthService) springContext.getBean("authService");
             list = authService.isSuperUser() || (
                     authService.hasActions(resourceListAction) &&
                             authService.isAllowView());

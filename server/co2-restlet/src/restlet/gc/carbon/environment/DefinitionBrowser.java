@@ -34,6 +34,7 @@ import gc.carbon.domain.data.ItemValueDefinition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -42,8 +43,6 @@ import java.util.List;
 @Component
 @Scope("prototype")
 public class DefinitionBrowser extends BaseBrowser {
-
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private EnvironmentService environmentService;
@@ -54,25 +53,45 @@ public class DefinitionBrowser extends BaseBrowser {
     @Autowired
     private DefinitionServiceDAO definitionServiceDAO;
 
+    @Autowired
+    @Qualifier("environmentActions")
+    private ResourceActions environmentActions;
+
+    @Autowired
+    @Qualifier("siteActions")
+    private ResourceActions siteActions;
+
+    @Autowired
+    @Qualifier("valueDefinitionActions")
+    private ResourceActions valueDefinitionActions;
+
+    @Autowired
+    @Qualifier("algorithmActions")
+    private ResourceActions algorithmActions;
+
+    @Autowired
+    @Qualifier("itemDefinitionActions")
+    private ResourceActions itemDefinitionActions;
+
+    @Autowired
+    @Qualifier("itemValueDefinitionActions")
+    private ResourceActions itemValueDefinitionActions;
+
     // Environments
     private String environmentUid = null;
     private Environment environment = null;
-    private ResourceActions environmentActions = new ResourceActions("environment");
 
     // Environment Sites
     private String siteUid = null;
     private Site site = null;
-    private ResourceActions siteActions = new ResourceActions("site");
 
     // ItemDefinitions
     private String valueDefinitionUid = null;
     private ValueDefinition valueDefinition = null;
-    private ResourceActions valueDefinitionActions = new ResourceActions("valueDefinition");
 
     // Algorithms
     private String algorithmUid = null;
     private Algorithm algorithm = null;
-    private ResourceActions algorithmActions = new ResourceActions("algorithm");
 
     // Algorithm Contexts
     private String algorithmContextUid = null;
@@ -81,15 +100,39 @@ public class DefinitionBrowser extends BaseBrowser {
     // ItemDefinitions
     private String itemDefinitionUid = null;
     private ItemDefinition itemDefinition = null;
-    private ResourceActions itemDefinitionActions = new ResourceActions("itemDefinition");
 
     // ItemValueDefinitions
     private String itemValueDefinitionUid = null;
     private ItemValueDefinition itemValueDefinition = null;
-    private ResourceActions itemValueDefinitionActions = new ResourceActions("itemValueDefinition");
 
     public DefinitionBrowser() {
         super();
+    }
+
+    // Actions
+
+    public ResourceActions getEnvironmentActions() {
+        return environmentActions;
+    }
+
+    public ResourceActions getSiteActions() {
+        return siteActions;
+    }
+
+    public ResourceActions getValueDefinitionActions() {
+        return valueDefinitionActions;
+    }
+
+    public ResourceActions getAlgorithmActions() {
+        return algorithmActions;
+    }
+
+    public ResourceActions getItemDefinitionActions() {
+        return itemDefinitionActions;
+    }
+
+    public ResourceActions getItemValueDefinitionActions() {
+        return itemValueDefinitionActions;
     }
 
     // Environments
@@ -111,10 +154,6 @@ public class DefinitionBrowser extends BaseBrowser {
         return environment;
     }
 
-    public ResourceActions getEnvironmentActions() {
-        return environmentActions;
-    }
-
     // Environment Sites
 
     public String getSiteUid() {
@@ -132,10 +171,6 @@ public class DefinitionBrowser extends BaseBrowser {
             }
         }
         return site;
-    }
-
-    public ResourceActions getSiteActions() {
-        return siteActions;
     }
 
     // ValueDefinitions
@@ -157,10 +192,6 @@ public class DefinitionBrowser extends BaseBrowser {
         return valueDefinition;
     }
 
-    public ResourceActions getValueDefinitionActions() {
-        return valueDefinitionActions;
-    }
-
     // Algorithms
 
     public String getAlgorithmUid() {
@@ -178,7 +209,6 @@ public class DefinitionBrowser extends BaseBrowser {
     public void setAlgorithmContextUid(String algorithmContextId) {
         this.algorithmContextUid = algorithmContextId;
     }
-
 
     public Algorithm getAlgorithm() {
         if (algorithm == null) {
@@ -202,10 +232,6 @@ public class DefinitionBrowser extends BaseBrowser {
         return definitionServiceDAO.getAlgorithmContexts(getEnvironment());
     }
 
-    public ResourceActions getAlgorithmActions() {
-        return algorithmActions;
-    }
-
     // ItemDefinitions
 
     public String getItemDefinitionUid() {
@@ -225,10 +251,6 @@ public class DefinitionBrowser extends BaseBrowser {
         return itemDefinition;
     }
 
-    public ResourceActions getItemDefinitionActions() {
-        return itemDefinitionActions;
-    }
-
     // ItemValueDefinitions
 
     public String getItemValueDefinitionUid() {
@@ -246,9 +268,5 @@ public class DefinitionBrowser extends BaseBrowser {
             }
         }
         return itemValueDefinition;
-    }
-
-    public ResourceActions getItemValueDefinitionActions() {
-        return itemValueDefinitionActions;
     }
 }

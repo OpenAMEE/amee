@@ -20,12 +20,11 @@
 package gc.carbon.profile;
 
 import gc.carbon.ResourceBuilder;
-import gc.carbon.profile.acceptor.ProfileAcceptor;
+import gc.carbon.ResourceBuilderFactory;
 import gc.carbon.domain.ObjectType;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.acceptor.*;
-import gc.carbon.ResourceBuilderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -116,7 +115,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     @Override
     public void handleGet() {
         log.debug("handleGet()");
-        if (profileBrowser.getEnvironmentActions().isAllowView()) {
+        if (profileBrowser.getProfileCategoryActions().isAllowView()) {
             if (!validateParameters()) {
                 return;
             }

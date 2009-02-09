@@ -23,19 +23,21 @@ import com.jellymold.kiwi.ResourceActions;
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.BaseBrowser;
 import gc.carbon.data.DataService;
+import gc.carbon.domain.CompoundUnit;
+import gc.carbon.domain.PerUnit;
+import gc.carbon.domain.Unit;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileDate;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.Unit;
-import gc.carbon.domain.PerUnit;
-import gc.carbon.domain.CompoundUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
 import java.util.Date;
 
 @Component("profileBrowser")
@@ -50,31 +52,43 @@ public class ProfileBrowser extends BaseBrowser {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    @Qualifier("profileActions")
+    private ResourceActions profileActions;
+
+    @Autowired
+    @Qualifier("profileCategoryActions")
+    private ResourceActions profileCategoryActions;
+
+    @Autowired
+    @Qualifier("profileItemActions")
+    private ResourceActions profileItemActions;
+
+    @Autowired
+    @Qualifier("profileItemValueActions")
+    private ResourceActions profileItemValueActions;
+
     // Profiles
     private Profile profile;
-    private ResourceActions profileActions = new ResourceActions("profile");
 
     // ProfileCategories
     private DataCategory dataCategory = null;
     private String dataCategoryUid = null;
-    private ResourceActions dataCategoryActions = new ResourceActions("profileCategory");
 
     // ProfileItems
     private ProfileItem profileItem = null;
     private String profileItemUid = null;
-    private ResourceActions profileItemActions = new ResourceActions("profileItem");
 
     // ProfileItemValues
     private ItemValue profileItemValue = null;
     private String profileItemValueUid = null;
-    private ResourceActions profileItemValueActions = new ResourceActions("profileItemValue");
 
     // ProfileDate (API v1)
     private Date profileDate = new ProfileDate();
 
     // Return Unit
     private Unit returnUnit = ProfileItem.INTERNAL_RETURN_UNIT;
-    
+
     // Filters
     private String selectBy;
     private String mode;
@@ -93,16 +107,32 @@ public class ProfileBrowser extends BaseBrowser {
         }
     }
 
-    // Profiles
-    public Profile getProfile() {
-        return profile;
-    }
+    // Actions
 
     public ResourceActions getProfileActions() {
         return profileActions;
     }
 
+    public ResourceActions getProfileCategoryActions() {
+        return profileCategoryActions;
+    }
+
+    public ResourceActions getProfileItemActions() {
+        return profileItemActions;
+    }
+
+    public ResourceActions getProfileItemValueActions() {
+        return profileItemValueActions;
+    }
+
+    // Profiles
+
+    public Profile getProfile() {
+        return profile;
+    }
+
     // ProfileCategories
+
     public String getDataCategoryUid() {
         return dataCategoryUid;
     }
@@ -120,11 +150,8 @@ public class ProfileBrowser extends BaseBrowser {
         return dataCategory;
     }
 
-    public ResourceActions getEnvironmentActions() {
-        return dataCategoryActions;
-    }
-
     // ProfileItems
+
     public String getProfileItemUid() {
         return profileItemUid;
     }
@@ -142,11 +169,8 @@ public class ProfileBrowser extends BaseBrowser {
         return profileItem;
     }
 
-    public ResourceActions getProfileItemActions() {
-        return profileItemActions;
-    }
-
     // ProfileItemValues
+    
     public String getProfileItemValueUid() {
         return profileItemValueUid;
     }
@@ -164,14 +188,9 @@ public class ProfileBrowser extends BaseBrowser {
         return profileItemValue;
     }
 
-    public ResourceActions getProfileItemValueActions() {
-        return profileItemValueActions;
-    }
-
     public void setProfileDate(String profileDate) {
         this.profileDate = new ProfileDate(profileDate);
     }
-
 
     public Date getProfileDate() {
         return profileDate;

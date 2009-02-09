@@ -49,7 +49,7 @@ public class SiteFilter extends Filter implements ApplicationContextAware {
                 // siteAppUid is used by SiteAppResource 
                 request.getAttributes().put("siteAppUid", siteApp.getUid());
                 // globally useful values
-                ThreadBeanHolder.set("springContext", applicationContext); // used in ResourceActions and BaseResource
+                ThreadBeanHolder.set("springContext", applicationContext); // used in BaseResource
                 ThreadBeanHolder.set("environment", site.getEnvironment());
                 // set details about the SiteApp & App being visited
                 ThreadBeanHolder.set("site", site);

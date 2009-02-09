@@ -132,7 +132,6 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         return environment;
     }
 
-
     //TODO - Implementing here so that subclasses are not required to. Admin client templates will be phased out in time.
     public String getTemplatePath() {
         return null;

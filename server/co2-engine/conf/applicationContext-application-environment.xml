@@ -45,6 +45,8 @@
         </property>
     </bean>
 
+    <!-- Environments -->
+
     <bean id="environmentsRouter" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
             <map>
@@ -89,9 +91,18 @@
                 <entry key="/roles">
                     <ref local="rolesRouter"/>
                 </entry>
+                <entry key="/tasks">
+                    <ref local="tasksRouter"/>
+                </entry>
             </map>
         </property>
     </bean>
+
+    <bean id="environmentActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="environment"/>
+    </bean>
+
+    <!-- ValueDefinitions -->
 
     <bean id="valueDefinitionsRouter" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
@@ -109,6 +120,12 @@
             </map>
         </property>
     </bean>
+
+    <bean id="valueDefinitionActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="valueDefinition"/>
+    </bean>
+
+    <!-- Algorithms -->
 
     <bean id="itemDefinitionsRouter" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
@@ -147,6 +164,20 @@
         </property>
     </bean>
 
+    <bean id="itemDefinitionActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="itemDefinition"/>
+    </bean>
+
+    <bean id="algorithmActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="algorithm"/>
+    </bean>
+
+    <bean id="itemValueDefinitionActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="itemValueDefinition"/>
+    </bean>
+
+    <!-- AlgorithmContexts -->
+
     <bean id="algorithmContextsRouter" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
             <map>
@@ -163,6 +194,8 @@
             </map>
         </property>
     </bean>
+
+    <!-- Sites -->
 
     <bean id="sitesRouter" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
@@ -187,14 +220,19 @@
                         <lookup-method name="createResource" bean="siteAppResource"/>
                     </bean>
                 </entry>
-                <entry key="/{siteUid}">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="siteResource"/>
-                    </bean>
-                </entry>
             </map>
         </property>
     </bean>
+
+    <bean id="siteActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="site"/>
+    </bean>
+
+    <bean id="siteAppActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="siteApp"/>
+    </bean>
+
+    <!-- Users -->
 
     <bean id="usersRouter" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
@@ -238,6 +276,12 @@
         </property>
     </bean>
 
+    <bean id="userActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="user"/>
+    </bean>
+
+    <!-- Groups -->
+
     <bean id="groupsRouter" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
             <map>
@@ -259,6 +303,12 @@
             </map>
         </property>
     </bean>
+
+    <bean id="groupActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="group"/>
+    </bean>
+
+    <!-- Roles -->
 
     <bean id="rolesRouter" class="org.restlet.ext.spring.SpringRouter">
         <property name="attachments">
@@ -285,6 +335,33 @@
                 </entry>
             </map>
         </property>
+    </bean>
+
+    <bean id="roleActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="role"/>
+    </bean>
+
+    <!-- Tasks -->
+
+    <bean id="tasksRouter" class="org.restlet.ext.spring.SpringRouter">
+        <property name="attachments">
+            <map>
+                <entry key="">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="tasksResource"/>
+                    </bean>
+                </entry>
+                <entry key="/{taskUid}">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="taskResource"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="scheduledTaskActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="scheduledTask"/>
     </bean>
 
 </beans>

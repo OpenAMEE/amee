@@ -7,6 +7,7 @@ import com.jellymold.utils.BaseBrowser;
 import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @Component
 @Scope("prototype")
@@ -16,15 +17,20 @@ public class AppBrowser extends BaseBrowser {
     AppService appService;
 
     // Apps
+
     private String appUid = null;
     private App app = null;
 
     // Actions
+
     private String actionUid = null;
     private Action action = null;
 
     // ResourceActions
-    private ResourceActions appActions = new ResourceActions(KiwiAppConstants.ACTION_APP_PREFIX);
+
+    @Autowired
+    @Qualifier("appActions")
+    private ResourceActions appActions;
 
     // Apps
 

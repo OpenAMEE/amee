@@ -19,29 +19,24 @@
  */
 package gc.carbon.data;
 
+import com.jellymold.kiwi.ResourceActions;
+import com.jellymold.kiwi.environment.EnvironmentService;
 import gc.carbon.BaseBrowser;
 import gc.carbon.definition.DefinitionServiceDAO;
-import gc.carbon.domain.data.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.DataItem;
+import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.ItemValue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import com.jellymold.kiwi.auth.AuthService;
-import com.jellymold.kiwi.ResourceActions;
-import com.jellymold.kiwi.environment.EnvironmentService;
-
 @Component("dataBrowser")
 @Scope("prototype")
 public class DataBrowser extends BaseBrowser {
-
-    private final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    private AuthService authService;
 
     @Autowired
     private DefinitionServiceDAO definitionServiceDAO;
@@ -49,15 +44,21 @@ public class DataBrowser extends BaseBrowser {
     @Autowired
     protected DataServiceDAO dataServiceDAO;
 
+    @Autowired
+    @Qualifier("dataCategoryActions")
+    private ResourceActions dataCategoryActions;
+
+    @Autowired
+    @Qualifier("dataItemActions")
+    private ResourceActions dataItemActions;
+
     // DataCategories
     private DataCategory dataCategory = null;
     private String dataCategoryUid = null;
-    private ResourceActions dataCategoryActions = new ResourceActions("dataCategory");
 
     // DataItems
     private DataItem dataItem = null;
     private String dataItemUid = null;
-    private ResourceActions dataItemActions = new ResourceActions("dataItem");
 
     // ItemValues
     private String itemValueUid = null;
@@ -80,6 +81,16 @@ public class DataBrowser extends BaseBrowser {
         }
     }
 
+    // Actions
+
+    public ResourceActions getDataCategoryActions() {
+        return dataCategoryActions;
+    }
+
+    public ResourceActions getDataItemActions() {
+        return dataItemActions;
+    }
+
     // DataCategories
 
     public String getDataCategoryUid() {
@@ -100,11 +111,7 @@ public class DataBrowser extends BaseBrowser {
     }
 
     public void setDataCategory(DataCategory dataCategory) {
-        this.dataCategory = dataCategory;    
-    }
-
-    public ResourceActions getDataCategoryActions() {
-        return dataCategoryActions;
+        this.dataCategory = dataCategory;
     }
 
     // DataItems
@@ -124,10 +131,6 @@ public class DataBrowser extends BaseBrowser {
             }
         }
         return dataItem;
-    }
-
-    public ResourceActions getDataItemActions() {
-        return dataItemActions;
     }
 
     // ItemValues

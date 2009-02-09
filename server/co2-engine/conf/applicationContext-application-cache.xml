@@ -62,4 +62,8 @@
         </property>
     </bean>
 
+    <bean id="cacheActions" class="com.jellymold.kiwi.ResourceActions">
+        <constructor-arg index="0" value="cache"/>
+    </bean>
+
 </beans>
