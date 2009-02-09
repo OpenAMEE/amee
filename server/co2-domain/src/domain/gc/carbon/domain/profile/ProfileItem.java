@@ -9,12 +9,12 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
-import javax.measure.unit.SI;
 import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import javax.persistence.*;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.math.MathContext;
+import java.math.RoundingMode;
 
 /**
  * This file is part of AMEE.
@@ -44,7 +44,7 @@ public class ProfileItem extends Item {
     public final static int PRECISION = 18;
     public final static int SCALE = 3;
     public final static RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
-    public final static BigDecimal ZERO = BigDecimal.valueOf(0,SCALE);
+    public final static BigDecimal ZERO = BigDecimal.valueOf(0, SCALE);
     public static final MathContext CONTEXT = new MathContext(ProfileItem.PRECISION, ProfileItem.ROUNDING_MODE);
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
@@ -66,7 +66,7 @@ public class ProfileItem extends Item {
 
     public static final Unit INTERNAL_AMOUNT_UNIT = new Unit(SI.KILOGRAM);
     public static final PerUnit INTERNAL_AMOUNT_PERUNIT = new PerUnit(NonSI.YEAR);
-    public static final Unit INTERNAL_RETURN_UNIT = CompoundUnit.valueOf(INTERNAL_AMOUNT_UNIT,INTERNAL_AMOUNT_PERUNIT);
+    public static final Unit INTERNAL_RETURN_UNIT = CompoundUnit.valueOf(INTERNAL_AMOUNT_UNIT, INTERNAL_AMOUNT_PERUNIT);
 
     public ProfileItem() {
         super();
@@ -87,7 +87,7 @@ public class ProfileItem extends Item {
     public void setBuilder(Builder builder) {
         this.builder = builder;
     }
-                    
+
     public String toString() {
         return "ProfileItem_" + getUid();
     }
@@ -139,8 +139,8 @@ public class ProfileItem extends Item {
         }
     }
 
-    public boolean isEnd() {      
-        return (endDate !=null) && (startDate.compareTo(endDate) == 0);
+    public boolean isEnd() {
+        return (endDate != null) && (startDate.compareTo(endDate) == 0);
     }
 
     public BigDecimal getAmount() {
@@ -199,5 +199,4 @@ public class ProfileItem extends Item {
     public ObjectType getObjectType() {
         return ObjectType.PI;
     }
-
 }
