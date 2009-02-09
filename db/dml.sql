@@ -24,15 +24,6 @@ UPDATE ITEM SET AMOUNT = NULL WHERE TYPE='DI';
 # ALGORITHM
 UPDATE ALGORITHM set TYPE='AL';
 
-# TARGET
-DELETE FROM TARGET WHERE TARGET='skinRenderResource';
-INSERT INTO TARGET
-(UID, NAME, DESCRIPTION, URI_PATTERN, TARGET, DEFAULT_TARGET, ENABLED, CREATED, MODIFIED, APP_ID, TYPE)
-VALUES ('F613C476EADD', 'Algorithm Contexts Resource', '', '/{environmentUid}/algorithmContexts',
-        'algorithmContextsResource', b'00000000', b'00000001', SYSDATE(), SYSDATE(), '4', '0'),
-       ('21F188A4937F', 'Algorithm Context Resource', '', '/{environmentUid}/algorithmContexts/{algorithmContentUid}',
-        'algorithmContextResource', b'00000000', b'00000001', SYSDATE(), SYSDATE(), '4', '0');
-
 # API_VERSION
 INSERT INTO API_VERSION (ID, CREATED, MODIFIED, UID, VERSION)
 VALUES	('1', SYSDATE(), SYSDATE(), '655B1AD17733', '1.0'),
@@ -45,9 +36,5 @@ UPDATE USER SET NICK_NAME = '';
 UPDATE USER SET STATUS = 0;
 UPDATE USER SET USER_TYPE = 0;
 UPDATE USER SET USER_TYPE = 3 WHERE USERNAME = 'root';
-
-# SKINS
-UPDATE SITE_APP SET SKIN_PATH = 'client-default' WHERE SKIN_PATH = 'default.client.skin';
-UPDATE SITE_APP SET SKIN_PATH = 'admin-default' WHERE SKIN_PATH = 'default.admin.skin';
 
 COMMIT;

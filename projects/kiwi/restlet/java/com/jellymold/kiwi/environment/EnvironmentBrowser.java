@@ -32,10 +32,6 @@ public class EnvironmentBrowser extends BaseBrowser {
     private String siteUid = null;
     private Site site = null;
 
-    // SiteAlaises
-    private String siteAliasUid = null;
-    private SiteAlias siteAlias = null;
-
     // SiteApp
     private String siteAppUid = null;
     private SiteApp siteApp = null;
@@ -67,7 +63,6 @@ public class EnvironmentBrowser extends BaseBrowser {
     // ResourceActions
     private ResourceActions environmentActions = new ResourceActions(EnvironmentConstants.ACTION_ENVIRONMENT_PREFIX);
     private ResourceActions siteActions = new ResourceActions(EnvironmentConstants.ACTION_SITE_PREFIX);
-    private ResourceActions siteAliasActions = new ResourceActions(EnvironmentConstants.ACTION_SITE_ALIAS_PREFIX);
     private ResourceActions siteAppActions = new ResourceActions(EnvironmentConstants.ACTION_SITE_APP_PREFIX);
     private ResourceActions groupActions = new ResourceActions(EnvironmentConstants.ACTION_GROUP_PREFIX);
     private ResourceActions roleActions = new ResourceActions(EnvironmentConstants.ACTION_ROLE_PREFIX);
@@ -107,23 +102,6 @@ public class EnvironmentBrowser extends BaseBrowser {
             site = siteService.getSiteByUid(environment, siteUid);
         }
         return site;
-    }
-
-    // SiteAliass
-
-    public String getSiteAliasUid() {
-        return siteAliasUid;
-    }
-
-    public void setSiteAliasUid(String siteAliasUid) {
-        this.siteAliasUid = siteAliasUid;
-    }
-
-    public SiteAlias getSiteAlias() {
-        if ((siteAlias == null) && (getSite() != null) && (siteAliasUid != null)) {
-            siteAlias = siteService.getSiteAliasByUid(site, siteAliasUid);
-        }
-        return siteAlias;
     }
 
     // SiteApps
@@ -258,10 +236,6 @@ public class EnvironmentBrowser extends BaseBrowser {
 
     public ResourceActions getSiteActions() {
         return siteActions;
-    }
-
-    public ResourceActions getSiteAliasActions() {
-        return siteAliasActions;
     }
 
     public ResourceActions getSiteAppActions() {

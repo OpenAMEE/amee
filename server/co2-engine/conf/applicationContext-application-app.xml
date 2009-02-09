@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
@@ -10,6 +10,7 @@
         <property name="root" ref="appsRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
         <property name="connectorService" ref="transactionConnectorService"/>
+        <property name="name" value="App Administration"/>
     </bean>
 
     <bean id="appsRoot" class="org.restlet.ext.spring.SpringRouter">
@@ -20,11 +21,9 @@
                         <property name="next">
                             <bean class="org.restlet.ext.seam.SpringFilter">
                                 <constructor-arg index="0" ref="appsApplication"/>
-                                <constructor-arg index="1" ref="transactionController"/>
                                 <property name="next">
                                     <bean class="com.jellymold.kiwi.SiteFilter">
                                         <constructor-arg index="0" ref="appsApplication"/>
-                                        <constructor-arg index="1" value="App Administration"/>
                                         <property name="next">
                                             <bean class="com.jellymold.kiwi.auth.BasicAuthFilter">
                                                 <constructor-arg index="0" ref="appsApplication"/>

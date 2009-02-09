@@ -1,14 +1,11 @@
 package gc.engine;
 
-import org.restlet.*;
-import org.restlet.ext.seam.TransactionController;
+import org.restlet.Context;
 import org.restlet.ext.jaxrs.JaxRsApplication;
-import org.springframework.context.ApplicationContext;
 
+// TODO: This needs to be configured as a Spring bean somewhere
 public class JaxRsEngineApplication extends JaxRsApplication {
 
-    private ApplicationContext springContext;
-    private TransactionController transactionController;
     private String filterNames = "";
 
     public JaxRsEngineApplication() {
@@ -17,8 +14,6 @@ public class JaxRsEngineApplication extends JaxRsApplication {
 
     public JaxRsEngineApplication(Context parentContext) {
         super(parentContext.createChildContext());
-        this.springContext = (ApplicationContext) parentContext.getAttributes().get("springContext");
-        this.transactionController = (TransactionController) parentContext.getAttributes().get("transactionController");
     }
 
     public String getFilterNames() {
@@ -30,13 +25,5 @@ public class JaxRsEngineApplication extends JaxRsApplication {
             filterNames = "";
         }
         this.filterNames = filterNames;
-    }
-
-    public ApplicationContext getSpringContext() {
-        return springContext;
-    }
-
-    public TransactionController getTransactionController() {
-        return transactionController;
     }
 }

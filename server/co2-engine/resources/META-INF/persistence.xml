@@ -10,7 +10,6 @@
         <class>com.jellymold.kiwi.Role</class>
         <class>com.jellymold.kiwi.Site</class>
         <class>com.jellymold.kiwi.ScheduledTask</class>
-        <class>com.jellymold.kiwi.SiteAlias</class>
         <class>com.jellymold.kiwi.SiteApp</class>
         <class>com.jellymold.kiwi.User</class>
         <class>gc.carbon.APIVersion</class>

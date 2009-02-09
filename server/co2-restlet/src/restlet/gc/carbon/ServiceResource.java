@@ -25,6 +25,7 @@ import org.apache.abdera.Abdera;
 import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.restlet.Context;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
@@ -56,6 +57,9 @@ public class ServiceResource extends AMEEResource {
 
     public static AtomFeed ATOM_FEED = AtomFeed.getInstance();
 
+    @Autowired
+    private PathItemService pathItemService;
+
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -80,8 +84,6 @@ public class ServiceResource extends AMEEResource {
     @Override
     public org.apache.abdera.model.Element getAtomElement() {
 
-        ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
-        PathItemService pathItemService = (PathItemService) springContext.getBean("pathItemService");
         PathItemGroup pathItemGroup = pathItemService.getProfilePathItemGroup();
 
         final Service service = ATOM_FEED.newService();

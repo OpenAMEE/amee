@@ -10,9 +10,6 @@ public class EnvironmentConstants {
     public final static String VIEW_SITES = "sites/sites.ftl";
     public final static String VIEW_SITE = "sites/site.ftl";
 
-    public final static String VIEW_SITE_ALIASES = "sites/siteAliases.ftl";
-    public final static String VIEW_SITE_ALIAS = "sites/siteAlias.ftl";
-
     public final static String VIEW_SITE_APPS = "sites/siteApps.ftl";
     public final static String VIEW_SITE_APP = "sites/siteApp.ftl";
 

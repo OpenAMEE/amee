@@ -51,7 +51,6 @@ import java.util.List;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-@Component("AMEEResource")
 public class AMEEResource extends BaseResource implements BeanFactoryAware {
 
     protected BeanFactory beanFactory;

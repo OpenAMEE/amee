@@ -38,6 +38,9 @@ import com.jellymold.kiwi.User;
  */
 public class BasicAuthFilter extends Guard {
 
+    @Autowired
+    private AuthService authService;
+
     public BasicAuthFilter(Application application) {
         super(application.getContext(), ChallengeScheme.HTTP_BASIC, "AMEE");
     }
@@ -57,10 +60,6 @@ public class BasicAuthFilter extends Guard {
         User user = new User();
         user.setUsername(identifer);
         user.setPasswordInClear(new String(secret));
-
-        ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
-        AuthService authService = (AuthService) springContext.getBean("authService");
         return authService.authenticate(user);
     }
-
 }

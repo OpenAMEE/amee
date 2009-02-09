@@ -325,32 +325,10 @@
         <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
     properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
-    <cache name="com.jellymold.kiwi.Site.siteAliases"
-           maxElementsInMemory="30"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
-    </cache>
 
     <!-- SiteApps -->
 
     <cache name="com.jellymold.kiwi.SiteApp"
-           maxElementsInMemory="100"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
-    </cache>
-
-    <!-- SiteAlias -->
-    <cache name="com.jellymold.kiwi.SiteAlias"
            maxElementsInMemory="100"
            eternal="false"
            overflowToDisk="false"

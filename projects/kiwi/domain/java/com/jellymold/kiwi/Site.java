@@ -37,13 +37,11 @@ import java.util.Set;
 /**
  * A Site represents a single web site consisting of a collection of Apps.
  * <p/>
- * A Site can be alaised by SiteAliases.
- * <p/>
  * Sites are joined to Apps via SiteApps.
  * <p/>
  * Sites belong to a Environment.
  * <p/>
- * When deleting a Site we need to ensure all SiteAliases and SiteApps are also removed.
+ * When deleting a Site we need to ensure all SiteApps are also removed.
  * <p/>
  * // TODO: add an enabled flag
  *
@@ -110,11 +108,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
 
     @OneToMany(mappedBy = "site", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("serverAlias")
-    private Set<SiteAlias> siteAliases = new HashSet<SiteAlias>();
-
-    @OneToMany(mappedBy = "site", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OrderBy("uriPattern")
     private Set<SiteApp> siteApps = new HashSet<SiteApp>();
 
@@ -139,15 +132,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
     public void add(SiteApp siteApp) {
         siteApp.setSite(this);
         getSiteApps().add(siteApp);
-    }
-
-    public void add(SiteAlias siteAlias) {
-        siteAlias.setSite(this);
-        getSiteAliases().add(siteAlias);
-    }
-
-    public void remove(SiteAlias siteAlias) {
-        getSiteAliases().remove(siteAlias);
     }
 
     public void remove(SiteApp siteApp) {
@@ -431,17 +415,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
         } catch (NumberFormatException e) {
             // swallow
         }
-    }
-
-    public Set<SiteAlias> getSiteAliases() {
-        return siteAliases;
-    }
-
-    public void setSiteAliases(Set<SiteAlias> siteAliases) {
-        if (siteAliases == null) {
-            siteAliases = new HashSet<SiteAlias>();
-        }
-        this.siteAliases = siteAliases;
     }
 
     public Set<SiteApp> getSiteApps() {

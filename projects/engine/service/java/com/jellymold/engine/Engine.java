@@ -1,16 +1,11 @@
 package com.jellymold.engine;
 
-import com.jellymold.kiwi.*;
-import com.jellymold.kiwi.auth.AuthFilter;
-import com.jellymold.kiwi.auth.GuestFilter;
-import com.jellymold.kiwi.auth.BasicAuthFilter;
-import com.jellymold.utils.ThreadBeanHolderFilter;
 import com.jellymold.utils.cache.CacheHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.restlet.*;
+import org.restlet.Component;
+import org.restlet.Server;
 import org.restlet.ext.seam.TransactionController;
-import org.restlet.ext.seam.SpringFilter;
 import org.restlet.service.LogService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -18,12 +13,7 @@ import org.tanukisoftware.wrapper.WrapperListener;
 import org.tanukisoftware.wrapper.WrapperManager;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Formatter;
-import java.util.logging.LogRecord;
+import java.util.logging.*;
 
 public class Engine implements WrapperListener, Serializable {
 
@@ -74,15 +64,14 @@ public class Engine implements WrapperListener, Serializable {
         // create the Restlet container and add Spring stuff
         // TODO: do this in Spring config
         container = ((Component) springContext.getBean("ameeContainer"));
-        container.getContext().getAttributes().put("springContext", springContext);
-        container.getContext().getAttributes().put("transactionController", transactionController);
-        container.setStatusService(new EngineStatusService(true));
+        container.getContext().getAttributes()
+                .put("transactionController", transactionController); // used in SpringServerConverter?
 
         // configure AJP server
         // TODO: do this in Spring config
         Server ajpServer = ((Server) springContext.getBean("ameeServer"));
-        ajpServer.getContext().getAttributes().put("springContext", springContext);
-        ajpServer.getContext().getAttributes().put("transactionController", transactionController);
+        ajpServer.getContext().getAttributes()
+                .put("transactionController", transactionController); // used in SpringServerConverter?
 
         // Configure Restlet logging to log on a single line
         LogService logService = container.getLogService();

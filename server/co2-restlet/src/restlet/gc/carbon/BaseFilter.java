@@ -34,7 +34,7 @@ public abstract class BaseFilter extends Filter {
     }
 
     public BaseFilter(Application application) {
-        super(application.getContext(), application);
+        super(application.getContext());
     }
 
     protected void removeEmptySegmentAtEnd(List<String> segments) {

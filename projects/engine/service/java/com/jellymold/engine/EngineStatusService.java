@@ -15,34 +15,35 @@ import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.resource.Representation;
 import org.restlet.resource.StringRepresentation;
 import org.restlet.service.StatusService;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+@Service
 public class EngineStatusService extends StatusService {
 
-    public EngineStatusService(boolean enabled) {
-        super(enabled);
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private FreeMarkerConfigurationService freeMarkerConfigurationService;
+
+    public EngineStatusService() {
+        super(true);
     }
 
     @Override
     public Representation getRepresentation(Status status, Request request, Response response) {
         if (MediaTypeUtils.isStandardWebBrowser(request)) {
-
-            Configuration configuration;
-            ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
-
-            FreeMarkerConfigurationService freeMarkerConfigurationService =
-                    (FreeMarkerConfigurationService) springContext.getBean("freeMarkerConfigurationService");
-            configuration = freeMarkerConfigurationService.getConfiguration();
-
-            if ((configuration != null) && (springContext != null)) {
+            Configuration configuration = freeMarkerConfigurationService.getConfiguration();
+            if (configuration != null) {
                 Map<String, Object> values = new HashMap<String, Object>();
                 values.put("status", status);
                 // values below are mirrored in BaseResource
-                values.put("authService", springContext.getBean("authService"));
+                values.put("authService", authService);
                 values.put("activeUser", AuthService.getUser());
                 values.put("activeGroup", ThreadBeanHolder.get("group"));
                 values.put("activeSite", ThreadBeanHolder.get("site"));

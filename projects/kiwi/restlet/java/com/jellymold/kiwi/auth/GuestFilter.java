@@ -7,6 +7,7 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * GuestFilter will ensure that that at least one User is signed-in. Firstly a previously authenticated 'real' User
@@ -18,7 +19,7 @@ public class GuestFilter extends BaseAuthFilter {
     private final Log log = LogFactory.getLog(getClass());
 
     public GuestFilter(Application application) {
-        super(application.getContext(), application);
+        super(application);
     }
 
     public int doHandle(Request request, Response response) {
@@ -29,14 +30,11 @@ public class GuestFilter extends BaseAuthFilter {
             accept(request, response, authToken);
         } else {
             AuthUtils.discardAuthCookie(response);
-            ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
-            AuthService authService = (AuthService) springContext.getBean("authService");
-            // TODO: Springify (deal with result)
             if (authService.doGuestSignIn() != null) {
                 // a guest user has been found, authenticated and signed in
                 result = super.doHandle(request, response);
             } else {
-                // no User available
+                // no user available
                 response.setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
                 result = STOP;
             }
