@@ -25,7 +25,12 @@
                                     <bean class="com.jellymold.kiwi.SiteFilter">
                                         <constructor-arg index="0" ref="authApplication"/>
                                         <constructor-arg index="1" value="Auth"/>
-                                        <property name="next" ref="authRouter"/>
+                                        <property name="next">
+                                            <bean class="com.jellymold.kiwi.auth.GuestFilter">
+                                                <constructor-arg index="0" ref="defaultApplication"/>
+                                                <property name="next" ref="authRouter"/>
+                                            </bean>
+                                        </property>
                                     </bean>
                                 </property>
                             </bean>

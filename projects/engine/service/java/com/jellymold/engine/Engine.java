@@ -72,21 +72,17 @@ public class Engine implements WrapperListener, Serializable {
         transactionController.end();
 
         // create the Restlet container and add Spring stuff
+        // TODO: do this in Spring config
         container = ((Component) springContext.getBean("ameeContainer"));
         container.getContext().getAttributes().put("springContext", springContext);
         container.getContext().getAttributes().put("transactionController", transactionController);
         container.setStatusService(new EngineStatusService(true));
 
         // configure AJP server
+        // TODO: do this in Spring config
         Server ajpServer = ((Server) springContext.getBean("ameeServer"));
         ajpServer.getContext().getAttributes().put("springContext", springContext);
         ajpServer.getContext().getAttributes().put("transactionController", transactionController);
-
-        // wrap VirtualHost creation
-        transactionController.begin(true);
-
-        // Spring wrapper
-        // ConnectorService connectorService = new TransactionConnectorService(transactionController);
 
         // Configure Restlet logging to log on a single line
         LogService logService = container.getLogService();
@@ -100,43 +96,6 @@ public class Engine implements WrapperListener, Serializable {
         });
         logger.setUseParentHandlers(false);
         logger.addHandler(ch);
-
-        // create a VirtualHost per Site
-//        SiteService siteService = (SiteService) springContext.getBean("siteService");
-//        List<Site> sites = siteService.getSites();
-//        for (Site site : sites) {
-//            // create VirtualHost based on Site and SiteAliases
-//            VirtualHost virtualHost = new VirtualHost(container.getContext());
-//            virtualHost.setName(site.getName().equals("") ? "Site" : site.getName());
-//            virtualHost.setHostScheme(site.getServerScheme().equals("") ? ".*" : site.getServerScheme());
-//            virtualHost.setHostPort(site.getServerPort().equals("") ? ".*" : site.getServerPort());
-//            virtualHost.setServerAddress(site.getServerAddress().equals("") ? ".*" : site.getServerPort());
-//            virtualHost.setServerPort(site.getServerPort().equals("") ? ".*" : site.getServerPort());
-//            String hostDomain = site.getServerName();
-//            for (SiteAlias siteAlias : site.getSiteAliases()) {
-//                hostDomain = hostDomain + "|" + siteAlias.getServerAlias();
-//            }
-//            virtualHost.setHostDomain(hostDomain.equals("") ? ".*" : hostDomain);
-//            container.getHosts().add(virtualHost);
-//            // add Apps to host based on Apps attached to Site
-//            for (SiteApp siteApp : site.getSiteApps()) {
-//                if (siteApp.isEnabled()) {
-//                    App app = siteApp.getApp();
-//                    // use the SiteApp UID as the EngineApplication name so that we can later retrieve the SiteApp
-//                    EngineApplication engineApplication = new EngineApplication(container.getContext(), siteApp.getUid());
-//                    engineApplication.setConnectorService(connectorService);
-//                    engineApplication.setFilterNames(app.getFilterNames());
-//                    if (!siteApp.isDefaultApp()) {
-//                        virtualHost.attach(siteApp.getUriPattern(), addFilters(engineApplication, app.getAuthenticationRequired()));
-//                    } else {
-//                        virtualHost.attachDefault(addFilters(engineApplication, app.getAuthenticationRequired()));
-//                    }
-//                }
-//            }
-//        }
-
-        // wrap VirtualHost creation
-        transactionController.end();
 
         try {
             // get things going
@@ -162,54 +121,6 @@ public class Engine implements WrapperListener, Serializable {
         // shutdown scheduled tasks
         // ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) org.jboss.seam.Component.getInstance("scheduledTaskManager", true);
         // scheduledTaskManager.onShutdown();
-    }
-
-    protected Restlet addFilters(EngineApplication engineApplication, boolean addAuthFilter) {
-        // create sequential list of Filters
-        List<Filter> filters = new ArrayList<Filter>();
-        // add standard Filters
-        filters.add(new ThreadBeanHolderFilter());
-        filters.add(new SpringFilter(engineApplication, transactionController, springContext));
-        filters.add(new SiteFilter(engineApplication, engineApplication.getName()));
-        //filters.add(new FreeMarkerConfigurationFilter(engineApplication));
-        // only add AuthFilter if required
-        if (addAuthFilter) {
-            filters.add(new BasicAuthFilter(engineApplication));
-            filters.add(new AuthFilter(engineApplication));
-        } else {
-            filters.add(new GuestFilter(engineApplication));
-        }
-        // add custom Filter if available
-        Filter customFilter = getCustomFilter(engineApplication);
-        if (customFilter != null) {
-            filters.add(customFilter);
-        }
-        // NOTE: the indexing below will only work there are enough Filters in the list
-        // set next Restlet/Filter for all Filters in sequence, except the last one
-        for (int i = 0; i < (filters.size() - 1); i++) {
-            filters.get(i).setNext(filters.get(i + 1));
-        }
-        // set next Restlet for last Filter in sequence
-        filters.get(filters.size() - 1).setNext(engineApplication);
-        // return the first Filter in sequence
-        return filters.get(0);
-    }
-
-    protected Filter getCustomFilter(EngineApplication engineApplication) {
-        Filter customFilter = null;
-        if (engineApplication.getFilterNames().length() > 0) {
-            try {
-                customFilter = (Filter) Class.forName(engineApplication.getFilterNames()).newInstance();
-                customFilter.setContext(engineApplication.getContext());
-            } catch (InstantiationException e) {
-                // swallow
-            } catch (IllegalAccessException e) {
-                // swallow
-            } catch (ClassNotFoundException e) {
-                // swallow
-            }
-        }
-        return customFilter;
     }
 
     public int stop(int exitCode) {

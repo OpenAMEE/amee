@@ -1,7 +1,6 @@
 package com.jellymold.kiwi;
 
 import com.jellymold.utils.domain.APIUtils;
-import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import com.jellymold.utils.domain.DatedObject;
 import org.hibernate.annotations.Cache;
@@ -34,10 +33,9 @@ import java.util.Set;
  * An App encapsulates a group of web resources into a logical group under a URI. Apps can be attached
  * to multiple Sites via SiteApps.
  * <p/>
- * Apps define a set of Targets, representing resources, and Actions which can be performed by Users within
- * the App.
+ * Apps define a set of Actions which can be performed by Users within the App.
  * <p/>
- * When deleting an App we need to ensure all relevant SiteApps are also removed. Actions and Targets should
+ * When deleting an App we need to ensure all relevant SiteApps are also removed. Actions should
  * be automatically removed but we need to deal with dependancies of Actions.
  *
  * @author Diggory Briercliffe
@@ -76,11 +74,6 @@ public class App implements DatedObject, Comparable {
     @OrderBy("key")
     private Set<Action> actions = new HashSet<Action>();
 
-    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("uriPattern")
-    private Set<Target> targets = new HashSet<Target>();
-
     @Column(name = "ALLOW_CLIENT_CACHE", nullable = false)
     private Boolean allowClientCache = true;
 
@@ -114,15 +107,6 @@ public class App implements DatedObject, Comparable {
 
     public void remove(Action action) {
         getActions().remove(action);
-    }
-
-    public void add(Target target) {
-        target.setApp(this);
-        getTargets().add(target);
-    }
-
-    public void remove(Target target) {
-        getTargets().remove(target);
     }
 
     public String toString() {
@@ -307,17 +291,6 @@ public class App implements DatedObject, Comparable {
             actions = new HashSet<Action>();
         }
         this.actions = actions;
-    }
-
-    public Set<Target> getTargets() {
-        return targets;
-    }
-
-    public void setTargets(Set<Target> targets) {
-        if (targets == null) {
-            targets = new HashSet<Target>();
-        }
-        this.targets = targets;
     }
 
     public Date getCreated() {

@@ -3,7 +3,6 @@ package com.jellymold.kiwi.app;
 import com.jellymold.kiwi.Action;
 import com.jellymold.kiwi.App;
 import com.jellymold.kiwi.ResourceActions;
-import com.jellymold.kiwi.Target;
 import com.jellymold.utils.BaseBrowser;
 import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Scope;
@@ -23,10 +22,6 @@ public class AppBrowser extends BaseBrowser {
     // Actions
     private String actionUid = null;
     private Action action = null;
-
-    // Targets
-    private String targetUid = null;
-    private Target target = null;
 
     // ResourceActions
     private ResourceActions appActions = new ResourceActions(KiwiAppConstants.ACTION_APP_PREFIX);
@@ -64,25 +59,6 @@ public class AppBrowser extends BaseBrowser {
         }
         return action;
     }
-
-
-    // Targets
-
-    public String getTargetUid() {
-        return targetUid;
-    }
-
-    public void setTargetUid(String targetUid) {
-        this.targetUid = targetUid;
-    }
-
-    public Target getTarget() {
-        if ((getApp() != null) && (target == null) && (targetUid != null)) {
-            target = appService.getTargetByUid(getApp(), targetUid);
-        }
-        return target;
-    }
-
 
     // ResourceActions
 

@@ -12,7 +12,6 @@
         <class>com.jellymold.kiwi.ScheduledTask</class>
         <class>com.jellymold.kiwi.SiteAlias</class>
         <class>com.jellymold.kiwi.SiteApp</class>
-        <class>com.jellymold.kiwi.Target</class>
         <class>com.jellymold.kiwi.User</class>
         <class>gc.carbon.APIVersion</class>
         <class>gc.carbon.domain.ValueDefinition</class>

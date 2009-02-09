@@ -41,7 +41,7 @@ public class EngineStatusService extends StatusService {
             if ((configuration != null) && (springContext != null)) {
                 Map<String, Object> values = new HashMap<String, Object>();
                 values.put("status", status);
-                // values below are mirrored in BaseResource and SkinRenderResource
+                // values below are mirrored in BaseResource
                 values.put("authService", springContext.getBean("authService"));
                 values.put("activeUser", AuthService.getUser());
                 values.put("activeGroup", ThreadBeanHolder.get("group"));

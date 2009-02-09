@@ -126,7 +126,7 @@ public abstract class BaseResource extends ComponentResource {
         ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("path", getRequest().getResourceRef().getPath());
-        // values below are mirrored in SkinRenderResource and EngineStatusFilter
+        // values below are mirrored in EngineStatusFilter
         values.put("authService", springContext.getBean("authService"));
         values.put("activeUser", ThreadBeanHolder.get("user"));
         values.put("activeGroup", ThreadBeanHolder.get("group"));

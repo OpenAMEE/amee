@@ -42,15 +42,15 @@
     </bean>
 
     <bean id="defaultRouter" class="org.restlet.ext.spring.SpringRouter">
-        <!--property name="attachments">
+        <property name="attachments">
             <map>
                 <entry key="">
                     <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="authResource"/>
+                        <lookup-method name="createResource" bean="homeResource"/>
                     </bean>
                 </entry>
             </map>
-        </property-->
+        </property>
     </bean>
 
 </beans>

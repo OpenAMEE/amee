@@ -292,18 +292,6 @@
     properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
-    <!-- Target -->
-    <cache name="com.jellymold.kiwi.Target"
-           maxElementsInMemory="100"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
-    </cache>
-
     <!-- User -->
     <cache name="com.jellymold.kiwi.User"
            maxElementsInMemory="100"
@@ -453,16 +441,6 @@
     properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
     <cache name="com.jellymold.kiwi.App.actions"
-           maxElementsInMemory="100"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
-    </cache>
-    <cache name="com.jellymold.kiwi.App.targets"
            maxElementsInMemory="100"
            eternal="false"
            overflowToDisk="false"
