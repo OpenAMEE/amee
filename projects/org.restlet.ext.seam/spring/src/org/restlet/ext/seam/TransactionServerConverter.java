@@ -6,11 +6,11 @@ import com.noelios.restlet.http.HttpServerCall;
 import com.noelios.restlet.http.HttpServerConverter;
 import org.restlet.Context;
 
-public class SpringServerConverter extends HttpServerConverter {
+public class TransactionServerConverter extends HttpServerConverter {
 
     private TransactionController transactionController;
 
-    public SpringServerConverter(Context context) {
+    public TransactionServerConverter(Context context) {
         super(context);
         transactionController = (TransactionController) context.getAttributes().get("transactionController");
     }

@@ -42,8 +42,6 @@ import java.util.Set;
  * Sites belong to a Environment.
  * <p/>
  * When deleting a Site we need to ensure all SiteApps are also removed.
- * <p/>
- * // TODO: add an enabled flag
  *
  * @author Diggory Briercliffe
  */

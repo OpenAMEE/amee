@@ -35,6 +35,7 @@
     <orderEntry type="library" name="amee-utils" level="project" />
     <orderEntry type="library" name="amee-utils-restlet" level="project" />
     <orderEntry type="library" name="slf4j" level="project" />
+    <orderEntry type="library" name="commons-cli" level="project" />
   </component>
 </module>
 

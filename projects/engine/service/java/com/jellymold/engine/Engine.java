@@ -1,6 +1,9 @@
 package com.jellymold.engine;
 
+import com.jellymold.kiwi.UserPasswordToMD5;
+import com.jellymold.kiwi.environment.ScheduledTaskManager;
 import com.jellymold.utils.cache.CacheHelper;
+import org.apache.commons.cli.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Component;
@@ -13,7 +16,10 @@ import org.tanukisoftware.wrapper.WrapperListener;
 import org.tanukisoftware.wrapper.WrapperManager;
 
 import java.io.Serializable;
-import java.util.logging.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 public class Engine implements WrapperListener, Serializable {
 
@@ -22,8 +28,7 @@ public class Engine implements WrapperListener, Serializable {
     protected ApplicationContext springContext;
     protected TransactionController transactionController;
     protected Component container;
-
-    protected String serverName;
+    protected String serverName = "localhost";
 
     public Engine() {
         super();
@@ -44,6 +49,8 @@ public class Engine implements WrapperListener, Serializable {
 
     public Integer start(String[] args) {
 
+        parseOptions(args);
+
         log.debug("Starting Engine...");
 
         // initialise Spring ApplicationContext
@@ -61,17 +68,17 @@ public class Engine implements WrapperListener, Serializable {
         onStart();
         transactionController.end();
 
-        // create the Restlet container and add Spring stuff
-        // TODO: do this in Spring config
+        // configure the Restlet container and add Spring stuff
+        // TODO: try and do this in Spring XML config
         container = ((Component) springContext.getBean("ameeContainer"));
         container.getContext().getAttributes()
-                .put("transactionController", transactionController); // used in SpringServerConverter?
+                .put("transactionController", transactionController); // used in TransactionServerConverter?
 
-        // configure AJP server
-        // TODO: do this in Spring config
+        // configure Restlet server (ajp, http, etc)
+        // TODO: try and do this in Spring XML config
         Server ajpServer = ((Server) springContext.getBean("ameeServer"));
         ajpServer.getContext().getAttributes()
-                .put("transactionController", transactionController); // used in SpringServerConverter?
+                .put("transactionController", transactionController); // used in TransactionServerConverter?
 
         // Configure Restlet logging to log on a single line
         LogService logService = container.getLogService();
@@ -99,17 +106,51 @@ public class Engine implements WrapperListener, Serializable {
         return null;
     }
 
+    protected void parseOptions(String[] args) {
+
+        CommandLine line = null;
+        CommandLineParser parser = new GnuParser();
+        Options options = new Options();
+
+        // define serverName option
+        Option serverNameOpt = OptionBuilder.withArgName("serverName")
+                .hasArg()
+                .withDescription("The server name")
+                .create("serverName");
+        serverNameOpt.setRequired(true);
+        options.addOption(serverNameOpt);
+
+        // parse the options
+        try {
+            line = parser.parse(options, args);
+        } catch (ParseException exp) {
+            new HelpFormatter().printHelp("java com.jellymold.engine.Engine", options);
+            System.exit(-1);
+        }
+
+        // serverName
+        if (line.hasOption(serverNameOpt.getOpt())) {
+            serverName = line.getOptionValue(serverNameOpt.getOpt());
+        }
+    }
+
     protected void onStart() {
+        // TODO: TEMPORARY CODE!!!! Remove once all databases have been migrated. Get rid of UserPasswordToMD5 too.
+        if (System.getProperty("amee.userPasswordToMD5") != null) {
+            UserPasswordToMD5 userPasswordToMD5 =
+                    (UserPasswordToMD5) springContext.getBean("userPasswordToMD5");
+            userPasswordToMD5.updateUserPasswordToMD5(false);
+        }
         // start scheduled tasks
-        // ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) org.jboss.seam.Component.getInstance("scheduledTaskManager", true);
-        // scheduledTaskManager.setServerName(serverName);
-        // scheduledTaskManager.onStart();
+        ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) springContext.getBean("scheduledTaskManager");
+        scheduledTaskManager.setServerName(serverName);
+        scheduledTaskManager.onStart();
     }
 
     protected void onShutdown() {
         // shutdown scheduled tasks
-        // ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) org.jboss.seam.Component.getInstance("scheduledTaskManager", true);
-        // scheduledTaskManager.onShutdown();
+        ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) springContext.getBean("scheduledTaskManager");
+        scheduledTaskManager.onShutdown();
     }
 
     public int stop(int exitCode) {
@@ -123,7 +164,7 @@ public class Engine implements WrapperListener, Serializable {
             CacheHelper.getInstance().getCacheManager().shutdown();
             log.debug("...Engine stopped.");
         } catch (Exception e) {
-            log.error("caught Exception: " + e);
+            log.error("Caught Exception: " + e);
         }
         return exitCode;
     }
