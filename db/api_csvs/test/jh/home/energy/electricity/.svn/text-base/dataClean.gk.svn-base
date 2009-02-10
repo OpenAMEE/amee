@@ -1,0 +1,10 @@
+#!/usr/bin/gawk  -f
+BEGIN {
+      FS=",";
+      OFS=",";
+      countryData="false";
+      usData="false";	
+      print "country","kgCO2PerKWh","kgCO2PerkWhGHGP","units","source"
+}
+$1!~/-/&&$1!~/country/&&$1!~/"/{gsub(/-/,"0.0",$3); gsub(/-/,"0.0",$4); print  $1,$3,$4,"kgCO2/kWh","WBCSD 2006"}
+$1~/-/&&$2!~/-/{gsub(/-/,"0.0",$3); gsub(/-/,"0.0",$4); print $2,$3,$4,"kgCO2/kWh","WBCSD 2006"}

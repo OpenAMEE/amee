@@ -1,0 +1,3 @@
+type,elementstotalarea,fabricheatloss,thermalbridges,totalfabricheatloss,ventilationheatloss,heatlosscoefficient,heatlossparameter,error,units,source
+dummy,0,0,0,0,0,0,0,valid,0,0
+heatlossparameter,0,0,0,0,0,0,0,valid,0,0

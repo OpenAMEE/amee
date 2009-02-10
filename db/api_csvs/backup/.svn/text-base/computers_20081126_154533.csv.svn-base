@@ -1,0 +1,5 @@
+device,rating,kWhPerYear,units,source,algorithm,default
+Personal Computers,Desktop,285.0,MTP/defra/amee 2008,value*user_numberOfDesktops*fuel_electricity,default,
+Personal Computers,Laptop,85.8,MTP/defra/amee 2008,value*user_numberOfLaptops*fuel_electricity,,
+Printer,Inkjet,23.8,MTP/defra/amee 2008,value*fuel_electricity,default,
+Printer,Laser,94.5,MTP/defra/amee 2008,value*fuel_electricity,,

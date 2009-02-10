@@ -1,0 +1,3 @@
+type,size,kW,units,Source,algorithm,default
+Smelly,18",0.888,kW,pertwang,value*user_tv_hours*fuel_electricity,
+Giant,400",0.01,kW,ajc made up,blah,

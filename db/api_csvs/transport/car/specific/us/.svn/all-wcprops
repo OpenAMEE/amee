@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/2523/internal/api_csvs/transport/car/specific/us
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/2376/internal/api_csvs/transport/car/specific/us/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/2376/internal/api_csvs/transport/car/specific/us/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/2376/internal/api_csvs/transport/car/specific/us/perMonth.js
+END
+v2Algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/2523/internal/api_csvs/transport/car/specific/us/v2Algorithm.js
+END
+perMonth.js.migrate
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/!svn/ver/2518/internal/api_csvs/transport/car/specific/us/perMonth.js.migrate
+END

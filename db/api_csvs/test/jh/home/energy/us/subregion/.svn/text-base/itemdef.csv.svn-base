@@ -1,0 +1,7 @@
+name,TestJHUSSubregion
+algFile,perMonth.js
+name,path,type,isDataItemValue,isDrillDown
+kWh Per Month,kWhPerMonth,DECIMAL,false,false
+eGRID Subregion,subregion,TEXT,true,true
+kg CO2 per kWh,kgCO2PerkWh,DECIMAL,true,false
+Source,source,TEXT,true,false

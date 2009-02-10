@@ -264,7 +264,15 @@ public class ItemValue implements PersistentObject, Pathable {
     }
 
     public PerUnit getPerUnit() {
-        return (perUnit != null) ? perUnit() : itemValueDefinition.getPerUnit();
+        if (perUnit != null) {
+            if (perUnit.equals("none")) {
+                 return PerUnit.valueOf(getItem().getDuration());
+             } else {
+                 return PerUnit.valueOf(perUnit);
+             }
+         } else {
+            return itemValueDefinition.getPerUnit();
+        }
     }
 
     public void setPerUnit(String perUnit) throws IllegalArgumentException {
@@ -284,14 +292,6 @@ public class ItemValue implements PersistentObject, Pathable {
 
     public boolean hasPerUnit() {
         return itemValueDefinition.hasPerUnits();
-    }
-
-    private PerUnit perUnit() {
-        if (perUnit.equals("none")) {
-            return PerUnit.valueOf(getItem().getDuration());
-        } else {
-            return PerUnit.valueOf(perUnit);
-        }
     }
 
     public ItemValue getCopy() {

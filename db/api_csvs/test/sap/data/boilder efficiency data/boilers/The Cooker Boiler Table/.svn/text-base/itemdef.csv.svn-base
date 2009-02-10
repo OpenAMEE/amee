@@ -1,0 +1,33 @@
+name,Sap 2005 Cooker Boiler Data,,,
+algFile,algorithm_alg.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Product index number,pin,TEXT,TRUE,TRUE
+Manufacturers reference no,mrn,TEXT,TRUE,FALSE
+Manufacturer’s name,manufacturersname,TEXT,TRUE,FALSE
+Brand name,brandname,TEXT,TRUE,FALSE
+Model name,modelname,TEXT,TRUE,FALSE
+Model qualifier,modelqualifier,TEXT,TRUE,FALSE
+Product ID,productid,TEXT,TRUE,FALSE
+First year of manufacture,firstyearofmanufacture,TEXT,TRUE,FALSE
+Final year of manufacture,finalyearofmanufacture,TEXT,TRUE,FALSE
+Fuel,fuel,TEXT,TRUE,FALSE
+Main type,maintype,TEXT,TRUE,FALSE
+Condensing,condensing,TEXT,TRUE,FALSE
+Flue type,fluetype,TEXT,TRUE,FALSE
+Fan assistance,fanassistance,TEXT,TRUE,FALSE
+Boiler power range bottom,Boilerpowerrangebottom,TEXT,TRUE,FALSE
+Boiler power range top,Boilerpowerrangetop,TEXT,TRUE,FALSE
+Case loss at full output,caselossatfulloutput,TEXT,TRUE,FALSE
+Full output power,fulloutputpower,TEXT,TRUE,FALSE
+Energy efficiency band,energyefficiencyband,TEXT,TRUE,FALSE
+Energy efficiency class,energyefficiencyclass,TEXT,TRUE,FALSE
+SAP seasonal efficiency,sapseasonalefficiency,TEXT,TRUE,FALSE
+Efficiency category,efficiencycategory,TEXT,TRUE,FALSE
+Test gas for LPG,testgasforlpg,TEXT,TRUE,FALSE
+SAP equation used,sapequationused,TEXT,TRUE,FALSE
+Ignition,ignition,TEXT,TRUE,FALSE
+Burner control,burnercontrol,TEXT,TRUE,FALSE
+Active Electrical power,activeelectricalpower,TEXT,TRUE,FALSE
+Inactive Electrical power,inactiveelectricalpower,TEXT,TRUE,FALSE
+DB entry updated,dbentryupdated,TEXT,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE

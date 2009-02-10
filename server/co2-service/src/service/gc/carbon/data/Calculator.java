@@ -53,13 +53,15 @@ public class Calculator implements BeanFactoryAware, Serializable {
     DataServiceDAO dataServiceDAO;
 
     private BeanFactory beanFactory;
+    private static final String ALGORITHM_NAME = "default";
+
 
     public BigDecimal calculate(ProfileItem profileItem) {
         log.debug("calculate() - starting calculator");
         BigDecimal amount;
         if (!profileItem.isEnd()) {
             ItemDefinition itemDefinition = profileItem.getItemDefinition();
-            Algorithm algorithm = getAlgorithm(itemDefinition, "perMonth");
+            Algorithm algorithm = getAlgorithm(itemDefinition, ALGORITHM_NAME);
 
             if (algorithm != null) {
 
@@ -108,7 +110,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
         Map<String, Object> values;
         BigDecimal amount;
         ItemDefinition itemDefinition = dataItem.getItemDefinition();
-        Algorithm algorithm = getAlgorithm(itemDefinition, "perMonth");
+        Algorithm algorithm = getAlgorithm(itemDefinition, ALGORITHM_NAME);
         if (algorithm != null) {
             // get the new amount via algorithm and values
             values = getValues(dataItem, userValueChoices);

@@ -122,6 +122,14 @@ public class ProfileCategoryPOSTTest extends BaseProfileCategoryTest {
     }
 
 
+    @Test
+    public void testPostWithPerUnitNone() throws Exception {
+        Form data = new Form();
+        data.add("distancePerUnit", "none");
+        data.add("distance", "1000");
+        assertDistanceNode(data, "km", "year");
+    }
+
     private void assertBadRequest(Form data) throws Exception {
         Status status = doPost(data).getStatus();
         assertEquals("Should be Bad Request", 400, status.getCode());

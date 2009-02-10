@@ -226,45 +226,59 @@ def migrate_ivd
 
 end
 
-def migrate_ivd2 
-  puts "Starting ITEM_VALUE_DEFINITION migrations"
+# Migrate the algorithms
+def migrate_algo
+  puts "Starting ALGORITHM migrations"
 
   begin
     conn = JavaSql::DriverManager.get_connection(@url, @user, @pswd)
-    stmt = conn.create_statement(JavaSql::ResultSet::TYPE_SCROLL_SENSITIVE, JavaSql::ResultSet::CONCUR_UPDATABLE)
-    conn.setAutoCommit(false)
+    stmt = conn.create_statement()
 
-    # Add all other ITEM_VALUE_DEFINITION_ID - API_VERSION_ID pairs into ITEM_VALUE_DEFINITION_API_VERSION
-    insert_old_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},1)"
-    insert_new_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},2)"
-    query = "SELECT ID FROM ITEM_VALUE_DEFINITION WHERE ID NOT IN (SELECT ITEM_VALUE_DEFINITION_ID FROM ITEM_VALUE_DEFINITION_API_VERSION)"
-    puts query
-    rs = stmt.executeQuery(query)
-    while(rs.next())
-      item_value_definition_id = rs.getInt("ID").to_s
-      query = insert_old_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
-      puts query
-      stmt.addBatch(query)
-      query = insert_new_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
-      puts query
-      stmt.addBatch(query)
+    # SQL Statements
+    select = "SELECT ID FROM ITEM_DEFINITION WHERE NAME='{NAME}'"
+    insert = "INSERT INTO ALGORITHM(UID, NAME, CONTENT, CREATED, MODIFIED, ENVIRONMENT_ID, ITEM_DEFINITION_ID, TYPE) " + 
+      "VALUES('{UID}','default','{CONTENT}', curdate(), curdate(), 2, {ID}, 'AL')"
+
+    file = File.new("algo.csv","r")
+    while(line = file.gets)
+      path, name = line.split(",")
+      query = select.sub(/\{NAME\}/, name.chomp!)
+      puts query 
+      rs = stmt.executeQuery(query)
+      if rs.next()
+        id = rs.getInt("ID") 
+        query = insert.sub(/\{UID\}/, JM::UidGen.getUid())
+        js = File.new(path + "/v2Algorithm.js","r")
+
+        lines = js.readlines() 
+        lines.each do |l| 
+          l.chomp! 
+          l.gsub!(/'/,"''")
+        end
+        query = query.sub(/\{CONTENT\}/,lines.join("\\n"))
+        query = query.sub(/\{ID\}/,id.to_s)
+        puts query
+        count = stmt.executeUpdate(query)
+        puts "migrate_algo - updated #{count} rows"
+        puts "\n"
+      else
+        puts "Error: ID not found"
+      end
     end
-    stmt.executeBatch()
-    conn.commit()
 
   rescue => err
     puts err
     break
   
   ensure
-    puts "Finished ITEM_VALUE_DEFINITION migrations"
+    puts "Finished ALGORITHM migrations"
     rs.close
     stmt.close
     conn.close
   end
-
+   
 end
-
+  
 # Load and run SQL commands
 def run_sql(file) 
   puts "Starting #{file} migrations"
@@ -277,3 +291,5 @@ run_sql("ddl.sql")
 migrate_ivd
 run_sql("dml.sql")
 migrate_pi
+migrate_algo
+run_sql("innodb.sql")

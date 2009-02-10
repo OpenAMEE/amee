@@ -117,6 +117,10 @@ public abstract class BaseProfileResource extends AMEEResource {
                     badRequest(APIFault.INVALID_API_PARAMETERS);
                     return false;
                 }
+                if (containsPerUnitNoneAndNoDuraton()) {
+                    badRequest(APIFault.INVALID_API_PARAMETERS);
+                    return false;
+                }
             }
         }
         return true;
@@ -162,5 +166,10 @@ public abstract class BaseProfileResource extends AMEEResource {
     private boolean containsValidFromOrEnd() {
         return getForm().getNames().contains("validFrom") ||
                 getForm().getNames().contains("end");
+    }
+
+    private boolean containsPerUnitNoneAndNoDuraton() {
+        //TODO
+        return false;
     }
 }

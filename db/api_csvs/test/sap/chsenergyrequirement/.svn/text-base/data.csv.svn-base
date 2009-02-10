@@ -1,0 +1,3 @@
+type,overallefficiency,chpunitheatfraction,boilersheatpumpheatfraction,distributionlossfactor,recoveredchpspaceheating,boilersheatpumpspaceheating,waterheatedrecoveredchp,waterheatedboilersheatpump,pumpsfanselectricity,error,units,source
+dummy,0,0,0,0,0,0,0,0,0,valid,0,0
+chsenergyrequirement,0,0,0,0,0,0,0,0,0,valid,0,0

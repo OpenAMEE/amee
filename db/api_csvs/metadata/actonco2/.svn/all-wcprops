@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/2511/internal/api_csvs/metadata/actonco2
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/2443/internal/api_csvs/metadata/actonco2/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/2443/internal/api_csvs/metadata/actonco2/perMonth.js
+END

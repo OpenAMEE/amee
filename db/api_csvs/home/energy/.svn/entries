@@ -1,0 +1,52 @@
+8
+
+dir
+2558
+http://svn.amee.com/internal/api_csvs/home/energy
+http://svn.amee.com
+
+
+
+2009-02-06T12:35:38.966956Z
+2541
+andrew
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+b293a2d2-da53-4cb3-b1bf-c591e3edcd7a
+
+uk
+dir
+
+electricity
+dir
+
+renewable
+dir
+
+insulation
+dir
+
+us
+dir
+
+electricityISO
+dir
+
+ireland
+dir
+
+quantity
+dir
+

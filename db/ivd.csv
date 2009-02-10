@@ -3,7 +3,7 @@
 "cyclesPerMonth",NULL,"month","Cycle Rate","cycleRate",NULL,"year"
 "distanceKmPerMonth","km","month","Distance","distance","km","year"
 "distanceKmPerYear","km","year","Distance","distance","km","year"
-"hoursPerMonth","hour","month","Time On","timeOn","hour","year"
+"hoursPerMonth",NULL,"month","Time On","hoursOn",NULL,"year"
 "kgPerMonth","kg","month","Mass Per Time","massPerTime","kg","year"
 "kmPerLitre","km","L","Fuel Consumption","fuelConsumption","km","L"
 "kmPerLitreOwn","km","L","Own Fuel Consumption","ownFuelConsumption","km","L"
@@ -12,7 +12,7 @@
 "kWhReadingCurrent","kW*h",NULL,"Current Reading","currentReading","kW*h",NULL
 "kWhReadingLast","kW*h",NULL,"Last Reading","lastReading","kW*h",NULL
 "litresPerMonth","L","month","Volume Per Time","volumePerTime","L","year"
-"minutesPerDay","minutes","day","Time On","timeOn","year","year"
 "numberOfDeliveries",NULL,"year","Number of deliveries","deliveries","year",NULL
 "journeysPerYear",NULL,"year","Journeys","journeys",NULL,"year"
-"usesPerDay",NULL,"day","Uses Per Time","usesPerTime",NULL,"year"
+"distanceMilesPerMonth","mi","month","distanceMilesPerMonth","distance","km","year"
+"mpgOwn","miles","gal","Fuel Consumption","ownFuelConsumption","km","L"

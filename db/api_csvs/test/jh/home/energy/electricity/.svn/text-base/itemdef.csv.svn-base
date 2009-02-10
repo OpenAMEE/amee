@@ -1,0 +1,11 @@
+name,JHTestElectricity
+algFile,perMonth.js
+name,path,type,isDataItemValue,isDrillDown
+Country,country,TEXT,true,true
+kgCO2 Per KWh,kgCO2PerKWh,DECIMAL,true,false
+kg CO2 per kWh (GHG Protocol),kgCO2PerkWhGHGP,DECIMAL,true,false
+kWh Per Month,kWhPerMonth,DECIMAL,false,false
+kWh reading current,kWhReadingCurrent,DECIMAL,false,false
+kWh reading last,kWhReadingLast,DECIMAL,false,false
+use ghg data,useGHG,BOOLEAN,false,false
+Source,source,TEXT,true,false

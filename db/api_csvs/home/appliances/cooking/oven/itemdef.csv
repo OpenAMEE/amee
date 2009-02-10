@@ -1,0 +1,8 @@
+name,Oven,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Type,type,TEXT,TRUE,TRUE
+Number of people,numberOfPeople,DECIMAL,FALSE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Base kWh per year,baseKWhPerYear,DECIMAL,TRUE,FALSE
+Per person kWh per year,perPersonKWhPerYear,DECIMAL,TRUE,FALSE

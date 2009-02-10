@@ -1,0 +1,15 @@
+type,energy,factor,emission,scaling,error,units,source
+dummy,0,0,0,0,valid,0,0
+IHSMainSpaceHeating,ihsmainspaceheating,0,0,0,0,valid,0,0
+IHSSecondarySpaceHeating,ihssecondaryspaceheating,0,0,0,0,valid,0,0
+IHSWaterHeatingEnergy,ihswaterheatingenergy,0,0,0,0,valid,0,0
+CHSBoilerEfficiency,chsboilerefficiency,0,0,0,0,valid,0,0
+CHSSpaceHeatingEnergy,chsspaceheatingenergy,0,0,0,0,valid,0,0
+CHSWaterHeatingEnergy,chswaterheatingenergy,0,0,0,0,valid,0,0
+HeatingSpaceWater,heatingspacewater,0,0,0,0,valid,0,0
+PumpFansElectricity,pumpfanselectricity,0,0,0,0,valid,0,0
+LightingEnergy,lightingenergy,0,0,0,0,valid,0,0
+DwellingProducedSavedEnergy,dwellingproducedsavedenergy,0,0,0,0,valid,0,0
+ConsumedEnergy,consumedenergy,0,0,0,0,valid,0,0
+TotalCO2,totalco2,0,0,0,0,valid,0,0
+DwellingEmissionRate,dwellingemissionrate,0,0,0,0,valid,0,0
