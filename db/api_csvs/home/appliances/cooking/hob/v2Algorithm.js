@@ -62,6 +62,6 @@ else if(type=='gas'){
 
 result=factor*(baseKWhPerYear+numberOfPeople*perPersonKWhPerYear);
 
-result/12;
+result;
 //original algorithm was just this line: kgCO2PerYear;
 

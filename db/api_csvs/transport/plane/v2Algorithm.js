@@ -19,9 +19,9 @@ function greatCircle() {
 if(long1>=-180)
   1.09*greatCircle()* kgCO2PerPassengerKm;
 else if (kgCO2PerPassengerKm != 0) {
-  (distance * kgCO2PerPassengerKm) / 12;
+  (distance * kgCO2PerPassengerKm);
 } else if (kgCO2PerPassengerJourney != 0) {
-     (journeys * kgCO2PerPassengerJourney) / 12;
+     (journeys * kgCO2PerPassengerJourney);
 } else {
   0;
 }

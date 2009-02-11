@@ -60,9 +60,9 @@ if(long1>=-180){
   }
   dist * getEFForClass(atype);
 } else if (kgCO2PerPassengerKm != 0) {
-  (distance * getEFForClass(type)) / 12;
+  (distance * getEFForClass(type));
 } else if (kgCO2PerPassengerJourney != 0) {
-     (journeys * kgCO2PerPassengerJourney) / 12;
+     (journeys * kgCO2PerPassengerJourney);
 } else {
   0;
 }

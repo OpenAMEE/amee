@@ -301,7 +301,6 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         final Feed feed = atomFeed.newFeed();
         feed.sortEntriesByUpdated(true);
-        
         feed.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
         feed.setTitle("Profile " + resource.getProfile().getDisplayName() + ", Category " + resource.getPathItem().getFullPath());
 

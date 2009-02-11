@@ -9,10 +9,10 @@
 "kmPerLitreOwn","km","L","Own Fuel Consumption","ownFuelConsumption","km","L"
 "kWhGeneratedPerMonth","kW*h","month","Generated Energy","generatedEnergy","kW*h","year"
 "kWhPerMonth","kW*h","month","Energy Consumption","energyConsumption","kW*h","year"
-"kWhReadingCurrent","kW*h",NULL,"Current Reading","currentReading","kW*h",NULL
-"kWhReadingLast","kW*h",NULL,"Last Reading","lastReading","kW*h",NULL
+"kWhReadingCurrent","kW*h","month","Current Reading","currentReading","kW*h","year"
+"kWhReadingLast","kW*h","month","Last Reading","lastReading","kW*h","year"
 "litresPerMonth","L","month","Volume Per Time","volumePerTime","L","year"
-"numberOfDeliveries",NULL,"year","Number of deliveries","deliveries","year",NULL
+"numberOfDeliveries",NULL,"year","Number of deliveries","deliveries",NULL,"year"
 "journeysPerYear",NULL,"year","Journeys","journeys",NULL,"year"
 "distanceMilesPerMonth","mi","month","distanceMilesPerMonth","distance","km","year"
 "mpgOwn","miles","gal","Fuel Consumption","ownFuelConsumption","km","L"

@@ -40,9 +40,8 @@ import java.math.MathContext;
 @DiscriminatorValue("PI")
 public class ProfileItem extends Item {
 
-    // 999,999,999,999,999,999.999
-    public final static int PRECISION = 18;
-    public final static int SCALE = 3;
+    public final static int PRECISION = 21;
+    public final static int SCALE = 6;
     public final static RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
     public final static BigDecimal ZERO = BigDecimal.valueOf(0,SCALE);
     public static final MathContext CONTEXT = new MathContext(ProfileItem.PRECISION, ProfileItem.ROUNDING_MODE);

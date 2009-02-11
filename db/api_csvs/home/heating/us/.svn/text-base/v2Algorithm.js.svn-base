@@ -29,5 +29,5 @@ else {
   if(isAirCon == "true"){
     result+=kWhPerYearAirCon*elecValue;
   }
-  result/12.;
+  result;
 }

@@ -1,1 +1,1 @@
-kgCO2PerYear / 12
+kgCO2PerYear

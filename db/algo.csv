@@ -17,12 +17,15 @@ api_csvs/home/energy/us/state,Energy US State
 api_csvs/home/appliances/entertainment/generic,Entertainment Generic
 api_csvs/home/heating,Heating
 api_csvs/home/heating/ustest,Heating US
+api_csvs/home/appliances/cooking/hob,Hob
 api_csvs/home/energy/insulation,Insulation
 api_csvs/home/appliances/kitchen/generic,Kitchen Generic
 api_csvs/home/lighting,Lighting
 api_csvs/transport/plane/generic/airports/codes,Major airport codes
 api_csvs/transport/plane/generic/airports/countries,Major airports
 api_csvs/transport/motorcycle/generic,Motorcycle Generic
+api_csvs/home/appliances/cooking/oven,Oven
+api_csvs/transport/plane/generic/passengerclass,Plane Class
 api_csvs/transport/plane,Plane Generic
 api_csvs/home/energy/uk/reductions,Reduction
 api_csvs/home/energy/renewable,Renewable
@@ -30,6 +33,9 @@ api_csvs/transport/ship,Ship Generic
 api_csvs/transport/taxi/generic,Taxi Generic
 api_csvs/home/appliances/televisions/generic,Televisions Generic
 api_csvs/transport/train/generic,Train Generic
+api_csvs/transport/metadata,Transport metadata
 api_csvs/transport/other,Transport Other
 api_csvs/home/waste,Waste
 api_csvs/home/water,Water
+api_csvs/home/water/reductions,Water Reductions
+api_csvs/home/water/usage,Water Usage
