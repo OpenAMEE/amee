@@ -9,6 +9,8 @@ import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.ResourceBuilder;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.ObjectType;
+import gc.carbon.domain.Unit;
+import gc.carbon.domain.PerUnit;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.Profile;
@@ -317,18 +319,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         for (Row row : sheet.getRows()) {
             endCell = row.findCell("end");
             if (!endCell.getValueAsBoolean()) {
-                try {
-                    amountPerMonth = row.findCell("amountPerMonth").getValueAsBigDecimal();
-                    amountPerMonth = amountPerMonth.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
-                    if (amountPerMonth.precision() > ProfileItem.PRECISION) {
-                        log.warn("precision is too big: " + amountPerMonth);
-                        // TODO: do something?
-                    }
-                } catch (Exception e) {
-                    // swallow
-                    log.warn("caught Exception: " + e);
-                    amountPerMonth = ProfileItem.ZERO;
-                }
+                amountPerMonth = row.findCell("amountPerMonth").getValueAsBigDecimal();
                 totalAmountPerMonth = totalAmountPerMonth.add(amountPerMonth);
             }
         }

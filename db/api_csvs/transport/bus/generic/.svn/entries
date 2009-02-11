@@ -1,0 +1,53 @@
+8
+
+dir
+2570
+http://svn.amee.com/internal/api_csvs/transport/bus/generic
+http://svn.amee.com
+
+
+
+2009-02-04T14:03:00.027226Z
+2523
+james.hetherington
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+b293a2d2-da53-4cb3-b1bf-c591e3edcd7a
+
+data.csv
+file
+
+
+
+
+2009-02-03T18:02:48.000000Z
+5dc09129b5e19fbde2d7ee6cf1dab426
+2008-12-03T20:32:38.594389Z
+2201
+aleks
+has-props
+
+v2Algorithm.js
+file
+
+
+
+
+2009-02-09T07:56:02.000000Z
+cdb21fcbc239c2e5396aea0d7d48f59f
+2009-02-04T14:03:00.027226Z
+2523
+james.hetherington
+

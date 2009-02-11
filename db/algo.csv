@@ -1,0 +1,41 @@
+api_csvs/transport/bus/generic,Bus Generic
+api_csvs/transport/car/bands/ireland,Car Bands
+api_csvs/transport/minibus,Car Generic
+api_csvs/transport/car/generic/electric,Car Generic Electric
+api_csvs/transport/car/specific,Car Specific
+api_csvs/transport/car/specific/uk,Car Specific UK
+api_csvs/transport/car/specific/us,Car Specific US
+api_csvs/home/appliances/computers/generic,Computers Generic
+api_csvs/home/appliances/cooking,Cooking
+api_csvs/home/energy/electricityISO,Electricity
+api_csvs/home/energy/quantity,Energy Quantity
+api_csvs/home/energy/uk/price,Energy UK Price
+api_csvs/home/energy/uk/seasonal,Energy UK Seasonal
+api_csvs/home/energy/uk/suppliers,Energy UK Suppliers
+api_csvs/home/energy/us/price,Energy US Price
+api_csvs/home/energy/us/state,Energy US State
+api_csvs/home/appliances/entertainment/generic,Entertainment Generic
+api_csvs/home/heating,Heating
+api_csvs/home/heating/ustest,Heating US
+api_csvs/home/appliances/cooking/hob,Hob
+api_csvs/home/energy/insulation,Insulation
+api_csvs/home/appliances/kitchen/generic,Kitchen Generic
+api_csvs/home/lighting,Lighting
+api_csvs/transport/plane/generic/airports/codes,Major airport codes
+api_csvs/transport/plane/generic/airports/countries,Major airports
+api_csvs/transport/motorcycle/generic,Motorcycle Generic
+api_csvs/home/appliances/cooking/oven,Oven
+api_csvs/transport/plane/generic/passengerclass,Plane Class
+api_csvs/transport/plane,Plane Generic
+api_csvs/home/energy/uk/reductions,Reduction
+api_csvs/home/energy/renewable,Renewable
+api_csvs/transport/ship,Ship Generic
+api_csvs/transport/taxi/generic,Taxi Generic
+api_csvs/home/appliances/televisions/generic,Televisions Generic
+api_csvs/transport/train/generic,Train Generic
+api_csvs/transport/metadata,Transport metadata
+api_csvs/transport/other,Transport Other
+api_csvs/home/waste,Waste
+api_csvs/home/water,Water
+api_csvs/home/water/reductions,Water Reductions
+api_csvs/home/water/usage,Water Usage

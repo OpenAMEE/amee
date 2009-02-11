@@ -53,7 +53,7 @@ public class ProfileItemFormAcceptor implements ProfileAcceptor {
         return accept(resource.getForm());
     }
 
-    //TODO - PI ProfileAcceptor is returning a collection of PIs - this reflect the ProfileAcceptor's original usage with PC. Move to seperate acceptor (done this for PIV)
+    //TODO - PI ProfileAcceptor is returning a collection of PIs - this reflects the ProfileAcceptor's original usage with PC. Move to seperate acceptor (done this for PIV)
     public List<ProfileItem> accept(Form form) {
 
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();

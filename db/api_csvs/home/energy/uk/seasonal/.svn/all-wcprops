@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/2523/internal/api_csvs/home/energy/uk/seasonal
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/2201/internal/api_csvs/home/energy/uk/seasonal/data.csv
+END
+v2Algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/2523/internal/api_csvs/home/energy/uk/seasonal/v2Algorithm.js
+END
+perMonth.js.migrate
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/2518/internal/api_csvs/home/energy/uk/seasonal/perMonth.js.migrate
+END

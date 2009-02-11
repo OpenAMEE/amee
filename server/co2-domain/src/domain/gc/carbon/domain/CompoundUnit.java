@@ -45,7 +45,8 @@ public class CompoundUnit extends Unit {
 
     public BigDecimal convert(BigDecimal decimal, CompoundUnit targetUnit) {
         DecimalMeasure dm = DecimalMeasure.valueOf(decimal, toUnit());
-        return dm.to(targetUnit.toUnit(), ProfileItem.CONTEXT).getValue();
+        BigDecimal converted = dm.to(targetUnit.toUnit(), ProfileItem.CONTEXT).getValue();
+        return converted.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
     }
 
     public javax.measure.unit.Unit toUnit() {

@@ -1,0 +1,17 @@
+name,Sap 2005 Boiler Manufacturers 2 Data,,,
+algFile,algorithm_alg.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Index,index,TEXT,TRUE,TRUE
+Current name,currentname,TEXT,TRUE,FALSE
+Secondary addressable object name,secondaryaddressableobjectname,TEXT,TRUE,FALSE
+Primary addressable object name,primaryaddressableobjectname,TEXT,TRUE,FALSE
+Designated street name,designatedstreetname,TEXT,TRUE,FALSE
+Locality name,localityname,TEXT,TRUE,FALSE
+Town name,townname,TEXT,TRUE,FALSE
+Administrative area name,administrativeareaname,TEXT,TRUE,FALSE
+Postcode,postcode,TEXT,TRUE,FALSE
+Country,country,TEXT,TRUE,FALSE
+Phone number,phonenumber,TEXT,TRUE,FALSE
+Url,url,TEXT,TRUE,FALSE
+DB entry updated,dbentryupdated,TEXT,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE

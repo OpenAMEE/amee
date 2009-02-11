@@ -1,0 +1,9 @@
+name,Train Generic
+algFile,perMonth.js
+name,path,type,isDataItemValue,isDrillDown
+Country,country,TEXT,false,false
+Distance Km Per Month,distanceKmPerMonth,DECIMAL,false,false
+kgCO2 Per Passenger Km,kgCO2PerKmPassenger,DECIMAL,true,false
+kgCO2 Per Passenger Km IE,kgCO2PerPassengerKmIE,DECIMAL,true,false
+Source,source,TEXT,true,false
+Type,type,TEXT,true,true

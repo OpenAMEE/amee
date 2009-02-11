@@ -114,7 +114,7 @@ public class ProfileCategoryFormAcceptor implements ProfileAcceptor {
             return null;
         }
 
-        // TODO - Refactor this, each version should have it's own acceptor
+        // TODO - Each APIVersion should have it's own Acceptor
         if (resource.getVersion().isVersionOne()) {
 
             profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));

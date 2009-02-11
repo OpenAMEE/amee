@@ -71,7 +71,12 @@ public class PerUnit extends Unit {
      */
     public BigDecimal convert(BigDecimal decimal, PerUnit targetPerUnit) {
         DecimalMeasure dm = DecimalMeasure.valueOf(decimal, toUnit().inverse());
-        return dm.to(targetPerUnit.toUnit().inverse(), ProfileItem.CONTEXT).getValue();
+        BigDecimal converted = dm.to(targetPerUnit.toUnit().inverse(), ProfileItem.CONTEXT).getValue();
+        return converted.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
+    }
+
+    public boolean isCompatibleWith(String unit) {
+        return "none".equals(unit) || this.unit.isCompatible(javax.measure.unit.Unit.valueOf(unit));
     }
 
     public boolean isTime() {

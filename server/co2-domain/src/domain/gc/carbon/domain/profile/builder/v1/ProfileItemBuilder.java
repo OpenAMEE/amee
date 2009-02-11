@@ -85,7 +85,7 @@ public class ProfileItemBuilder implements Builder {
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);
-        obj.put("amountPerMonth", item.getAmount());
+        obj.put("amountPerMonth", ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), PerUnit.valueOf("month")));
         obj.put("validFrom", DAY_DATE_FMT.format(item.getStartDate()));
         obj.put("end", Boolean.toString(item.isEnd()));
         obj.put("dataItem", item.getDataItem().getIdentityJSONObject());
@@ -98,15 +98,11 @@ public class ProfileItemBuilder implements Builder {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ProfileItem");
         buildElement(document, element, detailed);
-        PerUnit timePerUnit = getItemPerUnitTime();
 
         // Ensure the CO2 amount is in the expected V1 units. The algos always return CO2 amounts in kg/year.
-        if (timePerUnit == null || timePerUnit.equals(ProfileItem.INTERNAL_AMOUNT_PERUNIT)) {
-            element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
-        } else {
-            element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
-                ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), timePerUnit).toString()));
-        }
+        // V1 API always returns kg/month
+        element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
+            ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), PerUnit.valueOf("month")).toString()));
 
         element.appendChild(APIUtils.getElement(document, "ValidFrom", DAY_DATE_FMT.format(item.getStartDate())));
         element.appendChild(APIUtils.getElement(document, "End", Boolean.toString(item.isEnd())));
@@ -115,17 +111,5 @@ public class ProfileItemBuilder implements Builder {
             element.appendChild(item.getProfile().getIdentityElement(document));
         }
         return element;
-    }
-
-    // Find the PerUnit corresponding to the duration of this Item. This will be used to convert the internal CO2 amount period (Years)
-    // into the desired period.
-    // The assumption is that in V1, only one such PerUnit exists per-ItemDefinition.
-    private PerUnit getItemPerUnitTime() {
-        for (ItemValue iv : item.getItemValues()) {
-            if (iv.getItemValueDefinition().isFromProfile() && iv.hasPerUnit() && iv.getPerUnit().isTime()) {
-                return iv.getPerUnit();
-            }
-        }
-        return null;
     }
 }

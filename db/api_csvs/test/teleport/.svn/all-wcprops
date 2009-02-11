@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/!svn/ver/2392/internal/api_csvs/test/teleport
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/2391/internal/api_csvs/test/teleport/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/2391/internal/api_csvs/test/teleport/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/2392/internal/api_csvs/test/teleport/perMonth.js
+END
