@@ -3,7 +3,7 @@
 echo ${amee_host}
 amee_url="/auth/signIn?method=put"
 
-type="xml"
+type="json"
 
 curl -d next=/auth -d username=load -d password=l04d \
 	-H "Accept:application/${type}" \
