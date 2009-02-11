@@ -107,6 +107,7 @@ public abstract class BaseResource extends ComponentResource {
         return new DomRepresentation(MediaType.APPLICATION_XML, document);
     }
 
+    // TODO: Needs to be replaced by getAtomRepresentation in AMEEResource or be merged.
     protected Representation getAtomRepresentation() throws ResourceException {
         final org.apache.abdera.model.Element atomElement = getAtomElement();
         return new WriterRepresentation(MediaType.APPLICATION_ATOM_XML) {

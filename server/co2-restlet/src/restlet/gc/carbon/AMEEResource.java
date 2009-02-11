@@ -1,37 +1,34 @@
 package gc.carbon;
 
 import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.User;
 import com.jellymold.kiwi.ResourceActions;
+import com.jellymold.kiwi.User;
 import com.jellymold.kiwi.environment.EnvironmentService;
+import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.ThreadBeanHolder;
+import gc.carbon.data.DataService;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.profile.ProfileService;
-import com.jellymold.utils.BaseResource;
-import gc.carbon.data.DataService;
+import gc.carbon.profile.builder.v2.AtomFeed;
+import org.apache.xerces.dom.DocumentImpl;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.restlet.Context;
-import org.restlet.resource.Representation;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.DomRepresentation;
-import org.restlet.resource.Variant;
+import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.data.MediaType;
+import org.restlet.resource.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.apache.xerces.dom.DocumentImpl;
-import org.json.JSONObject;
-import org.json.JSONException;
 
-import java.util.Map;
-import java.util.List;
 import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * This file is part of AMEE.
@@ -73,7 +70,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         //TODO - This logic should be part of BaseResource. Move once package reorg allows this.
         // Set the default MediaType response to be atom+xml for all versions > 1.0
         if (!getVersion().isVersionOne()) {
-            super.getVariants().add(0,new Variant(MediaType.APPLICATION_ATOM_XML));
+            super.getVariants().add(0, new Variant(MediaType.APPLICATION_ATOM_XML));
         }
         setPathItem();
     }
@@ -83,13 +80,14 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         try {
             domRepresentation = new DomRepresentation(MediaType.APPLICATION_XML) {
                 Document doc = null;
+
                 public Document getDocument() throws IOException {
                     if (doc == null) {
                         doc = new DocumentImpl();
                         try {
                             Element element = doc.createElement("Resources");
                             if (!getVersion().isVersionOne()) {
-                                element.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns","http://schemas.amee.cc/2.0");
+                                element.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://schemas.amee.cc/2.0");
                             }
 
                             element.appendChild(getElement(doc));
@@ -106,6 +104,16 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
             throw new ResourceException(e);
         }
         return domRepresentation;
+    }
+
+    // TODO: Needs to replace getAtomRepresentation in BaseResource or be merged.
+    protected Representation getAtomRepresentation() throws ResourceException {
+        final org.apache.abdera.model.Element atomElement = getAtomElement();
+        return new WriterRepresentation(MediaType.APPLICATION_ATOM_XML) {
+            public void write(Writer writer) throws IOException {
+                AtomFeed.getInstance().getWriter().writeTo(atomElement, writer);
+            }
+        };
     }
 
     public int getItemsPerPage() {
@@ -125,7 +133,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     }
 
     public PathItem getPathItem() {
-        return pathItem;    
+        return pathItem;
     }
 
     public Environment getEnvironment() {

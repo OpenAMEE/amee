@@ -19,37 +19,29 @@
  */
 package gc.carbon;
 
-import org.apache.abdera.model.*;
-import org.apache.abdera.factory.Factory;
-import org.apache.abdera.Abdera;
-import org.springframework.stereotype.Component;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.ApplicationContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.restlet.Context;
-import org.restlet.resource.Representation;
-import org.restlet.resource.Variant;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.WriterRepresentation;
-import org.restlet.data.*;
-import org.joda.time.*;
-
-import gc.carbon.domain.path.PathItem;
-import gc.carbon.domain.path.PathItemGroup;
+import gc.carbon.data.OnlyActiveDataService;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
+import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.path.PathItemGroup;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
-import gc.carbon.data.OnlyActiveDataService;
 import gc.carbon.profile.builder.v2.AtomFeed;
-import com.jellymold.utils.ThreadBeanHolder;
+import org.apache.abdera.model.*;
+import org.restlet.Context;
+import org.restlet.data.*;
+import org.restlet.resource.Representation;
+import org.restlet.resource.ResourceException;
+import org.restlet.resource.Variant;
+import org.restlet.resource.WriterRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.Calendar;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 import java.util.Set;
-import java.io.Writer;
-import java.io.IOException;
 
 @Component("serviceResource")
 @Scope("prototype")
@@ -107,11 +99,11 @@ public class ServiceResource extends AMEEResource {
     }
 
     protected Representation getAtomRepresentation() {
-            return new WriterRepresentation(MediaType.APPLICATION_ATOM_SERVICE_XML) {
-                public void write(Writer writer) throws IOException {
-                    getAtomElement().writeTo(writer);
-                }
-            };
+        return new WriterRepresentation(MediaType.APPLICATION_ATOM_SERVICE_XML) {
+            public void write(Writer writer) throws IOException {
+                AtomFeed.getInstance().getWriter().writeTo(getAtomElement(), writer);
+            }
+        };
     }
 
     private void addCollections(PathItem pi, Workspace ws) {
@@ -122,7 +114,7 @@ public class ServiceResource extends AMEEResource {
         } else {
             for (PathItem pii : pi.findChildrenByType("DC")) {
                 addCollection(ws, pii, true);
-           }
+            }
         }
     }
 
