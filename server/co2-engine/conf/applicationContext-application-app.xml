@@ -72,7 +72,7 @@
         </property>
     </bean>
 
-    <bean id="appActions" class="com.jellymold.kiwi.ResourceActions">
+    <bean id="appActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="app"/>
     </bean>
 

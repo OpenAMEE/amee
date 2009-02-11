@@ -82,11 +82,11 @@
         </property>
     </bean>
 
-    <bean id="dataCategoryActions" class="com.jellymold.kiwi.ResourceActions">
+    <bean id="dataCategoryActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="dataCategory"/>
     </bean>
 
-    <bean id="dataItemActions" class="com.jellymold.kiwi.ResourceActions">
+    <bean id="dataItemActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="dataItem"/>
     </bean>
 
