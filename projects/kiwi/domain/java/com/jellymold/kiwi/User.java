@@ -42,8 +42,6 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     public final static int PASSWORD_SIZE = 40;
     public final static int PASSWORD_CLEAR_SIZE = 40;
     public final static int NAME_SIZE = 100;
-    public final static int NICK_NAME_SIZE = 100;
-    public final static int LOCATION_SIZE = 100;
     public final static int EMAIL_SIZE = 255;
 
     @Id
@@ -74,15 +72,9 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "NICK_NAME", length = NICK_NAME_SIZE, nullable = false)
-    private String nickName = "";
-
     @Column(name = "EMAIL", length = EMAIL_SIZE, nullable = false)
     @Index(name = "EMAIL_IND")
     private String email = "";
-
-    @Column(name = "LOCATION", length = LOCATION_SIZE, nullable = false)
-    private String location = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "API_VERSION_ID")
@@ -109,13 +101,11 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         setEnvironment(environment);
     }
 
-    public User(Environment environment, String username, String password, String name, String nickName, String location) {
+    public User(Environment environment, String username, String password, String name) {
         this(environment);
         setUsername(username);
         setPasswordInClear(password);
         setName(name);
-        setNickName(nickName);
-        setLocation(location);
     }
 
     public String toString() {
@@ -150,13 +140,11 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         obj.put("uid", getUid());
         obj.put("status", getStatus().getName());
         obj.put("type", getType().getName());
-        obj.put("resolvedNickName", getResolvedNickName());
-        obj.put("location", getLocation());
         obj.put("groupNames", new JSONArray(getGroupNames()));
+        obj.put("apiVersion", getApiVersion());
         if (detailed) {
             obj.put("username", getUsername());
             obj.put("name", getName());
-            obj.put("nickName", getNickName());
             obj.put("email", getEmail());
             obj.put("environment", getEnvironment().getIdentityJSONObject());
             obj.put("created", getCreated());
@@ -189,15 +177,13 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         element.setAttribute("uid", getUid());
         element.appendChild(APIUtils.getElement(document, "Status", getStatus().getName()));
         element.appendChild(APIUtils.getElement(document, "Type", getType().getName()));
-        element.appendChild(APIUtils.getElement(document, "ResolvedNickName", getResolvedNickName()));
-        element.appendChild(APIUtils.getElement(document, "Location", getLocation()));
         groups = document.createElement("GroupNames");
         for (String groupName : getGroupNames()) {
             groups.appendChild(APIUtils.getElement(document, "GroupName", groupName));
         }
         element.appendChild(groups);
+        element.appendChild(APIUtils.getElement(document, "ApiVersion", getApiVersion().toString()));
         if (detailed) {
-            element.appendChild(APIUtils.getElement(document, "NickName", getNickName()));
             element.appendChild(APIUtils.getElement(document, "Name", getName()));
             element.appendChild(APIUtils.getElement(document, "Username", getUsername()));
             element.appendChild(APIUtils.getElement(document, "Email", getEmail()));
@@ -228,9 +214,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         setUsername(element.elementText("Username"));
         setPasswordInClear(element.elementText("Password"));
         setName(element.elementText("Name"));
-        setNickName(element.elementText("NickName"));
         setEmail(element.elementText("Email"));
-        setLocation(element.elementText("Location"));
         setStatus(element.elementText("Status"));
         setType(element.elementText("Type"));
     }
@@ -362,25 +346,6 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         this.name = name.trim();
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public String getResolvedNickName() {
-        if (nickName.equals("")) {
-            return name;
-        } else {
-            return nickName;
-        }
-    }
-
-    public void setNickName(String nickName) {
-        if (nickName == null) {
-            nickName = "";
-        }
-        this.nickName = nickName.trim();
-    }
-
     public String getEmail() {
         return email;
     }
@@ -390,17 +355,6 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
             email = "";
         }
         this.email = email.trim();
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        if (location == null) {
-            location = "";
-        }
-        this.location = location.trim();
     }
 
     public String getPassword() {

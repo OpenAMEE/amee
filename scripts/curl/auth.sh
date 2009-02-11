@@ -3,7 +3,10 @@
 echo ${amee_host}
 amee_url="/auth/signIn?method=put"
 
-curl -d next=/auth -d username=admin -d password=r41n80w \
+type="xml"
+
+curl -d next=/auth -d username=load -d password=l04d \
+	-H "Accept:application/${type}" \
 	--dump-header .headers \
 	--verbose \
 	-c .cookies \
