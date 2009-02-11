@@ -32,13 +32,19 @@ import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class ProfileFilter extends BaseFilter {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private ProfileServiceDAO profileServiceDAO;
+
+    @Autowired
+    private PathItemService pathItemService;
 
     public ProfileFilter() {
         super();
@@ -69,16 +75,13 @@ public class ProfileFilter extends BaseFilter {
             String segment = segments.remove(0);
             if (!matchesReservedPaths(segment)) {
                 // look for Profile matching path
-                ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
-                ProfileServiceDAO profileServiceDAO = (ProfileServiceDAO) springContext.getBean("profileServiceDAO");
                 Profile profile = profileServiceDAO.getProfile(segment);
                 if (profile != null) {
                     // we found a Profile
-                    // make available in Seam contexts
+                    // make available in Spring contexts
                     ThreadBeanHolder.set("profile", profile);
                     ThreadBeanHolder.set("permission", profile.getPermission());
                     // look for path match
-                    PathItemService pathItemService = (PathItemService) springContext.getBean("pathItemService");
                     PathItemGroup pathItemGroup = pathItemService.getProfilePathItemGroup();
                     PathItem pathItem = pathItemGroup.findBySegments(segments);
                     if (pathItem != null) {
@@ -95,7 +98,7 @@ public class ProfileFilter extends BaseFilter {
             //TODO - Quick fix to allow /service paths
             if (!segments.isEmpty() && segments.get(0).equals("service"))
                 return CONTINUE;
-            
+
             if (path != null) {
                 // rewrite paths
                 request.getAttributes().put("previousResourceRef", reference.toString());
@@ -104,7 +107,7 @@ public class ProfileFilter extends BaseFilter {
                 reference.setPath(path);
             } else {
                 response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-                return STOP;                
+                return STOP;
             }
 
         }

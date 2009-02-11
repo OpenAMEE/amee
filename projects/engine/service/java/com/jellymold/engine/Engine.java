@@ -1,21 +1,14 @@
 package com.jellymold.engine;
 
-import com.jellymold.kiwi.*;
-import com.jellymold.kiwi.auth.AuthFilter;
-import com.jellymold.kiwi.auth.GuestFilter;
-import com.jellymold.kiwi.auth.BasicAuthFilter;
-import com.jellymold.kiwi.environment.SiteService;
-import com.jellymold.utils.ThreadBeanHolderFilter;
+import com.jellymold.kiwi.UserPasswordToMD5;
+import com.jellymold.kiwi.environment.ScheduledTaskManager;
 import com.jellymold.utils.cache.CacheHelper;
+import org.apache.commons.cli.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.restlet.*;
-import org.restlet.data.Protocol;
-import org.restlet.ext.seam.SpringConnectorService;
+import org.restlet.Component;
+import org.restlet.Server;
 import org.restlet.ext.seam.TransactionController;
-import org.restlet.ext.seam.SpringFilter;
-import org.restlet.ext.seam.SpringServerConverter;
-import org.restlet.service.ConnectorService;
 import org.restlet.service.LogService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -23,12 +16,10 @@ import org.tanukisoftware.wrapper.WrapperListener;
 import org.tanukisoftware.wrapper.WrapperManager;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 public class Engine implements WrapperListener, Serializable {
 
@@ -37,78 +28,14 @@ public class Engine implements WrapperListener, Serializable {
     protected ApplicationContext springContext;
     protected TransactionController transactionController;
     protected Component container;
-
-    protected static int AJP_PORT = 8010;
-    protected static int MAX_THREADS = 700;
-    protected static int MIN_THREADS = 200;
-    protected static int THREAD_MAX_IDLE_TIME_MS = 30000;
-    protected static int LOW_THREADS = 25;
-    protected static int LOW_RESOURCE_MAX_IDLE_TIME_MS = 2500;
-    protected static int ACCEPTOR_THREADS = 1;
-    protected static int ACCEPT_QUEUE_SIZE = 0;
-
-    private int ajpPort = AJP_PORT;
-    protected String serverName;
-    private int maxThreads = MAX_THREADS;
-    private int minThreads = MIN_THREADS;
-    private int threadMaxIdleTimeMs = THREAD_MAX_IDLE_TIME_MS;
-    private int lowThreads = LOW_THREADS;
-    private int lowResourceMaxIdleTimeMs = LOW_RESOURCE_MAX_IDLE_TIME_MS;
-    private int acceptorThreads = ACCEPTOR_THREADS;
-    private int acceptQueueSize = ACCEPT_QUEUE_SIZE;
+    protected String serverName = "localhost";
 
     public Engine() {
         super();
     }
 
-    public Engine(int ajpPort) {
+    public Engine(String serverName) {
         this();
-        this.ajpPort = ajpPort;
-    }
-
-    public Engine(
-            int ajpPort,
-            String serverName,
-            int maxThreads,
-            int minThreads,
-            int threadMaxIdleTimeMs) {
-        this(ajpPort, serverName);
-        this.maxThreads = maxThreads;
-        this.minThreads = minThreads;
-        this.threadMaxIdleTimeMs = threadMaxIdleTimeMs;
-    }
-
-    public Engine(
-            int ajpPort,
-            String serverName,
-            int maxThreads,
-            int minThreads,
-            int threadMaxIdleTimeMs,
-            int lowThreads,
-            int lowResourceMaxIdleTimeMs,
-            int acceptorThreads,
-            int acceptQueueSize) {
-        this(ajpPort, serverName, maxThreads, minThreads, threadMaxIdleTimeMs);
-        if (threadMaxIdleTimeMs > 0) {
-            this.threadMaxIdleTimeMs = threadMaxIdleTimeMs;
-        }
-        if (lowThreads > 0) {
-            this.lowThreads = lowThreads;
-        }
-        if (lowResourceMaxIdleTimeMs > 0) {
-            this.lowResourceMaxIdleTimeMs = lowResourceMaxIdleTimeMs;
-        }
-        if (acceptorThreads > -1) {
-            this.acceptorThreads = acceptorThreads;
-        }
-        if (acceptQueueSize > -1) {
-            this.acceptQueueSize = acceptQueueSize;
-        }
-    }
-
-    public Engine(int ajpPort, String serverName) {
-        this();
-        this.ajpPort = ajpPort;
         this.serverName = serverName;
     }
 
@@ -122,12 +49,15 @@ public class Engine implements WrapperListener, Serializable {
 
     public Integer start(String[] args) {
 
+        parseOptions(args);
+
         log.debug("Starting Engine...");
 
         // initialise Spring ApplicationContext
         springContext = new ClassPathXmlApplicationContext(new String[]{
                 "applicationContext.xml",
                 "applicationContext-container.xml",
+                "applicationContext-application-*.xml",
                 "applicationContext-skins.xml"});
 
         // initialise TransactionController (for controlling Spring)
@@ -138,22 +68,17 @@ public class Engine implements WrapperListener, Serializable {
         onStart();
         transactionController.end();
 
-        // create the Restlet container and add Spring stuff
+        // configure the Restlet container and add Spring stuff
+        // TODO: try and do this in Spring XML config
         container = ((Component) springContext.getBean("ameeContainer"));
-        container.getContext().getAttributes().put("springContext", springContext);
-        container.getContext().getAttributes().put("transactionController", transactionController);
-        container.setStatusService(new EngineStatusService(true));
+        container.getContext().getAttributes()
+                .put("transactionController", transactionController); // used in TransactionServerConverter?
 
-        // configure AJP server
+        // configure Restlet server (ajp, http, etc)
+        // TODO: try and do this in Spring XML config
         Server ajpServer = ((Server) springContext.getBean("ameeServer"));
-        ajpServer.getContext().getAttributes().put("springContext", springContext);
-        ajpServer.getContext().getAttributes().put("transactionController", transactionController);
-
-        // wrap VirtualHost creation
-        transactionController.begin(true);
-
-        // Spring wrapper
-        ConnectorService connectorService = new SpringConnectorService(transactionController);
+        ajpServer.getContext().getAttributes()
+                .put("transactionController", transactionController); // used in TransactionServerConverter?
 
         // Configure Restlet logging to log on a single line
         LogService logService = container.getLogService();
@@ -168,43 +93,6 @@ public class Engine implements WrapperListener, Serializable {
         logger.setUseParentHandlers(false);
         logger.addHandler(ch);
 
-        // create a VirtualHost per Site
-        SiteService siteService = (SiteService) springContext.getBean("siteService");
-        List<Site> sites = siteService.getSites();
-        for (Site site : sites) {
-            // create VirtualHost based on Site and SiteAliases
-            VirtualHost virtualHost = new VirtualHost(container.getContext());
-            virtualHost.setName(site.getName().equals("") ? "Site" : site.getName());
-            virtualHost.setHostScheme(site.getServerScheme().equals("") ? ".*" : site.getServerScheme());
-            virtualHost.setHostPort(site.getServerPort().equals("") ? ".*" : site.getServerPort());
-            virtualHost.setServerAddress(site.getServerAddress().equals("") ? ".*" : site.getServerPort());
-            virtualHost.setServerPort(site.getServerPort().equals("") ? ".*" : site.getServerPort());
-            String hostDomain = site.getServerName();
-            for (SiteAlias siteAlias : site.getSiteAliases()) {
-                hostDomain = hostDomain + "|" + siteAlias.getServerAlias();
-            }
-            virtualHost.setHostDomain(hostDomain.equals("") ? ".*" : hostDomain);
-            container.getHosts().add(virtualHost);
-            // add Apps to host based on Apps attached to Site
-            for (SiteApp siteApp : site.getSiteApps()) {
-                if (siteApp.isEnabled()) {
-                    App app = siteApp.getApp();
-                    // use the SiteApp UID as the EngineApplication name so that we can later retrieve the SiteApp
-                    EngineApplication engineApplication = new EngineApplication(container.getContext(), siteApp.getUid());
-                    engineApplication.setConnectorService(connectorService);
-                    engineApplication.setFilterNames(app.getFilterNames());
-                    if (!siteApp.isDefaultApp()) {
-                        virtualHost.attach(siteApp.getUriPattern(), addFilters(engineApplication, app.getAuthenticationRequired()));
-                    } else {
-                        virtualHost.attachDefault(addFilters(engineApplication, app.getAuthenticationRequired()));
-                    }
-                }
-            }
-        }
-
-        // wrap VirtualHost creation
-        transactionController.end();
-
         try {
             // get things going
             container.start();
@@ -218,65 +106,51 @@ public class Engine implements WrapperListener, Serializable {
         return null;
     }
 
+    protected void parseOptions(String[] args) {
+
+        CommandLine line = null;
+        CommandLineParser parser = new GnuParser();
+        Options options = new Options();
+
+        // define serverName option
+        Option serverNameOpt = OptionBuilder.withArgName("serverName")
+                .hasArg()
+                .withDescription("The server name")
+                .create("serverName");
+        serverNameOpt.setRequired(true);
+        options.addOption(serverNameOpt);
+
+        // parse the options
+        try {
+            line = parser.parse(options, args);
+        } catch (ParseException exp) {
+            new HelpFormatter().printHelp("java com.jellymold.engine.Engine", options);
+            System.exit(-1);
+        }
+
+        // serverName
+        if (line.hasOption(serverNameOpt.getOpt())) {
+            serverName = line.getOptionValue(serverNameOpt.getOpt());
+        }
+    }
+
     protected void onStart() {
+        // TODO: TEMPORARY CODE!!!! Remove once all databases have been migrated. Get rid of UserPasswordToMD5 too.
+        if (System.getProperty("amee.userPasswordToMD5") != null) {
+            UserPasswordToMD5 userPasswordToMD5 =
+                    (UserPasswordToMD5) springContext.getBean("userPasswordToMD5");
+            userPasswordToMD5.updateUserPasswordToMD5(false);
+        }
         // start scheduled tasks
-        // ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) org.jboss.seam.Component.getInstance("scheduledTaskManager", true);
-        // scheduledTaskManager.setServerName(serverName);
-        // scheduledTaskManager.onStart();
+        ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) springContext.getBean("scheduledTaskManager");
+        scheduledTaskManager.setServerName(serverName);
+        scheduledTaskManager.onStart();
     }
 
     protected void onShutdown() {
         // shutdown scheduled tasks
-        // ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) org.jboss.seam.Component.getInstance("scheduledTaskManager", true);
-        // scheduledTaskManager.onShutdown();
-    }
-
-    protected Restlet addFilters(EngineApplication engineApplication, boolean addAuthFilter) {
-        // create sequential list of Filters
-        List<Filter> filters = new ArrayList<Filter>();
-        // add standard Filters
-        filters.add(new ThreadBeanHolderFilter());
-        filters.add(new SpringFilter(engineApplication, transactionController, springContext));
-        filters.add(new SiteFilter(engineApplication, engineApplication.getName()));
-        //filters.add(new FreeMarkerConfigurationFilter(engineApplication));
-        // only add AuthFilter if required
-        if (addAuthFilter) {
-            filters.add(new BasicAuthFilter(engineApplication));
-            filters.add(new AuthFilter(engineApplication));
-        } else {
-            filters.add(new GuestFilter(engineApplication));
-        }
-        // add custom Filter if available
-        Filter customFilter = getCustomFilter(engineApplication);
-        if (customFilter != null) {
-            filters.add(customFilter);
-        }
-        // NOTE: the indexing below will only work there are enough Filters in the list
-        // set next Restlet/Filter for all Filters in sequence, except the last one
-        for (int i = 0; i < (filters.size() - 1); i++) {
-            filters.get(i).setNext(filters.get(i + 1));
-        }
-        // set next Restlet for last Filter in sequence
-        filters.get(filters.size() - 1).setNext(engineApplication);
-        // return the first Filter in sequence
-        return filters.get(0);
-    }
-
-    protected Filter getCustomFilter(EngineApplication engineApplication) {
-        Filter customFilter = null;
-        if (engineApplication.getFilterNames().length() > 0) {
-            try {
-                customFilter = (Filter) Class.forName(engineApplication.getFilterNames()).newInstance();
-                customFilter.setContext(engineApplication.getContext());
-            } catch (InstantiationException e) {
-                // swallow
-            } catch (IllegalAccessException e) {
-                // swallow
-            } catch (ClassNotFoundException e) {
-                // swallow
-            }
-        }
-        return customFilter;
+        ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) springContext.getBean("scheduledTaskManager");
+        scheduledTaskManager.onShutdown();
     }
 
     public int stop(int exitCode) {
@@ -290,7 +164,7 @@ public class Engine implements WrapperListener, Serializable {
             CacheHelper.getInstance().getCacheManager().shutdown();
             log.debug("...Engine stopped.");
         } catch (Exception e) {
-            log.error("caught Exception: " + e);
+            log.error("Caught Exception: " + e);
         }
         return exitCode;
     }

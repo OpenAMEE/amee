@@ -20,7 +20,6 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SiteApp implements EnvironmentObject, DatedObject {
 
-    public final static int URI_PATTERN_SIZE = 255;
     public final static int SKIN_PATH_SIZE = 255;
 
     @Id
@@ -43,17 +42,8 @@ public class SiteApp implements EnvironmentObject, DatedObject {
     @JoinColumn(name = "SITE_ID")
     private Site site;
 
-    @Column(name = "URI_PATTERN", length = URI_PATTERN_SIZE, nullable = false)
-    private String uriPattern = "";
-
     @Column(name = "SKIN_PATH", length = SKIN_PATH_SIZE, nullable = false)
     private String skinPath = "";
-
-    @Column(name = "DEFAULT_APP")
-    private boolean defaultApp = false;
-
-    @Column(name = "ENABLED")
-    private boolean enabled = true;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED")
@@ -75,11 +65,9 @@ public class SiteApp implements EnvironmentObject, DatedObject {
         setSite(site);
     }
 
-    public SiteApp(App app, Site site, String uriPattern, String skinPath, boolean defaultApp) {
+    public SiteApp(App app, Site site, String skinPath) {
         this(app, site);
-        setUriPattern(uriPattern);
         setSkinPath(skinPath);
-        setDefaultApp(defaultApp);
     }
 
     public String toString() {
@@ -90,21 +78,18 @@ public class SiteApp implements EnvironmentObject, DatedObject {
         if (this == o) return true;
         if (!(o instanceof SiteApp)) return false;
         SiteApp siteApp = (SiteApp) o;
-        // TODO: compare on something else too?
-        return getUriPattern().equalsIgnoreCase(siteApp.getUriPattern());
+        return getUid().equalsIgnoreCase(siteApp.getUid());
     }
 
     public int compareTo(Object o) throws ClassCastException {
         if (this == o) return 0;
         if (equals(o)) return 0;
         SiteApp siteApp = (SiteApp) o;
-        // TODO: compare on something else too?
-        return getUriPattern().compareToIgnoreCase(siteApp.getUriPattern());
+        return getUid().compareToIgnoreCase(siteApp.getUid());
     }
 
     public int hashCode() {
-        // TODO: compare on something else too?
-        return getUriPattern().toLowerCase().hashCode();
+        return getUid().toLowerCase().hashCode();
     }
 
     @Transient
@@ -117,10 +102,7 @@ public class SiteApp implements EnvironmentObject, DatedObject {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
         obj.put("app", getApp().getIdentityJSONObject());
-        obj.put("uriPattern", getUriPattern());
         obj.put("skinPath", getSkinPath());
-        obj.put("defaultApp", isDefaultApp());
-        obj.put("enabled", isEnabled());
         if (detailed) {
             obj.put("environment", getEnvironment().getIdentityJSONObject());
             obj.put("site", getSite().getIdentityJSONObject());
@@ -145,10 +127,7 @@ public class SiteApp implements EnvironmentObject, DatedObject {
         Element element = document.createElement("SiteApp");
         element.setAttribute("uid", getUid());
         element.appendChild(getApp().getIdentityElement(document));
-        element.appendChild(APIUtils.getElement(document, "UriPattern", getUriPattern()));
         element.appendChild(APIUtils.getElement(document, "SkinPath", getSkinPath()));
-        element.appendChild(APIUtils.getElement(document, "DefaultApp", "" + isDefaultApp()));
-        element.appendChild(APIUtils.getElement(document, "Enabled", "" + isEnabled()));
         if (detailed) {
             element.appendChild(getEnvironment().getIdentityElement(document));
             element.appendChild(getSite().getIdentityElement(document));
@@ -166,10 +145,7 @@ public class SiteApp implements EnvironmentObject, DatedObject {
     @Transient
     public void populate(org.dom4j.Element element) {
         setUid(element.attributeValue("uid"));
-        setUriPattern(element.elementText("UriPattern"));
         setSkinPath(element.elementText("SkinPath"));
-        setDefaultApp(element.elementText("DefaultApp"));
-        setEnabled(element.elementText("Enabled"));
     }
 
     @PrePersist
@@ -231,17 +207,6 @@ public class SiteApp implements EnvironmentObject, DatedObject {
         }
     }
 
-    public String getUriPattern() {
-        return uriPattern;
-    }
-
-    public void setUriPattern(String uriPattern) {
-        if (uriPattern == null) {
-            uriPattern = "";
-        }
-        this.uriPattern = uriPattern;
-    }
-
     public String getSkinPath() {
         return skinPath;
     }
@@ -251,30 +216,6 @@ public class SiteApp implements EnvironmentObject, DatedObject {
             skinPath = "";
         }
         this.skinPath = skinPath;
-    }
-
-    public boolean isDefaultApp() {
-        return defaultApp;
-    }
-
-    public void setDefaultApp(boolean defaultApp) {
-        this.defaultApp = defaultApp;
-    }
-
-    public void setDefaultApp(String defaultApp) {
-        setDefaultApp(Boolean.parseBoolean(defaultApp));
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public void setEnabled(String enabled) {
-        setEnabled(Boolean.parseBoolean(enabled));
     }
 
     public Date getCreated() {

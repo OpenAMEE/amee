@@ -2,18 +2,17 @@ package org.restlet.ext.seam;
 
 import org.restlet.resource.Representation;
 import org.restlet.service.ConnectorService;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class SpringConnectorService extends ConnectorService {
+@Service
+public class TransactionConnectorService extends ConnectorService {
 
+    @Autowired
     private TransactionController transactionController;
 
-    private SpringConnectorService() {
+    private TransactionConnectorService() {
         super();
-    }
-
-    public SpringConnectorService(TransactionController transactionController) {
-        this();
-        this.transactionController = transactionController;
     }
 
     public void beforeSend(Representation entity) {

@@ -6,11 +6,15 @@ import com.jellymold.utils.cache.CacheHelper;
 import net.sf.ehcache.Ehcache;
 import org.restlet.data.*;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @Service
 public class CacheAdmin {
 
-    private ResourceActions cacheActions = new ResourceActions("cache");
+    @Autowired
+    @Qualifier("cacheActions")
+    private ResourceActions cacheActions;
 
     private Ehcache cache;
 

@@ -11,7 +11,6 @@
 <#if browser.siteAppActions.allowView>
 <p>
 Name: ${siteApp.app.name}<br/>
-URI Pattern: ${siteApp.uriPattern}<br/>
 Created: ${siteApp.created?string.short}<br/>
 Modified: ${siteApp.modified?string.short}<br/>
 </p>
@@ -25,14 +24,7 @@ Modified: ${siteApp.modified?string.short}<br/>
           <option value="${app.uid}"<#if siteApp.app.uid == app.uid> selected="selected"</#if>>${app.name}</option>
       </#list>
   </select><br/>
-  URI Pattern: <input name='uriPattern' value='${siteApp.uriPattern}' type='text' size='60'/><br/>
   Skin Path: <input name='skinPath' value='${siteApp.skinPath}' type='text' size='60'/><br/>
-  Default:
-    Yes <input type="radio" name="defaultApp" value="true"<#if siteApp.defaultApp> checked</#if>/>
-    No <input type="radio" name="defaultApp" value="false"<#if !siteApp.defaultApp> checked</#if>/><br/>
-  Enabled:
-    Yes <input type="radio" name="enabled" value="true"<#if siteApp.enabled> checked</#if>/>
-    No <input type="radio" name="enabled" value="false"<#if !siteApp.enabled> checked</#if>/><br/><br/>
   <input type='submit' value="Update Site App"/><br/>
   </form>
   </p>

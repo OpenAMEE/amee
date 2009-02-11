@@ -1,7 +1,6 @@
 package com.jellymold.kiwi;
 
 import com.jellymold.utils.domain.APIUtils;
-import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import com.jellymold.utils.domain.DatedObject;
 import org.hibernate.annotations.Cache;
@@ -34,10 +33,9 @@ import java.util.Set;
  * An App encapsulates a group of web resources into a logical group under a URI. Apps can be attached
  * to multiple Sites via SiteApps.
  * <p/>
- * Apps define a set of Targets, representing resources, and Actions which can be performed by Users within
- * the App.
+ * Apps define a set of Actions which can be performed by Users within the App.
  * <p/>
- * When deleting an App we need to ensure all relevant SiteApps are also removed. Actions and Targets should
+ * When deleting an App we need to ensure all relevant SiteApps are also removed. Actions should
  * be automatically removed but we need to deal with dependancies of Actions.
  *
  * @author Diggory Briercliffe
@@ -49,8 +47,6 @@ public class App implements DatedObject, Comparable {
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
-    public final static int FILTER_NAMES_SIZE = 1000;
-    public final static int TARGET_BUILDER_SIZE = 255;
 
     @Id
     @GeneratedValue
@@ -66,24 +62,10 @@ public class App implements DatedObject, Comparable {
     @Column(name = "DESCRIPTION", length = DESCRIPTION_SIZE, nullable = false)
     private String description = "";
 
-    @Column(name = "AUTHENTICATION_REQUIRED", nullable = false)
-    private Boolean authenticationRequired = false;
-
-    @Column(name = "FILTER_NAMES", length = FILTER_NAMES_SIZE, nullable = false)
-    private String filterNames = "";
-
-    @Column(name = "TARGET_BUILDER", length = TARGET_BUILDER_SIZE, nullable = false)
-    private String targetBuilder = "";
-
     @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OrderBy("key")
     private Set<Action> actions = new HashSet<Action>();
-
-    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("uriPattern")
-    private Set<Target> targets = new HashSet<Target>();
 
     @Column(name = "ALLOW_CLIENT_CACHE", nullable = false)
     private Boolean allowClientCache = true;
@@ -120,15 +102,6 @@ public class App implements DatedObject, Comparable {
         getActions().remove(action);
     }
 
-    public void add(Target target) {
-        target.setApp(this);
-        getTargets().add(target);
-    }
-
-    public void remove(Target target) {
-        getTargets().remove(target);
-    }
-
     public String toString() {
         return "App_" + getUid();
     }
@@ -162,8 +135,6 @@ public class App implements DatedObject, Comparable {
         obj.put("uid", getUid());
         obj.put("name", getName());
         obj.put("description", getDescription());
-        obj.put("filterNames", getFilterNames());
-        obj.put("targetBuilder", getTargetBuilder());
         obj.put("allowClientCache", getAllowClientCache());
         if (detailed) {
             obj.put("created", getCreated());
@@ -188,8 +159,6 @@ public class App implements DatedObject, Comparable {
         element.setAttribute("uid", getUid());
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         element.appendChild(APIUtils.getElement(document, "Description", getDescription()));
-        element.appendChild(APIUtils.getElement(document, "FilterNames", getFilterNames()));
-        element.appendChild(APIUtils.getElement(document, "TargetBuilder", getTargetBuilder()));
         element.appendChild(APIUtils.getElement(document, "AllowClientCache", "" + getAllowClientCache()));
         if (detailed) {
             element.setAttribute("created", getCreated().toString());
@@ -210,8 +179,6 @@ public class App implements DatedObject, Comparable {
         setUid(element.attributeValue("uid"));
         setName(element.elementText("Name"));
         setDescription(element.elementText("Description"));
-        setFilterNames(element.elementText("FilterNames"));
-        setTargetBuilder(element.elementText("TargetBuilder"));
         setAllowClientCache(Boolean.parseBoolean(element.elementText("AllowClientCache")));
     }
 
@@ -266,42 +233,6 @@ public class App implements DatedObject, Comparable {
         this.description = description;
     }
 
-    public Boolean getAuthenticationRequired() {
-        return authenticationRequired;
-    }
-
-    public Boolean isAuthenticationRequired() {
-        return authenticationRequired;
-    }
-
-    public void setAuthenticationRequired(Boolean authenticationRequired) {
-        if (authenticationRequired != null) {
-            this.authenticationRequired = authenticationRequired;
-        }
-    }
-
-    public String getFilterNames() {
-        return filterNames;
-    }
-
-    public void setFilterNames(String filterNames) {
-        if (filterNames == null) {
-            filterNames = "";
-        }
-        this.filterNames = filterNames;
-    }
-
-    public String getTargetBuilder() {
-        return targetBuilder;
-    }
-
-    public void setTargetBuilder(String targetBuilder) {
-        if (targetBuilder == null) {
-            targetBuilder = "";
-        }
-        this.targetBuilder = targetBuilder;
-    }
-
     public Boolean getAllowClientCache() {
         return allowClientCache;
     }
@@ -325,17 +256,6 @@ public class App implements DatedObject, Comparable {
             actions = new HashSet<Action>();
         }
         this.actions = actions;
-    }
-
-    public Set<Target> getTargets() {
-        return targets;
-    }
-
-    public void setTargets(Set<Target> targets) {
-        if (targets == null) {
-            targets = new HashSet<Target>();
-        }
-        this.targets = targets;
     }
 
     public Date getCreated() {

@@ -102,12 +102,6 @@ public class AppResource extends BaseResource {
             if (form.getNames().contains("description")) {
                 app.setDescription(form.getFirstValue("description"));
             }
-            if (form.getNames().contains("authenticationRequired")) {
-                app.setAuthenticationRequired(Boolean.valueOf(form.getFirstValue("authenticationRequired")));
-            }
-            if (form.getNames().contains("filterNames")) {
-                app.setFilterNames(form.getFirstValue("filterNames"));
-            }
             success();
         } else {
             notAuthorized();

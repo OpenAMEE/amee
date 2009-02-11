@@ -21,9 +21,14 @@
           <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-skins.xml</file>
           <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext.xml</file>
           <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-container.xml</file>
-          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-restlet.xml</file>
-          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-vhosts.xml</file>
-          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-application.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-application-profiles.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-application-profiles.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-application-auth.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-application-data.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-application-environment.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-application-cache.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-application-app.xml</file>
+          <file>file://$MODULE_DIR$/../server/co2-engine/conf/applicationContext-application-default.xml</file>
         </fileset>
       </configuration>
     </facet>
@@ -53,31 +58,41 @@
     <orderEntry type="module" module-name="amee-service" />
     <orderEntry type="module" module-name="cache-restlet" />
     <orderEntry type="module" module-name="engine-service" />
-    <orderEntry type="module" module-name="idea" />
     <orderEntry type="module" module-name="kiwi-domain" />
     <orderEntry type="module" module-name="kiwi-restlet" />
     <orderEntry type="module" module-name="kiwi-service" />
     <orderEntry type="module" module-name="org.restlet.ext.seam" />
     <orderEntry type="module" module-name="sheet-domain" />
+    <orderEntry type="library" name="abdera" level="project" />
+    <orderEntry type="library" name="amee-utils" level="project" />
+    <orderEntry type="library" name="amee-utils-restlet" level="project" />
     <orderEntry type="library" name="commons-cli" level="project" />
     <orderEntry type="library" name="ehcache" level="project" />
     <orderEntry type="library" name="freemarker" level="project" />
     <orderEntry type="library" name="global" level="project" />
     <orderEntry type="library" name="hibernate" level="project" />
     <orderEntry type="library" name="janino" level="project" />
+    <orderEntry type="library" name="java-mail" level="project" />
     <orderEntry type="library" name="javacsv" level="project" />
+    <orderEntry type="library" name="jaxen" level="project" />
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="jetty" level="project" />
+    <orderEntry type="library" name="joda" level="project" />
     <orderEntry type="library" name="jscience" level="project" />
+    <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="library" name="mysql-connector-java" level="project" />
-    <orderEntry type="library" name="restlet" level="project" />
-    <orderEntry type="library" name="spring" level="project" />
-    <orderEntry type="library" name="spring-runtime" level="project" />
-    <orderEntry type="library" name="wrapper" level="project" />
     <orderEntry type="library" name="quartz" level="project" />
-    <orderEntry type="library" name="amee-utils" level="project" />
-    <orderEntry type="library" name="amee-utils-restlet" level="project" />
+    <orderEntry type="library" name="restlet" level="project" />
+    <orderEntry type="library" name="rhino" level="project" />
     <orderEntry type="library" name="slf4j" level="project" />
+    <orderEntry type="library" name="spring" level="project" />
+    <orderEntry type="library" name="spring-integration" level="project" />
+    <orderEntry type="library" name="spring-runtime" level="project" />
+    <orderEntry type="library" name="testng" level="project" />
+    <orderEntry type="library" name="utils" level="project" />
+    <orderEntry type="library" name="utils-restlet" level="project" />
+    <orderEntry type="library" name="wrapper" level="project" />
+    <orderEntry type="library" name="xmlunit" level="project" />
   </component>
 </module>
 

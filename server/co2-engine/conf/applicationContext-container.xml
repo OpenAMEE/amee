@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
     <bean id="ameeContainer" class="org.restlet.ext.spring.SpringComponent">
         <property name="clientsList">
@@ -11,12 +11,13 @@
             </list>
         </property>
         <property name="server" ref="ameeServer"/>
-        <!--property name="hosts">
+        <property name="hosts">
             <list>
                 <ref local="ameeHost"/>
                 <ref local="ameeAdminHost"/>
             </list>
-        </property-->
+        </property>
+        <property name="statusService" ref="engineStatusService"/>
     </bean>
 
     <bean id="ameeServer" class="org.restlet.ext.spring.SpringServer">
@@ -24,8 +25,8 @@
         <constructor-arg index="1" value="8010"/>
         <property name="parameters">
             <props>
-                <prop key="converter">org.restlet.ext.seam.SpringServerConverter</prop>
-                <prop key="minThreads">200</prop>
+                <prop key="converter">org.restlet.ext.seam.TransactionServerConverter</prop>
+                <prop key="minThreads">50</prop>
                 <prop key="maxThreads">700</prop>
                 <prop key="threadMaxIdleTimeMs">30000</prop>
                 <prop key="lowThreads">25</prop>
@@ -43,19 +44,28 @@
         <property name="hostDomain" value="live.co2.dgen.net|stage.co2.dgen.net|local.stage.co2.dgen.net"/>
         <property name="attachments">
             <map>
-                <!--entry key="/" value-ref="ameeApplication"/-->
+                <entry key="" value-ref="defaultApplication"/>
+                <entry key="/auth" value-ref="authApplication"/>
+                <entry key="/data" value-ref="dataApplication"/>
+                <entry key="/profiles" value-ref="profilesApplication"/>
             </map>
         </property>
+        <property name="name" value="live.co2.dgen.net"/>
     </bean>
 
     <bean id="ameeAdminHost" class="org.restlet.ext.spring.SpringHost">
         <constructor-arg ref="ameeContainer"/>
-        <property name="hostDomain" value="admin.stage.co2.dgen.net|local.admin.stage.co2.dgen.net"/>
+        <property name="hostDomain" value="admin.live.co2.dgen.net|admin.stage.co2.dgen.net|local.admin.stage.co2.dgen.net"/>
         <property name="attachments">
             <map>
-                <!--entry key="/" value-ref="ameeAdminApplication"/-->
+                <entry key="" value-ref="defaultApplication"/>
+                <entry key="/auth" value-ref="authApplication"/>
+                <entry key="/environments" value-ref="environmentsApplication"/>
+                <entry key="/apps" value-ref="appsApplication"/>
+                <entry key="/cache" value-ref="cacheApplication"/>
             </map>
         </property>
+        <property name="name" value="admin.live.co2.dgen.net"/>
     </bean>
 
 </beans>

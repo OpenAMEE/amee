@@ -17,7 +17,7 @@ public class AuthFilter extends BaseAuthFilter {
     private final Log log = LogFactory.getLog(getClass());
 
     public AuthFilter(Application application) {
-        super(application.getContext(), application);
+        super(application);
     }
 
     public int doHandle(Request request, Response response) {

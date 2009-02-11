@@ -120,17 +120,8 @@ public class SiteAppResource extends BaseResource {
                     siteApp.setApp(app);
                 }
             }
-            if (form.getNames().contains("uriPattern")) {
-                siteApp.setUriPattern(form.getFirstValue("uriPattern"));
-            }
             if (form.getNames().contains("skinPath")) {
                 siteApp.setSkinPath(form.getFirstValue("skinPath"));
-            }
-            if (form.getNames().contains("defaultApp")) {
-                siteApp.setDefaultApp(Boolean.valueOf(form.getFirstValue("defaultApp")));
-            }
-            if (form.getNames().contains("enabled")) {
-                siteApp.setEnabled(Boolean.valueOf(form.getFirstValue("enabled")));
             }
             success();
         } else {

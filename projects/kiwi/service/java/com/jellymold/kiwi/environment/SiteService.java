@@ -28,32 +28,12 @@ public class SiteService implements Serializable {
 
     @Autowired(required = true)
     private ObserveEventService observeEventService;
-    
+
     public SiteService() {
         super();
     }
 
     // Sites
-
-    public Site getSiteByHost(String host) {
-        // load Site or use object from Event context
-        Site site = (Site) ThreadBeanHolder.get("site");
-        if (site == null) {
-            List<Site> sites = entityManager.createQuery(
-                    "SELECT DISTINCT site FROM Site site " +
-                            "LEFT JOIN site.siteAliases siteAlias " +
-                            "WHERE site.serverName = :host OR siteAlias.serverAlias = :host")
-                    .setParameter("host", host)
-                    .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", "query.siteService")
-                    .getResultList();
-            if (sites.size() > 0) {
-                site = sites.get(0);
-            }
-            ThreadBeanHolder.set("site", site);
-        }
-        return site;
-    }
 
     public Site getSiteByUid(Environment environment, String uid) {
         Site site = null;
@@ -66,31 +46,29 @@ public class SiteService implements Serializable {
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.siteService")
                 .getResultList();
-        if (sites.size() > 0) {
+        if (sites.size() == 1) {
             site = sites.get(0);
         }
         return site;
     }
 
-    public Site getSiteByName(Environment environment, String name) {
+    public Site getSiteByName(String name) {
         Site site = null;
         List<Site> sites = entityManager.createQuery(
                 "SELECT s FROM Site s " +
-                        "WHERE s.name = :name " +
-                        "AND s.environment.id = :environmentId")
+                        "WHERE s.name = :name")
                 .setParameter("name", name.trim())
-                .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.siteService")
                 .getResultList();
-        if (sites.size() > 0) {
+        if (sites.size() == 1) {
             site = sites.get(0);
         }
         return site;
     }
 
     public List<Site> getSites(Environment environment, Pager pager) {
-        String orderBy = "serverName";
+        String orderBy = "name";
         if (pager != null) {
             // count all sites
             long count = (Long) entityManager.createQuery(
@@ -128,7 +106,7 @@ public class SiteService implements Serializable {
     }
 
     public List<Site> getSites() {
-        String orderBy = "serverName";
+        String orderBy = "name";
         List<Site> sites = entityManager.createQuery(
                 "SELECT s " +
                         "FROM Site s " +
@@ -152,67 +130,25 @@ public class SiteService implements Serializable {
         return (Site) ThreadBeanHolder.get("site");
     }
 
-    // SiteAliases
+    // SiteApps
 
-    public SiteAlias getSiteAliasByUid(Site site, String siteAliasUid) {
-        SiteAlias siteAlias = null;
-        List<SiteAlias> siteAliases = entityManager.createQuery(
-                "SELECT sa FROM SiteAlias sa " +
+    public SiteApp getSiteApp(Site site, String appName) {
+        SiteApp siteApp = null;
+        List<SiteApp> siteApps = entityManager.createQuery(
+                "SELECT sa FROM SiteApp sa, App a " +
                         "WHERE sa.site.id = :siteId " +
-                        "AND sa.uid = :siteAliasUid")
+                        "AND sa.app.id = a.id " +
+                        "AND a.name = :appName")
                 .setParameter("siteId", site.getId())
-                .setParameter("siteAliasUid", siteAliasUid)
+                .setParameter("appName", appName)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.siteService")
                 .getResultList();
-        if (siteAliases.size() > 0) {
-            siteAlias = siteAliases.get(0);
+        if (siteApps.size() == 1) {
+            siteApp = siteApps.get(0);
         }
-        return siteAlias;
+        return siteApp;
     }
-
-    public List<SiteAlias> getSiteAliases(Site site, Pager pager) {
-        if (pager != null) {
-            // first count all objects
-            long count = (Long) entityManager.createQuery(
-                    "SELECT count(sa) " +
-                            "FROM SiteAlias sa " +
-                            "WHERE sa.site.id = :siteId")
-                    .setParameter("siteId", site.getId())
-                    .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", "query.siteService")
-                    .getSingleResult();
-            // tell pager how many objects there are and give it a chance to select the requested page again
-            pager.setItems(count);
-            pager.goRequestedPage();
-        }
-        // now get the objects for the current page
-        Query query = entityManager.createQuery(
-                "SELECT sa " +
-                        "FROM SiteAlias sa " +
-                        "WHERE sa.site.id = :siteId " +
-                        "ORDER BY sa.name")
-                .setParameter("siteId", site.getId())
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.siteService");
-        if (pager != null) {
-            query.setMaxResults(pager.getItemsPerPage());
-            query.setFirstResult((int) pager.getStart());
-        }
-        List<SiteAlias> siteAliases = query.getResultList();
-        if (pager != null) {
-            // update the pager
-            pager.setItemsFound(siteAliases.size());
-        }
-        // all done, return results
-        return siteAliases;
-    }
-
-    public void remove(SiteAlias siteAlias) {
-        entityManager.remove(siteAlias);
-    }
-
-    // SiteApps
 
     public SiteApp getSiteAppByUid(Site site, String siteAppUid) {
         SiteApp siteApp = null;
@@ -231,7 +167,6 @@ public class SiteService implements Serializable {
         return siteApp;
     }
 
-    // TODO: scope to something?
     public SiteApp getSiteAppByUid(String siteAppUid) {
         SiteApp siteApp = null;
         List<SiteApp> siteApps = entityManager.createQuery(
@@ -270,8 +205,7 @@ public class SiteService implements Serializable {
         Query query = entityManager.createQuery(
                 "SELECT sa " +
                         "FROM SiteApp sa " +
-                        "WHERE sa.site.id = :siteId " +
-                        "ORDER BY sa.uriPattern")
+                        "WHERE sa.site.id = :siteId")
                 .setParameter("siteId", site.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.siteService");

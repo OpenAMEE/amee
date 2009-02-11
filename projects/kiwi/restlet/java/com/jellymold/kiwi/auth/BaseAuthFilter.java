@@ -12,20 +12,18 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class BaseAuthFilter extends Filter {
 
-    public BaseAuthFilter(Application application) {
-        super(application.getContext(), application);
-    }
+    @Autowired
+    protected AuthService authService;
 
-    public BaseAuthFilter(Context context, Application application) {
-        super(context, application);
+    public BaseAuthFilter(Application application) {
+        super(application.getContext());
     }
 
     protected String authenticated(Request request) {
-        ApplicationContext springContext = (ApplicationContext) request.getAttributes().get("springContext");
-        AuthService authService = (AuthService) springContext.getBean("authService");
         return authService.isAuthenticated(
                 getAuthToken(request),
                 request.getClientInfo().getAddress());

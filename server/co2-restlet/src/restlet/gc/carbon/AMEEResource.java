@@ -52,7 +52,6 @@ import java.io.IOException;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-@Component("AMEEResource")
 public class AMEEResource extends BaseResource implements BeanFactoryAware {
 
     protected BeanFactory beanFactory;
@@ -132,7 +131,6 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     public Environment getEnvironment() {
         return environment;
     }
-
 
     //TODO - Implementing here so that subclasses are not required to. Admin client templates will be phased out in time.
     public String getTemplatePath() {

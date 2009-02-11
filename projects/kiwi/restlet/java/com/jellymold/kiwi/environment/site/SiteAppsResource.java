@@ -153,10 +153,7 @@ public class SiteAppsResource extends BaseResource {
                 if (app != null) {
                     Site site = environmentBrowser.getSite();
                     newSiteApp = new SiteApp(app, site);
-                    newSiteApp.setUriPattern(form.getFirstValue("uriPattern"));
                     newSiteApp.setSkinPath(form.getFirstValue("skinPath"));
-                    newSiteApp.setDefaultApp(Boolean.valueOf(form.getFirstValue("defaultApp")));
-                    newSiteApp.setEnabled(Boolean.valueOf(form.getFirstValue("enabled")));
                     site.add(newSiteApp);
                 }
             }

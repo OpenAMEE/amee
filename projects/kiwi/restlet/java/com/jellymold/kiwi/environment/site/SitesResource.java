@@ -141,7 +141,6 @@ public class SitesResource extends BaseResource implements Serializable {
                 // create new instance
                 newSite = new Site(environmentBrowser.getEnvironment());
                 newSite.setName(form.getFirstValue("name"));
-                newSite.setServerName(form.getFirstValue("serverName"));
                 siteService.save(newSite);
             }
             if (newSite != null) {

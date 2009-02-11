@@ -77,7 +77,7 @@ public abstract class BaseResource extends ComponentResource {
     protected Representation getHtmlRepresentation() {
 
         Configuration configuration;
-        ApplicationContext springContext = (ApplicationContext) getRequest().getAttributes().get("springContext");
+        ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
         FreeMarkerConfigurationService freeMarkerConfigurationService =
                 (FreeMarkerConfigurationService) springContext.getBean("freeMarkerConfigurationService");
         configuration = freeMarkerConfigurationService.getConfiguration();

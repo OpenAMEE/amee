@@ -5,6 +5,7 @@ import com.jellymold.kiwi.app.AppConstants;
 import com.jellymold.kiwi.auth.AuthService;
 import com.jellymold.utils.BaseBrowser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import gc.carbon.APIVersion;
@@ -23,57 +24,85 @@ public class EnvironmentBrowser extends BaseBrowser {
 
     @Autowired
     private EnvironmentService environmentService;
-    
+
+    // ResourceActions
+
+    @Autowired
+    @Qualifier("environmentActions")
+    private ResourceActions environmentActions;
+
+    @Autowired
+    @Qualifier("siteActions")
+    private ResourceActions siteActions;
+
+    @Autowired
+    @Qualifier("siteAppActions")
+    private ResourceActions siteAppActions;
+
+    @Autowired
+    @Qualifier("groupActions")
+    private ResourceActions groupActions;
+
+    @Autowired
+    @Qualifier("roleActions")
+    private ResourceActions roleActions;
+
+    @Autowired
+    @Qualifier("userActions")
+    private ResourceActions userActions;
+
+    @Autowired
+    @Qualifier("appActions")
+    private ResourceActions appActions;
+
+    @Autowired
+    @Qualifier("scheduledTaskActions")
+    private ResourceActions scheduledTaskActions;
+
     // Environments
+
     private String environmentUid = null;
     private Environment environment = null;
 
     // Sites
+
     private String siteUid = null;
     private Site site = null;
 
-    // SiteAlaises
-    private String siteAliasUid = null;
-    private SiteAlias siteAlias = null;
-
     // SiteApp
+
     private String siteAppUid = null;
     private SiteApp siteApp = null;
 
     // Groups
+
     private String groupUid = null;
     private Group group = null;
 
     // Roles
+
     private String roleUid = null;
     private Role role = null;
 
     // Actions
+
     private String actionUid = null;
     private Action action = null;
 
     // Users
+
     private String userUid = null;
     private User user = null;
     private Boolean allowUserUpload = null;
 
     // GroupUsers
+
     private GroupUser groupUser = null;
 
     // ScheduledTasks
+
     private String scheduledTaskUid = null;
     private ScheduledTask scheduledTask = null;
-
-    // ResourceActions
-    private ResourceActions environmentActions = new ResourceActions(EnvironmentConstants.ACTION_ENVIRONMENT_PREFIX);
-    private ResourceActions siteActions = new ResourceActions(EnvironmentConstants.ACTION_SITE_PREFIX);
-    private ResourceActions siteAliasActions = new ResourceActions(EnvironmentConstants.ACTION_SITE_ALIAS_PREFIX);
-    private ResourceActions siteAppActions = new ResourceActions(EnvironmentConstants.ACTION_SITE_APP_PREFIX);
-    private ResourceActions groupActions = new ResourceActions(EnvironmentConstants.ACTION_GROUP_PREFIX);
-    private ResourceActions roleActions = new ResourceActions(EnvironmentConstants.ACTION_ROLE_PREFIX);
-    private ResourceActions userActions = new ResourceActions(EnvironmentConstants.ACTION_USER_PREFIX);
-    private ResourceActions appActions = new ResourceActions(AppConstants.ACTION_APP_PREFIX);
-    private ResourceActions scheduledTaskActions = new ResourceActions(EnvironmentConstants.ACTION_SCHEDULED_TASK_PREFIX);
 
     // Environments
 
@@ -107,23 +136,6 @@ public class EnvironmentBrowser extends BaseBrowser {
             site = siteService.getSiteByUid(environment, siteUid);
         }
         return site;
-    }
-
-    // SiteAliass
-
-    public String getSiteAliasUid() {
-        return siteAliasUid;
-    }
-
-    public void setSiteAliasUid(String siteAliasUid) {
-        this.siteAliasUid = siteAliasUid;
-    }
-
-    public SiteAlias getSiteAlias() {
-        if ((siteAlias == null) && (getSite() != null) && (siteAliasUid != null)) {
-            siteAlias = siteService.getSiteAliasByUid(site, siteAliasUid);
-        }
-        return siteAlias;
     }
 
     // SiteApps
@@ -260,10 +272,6 @@ public class EnvironmentBrowser extends BaseBrowser {
         return siteActions;
     }
 
-    public ResourceActions getSiteAliasActions() {
-        return siteAliasActions;
-    }
-
     public ResourceActions getSiteAppActions() {
         return siteAppActions;
     }
@@ -287,6 +295,8 @@ public class EnvironmentBrowser extends BaseBrowser {
     public ResourceActions getScheduledTaskActions() {
         return scheduledTaskActions;
     }
+
+    // APIVersion
 
     public List<APIVersion> getApiVersions() {
         return environmentService.getAPIVersions();

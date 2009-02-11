@@ -6,7 +6,7 @@ function deleteSite(siteUid) {
   resourceUrl = '/environments/${environment.uid}/sites/' + siteUid + '?method=delete';
   resourceElem = $('Elem_' + siteUid);
   resourceType = 'Site'; 
-  var deleteResource = new DeleteResource()
+  var deleteResource = new DeleteResource();
   deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
 }
 </script>
@@ -26,13 +26,11 @@ function deleteSite(siteUid) {
 <table>
 <tr>
   <th>Name</th>
-  <th>Server Name</th>
   <th></th>
 </tr>
 <#list sites as s>
   <tr id='Elem_${s.uid}'>
     <td>${s.name}</td>
-    <td>${s.serverName}</td>
     <td>
         <#if browser.siteActions.allowView><a href='/environments/${environment.uid}/sites/${s.uid}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
         <#if browser.siteActions.allowDelete><input type="image" onClick="deleteSite('${s.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
@@ -51,7 +49,6 @@ function deleteSite(siteUid) {
   <p>
   <form action='/environments/${environment.uid}/sites' method='POST' enctype='application/x-www-form-urlencoded'>
   Name: <input name='name' type='text' size='30'/><br/>
-  Server Name: <input name='serverName' type='text' size='30'/><br/><br/>
   <input type='submit' value="Create Site"/><br/>
   </form>
   </p>

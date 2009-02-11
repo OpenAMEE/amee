@@ -2,7 +2,6 @@ package com.jellymold.kiwi.app;
 
 import com.jellymold.kiwi.Action;
 import com.jellymold.kiwi.App;
-import com.jellymold.kiwi.Target;
 import com.jellymold.utils.Pager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -234,73 +233,5 @@ public class AppService implements Serializable {
 
     public void remove(Action action) {
         entityManager.remove(action);
-    }
-
-    // Targets
-
-    public Target getTargetByUid(App app, String targetUid) {
-        Target target = null;
-        List<Target> targets = entityManager.createQuery(
-                "SELECT t FROM Target t " +
-                        "WHERE t.app.id = :appId " +
-                        "AND t.uid = :targetUid")
-                .setParameter("appId", app.getId())
-                .setParameter("targetUid", targetUid)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.appService")
-                .getResultList();
-        if (targets.size() == 1) {
-            target = targets.get(0);
-        }
-        return target;
-    }
-
-    public List<Target> getTargets(App app) {
-        return getTargets(app, null);
-    }
-
-    public List<Target> getTargets(App app, Pager pager) {
-        if (pager != null) {
-            // count all objects
-            long count = (Long) entityManager.createQuery(
-                    "SELECT count(t) " +
-                            "FROM Target t " +
-                            "WHERE t.app.id = :appId")
-                    .setParameter("appId", app.getId())
-                    .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", "query.appService")
-                    .getSingleResult();
-            // tell pager how many objects there are and give it a chance to select the requested page again
-            pager.setItems(count);
-            pager.goRequestedPage();
-        }
-        // get the objects
-        Query query = entityManager.createQuery(
-                "SELECT t " +
-                        "FROM Target t " +
-                        "WHERE t.app.id = :appId " +
-                        "ORDER BY uriPattern")
-                .setParameter("appId", app.getId())
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.appService");
-        if (pager != null) {
-            query.setMaxResults(pager.getItemsPerPage());
-            query.setFirstResult((int) pager.getStart());
-        }
-        List<Target> targets = query.getResultList();
-        if (pager != null) {
-            // update the pager
-            pager.setItemsFound(targets.size());
-        }
-        // all done, return results
-        return targets;
-    }
-
-    public void save(Target target) {
-        entityManager.persist(target);
-    }
-
-    public void remove(Target target) {
-        entityManager.remove(target);
     }
 }
