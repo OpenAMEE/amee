@@ -120,7 +120,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
                 return;
             }
             Form form = getRequest().getResourceRef().getQueryAsForm();
-            if (getVersion().isVersionOne()) {
+            if (getApiVersion().isVersionOne()) {
                 profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
             } else {
                 String startDate = form.getFirstValue("startDate");

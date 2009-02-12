@@ -306,7 +306,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         atomFeed.newID(feed).setText("urn:dataCategory:" + resource.getDataCategory().getUid());
 
-        atomFeed.addGenerator(feed, resource.getVersion());
+        atomFeed.addGenerator(feed, resource.getApiVersion());
 
         atomFeed.addLinks(feed, "");
 

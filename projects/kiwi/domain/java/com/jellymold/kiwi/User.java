@@ -408,9 +408,6 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         }
     }
 
-    /**
-     * @return returns the api version; if null a new APIVersion is returned
-     */
     public APIVersion getApiVersion() {
         return apiVersion;
     }

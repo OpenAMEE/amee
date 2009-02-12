@@ -20,15 +20,15 @@
 package gc.carbon.domain.data.builder.v2;
 
 import com.jellymold.utils.domain.APIUtils;
+import gc.carbon.domain.Builder;
+import gc.carbon.domain.data.Item;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import gc.carbon.domain.Builder;
-import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
-import gc.carbon.domain.data.ItemValue;
-import gc.carbon.domain.data.Item;
 
 public class ItemValueBuilder implements Builder {
 
@@ -44,8 +44,8 @@ public class ItemValueBuilder implements Builder {
         obj.put("path", itemValue.getPath());
         obj.put("name", itemValue.getName());
         obj.put("value", itemValue.getValue());
-        obj.put("unit",itemValue.getUnit());
-        obj.put("perUnit",itemValue.getPerUnit());
+        obj.put("unit", itemValue.getUnit());
+        obj.put("perUnit", itemValue.getPerUnit());
         obj.put("itemValueDefinition", itemValue.getItemValueDefinition().getJSONObject(false));
         obj.put("displayName", itemValue.getDisplayName());
         obj.put("displayPath", itemValue.getDisplayPath());
@@ -55,7 +55,7 @@ public class ItemValueBuilder implements Builder {
             Item item = itemValue.getItem();
             if (item instanceof ProfileItem) {
                 ProfileItem pi = ((ProfileItem) item);
-                pi.setBuilder(new ProfileItemBuilder(pi));    
+                pi.setBuilder(new ProfileItemBuilder(pi));
             }
             obj.put("item", item.getJSONObject(true));
         }

@@ -5,12 +5,6 @@ import gc.carbon.domain.profile.ProfileItem;
 import javax.measure.DecimalMeasure;
 import java.math.BigDecimal;
 
-import com.jellymold.utils.domain.APIUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.json.JSONObject;
-import org.json.JSONException;
-
 /*
  * This file is part of AMEE.
  * <p/>
@@ -67,6 +61,6 @@ public class Unit {
 
     public String toString() {
         return toUnit().toString();
+        // return UnitFormat.getUCUMInstance().format(toUnit());
     }
-
- }
+}

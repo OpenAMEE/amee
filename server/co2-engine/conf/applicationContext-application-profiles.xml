@@ -19,7 +19,7 @@
                 <entry key="">
                     <bean class="com.jellymold.utils.ThreadBeanHolderFilter">
                         <property name="next">
-                            <bean class="org.restlet.ext.seam.SpringFilter">
+                            <bean class="org.restlet.ext.seam.TransactionFilter">
                                 <constructor-arg index="0" ref="profilesApplication"/>
                                 <property name="next">
                                     <bean class="com.jellymold.kiwi.SiteFilter">
