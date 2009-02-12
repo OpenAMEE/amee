@@ -1,18 +1,20 @@
 package gc.carbon.profile.builder.v2;
 
-import org.apache.abdera.factory.Factory;
-import org.apache.abdera.Abdera;
-import org.apache.abdera.parser.Parser;
-import org.apache.abdera.model.*;
-import org.restlet.data.MediaType;
 import gc.carbon.APIVersion;
 import gc.carbon.domain.data.ItemValue;
+import org.apache.abdera.Abdera;
+import org.apache.abdera.factory.Factory;
+import org.apache.abdera.model.*;
+import org.apache.abdera.parser.Parser;
+import org.apache.abdera.writer.WriterFactory;
+import org.apache.abdera.writer.Writer;
+import org.restlet.data.MediaType;
 
 import javax.xml.namespace.QName;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.text.SimpleDateFormat;
-import java.io.InputStream;
 
 /**
  * This file is part of AMEE.
@@ -55,6 +57,7 @@ public class AtomFeed {
 
     private static final String AMEE_LANG = "en-US";
 
+    WriterFactory writerFactory;
     private Factory factory;
     private Parser parser;
 
@@ -63,19 +66,20 @@ public class AtomFeed {
     private AtomFeed() {
         Abdera abdera = new Abdera();
         factory = abdera.getFactory();
+        writerFactory = abdera.getWriterFactory();
         parser = abdera.getParser();
     }
 
     public static AtomFeed getInstance() {
-        return instance;    
+        return instance;
     }
 
     public <T extends Element> Document<T> parse(InputStream is) {
-        return parser.parse(is);    
+        return parser.parse(is);
     }
 
     public String format(Date date) {
-        return ATOM_DATE_DISPLAY_FMT.format(date); 
+        return ATOM_DATE_DISPLAY_FMT.format(date);
     }
 
     public Feed newFeed() {
@@ -88,6 +92,10 @@ public class AtomFeed {
         Entry entry = factory.newEntry();
         entry.setLanguage(AMEE_LANG);
         return entry;
+    }
+
+    public Writer getWriter() {
+        return writerFactory.getWriter("prettyxml");
     }
 
     public IRIElement newID(Element e) {
