@@ -37,6 +37,9 @@
       <entry name="?*.groovy" />
     </wildcardResourcePatterns>
   </component>
+  <component name="CopyrightManager" default="">
+    <module2copyright />
+  </component>
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -268,6 +271,9 @@
     <option name="projectName" value="amee" />
   </component>
   <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectKey">
+    <option name="state" value="project:///Development/AMEE/amee/idea/amee.ipr" />
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/amee-domain.iml" filepath="$PROJECT_DIR$/amee-domain.iml" />

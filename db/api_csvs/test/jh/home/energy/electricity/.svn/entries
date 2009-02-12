@@ -1,14 +1,14 @@
 8
 
 dir
-2570
+2586
 http://svn.amee.com/internal/api_csvs/test/jh/home/energy/electricity
 http://svn.amee.com
 
 
 
-2009-01-26T18:43:19.232859Z
-2439
+2009-02-11T16:11:53.227462Z
+2572
 james.hetherington
 
 
@@ -38,6 +38,18 @@ bcc19e92c1f79d34e0c2becff2d32c8e
 2437
 james.hetherington
 has-props
+
+data.csv
+file
+
+
+
+
+2009-02-12T07:05:40.000000Z
+d73e4cb274dc968df42f41a28f9a8a24
+2009-02-11T16:11:53.227462Z
+2572
+james.hetherington
 
 dataGenerate.gk
 file
