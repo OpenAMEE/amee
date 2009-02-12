@@ -66,7 +66,6 @@ public class ItemValue implements PersistentObject, Pathable {
     @Column(name = "VALUE", nullable = false, length = VALUE_SIZE)
     private String value = "";
 
-    
     @Column(name = "CREATED")
     private Date created = Calendar.getInstance().getTime();
 
@@ -114,7 +113,6 @@ public class ItemValue implements PersistentObject, Pathable {
         }
         return value;
     }
-
 
     @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {

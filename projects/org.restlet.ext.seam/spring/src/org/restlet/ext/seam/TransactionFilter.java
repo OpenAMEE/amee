@@ -6,12 +6,12 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class SpringFilter extends Filter {
+public class TransactionFilter extends Filter {
 
     @Autowired
     private TransactionController transactionController;
 
-    public SpringFilter(Application application) {
+    public TransactionFilter(Application application) {
         super(application.getContext());
     }
 
@@ -19,9 +19,6 @@ public class SpringFilter extends Filter {
         try {
             transactionController.beforeHandle();
             return super.doHandle(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
         } finally {
             transactionController.afterHandle(!response.getStatus().isError());
         }

@@ -93,7 +93,7 @@ public abstract class BaseProfileResource extends AMEEResource {
 
     //TODO - Move to filter - validation is not general to all Profile Resources
     public boolean validateParameters() {
-        if (getVersion().isVersionOne()) {
+        if (getApiVersion().isVersionOne()) {
             if (containsCalendarParams()) {
                 badRequest(APIFault.INVALID_API_PARAMETERS);
                 return false;

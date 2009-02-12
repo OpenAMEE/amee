@@ -3,7 +3,6 @@ package gc.carbon.profile.acceptor;
 import com.jellymold.utils.APIFault;
 import gc.carbon.data.DataService;
 import gc.carbon.profile.acceptor.ProfileAcceptor;
-import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
@@ -115,7 +114,7 @@ public class ProfileCategoryFormAcceptor implements ProfileAcceptor {
         }
 
         // TODO - Each APIVersion should have it's own Acceptor
-        if (resource.getVersion().isVersionOne()) {
+        if (resource.getApiVersion().isVersionOne()) {
 
             profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
             boolean end = Boolean.valueOf(form.getFirstValue("end"));
@@ -146,7 +145,7 @@ public class ProfileCategoryFormAcceptor implements ProfileAcceptor {
         if (profileService.isUnique(profileItem)) {
 
             // save newProfileItem and do calculations
-            profileService.persist(profileItem, resource.getVersion());
+            profileService.persist(profileItem, resource.getApiVersion());
 
             // clear caches
             profileService.clearCaches(resource.getProfileBrowser());

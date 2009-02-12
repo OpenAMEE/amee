@@ -69,41 +69,78 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         environment = EnvironmentService.getEnvironment();
         //TODO - This logic should be part of BaseResource. Move once package reorg allows this.
         // Set the default MediaType response to be atom+xml for all versions > 1.0
-        if (!getVersion().isVersionOne()) {
+        if (!getApiVersion().isVersionOne()) {
             super.getVariants().add(0, new Variant(MediaType.APPLICATION_ATOM_XML));
         }
         setPathItem();
     }
 
     protected Representation getDomRepresentation() throws ResourceException {
-        Representation domRepresentation;
+
+        // flag to ensure we only do the fetching work once
+        final ThreadLocal<Boolean> fetched = new ThreadLocal<Boolean>();
+
+        Representation representation;
         try {
-            domRepresentation = new DomRepresentation(MediaType.APPLICATION_XML) {
-                Document doc = null;
+
+            representation = new DomRepresentation(MediaType.APPLICATION_XML) {
 
                 public Document getDocument() throws IOException {
-                    if (doc == null) {
-                        doc = new DocumentImpl();
+                    if ((fetched.get() == null) || !fetched.get()) {
+                        Document doc = new DocumentImpl();
                         try {
+                            fetched.set(true);
                             Element element = doc.createElement("Resources");
-                            if (!getVersion().isVersionOne()) {
+                            if (!getApiVersion().isVersionOne()) {
                                 element.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://schemas.amee.cc/2.0");
                             }
-
                             element.appendChild(getElement(doc));
                             doc.appendChild(element);
+                            setDocument(doc);
                         } catch (ResourceException ex) {
                             throw new IOException(ex);
                         }
                     }
-                    return doc;
+                    return super.getDocument();
                 }
             };
 
         } catch (IOException e) {
             throw new ResourceException(e);
         }
-        return domRepresentation;
+        return representation;
+    }
+
+    // TODO: Needs to replace getJsonRepresentation in BaseResource or be merged.
+    protected Representation getJsonRepresentation() throws ResourceException {
+
+        // flag to ensure we only do the fetching work once
+        final ThreadLocal<Boolean> fetched = new ThreadLocal<Boolean>();
+
+        // No need to use JsonRepresentation directly as it doesn't add much beyond StringRepresentation
+        return new StringRepresentation(null, MediaType.APPLICATION_JSON) {
+
+            @Override
+            public String getText() {
+                if ((fetched.get() == null) || !fetched.get()) {
+                    try {
+                        fetched.set(true);
+                        JSONObject obj = getJSONObject();
+                        obj.put("apiVersion", getApiVersion().toString());
+                        setText(obj.toString());
+                    } catch (JSONException e) {
+                        // swallow
+                        // TODO: replace this with a bespoke Exception implemention
+                        throw new RuntimeException(e);
+                    } catch (ResourceException e) {
+                        // swallow
+                        // TODO: replace this with a bespoke Exception implemention
+                        throw new RuntimeException(e);
+                    }
+                }
+                return super.getText();
+            }
+        };
     }
 
     // TODO: Needs to replace getAtomRepresentation in BaseResource or be merged.
@@ -156,7 +193,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         return values;
     }
 
-    public APIVersion getVersion() {
+    public APIVersion getApiVersion() {
         User user = (User) ThreadBeanHolder.get("user");
         return user.getApiVersion();
     }

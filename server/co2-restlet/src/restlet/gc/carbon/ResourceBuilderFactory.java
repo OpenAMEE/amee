@@ -28,7 +28,7 @@ import gc.carbon.data.builder.DataCategoryResourceBuilder;
 public class ResourceBuilderFactory {
 
     public static ResourceBuilder createProfileCategoryBuilder(ProfileCategoryResource resource) {
-        if (resource.getVersion().isVersionOne()) {
+        if (resource.getApiVersion().isVersionOne()) {
             return new gc.carbon.profile.builder.v1.ProfileCategoryResourceBuilder(resource);
         } else {
             return new gc.carbon.profile.builder.v2.ProfileCategoryResourceBuilder(resource);
@@ -36,7 +36,7 @@ public class ResourceBuilderFactory {
     }
 
     public static ResourceBuilder createProfileItemBuilder(ProfileItemResource resource) {
-        if (resource.getVersion().isVersionOne()) {
+        if (resource.getApiVersion().isVersionOne()) {
             return new gc.carbon.profile.builder.v1.ProfileItemResourceBuilder(resource);
         } else {
             return new gc.carbon.profile.builder.v2.ProfileItemResourceBuilder(resource);
@@ -46,5 +46,4 @@ public class ResourceBuilderFactory {
     public static ResourceBuilder createDataCategoryBuilder(DataCategoryResource resource) {
         return new DataCategoryResourceBuilder(resource);
     }
-
 }
