@@ -235,7 +235,7 @@ def migrate_algo
     stmt = conn.create_statement()
 
     # SQL Statements
-    select = "SELECT ID FROM ITEM_DEFINITION WHERE NAME='{NAME}'"
+    select = "SELECT ID FROM ITEM_DEFINITION WHERE NAME='{NAME}' AND ENVIRONMENT_ID=2"
     insert = "INSERT INTO ALGORITHM(UID, NAME, CONTENT, CREATED, MODIFIED, ENVIRONMENT_ID, ITEM_DEFINITION_ID, TYPE) " + 
       "VALUES('{UID}','default','{CONTENT}', curdate(), curdate(), 2, {ID}, 'AL')"
 
