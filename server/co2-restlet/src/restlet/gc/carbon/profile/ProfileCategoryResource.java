@@ -129,7 +129,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
                 }
                 profileBrowser.setEndDate(form.getFirstValue("endDate"));
                 profileBrowser.setDuration(form.getFirstValue("duration"));
-                profileBrowser.setSelectBy(form.getFirstValue("selectBy"));
+                profileBrowser.setSelectBy(form.getFirstValue("selectby"));
                 profileBrowser.setMode(form.getFirstValue("mode"));
                 profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
             }
@@ -187,8 +187,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     public List<ProfileItem> doAcceptOrStore(Representation entity) {
-        Form form = getRequest().getResourceRef().getQueryAsForm();
-        profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
+        profileBrowser.setAmountReturnUnit(getForm().getFirstValue("returnUnit"), getForm().getFirstValue("returnPerUnit"));
         return getAcceptor(entity.getMediaType()).accept(entity);
     }
 

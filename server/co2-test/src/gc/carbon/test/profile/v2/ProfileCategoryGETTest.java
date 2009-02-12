@@ -148,7 +148,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
 
     @Test
     public void testSelectByStart() throws Exception {
-        client.addQueryParameter("selectBy","start");
+        client.addQueryParameter("selectby","start");
         client.addQueryParameter("startDate",startDate.toString(fmt));
 
         DomRepresentation rep = client.get().getEntityAsDom();
@@ -161,7 +161,7 @@ public class ProfileCategoryGETTest extends BaseProfileCategoryTest {
 
     @Test
     public void testSelectByEnd() throws Exception {
-        client.addQueryParameter("selectBy","end");
+        client.addQueryParameter("selectby","end");
         client.addQueryParameter("startDate",startDate.toString(fmt));
 
         DomRepresentation rep = client.get().getEntityAsDom();

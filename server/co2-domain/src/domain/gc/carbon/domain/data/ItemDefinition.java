@@ -26,6 +26,7 @@ import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
 import gc.carbon.domain.ObjectType;
 import gc.carbon.domain.path.InternalValue;
+import gc.carbon.APIVersion;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -281,9 +282,9 @@ public class ItemDefinition implements PersistentObject {
         return ObjectType.ID;
     }
 
-    public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values) {
+    public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values, APIVersion version) {
         for (ItemValueDefinition ivd : getItemValueDefinitions()) {
-            if (ivd.getUsableValue() != null)
+            if (ivd.getUsableValue() != null && ivd.getAPIVersions().contains(version))
                 values.put(ivd, new InternalValue(ivd));
         }
     }

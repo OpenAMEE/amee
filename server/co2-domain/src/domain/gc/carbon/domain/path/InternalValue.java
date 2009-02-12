@@ -35,6 +35,7 @@ public class InternalValue {
 
     private final Log log = LogFactory.getLog(getClass());
 
+    private String name;
     private Object value;
 
     public InternalValue(String value) {
@@ -42,6 +43,7 @@ public class InternalValue {
     }
 
     public InternalValue(ItemValueDefinition itemValueDefinition) {
+        name = itemValueDefinition.getName();
         if (isDecimal(itemValueDefinition)) {
             value = convertStringToDecimal(itemValueDefinition.getUsableValue());
         } else {
@@ -50,6 +52,7 @@ public class InternalValue {
     }
 
     public InternalValue(ItemValue itemValue) {
+        name = itemValue.getName();
         if (isDecimal(itemValue.getItemValueDefinition())) {
             value = asInternalValue(itemValue);
         } else {
@@ -71,10 +74,10 @@ public class InternalValue {
             decimal = new BigDecimal(decimalString);
             decimal = decimal.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
             if (decimal.precision() > ProfileItem.PRECISION) {
-                log.warn("precision is too big: " + decimal);
+                log.warn("convertStringToDecimal() - precision is too big: " + decimal);
             }
-        } catch (Exception e) {
-            log.warn("caught Exception: " + e);
+        } catch (NumberFormatException e) {
+            log.warn("convertStringToDecimal() - NumberFormatException: name=" + name + ", value=" + value);
             decimal = ProfileItem.ZERO;
         }
         return decimal;

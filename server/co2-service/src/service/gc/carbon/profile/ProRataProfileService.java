@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.jellymold.kiwi.User;
+import com.jellymold.utils.ThreadBeanHolder;
+
 /**
  * A ProfileService which prorates amounts belonging to the {@link gc.carbon.domain.profile.ProfileItem ProfileItem} instances
  * that are returned by the delegated ProfileService.

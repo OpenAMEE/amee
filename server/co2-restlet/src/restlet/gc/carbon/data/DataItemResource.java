@@ -56,10 +56,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DataServiceDAO dataServiceDAO;
-
-    @Autowired
-    private Calculator calculator;
+    private DataService dataService;
 
     @Autowired
     private DataSheetService dataSheetService;
@@ -92,42 +89,42 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         DataItem dataItem = dataBrowser.getDataItem();
-        Choices userValueChoices = dataServiceDAO.getUserValueChoices(dataItem);
+        Choices userValueChoices = dataService.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
         values.put("dataItem", dataItem);
         values.put("node", dataItem);
         values.put("userValueChoices", userValueChoices);
-        values.put("amountPerMonth", calculator.calculate(dataItem, userValueChoices));
+        values.put("amountPerMonth", dataService.calculate(dataItem, userValueChoices));
         return values;
     }
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
         DataItem dataItem = dataBrowser.getDataItem();
-        Choices userValueChoices = dataServiceDAO.getUserValueChoices(dataItem);
+        Choices userValueChoices = dataService.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         JSONObject obj = new JSONObject();
         obj.put("actions", getActions(dataBrowser.getDataItemActions()));        
         obj.put("dataItem", dataItem.getJSONObject(true));
         obj.put("path", pathItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
-        obj.put("amountPerMonth", calculator.calculate(dataItem, userValueChoices));
+        obj.put("amountPerMonth", dataService.calculate(dataItem, userValueChoices));
         return obj;
     }
 
     @Override
     public Element getElement(Document document) {
         DataItem dataItem = dataBrowser.getDataItem();
-        Choices userValueChoices = dataServiceDAO.getUserValueChoices(dataItem);
+        Choices userValueChoices = dataService.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         Element element = document.createElement("DataItemResource");
         element.appendChild(dataItem.getElement(document, true));
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
         element.appendChild(userValueChoices.getElement(document));
         element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
-                calculator.calculate(dataItem, userValueChoices).toString()));
+                dataService.calculate(dataItem, userValueChoices).toString()));
         return element;
     }
 
@@ -214,7 +211,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             DataItem dataItem = dataBrowser.getDataItem();
             pathItemService.removePathItemGroup(dataItem.getEnvironment());
             dataSheetService.removeSheet(dataItem.getDataCategory());
-            dataServiceDAO.remove(dataItem);
+            dataService.remove(dataItem);
             success(pathItem.getParent().getFullPath());
         } else {
             notAuthorized();

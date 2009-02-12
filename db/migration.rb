@@ -138,9 +138,9 @@ def migrate_ivd
     conn.setAutoCommit(false)
 
     # SQL Statements
-    select_old = "SELECT ID, ITEM_DEFINITION_ID FROM ITEM_VALUE_DEFINITION WHERE PATH={OLD_PATH}"
+    select_old = "SELECT ID, VALUE, CHOICES, ITEM_DEFINITION_ID FROM ITEM_VALUE_DEFINITION WHERE PATH={OLD_PATH}"
     insert_new = "INSERT INTO ITEM_VALUE_DEFINITION(UID, NAME, PATH, VALUE, CHOICES, FROM_PROFILE, FROM_DATA, ALLOWED_ROLES, CREATED, MODIFIED, ENVIRONMENT_ID, ITEM_DEFINITION_ID, VALUE_DEFINITION_ID, PER_UNIT,UNIT) " + 
-      "VALUES('{UID}',{NEW_NAME},{NEW_PATH},'', '', true, false, '', curdate(), curdate(), 2, {ITEM_DEFINITION_ID}, 16,{NEW_PER_UNIT},{NEW_UNIT})"
+      "VALUES('{UID}',{NEW_NAME},{NEW_PATH},'{VALUE}', '{CHOICES}', true, false, '', curdate(), curdate(), 2, {ITEM_DEFINITION_ID}, 16,{NEW_PER_UNIT},{NEW_UNIT})"
     update_old = "UPDATE ITEM_VALUE_DEFINITION SET ALIASED_TO_ID=LAST_INSERT_ID(), PER_UNIT={OLD_PER_UNIT},UNIT={OLD_UNIT} WHERE ID={ID}"
     insert_old_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},1)"
     insert_new_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES(LAST_INSERT_ID(),2)"
@@ -157,12 +157,16 @@ def migrate_ivd
       while(rs.next())
         item_value_definition_id = rs.getInt("ID").to_s
         item_definition_id = rs.getInt("ITEM_DEFINITION_ID").to_s
+        value = rs.getInt("VALUE").to_s
+        choices = rs.getInt("CHOICES").to_s
         query = insert_new.sub(/\{UID\}/, JM::UidGen.getUid())
         query = query.sub(/\{NEW_NAME\}/, new_name)
         query = query.sub(/\{NEW_PATH\}/, new_path)
         query = query.sub(/\{ITEM_DEFINITION_ID\}/, item_definition_id)
         query = query.sub(/\{NEW_UNIT\}/, new_unit)
         query = query.sub(/\{NEW_PER_UNIT\}/, new_per_unit)
+        query = query.sub(/\{VALUE\}/, value)
+        query = query.sub(/\{CHOICES\}/, choices)
         puts query
         stmt.addBatch(query)
         

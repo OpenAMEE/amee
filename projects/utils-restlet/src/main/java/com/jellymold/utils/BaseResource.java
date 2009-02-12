@@ -52,6 +52,11 @@ public abstract class BaseResource extends ComponentResource {
 
     @Override
     public Representation represent(Variant variant) throws ResourceException {
+
+        if (log.isDebugEnabled()) {
+            log.debug("represent() - method: " + getRequest().getMethod() + ", parameters: " + getForm().getMatrixString());
+        }
+
         Representation representation;
         if (variant.getMediaType().equals(MediaType.TEXT_HTML)) {
             representation = getHtmlRepresentation();
@@ -307,7 +312,6 @@ public abstract class BaseResource extends ComponentResource {
     }
 
     public boolean isMultiPartForm() {
-        // return getRequest().getEntity().getMediaType().toString().startsWith(MediaType.MULTIPART_FORM_DATA.toString());
         return getRequest().getEntity().getMediaType().isCompatible(MediaType.MULTIPART_FORM_DATA);
     }
 
