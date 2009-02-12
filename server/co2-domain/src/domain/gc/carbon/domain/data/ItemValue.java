@@ -22,7 +22,10 @@ package gc.carbon.domain.data;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
-import gc.carbon.domain.*;
+import gc.carbon.domain.AMEEPerUnit;
+import gc.carbon.domain.AMEEUnit;
+import gc.carbon.domain.Builder;
+import gc.carbon.domain.ObjectType;
 import gc.carbon.domain.data.builder.v2.ItemValueBuilder;
 import gc.carbon.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
@@ -250,8 +253,8 @@ public class ItemValue implements PersistentObject, Pathable {
         return ObjectType.IV;
     }
 
-    public Unit getUnit() {
-        return (unit != null) ? Unit.valueOf(unit) : itemValueDefinition.getUnit();
+    public AMEEUnit getUnit() {
+        return (unit != null) ? AMEEUnit.valueOf(unit) : itemValueDefinition.getUnit();
     }
 
     public void setUnit(String unit) throws IllegalArgumentException {
@@ -261,12 +264,12 @@ public class ItemValue implements PersistentObject, Pathable {
         this.unit = unit;
     }
 
-    public PerUnit getPerUnit() {
+    public AMEEPerUnit getPerUnit() {
         if (perUnit != null) {
             if (perUnit.equals("none")) {
-                 return PerUnit.valueOf(getItem().getDuration());
+                 return AMEEPerUnit.valueOf(getItem().getDuration());
              } else {
-                 return PerUnit.valueOf(perUnit);
+                 return AMEEPerUnit.valueOf(perUnit);
              }
          } else {
             return itemValueDefinition.getPerUnit();
@@ -280,7 +283,7 @@ public class ItemValue implements PersistentObject, Pathable {
         this.perUnit = perUnit;
     }
 
-    public Unit getCompoundUnit() {
+    public AMEEUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
 

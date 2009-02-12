@@ -8,12 +8,12 @@ import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.ValueType;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.APIVersion;
+import gc.carbon.domain.AMEEPerUnit;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.data.ItemValueDefinition;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.PerUnit;
 import gc.carbon.profile.ProfileBrowser;
 import gc.carbon.profile.ProfileService;
 
@@ -88,7 +88,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
                     } else if ("name".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.getName(), ValueType.TEXT);
                     } else if ("amountPerMonth".equalsIgnoreCase(column.getName())) {
-                        new Cell(column, row, ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(profileItem.getAmount(), PerUnit.valueOf("month")), ValueType.DECIMAL);
+                        new Cell(column, row, ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(profileItem.getAmount(), AMEEPerUnit.valueOf("month")), ValueType.DECIMAL);
                     } else if ("validFrom".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, DAY_DATE_FMT.format(profileItem.getStartDate()), ValueType.TEXT);
                     } else if ("end".equalsIgnoreCase(column.getName())) {

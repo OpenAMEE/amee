@@ -3,18 +3,17 @@ package gc.carbon.profile.builder.v2;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.ResourceBuilder;
-import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.profile.Profile;
-import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
-import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.AMEEUnit;
 import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.path.PathItem;
-import gc.carbon.domain.Unit;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
 import gc.carbon.profile.*;
-import org.apache.abdera.model.*;
 import org.apache.abdera.ext.history.FeedPagingHelper;
 import org.apache.abdera.ext.opensearch.OpenSearchExtensionFactory;
-
+import org.apache.abdera.model.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -348,7 +347,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             }
         }
 
-        Unit returnUnit = resource.getProfileBrowser().getReturnUnit();
+        AMEEUnit returnUnit = resource.getProfileBrowser().getReturnUnit();
 
         // Add all ProfileItems as Entries in the Atom feed.
         for(ProfileItem profileItem : profileItems) {
@@ -417,7 +416,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         //TODO - Add batch support
         ProfileItem profileItem = resource.getProfileItems().get(0);
 
-        Unit returnUnit = resource.getProfileBrowser().getReturnUnit();
+        AMEEUnit returnUnit = resource.getProfileBrowser().getReturnUnit();
         String amount = profileItem.getAmount(returnUnit).toString();
 
         Entry entry = atomFeed.newEntry();

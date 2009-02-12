@@ -9,8 +9,6 @@ import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.ResourceBuilder;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.ObjectType;
-import gc.carbon.domain.Unit;
-import gc.carbon.domain.PerUnit;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.Profile;

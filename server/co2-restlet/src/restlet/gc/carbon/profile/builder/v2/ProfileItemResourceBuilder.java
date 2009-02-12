@@ -2,15 +2,18 @@ package gc.carbon.profile.builder.v2;
 
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.ResourceBuilder;
-import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
+import gc.carbon.domain.AMEEUnit;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.Unit;
+import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
 import gc.carbon.profile.ProfileItemResource;
+import org.apache.abdera.model.Category;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.IRIElement;
+import org.apache.abdera.model.Text;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.apache.abdera.model.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,7 +82,7 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
 
         ProfileItem profileItem = resource.getProfileItem();
 
-        Unit returnUnit = resource.getProfileBrowser().getReturnUnit();
+        AMEEUnit returnUnit = resource.getProfileBrowser().getReturnUnit();
         String amount = profileItem.getAmount(returnUnit).toString();
 
         Entry entry = atomFeed.newEntry();
