@@ -71,6 +71,7 @@
         </property>
     </bean>
 
+    <!-- TODO: Merge fully with ameeEnvironmentAdminSkin. Do in skins folder too. -->
     <bean id="siteAdminSkin" class="com.jellymold.utils.skin.Skin">
         <property name="path" value="site-admin"/>
         <property name="importedSkins">
@@ -127,6 +128,7 @@
         </property>
     </bean>
 
+    <!-- TODO: Merge fully with siteAdminSkin. Do in skins folder too. -->
     <bean id="ameeEnvironmentAdminSkin" class="com.jellymold.utils.skin.Skin">
         <property name="path" value="amee.environment.admin.skin"/>
         <property name="parent" ref="siteAdminSkin"/>

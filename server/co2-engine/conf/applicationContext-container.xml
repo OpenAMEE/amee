@@ -41,7 +41,7 @@
 
     <bean id="ameeHost" class="org.restlet.ext.spring.SpringHost">
         <constructor-arg ref="ameeContainer"/>
-        <property name="hostDomain" value="live.co2.dgen.net|stage.co2.dgen.net|local.stage.co2.dgen.net"/>
+        <property name="hostDomain" value="live.co2.dgen.net|stage.co2.dgen.net|local.stage.co2.dgen.net|dev.amee.com"/>
         <property name="attachments">
             <map>
                 <entry key="" value-ref="defaultApplication"/>
@@ -55,7 +55,7 @@
 
     <bean id="ameeAdminHost" class="org.restlet.ext.spring.SpringHost">
         <constructor-arg ref="ameeContainer"/>
-        <property name="hostDomain" value="admin.live.co2.dgen.net|admin.stage.co2.dgen.net|local.admin.stage.co2.dgen.net"/>
+        <property name="hostDomain" value="admin.live.co2.dgen.net|admin.stage.co2.dgen.net|local.admin.stage.co2.dgen.net|admin-dev.amee.com"/>
         <property name="attachments">
             <map>
                 <entry key="" value-ref="defaultApplication"/>
