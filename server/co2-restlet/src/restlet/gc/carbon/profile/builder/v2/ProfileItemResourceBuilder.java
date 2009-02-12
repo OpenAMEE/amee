@@ -73,7 +73,6 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
         return values;
     }
 
-
     public org.apache.abdera.model.Element getAtomElement() {
 
         AtomFeed atomFeed = AtomFeed.getInstance();

@@ -63,8 +63,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         super.init(context, request, response);
         profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
-        Form form = request.getResourceRef().getQueryAsForm();
-        profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
+        profileBrowser.setAmountReturnUnit(getForm().getFirstValue("returnUnit"), getForm().getFirstValue("returnPerUnit"));
         setAcceptors();
         setBuilderStrategy();
     }
@@ -117,7 +116,6 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     public void handleGet() {
         log.debug("handleGet()");
         if (profileBrowser.getProfileItemActions().isAllowView()) {
-            Form form = getRequest().getResourceRef().getQueryAsForm();
             super.handleGet();
         } else {
             notAuthorized();
