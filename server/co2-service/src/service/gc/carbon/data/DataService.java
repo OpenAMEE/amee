@@ -10,11 +10,15 @@ import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
 import gc.carbon.definition.DefinitionServiceDAO;
 import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.User;
 import com.jellymold.sheet.Sheet;
+import com.jellymold.sheet.Choices;
+import com.jellymold.utils.ThreadBeanHolder;
 
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.math.BigDecimal;
 
 /**
  * Primary service interface to Data Resources.
@@ -54,6 +58,9 @@ public class DataService {
 
     @Autowired
     private PathItemService pathItemService;
+
+    @Autowired
+    private Calculator calculator;
 
     public void clearCaches(DataCategory dc) {
         pathItemService.removePathItemGroup(dc.getEnvironment());
@@ -99,6 +106,20 @@ public class DataService {
 
     public void remove(DataCategory dc) {
         dao.remove(dc);
+    }
+
+    public void remove(DataItem di) {
+        dao.remove(di);
+    }
+
+    public Choices getUserValueChoices(DataItem di) {
+        return dao.getUserValueChoices(di);    
+    }
+
+    public BigDecimal calculate(DataItem di, Choices userValueChoices) {
+        //TODO - Need to remove ad-hoc usage of ThreadBeanHolder
+        User user = (User) ThreadBeanHolder.get("user");
+        return calculator.calculate(di, userValueChoices, user.getApiVersion());
     }
 
     public Sheet getSheet(DataBrowser browser) {

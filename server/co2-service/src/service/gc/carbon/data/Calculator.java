@@ -27,6 +27,7 @@ import gc.carbon.domain.data.ItemValueDefinition;
 import gc.carbon.domain.path.InternalValue;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileFinder;
+import gc.carbon.APIVersion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
@@ -56,7 +57,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
     private static final String ALGORITHM_NAME = "default";
 
 
-    public BigDecimal calculate(ProfileItem profileItem) {
+    public BigDecimal calculate(ProfileItem profileItem, APIVersion version) {
         log.debug("calculate() - starting calculator");
         BigDecimal amount;
         if (!profileItem.isEnd()) {
@@ -65,7 +66,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
 
             if (algorithm != null) {
 
-                Map<String, Object> values = getValues(profileItem);
+                Map<String, Object> values = getValues(profileItem, version);
 
                 // get the new amount via algorithm and values
                 amount = calculate(algorithm, values, profileItem);
@@ -105,7 +106,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
         return dataFinder;
     }
 
-    public BigDecimal calculate(DataItem dataItem, Choices userValueChoices) {
+    public BigDecimal calculate(DataItem dataItem, Choices userValueChoices, APIVersion version) {
         log.debug("starting calculator");
         Map<String, Object> values;
         BigDecimal amount;
@@ -113,7 +114,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
         Algorithm algorithm = getAlgorithm(itemDefinition, ALGORITHM_NAME);
         if (algorithm != null) {
             // get the new amount via algorithm and values
-            values = getValues(dataItem, userValueChoices);
+            values = getValues(dataItem, userValueChoices, version);
             amount = calculate(algorithm, values, null);
         } else {
             log.warn("calculate() - Algorithm NOT found");
@@ -196,9 +197,9 @@ public class Calculator implements BeanFactoryAware, Serializable {
         return null;
     }
 
-    public Map<String, Object> getValues(ProfileItem profileItem) {
+    public Map<String, Object> getValues(ProfileItem profileItem, APIVersion version) {
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
-        profileItem.getItemDefinition().appendInternalValues(values);
+        profileItem.getItemDefinition().appendInternalValues(values, version);
         profileItem.getDataItem().appendInternalValues(values);
         profileItem.appendInternalValues(values);
         Map<String, Object> returnValues = new HashMap<String, Object>();
@@ -208,9 +209,9 @@ public class Calculator implements BeanFactoryAware, Serializable {
         return returnValues;
     }
 
-    public Map<String, Object> getValues(DataItem dataItem, Choices userValueChoices) {
+    public Map<String, Object> getValues(DataItem dataItem, Choices userValueChoices, APIVersion version) {
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
-        dataItem.getItemDefinition().appendInternalValues(values);
+        dataItem.getItemDefinition().appendInternalValues(values, version);
         dataItem.appendInternalValues(values);
         appendUserValueChoices(userValueChoices, values);
 

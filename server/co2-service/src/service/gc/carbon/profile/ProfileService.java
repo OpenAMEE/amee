@@ -13,6 +13,8 @@ import gc.carbon.APIVersion;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.cache.CacheableFactory;
 import com.jellymold.utils.Pager;
+import com.jellymold.utils.ThreadBeanHolder;
+import com.jellymold.kiwi.User;
 
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
@@ -117,7 +119,9 @@ public class ProfileService {
     }
 
     public void calculate(ProfileItem pi) {
-        calculator.calculate(pi);
+        //TODO - Need to remove ad-hoc usage of ThreadBeanHolder
+        User user = (User) ThreadBeanHolder.get("user");
+        calculator.calculate(pi, user.getApiVersion());
     }
 }
 
