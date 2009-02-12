@@ -63,9 +63,9 @@ public class ProfileItem extends Item {
     @Transient
     private String convertedAmount = "";
 
-    public static final Unit INTERNAL_AMOUNT_UNIT = new Unit(SI.KILOGRAM);
-    public static final PerUnit INTERNAL_AMOUNT_PERUNIT = new PerUnit(NonSI.YEAR);
-    public static final Unit INTERNAL_RETURN_UNIT = CompoundUnit.valueOf(INTERNAL_AMOUNT_UNIT, INTERNAL_AMOUNT_PERUNIT);
+    public static final AMEEUnit INTERNAL_AMOUNT_UNIT = new AMEEUnit(SI.KILOGRAM);
+    public static final AMEEPerUnit INTERNAL_AMOUNT_PERUNIT = new AMEEPerUnit(NonSI.YEAR);
+    public static final AMEEUnit INTERNAL_RETURN_UNIT = AMEECompoundUnit.valueOf(INTERNAL_AMOUNT_UNIT, INTERNAL_AMOUNT_PERUNIT);
 
     public ProfileItem() {
         super();
@@ -147,7 +147,7 @@ public class ProfileItem extends Item {
     }
 
     @SuppressWarnings("unchecked")
-    public BigDecimal getAmount(Unit returnUnit) {
+    public BigDecimal getAmount(AMEEUnit returnUnit) {
         if (!returnUnit.equals(INTERNAL_RETURN_UNIT)) {
             return INTERNAL_RETURN_UNIT.convert(getAmount(), returnUnit);
         } else {

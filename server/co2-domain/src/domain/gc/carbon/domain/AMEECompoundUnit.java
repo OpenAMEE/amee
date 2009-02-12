@@ -1,15 +1,14 @@
 package gc.carbon.domain;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
-import org.json.JSONObject;
-import org.json.JSONException;
 import com.jellymold.utils.domain.APIUtils;
+import gc.carbon.domain.profile.ProfileItem;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.measure.DecimalMeasure;
 import java.math.BigDecimal;
-
-import gc.carbon.domain.profile.ProfileItem;
 
 /**
  * This file is part of AMEE.
@@ -30,20 +29,20 @@ import gc.carbon.domain.profile.ProfileItem;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class CompoundUnit extends Unit {
+public class AMEECompoundUnit extends AMEEUnit {
 
-    private PerUnit perUnit;
+    private AMEEPerUnit perUnit;
 
-    public static Unit valueOf(Unit unit, PerUnit perUnit) {
-        return new CompoundUnit(unit, perUnit);
+    public static AMEEUnit valueOf(AMEEUnit unit, AMEEPerUnit perUnit) {
+        return new AMEECompoundUnit(unit, perUnit);
     }
 
-    private CompoundUnit(Unit unit, PerUnit perUnit) {
+    private AMEECompoundUnit(AMEEUnit unit, AMEEPerUnit perUnit) {
         super(unit.toUnit());
         this.perUnit = perUnit;
     }
 
-    public BigDecimal convert(BigDecimal decimal, CompoundUnit targetUnit) {
+    public BigDecimal convert(BigDecimal decimal, AMEECompoundUnit targetUnit) {
         DecimalMeasure dm = DecimalMeasure.valueOf(decimal, toUnit());
         BigDecimal converted = dm.to(targetUnit.toUnit(), ProfileItem.CONTEXT).getValue();
         return converted.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);

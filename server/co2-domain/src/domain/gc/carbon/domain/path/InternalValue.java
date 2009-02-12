@@ -1,10 +1,10 @@
 package gc.carbon.domain.path;
 
 import com.jellymold.utils.ValueType;
+import gc.carbon.domain.AMEEUnit;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.data.ItemValueDefinition;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.domain.Unit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -87,8 +87,8 @@ public class InternalValue {
         if (!iv.hasUnit() && !iv.hasPerUnit())
             return decimal;
 
-        Unit internalUnit = iv.getItemValueDefinition().getCanonicalCompoundUnit();
-        Unit externalUnit = iv.getCompoundUnit();
+        AMEEUnit internalUnit = iv.getItemValueDefinition().getCanonicalCompoundUnit();
+        AMEEUnit externalUnit = iv.getCompoundUnit();
         if (!externalUnit.equals(internalUnit)) {
             decimal = externalUnit.convert(decimal, internalUnit);
         }

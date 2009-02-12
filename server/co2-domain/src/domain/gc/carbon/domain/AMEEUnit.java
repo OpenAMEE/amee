@@ -24,24 +24,24 @@ import java.math.BigDecimal;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class Unit {
+public class AMEEUnit {
 
-    public static final Unit ONE = new Unit(javax.measure.unit.Unit.ONE);
+    public static final AMEEUnit ONE = new AMEEUnit(javax.measure.unit.Unit.ONE);
     protected javax.measure.unit.Unit unit = javax.measure.unit.Unit.ONE;
 
-    public static Unit valueOf(String unit) {
-        return new Unit(javax.measure.unit.Unit.valueOf(unit));
+    public static AMEEUnit valueOf(String unit) {
+        return new AMEEUnit(javax.measure.unit.Unit.valueOf(unit));
     }
 
-    public Unit(javax.measure.unit.Unit unit) {
+    public AMEEUnit(javax.measure.unit.Unit unit) {
         this.unit = unit;
     }
 
-    public Unit with(PerUnit perUnit) {
-        return CompoundUnit.valueOf(this, perUnit);
+    public AMEEUnit with(AMEEPerUnit perUnit) {
+        return AMEECompoundUnit.valueOf(this, perUnit);
     }
 
-    public BigDecimal convert(BigDecimal decimal, Unit targetUnit) {
+    public BigDecimal convert(BigDecimal decimal, AMEEUnit targetUnit) {
         DecimalMeasure dm = DecimalMeasure.valueOf(decimal, toUnit());
         BigDecimal converted = dm.to(targetUnit.toUnit(), ProfileItem.CONTEXT).getValue();
         return converted.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
@@ -51,7 +51,7 @@ public class Unit {
         return this.unit.isCompatible(javax.measure.unit.Unit.valueOf(unit));
     }
 
-    public boolean equals(Unit that) {
+    public boolean equals(AMEEUnit that) {
         return toUnit().equals(that.toUnit());
     }
 

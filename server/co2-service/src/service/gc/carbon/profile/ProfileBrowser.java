@@ -23,9 +23,9 @@ import com.jellymold.kiwi.ResourceActions;
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.BaseBrowser;
 import gc.carbon.data.DataService;
-import gc.carbon.domain.CompoundUnit;
-import gc.carbon.domain.PerUnit;
-import gc.carbon.domain.Unit;
+import gc.carbon.domain.AMEECompoundUnit;
+import gc.carbon.domain.AMEEPerUnit;
+import gc.carbon.domain.AMEEUnit;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.Profile;
@@ -87,7 +87,7 @@ public class ProfileBrowser extends BaseBrowser {
     private Date profileDate = new ProfileDate();
 
     // Return Unit
-    private Unit returnUnit = ProfileItem.INTERNAL_RETURN_UNIT;
+    private AMEEUnit returnUnit = ProfileItem.INTERNAL_RETURN_UNIT;
 
     // Filters
     private String selectBy;
@@ -226,7 +226,7 @@ public class ProfileBrowser extends BaseBrowser {
         return getSelectBy() != null;
     }
 
-    public Unit getReturnUnit() {
+    public AMEEUnit getReturnUnit() {
         return returnUnit;
     }
 
@@ -240,13 +240,13 @@ public class ProfileBrowser extends BaseBrowser {
         if (returnUnit == null)
             returnUnit = ProfileItem.INTERNAL_AMOUNT_UNIT.toString();
 
-        Unit unit = Unit.valueOf(returnUnit);
+        AMEEUnit unit = AMEEUnit.valueOf(returnUnit);
 
         if (returnPerUnit == null)
             returnPerUnit = ProfileItem.INTERNAL_AMOUNT_PERUNIT.toString();
-        PerUnit perUnit = PerUnit.valueOf(returnPerUnit);
+        AMEEPerUnit perUnit = AMEEPerUnit.valueOf(returnPerUnit);
 
-        this.returnUnit = CompoundUnit.valueOf(unit, perUnit);
+        this.returnUnit = AMEECompoundUnit.valueOf(unit, perUnit);
     }
 
 }

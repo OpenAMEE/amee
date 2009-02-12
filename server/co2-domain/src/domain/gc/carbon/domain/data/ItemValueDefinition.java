@@ -24,9 +24,9 @@ import com.jellymold.sheet.Choice;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
+import gc.carbon.APIVersion;
 import gc.carbon.domain.*;
 import gc.carbon.domain.data.builder.v2.ItemValueDefinitionBuilder;
-import gc.carbon.APIVersion;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -366,12 +366,12 @@ public class ItemValueDefinition implements PersistentObject {
         this.unit = unit;
     }
 
-    public Unit getUnit() {
-        return (unit != null) ? Unit.valueOf(unit) : Unit.ONE;
+    public AMEEUnit getUnit() {
+        return (unit != null) ? AMEEUnit.valueOf(unit) : AMEEUnit.ONE;
     }
 
-    public PerUnit getPerUnit() {
-        return (perUnit != null) ? PerUnit.valueOf(perUnit) : PerUnit.ONE;
+    public AMEEPerUnit getPerUnit() {
+        return (perUnit != null) ? AMEEPerUnit.valueOf(perUnit) : AMEEPerUnit.ONE;
     }
 
     public boolean hasUnits() {
@@ -390,11 +390,11 @@ public class ItemValueDefinition implements PersistentObject {
         return getPerUnit().isCompatibleWith(perUnit);
     }
 
-    public Unit getCompoundUnit() {
+    public AMEEUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
 
-    public Unit getCanonicalCompoundUnit() {
+    public AMEEUnit getCanonicalCompoundUnit() {
         if (aliasedTo != null) {
             return aliasedTo.getCompoundUnit();
         } else {

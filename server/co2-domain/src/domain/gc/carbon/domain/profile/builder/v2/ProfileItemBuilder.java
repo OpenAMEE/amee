@@ -20,8 +20,8 @@
 package gc.carbon.domain.profile.builder.v2;
 
 import com.jellymold.utils.domain.APIUtils;
+import gc.carbon.domain.AMEEUnit;
 import gc.carbon.domain.Builder;
-import gc.carbon.domain.Unit;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
@@ -32,14 +32,12 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.math.BigDecimal;
-
 public class ProfileItemBuilder implements Builder {
 
     private ProfileItem item;
-    private Unit returnUnit = ProfileItem.INTERNAL_RETURN_UNIT;
+    private AMEEUnit returnUnit = ProfileItem.INTERNAL_RETURN_UNIT;
 
-    public ProfileItemBuilder(ProfileItem item, Unit returnUnit) {
+    public ProfileItemBuilder(ProfileItem item, AMEEUnit returnUnit) {
         this.item = item;
         this.returnUnit = returnUnit;
     }

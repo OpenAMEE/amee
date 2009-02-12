@@ -1,23 +1,14 @@
 package gc.carbon.domain;
 
+import gc.carbon.domain.profile.ProfileItem;
 import org.joda.time.Duration;
 import org.joda.time.format.ISOPeriodFormat;
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
-import org.json.JSONObject;
-import org.json.JSONException;
 
+import javax.measure.DecimalMeasure;
+import javax.measure.unit.Dimension;
 import static javax.measure.unit.SI.MILLI;
 import static javax.measure.unit.SI.SECOND;
-import javax.measure.unit.NonSI;
-import javax.measure.unit.Dimension;
-import javax.measure.DecimalMeasure;
-
-import com.jellymold.utils.domain.APIUtils;
-
 import java.math.BigDecimal;
-
-import gc.carbon.domain.profile.ProfileItem;
 
 /*
  * This file is part of AMEE.
@@ -38,26 +29,26 @@ import gc.carbon.domain.profile.ProfileItem;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class PerUnit extends Unit {
+public class AMEEPerUnit extends AMEEUnit {
 
-    public static final PerUnit ONE = new PerUnit(javax.measure.unit.Unit.ONE);
+    public static final AMEEPerUnit ONE = new AMEEPerUnit(javax.measure.unit.Unit.ONE);
 
     private String string;
 
-    public static PerUnit valueOf(String unit) {
-        return new PerUnit(javax.measure.unit.Unit.valueOf(unit));
+    public static AMEEPerUnit valueOf(String unit) {
+        return new AMEEPerUnit(javax.measure.unit.Unit.valueOf(unit));
     }
 
-    public static PerUnit valueOf(Duration duration) {
-        return new PerUnit(duration);
+    public static AMEEPerUnit valueOf(Duration duration) {
+        return new AMEEPerUnit(duration);
     }
 
-    public PerUnit(javax.measure.unit.Unit unit) {
+    public AMEEPerUnit(javax.measure.unit.Unit unit) {
         super(unit);
         this.string = unit.toString();
     }
 
-    private PerUnit(Duration duration) {
+    private AMEEPerUnit(Duration duration) {
         super(MILLI(SECOND).times(duration.getMillis()));
         this.string = ISOPeriodFormat.standard().print(duration.toPeriod());
     }
@@ -69,7 +60,7 @@ public class PerUnit extends Unit {
      * @param targetPerUnit - the target PerUnit of the converted decimal
      * @return the decimal value in the targetPerUnit
      */
-    public BigDecimal convert(BigDecimal decimal, PerUnit targetPerUnit) {
+    public BigDecimal convert(BigDecimal decimal, AMEEPerUnit targetPerUnit) {
         DecimalMeasure dm = DecimalMeasure.valueOf(decimal, toUnit().inverse());
         BigDecimal converted = dm.to(targetPerUnit.toUnit().inverse(), ProfileItem.CONTEXT).getValue();
         return converted.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
