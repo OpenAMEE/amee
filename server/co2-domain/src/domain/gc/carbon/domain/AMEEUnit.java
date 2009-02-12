@@ -3,6 +3,7 @@ package gc.carbon.domain;
 import gc.carbon.domain.profile.ProfileItem;
 
 import javax.measure.DecimalMeasure;
+import javax.measure.unit.Unit;
 import java.math.BigDecimal;
 
 /*
@@ -26,14 +27,14 @@ import java.math.BigDecimal;
  */
 public class AMEEUnit {
 
-    public static final AMEEUnit ONE = new AMEEUnit(javax.measure.unit.Unit.ONE);
-    protected javax.measure.unit.Unit unit = javax.measure.unit.Unit.ONE;
+    public static final AMEEUnit ONE = new AMEEUnit(Unit.ONE);
+    protected Unit unit = Unit.ONE;
 
     public static AMEEUnit valueOf(String unit) {
-        return new AMEEUnit(javax.measure.unit.Unit.valueOf(unit));
+        return new AMEEUnit(Unit.valueOf(unit));
     }
 
-    public AMEEUnit(javax.measure.unit.Unit unit) {
+    public AMEEUnit(Unit unit) {
         this.unit = unit;
     }
 
@@ -48,14 +49,14 @@ public class AMEEUnit {
     }
 
     public boolean isCompatibleWith(String unit) {
-        return this.unit.isCompatible(javax.measure.unit.Unit.valueOf(unit));
+        return this.unit.isCompatible(Unit.valueOf(unit));
     }
 
     public boolean equals(AMEEUnit that) {
         return toUnit().equals(that.toUnit());
     }
 
-    public javax.measure.unit.Unit toUnit() {
+    public Unit toUnit() {
         return unit;
     }
 

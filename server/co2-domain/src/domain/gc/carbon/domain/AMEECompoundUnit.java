@@ -8,6 +8,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.measure.DecimalMeasure;
+import javax.measure.unit.Unit;
 import java.math.BigDecimal;
 
 /**
@@ -48,7 +49,7 @@ public class AMEECompoundUnit extends AMEEUnit {
         return converted.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
     }
 
-    public javax.measure.unit.Unit toUnit() {
+    public Unit toUnit() {
         return unit.divide(perUnit.toUnit());
     }
 

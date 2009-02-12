@@ -8,6 +8,7 @@ import javax.measure.DecimalMeasure;
 import javax.measure.unit.Dimension;
 import static javax.measure.unit.SI.MILLI;
 import static javax.measure.unit.SI.SECOND;
+import javax.measure.unit.Unit;
 import java.math.BigDecimal;
 
 /*
@@ -31,19 +32,19 @@ import java.math.BigDecimal;
  */
 public class AMEEPerUnit extends AMEEUnit {
 
-    public static final AMEEPerUnit ONE = new AMEEPerUnit(javax.measure.unit.Unit.ONE);
+    public static final AMEEPerUnit ONE = new AMEEPerUnit(Unit.ONE);
 
     private String string;
 
     public static AMEEPerUnit valueOf(String unit) {
-        return new AMEEPerUnit(javax.measure.unit.Unit.valueOf(unit));
+        return new AMEEPerUnit(Unit.valueOf(unit));
     }
 
     public static AMEEPerUnit valueOf(Duration duration) {
         return new AMEEPerUnit(duration);
     }
 
-    public AMEEPerUnit(javax.measure.unit.Unit unit) {
+    public AMEEPerUnit(Unit unit) {
         super(unit);
         this.string = unit.toString();
     }
@@ -67,14 +68,14 @@ public class AMEEPerUnit extends AMEEUnit {
     }
 
     public boolean isCompatibleWith(String unit) {
-        return "none".equals(unit) || this.unit.isCompatible(javax.measure.unit.Unit.valueOf(unit));
+        return "none".equals(unit) || this.unit.isCompatible(Unit.valueOf(unit));
     }
 
     public boolean isTime() {
         return toUnit().getDimension().equals(Dimension.TIME);    
     }
 
-    public javax.measure.unit.Unit toUnit() {
+    public Unit toUnit() {
         return unit;
     }
 
