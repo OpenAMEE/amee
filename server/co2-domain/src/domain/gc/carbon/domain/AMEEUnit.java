@@ -39,8 +39,8 @@ public class AMEEUnit {
     public final static Unit<? extends Quantity> KILOWATT_PER_HOUR = KILOWATT.times(NonSI.HOUR);
 
     {
-        AMEE_UNIT_FORMAT.label(KILOWATT_PER_HOUR, "kWh");
-        AMEE_UNIT_FORMAT.alias(KILOWATT_PER_HOUR, "kWh");
+        // AMEE_UNIT_FORMAT.label(KILOWATT_PER_HOUR, "kWh");
+        // AMEE_UNIT_FORMAT.alias(KILOWATT_PER_HOUR, "kWh");
     }
 
     public static final AMEEUnit ONE = new AMEEUnit(Unit.ONE);
