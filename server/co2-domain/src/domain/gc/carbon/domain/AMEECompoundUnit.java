@@ -34,13 +34,13 @@ public class AMEECompoundUnit extends AMEEUnit {
 
     private AMEEPerUnit perUnit;
 
-    public static AMEEUnit valueOf(AMEEUnit unit, AMEEPerUnit perUnit) {
-        return new AMEECompoundUnit(unit, perUnit);
-    }
-
     private AMEECompoundUnit(AMEEUnit unit, AMEEPerUnit perUnit) {
         super(unit.toUnit());
         this.perUnit = perUnit;
+    }
+
+    public static AMEEUnit valueOf(AMEEUnit unit, AMEEPerUnit perUnit) {
+        return new AMEECompoundUnit(unit, perUnit);
     }
 
     public BigDecimal convert(BigDecimal decimal, AMEECompoundUnit targetUnit) {

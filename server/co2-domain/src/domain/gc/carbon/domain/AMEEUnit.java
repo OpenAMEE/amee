@@ -3,8 +3,15 @@ package gc.carbon.domain;
 import gc.carbon.domain.profile.ProfileItem;
 
 import javax.measure.DecimalMeasure;
+import javax.measure.quantity.Power;
+import javax.measure.quantity.Quantity;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
+import javax.measure.unit.UnitFormat;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.ParsePosition;
 
 /*
  * This file is part of AMEE.
@@ -27,15 +34,24 @@ import java.math.BigDecimal;
  */
 public class AMEEUnit {
 
+    protected final static UnitFormat AMEE_UNIT_FORMAT = UnitFormat.getInstance();
+    public final static Unit<Power> KILOWATT = SI.WATT.times(1000);
+    public final static Unit<? extends Quantity> KILOWATT_PER_HOUR = KILOWATT.times(NonSI.HOUR);
+
+    {
+        AMEE_UNIT_FORMAT.label(KILOWATT_PER_HOUR, "kWh");
+        AMEE_UNIT_FORMAT.alias(KILOWATT_PER_HOUR, "kWh");
+    }
+
     public static final AMEEUnit ONE = new AMEEUnit(Unit.ONE);
     protected Unit unit = Unit.ONE;
 
-    public static AMEEUnit valueOf(String unit) {
-        return new AMEEUnit(Unit.valueOf(unit));
-    }
-
     public AMEEUnit(Unit unit) {
         this.unit = unit;
+    }
+
+    public static AMEEUnit valueOf(String unit) {
+        return new AMEEUnit(internalValueOf(unit));
     }
 
     public AMEEUnit with(AMEEPerUnit perUnit) {
@@ -49,7 +65,16 @@ public class AMEEUnit {
     }
 
     public boolean isCompatibleWith(String unit) {
-        return this.unit.isCompatible(Unit.valueOf(unit));
+        return this.unit.isCompatible(internalValueOf(unit));
+    }
+
+    // This is like Unit.valueOf but forces use of AMEE_UNIT_FORMAT instead.
+    protected static Unit<? extends Quantity> internalValueOf(CharSequence csq) {
+        try {
+            return AMEE_UNIT_FORMAT.parseProductUnit(csq, new ParsePosition(0));
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     public boolean equals(AMEEUnit that) {
@@ -61,7 +86,6 @@ public class AMEEUnit {
     }
 
     public String toString() {
-        return toUnit().toString();
-        // return UnitFormat.getUCUMInstance().format(toUnit());
+        return AMEE_UNIT_FORMAT.format(toUnit());
     }
 }

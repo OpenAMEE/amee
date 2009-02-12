@@ -36,14 +36,6 @@ public class AMEEPerUnit extends AMEEUnit {
 
     private String string;
 
-    public static AMEEPerUnit valueOf(String unit) {
-        return new AMEEPerUnit(Unit.valueOf(unit));
-    }
-
-    public static AMEEPerUnit valueOf(Duration duration) {
-        return new AMEEPerUnit(duration);
-    }
-
     public AMEEPerUnit(Unit unit) {
         super(unit);
         this.string = unit.toString();
@@ -52,6 +44,14 @@ public class AMEEPerUnit extends AMEEUnit {
     private AMEEPerUnit(Duration duration) {
         super(MILLI(SECOND).times(duration.getMillis()));
         this.string = ISOPeriodFormat.standard().print(duration.toPeriod());
+    }
+
+    public static AMEEPerUnit valueOf(String unit) {
+        return new AMEEPerUnit(internalValueOf(unit));
+    }
+
+    public static AMEEPerUnit valueOf(Duration duration) {
+        return new AMEEPerUnit(duration);
     }
 
     /**
@@ -68,7 +68,7 @@ public class AMEEPerUnit extends AMEEUnit {
     }
 
     public boolean isCompatibleWith(String unit) {
-        return "none".equals(unit) || this.unit.isCompatible(Unit.valueOf(unit));
+        return "none".equals(unit) || this.unit.isCompatible(internalValueOf(unit));
     }
 
     public boolean isTime() {
