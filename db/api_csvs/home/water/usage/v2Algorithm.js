@@ -14,5 +14,5 @@ catch(err){}
 
 //if neither uses or minutes given, then data item value
 //for litresPerDay which gives typical usage
-30.42 * litresPerDay * kgCO2PerLitre;
+30.42 * litresPerDay * kgCO2PerLitre * 12;
 
