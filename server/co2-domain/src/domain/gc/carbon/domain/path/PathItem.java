@@ -22,6 +22,8 @@ package gc.carbon.domain.path;
 import com.jellymold.utils.domain.APIObject;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.ObjectType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -34,6 +36,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class PathItem implements APIObject, Serializable, Comparable {
+
+    private final Log log = LogFactory.getLog(getClass());
 
     private PathItemGroup pathItemGroup = null;
     private Long id = 0L;
@@ -244,6 +248,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         } else if (ot.equals(ObjectType.IV)) {
             return getParent().getInternalPath() + "/values/" + getUid();
         } else {
+            log.error("Unexpected ObjectType.");
             throw new RuntimeException("Unexpected ObjectType.");
         }
     }

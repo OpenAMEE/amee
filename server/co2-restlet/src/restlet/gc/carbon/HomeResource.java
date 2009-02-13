@@ -19,43 +19,26 @@
  */
 package gc.carbon;
 
-import com.jellymold.kiwi.Group;
-import com.jellymold.kiwi.Permission;
-import com.jellymold.kiwi.User;
-import com.jellymold.kiwi.auth.AuthService;
-import com.jellymold.utils.Pager;
-import gc.carbon.AMEEResource;
-import gc.carbon.profile.ProfileService;
-import gc.carbon.profile.ProfileBrowser;
-import gc.carbon.profile.ProfileConstants;
-import gc.carbon.domain.profile.Profile;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.jellymold.utils.BaseResource;
 import org.restlet.Context;
-import org.restlet.data.Form;
-import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.resource.Representation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 @Component("homeResource")
 @Scope("prototype")
-public class HomeResource extends AMEEResource implements Serializable {
+public class HomeResource extends BaseResource implements Serializable {
+
+    @Override
+    public void init(Context context, Request request, Response response) {
+        super.init(context, request, response);
+    }
 
     @Override
     public String getTemplatePath() {
-        return "index.ftl";
+        return "default.ftl";
     }
 }

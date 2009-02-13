@@ -2,7 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
     <bean id="ameeContainer" class="org.restlet.ext.spring.SpringComponent">
         <property name="clientsList">
@@ -17,6 +19,7 @@
                 <ref local="ameeAdminHost"/>
             </list>
         </property>
+        <property name="defaultHost" ref="defaultHost"/>
         <property name="statusService" ref="engineStatusService"/>
     </bean>
 
@@ -39,6 +42,13 @@
         </property>
     </bean>
 
+    <bean id="defaultHost" class="org.restlet.ext.spring.SpringHost">
+        <constructor-arg ref="ameeContainer"/>
+        <!--property name="defaultRoute">
+
+        </property-->
+    </bean>
+
     <bean id="ameeHost" class="org.restlet.ext.spring.SpringHost">
         <constructor-arg ref="ameeContainer"/>
         <property name="hostDomain" value="live.co2.dgen.net|stage.co2.dgen.net|local.stage.co2.dgen.net|dev.amee.com"/>
@@ -55,7 +65,8 @@
 
     <bean id="ameeAdminHost" class="org.restlet.ext.spring.SpringHost">
         <constructor-arg ref="ameeContainer"/>
-        <property name="hostDomain" value="admin.live.co2.dgen.net|admin.stage.co2.dgen.net|local.admin.stage.co2.dgen.net|admin-dev.amee.com"/>
+        <property name="hostDomain"
+                  value="admin.live.co2.dgen.net|admin.stage.co2.dgen.net|local.admin.stage.co2.dgen.net|admin-dev.amee.com"/>
         <property name="attachments">
             <map>
                 <entry key="" value-ref="defaultApplication"/>
@@ -66,6 +77,11 @@
             </map>
         </property>
         <property name="name" value="admin.live.co2.dgen.net"/>
+    </bean>
+
+    <bean id="modeEquals"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField" value="org.restlet.util.Template.MODE_EQUALS"/>
     </bean>
 
 </beans>

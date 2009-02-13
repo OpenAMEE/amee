@@ -131,10 +131,12 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
                     } catch (JSONException e) {
                         // swallow
                         // TODO: replace this with a bespoke Exception implemention
+                        log.error("Caught JSONException: " + e.getMessage());
                         throw new RuntimeException(e);
                     } catch (ResourceException e) {
                         // swallow
                         // TODO: replace this with a bespoke Exception implemention
+                        log.error("Caught ResourceException: " + e.getMessage());
                         throw new RuntimeException(e);
                     }
                 }

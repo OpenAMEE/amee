@@ -6,6 +6,8 @@ import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.DatedObject;
 import com.jellymold.utils.domain.UidGen;
 import gc.carbon.APIVersion;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -37,6 +39,9 @@ import java.util.List;
 @Table(name = "USER")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class User implements EnvironmentObject, DatedObject, Comparable, Serializable {
+
+    @Transient
+    private final Log log = LogFactory.getLog(getClass());
 
     public final static int USERNAME_SIZE = 20;
     public final static int PASSWORD_SIZE = 40;
@@ -366,6 +371,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         try {
             setPassword(Crypto.getAsMD5AndBase64(password));
         } catch (CryptoException e) {
+            log.error("Caught CryptoException: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }

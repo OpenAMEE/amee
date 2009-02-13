@@ -10,7 +10,7 @@
         </layout>
     </appender>
 
-    <!-- ############### Hibernate logging ################# -->
+    <!-- ############### Hibernate ################# -->
 
     <!--category name="org.hibernate">
         <priority value="INFO"/>
@@ -28,19 +28,25 @@
         <priority value="TRACE"/>
     </category-->
 
-    <!-- ############### Spring logging ################# -->
+    <!-- ############### Spring ################# -->
 
     <!--category name="org.springframework">
         <priority value="DEBUG"/>
     </category-->
 
-    <!-- ############### AMEE logging ################### -->
+    <!-- ############### Restlet ################# -->
+
+    <category name="org.restlet">
+        <priority value="DEBUG"/>
+    </category>
+
+    <!-- ############### AMEE ################### -->
 
     <category name="gc.carbon">
         <priority value="DEBUG"/>
     </category>
 
-    <!-- ############### Jelly Mold logging ################### -->
+    <!-- ############### Jelly Mold ################### -->
 
     <category name="com.jellymold">
         <priority value="DEBUG"/>
@@ -50,7 +56,7 @@
         <priority value="DEBUG"/>
     </category>
 
-    <!-- ############### Default logging ################### -->
+    <!-- ############### Default ################### -->
     
     <root>
         <priority value="INFO"/>
