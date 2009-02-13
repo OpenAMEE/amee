@@ -23,19 +23,19 @@ import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Column;
 import com.jellymold.sheet.Row;
 import com.jellymold.sheet.Sheet;
-import com.jellymold.utils.ValueType;
 import com.jellymold.utils.ThreadBeanHolder;
+import com.jellymold.utils.ValueType;
 import com.jellymold.utils.cache.CacheableFactory;
-import gc.carbon.domain.data.*;
+import gc.carbon.domain.data.DataItem;
+import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.data.ItemValueDefinition;
 import gc.carbon.domain.profile.StartEndDate;
-import gc.carbon.data.OnlyActiveDataService;
-import gc.carbon.data.DataServiceDAO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +74,6 @@ public class DataSheetFactory implements CacheableFactory {
                     new Column(sheet, itemValueDefinition.getPath(), itemValueDefinition.getName());
                 }
             }
-
             new Column(sheet, "label");
             new Column(sheet, "path");
             new Column(sheet, "uid", true);
@@ -85,10 +84,9 @@ public class DataSheetFactory implements CacheableFactory {
 
             // create rows and cells
             columns = sheet.getColumns();
-
-            // TODO - Will need to switch between OnlyActive - for DC GET and EarliestActive for Finder - tho need to ask AC this
             StartEndDate startDate = dataBrowser.getStartDate();
             StartEndDate endDate = dataBrowser.getEndDate();
+            // TODO - Will need to switch between OnlyActive - for DC GET and EarliestActive for Finder - tho need to ask AC this
             for (DataItem dataItem : new OnlyActiveDataService(dataService).getDataItems(dataBrowser.getDataCategory(), startDate, endDate)) {
                 itemValuesMap = dataItem.getItemValuesMap();
                 row = new Row(sheet, dataItem.getUid());

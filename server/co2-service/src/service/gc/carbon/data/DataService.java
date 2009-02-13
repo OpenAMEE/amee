@@ -1,28 +1,28 @@
 package gc.carbon.data;
 
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import gc.carbon.data.DataServiceDAO;
-import gc.carbon.domain.data.DataItem;
+import com.jellymold.kiwi.Environment;
+import com.jellymold.kiwi.User;
+import com.jellymold.sheet.Choices;
+import com.jellymold.sheet.Sheet;
+import com.jellymold.utils.ThreadBeanHolder;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
-import gc.carbon.definition.DefinitionServiceDAO;
-import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.User;
-import com.jellymold.sheet.Sheet;
-import com.jellymold.sheet.Choices;
-import com.jellymold.utils.ThreadBeanHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
-import java.util.List;
+import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Primary service interface to Data Resources.
- *
+ * <p/>
  * This file is part of AMEE.
  * <p/>
  * AMEE is free software; you can redistribute it and/or modify
@@ -88,8 +88,41 @@ public class DataService {
     }
 
     public List<DataItem> getDataItems(DataCategory dc, StartEndDate startDate, StartEndDate endDate) {
-        return dao.getDataItems(dc, startDate, endDate);
+
+        DataItem dataItem;
+        List<DataItem> dataItems;
+        Iterator<DataItem> i;
+
+        // code below replicates the query in:
+        // gc.carbon.data.DataServiceDAO#getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate)
+
+        dataItems = dao.getDataItems(dc);
+        i = dataItems.iterator();
+        if (endDate != null) {
+            while (i.hasNext()) {
+                dataItem = i.next();
+                // "di.startDate < :endDate AND (di.endDate > :startDate OR di.endDate IS NULL)" :
+                if (!(dataItem.getStartDate().before(endDate) &&
+                        ((dataItem.getEndDate() == null) || dataItem.getEndDate().after(startDate)))) {
+                    i.remove();
+                }
+            }
+        } else {
+            while (i.hasNext()) {
+                dataItem = i.next();
+                // "(di.endDate > :startDate OR di.endDate IS NULL)");
+                if (!((dataItem.getEndDate() == null) || dataItem.getEndDate().after(startDate))) {
+                    i.remove();
+                }
+            }
+        }
+
+        return dataItems;
     }
+
+    // public List<DataItem> getDataItems(DataCategory dc, StartEndDate startDate, StartEndDate endDate) {
+    //    return dao.getDataItems(dc, startDate, endDate);
+    //}
 
     public List<DataItem> getDataItems(DataCategory dc) {
         return dao.getDataItems(dc);
@@ -113,7 +146,7 @@ public class DataService {
     }
 
     public Choices getUserValueChoices(DataItem di) {
-        return dao.getUserValueChoices(di);    
+        return dao.getUserValueChoices(di);
     }
 
     public BigDecimal calculate(DataItem di, Choices userValueChoices) {
@@ -123,7 +156,7 @@ public class DataService {
     }
 
     public Sheet getSheet(DataBrowser browser) {
-       return dataSheetService.getSheet(browser);
+        return dataSheetService.getSheet(browser);
     }
 
     public ItemDefinition getItemDefinition(Environment env, String itemDefinitionUid) {

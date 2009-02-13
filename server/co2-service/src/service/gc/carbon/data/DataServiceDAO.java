@@ -29,7 +29,6 @@ import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.restlet.ext.seam.TransactionController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
@@ -55,9 +54,6 @@ class DataServiceDAO implements Serializable {
     private EntityManager entityManager;
 
     @Autowired
-    private TransactionController transactionController;
-
-    @Autowired
     private DataSheetService dataSheetService;
 
     @Autowired
@@ -80,7 +76,7 @@ class DataServiceDAO implements Serializable {
                 "FROM DataCategory dc " +
                         "WHERE dc.environment = :environment " +
                         "AND dc.dataCategory IS NULL")
-                .setParameter("environment", ((Environment) oe.getPayload()))
+                .setParameter("environment", oe.getPayload())
                 .getResultList();
         for (DataCategory dataCategory : dataCategories) {
             remove(dataCategory);
@@ -242,9 +238,9 @@ class DataServiceDAO implements Serializable {
                         "FROM DataItem di " +
                         "LEFT JOIN FETCH di.itemValues " +
                         "WHERE di.itemDefinition.id = :itemDefinitionId " +
-                        "AND di.dataCategory = :dataCategory")
+                        "AND di.dataCategory.id = :dataCategoryId")
                 .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
-                .setParameter("dataCategory", dataCategory)
+                .setParameter("dataCategoryId", dataCategory.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.dataService")
                 .getResultList();
@@ -257,13 +253,13 @@ class DataServiceDAO implements Serializable {
                 "FROM DataItem di " +
                 "LEFT JOIN FETCH di.itemValues " +
                 "WHERE di.itemDefinition.id = :itemDefinitionId " +
-                "AND di.dataCategory = :dataCategory AND " +
+                "AND di.dataCategory.id = :dataCategoryId AND " +
                 ((endDate != null) ? "di.startDate < :endDate AND (di.endDate > :startDate OR di.endDate IS NULL)" : "(di.endDate > :startDate OR di.endDate IS NULL)");
 
         if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
             Query query = entityManager.createQuery(q);
             query.setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId());
-            query.setParameter("dataCategory", dataCategory);
+            query.setParameter("dataCategoryId", dataCategory.getId());
             query.setParameter("startDate", startDate.toDate());
             if (endDate != null)
                 query.setParameter("endDate", endDate.toDate());
