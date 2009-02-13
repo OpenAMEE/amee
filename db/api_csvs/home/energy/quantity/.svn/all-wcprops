@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 53
-/!svn/ver/2523/internal/api_csvs/home/energy/quantity
+/!svn/ver/2615/internal/api_csvs/home/energy/quantity
 END
 data.csv
 K 25
@@ -19,13 +19,13 @@ perMonth.js
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/!svn/ver/2376/internal/api_csvs/home/energy/quantity/perMonth.js
+/!svn/ver/2615/internal/api_csvs/home/energy/quantity/perMonth.js
 END
 v2Algorithm.js
 K 25
 svn:wc:ra_dav:version-url
 V 68
-/!svn/ver/2523/internal/api_csvs/home/energy/quantity/v2Algorithm.js
+/!svn/ver/2615/internal/api_csvs/home/energy/quantity/v2Algorithm.js
 END
 quantity_alg.js
 K 25
