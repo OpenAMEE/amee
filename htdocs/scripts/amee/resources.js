@@ -73,8 +73,6 @@ var ModalHelper = Class.create({
     }
 });
 
-
-
 function alertModal(message) {
     new ModalHelper({
         owner: this,

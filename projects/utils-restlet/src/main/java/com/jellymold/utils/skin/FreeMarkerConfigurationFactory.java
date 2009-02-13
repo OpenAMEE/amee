@@ -6,6 +6,8 @@ import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ import java.util.Locale;
 
 @Service
 public class FreeMarkerConfigurationFactory implements CacheableFactory {
+
+    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private SkinManager skinManager;
@@ -38,6 +42,7 @@ public class FreeMarkerConfigurationFactory implements CacheableFactory {
             }
         }
         if (configuration == null) {
+            log.error("Must have a Skin. Could not find: " + skinPath);
             throw new RuntimeException("Must have a Skin. Could not find: " + skinPath);
         }
         return configuration;
@@ -81,7 +86,11 @@ public class FreeMarkerConfigurationFactory implements CacheableFactory {
     }
 
     public String getKey() {
-        return (String) ThreadBeanHolder.get("skinPath");
+        String skinPath = (String) ThreadBeanHolder.get("skinPath");
+        if (skinPath == null) {
+            skinPath = "client-default";
+        }
+        return skinPath;
     }
 
     public String getCacheName() {

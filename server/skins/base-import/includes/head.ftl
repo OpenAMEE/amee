@@ -11,8 +11,11 @@
 <meta name="Keywords" content="" />
 
 <script src="/scripts/log/logger.js" type="text/javascript"></script>
-<script src="/scripts/prototype/prototype.js" type="text/javascript"></script>
-<script src="/scripts/scriptaculous/scriptaculous.js?load=effects,builder,controls" type="text/javascript"></script>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+    google.load("prototype", "1.6");
+    google.load("scriptaculous", "1.8.2");
+</script>
 <script src="/scripts/control/livepipe.js" type="text/javascript"></script>
 <script src="/scripts/control/window.js" type="text/javascript"></script>
 <script src="/scripts/amee/resources.js" type="text/javascript"></script>

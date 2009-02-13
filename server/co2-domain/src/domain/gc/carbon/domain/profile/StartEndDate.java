@@ -1,9 +1,9 @@
 package gc.carbon.domain.profile;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
-import org.joda.time.LocalTime;
-import org.joda.time.Duration;
 import org.joda.time.format.ISOPeriodFormat;
 
 import java.text.ParseException;
@@ -31,8 +31,9 @@ import java.util.Date;
  */
 public class StartEndDate extends GCDate {
 
-    public static final String ISO_DATE = "yyyy-MM-dd'T'HH:mmZ";
+    private final Log log = LogFactory.getLog(getClass());
 
+    public static final String ISO_DATE = "yyyy-MM-dd'T'HH:mmZ";
     public static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat(ISO_DATE);
 
     private boolean floor = true;
@@ -63,6 +64,7 @@ public class StartEndDate extends GCDate {
                 return requestedDate.toDate().getTime();
             }
         } catch (ParseException e) {
+            log.error("parseStr() - Invalid date format: " + dateStr);
             throw new RuntimeException("parseStr() - Invalid date format: " + dateStr);
         }
     }

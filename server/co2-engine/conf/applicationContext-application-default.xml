@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
                            http://www.springframework.org/schema/util
@@ -14,6 +14,7 @@
     </bean>
 
     <bean id="defaultRoot" class="org.restlet.ext.spring.SpringRouter">
+        <constructor-arg ref="defaultApplication"/>
         <property name="attachments">
             <map>
                 <entry key="">
@@ -41,9 +42,17 @@
     </bean>
 
     <bean id="defaultRouter" class="org.restlet.ext.spring.SpringRouter">
+        <constructor-arg ref="defaultRoot"/>
+        <property name="defaultMatchingMode" ref="modeEquals"/>
+        <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">
             <map>
                 <entry key="">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="homeResource"/>
+                    </bean>
+                </entry>
+                <entry key="/">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="homeResource"/>
                     </bean>

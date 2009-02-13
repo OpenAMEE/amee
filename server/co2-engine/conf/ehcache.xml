@@ -1,5 +1,5 @@
-<!DOCTYPE ehcache-xml>
-<ehcache>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd">
 
     <diskStore path="java.io.tmp"/>
 
@@ -88,8 +88,28 @@
 
     <!-- **** AMEE Entities **** -->
 
+    <!-- APIVersion -->
+    <cache name="gc.carbon.APIVersion"
+           maxElementsInMemory="40"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
     <!-- Algorithm -->
-    <cache name="gc.carbon.data.Algorithm"
+    <cache name="gc.carbon.domain.data.AbstractAlgorithm"
+           maxElementsInMemory="40"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <!-- Algorithm -->
+    <cache name="gc.carbon.domain.data.Algorithm"
            maxElementsInMemory="40"
            eternal="false"
            overflowToDisk="false"
@@ -99,7 +119,7 @@
     </cache>
 
     <!-- DataCategory -->
-    <cache name="gc.carbon.data.DataCategory"
+    <cache name="gc.carbon.domain.data.DataCategory"
            maxElementsInMemory="60"
            eternal="false"
            overflowToDisk="false"
@@ -109,7 +129,7 @@
     </cache>
 
     <!-- Item -->
-    <cache name="gc.carbon.data.Item"
+    <cache name="gc.carbon.domain.data.Item"
            maxElementsInMemory="12500"
            eternal="false"
            overflowToDisk="false"
@@ -119,7 +139,7 @@
         <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
     properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
-    <cache name="gc.carbon.data.Item.itemValues"
+    <cache name="gc.carbon.domain.data.Item.itemValues"
            maxElementsInMemory="57500"
            eternal="false"
            overflowToDisk="false"
@@ -131,7 +151,7 @@
     </cache>
 
     <!-- ItemDefinition -->
-    <cache name="gc.carbon.data.ItemDefinition"
+    <cache name="gc.carbon.domain.data.ItemDefinition"
            maxElementsInMemory="40"
            eternal="false"
            overflowToDisk="false"
@@ -139,7 +159,7 @@
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LRU">
     </cache>
-    <cache name="gc.carbon.data.ItemDefinition.dataCategories"
+    <cache name="gc.carbon.domain.data.ItemDefinition.dataCategories"
            maxElementsInMemory="60"
            eternal="false"
            overflowToDisk="false"
@@ -147,7 +167,7 @@
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LRU">
     </cache>
-    <cache name="gc.carbon.data.ItemDefinition.algorithms"
+    <cache name="gc.carbon.domain.data.ItemDefinition.algorithms"
            maxElementsInMemory="40"
            eternal="false"
            overflowToDisk="false"
@@ -155,7 +175,7 @@
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LRU">
     </cache>
-    <cache name="gc.carbon.data.ItemDefinition.itemValueDefinitions"
+    <cache name="gc.carbon.domain.data.ItemDefinition.itemValueDefinitions"
            maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
@@ -165,7 +185,7 @@
     </cache>
 
     <!-- ItemValue -->
-    <cache name="gc.carbon.data.ItemValue"
+    <cache name="gc.carbon.domain.data.ItemValue"
            maxElementsInMemory="57500"
            eternal="false"
            overflowToDisk="false"
@@ -177,7 +197,7 @@
     </cache>
 
     <!-- ItemValueDefinition -->
-    <cache name="gc.carbon.data.ItemValueDefinition"
+    <cache name="gc.carbon.domain.data.ItemValueDefinition"
            maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
@@ -187,7 +207,7 @@
     </cache>
 
     <!-- Profile -->
-    <cache name="gc.carbon.profile.Profile"
+    <cache name="gc.carbon.domain.profile.Profile"
            maxElementsInMemory="50"
            eternal="false"
            overflowToDisk="false"
@@ -199,7 +219,7 @@
     </cache>
 
     <!-- ValueDefinition -->
-    <cache name="gc.carbon.ValueDefinition"
+    <cache name="gc.carbon.domain.ValueDefinition"
            maxElementsInMemory="40"
            eternal="false"
            overflowToDisk="false"
@@ -505,6 +525,18 @@
 
     <!-- EnvironmentService -->
     <cache name="query.environmentService"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
+        <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
+    </cache>
+
+    <!-- FreeMarkerConfigurations -->
+    <cache name="FreeMarkerConfigurations"
            maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"

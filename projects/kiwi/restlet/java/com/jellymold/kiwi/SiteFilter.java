@@ -76,6 +76,7 @@ public class SiteFilter extends Filter implements ApplicationContextAware {
         if (host != null) {
             return host.getName();
         } else {
+            log.error("Could not find VirtualHost for Site.");
             throw new RuntimeException("Could not find VirtualHost for Site.");
         }
     }
