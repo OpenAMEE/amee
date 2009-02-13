@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 import javax.measure.Measure;
+import javax.measure.DecimalMeasure;
 import javax.measure.quantity.Duration;
 import javax.measure.unit.SI;
 import java.math.BigDecimal;
@@ -58,27 +59,28 @@ public class ProRataProfileService extends ProfileService {
 
         for (ProfileItem pi : delegatee.getProfileItems(profileBrowser)) {
 
-            Interval interval = requestInterval;
+            Interval intersect = requestInterval;
 
-            if (hasPerTimeValues(pi)) {
+            // Find the intersection of the event with the requested window.
+            if (intersect.getStart().toDate().before(pi.getStartDate())) {
+                intersect = intersect.withStartMillis(pi.getStartDate().getTime());
+            }
+
+            if (pi.getEndDate() != null && pi.getEndDate().before(intersect.getEnd().toDate())) {
+                    intersect = intersect.withEndMillis(pi.getEndDate().getTime());
+            }
+
+            if (pi.hasPerTimeValues()) {
+                // The ProfileItem has perTime ItemValues. In this case, the ItemValues are multiplied by
+                // the (intersect/PerTime) ratio and the CO2 value recalculated.
 
                 ProfileItem pic = pi.getCopy();
-
-                if (interval.getStart().toDate().before(pi.getStartDate())) {
-                    interval = interval.withStartMillis(pi.getStartDate().getTime());
-                }
-
-                if (pi.getEndDate() != null) {
-                    if (pi.getEndDate().before(interval.getEnd().toDate())) {
-                        interval = interval.withEndMillis(pi.getEndDate().getTime());
-                    }
-                }
-
                 for (ItemValue iv : pi.getItemValues()) {
-                    if(iv.hasPerUnit() && iv.getValue().length() > 0) {
-                        pic.add(getProRatedItemValue(interval, iv));
+                    ItemValue ivc = iv.getCopy();
+                    if(ivc.hasPerTimeUnit() && ivc.getItemValueDefinition().isFromProfile() && ivc.getValue().length() > 0) {
+                        pic.add(getProRatedItemValue(intersect, ivc));
                     } else {
-                        pic.add(iv.getCopy());
+                        pic.add(ivc);
                     }
                 }
 
@@ -87,16 +89,17 @@ public class ProRataProfileService extends ProfileService {
                 requestedItems.add(pic);
                 
             } else if (pi.getEndDate() != null) {
+                // The ProfileItem has no perTime ItemValues and is bounded. In this case, the CO2 value is multiplied by
+                // the (intersection/event) ratio.
 
                 ProfileItem pic = pi.getCopy();
-                BigDecimal requestedInterval = new BigDecimal(interval.toDurationMillis());
-                BigDecimal itemInterval = new BigDecimal(getIntervalInMillis(pic.getStartDate(), pic.getEndDate()));
-                BigDecimal itemIntervalBasedToRequestInterval = itemInterval.divide(requestedInterval, ProfileItem.CONTEXT);
-                pic.setAmount(pic.getAmount().multiply(itemIntervalBasedToRequestInterval, ProfileItem.CONTEXT));
-
+                BigDecimal event = new BigDecimal(getIntervalInMillis(pic.getStartDate(), pic.getEndDate()));
+                BigDecimal itemIntersectRatio = event.divide(new BigDecimal(intersect.toDurationMillis()), ProfileItem.CONTEXT);
+                pic.setAmount(pic.getAmount().multiply(itemIntersectRatio, ProfileItem.CONTEXT));
                 requestedItems.add(pic);
 
             } else {
+                // The ProfileItem has no perTime ItemValues and is unbounded. In this case, the CO2 is not prorated.
                 requestedItems.add(pi);
             }
 
@@ -105,12 +108,11 @@ public class ProRataProfileService extends ProfileService {
         return requestedItems;
     }
 
-    private ItemValue getProRatedItemValue(Interval interval, ItemValue iv) {
-        ItemValue ivc = iv.getCopy();
-        Measure<Long, Duration> intercept = Measure.valueOf(interval.toDurationMillis(), SI.MILLI(SI.SECOND));
-        BigDecimal interceptBasedToPerUnit = new BigDecimal(intercept.doubleValue(ivc.getPerUnit().toUnit()));
+    private ItemValue getProRatedItemValue(Interval interval, ItemValue ivc) {
+        BigDecimal perTime = DecimalMeasure.valueOf(new BigDecimal(1), ivc.getPerUnit().toUnit()).to(SI.MILLI(SI.SECOND)).getValue();
+        BigDecimal intersectPerTimeRatio = new BigDecimal(interval.toDurationMillis()).divide(perTime, ProfileItem.CONTEXT);
         BigDecimal value = new BigDecimal(ivc.getValue());
-        value = value.multiply(interceptBasedToPerUnit, ProfileItem.CONTEXT);
+        value = value.multiply(intersectPerTimeRatio, ProfileItem.CONTEXT);
         ivc.setValue(value.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE).toString());
         return ivc;
     }
@@ -123,15 +125,5 @@ public class ProRataProfileService extends ProfileService {
 
     private long getIntervalInMillis(Date startDate, Date endDate) {
         return getInterval(startDate, endDate).toDurationMillis();
-    }
-
-    private boolean hasPerTimeValues(ProfileItem pi) {
-        List<ItemValue> itemValues = pi.getItemValues();
-        for (ItemValue iv : itemValues) {
-            if (iv.hasPerUnit() && iv.getPerUnit().isTime()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

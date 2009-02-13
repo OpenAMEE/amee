@@ -4,6 +4,7 @@ import gc.carbon.domain.*;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.Item;
+import gc.carbon.domain.data.ItemValue;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -197,5 +198,14 @@ public class ProfileItem extends Item {
     @Transient
     public ObjectType getObjectType() {
         return ObjectType.PI;
+    }
+
+    public boolean hasPerTimeValues() {
+        for (ItemValue iv : getItemValues()) {
+            if (iv.hasPerTimeUnit()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

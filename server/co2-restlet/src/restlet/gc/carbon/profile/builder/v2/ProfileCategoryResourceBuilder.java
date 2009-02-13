@@ -247,10 +247,10 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
     private BigDecimal getTotalAmount(List<ProfileItem> profileItems) {
         BigDecimal totalAmount = ProfileItem.ZERO;
         BigDecimal amount;
-
+        AMEEUnit returnUnit = resource.getProfileBrowser().getReturnUnit();
         for (ProfileItem profileItem : profileItems) {
             try {
-                amount = profileItem.getAmount();
+                amount = profileItem.getAmount(returnUnit);
                 amount = amount.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
                 if (amount.precision() > ProfileItem.PRECISION) {
                     log.warn("getTotalAmount() - precision is too big: " + amount);

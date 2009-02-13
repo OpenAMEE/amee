@@ -84,7 +84,11 @@ public class ProfileItemBuilder implements Builder {
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);
-        obj.put("amountPerMonth", ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), AMEEPerUnit.valueOf("month")));
+        if (item.hasPerTimeValues()) {
+            obj.put("amountPerMonth", ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), AMEEPerUnit.valueOf("month")));
+        } else {
+            obj.put("amountPerMonth", item.getAmount());
+        }
         obj.put("validFrom", DAY_DATE_FMT.format(item.getStartDate()));
         obj.put("end", Boolean.toString(item.isEnd()));
         obj.put("dataItem", item.getDataItem().getIdentityJSONObject());
@@ -100,9 +104,12 @@ public class ProfileItemBuilder implements Builder {
 
         // Ensure the CO2 amount is in the expected V1 units. The algos always return CO2 amounts in kg/year.
         // V1 API always returns kg/month
-        element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
-            ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), AMEEPerUnit.valueOf("month")).toString()));
-
+        if (item.hasPerTimeValues()) {
+            element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
+                ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), AMEEPerUnit.valueOf("month")).toString()));
+        } else {
+            element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
+        }
         element.appendChild(APIUtils.getElement(document, "ValidFrom", DAY_DATE_FMT.format(item.getStartDate())));
         element.appendChild(APIUtils.getElement(document, "End", Boolean.toString(item.isEnd())));
         element.appendChild(item.getDataItem().getIdentityElement(document));

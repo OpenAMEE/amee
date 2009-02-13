@@ -26,7 +26,7 @@ api_csvs/transport/plane/generic/airports/countries,Major airports
 api_csvs/transport/motorcycle/generic,Motorcycle Generic
 api_csvs/home/appliances/cooking/oven,Oven
 api_csvs/transport/plane/generic/passengerclass,Plane Class
-api_csvs/transport/plane,Plane Generic
+api_csvs/transport/plane/generic,Plane Generic
 api_csvs/home/energy/uk/reductions,Reduction
 api_csvs/home/energy/renewable,Renewable
 api_csvs/transport/ship,Ship Generic

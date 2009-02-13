@@ -88,7 +88,11 @@ public class ProfileSheetBuilder implements CacheableFactory {
                     } else if ("name".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.getName(), ValueType.TEXT);
                     } else if ("amountPerMonth".equalsIgnoreCase(column.getName())) {
-                        new Cell(column, row, ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(profileItem.getAmount(), AMEEPerUnit.valueOf("month")), ValueType.DECIMAL);
+                        if (profileItem.hasPerTimeValues()) {
+                            new Cell(column, row, ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(profileItem.getAmount(), AMEEPerUnit.valueOf("month")), ValueType.DECIMAL);
+                        } else {
+                            new Cell(column, row, profileItem.getAmount(), ValueType.DECIMAL);
+                        }
                     } else if ("validFrom".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, DAY_DATE_FMT.format(profileItem.getStartDate()), ValueType.TEXT);
                     } else if ("end".equalsIgnoreCase(column.getName())) {

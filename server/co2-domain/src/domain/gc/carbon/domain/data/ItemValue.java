@@ -36,6 +36,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
+import javax.measure.unit.Dimension;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -293,6 +294,10 @@ public class ItemValue implements PersistentObject, Pathable {
 
     public boolean hasPerUnit() {
         return itemValueDefinition.hasPerUnits();
+    }
+
+    public boolean hasPerTimeUnit() {
+        return hasPerUnit() && getPerUnit().isTime();     
     }
 
     public ItemValue getCopy() {
