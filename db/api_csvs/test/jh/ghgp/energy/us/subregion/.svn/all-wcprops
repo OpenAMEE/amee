@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion
+END
+Worksheet.xls
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/Worksheet.xls
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/data.csv
+END
+dataGenerate.gk
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/dataGenerate.gk
+END
+Worksheet.csv
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/Worksheet.csv
+END
+VikingEgridData.csv
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/VikingEgridData.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/itemdef.csv
+END
+ghgData.csv
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/ghgData.csv
+END
+dataGenerateGHGP.gk
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/dataGenerateGHGP.gk
+END
+ghgDataSorted.csv
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/ghgDataSorted.csv
+END
+vikingData.csv
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/vikingData.csv
+END
+dataClean.gk
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/dataClean.gk
+END
+vikingDataSorted.csv
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/vikingDataSorted.csv
+END
+dataScript
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/2596/internal/api_csvs/test/jh/ghgp/energy/us/subregion/dataScript
+END
