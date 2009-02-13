@@ -69,6 +69,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
         super.init(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

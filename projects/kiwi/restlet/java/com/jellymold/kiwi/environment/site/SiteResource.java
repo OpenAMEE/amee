@@ -30,19 +30,12 @@ public class SiteResource extends BaseResource {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    public SiteResource() {
-        super();
-    }
-
-    public SiteResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         environmentBrowser.setSiteUid(request.getAttributes().get("siteUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

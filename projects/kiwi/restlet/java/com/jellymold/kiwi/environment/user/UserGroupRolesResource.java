@@ -44,6 +44,7 @@ public class UserGroupRolesResource extends BaseResource {
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         environmentBrowser.setUserUid(request.getAttributes().get("userUid").toString());
         environmentBrowser.setGroupUid(request.getAttributes().get("groupUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

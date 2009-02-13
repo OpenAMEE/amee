@@ -61,6 +61,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
         setAcceptors();
         setBuilderStrategy();
         recurse = request.getResourceRef().getQueryAsForm().getFirstValue("recurse", "false").equals("true");
+        setAvailable(isValid());
     }
 
     private void setBuilderStrategy() {

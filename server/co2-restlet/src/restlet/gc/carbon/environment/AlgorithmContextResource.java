@@ -59,6 +59,14 @@ public class AlgorithmContextResource extends BaseResource implements Serializab
         super.init(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setAlgorithmContextUid(request.getAttributes().get("algorithmContentUid").toString());
+        setAvailable(isValid());
+    }
+
+    @Override
+    public boolean isValid() {
+        return super.isValid() &&
+                (definitionBrowser.getEnvironment() != null) &&
+                (definitionBrowser.getAlgorithmContext() != null);
     }
 
     @Override

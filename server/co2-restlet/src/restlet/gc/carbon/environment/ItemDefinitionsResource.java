@@ -68,6 +68,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
         environment = EnvironmentService.getEnvironment();
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
+        setAvailable(isValid());
     }
 
     @Override

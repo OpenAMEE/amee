@@ -35,6 +35,7 @@ public class HomeResource extends BaseResource implements Serializable {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        setAvailable(isValid());
     }
 
     @Override

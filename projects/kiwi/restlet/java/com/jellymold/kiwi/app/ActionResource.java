@@ -27,19 +27,12 @@ public class ActionResource extends BaseResource {
     @Autowired
     private AppBrowser appBrowser;
 
-    public ActionResource() {
-        super();
-    }
-
-    public ActionResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         appBrowser.setAppUid(request.getAttributes().get("appUid").toString());
         appBrowser.setActionUid(request.getAttributes().get("actionUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

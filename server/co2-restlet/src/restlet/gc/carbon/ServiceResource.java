@@ -58,6 +58,7 @@ public class ServiceResource extends AMEEResource {
         List<Variant> variants = super.getVariants();
         variants.clear();
         variants.add(new Variant(MediaType.APPLICATION_ATOM_SERVICE_XML));
+        setAvailable(isValid());
     }
 
     @Override

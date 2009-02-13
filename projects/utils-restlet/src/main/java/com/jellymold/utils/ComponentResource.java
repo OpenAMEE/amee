@@ -22,14 +22,6 @@ public abstract class ComponentResource extends Resource {
     public static final List<String> FEED_TYPES = new ArrayList<String>(Arrays.asList(FEED_TYPES_ARR));
     public static final String DEFAULT_FEED_TYPE = "rss_2.0";
 
-    public ComponentResource() {
-        super();
-    }
-
-    public ComponentResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     public boolean isValid() {
         return true;
     }

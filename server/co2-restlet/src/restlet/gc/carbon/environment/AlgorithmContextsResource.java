@@ -42,6 +42,13 @@ public class AlgorithmContextsResource extends BaseResource implements Serializa
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
+        setAvailable(isValid());
+    }
+
+    @Override
+    public boolean isValid() {
+        return super.isValid() &&
+                (definitionBrowser.getEnvironment() != null);
     }
 
     @Override

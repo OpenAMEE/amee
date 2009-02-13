@@ -66,6 +66,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
         setAcceptors();
         setBuilderStrategy();
+        setAvailable(isValid());
     }
 
     private void setAcceptors() {

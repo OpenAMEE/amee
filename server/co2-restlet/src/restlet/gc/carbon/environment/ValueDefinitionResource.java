@@ -60,6 +60,7 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
         super.init(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setValueDefinitionUid(request.getAttributes().get("valueDefinitionUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

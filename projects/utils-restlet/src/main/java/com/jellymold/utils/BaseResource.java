@@ -31,14 +31,6 @@ public abstract class BaseResource extends ComponentResource {
     private int page = 1;
     private PagerSetType pagerSetType = PagerSetType.ALL;
 
-    public BaseResource() {
-        super();
-    }
-
-    public BaseResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         List<Variant> variants = super.getVariants();

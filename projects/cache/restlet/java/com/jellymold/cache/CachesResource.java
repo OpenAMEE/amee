@@ -37,14 +37,6 @@ public class CachesResource extends BaseResource implements Serializable {
 
     private CacheSort cacheSort;
 
-    public CachesResource() {
-        super();
-    }
-
-    public CachesResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -55,6 +47,7 @@ public class CachesResource extends BaseResource implements Serializable {
         Form form = request.getResourceRef().getQueryAsForm();
         setPage(request);
         cacheSort = cacheAdmin.getCacheSort(request, response, form);
+        setAvailable(isValid());
     }
 
     @Override

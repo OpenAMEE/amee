@@ -36,14 +36,6 @@ public class RoleActionsResource extends BaseResource implements Serializable {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    public RoleActionsResource() {
-        super();
-    }
-
-    public RoleActionsResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -51,6 +43,7 @@ public class RoleActionsResource extends BaseResource implements Serializable {
         environmentBrowser.setRoleUid(request.getAttributes().get("roleUid").toString());
         setPage(request);
         setPagerSetType(request);
+        setAvailable(isValid());
     }
 
     @Override

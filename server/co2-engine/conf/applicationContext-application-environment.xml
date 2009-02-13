@@ -50,8 +50,6 @@
 
     <bean id="environmentsRouter" class="org.restlet.ext.spring.SpringRouter">
         <constructor-arg ref="environmentsRoot"/>
-        <property name="defaultMatchingMode" ref="modeEquals"/>
-        <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">
             <map>
                 <entry key="">
@@ -68,8 +66,6 @@
 
     <bean id="environmentRouter" class="org.restlet.ext.spring.SpringRouter">
         <constructor-arg ref="environmentsRouter"/>
-        <property name="defaultMatchingMode" ref="modeEquals"/>
-        <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">
             <map>
                 <entry key="">
@@ -113,8 +109,6 @@
 
     <bean id="valueDefinitionsRouter" class="org.restlet.ext.spring.SpringRouter">
         <constructor-arg ref="environmentRouter"/>
-        <property name="defaultMatchingMode" ref="modeEquals"/>
-        <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">
             <map>
                 <entry key="">
@@ -248,7 +242,7 @@
     </bean>
 
     <bean id="siteAppActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="siteApp"/>
+        <constructor-arg index="0" value="site.app"/>
     </bean>
 
     <!-- Users -->
@@ -299,7 +293,7 @@
     </bean>
 
     <bean id="userActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="user"/>
+        <constructor-arg index="0" value="site.user"/>
     </bean>
 
     <!-- Groups -->
@@ -330,7 +324,7 @@
     </bean>
 
     <bean id="groupActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="group"/>
+        <constructor-arg index="0" value="site.group"/>
     </bean>
 
     <!-- Roles -->
@@ -366,7 +360,7 @@
     </bean>
 
     <bean id="roleActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="role"/>
+        <constructor-arg index="0" value="site.role"/>
     </bean>
 
     <!-- Tasks -->

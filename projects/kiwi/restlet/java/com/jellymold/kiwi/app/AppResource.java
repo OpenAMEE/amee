@@ -27,18 +27,11 @@ public class AppResource extends BaseResource {
     @Autowired
     private AppBrowser appBrowser;
 
-    public AppResource() {
-        super();
-    }
-
-    public AppResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         appBrowser.setAppUid(request.getAttributes().get("appUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

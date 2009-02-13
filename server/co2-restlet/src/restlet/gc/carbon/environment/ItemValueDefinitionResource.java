@@ -67,6 +67,7 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
         definitionBrowser.setItemValueDefinitionUid(request.getAttributes().get("itemValueDefinitionUid").toString());
+        setAvailable(isValid());
     }
 
     @Override
