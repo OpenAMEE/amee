@@ -10,11 +10,11 @@ import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.*;
 import org.restlet.resource.Representation;
-import org.springframework.stereotype.Component;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.w3c.dom.Element;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -26,7 +26,7 @@ public class SignInResource extends BaseResource implements Serializable {
     public final static String VIEW_SIGN_IN = "auth/signIn.ftl";
 
     @Autowired
-    private AuthService authService;
+    protected AuthService authService;
 
     public SignInResource() {
         super();

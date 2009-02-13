@@ -9,3 +9,5 @@
         <#return "yyyy-MM-dd'T'HH:mmZ"/>
     </#if>
 </#function>
+
+<#assign loader = '<img src="/images/ajax-loader.gif"/>'>

@@ -72,11 +72,15 @@
                                 </select>
                             <#else>
                                 <input name='${iv.displayPath}' value='${iv.value}' type='text' size="30"/>
+                                <#if !activeUser.apiVersion.versionOne>
                                     <#if iv.hasUnit()>
-                                    <input name='${iv.displayPath}Unit' value='${iv.unit}' type='text' size="30"/>
-                                </#if>
-                                <#if iv.hasPerUnit()>
-                                    <input name='${iv.displayPath}PerUnit' value='${iv.perUnit}' type='text' size="30"/>
+                                        <input name='${iv.displayPath}Unit' value='${iv.unit}' type='text' size="30"/>
+                                    </#if>
+                                    <#if iv.hasPerUnit()>
+                                        <input name='${iv.displayPath}PerUnit' value='${iv.perUnit}' type='text' size="30"/>
+                                    </#if>
+                                <#else>
+                                    (${iv.unit} per ${iv.perUnit})
                                 </#if>
                             </#if>
                         </td>

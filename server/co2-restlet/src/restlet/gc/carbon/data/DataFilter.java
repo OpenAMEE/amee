@@ -31,10 +31,7 @@ import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import java.util.List;
 
@@ -80,7 +77,6 @@ public class DataFilter extends BaseFilter {
                 ThreadBeanHolder.set("pathItem", pathItem);
                 path = pathItem.getInternalPath() + suffix;
             }
-
             if (path != null) {
                 // rewrite paths
                 request.getAttributes().put("previousResourceRef", reference.toString());
@@ -89,7 +85,6 @@ public class DataFilter extends BaseFilter {
                 response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
                 return STOP;
             }
-
         }
         log.debug("rewrite() - end data path rewrite");
         return CONTINUE;

@@ -2,7 +2,6 @@ package gc.carbon.profile.acceptor;
 
 import com.jellymold.utils.APIFault;
 import gc.carbon.data.DataService;
-import gc.carbon.profile.acceptor.ProfileAcceptor;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
@@ -157,11 +156,13 @@ public class ProfileCategoryFormAcceptor implements ProfileAcceptor {
                     ItemValue itemValue = itemValues.get(name);
                     if (itemValue != null) {
                         itemValue.setValue(form.getFirstValue(name));
-                        if (itemValue.hasUnit() && form.getNames().contains(name + "Unit")) {
-                            itemValue.setUnit(form.getFirstValue(name + "Unit"));
-                        }
-                        if (itemValue.hasPerUnit() && form.getNames().contains(name + "PerUnit")) {
-                            itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
+                        if (!resource.getApiVersion().isVersionOne()) {
+                            if (itemValue.hasUnit() && form.getNames().contains(name + "Unit")) {
+                                itemValue.setUnit(form.getFirstValue(name + "Unit"));
+                            }
+                            if (itemValue.hasPerUnit() && form.getNames().contains(name + "PerUnit")) {
+                                itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
+                            }
                         }
                     }
                 }

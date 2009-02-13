@@ -40,6 +40,7 @@ import java.util.Date;
 public class APIVersion implements PersistentObject, DatedObject {
 
     public static final APIVersion ONE = new APIVersion("1.0");
+    public static final APIVersion TWO = new APIVersion("2.0");
     public final static int API_VERSION_SIZE = 3;
 
     @Id
@@ -122,6 +123,10 @@ public class APIVersion implements PersistentObject, DatedObject {
 
     public boolean isVersionOne() {
         return this.equals(ONE);
+    }
+
+    public boolean isVersionTwo() {
+        return this.equals(TWO);
     }
 
     @PrePersist

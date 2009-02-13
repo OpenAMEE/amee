@@ -12,12 +12,8 @@ var BaseDataApiService  = Class.create(ApiService, ({
         return 'data';
     },
     apiServiceCall: function(method, params) {
-        if (!params) {
-            var params = {};
-        }
-        if (!method) {
-            method = '';
-        }
+        params = params || {};
+        method = method || '';
         params.requestHeaders = ['Accept', 'application/json'];
         params.method = 'post';
         new Ajax.Request(window.location.href + method, params);

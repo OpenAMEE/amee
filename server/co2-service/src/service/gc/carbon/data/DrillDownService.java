@@ -24,26 +24,20 @@ import com.jellymold.sheet.Choices;
 import com.jellymold.sheet.Sheet;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemDefinition;
-import gc.carbon.data.DataBrowser;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Date;
 
 @Service
 public class DrillDownService implements Serializable {
 
-    private final Log log = LogFactory.getLog(getClass());
-
     @Autowired
     private DataSheetService dataSheetService;
-
 
     public Choices getChoices(DataCategory dataCategory, List<Choice> selections, Date startDate, Date endDate) {
         String name = "uid";

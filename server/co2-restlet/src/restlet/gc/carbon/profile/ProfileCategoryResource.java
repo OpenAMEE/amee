@@ -133,7 +133,6 @@ public class ProfileCategoryResource extends BaseProfileResource {
                 profileBrowser.setMode(form.getFirstValue("mode"));
                 profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
             }
-
             super.handleGet();
         } else {
             notAuthorized();
@@ -187,7 +186,9 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     public List<ProfileItem> doAcceptOrStore(Representation entity) {
-        profileBrowser.setAmountReturnUnit(getForm().getFirstValue("returnUnit"), getForm().getFirstValue("returnPerUnit"));
+        if (!getApiVersion().isVersionOne()) {
+            profileBrowser.setAmountReturnUnit(getForm().getFirstValue("returnUnit"), getForm().getFirstValue("returnPerUnit"));
+        }
         return getAcceptor(entity.getMediaType()).accept(entity);
     }
 

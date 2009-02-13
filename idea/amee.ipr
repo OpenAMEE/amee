@@ -380,33 +380,33 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.oauth_1.0" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.xdb_11.1" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.net" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.jdbc_3.0" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.simple_3.1" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.spring_2.5" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.gwt_1.5" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.jetty_6.1" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.ext.fileupload_1.2" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.ext.velocity_1.5" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.ext.atom_1.0" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.ext.spring_2.5" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.ext.jaxb_2.1" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.ext.jibx_1.1" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.servlet_2.5" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.ext.jaxrs_1.0" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.ext.wadl_1.0" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.ssl" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.gwt" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.example" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.ext.freemarker_2.3" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.grizzly_1.8" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/org.restlet.ext.json_2.0" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.javamail_1.4" />
-        <root url="file://$PROJECT_DIR$/../lib/restlet-1.1.1/src/com.noelios.restlet.ext.httpclient_3.1" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.spring_2.5" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.spring_2.5" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.atom_1.0" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.jetty_6.1" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.gwt_1.5" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.net" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.jaxb_2.1" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.ssl" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.jibx_1.1" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.wadl_1.0" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.oauth_1.0" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.fileupload_1.2" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.xdb_11.1" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.json_2.0" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.velocity_1.5" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.jdbc_3.0" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.servlet_2.5" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.freemarker_2.3" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.javamail_1.4" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.grizzly_1.8" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.example" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.simple_3.1" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.ext.jaxrs_1.0" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/com.noelios.restlet.ext.httpclient_3.1" />
+        <root url="file://$PROJECT_DIR$/../../lib/restlet-1.1.1/src/org.restlet.gwt" />
       </SOURCES>
     </library>
     <library name="ehcache">

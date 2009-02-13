@@ -170,7 +170,7 @@ public class ProfileBrowser extends BaseBrowser {
     }
 
     // ProfileItemValues
-    
+
     public String getProfileItemValueUid() {
         return profileItemValueUid;
     }
@@ -237,16 +237,16 @@ public class ProfileBrowser extends BaseBrowser {
     //TODO - There is a documented work item to model return amount as an ItemValue. In the short-term, move to constants.
     public void setAmountReturnUnit(String returnUnit, String returnPerUnit) {
 
-        if (returnUnit == null)
+        if (returnUnit == null) {
             returnUnit = ProfileItem.INTERNAL_AMOUNT_UNIT.toString();
-
+        }
         AMEEUnit unit = AMEEUnit.valueOf(returnUnit);
 
-        if (returnPerUnit == null)
+        if (returnPerUnit == null) {
             returnPerUnit = ProfileItem.INTERNAL_AMOUNT_PERUNIT.toString();
+        }
         AMEEPerUnit perUnit = AMEEPerUnit.valueOf(returnPerUnit);
 
         this.returnUnit = AMEECompoundUnit.valueOf(unit, perUnit);
     }
-
 }

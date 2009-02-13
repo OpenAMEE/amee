@@ -1,3 +1,13 @@
+// Global Ajax Responders
+Ajax.Responders.register({
+    onCreate: function() {
+        $('loading').show();
+    },
+    onComplete: function() {
+        $('loading').hide();
+    }
+});
+
 // ------------------ pager ------------------------------
 var Pager = Class.create();
 Pager.prototype = {
@@ -67,7 +77,7 @@ Pager.prototype = {
 
         // pages
         pageElement = new Element('select', {id : 'pageElement'});
-        for (page = 1; (page <= this.lastPage) && this.lastPage ; page++) {
+        for (page = 1; (page <= this.lastPage) && this.lastPage; page++) {
             var optionElement;
             if (this.currentPage == page) {
                 optionElement = new Element('option', {selected : 'selected', value : page}).update(page);
@@ -89,15 +99,15 @@ Pager.prototype = {
     getPageLink: function(page, current) {
         var numberLink;
         if (current) {
-            var numberElement =  new Element("b");
+            var numberElement = new Element("b");
             numberElement.update(" " + page + " ");
             return numberElement;
 
         } else {
-           var numberLink = new Element('a', {href: '#TODO'});
-           numberLink.update(" " + page + " ");
-           numberLink.observe('click', this.doPageItemLinkClick.bindAsEventListener(this));
-           return numberLink;
+            var numberLink = new Element('a', {href: '#TODO'});
+            numberLink.update(" " + page + " ");
+            numberLink.observe('click', this.doPageItemLinkClick.bindAsEventListener(this));
+            return numberLink;
         }
     },
     doPageItemLinkClick: function(event) {
@@ -106,7 +116,7 @@ Pager.prototype = {
             this.goPage(this.nextPage);
         }
         else if (element.id == 'previousPage') {
-            this.goPage(this.previousPage);    
+            this.goPage(this.previousPage);
         } else {
             this.goPage(event.element()[event.element().selectedIndex].value);
         }
@@ -162,18 +172,13 @@ ApiService.prototype = {
         }
     },
     apiRequest: function(params) {
-        var localParams;
-        if (params) {
-            localParams = params;
-        }
-
-        new Ajax.Request(window.location.href,
-            {
-                method: 'get',
-                parameters: params,
-                requestHeaders: ['Accept', 'application/json'],
-                onSuccess: this.processApiResponse.bind(this)
-            });
+        params = params || "";
+        new Ajax.Request(window.location.href + '?method=get', {
+            method: 'post',
+            parameters: params,
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.processApiResponse.bind(this)
+        });
     },
     updatePermissions: function(response) {
         var actions = response.responseJSON.actions;
@@ -239,7 +244,7 @@ ApiService.prototype = {
         return path + window.location.search;
     },
     titleCase: function(inStr) {
-        var outStr = inStr.substr(0,1).toUpperCase();
+        var outStr = inStr.substr(0, 1).toUpperCase();
         outStr = outStr + inStr.substr(1, inStr.length - 1);
         return outStr;
     },
@@ -291,7 +296,6 @@ ApiService.prototype = {
 
         var json = response.responseJSON;
 
-
         // data category information and drill down
         if (json.dataCategory) {
 
@@ -300,7 +304,6 @@ ApiService.prototype = {
             // update elements
             this.dataHeadingCategoryElement = $(this.dataHeadingCategoryElementName);
             this.dataContentElement = $(this.dataContentElementName);
-
 
             // set section heading
             if (this.dataHeadingCategoryElement) {
@@ -347,8 +350,14 @@ ApiService.prototype = {
 
                 this.dataContentElement.replace(pElement);
             }
+
             if (this.drillDown && json.path) {
-                var dDown = new DrillDown("/data" + json.path, this.apiVersion, this.getDateFormat(), this.getActionsAllowCreate()).loadDrillDown('');
+                new DrillDown(
+                        "/data" + json.path,
+                        this.apiVersion,
+                        this.getDateFormat(),
+                        this.getActionsAllowCreate()
+                        ).loadDrillDown();
             }
         }
     },
@@ -378,15 +387,15 @@ ApiService.prototype = {
 
         if (this.getActionsAllowView()) {
             var eUrl = optViewPath || uid;
-            
+
             actions.insert(new Element('a', {href : this.getUrl(eUrl)})
-                .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
+                    .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
         }
 
         if (this.getActionsAllowDelete()) {
             var dUrl = "'" + urlKey + "','" + this.getUrl(uid) + "'";
             actions.insert(new Element('input',
-                {
+            {
                 onClick : dMethod + '(' + dUrl + ') ; return false;',
                 type : 'image',
                 src : '/images/icons/page_delete.png',
@@ -410,7 +419,7 @@ ApiService.prototype = {
             if (!url.endsWith("/")) {
                 url = url + "/";
             }
-            return url +  params + window.location.search;
+            return url + params + window.location.search;
         } else {
             return url;
         }

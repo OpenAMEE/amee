@@ -1,23 +1,22 @@
 package gc.carbon.profile.acceptor;
 
-import gc.carbon.profile.ProfileItemResource;
-import gc.carbon.profile.ProfileService;
+import com.jellymold.utils.APIFault;
+import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.domain.profile.ValidFromDate;
-import gc.carbon.domain.data.ItemValue;
-import gc.carbon.profile.acceptor.ProfileAcceptor;
-import com.jellymold.utils.APIFault;
+import gc.carbon.profile.ProfileItemResource;
+import gc.carbon.profile.ProfileService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.StringUtils;
-import org.restlet.resource.Representation;
 import org.restlet.data.Form;
+import org.restlet.resource.Representation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.ArrayList;
 
 /**
  * This file is part of AMEE.
@@ -57,7 +56,7 @@ public class ProfileItemFormAcceptor implements ProfileAcceptor {
     public List<ProfileItem> accept(Form form) {
 
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
-        ProfileItem profileItem = null;
+        ProfileItem profileItem;
 
         profileItem = resource.getProfileBrowser().getProfileItem();
 
@@ -82,11 +81,13 @@ public class ProfileItemFormAcceptor implements ProfileAcceptor {
                 ItemValue itemValue = itemValues.get(name);
                 if (itemValue != null) {
                     itemValue.setValue(form.getFirstValue(name));
-                    if (itemValue.hasUnit() && form.getNames().contains(name+"Unit")) {
-                        itemValue.setUnit(form.getFirstValue(name + "Unit"));
-                    }
-                    if (itemValue.hasPerUnit() && form.getNames().contains(name+"PerUnit")) {
-                        itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
+                    if (!resource.getApiVersion().isVersionOne()) {
+                        if (itemValue.hasUnit() && form.getNames().contains(name + "Unit")) {
+                            itemValue.setUnit(form.getFirstValue(name + "Unit"));
+                        }
+                        if (itemValue.hasPerUnit() && form.getNames().contains(name + "PerUnit")) {
+                            itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
+                        }
                     }
                 }
             }
@@ -139,7 +140,7 @@ public class ProfileItemFormAcceptor implements ProfileAcceptor {
             if (end) {
                 profileItem.setEndDate(profileItem.getStartDate());
             } else {
-               profileItem.setEndDate(null); 
+                profileItem.setEndDate(null);
             }
         }
 

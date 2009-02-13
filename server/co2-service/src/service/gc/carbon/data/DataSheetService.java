@@ -20,12 +20,9 @@
 package gc.carbon.data;
 
 import com.jellymold.sheet.Sheet;
-import com.jellymold.utils.cache.CacheHelper;
 import com.jellymold.utils.ThreadBeanHolder;
+import com.jellymold.utils.cache.CacheHelper;
 import gc.carbon.domain.data.DataCategory;
-import gc.carbon.data.DataBrowser;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +30,6 @@ import java.io.Serializable;
 
 @Service
 public class DataSheetService implements Serializable {
-
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private DataSheetFactory dataSheetFactory;

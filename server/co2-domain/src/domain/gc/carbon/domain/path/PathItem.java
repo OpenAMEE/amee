@@ -244,7 +244,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         } else if (ot.equals(ObjectType.IV)) {
             return getParent().getInternalPath() + "/values/" + getUid();
         } else {
-            return null; // TODO: or throw an exception
+            throw new RuntimeException("Unexpected ObjectType.");
         }
     }
 

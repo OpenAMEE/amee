@@ -32,7 +32,7 @@ public class EngineStatusService extends StatusService {
     private FreeMarkerConfigurationService freeMarkerConfigurationService;
 
     public EngineStatusService() {
-        super(true);
+        super();
     }
 
     @Override
@@ -54,7 +54,6 @@ public class EngineStatusService extends StatusService {
             } else {
                 return super.getRepresentation(status, request, response);
             }
-
         } else {
             // just return status code for API calls
             return new StringRepresentation("");

@@ -6,18 +6,16 @@ import com.jellymold.utils.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
+import org.restlet.Component;
 import org.restlet.Filter;
 import org.restlet.VirtualHost;
-import org.restlet.Component;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.BeansException;
-
-import java.util.Iterator;
 
 // TODO: may be better to have a global filter that intelligently hooks into per module init functions
 // TODO: define attributes required from site/application objects
@@ -83,7 +81,7 @@ public class SiteFilter extends Filter implements ApplicationContextAware {
     }
 
     // code here is inspired by code in com.noelios.restlet.component.ComponentClientDispatcher
-    private VirtualHost getVirtualHost(){
+    private VirtualHost getVirtualHost() {
 
         VirtualHost host = null;
         final Integer hostHashCode = VirtualHost.getCurrent();
