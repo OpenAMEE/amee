@@ -283,3 +283,14 @@ img {border: 0px;}
     color: black;
     padding: 2px;
 }
+
+/* modal box
+-------------------*/
+.loginModalHead {margin-right: auto; margin-left: auto; background-color: #FFF; border: solid 10px #EEE; width: 246px; font-family: Arial, Helvetica, sans-serif; font-size: 10px;}
+.loginOuterDiv {font-size: 1.2em; border: solid 1px #999;}
+.loginOuterDiv h2 {margin: 0; background-color: #B2B2B2; font-size: 1.2em; padding: 5px 8px;}
+.loginOuterDiv form {padding: 10px;}
+.loginInnerDiv {padding: 10px 0 0 10px;}
+.loginButtonsOuter {padding: 0 10px 10px 10px;}
+.loginButtonsOuter .cancelButton {float: left;}
+.loginButtonsOuter .button {float: right;}

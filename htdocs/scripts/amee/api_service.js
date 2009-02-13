@@ -173,9 +173,10 @@ ApiService.prototype = {
     },
     apiRequest: function(params) {
         params = params || "";
-        new Ajax.Request(window.location.href + '?method=get', {
+        params = params.toQueryParams();
+        params['method'] = 'get';
+        new Ajax.Request(window.location.href + '?' + Object.toQueryString(params), {
             method: 'post',
-            parameters: params,
             requestHeaders: ['Accept', 'application/json'],
             onSuccess: this.processApiResponse.bind(this)
         });
