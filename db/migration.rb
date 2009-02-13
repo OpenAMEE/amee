@@ -246,7 +246,8 @@ def migrate_algo
     file = File.new("algo.csv","r")
     while(line = file.gets)
       path, name = line.split(",")
-      query = select.sub(/\{NAME\}/, name.chomp!)
+      puts "Migrating #{name.chomp} : #{path}"
+      query = select.sub(/\{NAME\}/, name.chomp)
       puts query 
       rs = stmt.executeQuery(query)
       if rs.next()
@@ -291,9 +292,9 @@ def run_sql(file)
 end
 
 # Run the migrations
-# run_sql("ddl.sql")
-# migrate_ivd
-# run_sql("dml.sql")
-# migrate_pi
-# migrate_algo
-# run_sql("innodb.sql")
+run_sql("ddl.sql")
+migrate_ivd
+run_sql("dml.sql")
+migrate_pi
+migrate_algo
+run_sql("innodb.sql")

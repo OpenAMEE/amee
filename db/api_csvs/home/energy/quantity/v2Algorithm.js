@@ -6,6 +6,9 @@ if(type=='electricity'){
   }
   // get electricity value based on country
   kgCO2PerKWh = dataFinder.getDataItemValue('home/energy/electricity', 'country=' + country, 'kgCO2PerKWh');
+  if(kgCO2PerKWh==null){//try ISO code
+    kgCO2PerKWh = dataFinder.getDataItemValue('home/energy/electricityiso', 'country=' + country, 'kgCO2PerKWh');
+  }
 }
 
 seasonFac=1.;
