@@ -2,6 +2,7 @@ package gc.carbon.profile.builder.v2;
 
 import gc.carbon.APIVersion;
 import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.data.DataItem;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.factory.Factory;
 import org.apache.abdera.model.*;
@@ -52,6 +53,7 @@ public class AtomFeed {
     public static final QName Q_NAME_VALUE = new QName(AMEE_SCHEMA, "value", PREFIX);
     public static final QName Q_NAME_UNIT = new QName(AMEE_SCHEMA, "unit", PREFIX);
     public static final QName Q_NAME_PER_UNIT = new QName(AMEE_SCHEMA, "perUnit", PREFIX);
+    public static final QName Q_NAME_DATA_ITEM = new QName(AMEE_SCHEMA, "dataItem", PREFIX);
 
     private static final SimpleDateFormat ATOM_DATE_DISPLAY_FMT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z");
 
@@ -188,6 +190,11 @@ public class AtomFeed {
             Element extension = entry.addExtension(Q_NAME_ITEM_VALUE);
             addItemValue(extension, itemValue, parentPath);
         }
+    }
+
+    public void addDataItem(ExtensibleElement e, DataItem dataItem) {
+        Element element = e.addSimpleExtension(Q_NAME_DATA_ITEM, dataItem.getDisplayName());
+        element.setAttributeValue("href","");
     }
 
     public void addItemValue(Element element, ItemValue itemValue) {

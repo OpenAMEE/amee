@@ -301,7 +301,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         final Feed feed = atomFeed.newFeed();
         feed.sortEntriesByUpdated(true);
         feed.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
-        feed.setTitle("Profile " + resource.getProfile().getDisplayName() + ", Category " + resource.getPathItem().getFullPath());
+        feed.setTitle("Profile " + resource.getProfile().getDisplayName() + ", Category " + resource.getDataCategory().getName());
 
         atomFeed.newID(feed).setText("urn:dataCategory:" + resource.getDataCategory().getUid());
 
@@ -316,6 +316,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         List<ProfileItem> profileItems = getProfileItems();
 
+        atomFeed.addName(feed, resource.getDataCategory().getName());
         atomFeed.addTotalAmount(feed, getTotalAmount(profileItems).toString(), resource.getProfileBrowser().getReturnUnit().toString());
 
         //TODO - Is this the correct way to use the pager?
@@ -368,6 +369,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
             entry.setPublished(profileItem.getStartDate());
             entry.setUpdated(profileItem.getStartDate());
+
+            atomFeed.addDataItem(entry, profileItem.getDataItem());
 
             atomFeed.addStartDate(entry, profileItem.getStartDate().toString());
 

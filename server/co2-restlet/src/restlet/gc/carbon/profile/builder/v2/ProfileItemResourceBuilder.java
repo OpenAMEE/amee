@@ -101,6 +101,8 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
         entry.setPublished(profileItem.getStartDate());
         entry.setUpdated(profileItem.getStartDate());
 
+        atomFeed.addDataItem(entry, profileItem.getDataItem());
+
         HCalendar content = new HCalendar();
 
         content.addSummary(amount + " " + returnUnit.toString());
