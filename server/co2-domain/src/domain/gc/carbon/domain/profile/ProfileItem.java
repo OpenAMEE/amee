@@ -208,4 +208,17 @@ public class ProfileItem extends Item {
         }
         return false;
     }
+
+    //TEMP HACK - will remove as soon we decide how to handle return units in V1 correctly.
+    public boolean isSingleFlight() {
+        for (ItemValue iv : getItemValues()) {
+            if ((iv.getName().startsWith("IATA") && iv.getValue().length() > 0) ||
+                (iv.getName().startsWith("Lat") && !iv.getValue().equals("-999")) ||
+                (iv.getName().startsWith("Lon") && !iv.getValue().equals("-999"))) {
+                return true;
+            }
+
+        }
+        return false;
+    }
 }

@@ -84,7 +84,7 @@ public class ProfileItemBuilder implements Builder {
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);
-        if (item.hasPerTimeValues()) {
+        if (!item.isSingleFlight()) {
             obj.put("amountPerMonth", ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), AMEEPerUnit.valueOf("month")));
         } else {
             obj.put("amountPerMonth", item.getAmount());
@@ -102,9 +102,7 @@ public class ProfileItemBuilder implements Builder {
         Element element = document.createElement("ProfileItem");
         buildElement(document, element, detailed);
 
-        // Ensure the CO2 amount is in the expected V1 units. The algos always return CO2 amounts in kg/year.
-        // V1 API always returns kg/month
-        if (item.hasPerTimeValues()) {
+        if (!item.isSingleFlight()) {
             element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
                 ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), AMEEPerUnit.valueOf("month")).toString()));
         } else {
