@@ -1,14 +1,17 @@
 package gc.carbon.data;
 
-import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
-import gc.carbon.data.DataService;
-
-import java.util.*;
-
+import gc.carbon.domain.profile.StartEndDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This file is part of AMEE.
@@ -31,26 +34,27 @@ import org.apache.commons.collections.Predicate;
  */
 public class OnlyActiveDataService extends DataService {
 
-    DataService delegatee;
+    private final Log log = LogFactory.getLog(getClass());
+
+    private DataService delegatee;
 
     public OnlyActiveDataService(DataService delegatee) {
         this.delegatee = delegatee;
     }
 
     public List<DataItem> getDataItems(final DataCategory dataCategory, final StartEndDate startDate, final StartEndDate endDate) {
-
+        log.debug("getDataItems() start");
+        DataItem.resetCachedLabels();
         final List<DataItem> dataItems = delegatee.getDataItems(dataCategory, startDate, endDate);
-
+        log.debug("getDataItems() got DataItems");
         List<DataItem> requestedItems = new ArrayList<DataItem>();
-
-        for(String type : getDistinctLabels(dataItems)) {
+        for (String type : getDistinctLabels(dataItems)) {
             List<DataItem> itemsByLabel = getItemsByLabel(dataItems, type);
             requestedItems.addAll(getActiveItems(itemsByLabel, startDate));
         }
-
+        log.debug("getDataItems() end");
         return requestedItems;
     }
-
 
     private Set<String> getDistinctLabels(List<DataItem> dataItems) {
         Set<String> labels = new HashSet<String>();
@@ -60,27 +64,29 @@ public class OnlyActiveDataService extends DataService {
         return labels;
     }
 
-    private List<DataItem> getItemsByLabel(List<DataItem> dataItems, final String type) {
-        return (List) CollectionUtils.select(dataItems, new Predicate() {
-              public boolean evaluate(Object o) {
-                  DataItem di = (DataItem) o;
-                  return type.equals(di.getLabel());
-              }
-          });
+    private List<DataItem> getItemsByLabel(List<DataItem> dataItems, final String label) {
+        List<DataItem> selectedDataItems = new ArrayList<DataItem>(dataItems.size());
+        CollectionUtils.select(dataItems, new Predicate() {
+            public boolean evaluate(Object o) {
+                DataItem di = (DataItem) o;
+                return label.equals(di.getLabel());
+            }
+        }, selectedDataItems);
+        return selectedDataItems;
     }
 
     private List<DataItem> getActiveItems(final List<DataItem> dataItems, final StartEndDate startDate) {
-        return (List) CollectionUtils.select(dataItems, new Predicate() {
-            public boolean evaluate(Object o) {
-                DataItem di = (DataItem) o;
-                for (DataItem dataItem : dataItems) {
-                    if (di.getStartDate().before(dataItem.getStartDate()) &&
-                            !dataItem.getStartDate().after(startDate.toDate())) {
-                        return false;
+            return (List) CollectionUtils.select(dataItems, new Predicate() {
+                public boolean evaluate(Object o) {
+                    DataItem di = (DataItem) o;
+                    for (DataItem dataItem : dataItems) {
+                        if (di.getStartDate().before(dataItem.getStartDate()) &&
+                                !dataItem.getStartDate().after(startDate.toDate())) {
+                            return false;
+                        }
                     }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
     }
 }
