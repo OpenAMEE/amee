@@ -1,0 +1,33 @@
+"eGRID2006 Version 2.1 Plant File (Year 2004 Data)",,
+,,
+,,
+"eGRID subregion name","eGRID subregion acronym","Subregion annual CO2 output emission rate (lb/MWh)"
+"SRNAME","SUBRGN","PLCO2RTA"
+"ASCC Alaska Grid","AKGD",1257.188
+"ASCC Miscellaneous","AKMS",480.099
+"ERCOT All","ERCT",1420.559
+"FRCC All","FRCC",1327.661
+"HICC Miscellaneous","HIMS",1456.167
+"HICC Oahu","HIOA",1728.121
+"MRO East","MROE",1858.719
+"MRO West","MROW",1813.810
+"NPCC Long Island","NYLI",1412.197
+"NPCC New England","NEWE",908.902
+"NPCC NYC/Westchester","NYCW",922.221
+"NPCC Upstate NY","NYUP",819.684
+"RFC East","RFCE",1095.533
+"RFC Michigan","RFCM",1641.412
+"RFC West","RFCW",1556.388
+"SERC Midwest","SRMW",1844.344
+"SERC Mississippi Valley","SRMV",1135.463
+"SERC South","SRSO",1490.370
+"SERC Tennessee Valley","SRTV",1494.886
+"SERC Virginia/Carolina","SRVC",1146.386
+"SPP North","SPNO",1971.417
+"SPP South","SPSO",1761.140
+"WECC California","CAMX",878.707
+"WECC Northwest","NWPP",921.104
+"WECC Rockies","RMPA",2035.813
+"WECC Southwest","AZNM",1254.018
+,,
+"US Total",,1363.001
