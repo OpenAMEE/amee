@@ -9,7 +9,7 @@
     <bean id="cacheApplication" class="org.restlet.Application">
         <property name="root" ref="cacheRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
-        <property name="connectorService" ref="transactionConnectorService"/>
+        <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="Cache Administration"/>
     </bean>
 
@@ -18,22 +18,18 @@
         <property name="attachments">
             <map>
                 <entry key="">
-                    <bean class="com.jellymold.utils.ThreadBeanHolderFilter">
+                    <bean class="org.restlet.ext.seam.TransactionFilter">
+                        <constructor-arg index="0" ref="cacheApplication"/>
                         <property name="next">
-                            <bean class="org.restlet.ext.seam.TransactionFilter">
+                            <bean class="com.jellymold.kiwi.SiteFilter">
                                 <constructor-arg index="0" ref="cacheApplication"/>
                                 <property name="next">
-                                    <bean class="com.jellymold.kiwi.SiteFilter">
+                                    <bean class="com.jellymold.kiwi.auth.BasicAuthFilter">
                                         <constructor-arg index="0" ref="cacheApplication"/>
                                         <property name="next">
-                                            <bean class="com.jellymold.kiwi.auth.BasicAuthFilter">
+                                            <bean class="com.jellymold.kiwi.auth.AuthFilter">
                                                 <constructor-arg index="0" ref="cacheApplication"/>
-                                                <property name="next">
-                                                    <bean class="com.jellymold.kiwi.auth.AuthFilter">
-                                                        <constructor-arg index="0" ref="cacheApplication"/>
-                                                        <property name="next" ref="cacheRouter"/>
-                                                    </bean>
-                                                </property>
+                                                <property name="next" ref="cacheRouter"/>
                                             </bean>
                                         </property>
                                     </bean>
@@ -47,7 +43,7 @@
     </bean>
 
     <bean id="cacheRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="cacheRoot"/>
+        <constructor-arg ref="cacheApplication"/>
         <property name="defaultMatchingMode" ref="modeEquals"/>
         <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">

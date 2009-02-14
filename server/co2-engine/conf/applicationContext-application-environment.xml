@@ -9,7 +9,7 @@
     <bean id="environmentsApplication" class="org.restlet.Application">
         <property name="root" ref="environmentsRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
-        <property name="connectorService" ref="transactionConnectorService"/>
+        <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="Environment Administration"/>
     </bean>
 
@@ -18,22 +18,18 @@
         <property name="attachments">
             <map>
                 <entry key="">
-                    <bean class="com.jellymold.utils.ThreadBeanHolderFilter">
+                    <bean class="org.restlet.ext.seam.TransactionFilter">
+                        <constructor-arg index="0" ref="environmentsApplication"/>
                         <property name="next">
-                            <bean class="org.restlet.ext.seam.TransactionFilter">
+                            <bean class="com.jellymold.kiwi.SiteFilter">
                                 <constructor-arg index="0" ref="environmentsApplication"/>
                                 <property name="next">
-                                    <bean class="com.jellymold.kiwi.SiteFilter">
+                                    <bean class="com.jellymold.kiwi.auth.BasicAuthFilter">
                                         <constructor-arg index="0" ref="environmentsApplication"/>
                                         <property name="next">
-                                            <bean class="com.jellymold.kiwi.auth.BasicAuthFilter">
+                                            <bean class="com.jellymold.kiwi.auth.AuthFilter">
                                                 <constructor-arg index="0" ref="environmentsApplication"/>
-                                                <property name="next">
-                                                    <bean class="com.jellymold.kiwi.auth.AuthFilter">
-                                                        <constructor-arg index="0" ref="environmentsApplication"/>
-                                                        <property name="next" ref="environmentsRouter"/>
-                                                    </bean>
-                                                </property>
+                                                <property name="next" ref="environmentsRouter"/>
                                             </bean>
                                         </property>
                                     </bean>
@@ -49,7 +45,7 @@
     <!-- Environments -->
 
     <bean id="environmentsRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentsRoot"/>
+        <constructor-arg ref="environmentsApplication"/>
         <property name="attachments">
             <map>
                 <entry key="">
@@ -65,7 +61,7 @@
     </bean>
 
     <bean id="environmentRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentsRouter"/>
+        <constructor-arg ref="environmentsApplication"/>
         <property name="attachments">
             <map>
                 <entry key="">
@@ -108,7 +104,7 @@
     <!-- ValueDefinitions -->
 
     <bean id="valueDefinitionsRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentRouter"/>
+        <constructor-arg ref="environmentsApplication"/>
         <property name="attachments">
             <map>
                 <entry key="">
@@ -132,7 +128,7 @@
     <!-- Algorithms -->
 
     <bean id="itemDefinitionsRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentRouter"/>
+        <constructor-arg ref="environmentsApplication"/>
         <property name="defaultMatchingMode" ref="modeEquals"/>
         <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">
@@ -186,7 +182,7 @@
     <!-- AlgorithmContexts -->
 
     <bean id="algorithmContextsRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentRouter"/>
+        <constructor-arg ref="environmentsApplication"/>
         <property name="defaultMatchingMode" ref="modeEquals"/>
         <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">
@@ -208,7 +204,7 @@
     <!-- Sites -->
 
     <bean id="sitesRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentRouter"/>
+        <constructor-arg ref="environmentsApplication"/>
         <property name="defaultMatchingMode" ref="modeEquals"/>
         <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">
@@ -248,7 +244,7 @@
     <!-- Users -->
 
     <bean id="usersRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentRouter"/>
+        <constructor-arg ref="environmentsApplication"/>
         <property name="defaultMatchingMode" ref="modeEquals"/>
         <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">
@@ -299,7 +295,7 @@
     <!-- Groups -->
 
     <bean id="groupsRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentRouter"/>
+        <constructor-arg ref="environmentsApplication"/>
         <property name="defaultMatchingMode" ref="modeEquals"/>
         <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">
@@ -330,7 +326,7 @@
     <!-- Roles -->
 
     <bean id="rolesRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentRouter"/>
+        <constructor-arg ref="environmentsApplication"/>
         <property name="defaultMatchingMode" ref="modeEquals"/>
         <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">
@@ -366,7 +362,7 @@
     <!-- Tasks -->
 
     <bean id="tasksRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentRouter"/>
+        <constructor-arg ref="environmentsApplication"/>
         <property name="defaultMatchingMode" ref="modeEquals"/>
         <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">

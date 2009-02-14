@@ -9,7 +9,7 @@
     <bean id="dataApplication" class="org.restlet.Application">
         <property name="root" ref="dataRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
-        <property name="connectorService" ref="transactionConnectorService"/>
+        <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="Data Administration"/>
     </bean>
 
@@ -18,24 +18,20 @@
         <property name="attachments">
             <map>
                 <entry key="">
-                    <bean class="com.jellymold.utils.ThreadBeanHolderFilter">
+                    <bean class="org.restlet.ext.seam.TransactionFilter">
+                        <constructor-arg index="0" ref="dataApplication"/>
                         <property name="next">
-                            <bean class="org.restlet.ext.seam.TransactionFilter">
+                            <bean class="com.jellymold.kiwi.SiteFilter">
                                 <constructor-arg index="0" ref="dataApplication"/>
                                 <property name="next">
-                                    <bean class="com.jellymold.kiwi.SiteFilter">
+                                    <bean class="com.jellymold.kiwi.auth.BasicAuthFilter">
                                         <constructor-arg index="0" ref="dataApplication"/>
                                         <property name="next">
-                                            <bean class="com.jellymold.kiwi.auth.BasicAuthFilter">
+                                            <bean class="com.jellymold.kiwi.auth.AuthFilter">
                                                 <constructor-arg index="0" ref="dataApplication"/>
                                                 <property name="next">
-                                                    <bean class="com.jellymold.kiwi.auth.AuthFilter">
-                                                        <constructor-arg index="0" ref="dataApplication"/>
-                                                        <property name="next">
-                                                            <bean class="gc.carbon.data.DataFilter">
-                                                                <property name="next" ref="dataRouter"/>
-                                                            </bean>
-                                                        </property>
+                                                    <bean class="gc.carbon.data.DataFilter">
+                                                        <property name="next" ref="dataRouter"/>
                                                     </bean>
                                                 </property>
                                             </bean>
@@ -51,7 +47,7 @@
     </bean>
 
     <bean id="dataRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="dataRoot"/>
+        <constructor-arg ref="dataApplication"/>
         <property name="defaultMatchingMode" ref="modeEquals"/>
         <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">

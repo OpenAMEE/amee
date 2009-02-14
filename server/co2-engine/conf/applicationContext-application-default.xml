@@ -9,7 +9,7 @@
     <bean id="defaultApplication" class="org.restlet.Application">
         <property name="root" ref="defaultRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
-        <property name="connectorService" ref="transactionConnectorService"/>
+        <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="Default App"/>
     </bean>
 
@@ -18,19 +18,15 @@
         <property name="attachments">
             <map>
                 <entry key="">
-                    <bean class="com.jellymold.utils.ThreadBeanHolderFilter">
+                    <bean class="org.restlet.ext.seam.TransactionFilter">
+                        <constructor-arg index="0" ref="defaultApplication"/>
                         <property name="next">
-                            <bean class="org.restlet.ext.seam.TransactionFilter">
+                            <bean class="com.jellymold.kiwi.SiteFilter">
                                 <constructor-arg index="0" ref="defaultApplication"/>
                                 <property name="next">
-                                    <bean class="com.jellymold.kiwi.SiteFilter">
+                                    <bean class="com.jellymold.kiwi.auth.GuestFilter">
                                         <constructor-arg index="0" ref="defaultApplication"/>
-                                        <property name="next">
-                                            <bean class="com.jellymold.kiwi.auth.GuestFilter">
-                                                <constructor-arg index="0" ref="defaultApplication"/>
-                                                <property name="next" ref="defaultRouter"/>
-                                            </bean>
-                                        </property>
+                                        <property name="next" ref="defaultRouter"/>
                                     </bean>
                                 </property>
                             </bean>
@@ -42,7 +38,7 @@
     </bean>
 
     <bean id="defaultRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="defaultRoot"/>
+        <constructor-arg ref="defaultApplication"/>
         <property name="defaultMatchingMode" ref="modeEquals"/>
         <property name="defaultMatchQuery" value="false"/>
         <property name="attachments">

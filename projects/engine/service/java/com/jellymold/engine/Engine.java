@@ -60,6 +60,9 @@ public class Engine implements WrapperListener, Serializable {
                 "applicationContext-application-*.xml",
                 "applicationContext-skins.xml"});
 
+        // obtain the Restlet container
+        container = ((Component) springContext.getBean("ameeContainer"));
+
         // initialise TransactionController (for controlling Spring)
         transactionController = (TransactionController) springContext.getBean("transactionController");
 
@@ -68,19 +71,14 @@ public class Engine implements WrapperListener, Serializable {
         onStart();
         transactionController.end();
 
-        // configure the Restlet container and add Spring stuff
-        // TODO: try and do this in Spring XML config
-        container = ((Component) springContext.getBean("ameeContainer"));
-        container.getContext().getAttributes()
-                .put("transactionController", transactionController); // used in TransactionServerConverter?
-
         // configure Restlet server (ajp, http, etc)
         // TODO: try and do this in Spring XML config
         Server ajpServer = ((Server) springContext.getBean("ameeServer"));
         ajpServer.getContext().getAttributes()
-                .put("transactionController", transactionController); // used in TransactionServerConverter?
+                .put("transactionController", transactionController); // used in TransactionServerConverter
 
-        // Configure Restlet logging to log on a single line
+        // configure Restlet logging to log on a single line
+        // TODO: try and do this in Spring XML config
         LogService logService = container.getLogService();
         logService.setLogFormat("[IP:{cia}] [M:{m}] [S:{S}] [PATH:{rp}] [UA:{cig}] [REF:{fp}]");
         Logger logger = Logger.getLogger("org.restlet");

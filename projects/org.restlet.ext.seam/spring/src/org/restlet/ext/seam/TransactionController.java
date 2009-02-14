@@ -93,16 +93,16 @@ public class TransactionController extends EntityManagerFactoryAccessor {
     }
 
     public void openEntityManager() {
-        if (!TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
-            logger.debug("begin() - Opening JPA EntityManager in TransactionController");
-            try {
-                EntityManager em = createEntityManager();
-                TransactionSynchronizationManager.bindResource(getEntityManagerFactory(), new EntityManagerHolder(em));
-            } catch (PersistenceException ex) {
-                throw new DataAccessResourceFailureException("Could not create JPA EntityManager", ex);
-            }
-        } else {
-            logger.debug("begin() - JPA EntityManager already open");
+        if (TransactionSynchronizationManager.hasResource(getEntityManagerFactory())) {
+            logger.warn("begin() - JPA EntityManager already open - closing it");
+            closeEntityManager();
+        }
+        logger.debug("begin() - Opening JPA EntityManager in TransactionController");
+        try {
+            EntityManager em = createEntityManager();
+            TransactionSynchronizationManager.bindResource(getEntityManagerFactory(), new EntityManagerHolder(em));
+        } catch (PersistenceException ex) {
+            throw new DataAccessResourceFailureException("Could not create JPA EntityManager", ex);
         }
     }
 
@@ -118,7 +118,7 @@ public class TransactionController extends EntityManagerFactoryAccessor {
     }
 
     /**
-     * 1) Called before HttpConverter.toRequest
+     * 1) Called by TransactionServerConverter before HttpConverter.toRequest
      *
      * @param withTransaction specify whether a transaction should be used
      */
@@ -128,14 +128,9 @@ public class TransactionController extends EntityManagerFactoryAccessor {
     }
 
     /**
-     * 2) Called before Filter.doHandle
-     */
-    public void beforeHandle() {
-        logger.debug("beforeHandle() - >>> BEFORE HANDLE");
-    }
-
-    /**
-     * 3) Called after Filter.doHandle
+     * 2) Called by TransactionFilter after Filter.doHandle
+     *
+     * @param success true or false
      */
     public void afterHandle(boolean success) {
         logger.debug("afterHandle() - <<< AFTER HANDLE");
@@ -146,21 +141,7 @@ public class TransactionController extends EntityManagerFactoryAccessor {
     }
 
     /**
-     * 4) Called after ConnectorService.beforeSend
-     */
-    public void beforeSend() {
-        logger.debug("beforeSend() - >>> BEFORE SEND");
-    }
-
-    /**
-     * 5) Called after ConnectorService.afterSend
-     */
-    public void afterSend() {
-        logger.debug("afterSend() - <<< AFTER SEND");
-    }
-
-    /**
-     * 6) Called after HttpConverter.commit
+     * 3) Called by TransactionServerConverter after HttpServerConverter.commit
      */
     public void afterCommit() {
         logger.debug("afterCommit() - <<< AFTER COMMIT");
