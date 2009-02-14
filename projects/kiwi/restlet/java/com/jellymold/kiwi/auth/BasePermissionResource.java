@@ -22,14 +22,6 @@ public abstract class BasePermissionResource extends BaseResource implements Ser
 
     private Permission permission;
 
-    public BasePermissionResource() {
-        super();
-    }
-
-    public BasePermissionResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();

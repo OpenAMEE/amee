@@ -74,6 +74,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         for (String key : query.getNames()) {
             parameters.add(new Choice(key, query.getValues(key)));
         }
+        setAvailable(isValid());
     }
 
     @Override

@@ -79,6 +79,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
         definitionBrowser.setAlgorithmUid(request.getAttributes().get("algorithmUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

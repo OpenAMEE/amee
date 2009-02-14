@@ -23,14 +23,6 @@ public class UserGroupRoleResource extends BaseResource {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    public UserGroupRoleResource() {
-        super();
-    }
-
-    public UserGroupRoleResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -38,6 +30,7 @@ public class UserGroupRoleResource extends BaseResource {
         environmentBrowser.setUserUid(request.getAttributes().get("userUid").toString());
         environmentBrowser.setGroupUid(request.getAttributes().get("groupUid").toString());
         environmentBrowser.setRoleUid(request.getAttributes().get("roleUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

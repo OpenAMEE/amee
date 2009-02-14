@@ -16,18 +16,18 @@ public class ProtectedResource extends BaseResource implements Serializable {
 
     public final static String VIEW_PROTECTED = "auth/protected.ftl";
 
-    public ProtectedResource() {
-        super();
+    @Override
+    public void init(Context context, Request request, Response response) {
+        super.init(context, request, response);
+        setAvailable(isValid());
     }
 
-    public ProtectedResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
+    @Override
     public String getTemplatePath() {
         return VIEW_PROTECTED;
     }
 
+    @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("next", AuthUtils.getNextUrl(getRequest(), getForm()));

@@ -48,6 +48,7 @@ public class DataCategorySheetResource extends BaseDataResource implements Seria
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

@@ -56,7 +56,9 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
     private ProfileBrowser profileBrowser;
+
     private User user;
     private Group group;
     private Profile newProfile = null;
@@ -66,8 +68,8 @@ public class ProfilesResource extends AMEEResource implements Serializable {
         super.init(context, request, response);
         user = AuthService.getUser();
         group = AuthService.getGroup();
-        profileBrowser = (ProfileBrowser) beanFactory.getBean("profileBrowser");
         setPage(request);
+        setAvailable(isValid());
     }
 
     @Override

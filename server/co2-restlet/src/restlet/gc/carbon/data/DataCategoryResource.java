@@ -70,6 +70,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
         setPage(request);
         setBuilderStrategy();
+        setAvailable(isValid());
     }
 
     private void setBuilderStrategy() {

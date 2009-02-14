@@ -61,6 +61,7 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
         super.init(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

@@ -19,7 +19,6 @@
                 <ref local="ameeAdminHost"/>
             </list>
         </property>
-        <!--property name="defaultHost" ref="defaultHost"/-->
         <property name="statusService" ref="engineStatusService"/>
     </bean>
 
@@ -41,13 +40,6 @@
             </props>
         </property>
     </bean>
-
-    <!--bean id="defaultHost" class="org.restlet.ext.spring.SpringHost">
-        <constructor-arg ref="ameeContainer"/>
-        <property name="defaultRoute">
-
-        </property>
-    </bean-->
 
     <bean id="ameeHost" class="org.restlet.ext.spring.SpringHost">
         <constructor-arg ref="ameeContainer"/>

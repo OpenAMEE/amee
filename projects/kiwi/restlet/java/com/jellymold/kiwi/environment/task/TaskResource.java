@@ -31,19 +31,12 @@ public class TaskResource extends BaseResource implements Serializable {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    public TaskResource() {
-        super();
-    }
-
-    public TaskResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         environmentBrowser.setScheduledTaskUid(request.getAttributes().get("scheduledTaskUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

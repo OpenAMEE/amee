@@ -69,6 +69,7 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
         profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
         profileBrowser.setProfileItemValueUid(request.getAttributes().get("valueUid").toString());
         setAcceptors();
+        setAvailable(isValid());
     }
 
     private void setAcceptors() {

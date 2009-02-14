@@ -30,19 +30,12 @@ public class GroupResource extends BaseResource {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    public GroupResource() {
-        super();
-    }
-
-    public GroupResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         environmentBrowser.setGroupUid(request.getAttributes().get("groupUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

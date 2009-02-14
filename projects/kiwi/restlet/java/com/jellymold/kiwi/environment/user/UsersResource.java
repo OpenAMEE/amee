@@ -37,19 +37,12 @@ public class UsersResource extends BaseResource implements Serializable {
 
     private User newUser;
 
-    public UsersResource() {
-        super();
-    }
-
-    public UsersResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
+        setAvailable(isValid());
     }
 
     @Override

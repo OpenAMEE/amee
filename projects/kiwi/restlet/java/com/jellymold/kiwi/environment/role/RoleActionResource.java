@@ -22,20 +22,13 @@ public class RoleActionResource extends BaseResource {
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    public RoleActionResource() {
-        super();
-    }
-
-    public RoleActionResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         environmentBrowser.setRoleUid(request.getAttributes().get("roleUid").toString());
         environmentBrowser.setActionUid(request.getAttributes().get("actionUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

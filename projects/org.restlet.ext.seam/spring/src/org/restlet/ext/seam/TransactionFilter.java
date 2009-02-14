@@ -17,7 +17,6 @@ public class TransactionFilter extends Filter {
 
     protected int doHandle(Request request, Response response) {
         try {
-            transactionController.beforeHandle();
             return super.doHandle(request, response);
         } finally {
             transactionController.afterHandle(!response.getStatus().isError());

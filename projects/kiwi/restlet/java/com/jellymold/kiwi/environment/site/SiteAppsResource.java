@@ -42,20 +42,13 @@ public class SiteAppsResource extends BaseResource {
 
     private SiteApp newSiteApp;
 
-    public SiteAppsResource() {
-        super();
-    }
-
-    public SiteAppsResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         environmentBrowser.setSiteUid(request.getAttributes().get("siteUid").toString());
         setPage(request);
+        setAvailable(isValid());
     }
 
     @Override

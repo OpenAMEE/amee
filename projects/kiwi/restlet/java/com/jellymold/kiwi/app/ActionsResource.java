@@ -34,19 +34,12 @@ public class ActionsResource extends BaseResource implements Serializable {
 
     private Action newAction;
 
-    public ActionsResource() {
-        super();
-    }
-
-    public ActionsResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         appBrowser.setAppUid(request.getAttributes().get("appUid").toString());
         setPage(request);
+        setAvailable(isValid());
     }
 
     @Override

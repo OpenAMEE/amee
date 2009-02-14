@@ -17,12 +17,10 @@ public class AuthResource extends SignInResource implements Serializable {
 
     public final static String VIEW_AUTH = "auth/home.ftl";
 
-    public AuthResource() {
-        super();
-    }
-
-    public AuthResource(Context context, Request request, Response response) {
-        super(context, request, response);
+    @Override
+    public void init(Context context, Request request, Response response) {
+        super.init(context, request, response);
+        setAvailable(isValid());
     }
 
     @Override

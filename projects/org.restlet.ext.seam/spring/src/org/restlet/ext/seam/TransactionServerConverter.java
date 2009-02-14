@@ -4,7 +4,9 @@ import com.noelios.restlet.http.HttpRequest;
 import com.noelios.restlet.http.HttpResponse;
 import com.noelios.restlet.http.HttpServerCall;
 import com.noelios.restlet.http.HttpServerConverter;
+import com.jellymold.utils.ThreadBeanHolder;
 import org.restlet.Context;
+import org.apache.log4j.NDC;
 
 public class TransactionServerConverter extends HttpServerConverter {
 
@@ -16,12 +18,26 @@ public class TransactionServerConverter extends HttpServerConverter {
     }
 
     public HttpRequest toRequest(HttpServerCall httpCall) {
+        // clear the ThreadBeanHolder at the start of each request
+        ThreadBeanHolder.clear();
+        // start transaction / entity manager
         transactionController.beforeToRequest(!"GET".equalsIgnoreCase(httpCall.getMethod()));
-        return super.toRequest(httpCall);
+        // pass request through
+        HttpRequest req = super.toRequest(httpCall);
+        // set the NDC (IP address) at the start of each request
+        NDC.remove();
+        NDC.push(req.getClientInfo().getAddress());
+        return req;
     }
 
     public void commit(HttpResponse response) {
+        // commit the response
         super.commit(response);
+        // end transaction / entity manager
         transactionController.afterCommit();
+        // clear the ThreadBeanHolder at the end of each request
+        ThreadBeanHolder.clear();
+        // Clear the NDC when the request has be completed.
+        NDC.remove();
     }
 }

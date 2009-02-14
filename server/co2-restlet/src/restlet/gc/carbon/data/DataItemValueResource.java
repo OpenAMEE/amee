@@ -52,6 +52,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         super.init(context, request, response);
         dataBrowser.setDataItemUid(request.getAttributes().get("itemUid").toString());
         dataBrowser.setItemValueUid(request.getAttributes().get("valueUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

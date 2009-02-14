@@ -36,20 +36,13 @@ public class SiteAppResource extends BaseResource {
     @Autowired
     private AppService appService;
 
-    public SiteAppResource() {
-        super();
-    }
-
-    public SiteAppResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         environmentBrowser.setSiteUid(request.getAttributes().get("siteUid").toString());
         environmentBrowser.setSiteAppUid(request.getAttributes().get("siteAppUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

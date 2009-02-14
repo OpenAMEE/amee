@@ -50,15 +50,7 @@ public class UserUploadResource extends BaseResource implements Serializable {
     @Autowired
     private UserLoader userLoader;
 
-    FileItemFactory fileItemFactory;
-
-    public UserUploadResource() {
-        super();
-    }
-
-    public UserUploadResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
+    private FileItemFactory fileItemFactory;
 
     @Override
     public void init(Context context, Request request, Response response) {
@@ -67,6 +59,12 @@ public class UserUploadResource extends BaseResource implements Serializable {
         diskFileItemFactory.setSizeThreshold(SIZE_THRESHOLD);
         fileItemFactory = diskFileItemFactory;
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
+        setAvailable(isValid());
+    }
+
+    @Override
+    public boolean isValid() {
+        return super.isValid() && (environmentBrowser.getEnvironment() != null);
     }
 
     @Override

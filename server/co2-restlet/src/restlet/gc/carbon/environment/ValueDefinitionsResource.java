@@ -69,6 +69,7 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
         environment = EnvironmentService.getEnvironment();
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
+        setAvailable(isValid());
     }
 
     @Override

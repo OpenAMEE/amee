@@ -312,7 +312,7 @@ class ProfileServiceDAO implements Serializable {
         query.setParameter("uid", uid.toUpperCase());
         profileItems = query.getResultList();
         if (profileItems.size() == 1) {
-            log.warn("getProfileItem() - found ProfileItem");
+            log.debug("getProfileItem() - found ProfileItem");
             profileItem = profileItems.get(0);
         } else {
             log.debug("getProfileItem() - ProfileItem NOT found");

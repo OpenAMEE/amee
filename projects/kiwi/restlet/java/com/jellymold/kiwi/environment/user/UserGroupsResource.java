@@ -41,14 +41,6 @@ public class UserGroupsResource extends BaseResource implements Serializable {
 
     private GroupUser newGroupUser;
 
-    public UserGroupsResource() {
-        super();
-    }
-
-    public UserGroupsResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -56,6 +48,7 @@ public class UserGroupsResource extends BaseResource implements Serializable {
         environmentBrowser.setUserUid(request.getAttributes().get("userUid").toString());
         setPage(request);
         setPagerSetType(request);
+        setAvailable(isValid());
     }
 
     @Override

@@ -34,18 +34,11 @@ public class AppsResource extends BaseResource implements Serializable {
 
     private App newApp;
 
-    public AppsResource() {
-        super();
-    }
-
-    public AppsResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         setPage(request);
+        setAvailable(isValid());
     }
 
     @Override

@@ -45,19 +45,12 @@ public class UserResource extends BaseResource {
     @Autowired
     protected EnvironmentService environmentService;
 
-    public UserResource() {
-        super();
-    }
-
-    public UserResource(Context context, Request request, Response response) {
-        super(context, request, response);
-    }
-
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         environmentBrowser.setUserUid(request.getAttributes().get("userUid").toString());
+        setAvailable(isValid());
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.jellymold.kiwi.environment;
 
 import com.jellymold.kiwi.ResourceActions;
 
+// TODO: Remove constants no longer used.
 public class EnvironmentConstants {
 
     public final static String VIEW_ENVIRONMENTS = "sites/environments.ftl";

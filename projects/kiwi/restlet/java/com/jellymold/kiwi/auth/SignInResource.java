@@ -28,12 +28,10 @@ public class SignInResource extends BaseResource implements Serializable {
     @Autowired
     protected AuthService authService;
 
-    public SignInResource() {
-        super();
-    }
-
-    public SignInResource(Context context, Request request, Response response) {
-        super(context, request, response);
+    @Override
+    public void init(Context context, Request request, Response response) {
+        super.init(context, request, response);
+        setAvailable(isValid());
     }
 
     @Override
