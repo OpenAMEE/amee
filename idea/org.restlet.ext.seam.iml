@@ -20,13 +20,12 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="amee-utils" level="project" />
-    <orderEntry type="library" name="amee-utils-restlet" level="project" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="global" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
     <orderEntry type="library" name="jee" level="project" />
     <orderEntry type="library" name="spring-runtime" level="project" />
+    <orderEntry type="library" name="utils" level="project" />
   </component>
 </module>
 
