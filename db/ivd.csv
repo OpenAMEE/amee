@@ -14,5 +14,5 @@
 "litresPerMonth","L","month","Volume Per Time","volumePerTime","L","year"
 "numberOfDeliveries",NULL,"year","Number of deliveries","deliveries",NULL,"year"
 "journeysPerYear",NULL,"year","Journeys","journeys",NULL,"year"
-"distanceMilesPerMonth","mi","month","distanceMilesPerMonth","distance","km","year"
+"distanceMilesPerMonth","mi","month","Distance","distance","km","year"
 "mpgOwn","mi","gal","Fuel Consumption","fuelConsumptionOwn","km","L"
