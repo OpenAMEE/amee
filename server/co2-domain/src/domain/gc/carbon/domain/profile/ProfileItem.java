@@ -200,9 +200,9 @@ public class ProfileItem extends Item {
         return ObjectType.PI;
     }
 
-    public boolean hasPerTimeValues() {
+    public boolean hasNonZeroPerTimeValues() {
         for (ItemValue iv : getItemValues()) {
-            if (iv.hasPerTimeUnit()) {
+            if (iv.hasPerTimeUnit() && iv.isNonZero()) {
                 return true;
             }
         }

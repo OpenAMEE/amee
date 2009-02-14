@@ -71,6 +71,8 @@ public class DataFinder implements Serializable {
                 value = itemValue.getValue();
             }
         }
+        log.debug("getDataItemValue() - path: " + path + ", drillDown: " + drillDown +
+                ", name: " + name + ", value: " + value);
         return value;
     }
 

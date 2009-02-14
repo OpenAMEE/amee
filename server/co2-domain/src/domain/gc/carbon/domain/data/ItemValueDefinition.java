@@ -24,6 +24,7 @@ import com.jellymold.sheet.Choice;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
+import com.jellymold.utils.ValueType;
 import gc.carbon.APIVersion;
 import gc.carbon.domain.*;
 import gc.carbon.domain.data.builder.v2.ItemValueDefinitionBuilder;
@@ -440,6 +441,10 @@ public class ItemValueDefinition implements PersistentObject {
         } else {
             return getName();
         }
+    }
+
+    public boolean isDecimal() {
+        return getValueDefinition().getValueType().equals(ValueType.DECIMAL);
     }
 
 }

@@ -39,6 +39,7 @@ import javax.persistence.*;
 import javax.measure.unit.Dimension;
 import java.util.Calendar;
 import java.util.Date;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "ITEM_VALUE")
@@ -272,7 +273,7 @@ public class ItemValue implements PersistentObject, Pathable {
              } else {
                  return AMEEPerUnit.valueOf(perUnit);
              }
-         } else {
+         } else {                                                             
             return itemValueDefinition.getPerUnit();
         }
     }
@@ -298,6 +299,10 @@ public class ItemValue implements PersistentObject, Pathable {
 
     public boolean hasPerTimeUnit() {
         return hasPerUnit() && getPerUnit().isTime();     
+    }
+
+    public boolean isNonZero() {
+        return getItemValueDefinition().isDecimal() && !new BigDecimal(getValue()).equals(BigDecimal.ZERO);
     }
 
     public ItemValue getCopy() {

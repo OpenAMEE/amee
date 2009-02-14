@@ -60,7 +60,7 @@ public class DataFilter extends BaseFilter {
     }
 
     protected int rewrite(Request request, Response response) {
-        log.debug("rewrite() - start data path rewrite");
+        log.debug("rewrite() - start data path rewrite ");
         String path = null;
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();

@@ -4,18 +4,15 @@ import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.ProfileItem;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 
-import javax.measure.Measure;
 import javax.measure.DecimalMeasure;
-import javax.measure.quantity.Duration;
 import javax.measure.unit.SI;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.jellymold.kiwi.User;
-import com.jellymold.utils.ThreadBeanHolder;
 
 /**
  * A ProfileService which prorates amounts belonging to the {@link gc.carbon.domain.profile.ProfileItem ProfileItem} instances
@@ -44,6 +41,8 @@ import com.jellymold.utils.ThreadBeanHolder;
  */
 public class ProRataProfileService extends ProfileService {
 
+    private Log log = LogFactory.getLog(getClass());
+
     private ProfileService delegatee;
 
     public ProRataProfileService(ProfileService delegatee) {
@@ -59,6 +58,9 @@ public class ProRataProfileService extends ProfileService {
 
         for (ProfileItem pi : delegatee.getProfileItems(profileBrowser)) {
 
+            if(log.isDebugEnabled())
+                log.debug("getProfileItems() - ProfileItem: " + pi.getName() + " has un-prorated CO2 Amount: " + pi.getAmount());
+
             Interval intersect = requestInterval;
 
             // Find the intersection of the event with the requested window.
@@ -70,21 +72,36 @@ public class ProRataProfileService extends ProfileService {
                     intersect = intersect.withEndMillis(pi.getEndDate().getTime());
             }
 
-            if (pi.hasPerTimeValues()) {
+            if (log.isDebugEnabled())
+                log.debug("getProfileItems() - request interval: " + requestInterval + ", intersect:" + intersect);
+
+            if (pi.hasNonZeroPerTimeValues()) {
                 // The ProfileItem has perTime ItemValues. In this case, the ItemValues are multiplied by
                 // the (intersect/PerTime) ratio and the CO2 value recalculated.
+
+                log.debug("getProfileItems() - ProfileItem: " + pi.getName() + " has PerTime ItemValues.");
 
                 ProfileItem pic = pi.getCopy();
                 for (ItemValue iv : pi.getItemValues()) {
                     ItemValue ivc = iv.getCopy();
                     if(ivc.hasPerTimeUnit() && ivc.getItemValueDefinition().isFromProfile() && ivc.getValue().length() > 0) {
                         pic.add(getProRatedItemValue(intersect, ivc));
+
+                        if(log.isDebugEnabled())
+                            log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
+                                    ". ItemValue: " + ivc.getName() + " = " + iv.getValue() + " has PerUnit: " + ivc.getPerUnit() +
+                                    ". Pro-rated ItemValue = " + ivc.getValue());
+
                     } else {
+                        log.debug("getProfileItems() - ProfileItem: " + pi.getName() + ". Unchanged ItemValue: " + ivc.getName());
                         pic.add(ivc);
                     }
                 }
 
                 delegatee.calculate(pic);
+
+                if(log.isDebugEnabled())
+                    log.debug("getProfileItems() - ProfileItem: " + pi.getName() + ". Adding prorated CO2 Amount: " + pic.getAmount());
 
                 requestedItems.add(pic);
                 
@@ -94,12 +111,22 @@ public class ProRataProfileService extends ProfileService {
 
                 ProfileItem pic = pi.getCopy();
                 BigDecimal event = new BigDecimal(getIntervalInMillis(pic.getStartDate(), pic.getEndDate()));
-                BigDecimal itemIntersectRatio = event.divide(new BigDecimal(intersect.toDurationMillis()), ProfileItem.CONTEXT);
-                pic.setAmount(pic.getAmount().multiply(itemIntersectRatio, ProfileItem.CONTEXT));
+                BigDecimal eventIntersectRatio = new BigDecimal(intersect.toDurationMillis()).divide(event, ProfileItem.CONTEXT);
+                pic.setAmount(pic.getAmount().multiply(eventIntersectRatio, ProfileItem.CONTEXT));
+
+                if(log.isDebugEnabled()) {
+                    log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
+                            " is bounded (" + getInterval(pic.getStartDate(),  pic.getEndDate()) +
+                            ") and has no PerTime ItemValues.");
+                    log.debug("getProfileItems() - Adding pro-rated CO2 Amount: " + pic.getAmount());
+                }
                 requestedItems.add(pic);
 
             } else {
                 // The ProfileItem has no perTime ItemValues and is unbounded. In this case, the CO2 is not prorated.
+                if(log.isDebugEnabled())
+                    log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
+                            " is unbounded and has no PerTime ItemValues. Adding un-prorated CO2 Amount: " + pi.getAmount());
                 requestedItems.add(pi);
             }
 

@@ -133,7 +133,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
      * @throws RhinoException thrown if the algorithm is processed with errors
      */
     public BigDecimal calculateWithRuntime(Algorithm algorithm, Map<String, Object> values, ProfileItem profileItem) throws RhinoException {
-        log.debug("calculateWithRuntime() - getting value");
+        log.debug("calculateWithRuntime()");
 
         // init DataFinder and ProfileFinder beans
         DataFinder dataFinder = initDataFinder(profileItem);
@@ -157,7 +157,10 @@ public class Calculator implements BeanFactoryAware, Serializable {
 
             Object result = cx.evaluateString(scope, algorithmContent, "", 0, null);
             value = Context.toString(result);
-            log.debug("calculateWithRuntime() - value: " + value);
+
+            log.debug("calculatewithRuntime() - Input values " + values);
+            log.debug("calculateWithRuntime() - CO2 Amount: " + value);
+
         } finally {
             Context.exit();
         }
@@ -169,7 +172,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
             if (amount.precision() > ProfileItem.PRECISION) {
                 log.warn("calculateWithRuntime() - precision is too big: " + amount);
             }
-            log.debug("calculateWithRuntime() - Scaled amount: " + amount);
+            log.debug("calculateWithRuntime() - CO2 Amount (scaled): " + amount);
         }
         return amount;
     }
@@ -190,7 +193,7 @@ public class Calculator implements BeanFactoryAware, Serializable {
     protected Algorithm getAlgorithm(ItemDefinition itemDefinition, String path) {
         for (Algorithm algorithm : itemDefinition.getAlgorithms()) {
             if (algorithm.getName().equalsIgnoreCase(path)) {
-                log.debug("getAlgorithm() - Found Algorithm: " + algorithm.getId());
+                log.debug("getAlgorithm() - Using Algorithm: " + algorithm.getId());
                 return algorithm;
             }
         }

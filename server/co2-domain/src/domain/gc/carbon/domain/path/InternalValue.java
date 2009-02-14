@@ -44,7 +44,7 @@ public class InternalValue {
 
     public InternalValue(ItemValueDefinition itemValueDefinition) {
         name = itemValueDefinition.getName();
-        if (isDecimal(itemValueDefinition)) {
+        if (itemValueDefinition.isDecimal()) {
             value = convertStringToDecimal(itemValueDefinition.getUsableValue());
         } else {
             value = itemValueDefinition.getUsableValue();
@@ -53,7 +53,7 @@ public class InternalValue {
 
     public InternalValue(ItemValue itemValue) {
         name = itemValue.getName();
-        if (isDecimal(itemValue.getItemValueDefinition())) {
+        if (itemValue.getItemValueDefinition().isDecimal()) {
             value = asInternalValue(itemValue);
         } else {
             value = itemValue.getUsableValue();
@@ -62,10 +62,6 @@ public class InternalValue {
 
     public Object getValue() {
         return value;
-    }
-
-    private boolean isDecimal(ItemValueDefinition ivd) {
-        return ivd.getValueDefinition().getValueType().equals(ValueType.DECIMAL);
     }
 
     private BigDecimal convertStringToDecimal(String decimalString) {
@@ -93,6 +89,11 @@ public class InternalValue {
         AMEEUnit internalUnit = iv.getItemValueDefinition().getCanonicalCompoundUnit();
         AMEEUnit externalUnit = iv.getCompoundUnit();
         if (!externalUnit.equals(internalUnit)) {
+            if (log.isDebugEnabled()) {
+                log.debug("asInternalValue() - path: " + iv.getPath() + " (aliasedTo: " + iv.getItemValueDefinition().getCannonicalPath()
+                    + ") external: " + decimal + " " + externalUnit
+                        + ", internal: " + externalUnit.convert(decimal, internalUnit) + " " + internalUnit);
+            }
             decimal = externalUnit.convert(decimal, internalUnit);
         }
 
