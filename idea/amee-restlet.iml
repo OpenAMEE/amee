@@ -40,5 +40,6 @@
     <orderEntry type="library" name="abdera" level="project" />
     <orderEntry type="library" name="freemarker" level="project" />
   </component>
+  <component name="libraryTable" />
 </module>
 
