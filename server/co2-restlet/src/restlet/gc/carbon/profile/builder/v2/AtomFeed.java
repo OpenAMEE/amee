@@ -1,8 +1,11 @@
 package gc.carbon.profile.builder.v2;
 
 import gc.carbon.APIVersion;
+import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.data.DataItem;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.path.PathItem;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.factory.Factory;
 import org.apache.abdera.model.*;
@@ -54,6 +57,8 @@ public class AtomFeed {
     public static final QName Q_NAME_UNIT = new QName(AMEE_SCHEMA, "unit", PREFIX);
     public static final QName Q_NAME_PER_UNIT = new QName(AMEE_SCHEMA, "perUnit", PREFIX);
     public static final QName Q_NAME_DATA_ITEM = new QName(AMEE_SCHEMA, "dataItem", PREFIX);
+    public static final QName Q_CATEGORIES = new QName(AMEE_SCHEMA, "categories", PREFIX);
+    public static final QName Q_CATEGORY = new QName(AMEE_SCHEMA, "category", PREFIX);
 
     private static final SimpleDateFormat ATOM_DATE_DISPLAY_FMT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z");
 
@@ -193,8 +198,7 @@ public class AtomFeed {
     }
 
     public void addDataItem(ExtensibleElement e, DataItem dataItem) {
-        Element element = e.addSimpleExtension(Q_NAME_DATA_ITEM, dataItem.getDisplayName());
-        element.setAttributeValue("href","");
+        e.addSimpleExtension(Q_NAME_DATA_ITEM, dataItem.getDisplayName());
     }
 
     public void addItemValue(Element element, ItemValue itemValue) {
@@ -239,5 +243,13 @@ public class AtomFeed {
         link.setMimeType(MediaType.APPLICATION_XML.toString());
         link.setRel(Link.REL_ALTERNATE);
 
+    }
+
+    public void addChildCategories(ExtensibleElement e, ProfileCategoryResource resource) {
+        ExtensibleElement categories = e.addExtension(Q_CATEGORIES);
+        for (PathItem pi : resource.getChildrenByType("DC")) {
+            Element category = factory.newElement(Q_CATEGORY);
+            categories.addSimpleExtension(Q_CATEGORY, pi.getPath());
+        }
     }
 }

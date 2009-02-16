@@ -348,6 +348,9 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             }
         }
 
+        
+        atomFeed.addChildCategories(feed, resource);
+
         AMEEUnit returnUnit = resource.getProfileBrowser().getReturnUnit();
 
         // Add all ProfileItems as Entries in the Atom feed.
