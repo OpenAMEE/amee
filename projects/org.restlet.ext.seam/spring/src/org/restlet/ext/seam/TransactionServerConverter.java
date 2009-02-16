@@ -1,12 +1,12 @@
 package org.restlet.ext.seam;
 
+import com.jellymold.utils.ThreadBeanHolder;
 import com.noelios.restlet.http.HttpRequest;
 import com.noelios.restlet.http.HttpResponse;
 import com.noelios.restlet.http.HttpServerCall;
 import com.noelios.restlet.http.HttpServerConverter;
-import com.jellymold.utils.ThreadBeanHolder;
-import org.restlet.Context;
 import org.apache.log4j.NDC;
+import org.restlet.Context;
 
 public class TransactionServerConverter extends HttpServerConverter {
 

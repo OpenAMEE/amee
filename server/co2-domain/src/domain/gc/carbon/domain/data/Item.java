@@ -1,22 +1,22 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package gc.carbon.domain.data;
 
 import com.jellymold.kiwi.Environment;
@@ -30,7 +30,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
 import org.joda.time.Duration;
-import org.joda.time.format.ISOPeriodFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -118,9 +117,9 @@ public abstract class Item implements PersistentObject, Pathable {
     public String getItemValuesString() {
         StringBuilder builder = new StringBuilder();
         List<ItemValue> itemValues = getItemValues();
-        builder.append(itemValues.get(0).getDisplayPath() +"=" + itemValues.get(0).getValue());
+        builder.append(itemValues.get(0).getDisplayPath() + "=" + itemValues.get(0).getValue());
         for (int i = 1; i < itemValues.size(); i++) {
-            builder.append(", "+itemValues.get(i).getDisplayPath() +"=" + itemValues.get(i).getValue());
+            builder.append(", " + itemValues.get(i).getDisplayPath() + "=" + itemValues.get(i).getValue());
         }
         return builder.toString();
     }
@@ -304,9 +303,9 @@ public abstract class Item implements PersistentObject, Pathable {
 
     public Duration getDuration() {
         if (endDate != null) {
-             return new Duration(startDate.getTime(), endDate.getTime());
+            return new Duration(startDate.getTime(), endDate.getTime());
         } else {
             return null;
         }
-    }   
+    }
 }

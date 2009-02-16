@@ -8,10 +8,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This file is part of AMEE.
@@ -44,49 +41,46 @@ public class OnlyActiveDataService extends DataService {
 
     public List<DataItem> getDataItems(final DataCategory dataCategory, final StartEndDate startDate, final StartEndDate endDate) {
         log.debug("getDataItems() start");
-        DataItem.resetCachedLabels();
         final List<DataItem> dataItems = delegatee.getDataItems(dataCategory, startDate, endDate);
         log.debug("getDataItems() got DataItems");
+        Map<String, Set<DataItem>> labelsToDataItems = getLabelsToDataItems(dataItems);
+        log.debug("getDataItems() got DataItems labels");
         List<DataItem> requestedItems = new ArrayList<DataItem>();
-        for (String type : getDistinctLabels(dataItems)) {
-            List<DataItem> itemsByLabel = getItemsByLabel(dataItems, type);
-            requestedItems.addAll(getActiveItems(itemsByLabel, startDate));
+        for (String label : labelsToDataItems.keySet()) {
+            requestedItems.addAll(getActiveItems(labelsToDataItems.get(label), startDate));
         }
         log.debug("getDataItems() end");
         return requestedItems;
     }
 
-    private Set<String> getDistinctLabels(List<DataItem> dataItems) {
-        Set<String> labels = new HashSet<String>();
+    private Map<String, Set<DataItem>> getLabelsToDataItems(List<DataItem> dataItems) {
+        String label;
+        Set<DataItem> dataItemSet;
+        Map<String, Set<DataItem>> labelsToDataItems = new HashMap<String, Set<DataItem>>();
         for (DataItem di : dataItems) {
-            labels.add(di.getLabel());
+            label = di.getLabel();
+            dataItemSet = labelsToDataItems.get(label);
+            if (dataItemSet == null) {
+                dataItemSet = new HashSet<DataItem>();
+                labelsToDataItems.put(label, dataItemSet);
+            }
+            dataItemSet.add(di);
         }
-        return labels;
+        return labelsToDataItems;
     }
 
-    private List<DataItem> getItemsByLabel(List<DataItem> dataItems, final String label) {
-        List<DataItem> selectedDataItems = new ArrayList<DataItem>(dataItems.size());
-        CollectionUtils.select(dataItems, new Predicate() {
+    private List<DataItem> getActiveItems(final Set<DataItem> dataItems, final StartEndDate startDate) {
+        return (List) CollectionUtils.select(dataItems, new Predicate() {
             public boolean evaluate(Object o) {
                 DataItem di = (DataItem) o;
-                return label.equals(di.getLabel());
-            }
-        }, selectedDataItems);
-        return selectedDataItems;
-    }
-
-    private List<DataItem> getActiveItems(final List<DataItem> dataItems, final StartEndDate startDate) {
-            return (List) CollectionUtils.select(dataItems, new Predicate() {
-                public boolean evaluate(Object o) {
-                    DataItem di = (DataItem) o;
-                    for (DataItem dataItem : dataItems) {
-                        if (di.getStartDate().before(dataItem.getStartDate()) &&
-                                !dataItem.getStartDate().after(startDate.toDate())) {
-                            return false;
-                        }
+                for (DataItem dataItem : dataItems) {
+                    if (di.getStartDate().before(dataItem.getStartDate()) &&
+                            !dataItem.getStartDate().after(startDate.toDate())) {
+                        return false;
                     }
-                    return true;
                 }
-            });
+                return true;
+            }
+        });
     }
 }
