@@ -1,0 +1,3 @@
+lightingType,lightingkWhYear,units,lightingSource,algorithm
+LEL,15.36,kWh/year,MTP/dgen/defra 2007,userNumberofLELBulbs*lightingkWhYear
+normal,31.59,kWh/year,MTP/dgen/defra 2007,userNumberofNormalBulbs*lightingkWhYear

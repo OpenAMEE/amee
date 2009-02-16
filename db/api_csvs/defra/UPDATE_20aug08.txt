@@ -1,0 +1,29 @@
+Heating
+=======
+Heating entries were ranked by % difference between old and
+new - see data-heating_diff.ods-  then update was done
+on the resulting data-heating.csv.
+
+The original file is data-heating_orig.csv.
+
+Heating stopped at following entry:
+>>>>>>>>>>>>>>>>>>>>>>>> i = 1315    key       = Detached 
+House&1&Gas&Post 1995&Boiler (average - 5-10yrs old)
+
+Corresponding to row 1316 of data-heating_diff.ods
+
+This means that rows 2 to 1316 of data-heating.csv were applied
+to defra.co2.dgen.net. Rows 1317-end are same as old version,
+see backup/data-heating.csv_datetime.
+
+In addition 8 more items with large absolute diffs were updated - 
+see data-heating_extra.csv
+
+PROCEDURE
+=========
+1. Update /home/lighting and check thoroughly
+2. Update /home/fuel and check thorougly
+3. Update /home/heating
+4. Update all others
+5. Amend alg for LPG and 0.527->0.537 in all elec stuff in 
+https://defra.co2.dgen.net/data/admin/definitions/

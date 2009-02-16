@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/!svn/ver/2650/internal/api_csvs/defra
+END
+data-appliances.csv
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/2650/internal/api_csvs/defra/data-appliances.csv
+END
+data-heating.csv
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/2650/internal/api_csvs/defra/data-heating.csv
+END
+data-heating_extra.csv
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/2650/internal/api_csvs/defra/data-heating_extra.csv
+END
+data-seasonal-billing.csv
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/2650/internal/api_csvs/defra/data-seasonal-billing.csv
+END
+transport_alg.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/2650/internal/api_csvs/defra/transport_alg.js
+END
+data-cooking.csv
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/2650/internal/api_csvs/defra/data-cooking.csv
+END
+data-fuel-price.csv
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/2650/internal/api_csvs/defra/data-fuel-price.csv
+END
+data-fuel.csv
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/2650/internal/api_csvs/defra/data-fuel.csv
+END
+data-heating-old.csv
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/2650/internal/api_csvs/defra/data-heating-old.csv
+END
+data-transport.csv
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/2650/internal/api_csvs/defra/data-transport.csv
+END
+data-heating_orig.csv
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/2650/internal/api_csvs/defra/data-heating_orig.csv
+END
+data-heating_diff.ods
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/2650/internal/api_csvs/defra/data-heating_diff.ods
+END
+UPDATE_20aug08.txt
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/2650/internal/api_csvs/defra/UPDATE_20aug08.txt
+END
+data-lighting.csv
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/2650/internal/api_csvs/defra/data-lighting.csv
+END
+actonco2_heating.zip
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/2650/internal/api_csvs/defra/actonco2_heating.zip
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/!svn/ver/2650/internal/api_csvs/defra/README.txt
+END
+tvSizes.xls
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/2650/internal/api_csvs/defra/tvSizes.xls
+END
+changes.xls
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/2650/internal/api_csvs/defra/changes.xls
+END
+data-tvs.csv
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/2650/internal/api_csvs/defra/data-tvs.csv
+END

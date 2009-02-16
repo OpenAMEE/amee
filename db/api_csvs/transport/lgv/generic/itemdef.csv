@@ -1,0 +1,18 @@
+name,Car Generic
+algFile,perMonth.js
+name,path,type,isDataItemValue,isDrillDown
+Aircon full,airconFull,BOOLEAN,false,false
+Aircon typical,airconTypical,BOOLEAN,false,false
+Country,country,TEXT,false,false
+Distance Km Per Month,distanceKmPerMonth,DECIMAL,false,false
+Eco driving,ecoDriving,BOOLEAN,false,false
+Fuel,fuel,TEXT,true,true
+kgCO2 Per Km,kgCO2PerKm,DECIMAL,true,false
+kgCO2 Per Km US,kgCO2PerKmUS,DECIMAL,true,false
+km per litre,kmPerLitre,DECIMAL,false,false
+km per litre own,kmPerLitreOwn,DECIMAL,false,false
+Occupants,occupants,DECIMAL,false,false
+Regularly serviced,regularlyServiced,BOOLEAN,false,false
+Size,size,TEXT,true,true
+Source,source,TEXT,true,false
+Tyres underinflated,tyresUnderinflated,BOOLEAN,false,false
