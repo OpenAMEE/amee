@@ -85,7 +85,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
 
     @Override
     public String getTemplatePath() {
-        return ProfileConstants.VIEW_PROFILE_CATEGORY;
+        return getApiVersion() + "/" + ProfileConstants.VIEW_PROFILE_CATEGORY;
     }
 
     @Override
