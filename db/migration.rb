@@ -157,8 +157,8 @@ def migrate_ivd
       while(rs.next())
         item_value_definition_id = rs.getInt("ID").to_s
         item_definition_id = rs.getInt("ITEM_DEFINITION_ID").to_s
-        value = rs.getInt("VALUE").to_s
-        choices = rs.getInt("CHOICES").to_s
+        value = rs.getString("VALUE")
+        choices = rs.getString("CHOICES")
         query = insert_new.sub(/\{UID\}/, JM::UidGen.getUid())
         query = query.sub(/\{NEW_NAME\}/, new_name)
         query = query.sub(/\{NEW_PATH\}/, new_path)
