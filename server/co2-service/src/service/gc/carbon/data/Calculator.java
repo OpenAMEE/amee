@@ -151,6 +151,8 @@ public class Calculator implements BeanFactoryAware, Serializable {
             Context cx = Context.enter();
             Scriptable scope = cx.initStandardObjects();
 
+            log.debug("calculatewithRuntime() - Input values " + values);
+
             for (String key : values.keySet()) {
                 scope.put(key, scope, values.get(key));
             }
@@ -158,7 +160,6 @@ public class Calculator implements BeanFactoryAware, Serializable {
             Object result = cx.evaluateString(scope, algorithmContent, "", 0, null);
             value = Context.toString(result);
 
-            log.debug("calculatewithRuntime() - Input values " + values);
             log.debug("calculateWithRuntime() - CO2 Amount: " + value);
 
         } finally {
