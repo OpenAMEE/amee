@@ -35,7 +35,6 @@
             dataHeadingCategoryElementName : 'apiDataCategoryHeading',
             dataContentElementName : "apiDataCategoryContent",
             apiVersion : '2.0',
-            drillDown : false,
             updateCategory: true,
             createCategory: true
         });

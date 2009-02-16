@@ -128,8 +128,7 @@ public class DataSheetFactory implements CacheableFactory {
 
     public String getKey() {
         DataBrowser browser = (DataBrowser) ThreadBeanHolder.get("dataBrowserForFactory");
-        return "DataSheet_" + browser.getDataCategory().getUid() + "_" +
-                browser.getStartDate().getTime() +
+        return "DataSheet_" + browser.getDataCategory().getUid() + "_" + browser.getStartDate().getTime() +
                 ((browser.getEndDate() != null) ? "_" + browser.getEndDate().getTime() : "");
     }
 

@@ -13,10 +13,15 @@
 <#include 'profileTrail.ftl'>
 
 <h2>Profile Item Details</h2>
-<p><#if profileItem.name != ''>Name: ${profileItem.name}<br/></#if>
-    Amount: ${profileItem.amount}<br/>
-    Start Date: ${startEndDate(profileItem.startDate)}<br/>
-    End Date: <#if profileItem.endDate??>${startEndDate(profileItem.endDate)}<#else>None</#if><br/>
+<p>
+    <#if profileItem.name != ''>Name: ${profileItem.name}<br/></#if>
+    <#if !profileItem.end>
+        kgCO2 pcm: ${profileItem.amount}<br/>
+        Valid From: ${profileItem.startDate?string(getDateFormatV1())}<br/>
+        End: No<br/>
+    <#else>
+        End: Yes<br/>
+    </#if>
     Full Path: ${browser.fullPath}<br/>
     Data Item Label: ${profileItem.dataItem.label}<br/>
     Item Definition: ${profileItem.itemDefinition.name}<br/>
@@ -43,21 +48,23 @@
             </#if>
         </tr>
         <tr>
-            <td>Start Date</td>
+            <td>Valid From</td>
             <#if browser.profileItemActions.allowModify>
-                <td><input name='startDate' value='${startEndDate(profileItem.startDate)}' type='text' size='13'/>
+                <td><input name='startDate' value='${profileItem.startDate?string(getDateFormatV1())}' type='text' size='13'/>
                     (${getDateFormatV1()})<br/>
                     <#else>
                 <td>${profileItem.startDate?datetime}</td>
             </#if>
         </tr>
         <tr>
-            <td>End Date</td>
+            <td>End Marker</td>
             <#if browser.profileItemActions.allowModify>
-                <td><input name='endDate' value='<#if profileItem.endDate??>${startEndDate(profileItem.endDate)}</#if>' type='text' size='13'/>
-                    (${getDateFormatV1()})<br/>
-                    <#else>
-                <td><#if profileItem.endDate??>${profileItem.endDate?datetime}<#else>None</#if></td>
+                <td><select name='end'>
+                    <option value='true'<#if profileItem.end> selected</#if>>Yes</option>
+                    <option value='false'<#if !profileItem.end> selected</#if>>No</option>
+                </select></td>
+            <#else>
+                <td>${profileItem.end}</td>
             </#if>
         </tr>
         <#if 0 != profileItem.itemValues?size>
@@ -74,7 +81,11 @@
                             </select>
                         <#else>
                             <input name='${iv.displayPath}' value='${iv.value}' type='text' size="30"/>
-                            (${iv.unit} per ${iv.perUnit})
+                            <#if iv.hasUnit() && iv.hasPerUnit()>
+                                (${iv.unit} per ${iv.perUnit})
+                            <#elseif iv.hasUnit()>
+                                (${iv.unit})
+                            </#if>
                         </#if>
                     </td>
                 <#else>

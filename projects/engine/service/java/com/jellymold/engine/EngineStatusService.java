@@ -84,7 +84,8 @@ public class EngineStatusService extends StatusService {
 
     @Override
     public Status getStatus(Throwable throwable, Request request, Response response) {
-        Application.getCurrent().getLogger().log(Level.SEVERE, "Unhandled exception or error intercepted", throwable);
+        Application.getCurrent().getLogger()
+                .log(Level.SEVERE, "Unhandled exception or error intercepted: " + throwable, throwable);
         return new Status(Status.SERVER_ERROR_INTERNAL.getCode(), throwable);
     }
 }

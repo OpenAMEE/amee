@@ -154,7 +154,6 @@ ApiService.prototype = {
         this.pagerBtmElementName = params.pagerBtmElementName || "apiBottomPager";
 
         this.apiVersion = params.apiVersion || '1.0';
-        this.drillDown = params.drillDown || false;
 
         // api data category items
         this.dataHeadingCategory = params.dataHeadingCategory || "";
@@ -356,15 +355,6 @@ ApiService.prototype = {
                 pElement.appendChild(document.createTextNode("Modifed: " + dataCategory.modified));
 
                 this.dataContentElement.replace(pElement);
-            }
-
-            if (this.drillDown && json.path) {
-                new DrillDown(
-                        "/data" + json.path,
-                        this.apiVersion,
-                        this.getDateFormat(),
-                        this.getActionsAllowCreate()
-                        ).loadDrillDown();
             }
         }
     },

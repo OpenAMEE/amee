@@ -3,11 +3,10 @@ package gc.carbon;
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.StartEndDate;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import org.joda.time.DateTime;
 
 public abstract class BaseBrowser implements Serializable {
 
@@ -31,29 +30,35 @@ public abstract class BaseBrowser implements Serializable {
     }
 
     public void setStartDate(String date) {
-        startDate = new StartEndDate(date, false);
+        if (date != null) {
+            startDate = new StartEndDate(date, false);
+        }
     }
 
-    public void setEndDate(String date) {
-        if (date != null)
-            endDate = new StartEndDate(date, false);
+    public void setStartDate(Date startDate) {
+        if (startDate != null) {
+            this.startDate = new StartEndDate(startDate);
+        }
     }
 
     public StartEndDate getStartDate() {
         return (startDate != null ? startDate : startOfMonth);
     }
 
-    public StartEndDate getEndDate() {
-        return endDate;
+    public void setEndDate(String date) {
+        if (date != null) {
+            endDate = new StartEndDate(date, false);
+        }
     }
 
     public void setEndDate(Date endDate) {
-        if (endDate != null)
+        if (endDate != null) {
             this.endDate = new StartEndDate(endDate);
+        }
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = new StartEndDate(startDate);
+    public StartEndDate getEndDate() {
+        return endDate;
     }
 
     public boolean isQuery() {
@@ -61,6 +66,7 @@ public abstract class BaseBrowser implements Serializable {
     }
 
     private String getStartOfMonthDate() {
-        return StartEndDate.ISO_DATE_FORMAT.format(new DateTime().dayOfMonth().withMinimumValue().getMillis());
+        return StartEndDate.ISO_DATE_FORMAT.format(
+                new DateTime().dayOfMonth().withMinimumValue().millisOfDay().withMinimumValue().getMillis());
     }
 }

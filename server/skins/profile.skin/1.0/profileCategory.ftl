@@ -26,10 +26,21 @@
         }
         resourceElem = $('Elem_' + profileItemUid);
         resourceType = 'Profile Item';
-        var deleteResource = new DeleteResource()
+        var deleteResource = new DeleteResource();
         deleteResource.deleteResourceCallback = profileItemDeleted;
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
+
+    document.observe('dom:loaded', function() {
+        <#if dataCategory.itemDefinition?? && browser.profileItemActions.allowCreate>
+            new DrillDown(
+                "/data${browser.pathItem.fullPath}",
+                "1.0",
+                "yyyyMMdd",
+                true
+            ).loadDrillDown();
+        </#if>
+    });
 
 </script>
 
@@ -105,14 +116,12 @@
     </#if>
 </#if>
 
-<#if dataCategory.itemDefinition??>
-    <#if browser.profileItemActions.allowCreate>
-        <h2 id="createProfileHeading"></h2>
-        <form id="createProfileFrm" onSubmit="return false;">
+<#if dataCategory.itemDefinition?? && browser.profileItemActions.allowCreate>
+    <h2 id="createProfileHeading"></h2>
+    <form id="createProfileFrm" onSubmit="return false;">
         <div id="createProfileItemDiv">
         </div>
-        </form>
-    </#if>
+    </form>
 </#if>
 
 <#include '/includes/after_content.ftl'>

@@ -124,10 +124,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
             if (getApiVersion().isVersionOne()) {
                 profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
             } else {
-                String startDate = form.getFirstValue("startDate");
-                if (startDate != null) {
-                    profileBrowser.setStartDate(form.getFirstValue("startDate"));
-                }
+                profileBrowser.setStartDate(form.getFirstValue("startDate"));
                 profileBrowser.setEndDate(form.getFirstValue("endDate"));
                 profileBrowser.setDuration(form.getFirstValue("duration"));
                 profileBrowser.setSelectBy(form.getFirstValue("selectby"));

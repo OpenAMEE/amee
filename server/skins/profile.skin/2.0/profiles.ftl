@@ -41,8 +41,7 @@
             contentElementName : "apiContent",
             pagerTopElementName : 'apiTopPager',
             pagerBtmElementName : 'apiBottomPager',
-            apiVersion : '2.0',
-            drillDown : false
+            apiVersion : '2.0'
         });
         profilesApiService.apiRequest();
     });

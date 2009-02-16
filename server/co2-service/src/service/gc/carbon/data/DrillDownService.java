@@ -40,6 +40,7 @@ public class DrillDownService implements Serializable {
     private DataSheetService dataSheetService;
 
     public Choices getChoices(DataCategory dataCategory, List<Choice> selections, Date startDate, Date endDate) {
+
         String name = "uid";
         List<Choice> choiceList = new ArrayList<Choice>();
         DataBrowser browser = new DataBrowser();
@@ -114,6 +115,6 @@ public class DrillDownService implements Serializable {
     }
 
     public Choices getChoices(DataCategory dataCategory, List<Choice> selections) {
-        return getChoices(dataCategory, selections, new Date(), null);
+        return getChoices(dataCategory, selections, null, null);
     }
 }

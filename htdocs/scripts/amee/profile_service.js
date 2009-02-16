@@ -62,6 +62,7 @@ DrillDown.prototype = {
         this.drillDownLoadedCallback(obj);
     },
     drillDownLoadedCallback: function(obj) {
+
         // store stuff locally
         this.selectName = obj.choices.name;
         this.selections = obj.selections;
@@ -83,34 +84,39 @@ DrillDown.prototype = {
         if (this.selectName == 'uid') {
             var choice = obj.choices.choices[0];
             this.uid = choice.value;
+            // params for V1 and V2
+            // dataItemUid
+            div.appendChild(new Element('input', {type : 'hidden', name : 'dataItemUid', value : this.uid}));
+            // name
+            div.appendChild(document.createTextNode('Name: '));
+            var nameInput = new Element('input', {type : 'text', name : 'name', id : 'name', style : 'margin-left:49px'});
+            div.appendChild(nameInput);
+            div.appendChild(document.createElement('br'));
+            // V1 or V2 params?
             if (this.apiVersion == '1.0') {
+                // V1 params
                 div.appendChild(document.createTextNode('Valid From: '));
                 var validFromInput = new Element('input', {type : 'text', name : 'validFrom', id : 'validFrom'});
                 div.appendChild(validFromInput);
             } else {
-                div.appendChild(new Element('input', {type : 'hidden', name : 'dataItemUid', value : this.uid}));
+                // V2 params
+                // startDate
                 div.appendChild(document.createTextNode('Start Date: '));
                 var startDateInput = new Element('input', {type : 'text', name : 'startDate', id : 'startDate', style : 'margin-left:20px'});
-
                 div.appendChild(startDateInput);
                 div.appendChild(document.createTextNode("  (" + this.dateFormat + ")"));
                 div.appendChild(document.createElement('br'));
-
+                // endDate
                 div.appendChild(document.createTextNode('End Date: '));
                 var endDateInput = new Element('input', {type : 'text', name : 'endDate', id : 'endDate', style : 'margin-left:25px'});
                 div.appendChild(endDateInput);
                 div.appendChild(document.createTextNode("  (" + this.dateFormat + ")"));
                 div.appendChild(document.createElement('br'));
-
+                // duration
                 div.appendChild(document.createTextNode('Duration: '));
                 var durationInput = new Element('input', {type : 'text', name : 'duration', id : 'duration', style : 'margin-left:31px'});
                 div.appendChild(durationInput);
                 div.appendChild(document.createTextNode("  (e.g PT30M [30 mins])"));
-                div.appendChild(document.createElement('br'));
-
-                div.appendChild(document.createTextNode('Name: '));
-                var nameInput = new Element('input', {type : 'text', name : 'name', id : 'name', style : 'margin-left:49px'});
-                div.appendChild(nameInput);
                 div.appendChild(document.createElement('br'));
             }
             div.appendChild(document.createElement('br'));

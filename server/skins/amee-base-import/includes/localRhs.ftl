@@ -1,7 +1,6 @@
 <div id="modal" class="columnBlock paddingTopBottom clearfix" style="overflow: auto; text-align: left;"></div>
 
-<#if activeUser?? && activeUser.apiVersion?? && activeUser.apiVersion.versionOne>
-    <#if node??>
+<#if activeUser?? && activeUser.apiVersion?? && activeUser.apiVersion.versionOne && node??>
     <h2>Details</h2>
     <table>
         <#if node.displayName??>
@@ -22,20 +21,19 @@
             </tr>
         <#if node.amount??>
             <tr>
-                <td>Amount:</td>
+                <td>kgCO2 pcm:</td>
                 <td>${node.amount}</td>
             </tr>
         </#if>
         <tr>
             <td>Created:</td>
-            <td>${node.created?datetime}</td>
+            <td>${node.created?string.short}</td>
         </tr>
         <tr>
             <td>Modified:</td>
-            <td>${node.modified?datetime}</td>
+            <td>${node.modified?string.short}</td>
         </tr>
     </table>
-    </#if>
 </#if>
 
 <script type='text/javascript'>

@@ -31,8 +31,10 @@
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
 
-    <#if browser.profileItemActions.allowList>
-        document.observe('dom:loaded', function() {
+    document.observe('dom:loaded', function() {
+
+        <#if browser.profileItemActions.allowList>
+
             var profileCategoryApiService = new ProfileCategoryApiService({
                 heading : "Profile Items",
                 headingElementName : "apiHeading",
@@ -44,12 +46,21 @@
                 dataHeadingCategory : 'Profile Category Details',
                 dataHeadingCategoryElementName : 'apiDataCategoryHeading',
                 dataContentElementName : "apiDataCategoryContent",
-                apiVersion : '2.0',
-                drillDown : true
+                apiVersion : '2.0'
             });
             profileCategoryApiService.apiRequest();
-        });
-    </#if>
+
+        </#if>
+
+        <#if dataCategory.itemDefinition?? && browser.profileItemActions.allowCreate>
+            new DrillDown(
+                "/data${browser.pathItem.fullPath}",
+                "2.0",
+                "yyyy-MM-dd'T'HH:mmZ",
+                true
+            ).loadDrillDown();
+        </#if>
+    });
 
 </script>
 
@@ -65,14 +76,12 @@
 <p id="apiTAmount"></p>
 <div id="apiBottomPager"></div>
 
-<#if dataCategory.itemDefinition??>
-    <#if browser.profileItemActions.allowCreate>
-        <h2 id="createProfileHeading"></h2>
-        <form id="createProfileFrm" onSubmit="return false;">
-            <div id="createProfileItemDiv">
-            </div>
-        </form>
-    </#if>
+<#if dataCategory.itemDefinition?? && browser.profileItemActions.allowCreate>
+    <h2 id="createProfileHeading"></h2>
+    <form id="createProfileFrm" onSubmit="return false;">
+        <div id="createProfileItemDiv">
+        </div>
+    </form>
 </#if>
 
 <#include '/includes/after_content.ftl'>

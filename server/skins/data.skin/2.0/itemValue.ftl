@@ -14,7 +14,6 @@
             dataHeadingItemElementName : 'apiDataItemHeading',
             dataContentElementName : "apiDataItemContent",
             apiVersion : '2.0',
-            drillDown : false,
             updateItem: true
         });
         dataItemValueApiService.apiRequest();
