@@ -6,15 +6,18 @@
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+
     function profileCategoryLoaded() {
         $("totalAmountPerMonth").innerHTML = this.resource.totalAmountPerMonth;
     }
+
     function profileItemDeleted() {
         Effect.Fade(this.resourceElem);
         var profileCategoryResource = new ProfileCategoryResource('${profile.uid}', '${browser.pathItem.fullPath}');
         profileCategoryResource.loadedCallback = profileCategoryLoaded;
         profileCategoryResource.load();
     }
+
     function deleteProfileItem(profileItemUid, profileItemPath) {
         if (profileItemPath && profileItemPath.indexOf("?") > -1) {
             resourceUrl = profileItemPath + '&method=delete';
@@ -27,6 +30,7 @@
         deleteResource.deleteResourceCallback = profileItemDeleted;
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
+
 </script>
 
 <h1>Profile Category</h1>

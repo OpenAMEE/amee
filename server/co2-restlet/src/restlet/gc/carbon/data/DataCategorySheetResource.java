@@ -59,7 +59,7 @@ public class DataCategorySheetResource extends BaseDataResource implements Seria
 
     @Override
     public String getTemplatePath() {
-        return DataConstants.VIEW_DATA_SHEET;
+        return getApiVersion() + "/" + DataConstants.VIEW_DATA_SHEET;
     }
 
     @Override

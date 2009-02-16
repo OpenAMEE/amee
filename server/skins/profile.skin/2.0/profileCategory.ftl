@@ -6,15 +6,18 @@
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+
     function profileCategoryLoaded() {
         $("tAmount").innerHTML = this.resource.tAmount;
     }
+
     function profileItemDeleted() {
         Effect.Fade(this.resourceElem);
         var profileCategoryResource = new ProfileCategoryResource('${profile.uid}', '${browser.pathItem.fullPath}');
         profileCategoryResource.loadedCallback = profileCategoryLoaded;
         profileCategoryResource.load();
     }
+
     function deleteProfileItem(profileItemUid, profileItemPath) {
         if (profileItemPath && profileItemPath.indexOf("?") > -1) {
             resourceUrl = profileItemPath + '&method=delete';
@@ -27,6 +30,27 @@
         deleteResource.deleteResourceCallback = profileItemDeleted;
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
+
+    <#if browser.profileItemActions.allowList>
+        document.observe('dom:loaded', function() {
+            var profileCategoryApiService = new ProfileCategoryApiService({
+                heading : "Profile Items",
+                headingElementName : "apiHeading",
+                contentElementName : "apiContent",
+                tAmountElementName : 'apiTAmount',
+                pagerTopElementName : 'apiTopPager',
+                pagerBtmElementName : 'apiBottomPager',
+                headingCategory : 'Profile Categories',
+                dataHeadingCategory : 'Profile Category Details',
+                dataHeadingCategoryElementName : 'apiDataCategoryHeading',
+                dataContentElementName : "apiDataCategoryContent",
+                apiVersion : '2.0',
+                drillDown : true
+            });
+            profileCategoryApiService.apiRequest();
+        });
+    </#if>
+
 </script>
 
 <h1>Profile Category</h1>
@@ -50,27 +74,5 @@
         </form>
     </#if>
 </#if>
-
-<script type='text/javascript'>
-    <#if browser.profileItemActions.allowList>
-        document.observe('dom:loaded', function() {
-            var profileCategoryApiService = new ProfileCategoryApiService({
-                    heading : "Profile Items",
-                    headingElementName : "apiHeading",
-                    contentElementName : "apiContent",
-                    tAmountElementName : 'apiTAmount',
-                    pagerTopElementName : 'apiTopPager',
-                    pagerBtmElementName : 'apiBottomPager',
-                    headingCategory : 'Profile Categories',
-                    dataHeadingCategory : 'Profile Category Details',
-                    dataHeadingCategoryElementName : 'apiDataCategoryHeading',
-                    dataContentElementName : "apiDataCategoryContent",
-                    apiVersion : '2.0',
-                    drillDown : true
-                });
-            profileCategoryApiService.apiRequest();
-        });
-    </#if>
-</script>
 
 <#include '/includes/after_content.ftl'>

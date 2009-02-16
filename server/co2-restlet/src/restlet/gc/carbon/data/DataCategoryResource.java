@@ -84,7 +84,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Override
     public String getTemplatePath() {
-        return DataConstants.VIEW_DATA_CATEGORY;
+        return getApiVersion() + "/" + DataConstants.VIEW_DATA_CATEGORY;
     }
 
     @Override

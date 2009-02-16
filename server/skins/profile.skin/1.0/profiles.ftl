@@ -5,6 +5,7 @@
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+    
     function deleteProfile(profileUid) {
         resourceUrl = '/profiles/' + profileUid + '?method=delete';
         resourceElem = $('Elem_' + profileUid);
@@ -12,6 +13,7 @@
         var deleteResource = new DeleteResource();
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
+
 </script>
 
 <h1>Profiles</h1>

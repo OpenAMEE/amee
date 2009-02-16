@@ -8,6 +8,15 @@
 <script src="/scripts/amee/api_service.js" type="text/javascript"></script>
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 
+<script type='text/javascript'>
+
+    document.observe('dom:loaded', function() {
+        var profileItemApiService = new ProfileItemApiService();
+        profileItemApiService.apiRequest();
+    });
+
+</script>
+
 <h1>Profile Item</h1>
 
 <#include 'profileTrail.ftl'>
@@ -36,10 +45,5 @@
         <div id="inputSubmit"></div><div id="updateStatusSubmit"></div>
     </form>
 </p>
-
-<script type='text/javascript'>
-    var profileItemApiService = new ProfileItemApiService();
-    profileItemApiService.apiRequest();
-</script>
 
 <#include '/includes/after_content.ftl'>

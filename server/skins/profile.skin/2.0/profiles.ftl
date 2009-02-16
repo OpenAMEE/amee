@@ -5,6 +5,7 @@
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+
     function deleteProfile(profileUid) {
         resourceUrl = '/profiles/' + profileUid + '?method=delete';
         resourceElem = $('Elem_' + profileUid);
@@ -12,19 +13,7 @@
         var deleteResource = new DeleteResource();
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
-</script>
 
-<h1>Profiles</h1>
-
-<p><a href='/profiles'>Profiles</a></p>
-
-<h2 id="apiHeading"></h2>
-<div id="apiTopPager"></div>
-<table id="apiContent">
-</table>
-<div id="apiBottomPager"></div>
-
-<script type='text/javascript'>
     var Profile = Class.create();
     Profile.prototype = {
         initialize: function() {
@@ -42,22 +31,32 @@
         }
     };
     var p = new Profile();
-        document.observe('dom:loaded', function() {
-            // hide n/a atom option
-            $('showAPIATOM').style.visibility = "hidden";
-            // api call
-            var profilesApiService = new ProfilesApiService({
-                    heading : "Profiles",
-                    headingElementName : "apiHeading",
-                    contentElementName : "apiContent",
-                    pagerTopElementName : 'apiTopPager',
-                    pagerBtmElementName : 'apiBottomPager',
-                    apiVersion : '2.0',
-                    drillDown : false
-                });
-            profilesApiService.apiRequest();
+
+    document.observe('dom:loaded', function() {
+        // hide n/a atom option
+        $('showAPIATOM').style.visibility = "hidden";
+        var profilesApiService = new ProfilesApiService({
+            heading : "Profiles",
+            headingElementName : "apiHeading",
+            contentElementName : "apiContent",
+            pagerTopElementName : 'apiTopPager',
+            pagerBtmElementName : 'apiBottomPager',
+            apiVersion : '2.0',
+            drillDown : false
         });
+        profilesApiService.apiRequest();
+    });
+
 </script>
+
+<h1>Profiles</h1>
+
+<p><a href='/profiles'>Profiles</a></p>
+
+<h2 id="apiHeading"></h2>
+<div id="apiTopPager"></div>
+<table id="apiContent"></table>
+<div id="apiBottomPager"></div>
 
 <#if browser.profileActions.allowCreate>
     <h2>Create Profile</h2>
@@ -65,4 +64,5 @@
         <input type='button' value='Create Profile' onClick='p.addProfile();'/>
     </form>
 </#if>
+
 <#include '/includes/after_content.ftl'>

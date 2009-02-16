@@ -1,10 +1,17 @@
 // Global Ajax Responders
+var loadingCount = 0;
 Ajax.Responders.register({
     onCreate: function() {
-        $('loading').show();
+        if (loadingCount == 0) {
+            $('loading').show();
+        }
+        loadingCount++;
     },
     onComplete: function() {
-        $('loading').hide();
+        loadingCount--;
+        if (loadingCount == 0) {
+            $('loading').hide();
+        }
     }
 });
 
@@ -129,7 +136,6 @@ Pager.prototype = {
 };
 
 // ------------------ pager ------------------------------
-
 
 var ApiService = Class.create();
 ApiService.prototype = {
