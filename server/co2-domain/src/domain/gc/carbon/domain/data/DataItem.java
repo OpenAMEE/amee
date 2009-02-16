@@ -33,7 +33,6 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.util.HashMap;
 import java.util.Map;
 
 @Entity
@@ -46,9 +45,6 @@ public class DataItem extends Item {
     @Index(name = "PATH_IND")
     private String path = "";
 
-    @Transient
-    private static transient ThreadLocal<Map<Long, String>> cachedLabels = new ThreadLocal<Map<Long, String>>();
-
     public DataItem() {
         super();
     }
@@ -57,57 +53,44 @@ public class DataItem extends Item {
         super(dataCategory, itemDefinition);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DataItem)) return false;
+        DataItem dataItem = (DataItem) o;
+        return getId().equals(dataItem.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
+
     public String toString() {
         return "DataItem_" + getUid();
     }
 
-    // TODO: This method is very slow. Usage of the cachedLabels field is to speed up iterations.
     @Transient
     public String getLabel() {
-        String label = getCachedLabel();
-        if (label == null) {
-            label = "";
-            ItemValue itemValue;
-            ItemDefinition itemDefinition = getItemDefinition();
-            Map<String, ItemValue> itemValuesMap = getItemValuesMap();
-            for (Choice choice : itemDefinition.getDrillDownChoices()) {
-                itemValue = itemValuesMap.get(choice.getName());
-                if ((itemValue != null) &&
-                        (itemValue.getValue().length() > 0) &&
-                        !itemValue.getValue().equals("-")) {
-                    if (label.length() > 0) {
-                        label = label.concat(", ");
-                    }
-                    label = label.concat(itemValue.getValue());
+        String label = "";
+        ItemValue itemValue;
+        ItemDefinition itemDefinition = getItemDefinition();
+        Map<String, ItemValue> itemValuesMap = getItemValuesMap();
+        for (Choice choice : itemDefinition.getDrillDownChoices()) {
+            itemValue = itemValuesMap.get(choice.getName());
+            if ((itemValue != null) &&
+                    (itemValue.getValue().length() > 0) &&
+                    !itemValue.getValue().equals("-")) {
+                if (label.length() > 0) {
+                    label = label.concat(", ");
                 }
+                label = label.concat(itemValue.getValue());
             }
-            if (label.length() == 0) {
-                label = getDisplayPath();
-            }
-            setCachedLabel(label);
+        }
+        if (label.length() == 0) {
+            label = getDisplayPath();
         }
         return label;
-    }
-
-    private String getCachedLabel() {
-        return getCachedLabels().get(getId());
-    }
-
-    private void setCachedLabel(String label) {
-        getCachedLabels().put(getId(), label);
-    }
-
-    public static void resetCachedLabels() {
-        cachedLabels.set(null);
-    }
-
-    private Map<Long, String> getCachedLabels() {
-        Map<Long, String> l = cachedLabels.get();
-        if (l == null) {
-            l = new HashMap<Long, String>();
-            cachedLabels.set(l);
-        }
-        return l;
     }
 
     @Transient
