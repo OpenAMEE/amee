@@ -2,7 +2,7 @@
 . ./curl.conf
 
 type="atom+xml"
-amee_url="profiles/${profileUid}/home/energy/electricity?startDate=2009-01-01T00:00%2B0000"
+amee_url="profiles/${profileUid}/home/energy?startDate=2009-01-01T00:00%2B0000"
 
 curl http://${amee_host}/${amee_url} \
 	-u admin:r41n80w \

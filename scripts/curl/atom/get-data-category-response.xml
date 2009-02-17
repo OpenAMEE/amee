@@ -1,10 +1,26 @@
-<html>
-<head>
-   <title>Status page</title>
-</head>
-<body>
-<h3>The server has not found anything matching the request URI</h3><p>You can get technical details <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">here</a>.<br>
-Please continue your visit at our <a href="/">home page</a>.
-</p>
-</body>
-</html>
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:amee="http://schemas.amee.cc/2.0" xml:lang="en-US" xml:base="http://local.stage.co2.dgen.net/profiles/F2C9906997EA/home/energy">
+  <title type="text">Profile F2C9906997EA, Category Energy</title>
+  <id>urn:dataCategory:30BA55A0C472</id>
+  <generator version="2.0" uri="http://www.amee.cc">AMEE</generator>
+  <link href="" type="application/atom+xml" rel="edit" />
+  <link href="" type="application/json" rel="alternate" />
+  <link href="" type="application/xml" rel="alternate" />
+  <author>
+    <name>F2C9906997EA</name>
+  </author>
+  <amee:name>Energy</amee:name>
+  <amee:totalAmount unit="kg/year">0.000000</amee:totalAmount>
+  <os:Query role="request" amee:startDate="2009-01-01T00:00+0000" />
+  <amee:categories>
+    <amee:category>electricity</amee:category>
+    <amee:category>electricityiso</amee:category>
+    <amee:category>insulation</amee:category>
+    <amee:category>ireland</amee:category>
+    <amee:category>quantity</amee:category>
+    <amee:category>renewable</amee:category>
+    <amee:category>uk</amee:category>
+    <amee:category>us</amee:category>
+  </amee:categories>
+  <updated>1970-01-01T00:00:00.000Z</updated>
+</feed>
