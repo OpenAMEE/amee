@@ -74,7 +74,7 @@ public class StartEndDate extends GCDate {
     }
 
     protected long defaultDate() {
-        return new DateTime().secondOfMinute().withMinimumValue().getMillis();
+        return new DateTime().secondOfMinute().withMinimumValue().millisOfSecond().withMinimumValue().getMillis();
     }
 
     public StartEndDate plus(String duration) {
