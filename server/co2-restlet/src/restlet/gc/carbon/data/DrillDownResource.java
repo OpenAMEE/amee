@@ -70,7 +70,7 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
 
     @Override
     public String getTemplatePath() {
-        return DataConstants.VIEW_DRILL_DOWN;
+        return getApiVersion() + "/" + DataConstants.VIEW_DRILL_DOWN;
     }
 
     @Override

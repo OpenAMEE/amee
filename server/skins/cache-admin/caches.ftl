@@ -33,7 +33,7 @@
         <#assign post = "">
         <#assign sortOrder = sheet.getColumn(column.name).sortOrder>
     </#if>
-  <th><a href="/caches?sortBy=${column.name}&sortOrder=${sortOrder}">${pre}${column.name}${post}</a></th>
+  <th><a href="/cache?sortBy=${column.name}&sortOrder=${sortOrder}">${pre}${column.name}${post}</a></th>
 </#list>
 </tr>
 <#list sheet.rows as row>

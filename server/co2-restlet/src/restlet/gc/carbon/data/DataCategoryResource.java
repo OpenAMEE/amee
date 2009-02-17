@@ -19,18 +19,18 @@
  */
 package gc.carbon.data;
 
-import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.APIFault;
+import com.jellymold.utils.domain.APIUtils;
+import gc.carbon.ResourceBuilder;
+import gc.carbon.ResourceBuilderFactory;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.StartEndDate;
-import gc.carbon.ResourceBuilder;
-import gc.carbon.ResourceBuilderFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +46,10 @@ import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @Component("dataCategoryResource")
 @Scope("prototype")
@@ -84,7 +87,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Override
     public String getTemplatePath() {
-        return DataConstants.VIEW_DATA_CATEGORY;
+        return getApiVersion() + "/" + DataConstants.VIEW_DATA_CATEGORY;
     }
 
     @Override
@@ -110,10 +113,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         if (dataBrowser.getDataCategoryActions().isAllowView()) {
             if (!getApiVersion().isVersionOne()) {
                 Form form = getRequest().getResourceRef().getQueryAsForm();
-                String startDate = form.getFirstValue("startDate");
-                if (startDate != null) {
-                    dataBrowser.setStartDate(form.getFirstValue("startDate"));
-                }
+                dataBrowser.setStartDate(form.getFirstValue("startDate"));
                 dataBrowser.setEndDate(form.getFirstValue("endDate"));
             }
             super.handleGet();

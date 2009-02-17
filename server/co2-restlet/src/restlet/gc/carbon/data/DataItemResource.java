@@ -84,7 +84,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
     @Override
     public String getTemplatePath() {
-        return DataConstants.VIEW_DATA_ITEM;
+        return getApiVersion() + "/" + DataConstants.VIEW_DATA_ITEM;
     }
 
     @Override

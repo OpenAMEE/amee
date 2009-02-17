@@ -64,7 +64,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
 
     @Override
     public String getTemplatePath() {
-        return DataConstants.VIEW_CARBON_VALUE;
+        return getApiVersion() + "/" + DataConstants.VIEW_CARBON_VALUE;
     }
 
     @Override

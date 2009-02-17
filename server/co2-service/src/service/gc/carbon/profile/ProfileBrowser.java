@@ -213,8 +213,8 @@ public class ProfileBrowser extends BaseBrowser {
     }
 
     public void setDuration(String duration) {
-        if (duration != null && endDate == null) {
-            endDate = startDate.plus(duration);
+        if ((duration != null) && (endDate == null)) {
+            endDate = getStartDate().plus(duration);
         }
     }
 

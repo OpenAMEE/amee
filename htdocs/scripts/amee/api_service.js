@@ -1,10 +1,17 @@
 // Global Ajax Responders
+var loadingCount = 0;
 Ajax.Responders.register({
     onCreate: function() {
-        $('loading').show();
+        if (loadingCount == 0) {
+            $('loading').show();
+        }
+        loadingCount++;
     },
     onComplete: function() {
-        $('loading').hide();
+        loadingCount--;
+        if (loadingCount == 0) {
+            $('loading').hide();
+        }
     }
 });
 
@@ -130,7 +137,6 @@ Pager.prototype = {
 
 // ------------------ pager ------------------------------
 
-
 var ApiService = Class.create();
 ApiService.prototype = {
     initialize: function(params) {
@@ -148,7 +154,6 @@ ApiService.prototype = {
         this.pagerBtmElementName = params.pagerBtmElementName || "apiBottomPager";
 
         this.apiVersion = params.apiVersion || '1.0';
-        this.drillDown = params.drillDown || false;
 
         // api data category items
         this.dataHeadingCategory = params.dataHeadingCategory || "";
@@ -350,15 +355,6 @@ ApiService.prototype = {
                 pElement.appendChild(document.createTextNode("Modifed: " + dataCategory.modified));
 
                 this.dataContentElement.replace(pElement);
-            }
-
-            if (this.drillDown && json.path) {
-                new DrillDown(
-                        "/data" + json.path,
-                        this.apiVersion,
-                        this.getDateFormat(),
-                        this.getActionsAllowCreate()
-                        ).loadDrillDown();
             }
         }
     },

@@ -82,7 +82,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     @Override
     public String getTemplatePath() {
-        return ProfileConstants.VIEW_PROFILE_ITEM;
+        return getApiVersion() + "/" + ProfileConstants.VIEW_PROFILE_ITEM;
     }
 
     @Override

@@ -95,7 +95,7 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
 
     @Override
     public String getTemplatePath() {
-        return ProfileConstants.VIEW_PROFILE_ITEM_VALUE;
+        return getApiVersion() + "/" + ProfileConstants.VIEW_PROFILE_ITEM_VALUE;
     }
 
     @Override
