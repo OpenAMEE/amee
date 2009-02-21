@@ -1,10 +1,9 @@
-package com.jellymold.kiwi.environment;
+package gc.carbon.environment;
 
 import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.ScheduledTask;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.beanutils.MethodUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.BeansException;
 import org.springframework.stereotype.Service;
@@ -13,8 +12,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContext;
 import org.quartz.Scheduler;
 import org.quartz.JobDetail;
-import org.quartz.Trigger;
-import org.quartz.TriggerUtils;
 import org.quartz.SchedulerException;
 import org.quartz.CronTrigger;
 import org.quartz.SimpleTrigger;
@@ -22,10 +19,7 @@ import org.quartz.SimpleTrigger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 
 @Service

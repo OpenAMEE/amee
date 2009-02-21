@@ -1,17 +1,16 @@
 package com.jellymold.kiwi.auth;
 
 import com.jellymold.kiwi.Site;
-import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.MediaTypeUtils;
+import gc.carbon.auth.AuthService;
+import gc.carbon.environment.SiteService;
 import org.restlet.Application;
-import org.restlet.Context;
 import org.restlet.Filter;
 import org.restlet.data.Cookie;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
-import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class BaseAuthFilter extends Filter {

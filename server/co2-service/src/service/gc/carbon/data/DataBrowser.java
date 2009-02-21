@@ -19,20 +19,13 @@
  */
 package gc.carbon.data;
 
-import com.jellymold.kiwi.ResourceActions;
-import com.jellymold.kiwi.environment.EnvironmentService;
+import gc.carbon.auth.ResourceActions;
 import gc.carbon.BaseBrowser;
-import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.DataCategory;
-import gc.carbon.domain.data.DataItem;
-import gc.carbon.domain.data.ItemDefinition;
-import gc.carbon.domain.data.ItemValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component("dataBrowser")
 @Scope("prototype")

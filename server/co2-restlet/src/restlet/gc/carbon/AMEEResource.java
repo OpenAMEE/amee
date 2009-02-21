@@ -1,9 +1,9 @@
 package gc.carbon;
 
 import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.ResourceActions;
+import gc.carbon.auth.ResourceActions;
 import com.jellymold.kiwi.User;
-import com.jellymold.kiwi.environment.EnvironmentService;
+import gc.carbon.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.ThreadBeanHolder;

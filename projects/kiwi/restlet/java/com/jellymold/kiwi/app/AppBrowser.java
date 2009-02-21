@@ -2,12 +2,13 @@ package com.jellymold.kiwi.app;
 
 import com.jellymold.kiwi.Action;
 import com.jellymold.kiwi.App;
-import com.jellymold.kiwi.ResourceActions;
+import gc.carbon.auth.ResourceActions;
 import com.jellymold.utils.BaseBrowser;
 import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import gc.carbon.app.AppService;
 
 @Component
 @Scope("prototype")

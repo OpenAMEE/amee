@@ -17,6 +17,8 @@ import org.w3c.dom.Element;
 
 import java.util.Map;
 
+import gc.carbon.app.AppService;
+
 @Component
 @Scope("prototype")
 public class AppResource extends BaseResource {
@@ -41,7 +43,7 @@ public class AppResource extends BaseResource {
 
     @Override
     public String getTemplatePath() {
-        return KiwiAppConstants.VIEW_APP;
+        return AppConstants.VIEW_APP;
     }
 
     @Override

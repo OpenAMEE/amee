@@ -21,7 +21,6 @@
     <orderEntry type="module" module-name="cache-restlet" />
     <orderEntry type="module" module-name="kiwi-domain" />
     <orderEntry type="module" module-name="kiwi-restlet" />
-    <orderEntry type="module" module-name="kiwi-service" />
     <orderEntry type="module" module-name="org.restlet.ext.seam" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="global" level="project" />
@@ -36,6 +35,7 @@
     <orderEntry type="library" name="amee-utils-restlet" level="project" />
     <orderEntry type="library" name="slf4j" level="project" />
     <orderEntry type="library" name="commons-cli" level="project" />
+    <orderEntry type="module" module-name="amee-service" />
   </component>
 </module>
 

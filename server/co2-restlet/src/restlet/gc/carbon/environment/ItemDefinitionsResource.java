@@ -20,7 +20,7 @@
 package gc.carbon.environment;
 
 import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.environment.EnvironmentService;
+import gc.carbon.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import gc.carbon.data.DataConstants;

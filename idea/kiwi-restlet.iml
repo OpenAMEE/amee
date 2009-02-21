@@ -19,7 +19,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="kiwi-domain" />
-    <orderEntry type="module" module-name="kiwi-service" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="global" level="project" />
     <orderEntry type="library" name="restlet" level="project" />
@@ -30,6 +29,7 @@
     <orderEntry type="library" name="utils" level="project" />
     <orderEntry type="library" name="utils-restlet" level="project" />
     <orderEntry type="library" name="spring-runtime" level="project" />
+    <orderEntry type="module" module-name="amee-service" />
   </component>
 </module>
 

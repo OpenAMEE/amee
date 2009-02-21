@@ -17,6 +17,9 @@ import org.w3c.dom.Element;
 
 import java.util.Map;
 
+import gc.carbon.environment.EnvironmentConstants;
+import gc.carbon.environment.EnvironmentService;
+
 @Component
 @Scope("prototype")
 public class EnvironmentResource extends BaseResource {

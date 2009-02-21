@@ -1,10 +1,8 @@
-package com.jellymold.kiwi.app;
+package gc.carbon.app;
 
 import com.jellymold.kiwi.Action;
 import com.jellymold.kiwi.App;
 import com.jellymold.utils.Pager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -15,8 +13,6 @@ import java.util.List;
 
 @Service
 public class AppService implements Serializable {
-
-    private final Log log = LogFactory.getLog(getClass());
 
     @PersistenceContext
     private EntityManager entityManager;

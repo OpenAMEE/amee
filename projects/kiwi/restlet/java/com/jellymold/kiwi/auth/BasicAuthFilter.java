@@ -1,18 +1,13 @@
 package com.jellymold.kiwi.auth;
 
+import com.jellymold.kiwi.User;
+import gc.carbon.auth.AuthService;
 import org.restlet.Application;
 import org.restlet.Guard;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import com.jellymold.utils.ThreadBeanHolder;
-import com.jellymold.kiwi.User;
 
 
 /**

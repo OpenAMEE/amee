@@ -1,7 +1,8 @@
-package com.jellymold.kiwi;
+package gc.carbon.auth;
 
 import com.jellymold.utils.crypto.Crypto;
 import com.jellymold.utils.crypto.CryptoException;
+import com.jellymold.kiwi.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;

@@ -21,6 +21,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import gc.carbon.environment.EnvironmentConstants;
+import gc.carbon.environment.EnvironmentService;
+
 @Component
 @Scope("prototype")
 public class EnvironmentsResource extends BaseResource implements Serializable {

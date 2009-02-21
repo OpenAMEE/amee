@@ -76,19 +76,19 @@
         </property>
     </bean>
 
-    <bean id="profileActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="profileActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="profile"/>
     </bean>
 
-    <bean id="profileCategoryActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="profileCategoryActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="profileCategory"/>
     </bean>
 
-    <bean id="profileItemActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="profileItemActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="profileItem"/>
     </bean>
 
-    <bean id="profileItemValueActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="profileItemValueActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="profileItemValue"/>
     </bean>
 

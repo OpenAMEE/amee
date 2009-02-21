@@ -22,7 +22,7 @@ package gc.carbon.profile;
 import com.jellymold.kiwi.Group;
 import com.jellymold.kiwi.Permission;
 import com.jellymold.kiwi.User;
-import com.jellymold.kiwi.auth.AuthService;
+import gc.carbon.auth.AuthService;
 import com.jellymold.utils.Pager;
 import gc.carbon.AMEEResource;
 import gc.carbon.domain.profile.Profile;

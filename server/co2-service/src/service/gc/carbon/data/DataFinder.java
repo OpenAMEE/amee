@@ -19,7 +19,6 @@
 */
 package gc.carbon.data;
 
-import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
 import gc.carbon.domain.ObjectType;
@@ -32,7 +31,6 @@ import gc.carbon.path.PathItemService;
 import gc.carbon.data.DataServiceDAO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Autowired;

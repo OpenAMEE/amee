@@ -20,10 +20,10 @@
 package gc.carbon.environment;
 
 import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.ResourceActions;
+import gc.carbon.auth.ResourceActions;
 import com.jellymold.kiwi.Site;
-import com.jellymold.kiwi.environment.EnvironmentService;
-import com.jellymold.kiwi.environment.SiteService;
+import gc.carbon.environment.EnvironmentService;
+import gc.carbon.environment.SiteService;
 import com.jellymold.utils.BaseBrowser;
 import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.ValueDefinition;
@@ -31,8 +31,6 @@ import gc.carbon.domain.data.Algorithm;
 import gc.carbon.domain.data.AlgorithmContext;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.ItemValueDefinition;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;

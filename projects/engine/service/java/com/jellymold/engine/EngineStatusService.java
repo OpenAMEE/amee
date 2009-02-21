@@ -1,11 +1,11 @@
 package com.jellymold.engine;
 
-import com.jellymold.kiwi.auth.AuthService;
 import com.jellymold.kiwi.auth.AuthUtils;
 import com.jellymold.utils.MediaTypeUtils;
 import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.skin.FreeMarkerConfigurationService;
 import freemarker.template.Configuration;
+import gc.carbon.auth.AuthService;
 import org.restlet.Application;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;

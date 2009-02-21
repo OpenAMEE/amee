@@ -2,9 +2,10 @@ package com.jellymold.kiwi.auth;
 
 import com.jellymold.kiwi.Site;
 import com.jellymold.kiwi.User;
-import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.domain.APIUtils;
+import gc.carbon.auth.AuthService;
+import gc.carbon.environment.SiteService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;

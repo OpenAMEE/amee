@@ -97,7 +97,7 @@
         </property>
     </bean>
 
-    <bean id="environmentActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="environmentActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="environment"/>
     </bean>
 
@@ -121,7 +121,7 @@
         </property>
     </bean>
 
-    <bean id="valueDefinitionActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="valueDefinitionActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="valueDefinition"/>
     </bean>
 
@@ -167,15 +167,15 @@
         </property>
     </bean>
 
-    <bean id="itemDefinitionActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="itemDefinitionActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="itemDefinition"/>
     </bean>
 
-    <bean id="algorithmActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="algorithmActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="algorithm"/>
     </bean>
 
-    <bean id="itemValueDefinitionActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="itemValueDefinitionActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="itemValueDefinition"/>
     </bean>
 
@@ -233,11 +233,11 @@
         </property>
     </bean>
 
-    <bean id="siteActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="siteActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="site"/>
     </bean>
 
-    <bean id="siteAppActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="siteAppActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="site.app"/>
     </bean>
 
@@ -288,7 +288,7 @@
         </property>
     </bean>
 
-    <bean id="userActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="userActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="site.user"/>
     </bean>
 
@@ -319,7 +319,7 @@
         </property>
     </bean>
 
-    <bean id="groupActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="groupActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="site.group"/>
     </bean>
 
@@ -355,7 +355,7 @@
         </property>
     </bean>
 
-    <bean id="roleActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="roleActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="site.role"/>
     </bean>
 
@@ -381,7 +381,7 @@
         </property>
     </bean>
 
-    <bean id="scheduledTaskActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="scheduledTaskActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="scheduledTask"/>
     </bean>
 

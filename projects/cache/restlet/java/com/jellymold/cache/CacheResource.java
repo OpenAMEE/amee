@@ -1,6 +1,5 @@
 package com.jellymold.cache;
 
-import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Column;
 import com.jellymold.sheet.Row;
@@ -9,6 +8,7 @@ import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.ValueType;
 import com.jellymold.utils.cache.CacheHelper;
+import gc.carbon.environment.EnvironmentService;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -21,11 +21,11 @@ import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import java.io.Serializable;
 import java.util.Date;

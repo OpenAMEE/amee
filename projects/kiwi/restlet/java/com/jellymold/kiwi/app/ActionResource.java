@@ -2,6 +2,7 @@ package com.jellymold.kiwi.app;
 
 import com.jellymold.kiwi.Action;
 import com.jellymold.utils.BaseResource;
+import gc.carbon.app.AppService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -42,7 +43,7 @@ public class ActionResource extends BaseResource {
 
     @Override
     public String getTemplatePath() {
-        return KiwiAppConstants.VIEW_ACTION;
+        return AppConstants.VIEW_ACTION;
     }
 
     @Override

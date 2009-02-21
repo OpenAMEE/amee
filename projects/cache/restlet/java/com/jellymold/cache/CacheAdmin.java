@@ -1,6 +1,6 @@
 package com.jellymold.cache;
 
-import com.jellymold.kiwi.ResourceActions;
+import gc.carbon.auth.ResourceActions;
 import com.jellymold.utils.SortOrder;
 import com.jellymold.utils.cache.CacheHelper;
 import net.sf.ehcache.Ehcache;

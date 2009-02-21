@@ -1,6 +1,6 @@
-package com.jellymold.kiwi.environment;
+package gc.carbon.environment;
 
-import com.jellymold.kiwi.ResourceActions;
+import gc.carbon.auth.ResourceActions;
 
 // TODO: Remove constants no longer used.
 public class EnvironmentConstants {

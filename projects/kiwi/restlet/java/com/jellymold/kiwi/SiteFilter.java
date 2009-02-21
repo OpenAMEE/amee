@@ -1,6 +1,6 @@
 package com.jellymold.kiwi;
 
-import com.jellymold.kiwi.environment.SiteService;
+import gc.carbon.environment.SiteService;
 import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.ThreadBeanHolder;
 import org.apache.commons.logging.Log;

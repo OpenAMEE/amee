@@ -19,9 +19,8 @@
  */
 package gc.carbon.profile;
 
-import com.jellymold.kiwi.ResourceActions;
+import gc.carbon.auth.ResourceActions;
 import gc.carbon.BaseBrowser;
-import gc.carbon.domain.AMEECompoundUnit;
 import gc.carbon.domain.data.CO2AmountUnit;
 import gc.carbon.domain.profile.ProfileDate;
 import org.springframework.beans.factory.annotation.Autowired;

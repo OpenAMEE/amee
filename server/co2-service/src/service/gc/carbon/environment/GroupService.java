@@ -1,11 +1,10 @@
-package com.jellymold.kiwi.environment;
+package gc.carbon.environment;
 
 import com.jellymold.kiwi.Group;
 import com.jellymold.kiwi.Site;
-import com.jellymold.kiwi.auth.AuthService;
+import gc.carbon.auth.AuthService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;

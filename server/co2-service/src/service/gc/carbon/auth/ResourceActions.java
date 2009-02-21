@@ -1,6 +1,5 @@
-package com.jellymold.kiwi;
+package gc.carbon.auth;
 
-import com.jellymold.kiwi.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;

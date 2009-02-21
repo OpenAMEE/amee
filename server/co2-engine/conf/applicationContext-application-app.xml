@@ -72,7 +72,7 @@
         </property>
     </bean>
 
-    <bean id="appActions" class="com.jellymold.kiwi.ResourceActions" scope="prototype">
+    <bean id="appActions" class="gc.carbon.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="app"/>
     </bean>
 

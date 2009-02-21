@@ -1,14 +1,16 @@
 package com.jellymold.kiwi.environment;
 
 import com.jellymold.kiwi.*;
-import com.jellymold.kiwi.app.AppConstants;
-import com.jellymold.kiwi.auth.AuthService;
 import com.jellymold.utils.BaseBrowser;
+import gc.carbon.APIVersion;
+import gc.carbon.auth.AuthService;
+import gc.carbon.auth.ResourceActions;
+import gc.carbon.environment.EnvironmentService;
+import gc.carbon.environment.SiteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import gc.carbon.APIVersion;
 
 import java.util.List;
 

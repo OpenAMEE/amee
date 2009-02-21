@@ -20,7 +20,7 @@
 package gc.carbon.environment;
 
 import com.jellymold.utils.BaseResource;
-import com.jellymold.kiwi.environment.EnvironmentService;
+import gc.carbon.environment.EnvironmentService;
 import gc.carbon.data.DataConstants;
 import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.ValueDefinition;

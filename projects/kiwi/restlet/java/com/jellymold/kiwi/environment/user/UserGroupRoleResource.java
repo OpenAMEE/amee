@@ -1,7 +1,7 @@
 package com.jellymold.kiwi.environment.user;
 
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
-import com.jellymold.kiwi.environment.EnvironmentConstants;
+import gc.carbon.environment.EnvironmentConstants;
 import com.jellymold.utils.BaseResource;
 import org.json.JSONException;
 import org.json.JSONObject;

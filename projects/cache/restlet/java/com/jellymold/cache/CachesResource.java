@@ -1,6 +1,5 @@
 package com.jellymold.cache;
 
-import com.jellymold.kiwi.environment.EnvironmentService;
 import com.jellymold.sheet.Cell;
 import com.jellymold.sheet.Column;
 import com.jellymold.sheet.Row;
@@ -9,6 +8,7 @@ import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.ValueType;
 import com.jellymold.utils.cache.CacheHelper;
+import gc.carbon.environment.EnvironmentService;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Statistics;

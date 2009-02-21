@@ -1,7 +1,7 @@
 package com.jellymold.kiwi.app;
 
 import com.jellymold.kiwi.Action;
-import com.jellymold.kiwi.environment.EnvironmentService;
+import gc.carbon.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
 import org.json.JSONArray;
@@ -21,6 +21,8 @@ import org.w3c.dom.Element;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+
+import gc.carbon.app.AppService;
 
 @Component
 @Scope("prototype")
@@ -49,7 +51,7 @@ public class ActionsResource extends BaseResource implements Serializable {
 
     @Override
     public String getTemplatePath() {
-        return KiwiAppConstants.VIEW_ACTIONS;
+        return AppConstants.VIEW_ACTIONS;
     }
 
     @Override

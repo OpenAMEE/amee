@@ -1,8 +1,8 @@
 package com.jellymold.kiwi.app;
 
-import com.jellymold.kiwi.ResourceActions;
+import gc.carbon.auth.ResourceActions;
 
-public class KiwiAppConstants {
+public class AppConstants {
 
     public final static String VIEW_APPS = "apps/apps.ftl";
     public final static String VIEW_APP = "apps/app.ftl";

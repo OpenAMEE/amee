@@ -20,7 +20,7 @@
 package gc.carbon.path;
 
 import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.environment.EnvironmentService;
+import gc.carbon.environment.EnvironmentService;
 import com.jellymold.utils.ThreadBeanHolder;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.data.DataService;

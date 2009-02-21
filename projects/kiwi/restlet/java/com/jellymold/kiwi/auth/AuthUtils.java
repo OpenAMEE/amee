@@ -1,9 +1,9 @@
 package com.jellymold.kiwi.auth;
 
 import com.jellymold.kiwi.Site;
-import com.jellymold.kiwi.environment.SiteService;
 import com.jellymold.utils.HeaderUtils;
-import com.jellymold.utils.ThreadBeanHolder;
+import gc.carbon.auth.AuthService;
+import gc.carbon.environment.SiteService;
 import org.restlet.data.CookieSetting;
 import org.restlet.data.Form;
 import org.restlet.data.Request;
