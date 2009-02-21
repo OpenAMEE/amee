@@ -21,7 +21,6 @@ package gc.carbon.domain.data;
 
 import com.jellymold.sheet.Choice;
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.domain.EngineUtils;
 import gc.carbon.domain.ObjectType;
 import org.hibernate.annotations.Index;
 import org.json.JSONException;
@@ -113,16 +112,6 @@ public class DataItem extends Item {
         dataItemElement.appendChild(APIUtils.getElement(document, "StartDate", getStartDate().toString()));
         dataItemElement.appendChild(APIUtils.getElement(document, "EndDate", (getEndDate() != null) ? getEndDate().toString() : ""));
         return dataItemElement;
-    }
-
-    @Transient
-    public String getDisplayPath() {
-        return EngineUtils.getDisplayPath(this);
-    }
-
-    @Transient
-    public String getDisplayName() {
-        return EngineUtils.getDisplayName(this);
     }
 
     public String getPath() {

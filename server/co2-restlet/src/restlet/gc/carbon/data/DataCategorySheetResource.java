@@ -47,19 +47,18 @@ public class DataCategorySheetResource extends BaseDataResource implements Seria
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
+        setDataCategory(request.getAttributes().get("categoryUid").toString());
         setAvailable(isValid());
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() &&
-                (dataBrowser.getDataCategoryUid() != null);
+        return super.isValid() && (getDataCategory() != null);
     }
 
     @Override
     public String getTemplatePath() {
-        return getApiVersion() + "/" + DataConstants.VIEW_DATA_SHEET;
+        return getAPIVersion() + "/" + DataConstants.VIEW_DATA_SHEET;
     }
 
     @Override

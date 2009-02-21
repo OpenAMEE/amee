@@ -29,6 +29,7 @@ import com.jellymold.utils.event.ObservedEvent;
 import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.APIVersion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -408,17 +409,14 @@ class ProfileServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value="unchecked")
-    public List<ProfileItem> getProfileItems(ProfileBrowser profileBrowser) {
-
-        if ((profileBrowser.getDataCategory() == null) || (profileBrowser.getDataCategory().getItemDefinition() == null))
-            return null;
+    public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
 
         StringBuilder queryBuilder = new StringBuilder("SELECT DISTINCT pi FROM ProfileItem pi ");
         queryBuilder.append("LEFT JOIN FETCH pi.itemValues ");
         queryBuilder.append("WHERE pi.itemDefinition.id = :itemDefinitionId ");
         queryBuilder.append("AND pi.dataCategory = :dataCategory ");
         queryBuilder.append("AND pi.profile = :profile AND ");
-        if (profileBrowser.getEndDate() == null) {
+        if (endDate == null) {
             queryBuilder.append("(pi.endDate > :startDate OR pi.endDate IS NULL)");
         } else {
             queryBuilder.append("pi.startDate < :endDate AND (pi.endDate > :startDate OR pi.endDate IS NULL)");
@@ -427,20 +425,19 @@ class ProfileServiceDAO implements Serializable {
         // now get all the Profile Items
         Query query = entityManager.createQuery(queryBuilder.toString());
 
-        query.setParameter("itemDefinitionId", profileBrowser.getDataCategory().getItemDefinition().getId());
-        query.setParameter("dataCategory", profileBrowser.getDataCategory());
-        query.setParameter("profile", profileBrowser.getProfile());
-        query.setParameter("startDate", profileBrowser.getStartDate().toDate());
+        query.setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId());
+        query.setParameter("dataCategory", dataCategory);
+        query.setParameter("profile", profile);
+        query.setParameter("startDate", startDate.toDate());
 
-        if (profileBrowser.getEndDate() != null)
-            query.setParameter("endDate", profileBrowser.getEndDate().toDate());
+        if (endDate != null)
+            query.setParameter("endDate", endDate.toDate());
 
         query.setHint("org.hibernate.cacheable", true);
         query.setHint("org.hibernate.cacheRegion", "query.profileService");
 
 
         return query.getResultList();
-
     }
 
     // ItemValues

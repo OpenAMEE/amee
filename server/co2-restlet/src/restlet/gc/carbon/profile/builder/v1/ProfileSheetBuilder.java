@@ -9,13 +9,10 @@ import com.jellymold.utils.ValueType;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.APIVersion;
 import gc.carbon.domain.AMEEPerUnit;
-import gc.carbon.domain.data.DataCategory;
-import gc.carbon.domain.data.ItemDefinition;
-import gc.carbon.domain.data.ItemValue;
-import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.data.*;
 import gc.carbon.domain.profile.ProfileItem;
-import gc.carbon.profile.ProfileBrowser;
 import gc.carbon.profile.ProfileService;
+import gc.carbon.profile.ProfileCategoryResource;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,10 +24,12 @@ public class ProfileSheetBuilder implements CacheableFactory {
     private static final String DAY_DATE = "yyyyMMdd";
     private static DateFormat DAY_DATE_FMT = new SimpleDateFormat(DAY_DATE);
 
+    private ProfileCategoryResource resource;
     private ProfileService profileService;
 
-    ProfileSheetBuilder(ProfileService profileService) {
+    ProfileSheetBuilder(ProfileCategoryResource resource, ProfileService profileService) {
         super();
+        this.resource = resource;
         this.profileService = profileService;
     }
 
@@ -42,24 +41,25 @@ public class ProfileSheetBuilder implements CacheableFactory {
         ItemValue itemValue;
         ItemDefinition itemDefinition;
         Sheet sheet = null;
-        ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowserForFactory");
-        DataCategory dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
-        if (dataCategory == null) {
-            dataCategory = profileBrowser.getDataCategory();
+
+        DataCategory dataCategory = resource.getDataCategory();
+
+        if (ThreadBeanHolder.get("dataCategoryForFactory") != null) {
+            dataCategory  =(DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
         }
 
-        // must have ItemDefinition
         itemDefinition = dataCategory.getItemDefinition();
         if (itemDefinition != null) {
 
-            List<ProfileItem> profileItems = profileService.getProfileItems(profileBrowser.getProfile(), dataCategory, profileBrowser.getProfileDate());
+            List<ProfileItem> profileItems = profileService.getProfileItems(resource.getProfile(), 
+                    dataCategory, resource.getProfileDate());
 
             // create sheet and columns
             sheet = new Sheet();
             sheet.setKey(getKey());
             sheet.setLabel("ProfileItems");
             for (ItemValueDefinition itemValueDefinition : itemDefinition.getItemValueDefinitions()) {
-                if (itemValueDefinition.isFromProfile() && itemValueDefinition.includedInAPIVersion(APIVersion.ONE)) {
+                if (itemValueDefinition.isFromProfile() && itemValueDefinition.isValidIn(APIVersion.ONE)) {
                     new Column(sheet, itemValueDefinition.getPath(), itemValueDefinition.getName());
                 }
             }
@@ -89,9 +89,9 @@ public class ProfileSheetBuilder implements CacheableFactory {
                         new Cell(column, row, profileItem.getName(), ValueType.TEXT);
                     } else if ("amountPerMonth".equalsIgnoreCase(column.getName())) {
                         if (!profileItem.isSingleFlight()) {
-                            new Cell(column, row, ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(profileItem.getAmount(), AMEEPerUnit.valueOf("month")), ValueType.DECIMAL);
+                            new Cell(column, row, profileItem.getAmount().convert(AMEEPerUnit.MONTH), ValueType.DECIMAL);
                         } else {
-                            new Cell(column, row, profileItem.getAmount(), ValueType.DECIMAL);
+                            new Cell(column, row, profileItem.getAmount().getValue(), ValueType.DECIMAL);
                         }
                     } else if ("validFrom".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, DAY_DATE_FMT.format(profileItem.getStartDate()), ValueType.TEXT);
@@ -129,12 +129,13 @@ public class ProfileSheetBuilder implements CacheableFactory {
     }
 
     public String getKey() {
-        ProfileBrowser profileBrowser = (ProfileBrowser) ThreadBeanHolder.get("profileBrowserForFactory");
-        DataCategory dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
-        if (dataCategory == null) {
-            dataCategory = profileBrowser.getDataCategory();
+
+        DataCategory dataCategory = resource.getDataCategory();
+        if (ThreadBeanHolder.get("dataCategoryForFactory") != null) {
+            dataCategory  =(DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
         }
-        return "ProfileSheet_" + profileBrowser.getProfile().getUid() + "_" + dataCategory.getUid() + "_" + profileBrowser.getProfileDate().getTime();
+        return "ProfileSheet_" + resource.getProfile().getUid() + "_" + dataCategory.getUid() + "_" +
+                resource.getProfileDate().getTime();
     }
 
     public String getCacheName() {

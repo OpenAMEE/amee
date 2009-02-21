@@ -59,8 +59,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Autowired
     private DataService dataService;
-
-    private DataCategory dataCategory;
+    
     private List<DataCategory> dataCategories;
     private DataItem dataItem;
     private List<DataItem> dataItems;
@@ -70,7 +69,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
+        setDataCategory(request.getAttributes().get("categoryUid").toString());
         setPage(request);
         setBuilderStrategy();
         setAvailable(isValid());
@@ -82,12 +81,12 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (dataBrowser.getDataCategory() != null);
+        return super.isValid() && (getDataCategory() != null);
     }
 
     @Override
     public String getTemplatePath() {
-        return getApiVersion() + "/" + DataConstants.VIEW_DATA_CATEGORY;
+        return getAPIVersion() + "/" + DataConstants.VIEW_DATA_CATEGORY;
     }
 
     @Override
@@ -111,7 +110,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     public void handleGet() {
         log.debug("handleGet()");
         if (dataBrowser.getDataCategoryActions().isAllowView()) {
-            if (!getApiVersion().isVersionOne()) {
+            if (getAPIVersion().isNotVersionOne()) {
                 Form form = getRequest().getResourceRef().getQueryAsForm();
                 dataBrowser.setStartDate(form.getFirstValue("startDate"));
                 dataBrowser.setEndDate(form.getFirstValue("endDate"));
@@ -146,7 +145,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     public void acceptOrStore(Representation entity) {
         log.debug("acceptOrStore()");
-        DataCategory thisDataCategory = dataBrowser.getDataCategory();
+        DataCategory thisDataCategory = getDataCategory();
 
         dataItems = new ArrayList<DataItem>();
         dataCategories = new ArrayList<DataCategory>();
@@ -168,7 +167,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             // clear caches
             dataService.clearCaches(thisDataCategory);
             if (isStandardWebBrowser()) {
-                success(dataBrowser.getFullPath());
+                success(getFullPath());
             } else {
                 // return a response for API calls
                 super.handleGet();
@@ -326,7 +325,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         DataCategory dataCategory = null;
         DataCategory thisDataCategory;
 
-        thisDataCategory = dataBrowser.getDataCategory();
+        thisDataCategory = getDataCategory();
 
         if (getRequest().getMethod().equals(Method.POST)) {
             if (dataBrowser.getDataCategoryActions().isAllowCreate()) {
@@ -399,7 +398,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         ItemDefinition itemDefinition;
         DataCategory thisDataCategory;
 
-        thisDataCategory = dataBrowser.getDataCategory();
+        thisDataCategory = getDataCategory();
         if (getRequest().getMethod().equals(Method.POST)) {
             if (dataBrowser.getDataItemActions().isAllowCreate()) {
                 // new DataItem
@@ -471,7 +470,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         log.debug("acceptFormPut()");
         DataCategory thisDataCategory;
         if (dataBrowser.getDataCategoryActions().isAllowModify()) {
-            thisDataCategory = dataBrowser.getDataCategory();
+            thisDataCategory = getDataCategory();
             if (form.getNames().contains("name")) {
                 thisDataCategory.setName(form.getFirstValue("name"));
             }
@@ -488,7 +487,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 }
             }
             dataService.clearCaches(thisDataCategory);
-            success(dataBrowser.getFullPath());
+            success(getFullPath());
             dataCategory = thisDataCategory;
         } else {
             notAuthorized();
@@ -504,9 +503,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     public void removeRepresentations() {
         log.debug("removeRepresentations()");
         if (dataBrowser.getDataCategoryActions().isAllowDelete()) {
-            DataCategory dataCategory = dataBrowser.getDataCategory();
-            dataService.clearCaches(dataBrowser.getDataCategory());
-            dataService.remove(dataCategory);
+            dataService.clearCaches(getDataCategory());
+            dataService.remove(getDataCategory());
             success(pathItem.getParent().getFullPath());
         } else {
             notAuthorized();

@@ -1,6 +1,6 @@
 package gc.carbon.domain;
 
-import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.data.Decimal;
 
 import javax.measure.DecimalMeasure;
 import javax.measure.quantity.Power;
@@ -34,12 +34,18 @@ import java.text.ParsePosition;
  */
 public class AMEEUnit {
 
-    protected final static UnitFormat AMEE_UNIT_FORMAT = UnitFormat.getInstance();
+    protected final static UnitFormat UNIT_FORMAT = UnitFormat.getInstance();
     public final static Unit<Power> KILOWATT = SI.WATT.times(1000);
     public final static Unit<? extends Quantity> KILOWATT_PER_HOUR = KILOWATT.times(NonSI.HOUR);
     {
-        AMEE_UNIT_FORMAT.label(KILOWATT_PER_HOUR, "kWh");
-        AMEE_UNIT_FORMAT.alias(KILOWATT_PER_HOUR, "kWh");
+        // Create a usable ASCII representation for kWh. JScience will use non-ASCII characters by default.
+        UNIT_FORMAT.label(KILOWATT_PER_HOUR, "kWh");
+        UNIT_FORMAT.alias(KILOWATT_PER_HOUR, "kWh");
+
+        // Ensure that "gal" and "oz" are always the US versions.
+        // JScience will bizarely default "gal" and "oz" to UK units for UK Locale.
+        UNIT_FORMAT.label(NonSI.GALLON_LIQUID_US, "gal");
+        UNIT_FORMAT.label(NonSI.OUNCE_LIQUID_US, "oz");
     }
 
     public static final AMEEUnit ONE = new AMEEUnit(Unit.ONE);
@@ -53,24 +59,18 @@ public class AMEEUnit {
         return new AMEEUnit(internalValueOf(unit));
     }
 
-    public AMEEUnit with(AMEEPerUnit perUnit) {
+    public AMEECompoundUnit with(AMEEPerUnit perUnit) {
         return AMEECompoundUnit.valueOf(this, perUnit);
-    }
-
-    public BigDecimal convert(BigDecimal decimal, AMEEUnit targetUnit) {
-        DecimalMeasure dm = DecimalMeasure.valueOf(decimal, toUnit());
-        BigDecimal converted = dm.to(targetUnit.toUnit(), ProfileItem.CONTEXT).getValue();
-        return converted.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
     }
 
     public boolean isCompatibleWith(String unit) {
         return this.unit.isCompatible(internalValueOf(unit));
     }
 
-    // This is like Unit.valueOf but forces use of AMEE_UNIT_FORMAT instead.
+    // This is like Unit.valueOf but forces use of UNIT_FORMAT instead.
     protected static Unit<? extends Quantity> internalValueOf(CharSequence csq) {
         try {
-            return AMEE_UNIT_FORMAT.parseProductUnit(csq, new ParsePosition(0));
+            return UNIT_FORMAT.parseProductUnit(csq, new ParsePosition(0));
         } catch (ParseException e) {
             throw new IllegalArgumentException(e);
         }
@@ -85,6 +85,6 @@ public class AMEEUnit {
     }
 
     public String toString() {
-        return AMEE_UNIT_FORMAT.format(toUnit());
+        return UNIT_FORMAT.format(toUnit());
     }
 }

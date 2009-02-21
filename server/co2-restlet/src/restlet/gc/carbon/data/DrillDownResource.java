@@ -58,24 +58,23 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        dataBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
+        setDataCategory(request.getAttributes().get("categoryUid").toString());
         setAvailable(isValid());
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() &&
-                (dataBrowser.getDataCategoryUid() != null);
+        return super.isValid() && (getDataCategory() != null);
     }
 
     @Override
     public String getTemplatePath() {
-        return getApiVersion() + "/" + DataConstants.VIEW_DRILL_DOWN;
+        return getAPIVersion() + "/" + DataConstants.VIEW_DRILL_DOWN;
     }
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        DataCategory dataCategory = dataBrowser.getDataCategory();
+        DataCategory dataCategory = getDataCategory();
         ItemDefinition itemDefinition = dataCategory.getItemDefinition();
         Map<String, Object> values = super.getTemplateValues();
         if (itemDefinition != null) {
@@ -93,7 +92,7 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        DataCategory dataCategory = dataBrowser.getDataCategory();
+        DataCategory dataCategory = getDataCategory();
         ItemDefinition itemDefinition = dataCategory.getItemDefinition();
         JSONObject obj = new JSONObject();
         obj.put("dataCategory", dataCategory.getIdentityJSONObject());
@@ -114,7 +113,7 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
 
     @Override
     public Element getElement(Document document) {
-        DataCategory dataCategory = dataBrowser.getDataCategory();
+        DataCategory dataCategory = getDataCategory();
         ItemDefinition itemDefinition = dataCategory.getItemDefinition();
         Element element = document.createElement("DrillDownResource");
         element.appendChild(dataCategory.getIdentityElement(document));

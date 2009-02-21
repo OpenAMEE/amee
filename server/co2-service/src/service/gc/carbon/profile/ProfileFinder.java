@@ -27,6 +27,7 @@ import gc.carbon.profile.ProfileServiceDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -34,7 +35,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Component
 @Scope("prototype")
 public class ProfileFinder implements Serializable {
 
@@ -43,7 +44,7 @@ public class ProfileFinder implements Serializable {
     @Autowired
     private ProfileServiceDAO profileServiceDAO;
 
-    private DataFinder dataFinder;
+    private DataFinder dataFinder;                                                              
     private ProfileItem profileItem;
 
     public ProfileFinder() {

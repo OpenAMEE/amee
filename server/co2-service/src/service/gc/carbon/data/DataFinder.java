@@ -33,13 +33,14 @@ import gc.carbon.data.DataServiceDAO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@Service
+@Component
 @Scope("prototype")
 public class DataFinder implements Serializable {
 
@@ -81,7 +82,7 @@ public class DataFinder implements Serializable {
         Choices choices;
         DataCategory dataCategory = getDataCategory(path);
         if (dataCategory != null) {
-            choices = drillDownService.getChoices(dataCategory, Choice.parseChoices(drillDown), startDate, endDate);
+            choices = drillDownService.getChoices(dataCategory, Choice.parseChoices(drillDown), getStartDate(), getEndDate());
             if (choices.getName().equals("uid") && (choices.getChoices().size() > 0)) {
                 dataItem = dataServiceDAO.getDataItem(choices.getChoices().get(0).getValue());
             }

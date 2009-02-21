@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jellymold.utils.APIFault;
+
 /**
  * This file is part of AMEE.
  * <p/>
@@ -82,9 +84,11 @@ public class ProfileCategoryAtomAcceptor implements ProfileAcceptor {
 
             } catch (IOException e) {
                 log.warn("accept() - Caught IOException: " + e.getMessage(), e);
+                resource.error();
             }
         } else {
             log.warn("accept() - entity not available");
+            resource.error();
         }
         return profileItems;
     }

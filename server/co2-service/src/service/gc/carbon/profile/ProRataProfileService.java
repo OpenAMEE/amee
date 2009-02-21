@@ -1,7 +1,12 @@
 package gc.carbon.profile;
 
 import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.Decimal;
+import gc.carbon.domain.data.CO2Amount;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.domain.profile.Profile;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.apache.commons.logging.LogFactory;
@@ -18,7 +23,6 @@ import java.util.List;
  * A ProfileService which prorates amounts belonging to the {@link gc.carbon.domain.profile.ProfileItem ProfileItem} instances
  * that are returned by the delegated ProfileService.
  * <p/>
- * The protated duration is specified by the ProfileBrowser passed to {@link #getProfileItems(gc.carbon.profile.ProfileBrowser profileBrowser)}
  * <p/>
  * This file is part of AMEE.
  * <p/>
@@ -50,13 +54,14 @@ public class ProRataProfileService extends ProfileService {
     }
 
     @SuppressWarnings(value="unchecked")
-    public List<ProfileItem> getProfileItems(ProfileBrowser profileBrowser) {
+    public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory,
+                                             StartEndDate startDate, StartEndDate endDate) {
 
         List<ProfileItem> requestedItems = new ArrayList<ProfileItem>();
 
-        Interval requestInterval = getInterval(profileBrowser.getStartDate(), profileBrowser.getEndDate());
+        Interval requestInterval = getInterval(startDate, endDate);
 
-        for (ProfileItem pi : delegatee.getProfileItems(profileBrowser)) {
+        for (ProfileItem pi : delegatee.getProfileItems(profile, dataCategory, startDate, endDate)) {
 
             if(log.isDebugEnabled())
                 log.debug("getProfileItems() - ProfileItem: " + pi.getName() + " has un-prorated CO2 Amount: " + pi.getAmount());
@@ -111,8 +116,9 @@ public class ProRataProfileService extends ProfileService {
 
                 ProfileItem pic = pi.getCopy();
                 BigDecimal event = new BigDecimal(getIntervalInMillis(pic.getStartDate(), pic.getEndDate()));
-                BigDecimal eventIntersectRatio = new BigDecimal(intersect.toDurationMillis()).divide(event, ProfileItem.CONTEXT);
-                pic.setAmount(pic.getAmount().multiply(eventIntersectRatio, ProfileItem.CONTEXT));
+                BigDecimal eventIntersectRatio = new BigDecimal(intersect.toDurationMillis()).divide(event, Decimal.CONTEXT);
+                BigDecimal proratedAmount = pic.getAmount().getValue().multiply(eventIntersectRatio, Decimal.CONTEXT);
+                pic.setAmount(new CO2Amount(proratedAmount));
 
                 if(log.isDebugEnabled()) {
                     log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
@@ -137,10 +143,10 @@ public class ProRataProfileService extends ProfileService {
 
     private ItemValue getProRatedItemValue(Interval interval, ItemValue ivc) {
         BigDecimal perTime = DecimalMeasure.valueOf(new BigDecimal(1), ivc.getPerUnit().toUnit()).to(SI.MILLI(SI.SECOND)).getValue();
-        BigDecimal intersectPerTimeRatio = new BigDecimal(interval.toDurationMillis()).divide(perTime, ProfileItem.CONTEXT);
+        BigDecimal intersectPerTimeRatio = new BigDecimal(interval.toDurationMillis()).divide(perTime, Decimal.CONTEXT);
         BigDecimal value = new BigDecimal(ivc.getValue());
-        value = value.multiply(intersectPerTimeRatio, ProfileItem.CONTEXT);
-        ivc.setValue(value.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE).toString());
+        value = value.multiply(intersectPerTimeRatio, Decimal.CONTEXT);
+        ivc.setValue(value.setScale(Decimal.SCALE, Decimal.ROUNDING_MODE).toString());
         return ivc;
     }
 

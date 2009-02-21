@@ -20,20 +20,13 @@
 package gc.carbon.data;
 
 import com.jellymold.sheet.Choices;
-import gc.carbon.domain.data.Algorithm;
-import gc.carbon.domain.data.DataItem;
-import gc.carbon.domain.data.ItemDefinition;
-import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.data.*;
 import gc.carbon.domain.path.InternalValue;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileFinder;
 import gc.carbon.APIVersion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.EvaluatorException;
-import org.mozilla.javascript.RhinoException;
-import org.mozilla.javascript.Scriptable;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -48,171 +41,123 @@ import java.util.Map;
 @Service
 public class Calculator implements BeanFactoryAware, Serializable {
 
+    @Autowired
+    private AlgorithmService algoService;
+
     private final Log log = LogFactory.getLog(getClass());
 
-    @Autowired
-    DataServiceDAO dataServiceDAO;
-
+    // Set by Spring context. The BeanFactory used to retreive ProfileFinder and DataFinder instances.
     private BeanFactory beanFactory;
-    private static final String ALGORITHM_NAME = "default";
 
+    /**
+     * Calculate and set the CO2 amount for a ProfileItem.
+     *
+     * @param profileItem - the ProfileItem for which to calculate CO2 amount
+     */
+    public void calculate(ProfileItem profileItem) {
 
-    public BigDecimal calculate(ProfileItem profileItem, APIVersion version) {
-        log.debug("calculate() - starting calculator");
+        if (profileItem.isEnd()) {
+            profileItem.updateAmount(CO2Amount.ZERO);
+            return;
+        }
+
+        Map<String, Object> values = getValues(profileItem);
+
+        //TODO - remove once we have resolved algo handling on undef values.
         BigDecimal amount;
-        if (!profileItem.isEnd()) {
-            ItemDefinition itemDefinition = profileItem.getItemDefinition();
-            Algorithm algorithm = getAlgorithm(itemDefinition, ALGORITHM_NAME);
-
-            if (algorithm != null) {
-
-                Map<String, Object> values = getValues(profileItem, version);
-
-                // get the new amount via algorithm and values
-                amount = calculate(algorithm, values, profileItem);
-
-                if (amount != null) {
-                    profileItem.updateAmount(amount);
-                } else {
-                    log.warn("calculate() - Calculated amount was NULL. Setting amount to ZERO");
-                    amount = ProfileItem.ZERO;
-                }
-            } else {
-                log.warn("calculate() - Algorithm NOT found. Setting amount to ZERO");
-                amount = ProfileItem.ZERO;
-            }
-        } else {
-            amount = ProfileItem.ZERO;
-            profileItem.updateAmount(amount);
+        try {
+            amount = calculate(algoService.getAlgorithm(profileItem.getItemDefinition()), values);
+        } catch (Exception ex) {
+            amount = Decimal.ZERO;    
         }
-        return amount;
+
+        if (amount != null) {
+            profileItem.updateAmount(new CO2Amount(amount));
+        }
     }
 
-    private ProfileFinder initProfileFinder(ProfileItem profileItem, DataFinder dataFinder) {
-        ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
-        profileFinder.setDataFinder(dataFinder);
-        if (profileItem != null) {
-            profileFinder.setProfileItem(profileItem);
-        }
-        return profileFinder;
-    }
-
-    private DataFinder initDataFinder(ProfileItem profileItem) {
-        DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
-        if (profileItem != null) {
-            dataFinder.setStartDate(profileItem.getStartDate());
-            dataFinder.setEndDate(profileItem.getEndDate());
-        }
-        return dataFinder;
-    }
-
+    /**
+     * Calculate and return the CO2 amount for a DataItem and a set of user specified values.
+     *
+     * Note: I am unsure if this is in active use (SM)
+     *
+     * @param dataItem - the DataItem for the calculation
+     * @param userValueChoices - user supplied value choices
+     * @param version - the APIVersion. This is used to determine the correct ItemValueDefinitions to load into the calculation
+     * @return the calculated CO2 amount
+     */
     public BigDecimal calculate(DataItem dataItem, Choices userValueChoices, APIVersion version) {
-        log.debug("starting calculator");
-        Map<String, Object> values;
+        Map<String, Object> values = getValues(dataItem, userValueChoices, version);
+        //TODO - remove once we have resolved algo handling on undef values.
         BigDecimal amount;
-        ItemDefinition itemDefinition = dataItem.getItemDefinition();
-        Algorithm algorithm = getAlgorithm(itemDefinition, ALGORITHM_NAME);
-        if (algorithm != null) {
-            // get the new amount via algorithm and values
-            values = getValues(dataItem, userValueChoices, version);
-            amount = calculate(algorithm, values, null);
-        } else {
-            log.warn("calculate() - Algorithm NOT found");
-            amount = ProfileItem.ZERO;
+        try {
+            amount = calculate(algoService.getAlgorithm(dataItem.getItemDefinition()), values);
+        } catch (Exception ex) {
+            amount = Decimal.ZERO;
         }
         return amount;
     }
 
     /**
-     * Calculate a value based on the algorithm and values. This implementation will expose any algorithm processing exceptions
+     * Calculate and return the CO2 amount for given the provided algorithm and input values.
      *
-     * @param algorithm   The algorithm
-     * @param values      values map for use in the algorithm
-     * @param profileItem optional ProfileItem
-     * @return returns the result of the algorithm
-     * @throws RhinoException thrown if the algorithm is processed with errors
+     * Intended to be used publically in test harnesses when passing the modified algorithm content and input values
+     * for execution is desirable.
+     *
+     * @param algorithm
+     * @param values
+     * @return the algorithm result as a BigDecimal
+     *
      */
-    public BigDecimal calculateWithRuntime(Algorithm algorithm, Map<String, Object> values, ProfileItem profileItem) throws RhinoException {
-        log.debug("calculateWithRuntime()");
+    public BigDecimal calculate(Algorithm algorithm, Map<String, Object> values) {
+        log.debug("calculate()");
 
-        // init DataFinder and ProfileFinder beans
-        DataFinder dataFinder = initDataFinder(profileItem);
-        ProfileFinder profileFinder = initProfileFinder(profileItem, dataFinder);
+        log.debug("calculate() - algorithm uid: " + algorithm.getUid());
+        log.debug("calculate() - input values: " + values);
 
-        values.put("dataFinder", dataFinder);
-        values.put("profileFinder", profileFinder);
+        log.debug("calculate() - starting calculation");
+        CO2Amount amount = new CO2Amount(algoService.evaluate(algorithm, values));
 
-        BigDecimal amount = ProfileItem.ZERO;
-        String value = null;
+        log.debug("calculate() - finished calculation");
+        log.debug("calculate() - CO2 Amount: " + amount);
 
-        String algorithmContent = algorithm.getFullContent();
-
-        try {
-            Context cx = Context.enter();
-            Scriptable scope = cx.initStandardObjects();
-
-            log.debug("calculatewithRuntime() - Input values " + values);
-
-            for (String key : values.keySet()) {
-                scope.put(key, scope, values.get(key));
-            }
-
-            Object result = cx.evaluateString(scope, algorithmContent, "", 0, null);
-            value = Context.toString(result);
-
-            log.debug("calculateWithRuntime() - CO2 Amount: " + value);
-
-        } finally {
-            Context.exit();
-        }
-
-        // Scale the result
-        if (value != null) {
-            amount = new BigDecimal(value);
-            amount = amount.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
-            if (amount.precision() > ProfileItem.PRECISION) {
-                log.warn("calculateWithRuntime() - precision is too big: " + amount);
-            }
-            log.debug("calculateWithRuntime() - CO2 Amount (scaled): " + amount);
-        }
-        return amount;
+        return amount.getValue();
     }
 
-    protected BigDecimal calculate(Algorithm algorithm, Map<String, Object> values, ProfileItem profileItem) {
-        try {
-            return calculateWithRuntime(algorithm, values, profileItem);
-        } catch (EvaluatorException e) {
-            log.warn("calculate() - caught EvaluatorException: " + e.getMessage());
-        } catch (RhinoException e) {
-            log.warn("calculate() - caught RhinoException: " + e.getMessage());
-        } catch (Exception e) {
-            log.warn("calculate() - caught Exception: " + e);
-        }
-        return ProfileItem.ZERO;
-    }
+    // Collect all relevant algorithm input values for a ProfileItem calculation.
+    public Map<String, Object> getValues(ProfileItem profileItem) {
 
-    protected Algorithm getAlgorithm(ItemDefinition itemDefinition, String path) {
-        for (Algorithm algorithm : itemDefinition.getAlgorithms()) {
-            if (algorithm.getName().equalsIgnoreCase(path)) {
-                log.debug("getAlgorithm() - Using Algorithm: " + algorithm.getId());
-                return algorithm;
-            }
-        }
-        return null;
-    }
-
-    public Map<String, Object> getValues(ProfileItem profileItem, APIVersion version) {
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
-        profileItem.getItemDefinition().appendInternalValues(values, version);
+        profileItem.getItemDefinition().appendInternalValues(values, profileItem.getProfile().getAPIVersion());
         profileItem.getDataItem().appendInternalValues(values);
         profileItem.appendInternalValues(values);
+
         Map<String, Object> returnValues = new HashMap<String, Object>();
         for (ItemValueDefinition ivd : values.keySet()) {
             returnValues.put(ivd.getCannonicalPath(), values.get(ivd).getValue());
         }
+
+        initAlgoFinders(profileItem, returnValues);
+
         return returnValues;
     }
 
+    private void initAlgoFinders(ProfileItem profileItem, Map<String, Object> values) {
+
+        ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
+        profileFinder.setProfileItem(profileItem);
+
+        DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
+        dataFinder.setStartDate(profileItem.getStartDate());
+        dataFinder.setEndDate(profileItem.getEndDate());
+
+        profileFinder.setDataFinder(dataFinder);
+
+        values.put("dataFinder", dataFinder);
+        values.put("profileFinder", profileFinder);
+    }
+
+    // Collect all relevant algorithm input values for a DataItem + user Choices calculation.
     public Map<String, Object> getValues(DataItem dataItem, Choices userValueChoices, APIVersion version) {
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
         dataItem.getItemDefinition().appendInternalValues(values, version);
@@ -223,6 +168,13 @@ public class Calculator implements BeanFactoryAware, Serializable {
         for (ItemValueDefinition ivd : values.keySet()) {
             returnValues.put(ivd.getCannonicalPath(), values.get(ivd).getValue());
         }
+
+        DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
+        ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
+        profileFinder.setDataFinder(dataFinder);
+
+        returnValues.put("dataFinder", dataFinder);
+        returnValues.put("profileFinder", profileFinder);
 
         return returnValues;
     }

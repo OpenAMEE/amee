@@ -20,10 +20,11 @@
 package gc.carbon.domain.profile.builder.v2;
 
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.domain.AMEEUnit;
 import gc.carbon.domain.Builder;
+import gc.carbon.domain.AMEECompoundUnit;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.data.CO2AmountUnit;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.StartEndDate;
 import org.json.JSONArray;
@@ -35,9 +36,9 @@ import org.w3c.dom.Element;
 public class ProfileItemBuilder implements Builder {
 
     private ProfileItem item;
-    private AMEEUnit returnUnit = ProfileItem.INTERNAL_RETURN_UNIT;
+    private AMEECompoundUnit returnUnit = CO2AmountUnit.DEFAULT;
 
-    public ProfileItemBuilder(ProfileItem item, AMEEUnit returnUnit) {
+    public ProfileItemBuilder(ProfileItem item, AMEECompoundUnit returnUnit) {
         this.item = item;
         this.returnUnit = returnUnit;
     }
@@ -51,7 +52,7 @@ public class ProfileItemBuilder implements Builder {
         obj.put("created", new StartEndDate(item.getCreated()));
         obj.put("modified", new StartEndDate(item.getModified()));
 
-        obj.put("name", item.getDisplayName());
+        obj.put("name", item.getName().isEmpty() ? JSONObject.NULL : item.getName());
         JSONArray itemValues = new JSONArray();
         for (ItemValue itemValue : item.getItemValues()) {
             itemValues.put(itemValue.getJSONObject(false));
@@ -69,7 +70,7 @@ public class ProfileItemBuilder implements Builder {
         element.setAttribute("created", new StartEndDate(item.getCreated()).toString());
         element.setAttribute("modified", new StartEndDate(item.getModified()).toString());
 
-        element.appendChild(APIUtils.getElement(document, "Name", item.getDisplayName()));
+        element.appendChild(APIUtils.getElement(document, "Name", item.getName()));
         Element itemValuesElem = document.createElement("ItemValues");
         for (ItemValue itemValue : item.getItemValues()) {
             itemValuesElem.appendChild(itemValue.getElement(document, false));
@@ -87,7 +88,7 @@ public class ProfileItemBuilder implements Builder {
         buildElement(obj, detailed);
 
         JSONObject amount = new JSONObject();
-        amount.put("value", item.getAmount(returnUnit));
+        amount.put("value", item.getAmount().convert(returnUnit).getValue());
         amount.put("unit", returnUnit);
         obj.put("amount", amount);
 
@@ -112,7 +113,8 @@ public class ProfileItemBuilder implements Builder {
         buildElement(document, element, detailed);
 
         Element amount = document.createElement("Amount");
-        amount.setTextContent(item.getAmount(returnUnit).toString());
+
+        amount.setTextContent(item.getAmount().convert(returnUnit).toString());
         amount.setAttribute("unit", returnUnit.toString());
         element.appendChild(amount);
         

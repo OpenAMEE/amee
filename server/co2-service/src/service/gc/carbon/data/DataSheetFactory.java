@@ -42,8 +42,6 @@ import java.util.Map;
 @Service
 public class DataSheetFactory implements CacheableFactory {
 
-    private final Log log = LogFactory.getLog(getClass());
-
     @Autowired
     private DataService dataService;
 

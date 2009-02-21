@@ -77,15 +77,20 @@ public class ProfileFilter extends BaseFilter {
                 // look for Profile matching path
                 Profile profile = profileServiceDAO.getProfile(segment);
                 if (profile != null) {
-                    // we found a Profile
-                    // make available in Spring contexts
+                    // we found a Profile. Make available to request scope.
+                    // TODO - remove from Threadlocal scope - only used in ProfilePIGFactory and these will be refactored-out in short order.
                     ThreadBeanHolder.set("profile", profile);
+                    request.getAttributes().put("profile", profile);
+
                     ThreadBeanHolder.set("permission", profile.getPermission());
                     // look for path match
                     PathItemGroup pathItemGroup = pathItemService.getProfilePathItemGroup();
                     PathItem pathItem = pathItemGroup.findBySegments(segments);
                     if (pathItem != null) {
+
                         // rewrite paths
+                        // TODO - remove from Threadlocal scope - only used in ProfilePIGFactory and these will be refactored-out in short order.
+                        request.getAttributes().put("pathItem", pathItem);
                         ThreadBeanHolder.set("pathItem", pathItem);
                         path = pathItem.getInternalPath();
                         if (path != null) {

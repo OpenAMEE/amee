@@ -6,6 +6,7 @@ import gc.carbon.path.PathItemService;
 import gc.carbon.profile.ProfileServiceDAO;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.data.Calculator;
@@ -60,9 +61,9 @@ public class ProfileService {
     @Autowired
     private Calculator calculator;
 
-    public void clearCaches(ProfileBrowser profileBrowser) {
-        pathItemService.removePathItemGroup(profileBrowser.getProfile());
-        profileSheetService.removeSheets(profileBrowser);
+    public void clearCaches(Profile profile) {
+        pathItemService.removePathItemGroup(profile);
+        profileSheetService.removeSheets(profile);
     }
 
     public void persist(ProfileItem pi, APIVersion apiVersion) {
@@ -98,20 +99,20 @@ public class ProfileService {
         return dao.getProfileItems(p);
     }
 
-    public List<ProfileItem> getProfileItems(ProfileBrowser browser) {
-        return dao.getProfileItems(browser);
+    public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
+        return dao.getProfileItems(profile, dataCategory, startDate, endDate);
     }
 
     public List<ProfileItem> getProfileItems(Profile p, DataCategory dc, Date date) {
         return dao.getProfileItems(p, dc, date);
     }
 
-    public Sheet getSheet(ProfileBrowser browser, CacheableFactory sheetFactory) {
-        return profileSheetService.getSheet(browser, sheetFactory);
+    public Sheet getSheet(CacheableFactory sheetFactory) {
+        return profileSheetService.getSheet(sheetFactory);
     }
 
-    public Sheet getSheet(ProfileBrowser browser, DataCategory dataCategory, CacheableFactory sheetFactory) {
-        return profileSheetService.getSheet(browser, dataCategory, sheetFactory);
+    public Sheet getSheet(DataCategory dataCategory, CacheableFactory sheetFactory) {
+        return profileSheetService.getSheet(dataCategory, sheetFactory);
     }
 
     public boolean isUnique(ProfileItem pi) {
@@ -119,9 +120,8 @@ public class ProfileService {
     }
 
     public void calculate(ProfileItem pi) {
-        //TODO - Need to remove ad-hoc usage of ThreadBeanHolder
-        User user = (User) ThreadBeanHolder.get("user");
-        calculator.calculate(pi, user.getApiVersion());
+        if (!pi.supportsCalculation()) return;
+        calculator.calculate(pi);
     }
 }
 

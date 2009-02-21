@@ -161,9 +161,9 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
             for (APIVersion apiVersion : apiVersions) {
                 String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
                 if (version != null) {
-                    itemValueDefinition.getAPIVersions().add(apiVersion);
+                    itemValueDefinition.addAPIVersion(apiVersion);
                 } else {
-                    itemValueDefinition.getAPIVersions().remove(apiVersion);
+                    itemValueDefinition.removeAPIVersion(apiVersion);
                 }
             }
             success();

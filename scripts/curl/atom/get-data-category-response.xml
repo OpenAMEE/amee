@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:amee="http://schemas.amee.cc/2.0" xml:lang="en-US" xml:base="http://local.stage.co2.dgen.net/profiles/F2C9906997EA/home/energy">
-  <title type="text">Profile F2C9906997EA, Category Energy</title>
-  <id>urn:dataCategory:30BA55A0C472</id>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:amee="http://schemas.amee.cc/2.0" xml:lang="en-US" xml:base="http://local.stage.co2.dgen.net/profiles/F2C9906997EA/transport/car/generic">
+  <title type="text">Profile F2C9906997EA, Category Generic</title>
+  <id>urn:dataCategory:87E55DA88017</id>
   <generator version="2.0" uri="http://www.amee.cc">AMEE</generator>
   <link href="" type="application/atom+xml" rel="edit" />
   <link href="" type="application/json" rel="alternate" />
@@ -9,18 +9,155 @@
   <author>
     <name>F2C9906997EA</name>
   </author>
-  <amee:name>Energy</amee:name>
-  <amee:totalAmount unit="kg/year">0.000000</amee:totalAmount>
-  <os:Query role="request" amee:startDate="2009-01-01T00:00+0000" />
+  <amee:name>Generic</amee:name>
+  <amee:totalAmount unit="kg/year">448.600000</amee:totalAmount>
+  <os:Query role="request" amee:startDate="2008-01-01T00:00+0000" />
   <amee:categories>
-    <amee:category>electricity</amee:category>
-    <amee:category>electricityiso</amee:category>
-    <amee:category>insulation</amee:category>
-    <amee:category>ireland</amee:category>
-    <amee:category>quantity</amee:category>
-    <amee:category>renewable</amee:category>
-    <amee:category>uk</amee:category>
-    <amee:category>us</amee:category>
+    <amee:category href="electric">electric</amee:category>
   </amee:categories>
-  <updated>1970-01-01T00:00:00.000Z</updated>
+  <updated>2009-02-20T14:17:05.000Z</updated>
+  <entry>
+    <title type="text">A8688477965C</title>
+    <subtitle type="text">Fri, 20 Feb 2009 14:17:00 GMT</subtitle>
+    <link href="A8688477965C" type="application/atom+xml" rel="edit" />
+    <link href="A8688477965C" type="application/json" rel="alternate" />
+    <link href="A8688477965C" type="application/xml" rel="alternate" />
+    <id>urn:item:A8688477965C</id>
+    <published>2009-02-20T14:17:00.000Z</published>
+    <updated>2009-02-20T14:17:00.000Z</updated>
+    <amee:dataItem uid="9B1BDFE5E16D" />
+    <amee:startDate>2009-02-20T14:17+0000</amee:startDate>
+    <amee:amount unit="kg/year">224.300000</amee:amount>
+    <amee:itemValue>
+      <amee:name>Occupants</amee:name>
+      <amee:value>-1</amee:value>
+      <link href="A8688477965C/occupants" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Country</amee:name>
+      <amee:value>N/A</amee:value>
+      <link href="A8688477965C/country" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Tyres underinflated</amee:name>
+      <amee:value>false</amee:value>
+      <link href="A8688477965C/tyresUnderinflated" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Aircon typical</amee:name>
+      <amee:value>true</amee:value>
+      <link href="A8688477965C/airconTypical" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Eco driving</amee:name>
+      <amee:value>false</amee:value>
+      <link href="A8688477965C/ecoDriving" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Aircon full</amee:name>
+      <amee:value>false</amee:value>
+      <link href="A8688477965C/airconFull" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Regularly serviced</amee:name>
+      <amee:value>true</amee:value>
+      <link href="A8688477965C/regularlyServiced" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Distance</amee:name>
+      <amee:value>1000</amee:value>
+      <link href="A8688477965C/distance" rel="http://schemas.amee.cc/2.0#itemValue" />
+      <amee:unit>km</amee:unit>
+      <amee:perUnit>year</amee:perUnit>
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Fuel Consumption</amee:name>
+      <amee:value>0</amee:value>
+      <link href="A8688477965C/fuelConsumption" rel="http://schemas.amee.cc/2.0#itemValue" />
+      <amee:unit>km</amee:unit>
+      <amee:perUnit>L</amee:perUnit>
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Own Fuel Consumption</amee:name>
+      <amee:value>0</amee:value>
+      <link href="A8688477965C/ownFuelConsumption" rel="http://schemas.amee.cc/2.0#itemValue" />
+      <amee:unit>km</amee:unit>
+      <amee:perUnit>L</amee:perUnit>
+    </amee:itemValue>
+    <amee:name></amee:name>
+    <content type="html">&lt;div class="vevent">&lt;div class="summary">224.300000 kg/year&lt;/div>&lt;abbr class="dtstart" title="2009-02-20T14:17+0000"> Fri, 20 Feb 2009 14:17:00 GMT&lt;/abbr>&lt;/div></content>
+    <category scheme="http://schemas.amee.cc/2.0#item" term="9B1BDFE5E16D" label="Car Generic" />
+  </entry>
+  <entry>
+    <title type="text">5C393E840DA7</title>
+    <subtitle type="text">Fri, 20 Feb 2009 14:15:00 GMT</subtitle>
+    <link href="5C393E840DA7" type="application/atom+xml" rel="edit" />
+    <link href="5C393E840DA7" type="application/json" rel="alternate" />
+    <link href="5C393E840DA7" type="application/xml" rel="alternate" />
+    <id>urn:item:5C393E840DA7</id>
+    <published>2009-02-20T14:15:00.000Z</published>
+    <updated>2009-02-20T14:15:00.000Z</updated>
+    <amee:dataItem uid="9B1BDFE5E16D" />
+    <amee:startDate>2009-02-20T14:15+0000</amee:startDate>
+    <amee:amount unit="kg/year">224.300000</amee:amount>
+    <amee:itemValue>
+      <amee:name>Occupants</amee:name>
+      <amee:value>-1</amee:value>
+      <link href="5C393E840DA7/occupants" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Country</amee:name>
+      <amee:value>N/A</amee:value>
+      <link href="5C393E840DA7/country" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Tyres underinflated</amee:name>
+      <amee:value>false</amee:value>
+      <link href="5C393E840DA7/tyresUnderinflated" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Aircon typical</amee:name>
+      <amee:value>true</amee:value>
+      <link href="5C393E840DA7/airconTypical" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Eco driving</amee:name>
+      <amee:value>false</amee:value>
+      <link href="5C393E840DA7/ecoDriving" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Aircon full</amee:name>
+      <amee:value>false</amee:value>
+      <link href="5C393E840DA7/airconFull" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Regularly serviced</amee:name>
+      <amee:value>true</amee:value>
+      <link href="5C393E840DA7/regularlyServiced" rel="http://schemas.amee.cc/2.0#itemValue" />
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Distance</amee:name>
+      <amee:value>1000</amee:value>
+      <link href="5C393E840DA7/distance" rel="http://schemas.amee.cc/2.0#itemValue" />
+      <amee:unit>km</amee:unit>
+      <amee:perUnit>year</amee:perUnit>
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Fuel Consumption</amee:name>
+      <amee:value>0</amee:value>
+      <link href="5C393E840DA7/fuelConsumption" rel="http://schemas.amee.cc/2.0#itemValue" />
+      <amee:unit>km</amee:unit>
+      <amee:perUnit>L</amee:perUnit>
+    </amee:itemValue>
+    <amee:itemValue>
+      <amee:name>Own Fuel Consumption</amee:name>
+      <amee:value>0</amee:value>
+      <link href="5C393E840DA7/ownFuelConsumption" rel="http://schemas.amee.cc/2.0#itemValue" />
+      <amee:unit>km</amee:unit>
+      <amee:perUnit>L</amee:perUnit>
+    </amee:itemValue>
+    <amee:name></amee:name>
+    <content type="html">&lt;div class="vevent">&lt;div class="summary">224.300000 kg/year&lt;/div>&lt;abbr class="dtstart" title="2009-02-20T14:15+0000"> Fri, 20 Feb 2009 14:15:00 GMT&lt;/abbr>&lt;/div></content>
+    <category scheme="http://schemas.amee.cc/2.0#item" term="9B1BDFE5E16D" label="Car Generic" />
+  </entry>
 </feed>

@@ -3,7 +3,7 @@
 
 # Notes:
 . curl.conf
-amee_url="/data/transport/plane/generic"
+amee_url="/data/transport/car/generic"
 type="xml"
 
 curl -H "Accept:application/${type}" \

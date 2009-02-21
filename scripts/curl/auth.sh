@@ -5,7 +5,7 @@ amee_url="/auth/signIn?method=put"
 
 type="xml"
 
-curl -d next=/auth -d username=load -d password=l04d \
+curl -d next=/auth -d username=admin -d password=r41n80w \
 	-H "Accept:application/${type}" \
 	--dump-header .headers \
 	--verbose \

@@ -136,9 +136,9 @@ public class AlgorithmsResource extends BaseResource implements Serializable {
         if (definitionBrowser.getAlgorithmActions().isAllowCreate()) {
             Form form = getForm();
             if (form.getFirstValue("name") != null) {
-                newAlgorithm = new Algorithm(definitionBrowser.getItemDefinition());
+                String content = form.getFirstValue("content");
+                newAlgorithm = new Algorithm(definitionBrowser.getItemDefinition(), content);
                 newAlgorithm.setName(form.getFirstValue("name"));
-                newAlgorithm.setContent(form.getFirstValue("content"));
             }
             if (newAlgorithm != null) {
                 if (isStandardWebBrowser()) {

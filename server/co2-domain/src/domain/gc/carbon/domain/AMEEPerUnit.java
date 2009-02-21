@@ -1,6 +1,7 @@
 package gc.carbon.domain;
 
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.data.Decimal;
 import org.joda.time.Duration;
 import org.joda.time.format.ISOPeriodFormat;
 
@@ -33,6 +34,7 @@ import java.math.BigDecimal;
 public class AMEEPerUnit extends AMEEUnit {
 
     public static final AMEEPerUnit ONE = new AMEEPerUnit(Unit.ONE);
+    public static final AMEEPerUnit MONTH = AMEEPerUnit.valueOf("month");
 
     private String string;
 
@@ -52,19 +54,6 @@ public class AMEEPerUnit extends AMEEUnit {
 
     public static AMEEPerUnit valueOf(Duration duration) {
         return new AMEEPerUnit(duration);
-    }
-
-    /**
-     * Convert a decimal value from X/PerT1 to X/PerT2.
-     *
-     * @param decimal - the BigDecimal value to be converted
-     * @param targetPerUnit - the target PerUnit of the converted decimal
-     * @return the decimal value in the targetPerUnit
-     */
-    public BigDecimal convert(BigDecimal decimal, AMEEPerUnit targetPerUnit) {
-        DecimalMeasure dm = DecimalMeasure.valueOf(decimal, toUnit().inverse());
-        BigDecimal converted = dm.to(targetPerUnit.toUnit().inverse(), ProfileItem.CONTEXT).getValue();
-        return converted.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
     }
 
     public boolean isCompatibleWith(String unit) {

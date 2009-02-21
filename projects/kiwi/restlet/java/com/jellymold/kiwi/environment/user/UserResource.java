@@ -1,6 +1,5 @@
 package com.jellymold.kiwi.environment.user;
 
-import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.User;
 import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import com.jellymold.kiwi.environment.EnvironmentConstants;
@@ -22,12 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
-import gc.carbon.APIVersion;
-
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
-
-import sun.rmi.runtime.Log;
 
 @Component
 @Scope("prototype")
@@ -143,8 +138,8 @@ public class UserResource extends BaseResource {
                     user.setEmail(form.getFirstValue("email"));
                 }
                 if (form.getNames().contains("apiVersion")) {
-                    user.setApiVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
-                    if (user.getApiVersion() == null) {
+                    user.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
+                    if (user.getAPIVersion() == null) {
                         log.error("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
                         badRequest();
                         return;

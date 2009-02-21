@@ -1,10 +1,31 @@
 <html>
 <head>
-   <title>Status page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+<title>Error 500 The server encountered an unexpected condition which prevented it from fulfilling the request</title>
 </head>
 <body>
-<h3>The server has not found anything matching the request URI</h3><p>You can get technical details <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">here</a>.<br>
-Please continue your visit at our <a href="/">home page</a>.
-</p>
+<h2>HTTP ERROR: 500</h2><pre>The server encountered an unexpected condition which prevented it from fulfilling the request</pre>
+<p>RequestURI=/profiles/F2C9906997EA/transport/car/generic</p>
+<p><i><small><a href="http://jetty.mortbay.org">Powered by jetty://</a></small></i></p>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
 </body>
 </html>

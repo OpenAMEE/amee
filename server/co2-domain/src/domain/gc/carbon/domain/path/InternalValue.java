@@ -2,8 +2,10 @@ package gc.carbon.domain.path;
 
 import com.jellymold.utils.ValueType;
 import gc.carbon.domain.AMEEUnit;
+import gc.carbon.domain.AMEECompoundUnit;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.data.ItemValueDefinition;
+import gc.carbon.domain.data.Decimal;
 import gc.carbon.domain.profile.ProfileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,7 +37,6 @@ public class InternalValue {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    private String name;
     private Object value;
 
     public InternalValue(String value) {
@@ -43,16 +44,14 @@ public class InternalValue {
     }
 
     public InternalValue(ItemValueDefinition itemValueDefinition) {
-        name = itemValueDefinition.getName();
         if (itemValueDefinition.isDecimal()) {
-            value = convertStringToDecimal(itemValueDefinition.getUsableValue());
+            value = new Decimal(itemValueDefinition.getValue(), itemValueDefinition.getCompoundUnit()).getValue();
         } else {
-            value = itemValueDefinition.getUsableValue();
+            value = itemValueDefinition.getValue();
         }
     }
 
     public InternalValue(ItemValue itemValue) {
-        name = itemValue.getName();
         if (itemValue.getItemValueDefinition().isDecimal()) {
             value = asInternalValue(itemValue);
         } else {
@@ -64,39 +63,24 @@ public class InternalValue {
         return value;
     }
 
-    private BigDecimal convertStringToDecimal(String decimalString) {
-        BigDecimal decimal;
-        try {
-            decimal = new BigDecimal(decimalString);
-            decimal = decimal.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
-            if (decimal.precision() > ProfileItem.PRECISION) {
-                log.warn("convertStringToDecimal() - precision is too big: " + decimal);
-            }
-        } catch (NumberFormatException e) {
-            log.warn("convertStringToDecimal() - NumberFormatException: name=" + name + ", value=" + value);
-            decimal = ProfileItem.ZERO;
-        }
-        return decimal;
-    }
-
     private BigDecimal asInternalValue(ItemValue iv) {
 
-        BigDecimal decimal = convertStringToDecimal(iv.getUsableValue());
-
         if (!iv.hasUnit() && !iv.hasPerUnit())
-            return decimal;
+            return new Decimal(iv.getUsableValue()).getValue();
 
-        AMEEUnit internalUnit = iv.getItemValueDefinition().getCanonicalCompoundUnit();
-        AMEEUnit externalUnit = iv.getCompoundUnit();
-        if (!externalUnit.equals(internalUnit)) {
+        Decimal decimal = new Decimal(iv.getUsableValue(), iv.getCompoundUnit());
+
+        AMEECompoundUnit internalUnit = iv.getItemValueDefinition().getCanonicalCompoundUnit();
+
+        if (decimal.hasDifferentUnits(internalUnit)) {
             if (log.isDebugEnabled()) {
                 log.debug("asInternalValue() - path: " + iv.getPath() + " (aliasedTo: " + iv.getItemValueDefinition().getCannonicalPath()
-                    + ") external: " + decimal + " " + externalUnit
-                        + ", internal: " + externalUnit.convert(decimal, internalUnit) + " " + internalUnit);
+                    + ") external: " + decimal + " " + decimal.getUnit()
+                        + ", internal: " + decimal.convert(internalUnit) + " " + internalUnit);
             }
-            decimal = externalUnit.convert(decimal, internalUnit);
+            decimal = decimal.convert(internalUnit);
         }
 
-        return decimal;
+        return decimal.getValue();
     }
 }

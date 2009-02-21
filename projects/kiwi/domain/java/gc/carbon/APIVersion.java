@@ -124,6 +124,10 @@ public class APIVersion implements PersistentObject, DatedObject {
         return this.equals(ONE);
     }
 
+    public boolean isNotVersionOne() {
+        return !this.equals(ONE);    
+    }
+
     @PrePersist
     public void onCreate() {
         setCreated(Calendar.getInstance().getTime());

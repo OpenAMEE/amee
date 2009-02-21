@@ -10,7 +10,7 @@ import java.util.Date;
 
 public abstract class BaseBrowser implements Serializable {
 
-    protected PathItem pathItem;
+
     private final StartEndDate startOfMonth = new StartEndDate(getStartOfMonthDate());
 
     protected StartEndDate startDate;
@@ -18,15 +18,6 @@ public abstract class BaseBrowser implements Serializable {
 
     public BaseBrowser() {
         super();
-        setPathItem((PathItem) ThreadBeanHolder.get("pathItem"));
-    }
-
-    public void setPathItem(PathItem pathItem) {
-        this.pathItem = pathItem;
-    }
-
-    public PathItem getPathItem() {
-        return pathItem;
     }
 
     public void setStartDate(String date) {
@@ -70,3 +61,4 @@ public abstract class BaseBrowser implements Serializable {
                 new DateTime().dayOfMonth().withMinimumValue().millisOfDay().withMinimumValue().getMillis());
     }
 }
+

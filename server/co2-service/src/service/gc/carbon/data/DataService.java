@@ -9,8 +9,10 @@ import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
+import gc.carbon.APIVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -128,6 +130,10 @@ public class DataService {
         return dao.getDataItems(dc);
     }
 
+    public ItemValue getItemValue(String uid) {
+        return dao.getItemValue(uid);
+    }
+
     public void persist(DataCategory dc) {
         em.persist(dc);
     }
@@ -149,10 +155,8 @@ public class DataService {
         return dao.getUserValueChoices(di);
     }
 
-    public BigDecimal calculate(DataItem di, Choices userValueChoices) {
-        //TODO - Need to remove ad-hoc usage of ThreadBeanHolder
-        User user = (User) ThreadBeanHolder.get("user");
-        return calculator.calculate(di, userValueChoices, user.getApiVersion());
+    public BigDecimal calculate(DataItem di, Choices userValueChoices, APIVersion apiVersion) {
+        return calculator.calculate(di, userValueChoices, apiVersion);
     }
 
     public Sheet getSheet(DataBrowser browser) {

@@ -52,19 +52,20 @@ public class ProfileItemFormAcceptor implements ProfileAcceptor {
         return accept(resource.getForm());
     }
 
-    //TODO - PI ProfileAcceptor is returning a collection of PIs - this reflects the ProfileAcceptor's original usage with PC. Move to seperate acceptor (done this for PIV)
+    //TODO - PI ProfileAcceptor is returning a collection of PIs - this reflects the ProfileAcceptor's original usage with PC.
+    //TODO - Move to seperate acceptor (done this for PIV)
     public List<ProfileItem> accept(Form form) {
 
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
         ProfileItem profileItem;
 
-        profileItem = resource.getProfileBrowser().getProfileItem();
+        profileItem = resource.getProfileItem();
 
-        // ensure updated ProfileItem does not break rules for ProfileItems
+        // Ensure updated ProfileItem does not break rules for ProfileItems
         ProfileItem profileItemCopy = profileItem.getCopy();
         updateProfileItem(profileItemCopy, form);
 
-        // ensure endDate is not before startDate
+        // Ensure endDate is not before startDate
         if (profileItemCopy.getEndDate() != null && profileItemCopy.getEndDate().before(profileItemCopy.getStartDate())) {
             resource.badRequest(APIFault.INVALID_DATE_RANGE);
             return profileItems;
@@ -72,16 +73,16 @@ public class ProfileItemFormAcceptor implements ProfileAcceptor {
 
         if (profileService.isUnique(profileItemCopy)) {
 
-            // update persistent ProfileItem
+            // Update persistent ProfileItem
             updateProfileItem(profileItem, form);
 
-            // update ItemValues if supplied
+            // Update ItemValues if supplied
             Map<String, ItemValue> itemValues = profileItem.getItemValuesMap();
             for (String name : form.getNames()) {
                 ItemValue itemValue = itemValues.get(name);
                 if (itemValue != null) {
                     itemValue.setValue(form.getFirstValue(name));
-                    if (!resource.getApiVersion().isVersionOne()) {
+                    if (resource.getAPIVersion().isNotVersionOne()) {
                         if (itemValue.hasUnit() && form.getNames().contains(name + "Unit")) {
                             itemValue.setUnit(form.getFirstValue(name + "Unit"));
                         }
@@ -93,9 +94,9 @@ public class ProfileItemFormAcceptor implements ProfileAcceptor {
             }
             log.debug("storeRepresentation() - ProfileItem updated");
 
-            // all done, need to recalculate and clear caches
+            // All done, need to recalculate and clear caches
             profileService.calculate(profileItem);
-            profileService.clearCaches(resource.getProfileBrowser());
+            profileService.clearCaches(resource.getProfile());
 
         } else {
             log.warn("storeRepresentation() - ProfileItem NOT updated");
@@ -119,22 +120,22 @@ public class ProfileItemFormAcceptor implements ProfileAcceptor {
             return;
         }
 
-        // update 'name' value
+        // Update 'name' value
         if (names.contains("name")) {
             profileItem.setName(form.getFirstValue("name"));
         }
 
-        // update 'startDate' value
+        // Update 'startDate' value
         if (names.contains("startDate")) {
             profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
         }
 
-        // update 'startDate' value
+        // Update 'startDate' value
         if (names.contains("validFrom")) {
             profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
         }
 
-        // update 'end' value
+        // Update 'end' value
         if (names.contains("end")) {
             boolean end = Boolean.valueOf(form.getFirstValue("end"));
             if (end) {
@@ -144,7 +145,7 @@ public class ProfileItemFormAcceptor implements ProfileAcceptor {
             }
         }
 
-        // update 'endDate' value
+        // Update 'endDate' value
         if (names.contains("endDate")) {
             if (StringUtils.isNotBlank(form.getFirstValue("endDate"))) {
                 profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
@@ -152,7 +153,7 @@ public class ProfileItemFormAcceptor implements ProfileAcceptor {
                 profileItem.setEndDate(null);
             }
         } else {
-            // update 'duration' value
+            // Update 'duration' value
             if (form.getNames().contains("duration")) {
                 StartEndDate endDate = profileItem.getStartDate().plus(form.getFirstValue("duration"));
                 profileItem.setEndDate(endDate);

@@ -159,15 +159,8 @@ public class ItemValueDefinition implements PersistentObject {
     }
 
     @Transient
-    public String getUsableValue() {
-        String value = getValue();
-        if (value != null) {
-            if (value.length() == 0) {
-                value = null;
-            }
-            // TODO: more validations, based on ValueDefinition
-        }
-        return value;
+    public boolean isUsableValue() {
+        return getValue() != null && !getValue().isEmpty();
     }
 
     @Transient
@@ -391,11 +384,11 @@ public class ItemValueDefinition implements PersistentObject {
         return getPerUnit().isCompatibleWith(perUnit);
     }
 
-    public AMEEUnit getCompoundUnit() {
+    public AMEECompoundUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
 
-    public AMEEUnit getCanonicalCompoundUnit() {
+    public AMEECompoundUnit getCanonicalCompoundUnit() {
         if (aliasedTo != null) {
             return aliasedTo.getCompoundUnit();
         } else {
@@ -403,16 +396,20 @@ public class ItemValueDefinition implements PersistentObject {
         }
     }
 
-    public Set<APIVersion> getAPIVersions() {
-        return apiVersions;
-    }
-
     public void setAPIVersions(Set<APIVersion> apiVersions) {
         this.apiVersions = apiVersions;
     }
 
-    public boolean includedInAPIVersion(APIVersion apiVersion) {
+    public boolean isValidIn(APIVersion apiVersion) {
         return apiVersions.contains(apiVersion);
+    }
+
+    public boolean addAPIVersion(APIVersion apiVersion) {
+        return apiVersions.add(apiVersion);    
+    }
+
+    public boolean removeAPIVersion(APIVersion apiVersion) {
+        return apiVersions.remove(apiVersion);
     }
 
     public ItemValueDefinition getAliasedTo() {

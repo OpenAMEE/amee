@@ -1,6 +1,7 @@
 package gc.carbon.data.builder;
 
 import gc.carbon.ResourceBuilder;
+import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.data.DataCategoryResource;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.data.DataCategory;
@@ -13,6 +14,7 @@ import org.json.JSONArray;
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
 import org.restlet.data.Method;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -59,16 +61,17 @@ public class DataCategoryResourceBuilder implements ResourceBuilder {
         if (resource.isGet()) {
 
             // add DataCategory
-            obj.put("dataCategory", resource.getDataBrowser().getDataCategory().getJSONObject(true));
+            obj.put("dataCategory", resource.getDataCategory().getJSONObject(true));
             obj.put("actions", resource.getActions(resource.getDataBrowser().getDataCategoryActions()));
             obj.put("dataItemActions", resource.getActions(resource.getDataBrowser().getDataItemActions()));
 
+            //TODO - Query with Dig
             // add ItemDefinition list
-            JSONArray itemDefinitions = new JSONArray();
-            for (ItemDefinition iDefinition : resource.getDataBrowser().getItemDefinitions()) {
-                itemDefinitions.put(iDefinition.getJSONObject(false));
-            }
-            obj.put("itemDefinitions", itemDefinitions);
+            //JSONArray itemDefinitions = new JSONArray();
+            //for (ItemDefinition iDefinition : definitionServiceDAO.getItemDefinitions(resource.getEnvironment())) {
+            //    itemDefinitions.put(iDefinition.getJSONObject(false));
+            //}
+            //obj.put("itemDefinitions", itemDefinitions);
 
             // list child Data Categories and child Data Items
             JSONObject children = new JSONObject();
@@ -132,7 +135,7 @@ public class DataCategoryResourceBuilder implements ResourceBuilder {
         if (resource.isGet()) {
 
             // add DataCategory
-            element.appendChild(resource.getDataBrowser().getDataCategory().getElement(document, true));
+            element.appendChild(resource.getDataCategory().getElement(document, true));
 
             // list child Data Categories and child Data Items
             Element childrenElement = document.createElement("Children");
@@ -184,7 +187,7 @@ public class DataCategoryResourceBuilder implements ResourceBuilder {
     }
 
     public Map<String, Object> getTemplateValues() {
-        DataCategory dataCategory = resource.getDataBrowser().getDataCategory();
+        DataCategory dataCategory = resource.getDataCategory();
         Sheet sheet = dataService.getSheet(resource.getDataBrowser());
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("browser", resource.getDataBrowser());

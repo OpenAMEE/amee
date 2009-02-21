@@ -113,7 +113,7 @@ public class ProfileCategoryFormAcceptor implements ProfileAcceptor {
         }
 
         // TODO - Each APIVersion should have it's own Acceptor
-        if (resource.getApiVersion().isVersionOne()) {
+        if (resource.getAPIVersion().isVersionOne()) {
 
             profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
             boolean end = Boolean.valueOf(form.getFirstValue("end"));
@@ -144,10 +144,10 @@ public class ProfileCategoryFormAcceptor implements ProfileAcceptor {
         if (profileService.isUnique(profileItem)) {
 
             // save newProfileItem and do calculations
-            profileService.persist(profileItem, resource.getApiVersion());
+            profileService.persist(profileItem, resource.getAPIVersion());
 
             // clear caches
-            profileService.clearCaches(resource.getProfileBrowser());
+            profileService.clearCaches(resource.getProfile());
 
             try {
                 // update item values if supplied
@@ -156,7 +156,7 @@ public class ProfileCategoryFormAcceptor implements ProfileAcceptor {
                     ItemValue itemValue = itemValues.get(name);
                     if (itemValue != null) {
                         itemValue.setValue(form.getFirstValue(name));
-                        if (!resource.getApiVersion().isVersionOne()) {
+                        if (resource.getAPIVersion().isNotVersionOne()) {
                             if (itemValue.hasUnit() && form.getNames().contains(name + "Unit")) {
                                 itemValue.setUnit(form.getFirstValue(name + "Unit"));
                             }
@@ -166,9 +166,11 @@ public class ProfileCategoryFormAcceptor implements ProfileAcceptor {
                         }
                     }
                 }
+
                 profileService.calculate(profileItem);
+
             } catch (IllegalArgumentException ex) {
-                log.warn("accept() - Bad parameter received");
+                log.warn("accept() - Bad parameter received", ex);
                 profileService.remove(profileItem);
                 resource.badRequest(APIFault.INVALID_PARAMETERS);
                 profileItem = null;

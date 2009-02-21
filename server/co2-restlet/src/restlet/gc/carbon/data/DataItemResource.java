@@ -22,7 +22,6 @@ package gc.carbon.data;
 import com.jellymold.sheet.Choice;
 import com.jellymold.sheet.Choices;
 import com.jellymold.utils.domain.APIUtils;
-import com.jellymold.kiwi.ResourceActions;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.profile.StartEndDate;
@@ -70,7 +69,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         Form query = request.getResourceRef().getQueryAsForm();
-        dataBrowser.setDataItemUid(request.getAttributes().get("itemUid").toString());
+        setDataItem(request.getAttributes().get("itemUid").toString());
         for (String key : query.getNames()) {
             parameters.add(new Choice(key, query.getValues(key)));
         }
@@ -79,17 +78,17 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (dataBrowser.getDataItem() != null);
+        return super.isValid() && (getDataItem() != null);
     }
 
     @Override
     public String getTemplatePath() {
-        return getApiVersion() + "/" + DataConstants.VIEW_DATA_ITEM;
+        return getAPIVersion() + "/" + DataConstants.VIEW_DATA_ITEM;
     }
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        DataItem dataItem = dataBrowser.getDataItem();
+        DataItem dataItem = getDataItem();
         Choices userValueChoices = dataService.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         Map<String, Object> values = super.getTemplateValues();
@@ -97,13 +96,13 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         values.put("dataItem", dataItem);
         values.put("node", dataItem);
         values.put("userValueChoices", userValueChoices);
-        values.put("amountPerMonth", dataService.calculate(dataItem, userValueChoices));
+        values.put("amountPerMonth", dataService.calculate(dataItem, userValueChoices, getAPIVersion()));
         return values;
     }
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        DataItem dataItem = dataBrowser.getDataItem();
+        DataItem dataItem = getDataItem();
         Choices userValueChoices = dataService.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         JSONObject obj = new JSONObject();
@@ -111,13 +110,13 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         obj.put("dataItem", dataItem.getJSONObject(true));
         obj.put("path", pathItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
-        obj.put("amountPerMonth", dataService.calculate(dataItem, userValueChoices));
+        obj.put("amountPerMonth", dataService.calculate(dataItem, userValueChoices, getAPIVersion()));
         return obj;
     }
 
     @Override
     public Element getElement(Document document) {
-        DataItem dataItem = dataBrowser.getDataItem();
+        DataItem dataItem = getDataItem();
         Choices userValueChoices = dataService.getUserValueChoices(dataItem);
         userValueChoices.merge(parameters);
         Element element = document.createElement("DataItemResource");
@@ -125,7 +124,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
         element.appendChild(userValueChoices.getElement(document));
         element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
-                dataService.calculate(dataItem, userValueChoices).toString()));
+                dataService.calculate(dataItem, userValueChoices, getAPIVersion()).toString()));
         return element;
     }
 
@@ -149,7 +148,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         log.debug("storeRepresentation()");
         if (dataBrowser.getDataItemActions().isAllowModify()) {
             Form form = getForm();
-            DataItem dataItem = dataBrowser.getDataItem();
+            DataItem dataItem = getDataItem();
             Set<String> names = form.getNames();
 
             // are we updating this DataItem?
@@ -194,7 +193,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             // clear caches
             pathItemService.removePathItemGroup(dataItem.getEnvironment());
             dataSheetService.removeSheet(dataItem.getDataCategory());
-            success(dataBrowser.getFullPath());
+            success(getFullPath());
         } else {
             notAuthorized();
         }
@@ -209,7 +208,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     public void removeRepresentations() {
         log.debug("removeRepresentations()");
         if (dataBrowser.getDataItemActions().isAllowDelete()) {
-            DataItem dataItem = dataBrowser.getDataItem();
+            DataItem dataItem = getDataItem();
             pathItemService.removePathItemGroup(dataItem.getEnvironment());
             dataSheetService.removeSheet(dataItem.getDataCategory());
             dataService.remove(dataItem);

@@ -2,6 +2,7 @@ package gc.carbon.domain;
 
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.data.Decimal;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -34,25 +35,27 @@ public class AMEECompoundUnit extends AMEEUnit {
 
     private AMEEPerUnit perUnit;
 
-    private AMEECompoundUnit(AMEEUnit unit, AMEEPerUnit perUnit) {
+    protected AMEECompoundUnit(AMEEUnit unit, AMEEPerUnit perUnit) {
         super(unit.toUnit());
         this.perUnit = perUnit;
     }
 
-    public static AMEEUnit valueOf(AMEEUnit unit, AMEEPerUnit perUnit) {
+    public static AMEECompoundUnit valueOf(AMEEUnit unit, AMEEPerUnit perUnit) {
         return new AMEECompoundUnit(unit, perUnit);
-    }
-
-    public BigDecimal convert(BigDecimal decimal, AMEECompoundUnit targetUnit) {
-        DecimalMeasure dm = DecimalMeasure.valueOf(decimal, toUnit());
-        BigDecimal converted = dm.to(targetUnit.toUnit(), ProfileItem.CONTEXT).getValue();
-        return converted.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
     }
 
     public Unit toUnit() {
         return unit.divide(perUnit.toUnit());
     }
 
+    public boolean hasDifferentPerUnit(AMEEPerUnit perUnit) {
+        return !this.perUnit.equals(perUnit);
+    }
+
+    public AMEEPerUnit getPerUnit() {
+        return perUnit;
+    }
+    
     public void getElement(Element parent, Document document) {
         parent.appendChild(APIUtils.getElement(document, "Unit", unit.toString()));
         parent.appendChild(APIUtils.getElement(document, "PerUnit", perUnit.toString()));

@@ -1,6 +1,7 @@
 package gc.carbon.data;
 
 import gc.carbon.AMEEResource;
+import gc.carbon.domain.data.DataItem;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
@@ -25,10 +26,35 @@ import org.restlet.data.Response;
  * Website http://www.amee.cc
  */
 public abstract class BaseDataResource extends AMEEResource {
+
     protected DataBrowser dataBrowser;
+    private DataItem dataItem;
 
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         this.dataBrowser = (DataBrowser) beanFactory.getBean("dataBrowser");
+    }
+    
+    public String getFullPath() {
+        if (pathItem != null) {
+            return "/data" + pathItem.getFullPath();
+        } else {
+            return "/data";
+        }
+    }
+
+    //TODO - Remove once we have refactored out usage of browser to retrieve DC in DataSheet Factories
+    public void setDataCategory(String dataCategoryUid) {
+        super.setDataCategory(dataCategoryUid);
+        dataBrowser.setDataCategory(getDataCategory());
+    }
+
+    public void setDataItem(String dataItemUid) {
+        if (dataItemUid.isEmpty()) return;
+        dataItem = dataService.getDataItem(dataItemUid);
+    }
+
+    public DataItem getDataItem() {
+        return dataItem;
     }
 }

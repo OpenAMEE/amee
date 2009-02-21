@@ -23,6 +23,7 @@ import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.domain.AMEEPerUnit;
 import gc.carbon.domain.Builder;
 import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.data.CO2Amount;
 import gc.carbon.domain.data.builder.v1.ItemValueBuilder;
 import gc.carbon.domain.profile.ProfileItem;
 import org.json.JSONArray;
@@ -85,9 +86,9 @@ public class ProfileItemBuilder implements Builder {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);
         if (!item.isSingleFlight()) {
-            obj.put("amountPerMonth", ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), AMEEPerUnit.valueOf("month")));
+            obj.put("amountPerMonth", item.getAmount().convert(AMEEPerUnit.MONTH).getValue());
         } else {
-            obj.put("amountPerMonth", item.getAmount());
+            obj.put("amountPerMonth", item.getAmount().getValue());
         }
         obj.put("validFrom", DAY_DATE_FMT.format(item.getStartDate()));
         obj.put("end", Boolean.toString(item.isEnd()));
@@ -104,7 +105,7 @@ public class ProfileItemBuilder implements Builder {
 
         if (!item.isSingleFlight()) {
             element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
-                ProfileItem.INTERNAL_AMOUNT_PERUNIT.convert(item.getAmount(), AMEEPerUnit.valueOf("month")).toString()));
+                item.getAmount().convert(AMEEPerUnit.MONTH).toString()));
         } else {
             element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
         }

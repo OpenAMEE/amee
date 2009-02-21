@@ -1,6 +1,9 @@
 package gc.carbon.profile;
 
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.data.DataCategory;
 import gc.carbon.profile.ProfileBrowser;
 import gc.carbon.profile.ProfileService;
 import org.apache.commons.collections.CollectionUtils;
@@ -38,35 +41,36 @@ public class SelectByProfileService extends ProfileService {
         this.selectBy = selectBy;
     }
 
-    public List<ProfileItem> getProfileItems(final ProfileBrowser profileBrowser) {
+    public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
 
-        List<ProfileItem> profileItems = delegatee.getProfileItems(profileBrowser);
+        List<ProfileItem> profileItems = delegatee.getProfileItems(profile, dataCategory, startDate, endDate);
 
         if ("start".equals(selectBy)) {
-            profileItems = selectByStart(profileBrowser, profileItems);
+            profileItems = selectByStart(startDate, profileItems);
 
         } else if ("end".equals(selectBy)) {
-            profileItems = selectByEnd(profileBrowser, profileItems);
+            profileItems = selectByEnd(endDate, profileItems);
         }
 
         return profileItems;
+
     }
 
-    private List<ProfileItem> selectByEnd(final ProfileBrowser profileBrowser, List<ProfileItem> profileItems) {
+    private List<ProfileItem> selectByEnd(final StartEndDate endDate, List<ProfileItem> profileItems) {
         profileItems = (List) CollectionUtils.select(profileItems, new Predicate() {
             public boolean evaluate(Object o) {
                 ProfileItem pi = (ProfileItem) o;
-                return pi.getEndDate() != null && profileBrowser.getEndDate() != null &&
-                        pi.getEndDate().getTime() < profileBrowser.getEndDate().getTime();
+                return pi.getEndDate() != null && endDate != null &&
+                        pi.getEndDate().getTime() < endDate.getTime();
             }
         });
         return profileItems;
     }
 
-    private List<ProfileItem> selectByStart(final ProfileBrowser profileBrowser, List<ProfileItem> profileItems) {
+    private List<ProfileItem> selectByStart(final StartEndDate startDate, List<ProfileItem> profileItems) {
         profileItems = (List) CollectionUtils.select(profileItems, new Predicate() {
             public boolean evaluate(Object o) {
-                return ((ProfileItem) o).getStartDate().getTime() >= profileBrowser.getStartDate().getTime();
+                return ((ProfileItem) o).getStartDate().getTime() >= startDate.getTime();
             }
         });
         return profileItems;

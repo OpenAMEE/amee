@@ -34,9 +34,7 @@ public class Algorithm extends AbstractAlgorithm {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ITEM_DEFINITION_ID", nullable = true)
-    /** optional for other types of Algorithm*/
     private ItemDefinition itemDefinition;
-
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "ALGORITHM_CONTEXT_ID")
@@ -54,10 +52,6 @@ public class Algorithm extends AbstractAlgorithm {
         itemDefinition.add(this);
     }
 
-    public Algorithm(ItemDefinition itemDefinition) {
-        this(itemDefinition, "");
-    }
-
     @Transient
     @Override
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
@@ -67,7 +61,6 @@ public class Algorithm extends AbstractAlgorithm {
         }
         return obj;
     }
-
 
     @Transient
     public Element getIdentityElement(Document document) {
@@ -92,19 +85,13 @@ public class Algorithm extends AbstractAlgorithm {
         return element;
     }
 
-    @Override
-    public String toString() {
-        return "Algorithm_" + getUid();
-    }
-
-    public ItemDefinition getItemDefinition() {
+    private ItemDefinition getItemDefinition() {
         return itemDefinition;
     }
 
-    public void setItemDefinition(ItemDefinition itemDefinition) {
-        if (itemDefinition != null) {
-            this.itemDefinition = itemDefinition;
-        }
+    private void setItemDefinition(ItemDefinition itemDefinition) {
+        if (itemDefinition == null) return;
+        this.itemDefinition = itemDefinition;
     }
 
     public AlgorithmContext getAlgorithmContext() {
@@ -115,15 +102,11 @@ public class Algorithm extends AbstractAlgorithm {
         this.algorithmContext = algorithmContext;
     }
 
-    @Override
-    public String getContent() {
-        return super.getContent();
-    }
-
     /**
-     * Gets the algorithm content and associated aglorithmContext
+     * Get the Algorithm content with any associated AlgorithmContext content.
      *
-     * @return returns the  algorithmContext and algorithm context
+     * @return a string constructed from the Algorithm content and context
+     *
      */
     public String getFullContent() {
         StringBuffer outContent = new StringBuffer(super.getContent());
@@ -138,4 +121,10 @@ public class Algorithm extends AbstractAlgorithm {
     public ObjectType getObjectType() {
         return ObjectType.AL;
     }
+
+    @Override
+    public String toString() {
+        return "Algorithm_" + getUid();
+    }
+
 }

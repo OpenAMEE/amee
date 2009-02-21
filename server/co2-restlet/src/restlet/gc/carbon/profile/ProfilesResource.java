@@ -74,7 +74,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
 
     @Override
     public String getTemplatePath() {
-        return getApiVersion() + "/" + ProfileConstants.VIEW_PROFILES;
+        return getAPIVersion() + "/" + ProfileConstants.VIEW_PROFILES;
     }
 
     @Override

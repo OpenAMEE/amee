@@ -10,6 +10,7 @@ import gc.carbon.ResourceBuilder;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.ObjectType;
 import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.data.Decimal;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
@@ -50,8 +51,6 @@ import java.util.Map;
  */
 public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
-    private final Log log = LogFactory.getLog(getClass());
-
     private CacheableFactory sheetBuilder;
     private DataService dataService;
     private ProfileService profileService;
@@ -61,7 +60,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         this.resource = resource;
         this.dataService = resource.getDataService();
         this.profileService = resource.getProfileService();
-        this.sheetBuilder = new ProfileSheetBuilder(profileService);
+        this.sheetBuilder = new ProfileSheetBuilder(resource, profileService);
     }
 
     public JSONObject getJSONObject() throws JSONException {
@@ -287,11 +286,11 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
     }
 
     private Sheet getSheet(DataCategory dataCategory) {
-        return profileService.getSheet(resource.getProfileBrowser(), dataCategory, sheetBuilder);
+        return profileService.getSheet(dataCategory, sheetBuilder);
     }
 
     private Sheet getSheet() {
-        return profileService.getSheet(resource.getProfileBrowser(), sheetBuilder);
+        return profileService.getSheet(sheetBuilder);
     }
 
     public Map<String, Object> getTemplateValues() {
@@ -312,7 +311,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
     public BigDecimal getTotalAmountPerMonth(Sheet sheet) {
         Cell endCell;
-        BigDecimal totalAmountPerMonth = ProfileItem.ZERO;
+        BigDecimal totalAmountPerMonth = Decimal.ZERO;
         BigDecimal amountPerMonth;
         for (Row row : sheet.getRows()) {
             endCell = row.findCell("end");

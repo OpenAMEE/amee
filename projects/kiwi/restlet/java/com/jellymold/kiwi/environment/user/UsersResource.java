@@ -146,8 +146,8 @@ public class UsersResource extends BaseResource implements Serializable {
                     } else {
                         newUser.setType(UserType.STANDARD);
                     }
-                    newUser.setApiVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
-                    if (newUser.getApiVersion() != null) {
+                    newUser.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
+                    if (newUser.getAPIVersion() != null) {
                         siteService.save(newUser);
                         // now clone user -> group memberships
                         cloneUser = siteService.getUserByUid(

@@ -20,19 +20,10 @@
 package gc.carbon.profile;
 
 import com.jellymold.kiwi.ResourceActions;
-import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.BaseBrowser;
-import gc.carbon.data.DataService;
 import gc.carbon.domain.AMEECompoundUnit;
-import gc.carbon.domain.AMEEPerUnit;
-import gc.carbon.domain.AMEEUnit;
-import gc.carbon.domain.data.DataCategory;
-import gc.carbon.domain.data.ItemValue;
-import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.data.CO2AmountUnit;
 import gc.carbon.domain.profile.ProfileDate;
-import gc.carbon.domain.profile.ProfileItem;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -43,14 +34,6 @@ import java.util.Date;
 @Component("profileBrowser")
 @Scope("prototype")
 public class ProfileBrowser extends BaseBrowser {
-
-    private final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    protected DataService dataService;
-
-    @Autowired
-    private ProfileService profileService;
 
     @Autowired
     @Qualifier("profileActions")
@@ -68,26 +51,11 @@ public class ProfileBrowser extends BaseBrowser {
     @Qualifier("profileItemValueActions")
     private ResourceActions profileItemValueActions;
 
-    // Profiles
-    private Profile profile;
-
-    // ProfileCategories
-    private DataCategory dataCategory = null;
-    private String dataCategoryUid = null;
-
-    // ProfileItems
-    private ProfileItem profileItem = null;
-    private String profileItemUid = null;
-
-    // ProfileItemValues
-    private ItemValue profileItemValue = null;
-    private String profileItemValueUid = null;
-
     // ProfileDate (API v1)
     private Date profileDate = new ProfileDate();
 
     // Return Unit
-    private AMEEUnit returnUnit = ProfileItem.INTERNAL_RETURN_UNIT;
+    private CO2AmountUnit co2AmountUnit = CO2AmountUnit.DEFAULT;
 
     // Filters
     private String selectBy;
@@ -95,20 +63,9 @@ public class ProfileBrowser extends BaseBrowser {
 
     public ProfileBrowser() {
         super();
-        profile = (Profile) ThreadBeanHolder.get("profile");
-    }
-
-    // General
-    public String getFullPath() {
-        if ((getProfile() != null) && (pathItem != null)) {
-            return "/profiles/" + getProfile().getDisplayPath() + pathItem.getFullPath();
-        } else {
-            return "/profiles";
-        }
     }
 
     // Actions
-
     public ResourceActions getProfileActions() {
         return profileActions;
     }
@@ -123,69 +80,6 @@ public class ProfileBrowser extends BaseBrowser {
 
     public ResourceActions getProfileItemValueActions() {
         return profileItemValueActions;
-    }
-
-    // Profiles
-
-    public Profile getProfile() {
-        return profile;
-    }
-
-    // ProfileCategories
-
-    public String getDataCategoryUid() {
-        return dataCategoryUid;
-    }
-
-    public void setDataCategoryUid(String dataCategoryUid) {
-        this.dataCategoryUid = dataCategoryUid;
-    }
-
-    public DataCategory getDataCategory() {
-        if (dataCategory == null) {
-            if (getDataCategoryUid() != null) {
-                dataCategory = dataService.getDataCategory(getDataCategoryUid());
-            }
-        }
-        return dataCategory;
-    }
-
-    // ProfileItems
-
-    public String getProfileItemUid() {
-        return profileItemUid;
-    }
-
-    public void setProfileItemUid(String profileItemUid) {
-        this.profileItemUid = profileItemUid;
-    }
-
-    public ProfileItem getProfileItem() {
-        if (profileItem == null) {
-            if (profileItemUid != null) {
-                profileItem = profileService.getProfileItem(profileItemUid);
-            }
-        }
-        return profileItem;
-    }
-
-    // ProfileItemValues
-
-    public String getProfileItemValueUid() {
-        return profileItemValueUid;
-    }
-
-    public void setProfileItemValueUid(String profileItemValueUid) {
-        this.profileItemValueUid = profileItemValueUid;
-    }
-
-    public ItemValue getProfileItemValue() {
-        if (profileItemValue == null) {
-            if (profileItemValueUid != null) {
-                profileItemValue = profileService.getProfileItemValue(profileItemValueUid);
-            }
-        }
-        return profileItemValue;
     }
 
     public void setProfileDate(String profileDate) {
@@ -226,27 +120,15 @@ public class ProfileBrowser extends BaseBrowser {
         return getSelectBy() != null;
     }
 
-    public AMEEUnit getReturnUnit() {
-        return returnUnit;
+    public CO2AmountUnit getCo2AmountUnit() {
+        return co2AmountUnit;
     }
 
-    public boolean returnInExternalUnit() {
-        return !returnUnit.equals(ProfileItem.INTERNAL_RETURN_UNIT);
+    public boolean requestedCO2InExternalUnit() {
+        return co2AmountUnit.isExternal();
     }
 
-    //TODO - There is a documented work item to model return amount as an ItemValue. In the short-term, move to constants.
-    public void setAmountReturnUnit(String returnUnit, String returnPerUnit) {
-
-        if (returnUnit == null) {
-            returnUnit = ProfileItem.INTERNAL_AMOUNT_UNIT.toString();
-        }
-        AMEEUnit unit = AMEEUnit.valueOf(returnUnit);
-
-        if (returnPerUnit == null) {
-            returnPerUnit = ProfileItem.INTERNAL_AMOUNT_PERUNIT.toString();
-        }
-        AMEEPerUnit perUnit = AMEEPerUnit.valueOf(returnPerUnit);
-
-        this.returnUnit = AMEECompoundUnit.valueOf(unit, perUnit);
+    public void setCO2AmountUnit(CO2AmountUnit co2AmountUnit) {
+        this.co2AmountUnit = co2AmountUnit;
     }
 }

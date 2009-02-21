@@ -146,7 +146,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         obj.put("status", getStatus().getName());
         obj.put("type", getType().getName());
         obj.put("groupNames", new JSONArray(getGroupNames()));
-        obj.put("apiVersion", getApiVersion());
+        obj.put("apiVersion", getAPIVersion());
         if (detailed) {
             obj.put("username", getUsername());
             obj.put("name", getName());
@@ -187,7 +187,7 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
             groups.appendChild(APIUtils.getElement(document, "GroupName", groupName));
         }
         element.appendChild(groups);
-        element.appendChild(APIUtils.getElement(document, "ApiVersion", getApiVersion().toString()));
+        element.appendChild(APIUtils.getElement(document, "ApiVersion", getAPIVersion().toString()));
         if (detailed) {
             element.appendChild(APIUtils.getElement(document, "Name", getName()));
             element.appendChild(APIUtils.getElement(document, "Username", getUsername()));
@@ -414,11 +414,11 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         }
     }
 
-    public APIVersion getApiVersion() {
+    public APIVersion getAPIVersion() {
         return apiVersion;
     }
 
-    public void setApiVersion(APIVersion apiVersion) {
+    public void setAPIVersion(APIVersion apiVersion) {
         if (apiVersion != null) {
             this.apiVersion = apiVersion;
         }

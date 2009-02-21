@@ -9,6 +9,7 @@ import com.jellymold.utils.HeaderUtils;
 import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.path.PathItem;
+import gc.carbon.domain.data.DataCategory;
 import gc.carbon.profile.ProfileService;
 import gc.carbon.profile.builder.v2.AtomFeed;
 import org.apache.xerces.dom.DocumentImpl;
@@ -54,6 +55,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     protected BeanFactory beanFactory;
     protected Environment environment;
     protected PathItem pathItem;
+    protected DataCategory dataCategory;
 
     @Autowired
     protected ProfileService profileService;
@@ -69,7 +71,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         environment = EnvironmentService.getEnvironment();
         //TODO - This logic should be part of BaseResource. Move once package reorg allows this.
         // Set the default MediaType response to be atom+xml for all versions > 1.0
-        if (!getApiVersion().isVersionOne()) {
+        if (getAPIVersion().isNotVersionOne()) {
             super.getVariants().add(0, new Variant(MediaType.APPLICATION_ATOM_XML));
         }
         setPathItem();
@@ -91,7 +93,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
                         try {
                             fetched.set(true);
                             Element element = doc.createElement("Resources");
-                            if (!getApiVersion().isVersionOne()) {
+                            if (getAPIVersion().isNotVersionOne()) {
                                 element.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://schemas.amee.cc/2.0");
                             }
                             element.appendChild(getElement(doc));
@@ -126,7 +128,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
                     try {
                         fetched.set(true);
                         JSONObject obj = getJSONObject();
-                        obj.put("apiVersion", getApiVersion().toString());
+                        obj.put("apiVersion", getAPIVersion().toString());
                         setText(obj.toString());
                     } catch (JSONException e) {
                         // swallow
@@ -175,6 +177,15 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         return pathItem;
     }
 
+    protected void setDataCategory(String dataCategoryUid) {
+        if (dataCategoryUid.isEmpty()) return;
+        this.dataCategory = dataService.getDataCategory(dataCategoryUid);
+    }
+
+    public DataCategory getDataCategory() {
+        return dataCategory;
+    }
+
     public Environment getEnvironment() {
         return environment;
     }
@@ -195,9 +206,9 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         return values;
     }
 
-    public APIVersion getApiVersion() {
+    public APIVersion getAPIVersion() {
         User user = (User) ThreadBeanHolder.get("user");
-        return user.getApiVersion();
+        return user.getAPIVersion();
     }
 
     public JSONObject getActions(ResourceActions rActions) throws JSONException {

@@ -22,7 +22,7 @@ package gc.carbon.profile;
 import gc.carbon.ResourceBuilder;
 import gc.carbon.ResourceBuilderFactory;
 import gc.carbon.domain.ObjectType;
-import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.data.CO2AmountUnit;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.acceptor.*;
 import org.apache.commons.logging.Log;
@@ -56,7 +56,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
+        setDataCategory(request.getAttributes().get("categoryUid").toString());
         setPage(request);
         setAcceptors();
         setBuilderStrategy();
@@ -78,14 +78,12 @@ public class ProfileCategoryResource extends BaseProfileResource {
 
     @Override
     public boolean isValid() {
-        return super.isValid() &&
-                (profileBrowser.getDataCategory() != null) &&
-                (pathItem.getObjectType().equals(ObjectType.DC));
+        return super.isValid() && (getDataCategory() != null) && (pathItem.getObjectType().equals(ObjectType.DC));
     }
 
     @Override
     public String getTemplatePath() {
-        return getApiVersion() + "/" + ProfileConstants.VIEW_PROFILE_CATEGORY;
+        return getAPIVersion() + "/" + ProfileConstants.VIEW_PROFILE_CATEGORY;
     }
 
     @Override
@@ -121,7 +119,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
                 return;
             }
             Form form = getRequest().getResourceRef().getQueryAsForm();
-            if (getApiVersion().isVersionOne()) {
+            if (getAPIVersion().isVersionOne()) {
                 profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
             } else {
                 profileBrowser.setStartDate(form.getFirstValue("startDate"));
@@ -129,7 +127,9 @@ public class ProfileCategoryResource extends BaseProfileResource {
                 profileBrowser.setDuration(form.getFirstValue("duration"));
                 profileBrowser.setSelectBy(form.getFirstValue("selectby"));
                 profileBrowser.setMode(form.getFirstValue("mode"));
-                profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
+                String unit = form.getFirstValue("returnUnit");
+                String perUnit = form.getFirstValue("returnPerUnit");
+                profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
             }
             super.handleGet();
         } else {
@@ -165,9 +165,9 @@ public class ProfileCategoryResource extends BaseProfileResource {
             profileItems = doAcceptOrStore(entity);
             if (!profileItems.isEmpty()) {
                 // clear caches
-                profileService.clearCaches(profileBrowser);
+                profileService.clearCaches(getProfile());
                 if (isStandardWebBrowser()) {
-                    success(profileBrowser.getFullPath());
+                    success(getBrowserFullPath());
                 } else {
                     // return a response for API calls
                     super.handleGet();
@@ -184,8 +184,10 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     public List<ProfileItem> doAcceptOrStore(Representation entity) {
-        if (!getApiVersion().isVersionOne()) {
-            profileBrowser.setAmountReturnUnit(getForm().getFirstValue("returnUnit"), getForm().getFirstValue("returnPerUnit"));
+        if (getAPIVersion().isNotVersionOne()) {
+            String unit = getForm().getFirstValue("returnUnit");
+            String perUnit = getForm().getFirstValue("returnPerUnit");
+            profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
         }
         return getAcceptor(entity.getMediaType()).accept(entity);
     }
@@ -212,9 +214,8 @@ public class ProfileCategoryResource extends BaseProfileResource {
     public void removeRepresentations() {
         log.debug("removeRepresentations()");
         if (profileBrowser.getProfileActions().isAllowDelete()) {
-            Profile profile = profileBrowser.getProfile();
-            profileService.clearCaches(profileBrowser);
-            profileService.remove(profile);
+            profileService.clearCaches(getProfile());
+            profileService.remove(getProfile());
             success("/profiles");
         } else {
             notAuthorized();
@@ -223,10 +224,6 @@ public class ProfileCategoryResource extends BaseProfileResource {
 
     public List<ProfileItem> getProfileItems() {
         return profileItems;
-    }
-
-    public ProfileItem getProfileItem() {
-        return profileBrowser.getProfileItem();
     }
 
     public boolean isRecurse() {

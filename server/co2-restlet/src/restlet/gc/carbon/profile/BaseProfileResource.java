@@ -4,10 +4,10 @@ import com.jellymold.utils.APIFault;
 import com.jellymold.utils.Pager;
 import gc.carbon.AMEEResource;
 import gc.carbon.data.DataService;
-import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.domain.profile.ProfileItem;
 import org.joda.time.format.ISOPeriodFormat;
 import org.restlet.Context;
 import org.restlet.data.Method;
@@ -41,6 +41,7 @@ import java.util.Set;
 public abstract class BaseProfileResource extends AMEEResource {
 
     protected ProfileBrowser profileBrowser;
+    protected ProfileItem profileItem;
 
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -71,16 +72,21 @@ public abstract class BaseProfileResource extends AMEEResource {
         return profileBrowser;
     }
 
-    public DataCategory getDataCategory() {
-        return profileBrowser.getDataCategory();
+    protected void setProfileItem(String profileItemUid) {
+        if (profileItemUid.isEmpty()) return;
+        this.profileItem = profileService.getProfileItem(profileItemUid);
     }
 
+    public ProfileItem getProfileItem() {
+        return profileItem;
+    }
+    
     public Date getProfileDate() {
         return profileBrowser.getProfileDate();
     }
 
     public Profile getProfile() {
-        return profileBrowser.getProfile();
+        return (Profile) getRequest().getAttributes().get("profile");
     }
 
     public ProfileService getProfileService() {
@@ -91,9 +97,17 @@ public abstract class BaseProfileResource extends AMEEResource {
         return dataService;
     }
 
+    public String getBrowserFullPath() {
+        if ((getProfile() != null) && (pathItem != null)) {
+            return "/profiles/" + getProfile().getDisplayPath() + pathItem.getFullPath();
+        } else {
+            return "/profiles";
+        }
+    }
+
     //TODO - Move to filter - validation is not general to all Profile Resources
     public boolean validateParameters() {
-        if (getApiVersion().isVersionOne()) {
+        if (getAPIVersion().isVersionOne()) {
             if (containsCalendarParams()) {
                 badRequest(APIFault.INVALID_API_PARAMETERS);
                 return false;
@@ -172,4 +186,5 @@ public abstract class BaseProfileResource extends AMEEResource {
         //TODO
         return false;
     }
+
 }

@@ -22,10 +22,7 @@ package gc.carbon.domain.data;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
-import gc.carbon.domain.AMEEPerUnit;
-import gc.carbon.domain.AMEEUnit;
-import gc.carbon.domain.Builder;
-import gc.carbon.domain.ObjectType;
+import gc.carbon.domain.*;
 import gc.carbon.domain.data.builder.v2.ItemValueBuilder;
 import gc.carbon.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
@@ -110,11 +107,8 @@ public class ItemValue implements PersistentObject, Pathable {
 
     public String getUsableValue() {
         String value = getValue();
-        if (value != null) {
-            if (value.length() == 0) {
-                value = null;
-            }
-            // TODO: more validations, based on ValueType
+        if (value != null && value.isEmpty()) {
+            value = null;
         }
         return value;
     }
@@ -285,7 +279,7 @@ public class ItemValue implements PersistentObject, Pathable {
         this.perUnit = perUnit;
     }
 
-    public AMEEUnit getCompoundUnit() {
+    public AMEECompoundUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
 
@@ -300,9 +294,11 @@ public class ItemValue implements PersistentObject, Pathable {
     public boolean hasPerTimeUnit() {
         return hasPerUnit() && getPerUnit().isTime();     
     }
-
+    
     public boolean isNonZero() {
-        return getItemValueDefinition().isDecimal() && !new BigDecimal(getValue()).equals(BigDecimal.ZERO);
+        return getItemValueDefinition().isDecimal() &&
+               getUsableValue() != null &&
+               !new BigDecimal(getValue()).equals(BigDecimal.ZERO);
     }
 
     public ItemValue getCopy() {

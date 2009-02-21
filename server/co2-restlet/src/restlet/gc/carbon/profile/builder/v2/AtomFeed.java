@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Comparator;
 
 /**
  * This file is part of AMEE.
@@ -198,7 +199,9 @@ public class AtomFeed {
     }
 
     public void addDataItem(ExtensibleElement e, DataItem dataItem) {
-        e.addSimpleExtension(Q_NAME_DATA_ITEM, dataItem.getDisplayName());
+        Element dataItemElement = factory.newElement(Q_NAME_DATA_ITEM);
+        dataItemElement.setAttributeValue("uid", dataItem.getUid());
+        e.addExtension(dataItemElement);
     }
 
     public void addItemValue(Element element, ItemValue itemValue) {
@@ -249,7 +252,9 @@ public class AtomFeed {
         ExtensibleElement categories = e.addExtension(Q_CATEGORIES);
         for (PathItem pi : resource.getChildrenByType("DC")) {
             Element category = factory.newElement(Q_CATEGORY);
-            categories.addSimpleExtension(Q_CATEGORY, pi.getPath());
+            category.setText(pi.getPath());
+            category.setAttributeValue("href",pi.getPath());
+            categories.addExtension(category);
         }
     }
 }

@@ -23,7 +23,6 @@ import com.jellymold.kiwi.Environment;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.PersistentObject;
 import com.jellymold.utils.domain.UidGen;
-import gc.carbon.domain.EngineUtils;
 import gc.carbon.domain.ObjectType;
 import gc.carbon.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
@@ -115,12 +114,10 @@ public class DataCategory implements PersistentObject, Pathable {
         return "DataCategory_" + getUid();
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -140,12 +137,10 @@ public class DataCategory implements PersistentObject, Pathable {
         return obj;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return getJSONObject(false);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element profileElement = document.createElement("DataCategory");
         profileElement.setAttribute("uid", getUid());
@@ -165,20 +160,20 @@ public class DataCategory implements PersistentObject, Pathable {
         return profileElement;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return getElement(document, false);
     }
 
-    @Transient
     public String getDisplayPath() {
-        // never put uid in path to allow for empty paths
         return getPath();
     }
 
-    @Transient
     public String getDisplayName() {
-        return EngineUtils.getDisplayName(this);
+        if (getName().length() > 0) {
+            return getName();
+        } else {
+            return getDisplayPath();
+        }
     }
 
     @PrePersist
@@ -282,4 +277,5 @@ public class DataCategory implements PersistentObject, Pathable {
     public ObjectType getObjectType() {
         return ObjectType.DC;
     }
+
 }

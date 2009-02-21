@@ -25,6 +25,7 @@ import com.jellymold.utils.cache.CacheHelper;
 import com.jellymold.utils.cache.CacheableFactory;
 import gc.carbon.profile.ProfileBrowser;
 import gc.carbon.domain.data.DataCategory;
+import gc.carbon.domain.profile.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -38,19 +39,16 @@ public class ProfileSheetService implements Serializable {
         super();
     }
 
-    public Sheet getSheet(ProfileBrowser browser, CacheableFactory builder) {
-        ThreadBeanHolder.set("profileBrowserForFactory", browser);
-        ThreadBeanHolder.set("dataCategoryForFactory", browser.getDataCategory());
+    public Sheet getSheet(CacheableFactory builder) {
         return (Sheet) cacheHelper.getCacheable(builder);
     }
 
-    public Sheet getSheet(ProfileBrowser browser, DataCategory dataCategory, CacheableFactory builder) {
-        ThreadBeanHolder.set("profileBrowserForFactory", browser);
+    public Sheet getSheet(DataCategory dataCategory, CacheableFactory builder) {
         ThreadBeanHolder.set("dataCategoryForFactory", dataCategory);
         return (Sheet) cacheHelper.getCacheable(builder);
     }
 
-    public void removeSheets(ProfileBrowser browser) {
-        cacheHelper.clearCache("ProfileSheets", "ProfileSheet_" + browser.getProfile().getUid());
+    public void removeSheets(Profile profile) {
+        cacheHelper.clearCache("ProfileSheets", "ProfileSheet_" + profile.getUid());
     }
 }

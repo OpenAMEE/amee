@@ -39,12 +39,6 @@ import java.util.List;
 public class DataBrowser extends BaseBrowser {
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
-
-    @Autowired
-    protected DataServiceDAO dataServiceDAO;
-
-    @Autowired
     @Qualifier("dataCategoryActions")
     private ResourceActions dataCategoryActions;
 
@@ -54,35 +48,12 @@ public class DataBrowser extends BaseBrowser {
 
     // DataCategories
     private DataCategory dataCategory = null;
-    private String dataCategoryUid = null;
-
-    // DataItems
-    private DataItem dataItem = null;
-    private String dataItemUid = null;
-
-    // ItemValues
-    private String itemValueUid = null;
-    private ItemValue itemValue = null;
-
-    // ItemDefinitions
-    private List<ItemDefinition> itemDefinitions = null;
 
     public DataBrowser() {
         super();
     }
 
-    // General
-
-    public String getFullPath() {
-        if (pathItem != null) {
-            return "/data" + pathItem.getFullPath();
-        } else {
-            return "/data";
-        }
-    }
-
     // Actions
-
     public ResourceActions getDataCategoryActions() {
         return dataCategoryActions;
     }
@@ -91,73 +62,11 @@ public class DataBrowser extends BaseBrowser {
         return dataItemActions;
     }
 
-    // DataCategories
-
-    public String getDataCategoryUid() {
-        return dataCategoryUid;
-    }
-
-    public void setDataCategoryUid(String dataCategoryUid) {
-        this.dataCategoryUid = dataCategoryUid;
-    }
-
     public DataCategory getDataCategory() {
-        if (dataCategory == null) {
-            if (dataCategoryUid != null) {
-                dataCategory = dataServiceDAO.getDataCategory(dataCategoryUid);
-            }
-        }
         return dataCategory;
     }
 
     public void setDataCategory(DataCategory dataCategory) {
         this.dataCategory = dataCategory;
-    }
-
-    // DataItems
-
-    public String getDataItemUid() {
-        return dataItemUid;
-    }
-
-    public void setDataItemUid(String dataItemUid) {
-        this.dataItemUid = dataItemUid;
-    }
-
-    public DataItem getDataItem() {
-        if (dataItem == null) {
-            if (dataItemUid != null) {
-                dataItem = dataServiceDAO.getDataItem(dataItemUid);
-            }
-        }
-        return dataItem;
-    }
-
-    // ItemValues
-
-    public String getItemValueUid() {
-        return itemValueUid;
-    }
-
-    public void setItemValueUid(String itemValueUid) {
-        this.itemValueUid = itemValueUid;
-    }
-
-    public ItemValue getItemValue() {
-        if (itemValue == null) {
-            if (itemValueUid != null) {
-                itemValue = dataServiceDAO.getItemValue(itemValueUid);
-            }
-        }
-        return itemValue;
-    }
-
-    // ItemDefinitions
-
-    public List<ItemDefinition> getItemDefinitions() {
-        if (itemDefinitions == null) {
-            itemDefinitions = definitionServiceDAO.getItemDefinitions(EnvironmentService.getEnvironment());
-        }
-        return itemDefinitions;
     }
 }

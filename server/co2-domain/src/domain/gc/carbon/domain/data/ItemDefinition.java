@@ -282,9 +282,26 @@ public class ItemDefinition implements PersistentObject {
         return ObjectType.ID;
     }
 
+    //
+    /**
+     * Get the algorithm corresponding to the supplied name.
+     *
+     * @param name - the name of the Algorithm to retreive
+     * @return the Algorithm corresponding to the supplied name
+     *
+     */
+    public Algorithm getAlgorithm(String name) {
+        for (Algorithm algorithm : getAlgorithms()) {
+            if (algorithm.getName().equalsIgnoreCase(name)) {
+                return algorithm;
+            }
+        }
+        return null;
+    }
+
     public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values, APIVersion version) {
         for (ItemValueDefinition ivd : getItemValueDefinitions()) {
-            if (ivd.getUsableValue() != null && ivd.getAPIVersions().contains(version))
+            if (ivd.isUsableValue() && ivd.isValidIn(version))
                 values.put(ivd, new InternalValue(ivd));
         }
     }

@@ -29,6 +29,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+import gc.carbon.APIVersion;
+
 /**
  * Permission.
  *
@@ -325,5 +327,9 @@ public class Permission implements EnvironmentObject, DatedObject, Comparable, S
 
     public void setModified(Date modified) {
         this.modified = modified;
+    }
+
+    public APIVersion getAPIVersion() {
+        return user.getAPIVersion();
     }
 }

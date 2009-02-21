@@ -23,9 +23,9 @@ import com.jellymold.kiwi.Environment;
 import com.jellymold.kiwi.Permission;
 import com.jellymold.utils.domain.APIUtils;
 import com.jellymold.utils.domain.UidGen;
-import gc.carbon.domain.EngineUtils;
 import gc.carbon.domain.ObjectType;
 import gc.carbon.domain.path.Pathable;
+import gc.carbon.APIVersion;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -142,16 +142,6 @@ public class Profile implements Serializable, Pathable {
         return APIUtils.getIdentityElement(document, this);
     }
 
-    @Transient
-    public String getDisplayPath() {
-        return EngineUtils.getDisplayPath(this);
-    }
-
-    @Transient
-    public String getDisplayName() {
-        return EngineUtils.getDisplayName(this);
-    }
-
     @PrePersist
     public void onCreate() {
         Date now = Calendar.getInstance().getTime();
@@ -244,5 +234,25 @@ public class Profile implements Serializable, Pathable {
     @Transient
     public ObjectType getObjectType() {
         return ObjectType.PR;
+    }
+
+    public APIVersion getAPIVersion() {
+        return getPermission().getAPIVersion();
+    }
+
+    public String getDisplayPath() {
+        if (getPath().length() > 0) {
+            return getPath();
+        } else {
+            return getUid();
+        }
+    }
+
+    public String getDisplayName() {
+        if (getName().length() > 0) {
+            return getName();
+        } else {
+            return getDisplayPath();
+        }
     }
 }

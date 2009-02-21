@@ -78,18 +78,8 @@ public class Engine implements WrapperListener, Serializable {
                 .put("transactionController", transactionController); // used in TransactionServerConverter
 
         // configure Restlet logging to log on a single line
-        // TODO: try and do this in Spring XML config
         LogService logService = container.getLogService();
         logService.setLogFormat("[IP:{cia}] [M:{m}] [S:{S}] [PATH:{rp}] [UA:{cig}] [REF:{fp}]");
-        Logger logger = Logger.getLogger("org.restlet");
-        ConsoleHandler ch = new ConsoleHandler();
-        ch.setFormatter(new Formatter() {
-            public String format(LogRecord record) {
-                return "[org.restlet]" + record.getMessage() + "\n";
-            }
-        });
-        logger.setUseParentHandlers(false);
-        logger.addHandler(ch);
 
         try {
             // get things going

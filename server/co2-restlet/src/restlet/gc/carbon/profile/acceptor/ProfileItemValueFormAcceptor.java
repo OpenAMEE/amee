@@ -31,7 +31,6 @@ import org.restlet.data.Form;
  */
 public class ProfileItemValueFormAcceptor implements ItemValueAcceptor {
 
-    private final Log log = LogFactory.getLog(getClass());
     private ProfileItemValueResource resource;
     private ProfileService profileService;
 
@@ -46,8 +45,8 @@ public class ProfileItemValueFormAcceptor implements ItemValueAcceptor {
 
     public ItemValue accept(Form form) {
 
-        ItemValue profileItemValue = resource.getProfileBrowser().getProfileItemValue();
-        ProfileItem profileItem = resource.getProfileBrowser().getProfileItem();
+        ItemValue profileItemValue = resource.getProfileItemValue();
+        ProfileItem profileItem = resource.getProfileItem();
 
         if (form.getFirstValue("value") != null) {
             profileItemValue.setValue(form.getFirstValue("value"));
@@ -62,7 +61,7 @@ public class ProfileItemValueFormAcceptor implements ItemValueAcceptor {
         // should recalculate now (regardless)
         profileService.calculate(profileItem);
         // path may have changed
-        profileService.clearCaches(resource.getProfileBrowser());
+        profileService.clearCaches(resource.getProfile());
 
         return profileItemValue;
     }

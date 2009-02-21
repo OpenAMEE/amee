@@ -3,9 +3,11 @@ package gc.carbon.profile.builder.v2;
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.ResourceBuilder;
-import gc.carbon.domain.AMEEUnit;
+import gc.carbon.domain.AMEECompoundUnit;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemDefinition;
+import gc.carbon.domain.data.Decimal;
+import gc.carbon.domain.data.CO2AmountUnit;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.ProfileItem;
@@ -116,7 +118,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             // add CO2 amount
             JSONObject totalAmount = new JSONObject();
             totalAmount.put("value", getTotalAmount(profileItems).toString());
-            totalAmount.put("unit", resource.getProfileBrowser().getReturnUnit());
+            totalAmount.put("unit", resource.getProfileBrowser().getCo2AmountUnit());
             obj.put("totalAmount", totalAmount);
 
         } else if (resource.isPost() || resource.isPut()) {
@@ -199,7 +201,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
             Element totalAmount = APIUtils.getElement(document,
                     "TotalAmount",
                     getTotalAmount(profileItems).toString());
-            totalAmount.setAttribute("unit", resource.getProfileBrowser().getReturnUnit().toString());
+            totalAmount.setAttribute("unit", resource.getProfileBrowser().getCo2AmountUnit().toString());
             element.appendChild(totalAmount);
 
         }
@@ -226,7 +228,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
 
         // must have ItemDefinition
-        itemDefinition = resource.getProfileBrowser().getDataCategory().getItemDefinition();
+        itemDefinition = resource.getDataCategory().getItemDefinition();
         if (itemDefinition != null) {
 
             ProfileService decoratedProfileServiceDAO = new OnlyActiveProfileService(profileService);
@@ -239,36 +241,27 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
                 decoratedProfileServiceDAO = new SelectByProfileService(decoratedProfileServiceDAO, resource.getProfileBrowser().getSelectBy());
             }
 
-            profileItems = decoratedProfileServiceDAO.getProfileItems(resource.getProfileBrowser());
+            ProfileBrowser browser = resource.getProfileBrowser();
+            profileItems = decoratedProfileServiceDAO.getProfileItems(resource.getProfile(), resource.getDataCategory(), 
+                    browser.getStartDate(), browser.getEndDate());
         }
         return profileItems;
     }
 
     private BigDecimal getTotalAmount(List<ProfileItem> profileItems) {
-        BigDecimal totalAmount = ProfileItem.ZERO;
+        BigDecimal totalAmount = Decimal.ZERO;
         BigDecimal amount;
-        AMEEUnit returnUnit = resource.getProfileBrowser().getReturnUnit();
+        CO2AmountUnit returnUnit = resource.getProfileBrowser().getCo2AmountUnit();
         for (ProfileItem profileItem : profileItems) {
-            try {
-                amount = profileItem.getAmount(returnUnit);
-                amount = amount.setScale(ProfileItem.SCALE, ProfileItem.ROUNDING_MODE);
-                if (amount.precision() > ProfileItem.PRECISION) {
-                    log.warn("getTotalAmount() - precision is too big: " + amount);
-                    // TODO: do something?
-                }
-            } catch (Exception e) {
-                // swallow
-                log.warn("getTotalAmount() - caught Exception: " + e);
-                amount = ProfileItem.ZERO;
-            }
+            amount = profileItem.getAmount().convert(returnUnit).getValue();
             totalAmount = totalAmount.add(amount);
         }
         return totalAmount;
     }
 
     private void setBuilder(ProfileItem pi) {
-        if (resource.getProfileBrowser().returnInExternalUnit()) {
-            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getReturnUnit()));
+        if (resource.getProfileBrowser().requestedCO2InExternalUnit()) {
+            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getCo2AmountUnit()));
         } else {
             pi.setBuilder(new ProfileItemBuilder(pi));
         }
@@ -299,27 +292,26 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         AtomFeed atomFeed = AtomFeed.getInstance();
 
         final Feed feed = atomFeed.newFeed();
-        feed.sortEntriesByUpdated(true);
         feed.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
         feed.setTitle("Profile " + resource.getProfile().getDisplayName() + ", Category " + resource.getDataCategory().getName());
 
         atomFeed.newID(feed).setText("urn:dataCategory:" + resource.getDataCategory().getUid());
 
-        atomFeed.addGenerator(feed, resource.getApiVersion());
+        atomFeed.addGenerator(feed, resource.getAPIVersion());
 
         atomFeed.addLinks(feed, "");
 
         Person author = atomFeed.newAuthor(feed);
         author.setName(resource.getProfile().getDisplayPath());
 
-        Date lastModified = new Date(0);
+        Date epoch = new Date(0);
+        Date lastModified = epoch;
 
         List<ProfileItem> profileItems = getProfileItems();
 
         atomFeed.addName(feed, resource.getDataCategory().getName());
-        atomFeed.addTotalAmount(feed, getTotalAmount(profileItems).toString(), resource.getProfileBrowser().getReturnUnit().toString());
+        atomFeed.addTotalAmount(feed, getTotalAmount(profileItems).toString(), resource.getProfileBrowser().getCo2AmountUnit().toString());
 
-        //TODO - Is this the correct way to use the pager?
         Pager pager = resource.getPager();
         int numOfProfileItems = profileItems.size();
         if (numOfProfileItems > pager.getItemsPerPage()) {
@@ -351,12 +343,16 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         
         atomFeed.addChildCategories(feed, resource);
 
-        AMEEUnit returnUnit = resource.getProfileBrowser().getReturnUnit();
+        CO2AmountUnit returnUnit = resource.getProfileBrowser().getCo2AmountUnit();
 
         // Add all ProfileItems as Entries in the Atom feed.
+
+        //Iterate over in reverse order (i.e. most recent first). Abdera Feed sorting methods do not seem to have
+        // any meaningful effect (SM - 18/02/2009)
+        Collections.reverse(profileItems);
         for(ProfileItem profileItem : profileItems) {
 
-            String amount = profileItem.getAmount(returnUnit).toString();
+            String amount = profileItem.getAmount().convert(returnUnit).toString();
 
             Entry entry = feed.addEntry();
 
@@ -408,7 +404,13 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
                 lastModified = profileItem.getModified();
         }
 
-        feed.setUpdated(lastModified);
+        // If there are no ProfileItems in this feed, the lastModified date will be Date(0). In this case,
+        // displaying the current Date is probably most sensible.
+        if (lastModified.equals(epoch)) {
+            feed.setUpdated(new Date());
+        } else {
+            feed.setUpdated(lastModified);
+        }
 
         return feed;
     }
@@ -422,8 +424,8 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
         //TODO - Add batch support
         ProfileItem profileItem = resource.getProfileItems().get(0);
 
-        AMEEUnit returnUnit = resource.getProfileBrowser().getReturnUnit();
-        String amount = profileItem.getAmount(returnUnit).toString();
+        CO2AmountUnit returnUnit = resource.getProfileBrowser().getCo2AmountUnit();
+        String amount = profileItem.getAmount().convert(returnUnit).toString();
 
         Entry entry = atomFeed.newEntry();
         entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
@@ -445,7 +447,7 @@ public class ProfileCategoryResourceBuilder implements ResourceBuilder {
 
         atomFeed.addAmount(entry, amount, returnUnit.toString());
 
-        content.addSummary(profileItem.getAmount(returnUnit) + " " + returnUnit.toString());
+        content.addSummary(profileItem.getAmount().convert(returnUnit) + " " + returnUnit.toString());
         content.addStartDate(profileItem.getStartDate());
         if (profileItem.getEndDate() != null) {
             content.addEndDate(profileItem.getEndDate());

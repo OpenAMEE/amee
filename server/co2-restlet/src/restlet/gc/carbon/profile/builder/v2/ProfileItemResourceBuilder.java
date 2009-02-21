@@ -2,7 +2,8 @@ package gc.carbon.profile.builder.v2;
 
 import com.jellymold.utils.domain.APIUtils;
 import gc.carbon.ResourceBuilder;
-import gc.carbon.domain.AMEEUnit;
+import gc.carbon.domain.AMEECompoundUnit;
+import gc.carbon.domain.data.CO2AmountUnit;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;
 import gc.carbon.profile.ProfileItemResource;
@@ -82,8 +83,8 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
 
         ProfileItem profileItem = resource.getProfileItem();
 
-        AMEEUnit returnUnit = resource.getProfileBrowser().getReturnUnit();
-        String amount = profileItem.getAmount(returnUnit).toString();
+        CO2AmountUnit returnUnit = resource.getProfileBrowser().getCo2AmountUnit();
+        String amount = profileItem.getAmount().convert(returnUnit).toString();
 
         Entry entry = atomFeed.newEntry();
         entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
@@ -131,8 +132,8 @@ public class ProfileItemResourceBuilder implements ResourceBuilder {
     }
     
     private void setBuilder(ProfileItem pi) {
-        if (resource.getProfileBrowser().returnInExternalUnit()) {
-            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getReturnUnit()));
+        if (resource.getProfileBrowser().requestedCO2InExternalUnit()) {
+            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getCo2AmountUnit()));
         } else {
             pi.setBuilder(new ProfileItemBuilder(pi));
         }

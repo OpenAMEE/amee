@@ -1,6 +1,9 @@
 package gc.carbon.profile;
 
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.profile.Profile;
+import gc.carbon.domain.profile.StartEndDate;
+import gc.carbon.domain.data.DataCategory;
 import gc.carbon.profile.ProfileBrowser;
 import gc.carbon.profile.ProfileService;
 
@@ -36,11 +39,12 @@ public class OnlyActiveProfileService extends ProfileService {
         this.delegatee = delegatee;
     }
 
-    public List<ProfileItem> getProfileItems(final ProfileBrowser profileBrowser) {
+    public List<ProfileItem> getProfileItems(final Profile profile, final DataCategory dataCategory,
+                                             final StartEndDate startDate, final StartEndDate endDate) {
 
        List<ProfileItem> requestedItems;
 
-        final List<ProfileItem> profileItems = delegatee.getProfileItems(profileBrowser);
+        final List<ProfileItem> profileItems = delegatee.getProfileItems(profile, dataCategory, startDate, endDate);
         requestedItems = (List) CollectionUtils.select(profileItems, new Predicate() {
             public boolean evaluate(Object o) {
                 ProfileItem pi = (ProfileItem) o;
@@ -48,7 +52,7 @@ public class OnlyActiveProfileService extends ProfileService {
                     if (pi.getDataItem().equals(innerProfileItem.getDataItem()) &&
                             pi.getName().equalsIgnoreCase(innerProfileItem.getName()) &&
                             pi.getStartDate().before(innerProfileItem.getStartDate()) &&
-                            !innerProfileItem.getStartDate().after(profileBrowser.getStartDate().toDate())) {
+                            !innerProfileItem.getStartDate().after(startDate.toDate())) {
                         return false;
                     }
                 }

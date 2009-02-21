@@ -21,8 +21,9 @@ package gc.carbon.profile;
 
 import gc.carbon.ResourceBuilder;
 import gc.carbon.ResourceBuilderFactory;
-import gc.carbon.domain.profile.Profile;
+import gc.carbon.data.DataService;
 import gc.carbon.domain.profile.ProfileItem;
+import gc.carbon.domain.data.CO2AmountUnit;
 import gc.carbon.profile.acceptor.ProfileAcceptor;
 import gc.carbon.profile.acceptor.ProfileItemAtomAcceptor;
 import gc.carbon.profile.acceptor.ProfileItemFormAcceptor;
@@ -56,14 +57,17 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Autowired
     ProfileService profileService;
 
+    @Autowired
+    DataService dataService;
+
     private Map<MediaType, ProfileAcceptor> acceptors;
     private ResourceBuilder builder;
 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
-        profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
+        setDataCategory(request.getAttributes().get("categoryUid").toString());
+        setProfileItem(request.getAttributes().get("itemUid").toString());
         setAcceptors();
         setBuilderStrategy();
         setAvailable(isValid());
@@ -77,22 +81,21 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (profileBrowser.getProfileItem() != null);
+        return super.isValid() && (getProfileItem() != null);
     }
 
     @Override
     public String getTemplatePath() {
-        return getApiVersion() + "/" + ProfileConstants.VIEW_PROFILE_ITEM;
+        return getAPIVersion() + "/" + ProfileConstants.VIEW_PROFILE_ITEM;
     }
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        ProfileItem profileItem = profileBrowser.getProfileItem();
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", profileBrowser);
-        values.put("profile", profileItem.getProfile());
-        values.put("profileItem", profileItem);
-        values.put("node", profileItem);
+        values.put("profile", getProfileItem().getProfile());
+        values.put("profileItem", getProfileItem());
+        values.put("node", getProfileItem());
         return values;
     }
 
@@ -117,11 +120,12 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     public void handleGet() {
         log.debug("handleGet()");
         if (profileBrowser.getProfileItemActions().isAllowView()) {
-            if (!getApiVersion().isVersionOne()) {
+            if (getAPIVersion().isNotVersionOne()) {
                 Form form = getRequest().getResourceRef().getQueryAsForm();
-                profileBrowser.setAmountReturnUnit(form.getFirstValue("returnUnit"), form.getFirstValue("returnPerUnit"));
-            }
-            super.handleGet();
+                String unit = form.getFirstValue("returnUnit");
+                String perUnit = form.getFirstValue("returnPerUnit");
+                profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));            }
+                super.handleGet();
         } else {
             notAuthorized();
         }
@@ -144,7 +148,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
             if (!profileItems.isEmpty()) {
                 // do response
                 if (isStandardWebBrowser()) {
-                    success(getProfileBrowser().getFullPath());
+                    success(getBrowserFullPath());
                 } else {
                     // return a response for API calls
                     super.handleGet();
@@ -161,8 +165,10 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     public List<ProfileItem> doStore(Representation entity) {
-        if (!getApiVersion().isVersionOne()) {
-            profileBrowser.setAmountReturnUnit(getForm().getFirstValue("returnUnit"), getForm().getFirstValue("returnPerUnit"));
+        if (getAPIVersion().isNotVersionOne()) {
+            String unit = getForm().getFirstValue("returnUnit");
+            String perUnit = getForm().getFirstValue("returnPerUnit");
+            profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
         }
         return getAcceptor(entity.getMediaType()).accept(entity);
     }
@@ -184,9 +190,9 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     public void removeRepresentations() {
         log.debug("removeRepresentations()");
         if (profileBrowser.getProfileItemActions().isAllowDelete()) {
-            ProfileItem profileItem = profileBrowser.getProfileItem();
+            ProfileItem profileItem = getProfileItem();
             profileService.remove(profileItem);
-            profileService.clearCaches(profileBrowser);
+            profileService.clearCaches(getProfile());
             success(pathItem.getParent().getFullPath());
         } else {
             notAuthorized();
@@ -197,11 +203,4 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         return null;
     }
 
-    public ProfileItem getProfileItem() {
-        return profileBrowser.getProfileItem();
-    }
-
-    public Profile getProfile() {
-        return profileBrowser.getProfile();
-    }
 }

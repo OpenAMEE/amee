@@ -47,33 +47,42 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
 
     private final Log log = LogFactory.getLog(getClass());
 
+    private ItemValue itemValue;
+
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        dataBrowser.setDataItemUid(request.getAttributes().get("itemUid").toString());
-        dataBrowser.setItemValueUid(request.getAttributes().get("valueUid").toString());
+        setDataItem(request.getAttributes().get("itemUid").toString());
+        setItemValueUid(request.getAttributes().get("valueUid").toString());
         setAvailable(isValid());
+    }
+
+    private void setItemValueUid(String itemValueUid) {
+        if (itemValueUid.isEmpty()) return;
+        this.itemValue = dataService.getItemValue(itemValueUid);
+    }
+
+    private ItemValue getItemValue() {
+        return itemValue;
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() &&
-                (dataBrowser.getDataItemUid() != null) &&
-                (dataBrowser.getItemValueUid() != null);
+        return super.isValid() && (getDataItem() != null) && (getItemValue() != null);
     }
 
     @Override
     public String getTemplatePath() {
-        return getApiVersion() + "/" + DataConstants.VIEW_CARBON_VALUE;
+        return getAPIVersion() + "/" + DataConstants.VIEW_CARBON_VALUE;
     }
 
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
-        values.put("dataItem", dataBrowser.getDataItem());
-        values.put("itemValue", dataBrowser.getItemValue());
-        values.put("node", dataBrowser.getItemValue());
+        values.put("dataItem", getDataItem());
+        values.put("itemValue", getItemValue());
+        values.put("node", getItemValue());
         return values;
     }
 
@@ -81,8 +90,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("actions", getActions(dataBrowser.getDataItemActions()));
-        obj.put("itemValue", dataBrowser.getItemValue().getJSONObject());
-        obj.put("dataItem", dataBrowser.getDataItem().getIdentityJSONObject());
+        obj.put("itemValue", getItemValue().getJSONObject());
+        obj.put("dataItem", getDataItem().getIdentityJSONObject());
         obj.put("path", pathItem.getFullPath());
         return obj;
     }
@@ -90,8 +99,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public Element getElement(Document document) {
         Element element = document.createElement("DataItemValueResource");
-        element.appendChild(dataBrowser.getItemValue().getElement(document));
-        element.appendChild(dataBrowser.getDataItem().getIdentityElement(document));
+        element.appendChild(getItemValue().getElement(document));
+        element.appendChild(getDataItem().getIdentityElement(document));
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
         return element;
     }
@@ -100,8 +109,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     public void handleGet() {
         log.debug("handleGet");
         if (dataBrowser.getDataItemActions().isAllowView()) {
-            DataItem dataItem = dataBrowser.getDataItem();
-            ItemValue itemValue = dataBrowser.getItemValue();
+            DataItem dataItem = getDataItem();
+            ItemValue itemValue = getItemValue();
             if (itemValue.getItem().equals(dataItem)) {
                 super.handleGet();
             } else {
@@ -123,19 +132,18 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         log.debug("storeRepresentation()");
         if (dataBrowser.getDataItemActions().isAllowModify()) {
             Form form = getForm();
-            DataItem dataItem = dataBrowser.getDataItem();
-            ItemValue itemValue = dataBrowser.getItemValue();
+            DataItem dataItem = getDataItem();
+            ItemValue itemValue = getItemValue();
             // validation
             if (itemValue.getItem().equals(dataItem)) {
                 // are we updating this ItemValue?
                 if (form.getFirstValue("value") != null) {
                     // update ItemValue
                     itemValue.setValue(form.getFirstValue("value"));
-                    // TODO: recalculate now? make profile dirty?
                 }
                 // all done
                 if (isStandardWebBrowser()) {
-                    success(dataBrowser.getFullPath());
+                    success(getFullPath());
                 } else {
                     // return a response for API calls
                     super.handleGet();

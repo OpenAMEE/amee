@@ -1,21 +1,14 @@
 package gc.carbon.domain.profile;
 
 import gc.carbon.domain.*;
-import gc.carbon.domain.data.DataCategory;
-import gc.carbon.domain.data.DataItem;
-import gc.carbon.domain.data.Item;
-import gc.carbon.domain.data.ItemValue;
+import gc.carbon.domain.data.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.measure.unit.NonSI;
-import javax.measure.unit.SI;
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 
 /**
  * This file is part of AMEE.
@@ -41,12 +34,6 @@ import java.math.RoundingMode;
 @DiscriminatorValue("PI")
 public class ProfileItem extends Item {
 
-    public final static int PRECISION = 21;
-    public final static int SCALE = 6;
-    public final static RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
-    public final static BigDecimal ZERO = BigDecimal.valueOf(0, SCALE);
-    public static final MathContext CONTEXT = new MathContext(ProfileItem.PRECISION, ProfileItem.ROUNDING_MODE);
-
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "PROFILE_ID")
     private Profile profile;
@@ -55,18 +42,11 @@ public class ProfileItem extends Item {
     @JoinColumn(name = "DATA_ITEM_ID")
     private DataItem dataItem;
 
-    @Column(name = "AMOUNT", precision = PRECISION, scale = SCALE)
-    private BigDecimal amount = ZERO;
+    @Column(name = "AMOUNT", precision = Decimal.PRECISION, scale = Decimal.SCALE)
+    private BigDecimal amount = Decimal.ZERO;
 
     @Transient
     private Builder builder;
-
-    @Transient
-    private String convertedAmount = "";
-
-    public static final AMEEUnit INTERNAL_AMOUNT_UNIT = new AMEEUnit(SI.KILOGRAM);
-    public static final AMEEPerUnit INTERNAL_AMOUNT_PERUNIT = new AMEEPerUnit(NonSI.YEAR);
-    public static final AMEEUnit INTERNAL_RETURN_UNIT = AMEECompoundUnit.valueOf(INTERNAL_AMOUNT_UNIT, INTERNAL_AMOUNT_PERUNIT);
 
     public ProfileItem() {
         super();
@@ -111,16 +91,6 @@ public class ProfileItem extends Item {
         return getUid();
     }
 
-    @Transient
-    public String getDisplayPath() {
-        return EngineUtils.getDisplayPath(this);
-    }
-
-    @Transient
-    public String getDisplayName() {
-        return EngineUtils.getDisplayName(this);
-    }
-
     public Profile getProfile() {
         return profile;
     }
@@ -143,42 +113,16 @@ public class ProfileItem extends Item {
         return (endDate != null) && (startDate.compareTo(endDate) == 0);
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public CO2Amount getAmount() {
+        return new CO2Amount(amount);
     }
 
-    @SuppressWarnings("unchecked")
-    public BigDecimal getAmount(AMEEUnit returnUnit) {
-        if (!returnUnit.equals(INTERNAL_RETURN_UNIT)) {
-            return INTERNAL_RETURN_UNIT.convert(getAmount(), returnUnit);
-        } else {
-            return getAmount();
-        }
-    }
-
-    public void setAmount(BigDecimal amount) {
-        if (amount == null) {
-            amount = ZERO;
-        }
-        this.amount = amount;
+    public void setAmount(CO2Amount amount) {
+        this.amount = amount.getValue();
     }
 
     @Transient
-    public void setConvertedAmount(String convertedAmount) {
-        if (convertedAmount == null) {
-            convertedAmount = "";
-        }
-        this.convertedAmount = convertedAmount;
-    }
-
-
-    @Transient
-    public String getConvertedAmount() {
-        return convertedAmount;
-    }
-
-    @Transient
-    public void updateAmount(BigDecimal newAmount) {
+    public void updateAmount(CO2Amount newAmount) {
         setAmount(newAmount);
     }
 
@@ -220,5 +164,9 @@ public class ProfileItem extends Item {
 
         }
         return false;
+    }
+
+    public boolean supportsCalculation() {
+        return !getItemDefinition().getAlgorithms().isEmpty();
     }
 }

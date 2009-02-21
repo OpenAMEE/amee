@@ -2,7 +2,7 @@
 . ./curl.conf
 
 type="atom+xml"
-amee_url="profiles/${profileUid}/home/energy/electricity"
+amee_url="profiles/${profileUid}/transport/car/generic"
 
 curl http://${amee_host}/${amee_url} \
   -X POST \

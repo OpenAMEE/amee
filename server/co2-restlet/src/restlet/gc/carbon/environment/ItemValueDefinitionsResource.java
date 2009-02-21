@@ -170,7 +170,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
                 for (APIVersion apiVersion : apiVersions) {
                     String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
                     if (version != null) {
-                        newItemValueDefinition.getAPIVersions().add(apiVersion);
+                        newItemValueDefinition.addAPIVersion(apiVersion);
                     }
                 }
 

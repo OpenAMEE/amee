@@ -20,7 +20,6 @@
 package gc.carbon.profile;
 
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.AMEEResource;
 import gc.carbon.profile.acceptor.ItemValueAcceptor;
 import gc.carbon.profile.builder.v2.AtomFeed;
 import gc.carbon.profile.acceptor.*;
@@ -50,26 +49,30 @@ import java.util.HashMap;
 
 @Component
 @Scope("prototype")
-public class ProfileItemValueResource extends AMEEResource implements Serializable {
+public class ProfileItemValueResource extends BaseProfileResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private ProfileService profileService;
 
-    private ProfileBrowser profileBrowser;
+    private ItemValue itemValue;
 
     private Map<MediaType, ItemValueAcceptor> acceptors;
 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        profileBrowser = (ProfileBrowser) beanFactory.getBean("profileBrowser");
-        profileBrowser.setDataCategoryUid(request.getAttributes().get("categoryUid").toString());
-        profileBrowser.setProfileItemUid(request.getAttributes().get("itemUid").toString());
-        profileBrowser.setProfileItemValueUid(request.getAttributes().get("valueUid").toString());
+        setDataCategory(request.getAttributes().get("categoryUid").toString());
+        setProfileItem(request.getAttributes().get("itemUid").toString());
+        setProfileItemValueUid(request.getAttributes().get("valueUid").toString());
         setAcceptors();
         setAvailable(isValid());
+    }
+
+    private void setProfileItemValueUid(String profileItemValueUid) {
+        if (profileItemValueUid.isEmpty()) return;
+        this.itemValue = profileService.getProfileItemValue(profileItemValueUid);
     }
 
     private void setAcceptors() {
@@ -88,51 +91,47 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
 
     @Override
     public boolean isValid() {
-        return super.isValid() &&
-                (profileBrowser.getProfileItemUid() != null) &&
-                (profileBrowser.getProfileItemValueUid() != null);
+        return super.isValid() && (getProfileItem() != null) && (getProfileItemValue() != null);
     }
 
     @Override
     public String getTemplatePath() {
-        return getApiVersion() + "/" + ProfileConstants.VIEW_PROFILE_ITEM_VALUE;
+        return getAPIVersion() + "/" + ProfileConstants.VIEW_PROFILE_ITEM_VALUE;
     }
 
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", profileBrowser);
-        values.put("profileItemValue", profileBrowser.getProfileItemValue());
-        values.put("node", profileBrowser.getProfileItemValue());
-        values.put("profileItem", profileBrowser.getProfileItem());
-        values.put("profile", profileBrowser.getProfile());
+        values.put("profileItemValue", getProfileItemValue());
+        values.put("node", getProfileItemValue());
+        values.put("profileItem", getProfileItem());
+        values.put("profile", getProfile());
         return values;
     }
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
-        obj.put("itemValue", profileBrowser.getProfileItemValue().getJSONObject(true));
-        obj.put("path", pathItem.getFullPath());
-        obj.put("profile", profileBrowser.getProfile().getIdentityJSONObject());
+        obj.put("itemValue", getProfileItemValue().getJSONObject(true));
+        obj.put("path", getPathItem().getFullPath());
+        obj.put("profile", getProfile().getIdentityJSONObject());
         obj.put("actions", getActions(profileBrowser.getProfileItemValueActions()));
         return obj;
     }
 
     @Override
     public Element getElement(Document document) {
-        ItemValue itemValue = profileBrowser.getProfileItemValue();
+        ItemValue itemValue = getProfileItemValue();
         Element element = document.createElement("ProfileItemValueResource");
         element.appendChild(itemValue.getElement(document));
-        element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
-        element.appendChild(profileBrowser.getProfile().getIdentityElement(document));
+        element.appendChild(APIUtils.getElement(document, "Path", getPathItem().getFullPath()));
+        element.appendChild(getProfile().getIdentityElement(document));
         return element;
     }
 
     @Override
     public org.apache.abdera.model.Element getAtomElement() {
-
-        ItemValue itemValue = profileBrowser.getProfileItemValue();
 
         AtomFeed atomFeed = AtomFeed.getInstance();
         Entry entry = atomFeed.newEntry();
@@ -140,32 +139,32 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
         entry.setBaseUri(getRequest().getAttributes().get("previousHierachicalPart").toString());
 
         Text title = atomFeed.newTitle(entry);
-        title.setText(itemValue.getDisplayName());
+        title.setText(getProfileItemValue().getDisplayName());
 
         atomFeed.addLinks(entry, "");
 
         IRIElement eid = atomFeed.newID(entry);
-        eid.setText("urn:itemValue:" + itemValue.getUid());
+        eid.setText("urn:itemValue:" + getProfileItemValue().getUid());
 
-        entry.setPublished(itemValue.getCreated());
-        entry.setUpdated(itemValue.getModified());
+        entry.setPublished(getProfileItemValue().getCreated());
+        entry.setUpdated(getProfileItemValue().getModified());
 
-        atomFeed.addItemValue(entry, itemValue);
+        atomFeed.addItemValue(entry, getProfileItemValue());
 
-        StringBuilder content = new StringBuilder(itemValue.getName());
+        StringBuilder content = new StringBuilder(getProfileItemValue().getName());
         content.append("=");
-        content.append(itemValue.getValue().isEmpty() ? "N/A" : itemValue.getValue());
-        if (itemValue.hasUnit())
+        content.append(getProfileItemValue().getValue().isEmpty() ? "N/A" : getProfileItemValue().getValue());
+        if (getProfileItemValue().hasUnit())
             content.append(", unit=");
-            content.append(itemValue.getUnit());
-        if (itemValue.hasPerUnit())
-            content.append(", perUnit=");
-            content.append(itemValue.getPerUnit());
+            content.append(getProfileItemValue().getUnit());
+        if (getProfileItemValue().hasPerUnit())
+            content.append(", v=");
+            content.append(getProfileItemValue().getPerUnit());
         entry.setContent(content.toString());
 
         Category cat = atomFeed.newItemValueCategory(entry);
-        cat.setTerm(itemValue.getItemValueDefinition().getUid());
-        cat.setLabel(itemValue.getItemValueDefinition().getName());
+        cat.setTerm(getProfileItemValue().getItemValueDefinition().getUid());
+        cat.setLabel(getProfileItemValue().getItemValueDefinition().getName());
 
         return entry;
 
@@ -195,7 +194,7 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
 
             // all done
             if (isStandardWebBrowser()) {
-                success(profileBrowser.getFullPath());
+                success(getBrowserFullPath());
             } else {
                 // return a response for API calls
                 super.handleGet();
@@ -211,5 +210,9 @@ public class ProfileItemValueResource extends AMEEResource implements Serializab
 
     public ProfileService getProfileService() {
         return profileService;
+    }
+
+    public ItemValue getProfileItemValue() {
+        return itemValue;
     }
 }

@@ -308,4 +308,20 @@ public abstract class Item implements PersistentObject, Pathable {
             return null;
         }
     }
+
+    public String getDisplayPath() {
+        if (getPath().length() > 0) {
+            return getPath();
+        } else {
+            return getUid();
+        }
+    }
+
+    public String getDisplayName() {
+        if (getName().length() > 0) {
+            return getName();
+        } else {
+            return getDisplayPath();
+        }
+    }    
 }
