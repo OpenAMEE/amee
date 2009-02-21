@@ -18,7 +18,7 @@
         <property name="attachments">
             <map>
                 <entry key="">
-                    <bean class="org.restlet.ext.seam.TransactionFilter">
+                    <bean class="gc.carbon.transaction.TransactionFilter">
                         <constructor-arg index="0" ref="dataApplication"/>
                         <property name="next">
                             <bean class="com.jellymold.kiwi.SiteFilter">

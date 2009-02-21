@@ -286,7 +286,6 @@
       <module fileurl="file://$PROJECT_DIR$/idea.iml" filepath="$PROJECT_DIR$/idea.iml" />
       <module fileurl="file://$PROJECT_DIR$/kiwi-domain.iml" filepath="$PROJECT_DIR$/kiwi-domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/kiwi-restlet.iml" filepath="$PROJECT_DIR$/kiwi-restlet.iml" />
-      <module fileurl="file://$PROJECT_DIR$/org.restlet.ext.seam.iml" filepath="$PROJECT_DIR$/org.restlet.ext.seam.iml" />
       <module fileurl="file://$PROJECT_DIR$/sheet-domain.iml" filepath="$PROJECT_DIR$/sheet-domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/skins.iml" filepath="$PROJECT_DIR$/skins.iml" />
     </modules>

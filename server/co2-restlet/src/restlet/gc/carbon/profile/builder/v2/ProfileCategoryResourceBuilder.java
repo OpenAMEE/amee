@@ -2,8 +2,7 @@ package gc.carbon.profile.builder.v2;
 
 import com.jellymold.utils.Pager;
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.ResourceBuilder;
-import gc.carbon.domain.AMEECompoundUnit;
+import gc.carbon.builder.ResourceBuilder;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.Decimal;

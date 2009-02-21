@@ -35,7 +35,7 @@
         <property name="scopes">
             <map>
                 <entry key="event">
-                    <bean class="org.restlet.ext.seam.RestletRequestScope"/>
+                    <bean class="gc.carbon.engine.spring.RestletRequestScope"/>
                 </entry>
             </map>
         </property>

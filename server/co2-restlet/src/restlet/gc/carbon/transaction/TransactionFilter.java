@@ -1,4 +1,4 @@
-package org.restlet.ext.seam;
+package gc.carbon.transaction;
 
 import org.restlet.Application;
 import org.restlet.Filter;

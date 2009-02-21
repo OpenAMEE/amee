@@ -1,8 +1,7 @@
 package gc.carbon.profile.builder.v2;
 
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.ResourceBuilder;
-import gc.carbon.domain.AMEECompoundUnit;
+import gc.carbon.builder.ResourceBuilder;
 import gc.carbon.domain.data.CO2AmountUnit;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.builder.v2.ProfileItemBuilder;

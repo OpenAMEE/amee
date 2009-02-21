@@ -27,7 +27,7 @@
         <constructor-arg index="1" value="8010"/>
         <property name="parameters">
             <props>
-                <prop key="converter">org.restlet.ext.seam.TransactionServerConverter</prop>
+                <prop key="converter">gc.carbon.engine.restlet.TransactionServerConverter</prop>
                 <prop key="minThreads">50</prop>
                 <prop key="maxThreads">700</prop>
                 <prop key="threadMaxIdleTimeMs">30000</prop>

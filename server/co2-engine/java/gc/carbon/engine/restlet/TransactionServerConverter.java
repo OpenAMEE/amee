@@ -1,4 +1,4 @@
-package org.restlet.ext.seam;
+package gc.carbon.engine.restlet;
 
 import com.jellymold.utils.ThreadBeanHolder;
 import com.noelios.restlet.http.HttpRequest;
@@ -7,6 +7,7 @@ import com.noelios.restlet.http.HttpServerCall;
 import com.noelios.restlet.http.HttpServerConverter;
 import org.apache.log4j.NDC;
 import org.restlet.Context;
+import gc.carbon.transaction.TransactionController;
 
 public class TransactionServerConverter extends HttpServerConverter {
 

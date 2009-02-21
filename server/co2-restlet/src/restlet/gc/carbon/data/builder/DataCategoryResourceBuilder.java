@@ -1,6 +1,6 @@
 package gc.carbon.data.builder;
 
-import gc.carbon.ResourceBuilder;
+import gc.carbon.builder.ResourceBuilder;
 import gc.carbon.data.DataCategoryResource;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.data.DataCategory;

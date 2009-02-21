@@ -1,4 +1,4 @@
-package org.restlet.ext.seam;
+package gc.carbon.engine.spring;
 
 import org.restlet.data.Request;
 import org.springframework.beans.factory.ObjectFactory;

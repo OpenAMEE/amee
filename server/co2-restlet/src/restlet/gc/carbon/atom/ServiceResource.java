@@ -17,7 +17,7 @@
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-package gc.carbon;
+package gc.carbon.atom;
 
 import gc.carbon.data.OnlyActiveDataService;
 import gc.carbon.domain.data.DataCategory;
@@ -27,6 +27,7 @@ import gc.carbon.domain.path.PathItemGroup;
 import gc.carbon.domain.profile.StartEndDate;
 import gc.carbon.path.PathItemService;
 import gc.carbon.profile.builder.v2.AtomFeed;
+import gc.carbon.AMEEResource;
 import org.apache.abdera.model.*;
 import org.restlet.Context;
 import org.restlet.data.*;

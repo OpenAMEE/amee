@@ -2,12 +2,12 @@ package gc.carbon.engine;
 
 import com.jellymold.utils.cache.CacheHelper;
 import gc.carbon.auth.UserPasswordToMD5;
+import gc.carbon.transaction.TransactionController;
 import org.apache.commons.cli.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Component;
 import org.restlet.Server;
-import org.restlet.ext.seam.TransactionController;
 import org.restlet.service.LogService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

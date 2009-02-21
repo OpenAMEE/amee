@@ -21,8 +21,8 @@ package gc.carbon.data;
 
 import com.jellymold.utils.APIFault;
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.ResourceBuilder;
-import gc.carbon.ResourceBuilderFactory;
+import gc.carbon.builder.ResourceBuilder;
+import gc.carbon.builder.ResourceBuilderFactory;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.data.ItemDefinition;

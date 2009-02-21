@@ -19,8 +19,8 @@
  */
 package gc.carbon.profile;
 
-import gc.carbon.ResourceBuilder;
-import gc.carbon.ResourceBuilderFactory;
+import gc.carbon.builder.ResourceBuilder;
+import gc.carbon.builder.ResourceBuilderFactory;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.data.CO2AmountUnit;

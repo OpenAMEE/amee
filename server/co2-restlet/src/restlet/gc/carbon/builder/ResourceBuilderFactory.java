@@ -1,8 +1,8 @@
-package gc.carbon;
+package gc.carbon.builder;
 
 import gc.carbon.profile.ProfileCategoryResource;
 import gc.carbon.profile.ProfileItemResource;
-import gc.carbon.ResourceBuilder;
+import gc.carbon.builder.ResourceBuilder;
 import gc.carbon.data.DataCategoryResource;
 import gc.carbon.data.builder.DataCategoryResourceBuilder;
 

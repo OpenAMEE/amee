@@ -1,7 +1,7 @@
 package gc.carbon.profile.builder.v1;
 
 import com.jellymold.utils.domain.APIUtils;
-import gc.carbon.ResourceBuilder;
+import gc.carbon.builder.ResourceBuilder;
 import gc.carbon.domain.profile.builder.v1.ProfileItemBuilder;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.profile.ProfileItemResource;

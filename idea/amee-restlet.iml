@@ -25,7 +25,6 @@
     <orderEntry type="module" module-name="amee-service" />
     <orderEntry type="module" module-name="kiwi-domain" />
     <orderEntry type="module" module-name="sheet-domain" />
-    <orderEntry type="module" module-name="org.restlet.ext.seam" />
     <orderEntry type="library" name="amee-utils" level="project" />
     <orderEntry type="library" name="amee-utils-restlet" level="project" />
     <orderEntry type="library" name="spring" level="project" />
