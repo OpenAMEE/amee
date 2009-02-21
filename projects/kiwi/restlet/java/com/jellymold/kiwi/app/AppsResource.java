@@ -22,14 +22,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import gc.carbon.app.AppService;
+import gc.carbon.app.AppServiceDAO;
 
 @Component
 @Scope("prototype")
 public class AppsResource extends BaseResource implements Serializable {
 
     @Autowired
-    private AppService appService;
+    private AppServiceDAO appService;
 
     @Autowired
     private AppBrowser appBrowser;

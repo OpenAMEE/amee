@@ -1,10 +1,8 @@
 package gc.carbon.data;
 
 import com.jellymold.kiwi.Environment;
-import com.jellymold.kiwi.User;
 import com.jellymold.sheet.Choices;
 import com.jellymold.sheet.Sheet;
-import com.jellymold.utils.ThreadBeanHolder;
 import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.data.DataCategory;
 import gc.carbon.domain.data.DataItem;
@@ -96,7 +94,7 @@ public class DataService {
         Iterator<DataItem> i;
 
         // code below replicates the query in:
-        // gc.carbon.data.DataServiceDAO#getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate)
+        // gc.carbon.data.dao.DataServiceDAO#getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate)
 
         dataItems = dao.getDataItems(dc);
         i = dataItems.iterator();

@@ -1,11 +1,9 @@
 package gc.carbon.data.builder;
 
 import gc.carbon.ResourceBuilder;
-import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.data.DataCategoryResource;
 import gc.carbon.data.DataService;
 import gc.carbon.domain.data.DataCategory;
-import gc.carbon.domain.data.ItemDefinition;
 import gc.carbon.domain.data.DataItem;
 import gc.carbon.domain.path.PathItem;
 import org.json.JSONObject;
@@ -13,8 +11,6 @@ import org.json.JSONException;
 import org.json.JSONArray;
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
-import org.restlet.data.Method;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 import java.util.HashMap;

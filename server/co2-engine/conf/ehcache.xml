@@ -475,7 +475,7 @@
 
     <!-- **** Kiwi - Queries **** -->
 
-    <!-- AppService -->
+    <!-- AppServiceDAO -->
     <cache name="query.appService"
            maxElementsInMemory="200"
            eternal="false"

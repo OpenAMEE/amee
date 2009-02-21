@@ -9,7 +9,7 @@ import gc.carbon.environment.EnvironmentService;
 import gc.carbon.environment.SiteService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
-import gc.carbon.app.AppService;
+import gc.carbon.app.AppServiceDAO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +38,7 @@ public class SiteAppsResource extends BaseResource {
     private EnvironmentBrowser environmentBrowser;
 
     @Autowired
-    private AppService appService;
+    private AppServiceDAO appService;
 
     private SiteApp newSiteApp;
 

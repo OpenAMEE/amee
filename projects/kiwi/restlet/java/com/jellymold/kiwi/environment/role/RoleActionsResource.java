@@ -8,7 +8,7 @@ import gc.carbon.environment.EnvironmentConstants;
 import gc.carbon.environment.EnvironmentService;
 import com.jellymold.utils.BaseResource;
 import com.jellymold.utils.Pager;
-import gc.carbon.app.AppService;
+import gc.carbon.app.AppServiceDAO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +31,7 @@ import java.util.*;
 public class RoleActionsResource extends BaseResource implements Serializable {
 
     @Autowired
-    private AppService appService;
+    private AppServiceDAO appService;
 
     @Autowired
     private EnvironmentBrowser environmentBrowser;

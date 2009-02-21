@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import gc.carbon.app.AppService;
+import gc.carbon.app.AppServiceDAO;
 
 @Component
 @Scope("prototype")
 public class AppBrowser extends BaseBrowser {
 
     @Autowired
-    AppService appService;
+    AppServiceDAO appService;
 
     // Apps
 

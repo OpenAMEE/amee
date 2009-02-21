@@ -28,7 +28,6 @@ import gc.carbon.domain.data.ItemValue;
 import gc.carbon.domain.path.PathItem;
 import gc.carbon.domain.path.PathItemGroup;
 import gc.carbon.path.PathItemService;
-import gc.carbon.data.DataServiceDAO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;

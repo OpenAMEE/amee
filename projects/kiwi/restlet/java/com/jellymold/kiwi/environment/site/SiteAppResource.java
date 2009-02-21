@@ -7,7 +7,7 @@ import com.jellymold.kiwi.environment.EnvironmentBrowser;
 import gc.carbon.environment.EnvironmentConstants;
 import gc.carbon.environment.SiteService;
 import com.jellymold.utils.BaseResource;
-import gc.carbon.app.AppService;
+import gc.carbon.app.AppServiceDAO;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -34,7 +34,7 @@ public class SiteAppResource extends BaseResource {
     private EnvironmentBrowser environmentBrowser;
 
     @Autowired
-    private AppService appService;
+    private AppServiceDAO appService;
 
     @Override
     public void init(Context context, Request request, Response response) {

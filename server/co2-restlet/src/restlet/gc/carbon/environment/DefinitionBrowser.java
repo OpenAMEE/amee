@@ -21,11 +21,11 @@ package gc.carbon.environment;
 
 import com.jellymold.kiwi.Environment;
 import gc.carbon.auth.ResourceActions;
+import gc.carbon.definition.DefinitionServiceDAO;
 import com.jellymold.kiwi.Site;
 import gc.carbon.environment.EnvironmentService;
 import gc.carbon.environment.SiteService;
 import com.jellymold.utils.BaseBrowser;
-import gc.carbon.definition.DefinitionServiceDAO;
 import gc.carbon.domain.ValueDefinition;
 import gc.carbon.domain.data.Algorithm;
 import gc.carbon.domain.data.AlgorithmContext;

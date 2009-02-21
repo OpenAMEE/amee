@@ -17,14 +17,14 @@ import org.w3c.dom.Element;
 
 import java.util.Map;
 
-import gc.carbon.app.AppService;
+import gc.carbon.app.AppServiceDAO;
 
 @Component
 @Scope("prototype")
 public class AppResource extends BaseResource {
 
     @Autowired
-    private AppService appService;
+    private AppServiceDAO appService;
 
     @Autowired
     private AppBrowser appBrowser;

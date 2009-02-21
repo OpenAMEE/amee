@@ -12,12 +12,12 @@ import java.io.Serializable;
 import java.util.List;
 
 @Service
-public class AppService implements Serializable {
+public class AppServiceDAO implements Serializable {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public AppService() {
+    public AppServiceDAO() {
         super();
     }
 

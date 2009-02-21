@@ -2,7 +2,7 @@ package com.jellymold.kiwi.app;
 
 import com.jellymold.kiwi.Action;
 import com.jellymold.utils.BaseResource;
-import gc.carbon.app.AppService;
+import gc.carbon.app.AppServiceDAO;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -23,7 +23,7 @@ import java.util.Map;
 public class ActionResource extends BaseResource {
 
     @Autowired
-    private AppService appService;
+    private AppServiceDAO appService;
 
     @Autowired
     private AppBrowser appBrowser;

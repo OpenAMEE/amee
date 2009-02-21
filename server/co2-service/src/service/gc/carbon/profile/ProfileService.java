@@ -3,7 +3,6 @@ package gc.carbon.profile;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import gc.carbon.path.PathItemService;
-import gc.carbon.profile.ProfileServiceDAO;
 import gc.carbon.domain.profile.ProfileItem;
 import gc.carbon.domain.profile.Profile;
 import gc.carbon.domain.profile.StartEndDate;
@@ -14,8 +13,6 @@ import gc.carbon.APIVersion;
 import com.jellymold.sheet.Sheet;
 import com.jellymold.utils.cache.CacheableFactory;
 import com.jellymold.utils.Pager;
-import com.jellymold.utils.ThreadBeanHolder;
-import com.jellymold.kiwi.User;
 
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
