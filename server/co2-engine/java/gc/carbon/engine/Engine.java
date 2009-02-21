@@ -1,4 +1,4 @@
-package com.jellymold.engine;
+package gc.carbon.engine;
 
 import com.jellymold.utils.cache.CacheHelper;
 import gc.carbon.auth.UserPasswordToMD5;
@@ -107,7 +107,7 @@ public class Engine implements WrapperListener, Serializable {
         try {
             line = parser.parse(options, args);
         } catch (ParseException exp) {
-            new HelpFormatter().printHelp("java com.jellymold.engine.Engine", options);
+            new HelpFormatter().printHelp("java gc.carbon.engine.Engine", options);
             System.exit(-1);
         }
 

@@ -48,6 +48,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../server/co2-engine">
       <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/conf" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../server/co2-engine/resources" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -56,7 +57,6 @@
     <orderEntry type="module" module-name="amee-restlet" />
     <orderEntry type="module" module-name="amee-service" />
     <orderEntry type="module" module-name="cache-restlet" />
-    <orderEntry type="module" module-name="engine-service" />
     <orderEntry type="module" module-name="kiwi-domain" />
     <orderEntry type="module" module-name="kiwi-restlet" />
     <orderEntry type="module" module-name="org.restlet.ext.seam" />
