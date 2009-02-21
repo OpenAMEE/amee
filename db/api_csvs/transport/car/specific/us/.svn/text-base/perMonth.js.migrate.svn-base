@@ -14,7 +14,7 @@ kgCO2PerUSGallon=kgCO2PerLitre*3.785;
 // now calculate the monthly kgCO2 emissions
 mpg=0.;
 if(drivingType=='own'){
-    mpg=ownFuelConsumption/0.354;
+    mpg=ownFuelConsumption/0.425143707;
 } else if(drivingType=='city'){
     mpg=mpgCity; 
 } else if(drivingType=='highway'){
@@ -24,5 +24,5 @@ else if(drivingType=='combined'){
     mpg=mpgCombined;
 }
 
-kgCO2PerUSGallon * distance /(mpg * 1.609);
+kgCO2PerUSGallon * distance /(mpg * 1.609344);
 
