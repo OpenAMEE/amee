@@ -43,7 +43,7 @@
 
     <bean id="ameeHost" class="org.restlet.ext.spring.SpringHost">
         <constructor-arg ref="ameeContainer"/>
-        <property name="hostDomain" value="live.co2.dgen.net|stage.co2.dgen.net|local.stage.co2.dgen.net|dev.amee.com"/>
+        <property name="hostDomain" value="${HOST_NAME}"/>
         <property name="attachments">
             <map>
                 <entry key="" value-ref="defaultApplication"/>
@@ -52,13 +52,14 @@
                 <entry key="/profiles" value-ref="profilesApplication"/>
             </map>
         </property>
-        <property name="name" value="live.co2.dgen.net"/>
+        <!-- This value must match at least one entry in the SITE.NAME db table column. -->
+        <property name="name" value="AMEE"/>
     </bean>
 
     <bean id="ameeAdminHost" class="org.restlet.ext.spring.SpringHost">
         <constructor-arg ref="ameeContainer"/>
         <property name="hostDomain"
-                  value="admin.live.co2.dgen.net|admin.stage.co2.dgen.net|local.admin.stage.co2.dgen.net|admin-dev.amee.com"/>
+                  value="${HOST_NAME.ADMIN}"/>
         <property name="attachments">
             <map>
                 <entry key="" value-ref="defaultApplication"/>
@@ -68,7 +69,8 @@
                 <entry key="/cache" value-ref="cacheApplication"/>
             </map>
         </property>
-        <property name="name" value="admin.live.co2.dgen.net"/>
+        <!-- This value must match at least one entry in the SITE.NAME db table column. -->
+        <property name="name" value="AMEE.ADMIN"/>
     </bean>
 
     <bean id="modeEquals"
