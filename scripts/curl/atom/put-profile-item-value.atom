@@ -7,9 +7,9 @@
   <id>urn:itemValue:A3BE0064FA9B</id>
   <published>2009-01-03T18:51:20.000Z</published>
   <updated>2009-01-03T20:17:14.000Z</updated>
-  <amee:name xmlns:amee="http://schemas.amee.cc/2.0">kWh</amee:name>
-  <amee:value xmlns:amee="http://schemas.amee.cc/2.0">50</amee:value>
-  <amee:perUnit xmlns:amee="http://schemas.amee.cc/2.0">month</amee:perUnit>
+  <amee:name xmlns:amee="http://schemas.amee.com/2.0">kWh</amee:name>
+  <amee:value xmlns:amee="http://schemas.amee.com/2.0">50</amee:value>
+  <amee:perUnit xmlns:amee="http://schemas.amee.com/2.0">month</amee:perUnit>
   <content type="text">kWh=200, perUnit=year</content>
-  <category scheme="http://schemas.amee.cc/2.0#itemValue" term="D89B4DF7E9CC" label="Electricity"/>
+  <category scheme="http://schemas.amee.com/2.0#itemValue" term="D89B4DF7E9CC" label="Electricity"/>
 </entry>

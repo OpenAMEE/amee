@@ -49,12 +49,12 @@ namespace :install do
     # Create bin
     puts "Creating new deployment bin directory #{package_dir}/bin"
     FileUtils.mkdir_p("#{package_dir}/bin")
-    FileUtils.cp_r "#{src_dir}/server/co2-engine/bin/.","#{package_dir}/bin"  
+    FileUtils.cp_r "#{src_dir}/server/amee-engine/bin/.","#{package_dir}/bin"  
     
     # Create conf
     puts "Creating new deployment conf directory #{package_dir}/conf"
     FileUtils.mkdir_p("#{package_dir}/conf")
-    FileUtils.cp_r "#{src_dir}/server/co2-engine/conf/.","#{package_dir}/conf"  
+    FileUtils.cp_r "#{src_dir}/server/amee-engine/conf/.","#{package_dir}/conf"  
 
     # Create htdocs
     puts "Creating new deployment htdocs directory #{package_dir}/htdocs"
@@ -64,7 +64,7 @@ namespace :install do
     # Create skins
     puts "Creating new deployment skins directory #{package_dir}/skins"
     FileUtils.mkdir_p("#{package_dir}/skins")
-    FileUtils.cp_r "#{src_dir}/server/skins/.","#{package_dir}/skins"  
+    FileUtils.cp_r "#{src_dir}/server/amee-skins/.","#{package_dir}/skins"  
 
     # Create lib
     puts "Creating new deployment lib directory #{package_dir}/lib"

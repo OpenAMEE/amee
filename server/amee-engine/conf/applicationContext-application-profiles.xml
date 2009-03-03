@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+    <bean id="profilesApplication" class="org.restlet.Application">
+        <property name="root" ref="profilesRoot"/>
+        <property name="tunnelService.methodTunnel" value="true"/>
+        <property name="statusService" ref="engineStatusService"/>
+        <property name="name" value="Profile Administration"/>
+    </bean>
+
+    <bean id="profilesRoot" class="org.restlet.ext.spring.SpringRouter">
+        <constructor-arg ref="profilesApplication"/>
+        <property name="attachments">
+            <map>
+                <entry key="">
+                    <bean class="com.amee.restlet.transaction.TransactionFilter">
+                        <constructor-arg index="0" ref="profilesApplication"/>
+                        <property name="next">
+                            <bean class="com.amee.restlet.site.SiteFilter">
+                                <constructor-arg index="0" ref="profilesApplication"/>
+                                <property name="next">
+                                    <bean class="com.amee.restlet.auth.BasicAuthFilter">
+                                        <constructor-arg index="0" ref="profilesApplication"/>
+                                        <property name="next">
+                                            <bean class="com.amee.restlet.auth.AuthFilter">
+                                                <constructor-arg index="0" ref="profilesApplication"/>
+                                                <property name="next">
+                                                    <bean class="com.amee.restlet.profile.ProfileFilter">
+                                                        <property name="next">
+                                                            <bean class="com.amee.restlet.LogFilter">
+                                                               <property name="next" ref="profilesRouter"/>
+                                                            </bean>
+                                                        </property>
+                                                    </bean>
+                                                </property>
+                                            </bean>
+                                        </property>
+                                    </bean>
+                                </property>
+                            </bean>
+                        </property>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="profilesRouter" class="org.restlet.ext.spring.SpringRouter">
+        <constructor-arg ref="profilesApplication"/>
+        <property name="defaultMatchingMode" ref="modeEquals"/>
+        <property name="defaultMatchQuery" value="false"/>
+        <property name="attachments">
+            <map>
+                <entry key="">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="profilesResource"/>
+                    </bean>
+                </entry>
+                <entry key="/categories/{categoryUid}">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="profileCategoryResource"/>
+                    </bean>
+                </entry>
+                <entry key="/categories/{categoryUid}/items/{itemUid}">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="profileItemResource"/>
+                    </bean>
+                </entry>
+                <entry key="/categories/{categoryUid}/items/{itemUid}/values/{valueUid}">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="profileItemValueResource"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="profileActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
+        <constructor-arg index="0" value="profile"/>
+    </bean>
+
+    <bean id="profileCategoryActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
+        <constructor-arg index="0" value="profileCategory"/>
+    </bean>
+
+    <bean id="profileItemActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
+        <constructor-arg index="0" value="profileItem"/>
+    </bean>
+
+    <bean id="profileItemValueActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
+        <constructor-arg index="0" value="profileItemValue"/>
+    </bean>
+
+</beans>

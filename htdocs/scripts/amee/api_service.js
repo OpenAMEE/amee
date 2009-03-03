@@ -173,7 +173,7 @@ ApiService.prototype = {
         if (this.apiVersion == "1.0") {
             return "yyyyMMdd";
         } else {
-            return "yyyy-MM-dd'T'HH:mmZ";
+            return "yyyy-MM-dd'T'HH:mm:ssZ";
         }
     },
     apiRequest: function(params) {

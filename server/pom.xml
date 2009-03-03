@@ -1,0 +1,89 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                      http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Project Metadata. -->
+  <groupId>com.amee</groupId>
+  <artifactId>server</artifactId>
+  <packaging>pom</packaging>
+  <version>${amee.version}</version>
+  <name>AMEE Platform</name>
+
+  <!-- Project Properties. -->
+  <properties>
+      <amee.version>2.0</amee.version>
+      <spring.version>2.5.6</spring.version>
+      <restlet.version>1.1.1</restlet.version>
+      <org.json.version>2.0</org.json.version>
+      <joda-time.version>1.6</joda-time.version>
+      <hibernate.version>3.4.0.GA</hibernate.version>
+  </properties>
+
+  <!-- AMEE Modules. -->
+  <modules>
+    <module>amee-admin</module>
+    <module>amee-calculation</module>
+    <module>amee-core</module>
+    <module>amee-domain</module>
+    <module>amee-engine</module>
+    <module>amee-restlet</module>
+    <module>amee-service</module>
+  </modules>
+
+  <!-- Build Plugins. -->
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+          </configuration>
+        </plugin>
+      </plugins>
+   </pluginManagement> 
+  </build>
+
+  <!-- Maven Repositories. -->
+  <repositories>
+      <repository>
+          <id>maven-restlet</id>
+          <name>Public online Restlet repository</name>
+          <url>http://maven.restlet.org</url>
+      </repository>
+      <repository>
+        <id>apache-incubating</id>
+        <name>Apache Incubating Repository</name>
+        <url>http://people.apache.org/repo/m2-incubating-repository/</url>
+      </repository>      
+  </repositories>
+ 
+  <!-- Project Dependencies. -->
+  <dependencies>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.14</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1</version>
+    </dependency>
+  </dependencies>
+
+</project>

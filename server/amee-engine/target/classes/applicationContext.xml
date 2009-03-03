@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:springIntegration="http://www.springframework.org/schema/integration"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+                           http://www.springframework.org/schema/integration
+                           http://www.springframework.org/schema/integration/spring-integration-1.0.xsd">
+
+    <!-- Placeholder property configuration -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
+
+    <!-- Annotations and other stuff -->
+    <context:load-time-weaver/>
+    <context:annotation-config/>
+    <context:component-scan base-package="com"/>
+    <tx:annotation-driven mode="aspectj"/>
+
+    <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+
+    <!-- Enable request scope -->
+    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+        <property name="scopes">
+            <map>
+                <entry key="event">
+                    <bean class="com.amee.engine.spring.RestletRequestScope"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!-- DataSource, em/tx configuration -->
+    <!-- See: http://commons.apache.org/dbcp/configuration.html -->
+    <!-- See: http://dev.mysql.com/doc/refman/5.1/en/connector-j-reference-configuration-properties.html -->
+    <bean id="ameeDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url"
+                  value="jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?autoReconnect=true&amp;autoReconnectForPools=true&amp;useCompression=true"/>
+        <property name="username" value="${DB_USERNAME}"/>
+        <property name="password" value="${DB_PSWD}"/>
+        <property name="initialSize" value="10"/>
+        <property name="maxActive" value="250"/>
+        <property name="maxIdle" value="50"/>
+        <property name="minIdle" value="10"/>
+        <property name="maxWait" value="-1"/>
+        <property name="validationQuery" value="SELECT 1 FROM DUAL"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="true"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="300"/>
+        <property name="minEvictableIdleTimeMillis" value="240000"/>
+        <property name="timeBetweenEvictionRunsMillis" value="1000"/>
+        <property name="defaultAutoCommit" value="false"/>
+    </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="ameeDataSource"/>
+        <property name="loadTimeWeaver">
+            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <property name="dataSource" ref="ameeDataSource"/>
+        <property name="jpaDialect" ref="jpaDialect"/>
+    </bean>
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+
+    <!-- Scheduler configuration -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <!-- name used to publish applicationContext to Quartz Job instances, so they can call business services -->
+        <property name="applicationContextSchedulerContextKey">
+            <value>applicationContext</value>
+        </property>
+    </bean>
+
+    <!-- Event/messaging beans -->
+    <springIntegration:annotation-config/>
+
+    <springIntegration:gateway id="ObserveEventGateway"
+                               service-interface="com.amee.domain.event.ObserveEventGateway"/>
+
+    <springIntegration:channel id="observe"/>
+    <springIntegration:channel id="beforeSiteDelete"/>
+    <springIntegration:channel id="beforeEnvironmentDelete"/>
+    <springIntegration:channel id="beforeGroupDelete"/>
+    <springIntegration:channel id="beforeUserDelete"/>
+
+    <springIntegration:channel id="beforeDataItemsDelete"/>
+    <springIntegration:channel id="beforeDataCategoryDelete"/>
+    <springIntegration:channel id="beforeDataItemDelete"/>
+    <springIntegration:channel id="beforeItemDefinitionDelete"/>
+    <springIntegration:channel id="beforeItemValueDefinitionDelete"/>
+    <springIntegration:channel id="beforeValueDefinitionDelete"/>
+
+</beans>

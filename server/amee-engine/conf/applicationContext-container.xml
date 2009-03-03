@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+    <bean id="ameeContainer" class="org.restlet.ext.spring.SpringComponent">
+        <property name="clientsList">
+            <list>
+                <value>file</value>
+            </list>
+        </property>
+        <property name="server" ref="ameeServer"/>
+        <property name="hosts">
+            <list>
+                <ref local="ameeHost"/>
+                <ref local="ameeAdminHost"/>
+            </list>
+        </property>
+        <property name="statusService" ref="engineStatusService"/>
+    </bean>
+
+    <bean id="ameeServer" class="org.restlet.ext.spring.SpringServer">
+        <constructor-arg index="0" value="ajp"/>
+        <constructor-arg index="1" value="8010"/>
+        <property name="parameters">
+            <props>
+                <prop key="converter">com.amee.engine.restlet.TransactionServerConverter</prop>
+                <prop key="minThreads">50</prop>
+                <prop key="maxThreads">700</prop>
+                <prop key="threadMaxIdleTimeMs">30000</prop>
+                <prop key="lowThreads">25</prop>
+                <prop key="lowResourceMaxIdleTimeMs">2500</prop>
+                <prop key="acceptorThreads">1</prop>
+                <prop key="acceptQueueSize">0</prop>
+                <!-- more params here: http://www.restlet.org/documentation/1.1/ext/com/noelios/restlet/ext/jetty/JettyServerHelper.html -->
+                <!-- advice here: http://jetty.mortbay.org/jetty5/doc/optimization.html (what about Jetty 6?) -->
+            </props>
+        </property>
+    </bean>
+
+    <bean id="ameeHost" class="org.restlet.ext.spring.SpringHost">
+        <constructor-arg ref="ameeContainer"/>
+        <property name="hostDomain" value="${HOST_NAME}"/>
+        <property name="attachments">
+            <map>
+                <entry key="" value-ref="defaultApplication"/>
+                <entry key="/auth" value-ref="authApplication"/>
+                <entry key="/data" value-ref="dataApplication"/>
+                <entry key="/profiles" value-ref="profilesApplication"/>
+            </map>
+        </property>
+        <!-- This value must match at least one entry in the SITE.NAME db table column. -->
+        <property name="name" value="AMEE"/>
+    </bean>
+
+    <bean id="ameeAdminHost" class="org.restlet.ext.spring.SpringHost">
+        <constructor-arg ref="ameeContainer"/>
+        <property name="hostDomain"
+                  value="${HOST_NAME.ADMIN}"/>
+        <property name="attachments">
+            <map>
+                <entry key="" value-ref="defaultApplication"/>
+                <entry key="/auth" value-ref="authApplication"/>
+                <entry key="/environments" value-ref="environmentsApplication"/>
+                <entry key="/apps" value-ref="appsApplication"/>
+                <entry key="/cache" value-ref="cacheApplication"/>
+            </map>
+        </property>
+        <!-- This value must match at least one entry in the SITE.NAME db table column. -->
+        <property name="name" value="AMEE.ADMIN"/>
+    </bean>
+
+    <bean id="modeEquals"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField" value="org.restlet.util.Template.MODE_EQUALS"/>
+    </bean>
+
+</beans>
