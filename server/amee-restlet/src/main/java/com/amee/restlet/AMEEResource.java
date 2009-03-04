@@ -64,7 +64,6 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     protected PathItem pathItem;
     protected DataCategory dataCategory;
 
-
     @Autowired
     protected ProfileService profileService;
 
@@ -146,7 +145,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
                             fetched.set(true);
                             Element element = doc.createElement("Resources");
                             if (getAPIVersion().isNotVersionOne()) {
-                                element.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://schemas.amee.com/2.0");
+                                element.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://schemas.amee.cc/2.0");
                             }
                             element.appendChild(getElement(doc));
                             doc.appendChild(element);

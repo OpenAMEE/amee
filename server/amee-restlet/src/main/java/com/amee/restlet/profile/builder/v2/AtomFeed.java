@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class AtomFeed {
 
-    private static final String AMEE_SCHEMA = "http://schemas.amee.com/2.0";
+    private static final String AMEE_SCHEMA = "http://schemas.amee.cc/2.0";
     private static final String AMEE_ITEM_SCHEME = AMEE_SCHEMA + "#item";
     private static final String AMEE_ITEM_VALUE_SCHEME = AMEE_SCHEMA + "#itemValue";
 
