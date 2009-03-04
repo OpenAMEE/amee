@@ -33,7 +33,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.RhinoException;
 import org.restlet.Context;
 import org.restlet.data.Form;
 import org.restlet.data.Request;
@@ -162,18 +161,19 @@ public class AlgorithmResource extends BaseResource implements Serializable {
             algorithmTestWrapper.setAmount(calculator.calculate(
                     algorithmTestWrapper.getMockAlgorithm(),
                     algorithmTestWrapper.getValuesMap()));
-        } catch (RhinoException e) {
-            StringBuffer testAlgorithmError = new StringBuffer();
-            testAlgorithmError.append("Error on line")
-                    .append("'").append(e.lineNumber()).append("'");
-            if (!StringUtils.isBlank(e.lineSource())) {
-                testAlgorithmError.append("\nLine Source: ").append(e.lineSource());
-            }
-            testAlgorithmError.append("\nError: ").append(e.getMessage());
-            if (!StringUtils.isBlank(e.getScriptStackTrace())) {
-                testAlgorithmError.append("\nScript StackTrace: ").append(e.getScriptStackTrace());
-            }
-            algorithmTestWrapper.setError(testAlgorithmError);
+            // TODO: see if we can re-implement this
+//        } catch (RhinoException e) {
+//            StringBuffer testAlgorithmError = new StringBuffer();
+//            testAlgorithmError.append("Error on line")
+//                    .append("'").append(e.lineNumber()).append("'");
+//            if (!StringUtils.isBlank(e.lineSource())) {
+//                testAlgorithmError.append("\nLine Source: ").append(e.lineSource());
+//            }
+//            testAlgorithmError.append("\nError: ").append(e.getMessage());
+//            if (!StringUtils.isBlank(e.getScriptStackTrace())) {
+//                testAlgorithmError.append("\nScript StackTrace: ").append(e.getScriptStackTrace());
+//            }
+//            algorithmTestWrapper.setError(testAlgorithmError);
         } catch (Exception e) {
 
             StringWriter writer = null;
