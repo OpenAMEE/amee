@@ -41,7 +41,6 @@ public class SiteFilter extends Filter implements ApplicationContextAware {
 
     protected int doHandle(Request request, Response response) {
         log.debug("do handle");
-        String host = request.getResourceRef().getHostDomain();
         // get the Site for this request
         Site site = siteService.getSiteByName(getSiteName());
         if (site != null) {
@@ -50,6 +49,7 @@ public class SiteFilter extends Filter implements ApplicationContextAware {
                 // siteAppUid is used by SiteAppResource 
                 request.getAttributes().put("siteAppUid", siteApp.getUid());
                 // globally useful values
+                request.getAttributes().put("environment", site.getEnvironment());
                 ThreadBeanHolder.set("springContext", applicationContext); // used in BaseResource
                 ThreadBeanHolder.set("environment", site.getEnvironment());
                 // set details about the SiteApp & App being visited

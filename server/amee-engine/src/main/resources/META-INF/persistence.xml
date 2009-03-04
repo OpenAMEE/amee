@@ -23,7 +23,6 @@
         <class>com.amee.domain.data.ItemValueDefinition</class>
         <class>com.amee.domain.profile.Profile</class>
         <class>com.amee.domain.profile.ProfileItem</class>
-        <class>com.amee.domain.APIVersion</class>
         <properties>
             <!-- *** Hibernate Configuration *** -->
             <!-- See: http://www.hibernate.org/hib_docs/reference/en/html/configuration-optional.html -->

@@ -27,15 +27,17 @@ function deleteUser(environmentUid, userUid) {
 
 <table>
 <tr>
-  <th>Username</th>
-  <th>Name</th>
-  <th>Status</th>
-  <th>Actions</th>
+    <th>Username</th>
+    <th>Name</th>
+    <th>API Version</th>
+    <th>Status</th>
+    <th>Actions</th>
 </tr>
 <#list users as u>
   <tr id='Elem_${u.uid}'>
     <td>${u.username}</td>
     <td>${u.name}</td>
+    <td>${u.APIVersion}</td>
     <td>${u.status}</td>
     <td>
         <#if browser.userActions.allowView><a href='/environments/${environment.uid}/users/${u.uid}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>

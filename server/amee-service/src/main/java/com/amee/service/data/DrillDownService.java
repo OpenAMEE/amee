@@ -41,59 +41,63 @@ public class DrillDownService implements Serializable {
 
     public Choices getChoices(DataCategory dataCategory, List<Choice> selections, Date startDate, Date endDate) {
 
+        DataBrowser browser;
+        Sheet sheet;
+        ItemDefinition itemDefinition;
+        Iterator<Choice> iterator;
+        Choice choice;
+        List<Choice> drillDownChoices;
         String name = "uid";
         List<Choice> choiceList = new ArrayList<Choice>();
-        DataBrowser browser = new DataBrowser();
+
+        // configure browser based on request params
+        browser = new DataBrowser();
         browser.setDataCategory(dataCategory);
         browser.setStartDate(startDate);
         browser.setEndDate(endDate);
-        Sheet sheet = dataSheetService.getSheet(browser);
-        ItemDefinition itemDefinition = dataCategory.getItemDefinition();
-        Iterator<Choice> iterator;
-        Choice choice;
 
-        // will only have sheet if itemDefinition was avaialable for this dataCategory
-        if (sheet != null) {
+        // we can do a drill down if an itemDefinition is attached to current dataCategory
+        itemDefinition = dataCategory.getItemDefinition();
+        if (itemDefinition != null) {
 
-            // get filtered sheet copy
+            // obtain drill down choices and selections
+            drillDownChoices = itemDefinition.getDrillDownChoices();
+            // re-order selection list to match choices
+            for (Choice c : drillDownChoices) {
+                int selectionIndex = selections.indexOf(c);
+                if (selectionIndex >= 0) {
+                    selections.add(selections.remove(selectionIndex));
+                }
+            }
+
+            // remove selections not in choices
+            iterator = selections.iterator();
+            while (iterator.hasNext()) {
+                choice = iterator.next();
+                if (!drillDownChoices.contains(choice)) {
+                    iterator.remove();
+                }
+            }
+
+            // remove drill down choices that have been selected
+            iterator = drillDownChoices.iterator();
+            while (iterator.hasNext()) {
+                choice = iterator.next();
+                if (selections.contains(choice)) {
+                    iterator.remove();
+                }
+            }
+
+            // TODO: give choices from itemValueDefinition priority?
+
+            // get filtered copy of sheet based on browser
+            sheet = dataSheetService.getSheet(browser);
             sheet = Sheet.getCopy(sheet, selections);
 
-            // produce choices list
-            if (itemDefinition.hasDrillDownAvailable()) {
-                // obtain drill down choices and selections
-                List<Choice> drillDownChoices = itemDefinition.getDrillDownChoices();
-                // re-order selection list to match choices
-                for (Choice c : drillDownChoices) {
-                    int selectionIndex = selections.indexOf(c);
-                    if (selectionIndex >= 0) {
-                        selections.add(selections.remove(selectionIndex));
-                    }
-                }
-                // remove selections not in choices
-                iterator = selections.iterator();
-                while (iterator.hasNext()) {
-                    choice = iterator.next();
-                    if (!drillDownChoices.contains(choice)) {
-                        iterator.remove();
-                    }
-                }
-                // remove drill down choices that have been selected
-                iterator = drillDownChoices.iterator();
-                while (iterator.hasNext()) {
-                    choice = iterator.next();
-                    if (selections.contains(choice)) {
-                        iterator.remove();
-                    }
-                }
-                // TODO: choices from itemValueDefinition have priority
-                // get distinct choices from sheet based on first column specified in drill down
-                if (drillDownChoices.size() > 0) {
-                    name = drillDownChoices.get(0).getName();
-                    choiceList = sheet.getChoices(name);
-                } else {
-                    // just return choices list for uid column
-                    choiceList = sheet.getChoices("uid");
-                }
+            // get distinct choices from sheet based on first column specified in drill down
+            if (drillDownChoices.size() > 0) {
+                name = drillDownChoices.get(0).getName();
+                choiceList = sheet.getChoices(name);
             } else {
                 // just return choices list for uid column
                 choiceList = sheet.getChoices("uid");
@@ -103,7 +107,7 @@ public class DrillDownService implements Serializable {
         // skip ahead if we only have one choice that is not "uid"
         if (!name.equals("uid") && (choiceList.size() == 1)) {
             selections.add(new Choice(name, choiceList.get(0).getValue()));
-            return getChoices(dataCategory, selections);
+            return getChoices(dataCategory, selections, startDate, endDate);
         } else {
             // wrap result in Choices object
             return new Choices(name, choiceList);

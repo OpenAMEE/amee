@@ -6,8 +6,10 @@
     <#return "yyyyMMdd"/>
 </#function>
 
-<#function getDateFormat>
-    <#return "yyyy-MM-dd'T'HH:mm:ssZ"/>
+<#function getDateFormat version="2.0">
+    <#if version == "1.0">
+        <#return getDateFormatV1()/>
+    <#else>
+        <#return "yyyy-MM-dd'T'HH:mm:ssZ"/>
+    </#if>
 </#function>
-
-<#assign loader = '<img src="/images/ajax-loader.gif"/>'>

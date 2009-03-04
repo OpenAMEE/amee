@@ -26,7 +26,7 @@
 <h2>Item Values</h2>
 <p>
     <table>
-        <tr>
+        <tr>                    
             <th>Name</th>
             <th>Value Definition</th>
             <th>Value Type</th>
