@@ -254,6 +254,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
+        values.put("pathItem", pathItem);
         values.put("apiVersions", environmentService.getAPIVersions());
         return values;
     }

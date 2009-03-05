@@ -1,6 +1,6 @@
 <div id="modal" class="columnBlock paddingTopBottom clearfix" style="overflow: auto; text-align: left;"></div>
 
-<#if activeUser?? && activeUser.APIVersion?? && activeUser.APIVersion.versionOne && node??>
+<#if activeUser?? && activeUser.APIVersion.versionOne && node??>
     <h2>Details</h2>
     <table>
         <#if node.displayName??>
@@ -96,11 +96,10 @@
 </script>
 
 <form id='api' onSubmit="return false;">
-<#if activeUser?? &&  activeUser.username != 'guest' && activeUser.apiVersion??>
-    <h2>API ${activeUser.APIVersion.version}
-    <br/>
-</#if>        
-</h2>
+    <#if activeUser?? && activeUser.username != 'guest'>
+        <h2>API ${activeUser.APIVersion.version}</h2>
+        <br/>
+    </#if>
     <button id="showAPIJSON" name='showAPIJSON' type='button' onClick='showJSON(); return false;'>Show JSON</button>
     <br/><br/>
     <button id="showAPIXML" name='showAPIXML' type='button' onClick='showXML(); return false;'>Show XML</button>

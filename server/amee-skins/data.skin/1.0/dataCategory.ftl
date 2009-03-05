@@ -27,7 +27,7 @@
 <h1>Data Category</h1>
 
 <#include 'dataTrail.ftl'>
-<#assign children = browser.pathItem.findChildrenByType('DC')>
+<#assign children = pathItem.findChildrenByType('DC')>
 
 <h2>Data Category Details</h2>
 <p>Name: ${dataCategory.name}<br/>
@@ -96,7 +96,7 @@
         Path: <input name='path' value='${dataCategory.path}' type='text' size='30'/><br/>
         Item Definition: <select name='itemDefinitionUid'>
         <option value=''>(No Item Definition)</option>
-        <#list browser.itemDefinitions as id>
+        <#list itemDefinitions as id>
             <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
         </#list>
         </select><br/><br/>
@@ -121,7 +121,7 @@
         Path: <input name='path' value='' type='text' size='30'/><br/>
         Item Definition: <select name='itemDefinitionUid'>
         <option value=''>(No Item Definition)</option>
-        <#list browser.itemDefinitions as id>
+        <#list itemDefinitions as id>
             <option value='${id.uid}'>${id.name}</option>
         </#list>
         </select><br/><br/>

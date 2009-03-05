@@ -8,6 +8,8 @@ import com.amee.domain.path.PathItem;
 import com.amee.domain.sheet.Sheet;
 import com.amee.restlet.data.DataCategoryResource;
 import com.amee.service.data.DataService;
+import com.amee.service.environment.EnvironmentService;
+import com.amee.service.definition.DefinitionServiceDAO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +46,10 @@ public class DataCategoryResourceBuilder {
 
     @Autowired
     private DataService dataService;
+
+    // TODO: Steve, is it good to inject the DAO here?
+    @Autowired
+    private DefinitionServiceDAO definitionServiceDAO;
 
     public JSONObject getJSONObject(DataCategoryResource resource) throws JSONException {
 
@@ -186,6 +192,7 @@ public class DataCategoryResourceBuilder {
         values.put("browser", resource.getDataBrowser());
         values.put("dataCategory", dataCategory);
         values.put("itemDefinition", dataCategory.getItemDefinition());
+        values.put("itemDefinitions", definitionServiceDAO.getItemDefinitions(EnvironmentService.getEnvironment()));
         values.put("node", dataCategory);
         if (sheet != null) {
             Pager pager = resource.getPager(resource.getItemsPerPage());
