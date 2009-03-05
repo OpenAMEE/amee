@@ -52,24 +52,24 @@ public class ProfileCategoryResource extends BaseProfileResource {
 
     private final Log log = LogFactory.getLog(getClass());
 
+    @Autowired
+    private ProfileCategoryFormAcceptor formAcceptor;
+
+    @Autowired
+    private ProfileCategoryAtomAcceptor atomAcceptor;
+
+    @Autowired
+    private ProfileCategoryXMLAcceptor xmlAcceptor;
+
+    @Autowired
+    private ProfileCategoryJSONAcceptor jsonAcceptor;
+
+    @Autowired
+    private ProfileCategoryResourceBuilderFactory builderFactory;
+
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
     private IProfileCategoryResourceBuilder builder;
     private boolean recurse = false;
-
-    @Autowired
-    ProfileCategoryFormAcceptor formAcceptor;
-
-    @Autowired
-    ProfileCategoryAtomAcceptor atomAcceptor;
-
-    @Autowired
-    ProfileCategoryXMLAcceptor xmlAcceptor;
-
-    @Autowired
-    ProfileCategoryJSONAcceptor jsonAcceptor;
-
-    @Autowired
-    ProfileCategoryResourceBuilderFactory builderFactory;
 
     @Override
     public void init(Context context, Request request, Response response) {

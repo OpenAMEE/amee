@@ -47,7 +47,6 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         return obj;
     }
 
-
     public Element getElement(ProfileItemResource resource, Document document) {
         ProfileItem profileItem = resource.getProfileItem();
         setProfileItemBuilder(profileItem);

@@ -67,7 +67,7 @@ public class Choice implements Serializable, Comparable, APIObject {
 
     public static List<Choice> parseChoices(String c) {
         List<Choice> choices = new ArrayList<Choice>();
-        if (c != null) {
+        if ((c != null) && !c.isEmpty()) {
             String[] arr = c.split(",");
             for (String s : arr) {
                 choices.add(Choice.parseNameAndValue(s));

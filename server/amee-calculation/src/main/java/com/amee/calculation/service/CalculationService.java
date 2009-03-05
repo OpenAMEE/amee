@@ -44,10 +44,10 @@ import java.util.Map;
 @Service
 public class CalculationService implements BeanFactoryAware, Serializable {
 
+    private final Log log = LogFactory.getLog(getClass());
+
     @Autowired
     private AlgorithmService algoService;
-
-    private final Log log = LogFactory.getLog(getClass());
 
     // Set by Spring context. The BeanFactory used to retreive ProfileFinder and DataFinder instances.
     private BeanFactory beanFactory;
@@ -71,7 +71,8 @@ public class CalculationService implements BeanFactoryAware, Serializable {
         BigDecimal amount;
         try {
             amount = calculate(algoService.getAlgorithm(profileItem.getItemDefinition()), values);
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            log.error("calculate() - caught Exception: " + e.getMessage(), e);
             amount = Decimal.ZERO;
         }
 
@@ -82,12 +83,12 @@ public class CalculationService implements BeanFactoryAware, Serializable {
 
     /**
      * Calculate and return the CO2 amount for a DataItem and a set of user specified values.
-     *
+     * <p/>
      * Note: I am unsure if this is in active use (SM)
      *
-     * @param dataItem - the DataItem for the calculation
+     * @param dataItem         - the DataItem for the calculation
      * @param userValueChoices - user supplied value choices
-     * @param version - the APIVersion. This is used to determine the correct ItemValueDefinitions to load into the calculation
+     * @param version          - the APIVersion. This is used to determine the correct ItemValueDefinitions to load into the calculation
      * @return the calculated CO2 amount
      */
     public BigDecimal calculate(DataItem dataItem, Choices userValueChoices, APIVersion version) {
@@ -96,7 +97,8 @@ public class CalculationService implements BeanFactoryAware, Serializable {
         BigDecimal amount;
         try {
             amount = calculate(algoService.getAlgorithm(dataItem.getItemDefinition()), values);
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            log.error("calculate() - caught Exception: " + e.getMessage(), e);
             amount = Decimal.ZERO;
         }
         return amount;
@@ -104,14 +106,13 @@ public class CalculationService implements BeanFactoryAware, Serializable {
 
     /**
      * Calculate and return the CO2 amount for given the provided algorithm and input values.
-     *
+     * <p/>
      * Intended to be used publically in test harnesses when passing the modified algorithm content and input values
      * for execution is desirable.
      *
      * @param algorithm
      * @param values
      * @return the algorithm result as a BigDecimal
-     *
      */
     public BigDecimal calculate(Algorithm algorithm, Map<String, Object> values) {
         log.debug("calculate()");

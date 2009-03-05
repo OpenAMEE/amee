@@ -1,9 +1,5 @@
 package com.amee.restlet;
 
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.template.Configuration;
-import freemarker.template.TemplateHashModel;
-import freemarker.template.TemplateModelException;
 import com.amee.domain.Pager;
 import com.amee.domain.PagerSetType;
 import com.amee.domain.sheet.SortOrder;
@@ -11,6 +7,10 @@ import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.APIFault;
 import com.amee.restlet.utils.MediaTypeUtils;
 import com.amee.service.ThreadBeanHolder;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.Configuration;
+import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateModelException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.dom.DocumentImpl;
@@ -67,6 +67,7 @@ public abstract class BaseResource extends com.amee.restlet.ComponentResource {
         } else {
             representation = super.represent(variant);
         }
+
         if (representation != null) {
             representation.setCharacterSet(CharacterSet.UTF_8);
             // TODO: need an option for this

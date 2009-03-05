@@ -26,8 +26,8 @@
 #    the login password  
 #
 require 'java'
-require '../lib/amee-maven/utils-1.0.0-SNAPSHOT.jar'
-require '../lib/mysql/mysql-connector-java.jar'
+require '../server/amee-domain/target/amee-domain-2.0.jar'
+require '../../AMEE.git/lib/mysql/mysql-connector-java.jar'
 require 'getoptlong'
 require 'rdoc/usage'
     
@@ -42,14 +42,14 @@ module JavaSql
 end
 
 module JM
-  include_package 'com.jellymold.utils.domain' 
+  include_package 'com.amee.domain' 
 end
 
 # JDBC Default Parameters
 @host="localhost"
 @database = "amee"
-@user = "root"
-@pswd = "root"
+@user = "amee"
+@pswd = "amee"
 
 # Parse command line arguments
 parser = GetoptLong.new

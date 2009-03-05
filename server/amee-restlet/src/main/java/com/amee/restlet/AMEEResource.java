@@ -29,10 +29,10 @@ import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
-import java.util.List;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This file is part of AMEE.
@@ -102,10 +102,13 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         }
     }
 
+    // TODO: This is a modified duplication of the same method in BaseResource. Find a way to merge.
     @Override
     public Representation represent(Variant variant) throws ResourceException {
-        if (log.isDebugEnabled())
+
+        if (log.isDebugEnabled()) {
             log.debug("represent() - method: " + getRequest().getMethod() + ", parameters: " + getForm().getMatrixString());
+        }
 
         Representation representation;
         if (variant.getMediaType().equals(MediaType.TEXT_HTML)) {
@@ -140,7 +143,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
 
                 public Document getDocument() throws IOException {
                     if ((fetched.get() == null) || !fetched.get()) {
-                        Document doc = new DocumentImpl();                                                                                  
+                        Document doc = new DocumentImpl();
                         try {
                             fetched.set(true);
                             Element element = doc.createElement("Resources");
@@ -274,7 +277,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
      * Produce the appropriate response for a successful POST or PUT.
      *
      * @param uri - for POSTS this will be the URI of the parent resource; for PUTS this will be
-     *  the URI of the updated resource.
+     *            the URI of the updated resource.
      * @param uid - the uid of the created or modified resource
      */
     public void success(String uri, String uid) {
@@ -309,6 +312,6 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     private boolean shouldReturnRepresentation() {
         return true;
         //String representationRequested = getForm().getFirstValue("returnRepresentation");
-       //return StringUtils.equals(representationRequested, "true");
+        //return StringUtils.equals(representationRequested, "true");
     }
 }
