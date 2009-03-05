@@ -51,7 +51,7 @@
 <h2>Profile Category Details</h2>
 <p>Name: ${dataCategory.name}<br/>
     <#if dataCategory.path != ''>Path: ${dataCategory.path}<br/></#if>
-    Full Path: ${browser.fullPath}<br/>
+    Full Path: ${basePath}<br/>
     <#if dataCategory.itemDefinition??>Item Definition: ${dataCategory.itemDefinition.name}<br/></#if>
     Environment: ${dataCategory.environment.name}<br/>
     Data Category UID: ${dataCategory.uid}<br/>

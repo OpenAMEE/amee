@@ -10,7 +10,7 @@
 
 <h2>Data Item Value Details</h2>
 <p>Value: ${itemValue.value}<br/>
-    Full Path: ${browser.fullPath}<br/>
+    Full Path: ${basePath}<br/>
     Item Value Definition: ${itemValue.itemValueDefinition.name}<br/>
     Value Definition: ${itemValue.itemValueDefinition.valueDefinition.name}<br/>
     Value Type: ${itemValue.itemValueDefinition.valueDefinition.valueType}<br/>
