@@ -73,7 +73,7 @@ class ProfileServiceDAO implements Serializable {
 
     // Handle events
 
-    @ServiceActivator(inputChannel="beforeDataItemDelete")
+    @ServiceActivator(inputChannel = "beforeDataItemDelete")
     public void beforeDataItemDelete(ObservedEvent oe) {
         DataItem dataItem = (DataItem) oe.getPayload();
         log.debug("beforeDataItemDelete");
@@ -92,7 +92,7 @@ class ProfileServiceDAO implements Serializable {
                 .executeUpdate();
     }
 
-    @ServiceActivator(inputChannel="beforeDataItemsDelete")
+    @ServiceActivator(inputChannel = "beforeDataItemsDelete")
     public void beforeDataItemsDelete(ObservedEvent oe) {
         ItemDefinition itemDefinition = (ItemDefinition) oe.getPayload();
         log.debug("beforeDataItemsDelete");
@@ -111,7 +111,7 @@ class ProfileServiceDAO implements Serializable {
                 .executeUpdate();
     }
 
-    @ServiceActivator(inputChannel="beforeDataCategoryDelete")
+    @ServiceActivator(inputChannel = "beforeDataCategoryDelete")
     public void beforeDataCategoryDelete(ObservedEvent oe) {
         DataCategory dataCategory = (DataCategory) oe.getPayload();
         log.debug("beforeDataCategoryDelete");
@@ -130,7 +130,7 @@ class ProfileServiceDAO implements Serializable {
                 .executeUpdate();
     }
 
-    @ServiceActivator(inputChannel="beforeUserDelete")
+    @ServiceActivator(inputChannel = "beforeUserDelete")
     public void beforeUserDelete(ObservedEvent oe) {
         User user = (User) oe.getPayload();
         log.debug("beforeUserDelete");
@@ -148,7 +148,7 @@ class ProfileServiceDAO implements Serializable {
 
     }
 
-    @ServiceActivator(inputChannel="beforeGroupDelete")
+    @ServiceActivator(inputChannel = "beforeGroupDelete")
     public void beforeGroupDelete(ObservedEvent oe) {
         Group group = (Group) oe.getPayload();
         log.debug("beforeGroupDelete");
@@ -165,7 +165,7 @@ class ProfileServiceDAO implements Serializable {
         }
     }
 
-    @ServiceActivator(inputChannel="beforeEnvironmentDelete")
+    @ServiceActivator(inputChannel = "beforeEnvironmentDelete")
     public void beforeEnvironmentDelete(ObservedEvent oe) {
         Environment environment = (Environment) oe.getPayload();
         log.debug("beforeEnvironmentDelete");
@@ -282,18 +282,25 @@ class ProfileServiceDAO implements Serializable {
         return profiles;
     }
 
+    // TODO: Work out the implication of using native queries for deletes. Does the EntityManager get confused?
     public void remove(Profile profile) {
         log.debug("remove: " + profile.getUid());
         // delete all ItemValues for ProfileItems within this Profile
-        entityManager.createQuery(
-                "DELETE FROM ItemValue iv " +
-                        "WHERE iv.item IN " +
-                        "(SELECT pi FROM ProfileItem pi WHERE pi.profile = :profile)")
-                .setParameter("profile", profile)
+        entityManager.createNativeQuery(
+                "DELETE iv " +
+                        "FROM ITEM_VALUE iv, ITEM i " +
+                        "WHERE iv.ITEM_ID = i.ID " +
+                        "AND i.TYPE = 'PI' " +
+                        "AND i.PROFILE_ID = :profileId")
+                .setParameter("profileId", profile.getId())
                 .executeUpdate();
         // delete all ProfileItems within this Profile
-        entityManager.createQuery("DELETE FROM ProfileItem pi WHERE pi.profile = :profile")
-                .setParameter("profile", profile)
+        entityManager.createQuery(
+                new StringBuilder()
+                        .append("DELETE ")
+                        .append("FROM ProfileItem pi ")
+                        .append("WHERE pi.profile.id = :profileId").toString())
+                .setParameter("profileId", profile.getId())
                 .executeUpdate();
         // delete Profile
         entityManager.remove(profile);
@@ -409,7 +416,7 @@ class ProfileServiceDAO implements Serializable {
         }
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
 
         if ((dataCategory == null) || (dataCategory.getItemDefinition() == null))
@@ -489,7 +496,7 @@ class ProfileServiceDAO implements Serializable {
         if (itemValueDefinitions.size() > 0) {
 
             transactionController.begin(true);
-            
+
             // create missing ItemValues
             for (ItemValueDefinition ivd : itemValueDefinitions) {
                 // start default value with value from ItemValueDefinition

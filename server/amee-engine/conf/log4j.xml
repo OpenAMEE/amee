@@ -55,6 +55,29 @@
         <priority value="DEBUG"/>
     </category>
 
+    <!-- ############### log4jdbc ################### -->
+    <!-- See: http://code.google.com/p/log4jdbc/ -->
+
+    <category name="jdbc.sqlonly">
+        <priority value="INFO"/>
+    </category>
+
+    <category name="jdbc.sqltiming">
+        <priority value="ERROR"/>
+    </category>
+
+    <category name="jdbc.audit">
+        <priority value="ERROR"/>
+    </category>
+
+    <category name="jdbc.resultset">
+        <priority value="ERROR"/>
+    </category>
+
+    <category name="jdbc.connection">
+        <priority value="INFO"/>
+    </category>
+
     <!-- ############### Default ################### -->
 
     <root>

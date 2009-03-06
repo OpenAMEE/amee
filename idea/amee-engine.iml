@@ -127,6 +127,7 @@
     <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:servlet-api-2.5:6.1.9" level="project" />
     <orderEntry type="library" exported="" name="Maven: com.noelios.restlet:com.noelios.restlet.ext.jetty:1.1.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty-sslengine:6.1.11" level="project" />
+    <orderEntry type="library" name="lof4jdbc" level="project" />
   </component>
 </module>
 

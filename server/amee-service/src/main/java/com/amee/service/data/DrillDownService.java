@@ -23,7 +23,6 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
-import com.amee.domain.sheet.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,24 +36,16 @@ import java.util.List;
 public class DrillDownService implements Serializable {
 
     @Autowired
-    private DataSheetService dataSheetService;
+    private DrillDownDAO drillDownDao;
 
     public Choices getChoices(DataCategory dataCategory, List<Choice> selections, Date startDate, Date endDate) {
 
-        DataBrowser browser;
-        Sheet sheet;
         ItemDefinition itemDefinition;
         Iterator<Choice> iterator;
         Choice choice;
         List<Choice> drillDownChoices;
         String name = "uid";
         List<Choice> choiceList = new ArrayList<Choice>();
-
-        // configure browser based on request params
-        browser = new DataBrowser();
-        browser.setDataCategory(dataCategory);
-        browser.setStartDate(startDate);
-        browser.setEndDate(endDate);
 
         // we can do a drill down if an itemDefinition is attached to current dataCategory
         itemDefinition = dataCategory.getItemDefinition();
@@ -90,17 +81,18 @@ public class DrillDownService implements Serializable {
 
             // TODO: give choices from itemValueDefinition priority?
 
-            // get filtered copy of sheet based on browser
-            sheet = dataSheetService.getSheet(browser);
-            sheet = Sheet.getCopy(sheet, selections);
-
             // get distinct choices from sheet based on first column specified in drill down
             if (drillDownChoices.size() > 0) {
                 name = drillDownChoices.get(0).getName();
-                choiceList = sheet.getChoices(name);
+                choiceList = drillDownDao.getDataItemValueChoices(
+                        dataCategory,
+                        selections,
+                        name);
             } else {
                 // just return choices list for uid column
-                choiceList = sheet.getChoices("uid");
+                choiceList = drillDownDao.getDataItemUIDChoices(
+                        dataCategory,
+                        selections);
             }
         }
 

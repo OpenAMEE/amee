@@ -59,11 +59,12 @@
     <!--
         **** Data capacity (collected from DB, with some contingency) ****
         5 Environments
-        60 Data Categories
-        40 Item Definitions
-        40 Algorithms
-        40 Value Definitions
-        200 Item Value Definitions
+        40 APIVersions
+        200 Data Categories
+        200 Item Definitions
+        200 Algorithms
+        100 Value Definitions
+        1000 Item Value Definitions
         10,000 Data Items (DI)
         50,000 Data Item Values (DIV)
 
@@ -100,7 +101,7 @@
 
     <!-- Algorithm -->
     <cache name="com.amee.domain.algorithm.AbstractAlgorithm"
-           maxElementsInMemory="40"
+           maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -110,7 +111,7 @@
 
     <!-- Algorithm -->
     <cache name="com.amee.domain.algorithm.Algorithm"
-           maxElementsInMemory="40"
+           maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -120,7 +121,7 @@
 
     <!-- DataCategory -->
     <cache name="com.amee.domain.data.DataCategory"
-           maxElementsInMemory="60"
+           maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -152,15 +153,7 @@
 
     <!-- ItemDefinition -->
     <cache name="com.amee.domain.data.ItemDefinition"
-           maxElementsInMemory="40"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
-    </cache>
-    <cache name="com.amee.domain.data.ItemDefinition.dataCategories"
-           maxElementsInMemory="60"
+           maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -168,7 +161,7 @@
            memoryStoreEvictionPolicy="LRU">
     </cache>
     <cache name="com.amee.domain.data.ItemDefinition.algorithms"
-           maxElementsInMemory="40"
+           maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -198,7 +191,7 @@
 
     <!-- ItemValueDefinition -->
     <cache name="com.amee.domain.data.ItemValueDefinition"
-           maxElementsInMemory="200"
+           maxElementsInMemory="1000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -220,7 +213,7 @@
 
     <!-- ValueDefinition -->
     <cache name="com.amee.domain.ValueDefinition"
-           maxElementsInMemory="40"
+           maxElementsInMemory="100"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"

@@ -43,9 +43,9 @@
     <!-- See: http://commons.apache.org/dbcp/configuration.html -->
     <!-- See: http://dev.mysql.com/doc/refman/5.1/en/connector-j-reference-configuration-properties.html -->
     <bean id="ameeDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="driverClassName" value="${DB_DRIVER}"/>
         <property name="url"
-                  value="jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?autoReconnect=true&amp;autoReconnectForPools=true&amp;useCompression=true"/>
+                  value="${DB_URL_PREFIX}:mysql://${DB_HOST}:3306/${DB_NAME}?autoReconnect=true&amp;autoReconnectForPools=true&amp;useCompression=true"/>
         <property name="username" value="${DB_USERNAME}"/>
         <property name="password" value="${DB_PSWD}"/>
         <property name="initialSize" value="10"/>
