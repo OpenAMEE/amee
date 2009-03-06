@@ -23,7 +23,7 @@ public class BaseBrowser {
 
     // START_OF_MONTH is default start date for GET requests.
     public StartEndDate getStartDate() {
-        return (startDate != null ? startDate : StartEndDate.START_OF_MONTH);
+        return (startDate != null ? startDate : StartEndDate.getStartOfMonthDate());
     }
 
     public void setEndDate(String date) {
@@ -45,5 +45,4 @@ public class BaseBrowser {
     public boolean isQuery() {
         return (startDate != null) || (endDate != null);
     }
-
 }

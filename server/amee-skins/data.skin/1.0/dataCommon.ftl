@@ -1,2 +1,6 @@
 <#assign sectionName = "data">
-<#assign basePath = browser.fullPath>
+<#if pathItem??>
+    <#assign basePath = "/data" + pathItem.fullPath>
+<#else>
+    <#assign basePath = "/data">
+</#if>

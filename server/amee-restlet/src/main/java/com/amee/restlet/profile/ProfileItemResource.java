@@ -25,7 +25,6 @@ import com.amee.restlet.profile.acceptor.ProfileItemAtomAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileItemFormAcceptor;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileItemResourceBuilderFactory;
-import com.amee.service.data.DataService;
 import com.amee.service.profile.ProfileConstants;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
@@ -61,13 +60,10 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     private ProfileItemFormAcceptor formAcceptor;
 
     @Autowired
-    ProfileService profileService;
+    private ProfileService profileService;
 
     @Autowired
-    DataService dataService;
-
-    @Autowired
-    ProfileItemResourceBuilderFactory builderFactory;
+    private ProfileItemResourceBuilderFactory builderFactory;
 
     private IProfileItemResourceBuilder builder;
 
@@ -125,8 +121,9 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
                 Form form = getRequest().getResourceRef().getQueryAsForm();
                 String unit = form.getFirstValue("returnUnit");
                 String perUnit = form.getFirstValue("returnPerUnit");
-                profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));            }
-                super.handleGet();
+                profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
+            }
+            super.handleGet();
         } else {
             notAuthorized();
         }
@@ -158,7 +155,6 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         } else {
             notAuthorized();
         }
-
     }
 
     protected boolean isStoreAuthorized() {
@@ -166,20 +162,19 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     public List<ProfileItem> doStore(Representation entity) {
+        // units are only supported beyond version one
         if (getAPIVersion().isNotVersionOne()) {
             String unit = getForm().getFirstValue("returnUnit");
             String perUnit = getForm().getFirstValue("returnPerUnit");
             profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
         }
-
+        // handle atom and standard forms differently
         MediaType type = entity.getMediaType();
-
         if (MediaType.APPLICATION_ATOM_XML.includes(type)) {
             return atomAcceptor.accept(this, entity);
         } else {
             return formAcceptor.accept(this, getForm());
         }
-
     }
 
     @Override
@@ -203,5 +198,4 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     public List<ProfileItem> getProfileItems() {
         return null;
     }
-
 }

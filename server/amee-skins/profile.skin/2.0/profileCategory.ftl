@@ -13,7 +13,7 @@
 
     function profileItemDeleted() {
         Effect.Fade(this.resourceElem);
-        var profileCategoryResource = new ProfileCategoryResource('${profile.uid}', '${browser.pathItem.fullPath}');
+        var profileCategoryResource = new ProfileCategoryResource('${profile.uid}', '${pathItem.fullPath}');
         profileCategoryResource.loadedCallback = profileCategoryLoaded;
         profileCategoryResource.load();
     }
@@ -54,7 +54,7 @@
 
         <#if dataCategory.itemDefinition?? && browser.profileItemActions.allowCreate>
             new DrillDown(
-                "/data${browser.pathItem.fullPath}",
+                "/data${pathItem.fullPath}",
                 "2.0",
                 "yyyy-MM-dd'T'HH:mm:ssZ",
                 true

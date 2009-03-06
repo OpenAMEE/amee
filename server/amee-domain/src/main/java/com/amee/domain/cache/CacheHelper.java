@@ -51,7 +51,7 @@ public class CacheHelper implements Serializable {
         String elementKey = factory.getKey();
         BlockingCache cache = getBlockingCache(cacheName);
         if (cache != null) {
-            log.debug("cache: " + cacheName + " elementKey: " + elementKey);
+            log.debug("getCacheable() cache: " + cacheName + " elementKey: " + elementKey);
             String originalThreadName = Thread.currentThread().getName();
             try {
                 Element element = cache.get(elementKey);
@@ -73,21 +73,25 @@ public class CacheHelper implements Serializable {
                 Thread.currentThread().setName(originalThreadName);
             }
         } else {
-            log.warn("cache NOT found: " + cacheName);
+            log.warn("getCacheable() cache NOT found: " + cacheName);
             o = factory.create();
         }
         return o;
+    }
+
+    public void clearCache(CacheableFactory factory) {
+        remove(factory.getCacheName(), factory.getKey());
     }
 
     // TODO: profile this method to see if it's cost effective
     public void clearCache(String cacheName, String elementKeyPrefix) {
         BlockingCache cache = getBlockingCache(cacheName);
         if (cache != null) {
-            log.debug("cache: " + cacheName + " elementKeyPrefix: " + elementKeyPrefix);
+            log.debug("clearCache() cache: " + cacheName + " elementKeyPrefix: " + elementKeyPrefix);
             for (Object o : cache.getKeys()) {
                 String elementKey = (String) o;
                 if (elementKey.startsWith(elementKeyPrefix)) {
-                    log.debug("removing: " + elementKey);
+                    log.debug("clearCache() removing: " + elementKey);
                     cache.remove(elementKey);
                 }
             }
@@ -97,24 +101,24 @@ public class CacheHelper implements Serializable {
     public void clearCache(String cacheName) {
         BlockingCache cache = getBlockingCache(cacheName);
         if (cache != null) {
-            log.debug("cache: " + cacheName);
+            log.debug("clearCache() cache: " + cacheName);
             cache.removeAll();
             cache.getKeys();
         }
     }
 
-    private String getCacheKey(String key, String environmentuid){
+    private String getCacheKey(String key, String environmentuid) {
         return key + "_" + environmentuid;
     }
 
-    public void remove(String cacheName, String elementKey, String environmentUid){
-        remove(cacheName, getCacheKey(elementKey,environmentUid));
+    public void remove(String cacheName, String elementKey, String environmentUid) {
+        remove(cacheName, getCacheKey(elementKey, environmentUid));
     }
 
     public void remove(String cacheName, String elementKey) {
         BlockingCache cache = getBlockingCache(cacheName);
         if (cache != null) {
-            log.debug("cache: " + cacheName + " elementKey: " + elementKey);
+            log.debug("remove() cache: " + cacheName + " elementKey: " + elementKey);
             cache.remove(elementKey);
         }
     }
@@ -123,14 +127,14 @@ public class CacheHelper implements Serializable {
         return cacheManager;
     }
 
-    public void add(String cacheName, String environmentUid, String elementKey, Object o){
-        add(cacheName,getCacheKey(elementKey,environmentUid),o);
+    public void add(String cacheName, String environmentUid, String elementKey, Object o) {
+        add(cacheName, getCacheKey(elementKey, environmentUid), o);
     }
 
     public void add(String cacheName, String elementKey, Object o) {
         BlockingCache cache = getBlockingCache(cacheName);
         if (cache != null) {
-            log.debug("cache: " + cacheName + " elementKey: " + elementKey);
+            log.debug("add() cache: " + cacheName + " elementKey: " + elementKey);
             cache.put(new Element(elementKey, o));
         }
     }
@@ -140,8 +144,8 @@ public class CacheHelper implements Serializable {
         return cache.getKeys();
     }
 
-    public Object get(String cacheName, String environmentUid, String elementKey){
-        return get(cacheName, getCacheKey(elementKey,environmentUid));
+    public Object get(String cacheName, String environmentUid, String elementKey) {
+        return get(cacheName, getCacheKey(elementKey, environmentUid));
     }
 
     public Object get(String cacheName, Object elementKey) {
@@ -158,8 +162,8 @@ public class CacheHelper implements Serializable {
         return null;
     }
 
-    public Object getAndBlock(String cacheName, String elementKey, String environmentUid){
-        return getAndBlock(cacheName, getCacheKey(elementKey,environmentUid));
+    public Object getAndBlock(String cacheName, String elementKey, String environmentUid) {
+        return getAndBlock(cacheName, getCacheKey(elementKey, environmentUid));
     }
 
     public Object getAndBlock(String cacheName, Object elementKey) {
@@ -173,8 +177,8 @@ public class CacheHelper implements Serializable {
         return null;
     }
 
-    public Object getAndRemove(String cacheName, String elementKey, String environmentUid){
-        return getAndRemove(cacheName, getCacheKey(elementKey,environmentUid));
+    public Object getAndRemove(String cacheName, String elementKey, String environmentUid) {
+        return getAndRemove(cacheName, getCacheKey(elementKey, environmentUid));
     }
 
     public Object getAndRemove(String cacheName, Object elementKey) {
@@ -192,17 +196,16 @@ public class CacheHelper implements Serializable {
         return null;
     }
 
-    public void add(String cacheName, PersistentObject persistentObject, String environmentUid){
-        add(cacheName,getCacheKey(persistentObject.getUid(),environmentUid),persistentObject);
+    public void add(String cacheName, PersistentObject persistentObject, String environmentUid) {
+        add(cacheName, getCacheKey(persistentObject.getUid(), environmentUid), persistentObject);
     }
 
     public void add(String cacheName, PersistentObject persistentObject) {
         add(cacheName, persistentObject.getUid(), persistentObject);
-
     }
 
-    public void remove(String cacheName, PersistentObject persistentObject, String environmentUid){
-        remove(cacheName,getCacheKey(persistentObject.getUid(),environmentUid));
+    public void remove(String cacheName, PersistentObject persistentObject, String environmentUid) {
+        remove(cacheName, getCacheKey(persistentObject.getUid(), environmentUid));
     }
 
     public void remove(String cacheName, PersistentObject persistentObject) {

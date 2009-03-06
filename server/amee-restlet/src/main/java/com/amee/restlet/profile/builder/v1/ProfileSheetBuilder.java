@@ -30,7 +30,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
     private ProfileCategoryResource resource;
     private ProfileService profileService;
 
-    ProfileSheetBuilder(ProfileCategoryResource resource, ProfileService profileService) {
+    public ProfileSheetBuilder(ProfileCategoryResource resource, ProfileService profileService) {
         super();
         this.resource = resource;
         this.profileService = profileService;

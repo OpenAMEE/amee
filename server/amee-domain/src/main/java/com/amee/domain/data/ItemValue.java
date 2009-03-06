@@ -21,6 +21,7 @@ package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
 import com.amee.domain.*;
+import com.amee.domain.environment.Environment;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
@@ -104,7 +105,7 @@ public class ItemValue implements PersistentObject, Pathable {
 
     public String getUsableValue() {
         String value = getValue();
-        if (value != null && value.isEmpty()) {
+        if ((value != null) && value.isEmpty()) {
             value = null;
         }
         return value;
@@ -142,6 +143,11 @@ public class ItemValue implements PersistentObject, Pathable {
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
 
+    }
+
+    @Transient
+    public Environment getEnvironment() {
+        return getItem().getEnvironment();
     }
 
     @Transient

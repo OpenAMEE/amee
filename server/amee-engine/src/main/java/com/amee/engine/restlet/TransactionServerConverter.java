@@ -23,8 +23,7 @@ public class TransactionServerConverter extends HttpServerConverter {
         // start transaction / entity manager
         transactionController.beforeToRequest(!"GET".equalsIgnoreCase(httpCall.getMethod()));
         // pass request through
-        HttpRequest req = super.toRequest(httpCall);
-        return req;
+        return super.toRequest(httpCall);
     }
 
     public void commit(HttpResponse response) {

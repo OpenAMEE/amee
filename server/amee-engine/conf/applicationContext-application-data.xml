@@ -33,7 +33,7 @@
                                                     <bean class="com.amee.restlet.data.DataFilter">
                                                         <property name="next">
                                                             <bean class="com.amee.restlet.LogFilter">
-                                                               <property name="next" ref="dataRouter"/>
+                                                                <property name="next" ref="dataRouter"/>
                                                             </bean>
                                                         </property>
                                                     </bean>

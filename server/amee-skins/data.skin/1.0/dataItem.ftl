@@ -14,7 +14,7 @@
     <#if dataItem.path != ''>Path: ${dataItem.path}<br/></#if>
     Start Date: ${startEndDate(dataItem.startDate)}<br/>
     End Date: <#if dataItem.endDate??>${startEndDate(dataItem.endDate)}<#else>None</#if><br/>
-    Full Path: ${browser.fullPath}<br/>
+    Full Path: ${basePath}<br/>
     Label: ${dataItem.label}<br/>
     Item Definition: ${dataItem.itemDefinition.name}<br/>
     Environment: ${dataItem.environment.name}<br/>
@@ -26,7 +26,7 @@
 <h2>Item Values</h2>
 <p>
     <table>
-        <tr>
+        <tr>                    
             <th>Name</th>
             <th>Value Definition</th>
             <th>Value Type</th>

@@ -39,5 +39,4 @@ public class ProfileItemResourceBuilderFactory {
             return v2ProfileItemResourceBuilder;
         }
     }
-
 }

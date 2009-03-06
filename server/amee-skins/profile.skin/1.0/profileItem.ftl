@@ -22,7 +22,7 @@
     <#else>
         End: Yes<br/>
     </#if>
-    Full Path: ${browser.fullPath}<br/>
+    Full Path: ${basePath}<br/>
     Data Item Label: ${profileItem.dataItem.label}<br/>
     Item Definition: ${profileItem.itemDefinition.name}<br/>
     Environment: ${profileItem.environment.name}<br/>

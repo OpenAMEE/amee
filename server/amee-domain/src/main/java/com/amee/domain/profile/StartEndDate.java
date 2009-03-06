@@ -35,9 +35,6 @@ public class StartEndDate extends GCDate {
 
     private static final DateTimeFormatter FMT = ISODateTimeFormat.dateTimeNoMillis();
 
-    public static final StartEndDate START_OF_MONTH =
-            new StartEndDate(new DateTime().dayOfMonth().withMinimumValue().millisOfDay().withMinimumValue().toDate());
-
     public StartEndDate() {
         this(new Date());
     }
@@ -80,7 +77,6 @@ public class StartEndDate extends GCDate {
         return new StartEndDate(thisPlusPeriod.toDate());
     }
 
-
     public static boolean validate(String dateStr) {
         try {
             FMT.parseDateTime(dateStr);
@@ -90,4 +86,7 @@ public class StartEndDate extends GCDate {
         return true;
     }
 
+    public static StartEndDate getStartOfMonthDate() {
+        return new StartEndDate(new DateTime().dayOfMonth().withMinimumValue().millisOfDay().withMinimumValue().toDate());
+    }
 }

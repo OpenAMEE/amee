@@ -562,10 +562,11 @@ var ProfilesApiService = Class.create(BaseProfileApiService, ({
             var rows = [];
             for (var i = 0; i < json.profiles.length; i++) {
                 var profile = json.profiles[i];
+                // TODO: deal with permissions
                 var detailRow = new Element('tr', {id : 'Elem_' + profile.uid})
                         .insert(new Element('td').insert(profile.path))
-                        .insert(new Element('td').insert(profile.permission.group.name))
-                        .insert(new Element('td').insert(profile.permission.user.username))
+                        // .insert(new Element('td').insert(profile.permission.group.name))
+                        // .insert(new Element('td').insert(profile.permission.user.username))
                         .insert(new Element('td').insert(profile.created));
 
                 // create actions

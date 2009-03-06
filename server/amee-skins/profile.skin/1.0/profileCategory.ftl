@@ -13,7 +13,7 @@
 
     function profileItemDeleted() {
         Effect.Fade(this.resourceElem);
-        var profileCategoryResource = new ProfileCategoryResource('${profile.uid}', '${browser.pathItem.fullPath}');
+        var profileCategoryResource = new ProfileCategoryResource('${profile.uid}', '${pathItem.fullPath}');
         profileCategoryResource.loadedCallback = profileCategoryLoaded;
         profileCategoryResource.load();
     }
@@ -34,7 +34,7 @@
     document.observe('dom:loaded', function() {
         <#if dataCategory.itemDefinition?? && browser.profileItemActions.allowCreate>
             new DrillDown(
-                "/data${browser.pathItem.fullPath}",
+                "/data${pathItem.fullPath}",
                 "1.0",
                 "yyyyMMdd",
                 true
@@ -51,13 +51,13 @@
 <h2>Profile Category Details</h2>
 <p>Name: ${dataCategory.name}<br/>
     <#if dataCategory.path != ''>Path: ${dataCategory.path}<br/></#if>
-    Full Path: ${browser.fullPath}<br/>
+    Full Path: ${basePath}<br/>
     <#if dataCategory.itemDefinition??>Item Definition: ${dataCategory.itemDefinition.name}<br/></#if>
     Environment: ${dataCategory.environment.name}<br/>
     Data Category UID: ${dataCategory.uid}<br/>
 </p>
 
-<#assign children = browser.pathItem.findChildrenByType('DC')>
+<#assign children = pathItem.findChildrenByType('DC')>
 <#if 0 != children?size>
     <h2>Profile Categories</h2>
     <p>

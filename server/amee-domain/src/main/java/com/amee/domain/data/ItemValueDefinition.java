@@ -110,7 +110,7 @@ public class ItemValueDefinition implements PersistentObject {
     @Column(name = "MODIFIED")
     private Date modified = Calendar.getInstance().getTime();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "ITEM_VALUE_DEFINITION_API_VERSION",
         joinColumns = {@JoinColumn(name = "ITEM_VALUE_DEFINITION_ID")},

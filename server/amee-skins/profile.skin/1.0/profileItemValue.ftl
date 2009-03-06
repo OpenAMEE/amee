@@ -10,7 +10,7 @@
 
 <h2>Profile Item Value Details</h2>
 <p><#if profileItemValue.value != ''>Value: ${profileItemValue.value}<br/></#if>
-    Full Path: ${browser.fullPath}<br/>
+    Full Path: ${basePath}<br/>
     Data Item Label: ${profileItemValue.item.dataItem.label}<br/>
     Item Value Definition: ${profileItemValue.itemValueDefinition.name}<br/>
     Value Definition: ${profileItemValue.itemValueDefinition.valueDefinition.name}<br/>
