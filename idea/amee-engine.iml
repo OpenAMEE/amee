@@ -69,9 +69,9 @@
     <orderEntry type="library" exported="" name="Maven: net.sf.ehcache:ehcache:1.5.0" level="project" />
     <orderEntry type="library" exported="" name="Maven: backport-util-concurrent:backport-util-concurrent:3.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: net.sf.jsr107cache:jsr107cache:1.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
     <orderEntry type="library" exported="" name="Maven: net.sourceforge.javacsv:javacsv:2.0" level="project" />
     <orderEntry type="library" exported="" name="Maven: commons-fileupload:commons-fileupload:1.2.1" level="project" />
-    <orderEntry type="library" exported="" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-orm:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-tx:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.opensymphony.quartz:quartz:1.6.1" level="project" />
