@@ -63,6 +63,8 @@ class DrillDownDAO implements Serializable {
 
     public List<Choice> getDataItemValueChoices(
             DataCategory dataCategory,
+            Date startDate,
+            Date endDate,
             List<Choice> selections,
             String name) {
 
@@ -86,11 +88,19 @@ class DrillDownDAO implements Serializable {
         if (itemValueDefinition != null) {
             if (!selections.isEmpty()) {
                 // get choices based on selections
-                dataItemIds = getDataItemIdsBySelections(dataCategory, selections);
+                dataItemIds = getDataItemIdsBySelections(
+                        dataCategory,
+                        startDate,
+                        endDate,
+                        selections);
                 if (!dataItemIds.isEmpty()) {
                     for (String value : getValues(
                             itemValueDefinition.getId(),
-                            getDataItemIdsBySelections(dataCategory, selections))) {
+                            getDataItemIdsBySelections(
+                                    dataCategory,
+                                    startDate,
+                                    endDate,
+                                    selections))) {
                         choices.add(new Choice(value));
                     }
                 }
@@ -112,6 +122,8 @@ class DrillDownDAO implements Serializable {
 
     public List<Choice> getDataItemUIDChoices(
             DataCategory dataCategory,
+            Date startDate,
+            Date endDate,
             List<Choice> selections) {
 
         ItemDefinition itemDefinition;
@@ -130,7 +142,11 @@ class DrillDownDAO implements Serializable {
         itemDefinition = dataCategory.getItemDefinition();
         if (!selections.isEmpty()) {
             // get choices based on selections
-            dataItemIds = getDataItemIdsBySelections(dataCategory, selections);
+            dataItemIds = getDataItemIdsBySelections(
+                    dataCategory,
+                    endDate,
+                    startDate,
+                    selections);
             if (!dataItemIds.isEmpty()) {
                 for (String value : this.getDataItemUIDs(dataItemIds)) {
                     choices.add(new Choice(value));
@@ -140,7 +156,9 @@ class DrillDownDAO implements Serializable {
             // get choices for top level (no selections)
             for (String value : getDataItemUIDs(
                     dataCategory.getId(),
-                    itemDefinition.getId())) {
+                    itemDefinition.getId(),
+                    startDate,
+                    endDate)) {
                 choices.add(new Choice(value));
             }
         }
@@ -150,6 +168,8 @@ class DrillDownDAO implements Serializable {
 
     public Collection<Long> getDataItemIdsBySelections(
             DataCategory dataCategory,
+            Date startDate,
+            Date endDate,
             List<Choice> selections) {
 
         Collection<Long> dataItemIds;
@@ -170,10 +190,12 @@ class DrillDownDAO implements Serializable {
         for (Choice selection : selections) {
             itemValueDefinition = dataCategory.getItemDefinition().getItemValueDefinition(selection.getName());
             if (itemValueDefinition != null) {
-                dataItemIds = getDataItemIdsByValue(
+                dataItemIds = getDataItemIds(
                         dataCategory.getId(),
                         dataCategory.getItemDefinition().getId(),
                         itemValueDefinition.getId(),
+                        startDate,
+                        endDate,
                         selection.getValue());
                 collections.add(dataItemIds);
                 allDataItemIds.addAll(dataItemIds);
@@ -265,12 +287,16 @@ class DrillDownDAO implements Serializable {
         }
     }
 
-    public List<String> getDataItemUIDs(
+    public Collection<String> getDataItemUIDs(
             Long dataCategoryId,
-            Long itemDefinitionId) {
+            Long itemDefinitionId,
+            Date startDate,
+            Date endDate) {
 
         StringBuilder sql;
         SQLQuery query;
+        List<Object[]> results;
+        Set<String> dataItemUids;
 
         // check arguments
         if ((dataCategoryId == null) || (itemDefinitionId == null)) {
@@ -279,7 +305,7 @@ class DrillDownDAO implements Serializable {
 
         // create SQL
         sql = new StringBuilder();
-        sql.append("SELECT UID ");
+        sql.append("SELECT UID, START_DATE, END_DATE ");
         sql.append("FROM ITEM ");
         sql.append("WHERE TYPE = 'DI' ");
         sql.append("AND DATA_CATEGORY_ID = :dataCategoryId ");
@@ -289,20 +315,26 @@ class DrillDownDAO implements Serializable {
         Session session = (Session) entityManager.getDelegate();
         query = session.createSQLQuery(sql.toString());
         query.addScalar("UID", Hibernate.STRING);
+        query.addScalar("START_DATE", Hibernate.TIMESTAMP);
+        query.addScalar("END_DATE", Hibernate.TIMESTAMP);
 
         // set parameters
         query.setLong("dataCategoryId", dataCategoryId);
         query.setLong("itemDefinitionId", itemDefinitionId);
 
         // execute SQL
-        try {
-            List<String> results = query.list();
-            log.debug("getDataItemUIDs() results: " + results.size());
-            return results;
-        } catch (Exception e) {
-            log.error("getDataItemUIDs() Caught Exception: " + e.getMessage(), e);
-            throw new RuntimeException(e);
+        results = (List<Object[]>) query.list();
+        log.debug("getDataItemUIDs() results: " + results.size());
+
+        // only include DataItem UIDs within the correct time frame
+        dataItemUids = new HashSet<String>();
+        for (Object[] row : results) {
+            if (isWithinTimeFrame(startDate, endDate, (Date) row[1], (Date) row[2])) {
+                dataItemUids.add((String) row[0]);
+            }
         }
+
+        return dataItemUids;
     }
 
     public List<String> getDataItemValues(
@@ -352,18 +384,22 @@ class DrillDownDAO implements Serializable {
         }
     }
 
-    public Collection<Long> getDataItemIdsByValue(
+    public Collection<Long> getDataItemIds(
             Long dataCategoryId,
             Long itemDefinitionId,
             Long itemValueDefinitionId,
+            Date startDate,
+            Date endDate,
             String value) {
 
         StringBuilder sql;
         SQLQuery query;
+        List<Object[]> results;
+        Set<Long> dataItemIds;
 
         // create SQL
         sql = new StringBuilder();
-        sql.append("SELECT DISTINCT i.ID ID ");
+        sql.append("SELECT i.ID ID, i.START_DATE START_DATE, i.END_DATE END_DATE ");
         sql.append("FROM ITEM i, ITEM_VALUE iv ");
         sql.append("WHERE i.ID = iv.ITEM_ID ");
         sql.append("AND i.TYPE = 'DI' ");
@@ -376,6 +412,8 @@ class DrillDownDAO implements Serializable {
         Session session = (Session) entityManager.getDelegate();
         query = session.createSQLQuery(sql.toString());
         query.addScalar("ID", Hibernate.LONG);
+        query.addScalar("START_DATE", Hibernate.TIMESTAMP);
+        query.addScalar("END_DATE", Hibernate.TIMESTAMP);
 
         // set parameters
         query.setLong("dataCategoryId", dataCategoryId);
@@ -384,13 +422,32 @@ class DrillDownDAO implements Serializable {
         query.setString("value", value);
 
         // execute SQL
-        try {
-            List<Long> results = query.list();
-            log.debug("getDataItemIdsByValue() results: " + results.size());
-            return results;
-        } catch (Exception e) {
-            log.error("Caught Exception: " + e.getMessage(), e);
-            throw new RuntimeException(e);
+        results = (List<Object[]>) query.list();
+        log.debug("getDataItemIds() results: " + results.size());
+
+        // only include DataItem IDs within the correct time frame
+        dataItemIds = new HashSet<Long>();
+        for (Object[] row : results) {
+            if (isWithinTimeFrame(startDate, endDate, (Date) row[1], (Date) row[2])) {
+                dataItemIds.add((Long) row[0]);
+            }
         }
+
+        return dataItemIds;
+    }
+
+    protected boolean isWithinTimeFrame(Date startDate, Date endDate, Date checkStartDate, Date checkEndDate) {
+        boolean result = true;
+        if (endDate != null) {
+            if (!(checkStartDate.before(endDate) &&
+                    ((checkEndDate == null) || checkEndDate.after(startDate)))) {
+                result = false;
+            }
+        } else {
+            if (!((checkEndDate == null) || checkEndDate.after(startDate))) {
+                result = false;
+            }
+        }
+        return result;
     }
 }

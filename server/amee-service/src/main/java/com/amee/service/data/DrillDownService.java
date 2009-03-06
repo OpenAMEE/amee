@@ -86,12 +86,16 @@ public class DrillDownService implements Serializable {
                 name = drillDownChoices.get(0).getName();
                 choiceList = drillDownDao.getDataItemValueChoices(
                         dataCategory,
+                        startDate,
+                        endDate,
                         selections,
                         name);
             } else {
                 // just return choices list for uid column
                 choiceList = drillDownDao.getDataItemUIDChoices(
                         dataCategory,
+                        startDate,
+                        endDate,
                         selections);
             }
         }
