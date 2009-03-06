@@ -21,10 +21,7 @@ package com.amee.calculation.service;
 
 import com.amee.domain.APIVersion;
 import com.amee.domain.algorithm.Algorithm;
-import com.amee.domain.data.CO2Amount;
-import com.amee.domain.data.DataItem;
-import com.amee.domain.data.Decimal;
-import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.*;
 import com.amee.domain.path.InternalValue;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choices;
@@ -166,7 +163,7 @@ public class CalculationService implements BeanFactoryAware, Serializable {
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
         dataItem.getItemDefinition().appendInternalValues(values, version);
         dataItem.appendInternalValues(values);
-        appendUserValueChoices(userValueChoices, values);
+        appendUserValueChoices(dataItem.getItemDefinition(), userValueChoices, values, version);
 
         Map<String, Object> returnValues = new HashMap<String, Object>();
         for (ItemValueDefinition ivd : values.keySet()) {
@@ -183,11 +180,15 @@ public class CalculationService implements BeanFactoryAware, Serializable {
         return returnValues;
     }
 
-    private void appendUserValueChoices(Choices userValueChoices, Map<ItemValueDefinition, InternalValue> values) {
+    private void appendUserValueChoices(ItemDefinition itemDefinition, Choices userValueChoices,
+                                        Map<ItemValueDefinition, InternalValue> values, APIVersion version) {
         if (userValueChoices != null) {
             Map<ItemValueDefinition, InternalValue> userChoices = new HashMap<ItemValueDefinition, InternalValue>();
-            for (ItemValueDefinition itemValueDefinition : values.keySet()) {
-                if (itemValueDefinition.isFromProfile() && userValueChoices.containsKey(itemValueDefinition.getPath())) {
+            for (ItemValueDefinition itemValueDefinition : itemDefinition.getItemValueDefinitions()) {
+                // Add each submitted user Choice that is available in the ItemDefinition and for the user's APIVersion
+                if (itemValueDefinition.isFromProfile() &&
+                        userValueChoices.containsKey(itemValueDefinition.getPath()) &&
+                        itemValueDefinition.isValidIn(version)) {
                     userChoices.put(itemValueDefinition,
                             new InternalValue(userValueChoices.get(itemValueDefinition.getPath()).getValue()));
                 }
