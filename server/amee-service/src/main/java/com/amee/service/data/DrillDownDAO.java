@@ -39,6 +39,9 @@ import java.util.*;
 
 /**
  * Uses native SQL to perform a drill down into DataItem values.
+ *
+ * TODO: Consider merging with DataServiceDAO?
+ *
  * <p/>
  * Note: I was unable to use the JPA EntityManger for this SQL so have used
  * the native Hibernate Session instead. This seems to be due to
@@ -76,6 +79,7 @@ class DrillDownDAO implements Serializable {
         // check arguments
         if ((dataCategory == null) ||
                 (dataCategory.getItemDefinition() == null) ||
+                (startDate == null) ||
                 (selections == null) ||
                 (name == null)) {
             throw new IllegalArgumentException("A required argument is missing.");
@@ -88,15 +92,15 @@ class DrillDownDAO implements Serializable {
         if (itemValueDefinition != null) {
             if (!selections.isEmpty()) {
                 // get choices based on selections
-                dataItemIds = getDataItemIdsBySelections(
+                dataItemIds = getDataItemIds(
                         dataCategory,
                         startDate,
                         endDate,
                         selections);
                 if (!dataItemIds.isEmpty()) {
-                    for (String value : getValues(
+                    for (String value : getDataItemValues(
                             itemValueDefinition.getId(),
-                            getDataItemIdsBySelections(
+                            getDataItemIds(
                                     dataCategory,
                                     startDate,
                                     endDate,
@@ -133,6 +137,7 @@ class DrillDownDAO implements Serializable {
         // check arguments
         if ((dataCategory == null) ||
                 (dataCategory.getItemDefinition() == null) ||
+                (startDate == null) ||
                 (selections == null)) {
             throw new IllegalArgumentException("A required argument is missing.");
         }
@@ -142,10 +147,10 @@ class DrillDownDAO implements Serializable {
         itemDefinition = dataCategory.getItemDefinition();
         if (!selections.isEmpty()) {
             // get choices based on selections
-            dataItemIds = getDataItemIdsBySelections(
+            dataItemIds = getDataItemIds(
                     dataCategory,
-                    endDate,
                     startDate,
+                    endDate,
                     selections);
             if (!dataItemIds.isEmpty()) {
                 for (String value : this.getDataItemUIDs(dataItemIds)) {
@@ -166,99 +171,14 @@ class DrillDownDAO implements Serializable {
         return choices;
     }
 
-    public Collection<Long> getDataItemIdsBySelections(
-            DataCategory dataCategory,
-            Date startDate,
-            Date endDate,
-            List<Choice> selections) {
-
-        Collection<Long> dataItemIds;
-        Set<Long> allDataItemIds;
-        Collection<Collection<Long>> collections;
-        ItemValueDefinition itemValueDefinition;
-
-        // check arguments
-        if ((dataCategory == null) ||
-                (dataCategory.getItemDefinition() == null) ||
-                (selections == null)) {
-            throw new IllegalArgumentException("Must have a DataCategory with an ItemDefinition and some selections.");
-        }
-
-        // iterate over selections and fetch DataItem IDs
-        allDataItemIds = new HashSet<Long>();
-        collections = new ArrayList<Collection<Long>>();
-        for (Choice selection : selections) {
-            itemValueDefinition = dataCategory.getItemDefinition().getItemValueDefinition(selection.getName());
-            if (itemValueDefinition != null) {
-                dataItemIds = getDataItemIds(
-                        dataCategory.getId(),
-                        dataCategory.getItemDefinition().getId(),
-                        itemValueDefinition.getId(),
-                        startDate,
-                        endDate,
-                        selection.getValue());
-                collections.add(dataItemIds);
-                allDataItemIds.addAll(dataItemIds);
-            } else {
-                throw new IllegalArgumentException("Could not locate ItemValueDefinition: " + selection.getName());
-            }
-        }
-
-        // reduce all to intersection
-        for (Collection<Long> c : collections) {
-            allDataItemIds.retainAll(c);
-        }
-
-        return allDataItemIds;
-    }
-
-    public List<String> getValues(
-            Long itemValueDefinitionId,
-            Collection<Long> ids) {
+    public Collection<String> getDataItemUIDs(Collection<Long> dataItemIds) {
 
         StringBuilder sql;
         SQLQuery query;
 
         // check arguments
-        if ((itemValueDefinitionId == null) || (ids == null) || (ids.isEmpty())) {
-            throw new IllegalArgumentException("A required argument is missing.");
-        }
-
-        // create SQL
-        sql = new StringBuilder();
-        sql.append("SELECT DISTINCT VALUE ");
-        sql.append("FROM ITEM_VALUE ");
-        sql.append("WHERE ITEM_VALUE_DEFINITION_ID = :itemValueDefinitionId ");
-        sql.append("AND ITEM_ID IN (:ids) ");
-        sql.append("ORDER BY LCASE(VALUE) ASC");
-
-        // create query
-        Session session = (Session) entityManager.getDelegate();
-        query = session.createSQLQuery(sql.toString());
-        query.addScalar("VALUE", Hibernate.STRING);
-
-        // set parameters
-        query.setLong("itemValueDefinitionId", itemValueDefinitionId);
-        query.setParameterList("ids", ids, Hibernate.LONG);
-
-        // execute SQL
-        try {
-            List<String> results = query.list();
-            log.debug("getDataItemValues() results: " + results.size());
-            return results;
-        } catch (Exception e) {
-            log.error("Caught Exception: " + e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    public List<String> getDataItemUIDs(Collection<Long> ids) {
-
-        StringBuilder sql;
-        SQLQuery query;
-
-        // check arguments
-        if ((ids == null) || (ids.isEmpty())) {
+        if ((dataItemIds == null) ||
+                (dataItemIds.isEmpty())) {
             throw new IllegalArgumentException("A required argument is missing.");
         }
 
@@ -266,7 +186,7 @@ class DrillDownDAO implements Serializable {
         sql = new StringBuilder();
         sql.append("SELECT UID ");
         sql.append("FROM ITEM ");
-        sql.append("WHERE ID IN (:ids)");
+        sql.append("WHERE ID IN (:dataItemIds)");
 
         // create query
         Session session = (Session) entityManager.getDelegate();
@@ -274,7 +194,7 @@ class DrillDownDAO implements Serializable {
         query.addScalar("UID", Hibernate.STRING);
 
         // set parameters
-        query.setParameterList("ids", ids, Hibernate.LONG);
+        query.setParameterList("dataItemIds", dataItemIds, Hibernate.LONG);
 
         // execute SQL
         try {
@@ -299,7 +219,9 @@ class DrillDownDAO implements Serializable {
         Set<String> dataItemUids;
 
         // check arguments
-        if ((dataCategoryId == null) || (itemDefinitionId == null)) {
+        if ((dataCategoryId == null) ||
+                (itemDefinitionId == null) ||
+                (startDate == null)) {
             throw new IllegalArgumentException("A required argument is missing.");
         }
 
@@ -335,6 +257,48 @@ class DrillDownDAO implements Serializable {
         }
 
         return dataItemUids;
+    }
+
+    public List<String> getDataItemValues(
+            Long itemValueDefinitionId,
+            Collection<Long> dataItemIds) {
+
+        StringBuilder sql;
+        SQLQuery query;
+
+        // check arguments
+        if ((itemValueDefinitionId == null) ||
+                (dataItemIds == null) ||
+                (dataItemIds.isEmpty())) {
+            throw new IllegalArgumentException("A required argument is missing.");
+        }
+
+        // create SQL
+        sql = new StringBuilder();
+        sql.append("SELECT DISTINCT VALUE ");
+        sql.append("FROM ITEM_VALUE ");
+        sql.append("WHERE ITEM_VALUE_DEFINITION_ID = :itemValueDefinitionId ");
+        sql.append("AND ITEM_ID IN (:dataItemIds) ");
+        sql.append("ORDER BY LCASE(VALUE) ASC");
+
+        // create query
+        Session session = (Session) entityManager.getDelegate();
+        query = session.createSQLQuery(sql.toString());
+        query.addScalar("VALUE", Hibernate.STRING);
+
+        // set parameters
+        query.setLong("itemValueDefinitionId", itemValueDefinitionId);
+        query.setParameterList("dataItemIds", dataItemIds, Hibernate.LONG);
+
+        // execute SQL
+        try {
+            List<String> results = query.list();
+            log.debug("getDataItemValues() results: " + results.size());
+            return results;
+        } catch (Exception e) {
+            log.error("Caught Exception: " + e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 
     public List<String> getDataItemValues(
@@ -382,6 +346,53 @@ class DrillDownDAO implements Serializable {
             log.error("getDataItemValues() Caught Exception: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    public Collection<Long> getDataItemIds(
+            DataCategory dataCategory,
+            Date startDate,
+            Date endDate,
+            List<Choice> selections) {
+
+        Collection<Long> dataItemIds;
+        Set<Long> allDataItemIds;
+        Collection<Collection<Long>> collections;
+        ItemValueDefinition itemValueDefinition;
+
+        // check arguments
+        if ((dataCategory == null) ||
+                (dataCategory.getItemDefinition() == null) ||
+                (startDate == null) ||
+                (selections == null)) {
+            throw new IllegalArgumentException("A required argument is missing.");
+        }
+
+        // iterate over selections and fetch DataItem IDs
+        allDataItemIds = new HashSet<Long>();
+        collections = new ArrayList<Collection<Long>>();
+        for (Choice selection : selections) {
+            itemValueDefinition = dataCategory.getItemDefinition().getItemValueDefinition(selection.getName());
+            if (itemValueDefinition != null) {
+                dataItemIds = getDataItemIds(
+                        dataCategory.getId(),
+                        dataCategory.getItemDefinition().getId(),
+                        itemValueDefinition.getId(),
+                        startDate,
+                        endDate,
+                        selection.getValue());
+                collections.add(dataItemIds);
+                allDataItemIds.addAll(dataItemIds);
+            } else {
+                throw new IllegalArgumentException("Could not locate ItemValueDefinition: " + selection.getName());
+            }
+        }
+
+        // reduce all to intersection
+        for (Collection<Long> c : collections) {
+            allDataItemIds.retainAll(c);
+        }
+
+        return allDataItemIds;
     }
 
     public Collection<Long> getDataItemIds(
@@ -436,15 +447,15 @@ class DrillDownDAO implements Serializable {
         return dataItemIds;
     }
 
-    protected boolean isWithinTimeFrame(Date startDate, Date endDate, Date checkStartDate, Date checkEndDate) {
+    protected boolean isWithinTimeFrame(Date targetStart, Date targetEnd, Date testStart, Date testEnd) {
         boolean result = true;
-        if (endDate != null) {
-            if (!(checkStartDate.before(endDate) &&
-                    ((checkEndDate == null) || checkEndDate.after(startDate)))) {
+        if (targetEnd != null) {
+            if (!(testStart.before(targetEnd) &&
+                    ((testEnd == null) || testEnd.after(targetStart)))) {
                 result = false;
             }
         } else {
-            if (!((checkEndDate == null) || checkEndDate.after(startDate))) {
+            if (!((testEnd == null) || testEnd.after(targetStart))) {
                 result = false;
             }
         }

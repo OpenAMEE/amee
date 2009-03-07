@@ -1,3 +1,22 @@
+/**
+ * This file is part of AMEE.
+ * <p/>
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * <p/>
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package com.amee.service.data;
 
 import com.amee.domain.data.DataCategory;
@@ -22,30 +41,12 @@ import java.util.List;
 
 /**
  * Primary service interface to Data Resources.
- * <p/>
- * This file is part of AMEE.
- * <p/>
- * AMEE is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * <p/>
- * AMEE is free software and is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * <p/>
- * Created by http://www.dgen.net.
- * Website http://www.amee.cc
  */
 @Service
 public class DataService {
 
     private final Log log = LogFactory.getLog(getClass());
-    
+
     @PersistenceContext
     private EntityManager em;
 
@@ -96,6 +97,7 @@ public class DataService {
         // code below replicates the query in:
         // com.amee.data.dao.DataServiceDAO#getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate)
 
+        // TODO: date logic here should share code in com.amee.service.data.DrillDownDAO#isWithinTimeFrame
         dataItems = dao.getDataItems(dc);
         i = dataItems.iterator();
         if (endDate != null) {
