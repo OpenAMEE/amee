@@ -18,7 +18,8 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.List;
 
-@Service
+// TODO: disabled for now
+// @Service
 public class ScheduledTaskManager implements Serializable, ApplicationContextAware {
 
     private final Log log = LogFactory.getLog(getClass());
