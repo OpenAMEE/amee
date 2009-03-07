@@ -247,6 +247,16 @@
 
     <!-- **** Application objects **** -->
 
+    <!-- Data Sheets -->
+    <cache name="DrillDownChoices"
+           maxElementsInMemory="1000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
     <!-- Profile Path Item Groups -->
     <cache name="ProfilePIGs"
            maxElementsInMemory="50"

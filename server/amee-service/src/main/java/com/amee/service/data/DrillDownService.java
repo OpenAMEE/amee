@@ -24,6 +24,7 @@ import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.cache.CacheHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,12 +40,14 @@ public class DrillDownService implements Serializable {
     @Autowired
     private DrillDownDAO drillDownDao;
 
-    public Choices getChoices(DataCategory dataCategory, List<Choice> selections, Date startDate, Date endDate) {
+    private CacheHelper cacheHelper = CacheHelper.getInstance();
+
+    public Choices getValueChoices(DataCategory dataCategory, List<Choice> selections, Date startDate, Date endDate) {
 
         ItemDefinition itemDefinition;
-        List<Choice> drillDownChoices;
-        String name = "uid";
-        List<Choice> choiceList = new ArrayList<Choice>();
+        List<Choice> drillDownChoices = null;
+        String name;
+        List<Choice> values = new ArrayList<Choice>();
 
         // must have a startDate
         // default to start of month
@@ -62,35 +65,41 @@ public class DrillDownService implements Serializable {
             removeSelectionsNotInDrillDownChoices(drillDownChoices, selections);
             removeDrillDownChoicesThatHaveBeenSelected(drillDownChoices, selections);
 
-            // TODO: give choices from itemValueDefinition priority?
+            // get drill down values
+            values = getDataItemChoices(dataCategory, startDate, endDate, selections, drillDownChoices);
+        }
 
-            // get distinct choices from sheet based on first column specified in drill down
-            if (drillDownChoices.size() > 0) {
-                name = drillDownChoices.get(0).getName();
-                choiceList = drillDownDao.getDataItemValueChoices(
+        // work out name
+        if ((drillDownChoices != null) && (drillDownChoices.size() > 0)) {
+            name = drillDownChoices.get(0).getName();
+        } else {
+            name = "uid";
+        }
+
+        // skip ahead if we only have one value that is not "uid"
+        if (!name.equals("uid") && (values.size() == 1)) {
+            selections.add(new Choice(name, values.get(0).getValue()));
+            return getValueChoices(dataCategory, selections, startDate, endDate);
+        } else {
+            // wrap result in Choices object
+            return new Choices(name, values);
+        }
+    }
+
+    private List<Choice> getDataItemChoices(
+            DataCategory dataCategory,
+            Date startDate,
+            Date endDate,
+            List<Choice> selections,
+            List<Choice> drillDownChoices) {
+        return (List<Choice>) cacheHelper.getCacheable(
+                new DrillDownFactory(
+                        drillDownDao,
                         dataCategory,
                         startDate,
                         endDate,
                         selections,
-                        name);
-            } else {
-                // just return choices list for uid column
-                choiceList = drillDownDao.getDataItemUIDChoices(
-                        dataCategory,
-                        startDate,
-                        endDate,
-                        selections);
-            }
-        }
-
-        // skip ahead if we only have one choice that is not "uid"
-        if (!name.equals("uid") && (choiceList.size() == 1)) {
-            selections.add(new Choice(name, choiceList.get(0).getValue()));
-            return getChoices(dataCategory, selections, startDate, endDate);
-        } else {
-            // wrap result in Choices object
-            return new Choices(name, choiceList);
-        }
+                        drillDownChoices));
     }
 
     protected void matchSelectionOrderToDrillDownChoices(List<Choice> drillDownChoices, List<Choice> selections) {
@@ -127,6 +136,6 @@ public class DrillDownService implements Serializable {
     }
 
     public Choices getChoices(DataCategory dataCategory, List<Choice> selections) {
-        return getChoices(dataCategory, selections, null, null);
+        return getValueChoices(dataCategory, selections, null, null);
     }
 }

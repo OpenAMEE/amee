@@ -8,7 +8,7 @@
 <div id="outer">
     <#include '/includes/header_and_mast.ftl'>
     <!-- loading div -->
-    <div id="loading" style="display: none;">Loading...&nbsp;<img src="/images/ajax-loader.gif"/></div>
+    <div id="loading" style="display: none;">Working...&nbsp;<img src="/images/ajax-loader.gif"/></div>
     <!-- start content -->
     <div id="content" class="clearfix">
         <#include '/includes/lhn.ftl'>
