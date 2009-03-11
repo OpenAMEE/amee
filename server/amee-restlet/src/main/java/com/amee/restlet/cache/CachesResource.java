@@ -40,10 +40,6 @@ public class CachesResource extends BaseResource implements Serializable {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        initialise(request, response);
-    }
-
-    protected void initialise(Request request, Response response) {
         Form form = request.getResourceRef().getQueryAsForm();
         setPage(request);
         cacheSort = cacheAdmin.getCacheSort(request, response, form);
