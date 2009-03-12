@@ -64,7 +64,7 @@ function deleteItemValueDefinition(itemValueDefinitionUid) {
       PerUnit: <input name='perUnit' type='text' size='10'/><br/>
       API Version:
       <#list apiVersions as v>
-        ${v.version}<input type="checkbox" name="apiversion-${v.version}" value="">
+        ${v.version}<input type="checkbox" name="apiversion-${v.version}" value="true">
       </#list><br>
       Alias To: <select name='aliasedTo'>
         <option value='' selected>None</option>
