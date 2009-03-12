@@ -252,7 +252,7 @@ public abstract class BaseResource extends com.amee.restlet.ComponentResource {
     }
 
     public void success(String redirectUri) {
-        if (MediaTypeUtils.isStandardWebBrowser(getRequest())) {
+        if (isStandardWebBrowser()) {
             // redirect for HTML clients (POST-THEN-REDIRECT)
             getResponse().setStatus(Status.REDIRECTION_FOUND);
             if (redirectUri != null) {

@@ -20,6 +20,7 @@ public class HeaderUtils implements Serializable {
         HeaderUtils.addHeader(new Parameter(name, value), response);
     }
 
+    @SuppressWarnings(value="unchecked")
     public static void addHeader(Parameter header, Response response) {
         Series<Parameter> additionalHeaders =
                 (Series<Parameter>) response.getAttributes().get(HttpConstants.ATTRIBUTE_HEADERS);

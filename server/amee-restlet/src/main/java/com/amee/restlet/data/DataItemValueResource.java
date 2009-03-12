@@ -141,13 +141,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
                     // update ItemValue
                     itemValue.setValue(form.getFirstValue("value"));
                 }
-                // all done
-                if (isStandardWebBrowser()) {
-                    success(getFullPath());
-                } else {
-                    // return a response for API calls
-                    super.handleGet();
-                }
+                successfulPut(getFullPath());
             } else {
                 log.warn("itemValue not found");
                 notFound();

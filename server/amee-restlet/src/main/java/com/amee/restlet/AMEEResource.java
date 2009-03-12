@@ -1,14 +1,12 @@
 package com.amee.restlet;
 
 import com.amee.domain.APIVersion;
-import com.amee.domain.PagerSetType;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.restlet.profile.builder.v2.AtomFeed;
 import com.amee.restlet.utils.HeaderUtils;
-import com.amee.restlet.utils.MediaTypeUtils;
 import com.amee.service.ThreadBeanHolder;
 import com.amee.service.auth.ResourceActions;
 import com.amee.service.data.DataService;
@@ -54,10 +52,6 @@ import java.util.Map;
  * Website http://www.amee.cc
  */
 public class AMEEResource extends BaseResource implements BeanFactoryAware {
-
-    private Form form;
-    private int page = 1;
-    private PagerSetType pagerSetType = PagerSetType.ALL;
 
     protected BeanFactory beanFactory;
     protected Environment environment;
@@ -275,44 +269,80 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     }
 
     /**
-     * Produce the appropriate response for a successful POST or PUT.
+     * Produce the appropriate response for a successful PUT.
      *
-     * @param uri - for POSTS this will be the URI of the parent resource; for PUTS this will be
-     *            the URI of the updated resource.
-     * @param uid - the uid of the created or modified resource
+     * @param uri - the URI of the updated resource.
      */
-    public void success(String uri, String uid) {
-        // For web browsers, continue with the same logic for for V1.X API. This is only to support the AMEE
-        // web interface.
-        if (MediaTypeUtils.isStandardWebBrowser(getRequest())) {
+    public void successfulPut(String uri) {
+        // For web browsers, continue with the same logic from AMEE 1.X.
+        if (isStandardWebBrowser()) {
             getResponse().setStatus(Status.REDIRECTION_FOUND);
-            if (uri != null) {
-                getResponse().setLocationRef(uri);
-            } else {
-                getResponse().setLocationRef(getRequest().getResourceRef().getBaseRef());
-            }
+            getResponse().setLocationRef(uri);
         } else {
-            // Generate a representation for the following scenarios:
-            //  (i) backwards compatibility with API V1.X.
-            //  (ii) if the client has specifically requested a representation (and thus following V1.X behaviour).
-            if (getAPIVersion().isVersionOne() || shouldReturnRepresentation()) {
+            // Return a representation when the following conditions apply:
+            //  (i) API V1.X (backwards compatibility)
+            //  (ii) if the client has specifically requested a representation
+            if (getAPIVersion().isVersionOne() || isRepresentationRequested()) {
                 super.handleGet();
-            } else if (isPost()) {
-                // For POSTs in API versions >V1.X set the Location and 201 Created headers.
-                getResponse().setLocationRef(uri + "/" + uid);
-                getResponse().setStatus(Status.SUCCESS_CREATED);
             } else {
-                // For PUTs in API versions >V1.X set the 200 Accepted header.
-                getResponse().setStatus(Status.SUCCESS_ACCEPTED);
+                // For PUTs in API versions >V1.X, return a 200 Accepted header.
+                getResponse().setStatus(Status.SUCCESS_OK);
+            }
+        }
+    }
+
+    /**
+     * Produce the appropriate response for a successful DELETE.
+     *
+     * @param uri - the redirect URI. Only used if redirect is supported by the client.
+     */
+    public void successfulDelete(String uri) {
+        if (isStandardWebBrowser()) {
+            getResponse().setStatus(Status.REDIRECTION_FOUND);
+            getResponse().setLocationRef(uri);
+        } else {
+            getResponse().setStatus(Status.SUCCESS_OK);
+        }
+    }
+
+    /**
+     * Produce the appropriate response for a successful POST.
+     *
+     * @param uri - the URI of the parent resource
+     *
+     */
+    public void successfulPost(String uri) {
+        successfulPost(uri, getRequest().getResourceRef().getBaseRef().toString());
+    }
+
+    /**
+     * Produce the appropriate response for a successful POST.
+     *
+     * @param parentUri - the URI of the parent resource
+     * @param uid - the uid of the created resource. This will be used to create the Location URI when a
+     * representation has not been requested by the client.
+     */
+    public void successfulPost(String parentUri, String uid) {
+        // For web browsers, continue with the same logic from AMEE 1.X.
+        if (isStandardWebBrowser()) {
+            getResponse().setStatus(Status.REDIRECTION_FOUND);
+            getResponse().setLocationRef(parentUri);
+        } else {
+            // Return a representation when the following conditions apply:
+            //  (i) API V1.X (backwards compatibility)
+            //  (ii) if the client has specifically requested a representation
+            if (getAPIVersion().isVersionOne() || isRepresentationRequested()) {
+                super.handleGet();
+            } else {
+                // For POSTs in API versions >V1.X set the Location and 201 Created headers.
+                getResponse().setLocationRef(parentUri + "/" + uid);
+                getResponse().setStatus(Status.SUCCESS_CREATED);
             }
         }
     }
 
     // True if the client has explicitly requested a representation to be returned following a POST or PUT request
-    //TODO
-    private boolean shouldReturnRepresentation() {
-        return true;
-        //String representationRequested = getForm().getFirstValue("returnRepresentation");
-        //return StringUtils.equals(representationRequested, "true");
+    private boolean isRepresentationRequested() {
+       return getForm().getFirstValue("http://andrewhitchcock.org/?post=305", "none").equals("full");
     }
 }

@@ -71,7 +71,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     public void addProfileCategoryInfo(ProfileCategoryResource resource, JSONObject obj) throws JSONException {
 
         // add objects
-        obj.put("path", resource.getFullPath());
+        obj.put("path", resource.getPathItem().getFullPath());
         obj.put("profileDate", resource.getProfileBrowser().getProfileDate());
 
         // add relevant Profile info depending on whether we are at root
@@ -178,7 +178,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     protected void addProfileCategoryInfo(ProfileCategoryResource resource, Document document, Element element) {
 
         // add objects
-        element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));
+        element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
 
         // add profile date
         element.appendChild(APIUtils.getElement(document, "ProfileDate", resource.getProfileBrowser().getProfileDate().toString()));

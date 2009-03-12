@@ -200,7 +200,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             // clear caches
             pathItemService.removePathItemGroup(dataItem.getEnvironment());
             dataSheetService.removeSheet(dataItem.getDataCategory());
-            success(getFullPath());
+            successfulPut(getFullPath());
         } else {
             notAuthorized();
         }
@@ -219,7 +219,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             pathItemService.removePathItemGroup(dataItem.getEnvironment());
             dataSheetService.removeSheet(dataItem.getDataCategory());
             dataService.remove(dataItem);
-            success(pathItem.getParent().getFullPath());
+            successfulDelete(pathItem.getParent().getFullPath());
         } else {
             notAuthorized();
         }

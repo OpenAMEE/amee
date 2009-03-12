@@ -19,9 +19,8 @@ import org.apache.abdera.ext.opensearch.OpenSearchExtensionFactory;
 import org.apache.abdera.model.*;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;       
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -65,7 +64,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         JSONObject obj = new JSONObject();
 
         // add objects
-        obj.put("path", resource.getFullPath());
+        obj.put("path", resource.getPathItem().getFullPath());
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
@@ -146,7 +145,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         // create element
         Element element = document.createElement("ProfileCategoryResource");
 
-        element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));
+        element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {

@@ -175,9 +175,11 @@ public class ProfileCategoryResource extends BaseProfileResource {
             if (!profileItems.isEmpty()) {
                 // clear caches
                 profileService.clearCaches(getProfile());
-                //TODO - usage of getBrowserFullPath
-                success(getBrowserFullPath(), getProfileItems().get(0).getUid());
-            }
+                if (isPost()) {
+                    successfulPost(getFullPath(), getProfileItems().get(0).getUid());
+                } else {
+                    successfulPut(getFullPath());
+                }            }
         } else {
             notAuthorized();
         }
@@ -222,7 +224,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
         if (profileBrowser.getProfileActions().isAllowDelete()) {
             profileService.clearCaches(getProfile());
             profileService.remove(getProfile());
-            success("/profiles");
+            successfulDelete("/profiles");
         } else {
             notAuthorized();
         }

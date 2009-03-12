@@ -46,7 +46,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         ProfileItem profileItem = resource.getProfileItem();
         setProfileItemBuilder(resource, profileItem);
         obj.put("profileItem", profileItem.getJSONObject(true));
-        obj.put("path", resource.getFullPath());
+        obj.put("path", resource.getPathItem().getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
         return obj;
     }
@@ -57,7 +57,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         setProfileItemBuilder(resource, profileItem);
         Element element = document.createElement("ProfileItemResource");
         element.appendChild(profileItem.getElement(document, true));
-        element.appendChild(APIUtils.getElement(document, "Path", resource.getFullPath()));
+        element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
     }
@@ -114,7 +114,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
             atomFeed.addEndDate(entry, profileItem.getEndDate().toString());
         }
 
-        atomFeed.addAmount(entry, amount.toString(), returnUnit.toString());
+        atomFeed.addAmount(entry, amount, returnUnit.toString());
 
         atomFeed.addItemValuesWithLinks(entry, profileItem.getItemValues(), "");
 

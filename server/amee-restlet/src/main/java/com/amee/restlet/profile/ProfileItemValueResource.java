@@ -186,14 +186,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
             } else {
                 formAcceptor.accept(this, getForm());
             }
-
-            if (isStandardWebBrowser()) {
-                // Return response headers for web client calls
-                success(getBrowserFullPath());
-            } else {
-                // Return a response for API calls
-                super.handleGet();
-            }
+            successfulPut(getFullPath());
         } else {
             notAuthorized();
         }

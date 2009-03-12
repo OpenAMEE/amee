@@ -53,10 +53,6 @@ public abstract class BaseProfileResource extends AMEEResource {
         return getPager(getItemsPerPage());
     }
 
-    public String getFullPath() {
-        return pathItem.getFullPath();
-    }
-
     public boolean hasParent() {
         return pathItem.getParent() != null;
     }
@@ -94,7 +90,7 @@ public abstract class BaseProfileResource extends AMEEResource {
         return dataService;
     }
 
-    public String getBrowserFullPath() {
+    public String getFullPath() {
         if ((getProfile() != null) && (pathItem != null)) {
             return "/profiles/" + getProfile().getDisplayPath() + pathItem.getFullPath();
         } else {

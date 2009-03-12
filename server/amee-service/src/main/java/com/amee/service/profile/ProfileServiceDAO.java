@@ -73,6 +73,7 @@ class ProfileServiceDAO implements Serializable {
 
     // Handle events
 
+    @SuppressWarnings(value="unchecked")
     @ServiceActivator(inputChannel = "beforeDataItemDelete")
     public void beforeDataItemDelete(ObservedEvent oe) {
         DataItem dataItem = (DataItem) oe.getPayload();
@@ -92,6 +93,7 @@ class ProfileServiceDAO implements Serializable {
                 .executeUpdate();
     }
 
+    @SuppressWarnings(value="unchecked")
     @ServiceActivator(inputChannel = "beforeDataItemsDelete")
     public void beforeDataItemsDelete(ObservedEvent oe) {
         ItemDefinition itemDefinition = (ItemDefinition) oe.getPayload();
@@ -111,6 +113,7 @@ class ProfileServiceDAO implements Serializable {
                 .executeUpdate();
     }
 
+    @SuppressWarnings(value="unchecked")
     @ServiceActivator(inputChannel = "beforeDataCategoryDelete")
     public void beforeDataCategoryDelete(ObservedEvent oe) {
         DataCategory dataCategory = (DataCategory) oe.getPayload();
@@ -130,6 +133,7 @@ class ProfileServiceDAO implements Serializable {
                 .executeUpdate();
     }
 
+    @SuppressWarnings(value="unchecked")
     @ServiceActivator(inputChannel = "beforeUserDelete")
     public void beforeUserDelete(ObservedEvent oe) {
         User user = (User) oe.getPayload();
@@ -148,6 +152,7 @@ class ProfileServiceDAO implements Serializable {
 
     }
 
+    @SuppressWarnings(value="unchecked")
     @ServiceActivator(inputChannel = "beforeGroupDelete")
     public void beforeGroupDelete(ObservedEvent oe) {
         Group group = (Group) oe.getPayload();
@@ -165,6 +170,7 @@ class ProfileServiceDAO implements Serializable {
         }
     }
 
+    @SuppressWarnings(value="unchecked")
     @ServiceActivator(inputChannel = "beforeEnvironmentDelete")
     public void beforeEnvironmentDelete(ObservedEvent oe) {
         Environment environment = (Environment) oe.getPayload();
@@ -190,6 +196,7 @@ class ProfileServiceDAO implements Serializable {
         return profile;
     }
 
+    @SuppressWarnings(value="unchecked")
     public Profile getProfileByUid(String uid) {
         Profile profile = null;
         List<Profile> profiles;
@@ -212,6 +219,7 @@ class ProfileServiceDAO implements Serializable {
         return profile;
     }
 
+    @SuppressWarnings(value="unchecked")
     public Profile getProfileByPath(String path) {
         Profile profile = null;
         List<Profile> profiles;
@@ -234,6 +242,7 @@ class ProfileServiceDAO implements Serializable {
         return profile;
     }
 
+    @SuppressWarnings(value="unchecked")
     public List<Profile> getProfiles(Pager pager) {
         Environment environment = EnvironmentService.getEnvironment();
         User user = AuthService.getUser();
@@ -308,6 +317,7 @@ class ProfileServiceDAO implements Serializable {
 
     // ProfileItems
 
+    @SuppressWarnings(value="unchecked")
     public ProfileItem getProfileItem(String uid, APIVersion apiVersion) {
         ProfileItem profileItem = null;
         List<ProfileItem> profileItems;
@@ -329,6 +339,7 @@ class ProfileServiceDAO implements Serializable {
         return profileItem;
     }
 
+    @SuppressWarnings(value="unchecked")
     public boolean equivilentProfileItemExists(ProfileItem profileItem) {
         List<ProfileItem> profileItems = entityManager.createQuery(
                 "SELECT DISTINCT pi " +
@@ -356,8 +367,9 @@ class ProfileServiceDAO implements Serializable {
         }
     }
 
+    @SuppressWarnings(value="unchecked")
     public List<ProfileItem> getProfileItems(Profile profile) {
-        List<ProfileItem> profileItems = entityManager.createQuery(
+        return (List<ProfileItem>) entityManager.createQuery(
                 "SELECT DISTINCT pi " +
                         "FROM ProfileItem pi " +
                         "LEFT JOIN FETCH pi.itemValues " +
@@ -366,9 +378,9 @@ class ProfileServiceDAO implements Serializable {
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.profileService")
                 .getResultList();
-        return profileItems;
     }
 
+    @SuppressWarnings(value="unchecked")
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, Date profileDate) {
         if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
 
@@ -453,6 +465,7 @@ class ProfileServiceDAO implements Serializable {
 
     // ItemValues
 
+    @SuppressWarnings(value="unchecked")
     public ItemValue getProfileItemValue(String uid) {
         ItemValue profileItemValue = null;
         List<ItemValue> profileItemValues;
@@ -477,6 +490,7 @@ class ProfileServiceDAO implements Serializable {
 
     // check Profile Item objects
 
+    @SuppressWarnings(value="unchecked")
     public void checkProfileItem(ProfileItem profileItem, APIVersion apiVersion) {
         // find ItemValueDefinitions not currently implemented in this Item
         List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
@@ -495,6 +509,8 @@ class ProfileServiceDAO implements Serializable {
                 .getResultList();
         if (itemValueDefinitions.size() > 0) {
 
+            // Ensure a transaction has been opened. The implementation of open-session-in-view we are using
+            // does not open transactions for GETs. This method is called for certain GETs.
             transactionController.begin(true);
 
             // create missing ItemValues

@@ -144,13 +144,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         if (isStoreAuthorized()) {
             List<ProfileItem> profileItems = doStore(entity);
             if (!profileItems.isEmpty()) {
-                // Return response headers for the web client
-                if (isStandardWebBrowser()) {
-                    success(getBrowserFullPath());
-                } else {
-                    // Return a response for API calls
-                    super.handleGet();
-                }
+                successfulPut(getFullPath());
             }
         } else {
             notAuthorized();
@@ -189,7 +183,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
             ProfileItem profileItem = getProfileItem();
             profileService.remove(profileItem);
             profileService.clearCaches(getProfile());
-            success(pathItem.getParent().getFullPath());
+            successfulDelete(pathItem.getParent().getFullPath());
         } else {
             notAuthorized();
         }

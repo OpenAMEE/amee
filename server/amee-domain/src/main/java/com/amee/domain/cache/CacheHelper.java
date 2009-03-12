@@ -51,7 +51,7 @@ public class CacheHelper implements Serializable {
         String elementKey = factory.getKey();
         BlockingCache cache = getBlockingCache(cacheName);
         if (cache != null) {
-            log.debug("getCacheable() cache: " + cacheName + " elementKey: " + elementKey);
+            log.debug("getCacheable() - cache: " + cacheName + " elementKey: " + elementKey);
             String originalThreadName = Thread.currentThread().getName();
             try {
                 Element element = cache.get(elementKey);
@@ -73,7 +73,7 @@ public class CacheHelper implements Serializable {
                 Thread.currentThread().setName(originalThreadName);
             }
         } else {
-            log.warn("getCacheable() cache NOT found: " + cacheName);
+            log.warn("getCacheable() - cache NOT found: " + cacheName);
             o = factory.create();
         }
         return o;
@@ -87,7 +87,7 @@ public class CacheHelper implements Serializable {
     public void clearCache(String cacheName, String elementKeyPrefix) {
         BlockingCache cache = getBlockingCache(cacheName);
         if (cache != null) {
-            log.debug("clearCache() cache: " + cacheName + " elementKeyPrefix: " + elementKeyPrefix);
+            log.debug("clearCache() - cache: " + cacheName + " elementKeyPrefix: " + elementKeyPrefix);
             for (Object o : cache.getKeys()) {
                 String elementKey = (String) o;
                 if (elementKey.startsWith(elementKeyPrefix)) {
@@ -101,7 +101,7 @@ public class CacheHelper implements Serializable {
     public void clearCache(String cacheName) {
         BlockingCache cache = getBlockingCache(cacheName);
         if (cache != null) {
-            log.debug("clearCache() cache: " + cacheName);
+            log.debug("clearCache() - cache: " + cacheName);
             cache.removeAll();
             cache.getKeys();
         }
@@ -118,7 +118,7 @@ public class CacheHelper implements Serializable {
     public void remove(String cacheName, String elementKey) {
         BlockingCache cache = getBlockingCache(cacheName);
         if (cache != null) {
-            log.debug("remove() cache: " + cacheName + " elementKey: " + elementKey);
+            log.debug("remove() - cache: " + cacheName + " elementKey: " + elementKey);
             cache.remove(elementKey);
         }
     }
@@ -134,7 +134,7 @@ public class CacheHelper implements Serializable {
     public void add(String cacheName, String elementKey, Object o) {
         BlockingCache cache = getBlockingCache(cacheName);
         if (cache != null) {
-            log.debug("add() cache: " + cacheName + " elementKey: " + elementKey);
+            log.debug("add() - cache: " + cacheName + " elementKey: " + elementKey);
             cache.put(new Element(elementKey, o));
         }
     }

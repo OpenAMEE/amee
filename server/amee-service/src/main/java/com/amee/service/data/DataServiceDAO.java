@@ -73,6 +73,7 @@ class DataServiceDAO implements Serializable {
 
     // Handle events
 
+    @SuppressWarnings(value="unchecked")
     @ServiceActivator(inputChannel = "beforeEnvironmentDelete")
     public void beforeEnvironmentDelete(ObservedEvent oe) {
         log.debug("beforeEnvironmentDelete");
@@ -88,6 +89,7 @@ class DataServiceDAO implements Serializable {
         }
     }
 
+    @SuppressWarnings(value="unchecked")
     @ServiceActivator(inputChannel = "beforeItemDefinitionDelete")
     public void beforeItemDefinitionDelete(ObservedEvent oe) {
         ItemDefinition itemDefinition = (ItemDefinition) oe.getPayload();
@@ -108,6 +110,7 @@ class DataServiceDAO implements Serializable {
                 .executeUpdate();
     }
 
+    @SuppressWarnings(value="unchecked")
     @ServiceActivator(inputChannel = "beforeItemValueDefinitionDelete")
     public void beforeItemValueDefinitionDelete(ObservedEvent oe) {
         log.debug("beforeItemValueDefinitionDelete");
@@ -115,12 +118,13 @@ class DataServiceDAO implements Serializable {
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
                         "WHERE iv.itemValueDefinition = :itemValueDefinition")
-                .setParameter("itemValueDefinition", ((ItemValueDefinition) oe.getPayload()))
+                .setParameter("itemValueDefinition", oe.getPayload())
                 .executeUpdate();
     }
 
     // DataCategories
 
+    @SuppressWarnings(value="unchecked")
     public DataCategory getDataCategory(String uid) {
         DataCategory dataCategory = null;
         List<DataCategory> dataCategories = entityManager.createQuery(
@@ -139,17 +143,18 @@ class DataServiceDAO implements Serializable {
         return dataCategory;
     }
 
+    @SuppressWarnings(value="unchecked")
     public List<DataCategory> getDataCategories(Environment environment) {
-        List<DataCategory> dataCategories = entityManager.createQuery(
+        return (List<DataCategory>) entityManager.createQuery(
                 "FROM DataCategory " +
                         "WHERE environment = :environment")
                 .setParameter("environment", environment)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.dataService")
                 .getResultList();
-        return dataCategories;
     }
 
+    @SuppressWarnings(value="unchecked")
     public void remove(DataCategory dataCategory) {
         log.debug("remove: " + dataCategory.getName());
         observeEventService.raiseEvent("beforeDataCategoryDelete", dataCategory);
@@ -181,6 +186,7 @@ class DataServiceDAO implements Serializable {
 
     // ItemValues
 
+    @SuppressWarnings(value="unchecked")
     public ItemValue getItemValue(String uid) {
         ItemValue itemValue = null;
         List<ItemValue> itemValues;
@@ -202,6 +208,7 @@ class DataServiceDAO implements Serializable {
 
     // DataItems
 
+    @SuppressWarnings(value="unchecked")
     public DataItem getDataItem(String uid) {
         DataItem dataItem = null;
         List<DataItem> dataItems;
@@ -224,9 +231,10 @@ class DataServiceDAO implements Serializable {
         return dataItem;
     }
 
-    // TODO: This uses up lots of memory - so what?!
+    //Note - This uses up lots of memory
+    @SuppressWarnings(value="unchecked")
     public List<DataItem> getDataItems(Environment environment) {
-        List<DataItem> dataItems = entityManager.createQuery(
+        return (List<DataItem>) entityManager.createQuery(
                 "SELECT DISTINCT di " +
                         "FROM DataItem di " +
                         "LEFT JOIN FETCH di.itemValues " +
@@ -235,11 +243,11 @@ class DataServiceDAO implements Serializable {
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.dataService")
                 .getResultList();
-        return dataItems;
     }
 
+    @SuppressWarnings(value="unchecked")
     public List<DataItem> getDataItems(DataCategory dataCategory) {
-        List<DataItem> dataItems = entityManager.createQuery(
+        return (List<DataItem>) entityManager.createQuery(
                 "SELECT DISTINCT di " +
                         "FROM DataItem di " +
                         "LEFT JOIN FETCH di.itemValues " +
@@ -250,9 +258,9 @@ class DataServiceDAO implements Serializable {
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.dataService")
                 .getResultList();
-        return dataItems;
     }
 
+    @SuppressWarnings(value="unchecked")
     public List<DataItem> getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
 
         String q = "SELECT DISTINCT di " +
@@ -277,6 +285,7 @@ class DataServiceDAO implements Serializable {
         }
     }
 
+    @SuppressWarnings(value="unchecked")
     public Choices getUserValueChoices(DataItem dataItem) {
         List<Choice> userValueChoices = new ArrayList<Choice>();
         for (ItemValueDefinition ivd : dataItem.getItemDefinition().getItemValueDefinitions()) {
@@ -303,6 +312,7 @@ class DataServiceDAO implements Serializable {
         entityManager.remove(dataItem);
     }
 
+    @SuppressWarnings(value="unchecked")
     public void checkDataItem(DataItem dataItem) {
         // find ItemValueDefinitions not currently implemented in this Item
         List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(

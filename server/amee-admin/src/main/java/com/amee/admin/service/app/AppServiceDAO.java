@@ -23,6 +23,7 @@ class AppServiceDAO implements Serializable {
 
     // Apps
 
+    @SuppressWarnings(value="unchecked")
     public App getAppByUid(String uid) {
         App app = null;
         if (uid != null) {
@@ -40,6 +41,7 @@ class AppServiceDAO implements Serializable {
         return app;
     }
 
+    @SuppressWarnings(value="unchecked")
     public App getAppByName(String name) {
         App app = null;
         if (name != null) {
@@ -57,6 +59,7 @@ class AppServiceDAO implements Serializable {
         return app;
     }
 
+    @SuppressWarnings(value="unchecked")
     public List<App> getApps(Pager pager) {
         // first count all apps
         long count = (Long) entityManager.createQuery(
@@ -84,15 +87,15 @@ class AppServiceDAO implements Serializable {
         return apps;
     }
 
+    @SuppressWarnings(value="unchecked")
     public List<App> getApps() {
-        List<App> apps = entityManager.createQuery(
+        return (List<App>) entityManager.createQuery(
                 "SELECT a " +
                 "FROM App a " +
                         "ORDER BY a.name")
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.appService")
                 .getResultList();
-        return apps;
     }
 
     public void save(App app) {
@@ -105,6 +108,7 @@ class AppServiceDAO implements Serializable {
 
     // Actions
 
+    @SuppressWarnings(value="unchecked")
     public Action getActionByUid(App app, String uid) {
         Action action = null;
         List<Action> actions = entityManager.createQuery(
@@ -122,6 +126,7 @@ class AppServiceDAO implements Serializable {
         return action;
     }
 
+    @SuppressWarnings(value="unchecked")
     public Action getActionByUid(String uid) {
         Action action = null;
         if (uid != null) {
@@ -139,6 +144,7 @@ class AppServiceDAO implements Serializable {
         return action;
     }
 
+    @SuppressWarnings(value="unchecked")
     public Action getActionByKey(String key) {
         Action action = null;
         if (key != null) {
@@ -160,6 +166,7 @@ class AppServiceDAO implements Serializable {
         return getActions(app, null);
     }
 
+    @SuppressWarnings(value="unchecked")
     public List<Action> getActions(App app, Pager pager) {
         if (pager != null) {
             // count all objects
@@ -197,6 +204,7 @@ class AppServiceDAO implements Serializable {
         return actions;
     }
 
+    @SuppressWarnings(value="unchecked")
     public List<Action> getActions(Pager pager) {
         // first count all objects
         long count = (Long) entityManager.createQuery(

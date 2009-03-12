@@ -164,12 +164,15 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         if ((dataCategory != null) || (dataItem != null) || !dataCategories.isEmpty() || !dataItems.isEmpty()) {
             // clear caches
             dataService.clearCaches(thisDataCategory);
-            if (isStandardWebBrowser()) {
-                success(getFullPath());
-            } else {
-                // return a response for API calls
-                super.handleGet();
-            }
+            if (isPost()) {
+                 if (getDataItems().isEmpty()) {
+                     successfulPost(getFullPath());
+                 } else {
+                     successfulPost(getFullPath(), getDataItems().get(0).getUid());
+                 }
+             } else {
+                 successfulPut(getFullPath());
+             }
         } else {
             badRequest();
         }
@@ -485,7 +488,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 }
             }
             dataService.clearCaches(thisDataCategory);
-            success(getFullPath());
+            successfulPut(getFullPath());
             dataCategory = thisDataCategory;
         } else {
             notAuthorized();
@@ -503,7 +506,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         if (dataBrowser.getDataCategoryActions().isAllowDelete()) {
             dataService.clearCaches(getDataCategory());
             dataService.remove(getDataCategory());
-            success(pathItem.getParent().getFullPath());
+            successfulDelete(pathItem.getParent().getFullPath());
         } else {
             notAuthorized();
         }
