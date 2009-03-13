@@ -330,9 +330,6 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         this.dataContentElementName = params.dataContentElementName || "apiDataItemContent";
 
         this.updateItem = params.updateItem || false;
-
-        var uid;
-        var path;
     },
     renderApiResponse: function($super, response) {
         var json = response.responseJSON;

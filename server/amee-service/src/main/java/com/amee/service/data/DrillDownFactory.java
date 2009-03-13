@@ -88,6 +88,10 @@ public class DrillDownFactory implements CacheableFactory {
         StringBuilder key = new StringBuilder();
         key.append("DrillDown_");
         key.append(dataCategory.getUid());
+        for (Choice selection : selections) {
+            key.append("_SL_");
+            key.append(selection.getValue().hashCode());
+        }
         if (startDate != null) {
             key.append("_SD_");
             key.append(startDate.getTime());
@@ -95,10 +99,6 @@ public class DrillDownFactory implements CacheableFactory {
         if (endDate != null) {
             key.append("_ED_");
             key.append(endDate.getTime());
-        }
-        for (Choice selection : selections) {
-            key.append("_SL_");
-            key.append(selection.getValue().hashCode());
         }
         return key.toString();
     }
