@@ -243,7 +243,9 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
             if (this.itemAllowList) {
                 $super(response);
             }
-        } else if (json.profileCategories.length > 0) {
+        } 
+        
+        if (json.profileCategories.length > 0) {
             // update elements
             this.headingCategoryElement = $(this.headingElementName);
             this.headingContentElement = $(this.headingElementName);

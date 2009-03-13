@@ -78,7 +78,9 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
 
         if (json.children.dataItems.rows) {
             $super(response, json.children.pager);
-        } else if (json.children.dataCategories.length > 0) {
+        }
+        
+        if (json.children.dataCategories.length > 0) {
             // update elements
             this.headingCategoryElement = $(this.headingElementName);
             this.headingContentElement = $(this.headingElementName);
