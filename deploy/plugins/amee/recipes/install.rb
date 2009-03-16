@@ -65,8 +65,9 @@ namespace :install do
     # Create lib
     puts "Creating new deployment lib directory #{package_dir}/lib"
     FileUtils.mkdir_p("#{package_dir}/lib")
-    FileUtils.cp_r Dir.glob("#{src_dir}/server/target/dependency/*.jar"), "#{package_dir}/lib", :verbose => true  
-    FileUtils.cp_r Dir.glob("#{src_dir}/server/*/target/dependency/*.jar"), "#{package_dir}/lib", :verbose => true  
+    FileUtils.cp_r Dir.glob("#{src_dir}/server/target/dependency/*.jar"), "#{package_dir}/lib"  
+    FileUtils.cp_r Dir.glob("#{src_dir}/server/*/target/dependency/*.jar"), "#{package_dir}/lib"  
+    FileUtils.cp_r Dir.glob("#{src_dir}/server/*/target/*.jar"), "#{package_dir}/lib"  
 
     # Create db
     puts "Creating new deployment db directory #{package_dir}/db"
