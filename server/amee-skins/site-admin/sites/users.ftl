@@ -68,14 +68,14 @@ Name: <input name='name' type='text' size='60'/><br/>
 Username: <input name='username' type='text' size='30'/><br/>
 Password: <input name='password' type='password' size='30'/><br/>
 Email: <input name='email' type='text' size='60'/><br/><br/>
-<#if !activeUser.apiVersion.versionOne>
-    API Version: <select name='apiVersion'> <br/>
-      <#list apiVersions as apiVersion>
-          <option value='${apiVersion.version}'>${apiVersion.version}</option>
+<#if !activeUser.APIVersion.versionOne>
+    API Version: <select name='APIVersion'> <br/>
+      <#list APIVersions as APIVersion>
+          <option value='${APIVersion.version}'>${APIVersion.version}</option>
       </#list>
     </select><br/>
 <#else>
-    <input type="hidden" name="apiVersion" value="${activeUser.apiVersion.version}" />
+    <input type="hidden" name="APIVersion" value="${activeUser.APIVersion.version}" />
 </#if>
 <input type='submit' value="Create User"/><br/>
 </form>

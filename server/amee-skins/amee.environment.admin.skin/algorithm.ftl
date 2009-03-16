@@ -149,9 +149,9 @@
         <div class="nameCol">Date(s):<br/><span style="font-size:12; font-weight:bold; color:silver;">optional</span></div>
         <div class="valueCol">
             <div class="nameCol">Start:</div> <input name='startDate' value='' type='text' size='20' />
-            <span style="font-size:12; font-weight:bold; color:silver;">format (${getDateFormat(activeUser.apiVersion.version)})</span><br/>
+            <span style="font-size:12; font-weight:bold; color:silver;">format (${getDateFormat(activeUser.APIVersion.version)})</span><br/>
             <div class="nameCol">End:</div> <input name='endDate' value='' type='text' size='20' />
-            <span style="font-size:12; font-weight:bold; color:silver;">format (${getDateFormat(activeUser.apiVersion.version)})</span>
+            <span style="font-size:12; font-weight:bold; color:silver;">format (${getDateFormat(activeUser.APIVersion.version)})</span>
         </div><br/><br/><br/><hr>
 
         <div name="testResult" id="testResult" style="visibility:visible;">

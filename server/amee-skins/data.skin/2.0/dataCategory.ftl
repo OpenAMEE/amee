@@ -34,7 +34,7 @@
             dataHeadingCategory : 'Data Category Details',
             dataHeadingCategoryElementName : 'apiDataCategoryHeading',
             dataContentElementName : "apiDataCategoryContent",
-            apiVersion : '2.0',
+            APIVersion : '2.0',
             updateCategory: true,
             createCategory: true
         });

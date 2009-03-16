@@ -46,7 +46,7 @@
                 dataHeadingCategory : 'Profile Category Details',
                 dataHeadingCategoryElementName : 'apiDataCategoryHeading',
                 dataContentElementName : "apiDataCategoryContent",
-                apiVersion : '2.0'
+                APIVersion : '2.0'
             });
             profileCategoryApiService.apiRequest();
 

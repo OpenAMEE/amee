@@ -17,7 +17,7 @@
             dataHeadingItem : 'Data Item Details',
             dataHeadingItemElementName : 'apiDataItemHeading',
             dataContentElementName : "apiDataItemContent",
-            apiVersion : '2.0',
+            APIVersion : '2.0',
             updateItem: true
         });
         dataItemApiService.apiRequest();
