@@ -21,17 +21,11 @@
  */
 package com.amee.service.data;
 
-import com.amee.core.ValueType;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.*;
-import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.*;
-import com.amee.service.ThreadBeanHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Date;
 
 public class DrillDownFactory implements CacheableFactory {
@@ -70,17 +64,16 @@ public class DrillDownFactory implements CacheableFactory {
             // get DataItem value choice list
             return drillDownDao.getDataItemValueChoices(
                     dataCategory,
-                    startDate,
-                    endDate,
-                    selections,
-                    drillDownChoices.get(0).getName());
+                    drillDownChoices.get(0).getName(), selections, startDate,
+                    endDate
+            );
         } else {
             // get DataItem UID choice list
             return drillDownDao.getDataItemUIDChoices(
                     dataCategory,
-                    startDate,
-                    endDate,
-                    selections);
+                    selections, startDate,
+                    endDate
+            );
         }
     }
 

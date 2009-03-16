@@ -38,10 +38,9 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * Uses native SQL to perform a drill down into DataItem values.
- *
- * TODO: Consider merging with DataServiceDAO?
- *
+ * Uses native SQL to perform a 'drill down' into DataItem values.
+ * <p/>
+ * See {@link DrillDownService} for a description of drill downs.
  * <p/>
  * Note: I was unable to use the JPA EntityManger for this SQL so have used
  * the native Hibernate Session instead. This seems to be due to
@@ -64,12 +63,25 @@ class DrillDownDAO implements Serializable {
         super();
     }
 
+    /**
+     * Retrieves a {@link List} of {@link Choice}s containing values for a user to select. The value choices
+     * are appropriate for the current level within the 'drill down' given the supplied {@link DataCategory},
+     * {@link com.amee.domain.data.ItemValueDefinition) path, selections, start date and end date.
+     *
+     * @param dataCategory the {@link com.amee.domain.data.DataCategory} from which {@link com.amee.domain.data.DataItem}s will
+     *                     be selected (required)
+     * @param path         the path of the {@link com.amee.domain.data.ItemValueDefinition) from which to select values
+     * @param selections   the current user selections for a drill down
+     * @param startDate    the date after which TODO
+     * @param endDate      the date before which TODO.  May be <code>null</code>
+     * @return a {@link java.util.List} of {@link com.amee.domain.sheet.Choice}s containing values for a user to select
+     */
     public List<Choice> getDataItemValueChoices(
             DataCategory dataCategory,
-            Date startDate,
-            Date endDate,
+            String path,
             List<Choice> selections,
-            String name) {
+            Date startDate,
+            Date endDate) {
 
         ItemDefinition itemDefinition;
         ItemValueDefinition itemValueDefinition;
@@ -81,30 +93,30 @@ class DrillDownDAO implements Serializable {
                 (dataCategory.getItemDefinition() == null) ||
                 (startDate == null) ||
                 (selections == null) ||
-                (name == null)) {
+                (path == null)) {
             throw new IllegalArgumentException("A required argument is missing.");
         }
 
         // get choices
         choices = new ArrayList<Choice>();
         itemDefinition = dataCategory.getItemDefinition();
-        itemValueDefinition = itemDefinition.getItemValueDefinition(name);
+        itemValueDefinition = itemDefinition.getItemValueDefinition(path);
         if (itemValueDefinition != null) {
             if (!selections.isEmpty()) {
                 // get choices based on selections
                 dataItemIds = getDataItemIds(
                         dataCategory,
-                        startDate,
-                        endDate,
-                        selections);
+                        selections, startDate,
+                        endDate
+                );
                 if (!dataItemIds.isEmpty()) {
                     for (String value : getDataItemValues(
                             itemValueDefinition.getId(),
                             getDataItemIds(
                                     dataCategory,
-                                    startDate,
-                                    endDate,
-                                    selections))) {
+                                    selections, startDate,
+                                    endDate
+                            ))) {
                         choices.add(new Choice(value));
                     }
                 }
@@ -118,17 +130,29 @@ class DrillDownDAO implements Serializable {
                 }
             }
         } else {
-            throw new IllegalArgumentException("ItemValueDefinition not found: " + name);
+            throw new IllegalArgumentException("ItemValueDefinition not found: " + path);
         }
 
         return choices;
     }
 
+    /**
+     * Retrieves a {@link List} of {@link Choice}s containing values for a user to select. The value choices
+     * are appropriate for the current level within the 'drill down' given the supplied {@link DataCategory},
+     * {@link com.amee.domain.data.ItemValueDefinition) path, selections, start date and end date.
+     *
+     * @param dataCategory the {@link com.amee.domain.data.DataCategory} from which {@link com.amee.domain.data.DataItem}s will
+     *                     be selected (required)
+     * @param selections   the current user selections for a drill down
+     * @param startDate    the date after which TODO
+     * @param endDate      the date before which TODO.  May be <code>null</code>
+     * @return a {@link java.util.List} of {@link com.amee.domain.sheet.Choice}s containing UIDs for a user to select
+     */
     public List<Choice> getDataItemUIDChoices(
             DataCategory dataCategory,
+            List<Choice> selections,
             Date startDate,
-            Date endDate,
-            List<Choice> selections) {
+            Date endDate) {
 
         ItemDefinition itemDefinition;
         List<Choice> choices;
@@ -149,9 +173,9 @@ class DrillDownDAO implements Serializable {
             // get choices based on selections
             dataItemIds = getDataItemIds(
                     dataCategory,
-                    startDate,
-                    endDate,
-                    selections);
+                    selections, startDate,
+                    endDate
+            );
             if (!dataItemIds.isEmpty()) {
                 for (String value : this.getDataItemUIDs(dataItemIds)) {
                     choices.add(new Choice(value));
@@ -171,7 +195,7 @@ class DrillDownDAO implements Serializable {
         return choices;
     }
 
-    public Collection<String> getDataItemUIDs(Collection<Long> dataItemIds) {
+    protected Collection<String> getDataItemUIDs(Collection<Long> dataItemIds) {
 
         StringBuilder sql;
         SQLQuery query;
@@ -207,7 +231,7 @@ class DrillDownDAO implements Serializable {
         }
     }
 
-    public Collection<String> getDataItemUIDs(
+    protected Collection<String> getDataItemUIDs(
             Long dataCategoryId,
             Long itemDefinitionId,
             Date startDate,
@@ -259,7 +283,7 @@ class DrillDownDAO implements Serializable {
         return dataItemUids;
     }
 
-    public List<String> getDataItemValues(
+    protected List<String> getDataItemValues(
             Long itemValueDefinitionId,
             Collection<Long> dataItemIds) {
 
@@ -301,7 +325,7 @@ class DrillDownDAO implements Serializable {
         }
     }
 
-    public List<String> getDataItemValues(
+    protected List<String> getDataItemValues(
             Long dataCategoryId,
             Long itemDefinitionId,
             Long itemValueDefinitionId) {
@@ -348,11 +372,11 @@ class DrillDownDAO implements Serializable {
         }
     }
 
-    public Collection<Long> getDataItemIds(
+    protected Collection<Long> getDataItemIds(
             DataCategory dataCategory,
+            List<Choice> selections,
             Date startDate,
-            Date endDate,
-            List<Choice> selections) {
+            Date endDate) {
 
         Collection<Long> dataItemIds;
         Set<Long> allDataItemIds;
@@ -395,7 +419,7 @@ class DrillDownDAO implements Serializable {
         return allDataItemIds;
     }
 
-    public Collection<Long> getDataItemIds(
+    protected Collection<Long> getDataItemIds(
             Long dataCategoryId,
             Long itemDefinitionId,
             Long itemValueDefinitionId,
