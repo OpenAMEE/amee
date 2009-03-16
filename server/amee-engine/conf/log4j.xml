@@ -59,7 +59,7 @@
     <!-- See: http://code.google.com/p/log4jdbc/ -->
 
     <category name="jdbc.sqlonly">
-        <priority value="INFO"/>
+        <priority value="ERROR"/>
     </category>
 
     <category name="jdbc.sqltiming">

@@ -61,6 +61,9 @@ class DataServiceDAO implements Serializable {
     @Autowired
     private PathItemService pathItemService;
 
+    @Autowired
+    private DrillDownService drillDownService;
+
     @Autowired(required = true)
     private ObserveEventService observeEventService;
 
@@ -330,14 +333,14 @@ class DataServiceDAO implements Serializable {
                 .setHint("org.hibernate.cacheRegion", "query.dataService")
                 .getResultList();
         if (itemValueDefinitions.size() > 0) {
-
+            // explicitly start a transaction
             transactionController.begin(true);
-
             // create missing ItemValues
             for (ItemValueDefinition ivd : itemValueDefinitions) {
                 entityManager.persist(new ItemValue(ivd, dataItem, ""));
             }
             // clear caches
+            drillDownService.clearDrillDownCache();
             pathItemService.removePathItemGroup(dataItem.getEnvironment());
             dataSheetService.removeSheet(dataItem.getDataCategory());
         }

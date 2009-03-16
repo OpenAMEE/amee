@@ -28,8 +28,6 @@ import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
-import com.amee.service.data.DataSheetService;
-import com.amee.service.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -62,14 +60,8 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     private DataService dataService;
 
     @Autowired
-    private DataSheetService dataSheetService;
-
-    @Autowired
-    private PathItemService pathItemService;
-
-    @Autowired
     private CalculationService calculationService;
-    
+
     private List<Choice> parameters = new ArrayList<Choice>();
 
     @Override
@@ -198,8 +190,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             }
 
             // clear caches
-            pathItemService.removePathItemGroup(dataItem.getEnvironment());
-            dataSheetService.removeSheet(dataItem.getDataCategory());
+            dataService.clearCaches(dataItem.getDataCategory());
             successfulPut(getFullPath());
         } else {
             notAuthorized();
@@ -216,8 +207,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         log.debug("removeRepresentations()");
         if (dataBrowser.getDataItemActions().isAllowDelete()) {
             DataItem dataItem = getDataItem();
-            pathItemService.removePathItemGroup(dataItem.getEnvironment());
-            dataSheetService.removeSheet(dataItem.getDataCategory());
+            dataService.clearCaches(dataItem.getDataCategory());
             dataService.remove(dataItem);
             successfulDelete(pathItem.getParent().getFullPath());
         } else {

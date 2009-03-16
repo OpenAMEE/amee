@@ -62,8 +62,12 @@ public class DataService {
     @Autowired
     private PathItemService pathItemService;
 
+    @Autowired
+    private DrillDownService drillDownService;
+
     public void clearCaches(DataCategory dc) {
         log.debug("clearCaches()");
+        drillDownService.clearDrillDownCache();
         pathItemService.removePathItemGroup(dc.getEnvironment());
         dataSheetService.removeSheet(dc);
     }

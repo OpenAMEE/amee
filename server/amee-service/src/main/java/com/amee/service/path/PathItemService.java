@@ -23,8 +23,6 @@ import com.amee.domain.cache.CacheHelper;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +30,6 @@ import java.io.Serializable;
 
 @Service
 public class PathItemService implements Serializable {
-
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private EnvironmentPIGFactory environmentPIGFactory;

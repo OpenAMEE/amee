@@ -19,12 +19,12 @@
  */
 package com.amee.service.data;
 
+import com.amee.domain.cache.CacheHelper;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
-import com.amee.domain.profile.StartEndDate;
-import com.amee.domain.cache.CacheHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +41,10 @@ public class DrillDownService implements Serializable {
     private DrillDownDAO drillDownDao;
 
     private CacheHelper cacheHelper = CacheHelper.getInstance();
+
+    public Choices getChoices(DataCategory dataCategory, List<Choice> selections) {
+        return getValueChoices(dataCategory, selections, null, null);
+    }
 
     public Choices getValueChoices(DataCategory dataCategory, List<Choice> selections, Date startDate, Date endDate) {
 
@@ -86,7 +90,11 @@ public class DrillDownService implements Serializable {
         }
     }
 
-    private List<Choice> getDataItemChoices(
+    public void clearDrillDownCache() {
+        cacheHelper.clearCache("DrillDownChoices");
+    }
+
+    protected List<Choice> getDataItemChoices(
             DataCategory dataCategory,
             Date startDate,
             Date endDate,
@@ -133,9 +141,5 @@ public class DrillDownService implements Serializable {
                 iterator.remove();
             }
         }
-    }
-
-    public Choices getChoices(DataCategory dataCategory, List<Choice> selections) {
-        return getValueChoices(dataCategory, selections, null, null);
     }
 }

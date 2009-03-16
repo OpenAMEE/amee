@@ -65,14 +65,6 @@ public class DataCategoryResourceBuilder {
             obj.put("actions", resource.getActions(resource.getDataBrowser().getDataCategoryActions()));
             obj.put("dataItemActions", resource.getActions(resource.getDataBrowser().getDataItemActions()));
 
-            //TODO - Query with Dig
-            // for the admin interface - add ItemDefinition list
-            //JSONArray itemDefinitions = new JSONArray();
-            //for (ItemDefinition iDefinition : definitionServiceDAO.getItemDefinitions(resource.getEnvironment())) {
-            //    itemDefinitions.put(iDefinition.getJSONObject(false));
-            //}
-            //obj.put("itemDefinitions", itemDefinitions);
-
             // list child Data Categories and child Data Items
             JSONObject children = new JSONObject();
 
