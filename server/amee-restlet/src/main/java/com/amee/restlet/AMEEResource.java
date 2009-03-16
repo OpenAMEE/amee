@@ -343,6 +343,6 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
 
     // True if the client has explicitly requested a representation to be returned following a POST or PUT request
     private boolean isRepresentationRequested() {
-       return getForm().getFirstValue("http://andrewhitchcock.org/?post=305", "none").equals("full");
+       return getForm().getFirstValue("representation", "none").equals("full");
     }
 }

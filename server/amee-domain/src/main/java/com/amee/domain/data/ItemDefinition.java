@@ -302,7 +302,7 @@ public class ItemDefinition implements PersistentObject {
 
     public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values, APIVersion version) {
         for (ItemValueDefinition ivd : getItemValueDefinitions()) {
-            if (ivd.isUsableValue() && ivd.isValidIn(version))
+            if (ivd.isUsableValue() && ivd.isValidInAPIVersion(version))
                 values.put(ivd, new InternalValue(ivd));
         }
     }

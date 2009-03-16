@@ -1,8 +1,11 @@
 package com.amee.domain.data.builder.v2;
 
 import com.amee.domain.APIUtils;
+import com.amee.domain.APIVersion;
 import com.amee.domain.Builder;
+import com.amee.domain.PersistentObject;
 import com.amee.domain.data.ItemValueDefinition;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -58,12 +61,20 @@ public class ItemValueDefinitionBuilder implements Builder {
             obj.put("created", itemValueDefinition.getCreated());
             obj.put("modified", itemValueDefinition.getModified());
             obj.put("value", itemValueDefinition.getValue());
+            obj.put("choices", itemValueDefinition.getChoices());
             obj.put("fromProfile", itemValueDefinition.isFromProfile());
             obj.put("fromData", itemValueDefinition.isFromData());
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
             obj.put("environment", itemValueDefinition.getEnvironment().getIdentityJSONObject());
             obj.put("itemDefinition", itemValueDefinition.getItemDefinition().getIdentityJSONObject());
+            obj.put("aliasedTo", itemValueDefinition.getAliasedTo() == null ? JSONObject.NULL : itemValueDefinition.getAliasedTo().getIdentityJSONObject());
+            JSONArray apiVersions = new JSONArray();
+            for (APIVersion v : itemValueDefinition.getAPIVersions()) {
+                apiVersions.put(v.getJSONObject(false));
+            }
+            obj.put("apiVersions", apiVersions);
         }
+
         return obj;
     }
 
@@ -88,9 +99,21 @@ public class ItemValueDefinitionBuilder implements Builder {
             element.setAttribute("created", itemValueDefinition.getCreated().toString());
             element.setAttribute("modified", itemValueDefinition.getModified().toString());
             element.appendChild(APIUtils.getElement(document, "Value", itemValueDefinition.getValue()));
+            element.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getChoices()));
             element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
             element.appendChild(itemValueDefinition.getEnvironment().getIdentityElement(document));
             element.appendChild(itemValueDefinition.getItemDefinition().getIdentityElement(document));
+            if (itemValueDefinition.getAliasedTo() != null) {
+                element.appendChild(itemValueDefinition.getAliasedTo().getIdentityElement(document));
+                element.appendChild(APIUtils.getIdentityElement(document, "AliasedTo", itemValueDefinition.getAliasedTo()));
+            } else {
+                element.appendChild(APIUtils.getElement(document, "AliasedTo",""));
+            }
+            Element apiVersions = document.createElement("APIVersions");
+            for (APIVersion v : itemValueDefinition.getAPIVersions()) {
+                apiVersions.appendChild(v.getElement(document, false));
+            }
+            element.appendChild(apiVersions);
         }
         return element;
     }

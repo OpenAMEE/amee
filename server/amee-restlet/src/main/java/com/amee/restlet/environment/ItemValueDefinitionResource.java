@@ -135,6 +135,9 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
             if (names.contains("value")) {
                 itemValueDefinition.setValue(form.getFirstValue("value"));
             }
+            if (names.contains("choices")) {
+                itemValueDefinition.setChoices(form.getFirstValue("choices"));
+            }
             if (names.contains("unit")) {
                 itemValueDefinition.setUnit(form.getFirstValue("unit"));
             }

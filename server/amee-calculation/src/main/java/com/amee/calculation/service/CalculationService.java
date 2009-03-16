@@ -189,7 +189,7 @@ public class CalculationService implements BeanFactoryAware, Serializable {
                 // Add each submitted user Choice that is available in the ItemDefinition and for the user's APIVersion
                 if (itemValueDefinition.isFromProfile() &&
                         userValueChoices.containsKey(itemValueDefinition.getPath()) &&
-                        itemValueDefinition.isValidIn(version)) {
+                        itemValueDefinition.isValidInAPIVersion(version)) {
                     userChoices.put(itemValueDefinition,
                             new InternalValue(userValueChoices.get(itemValueDefinition.getPath()).getValue()));
                 }

@@ -393,11 +393,15 @@ public class ItemValueDefinition implements PersistentObject {
         }
     }
 
+    public Set<APIVersion> getAPIVersions() {
+        return apiVersions;
+    }
+
     public void setAPIVersions(Set<APIVersion> apiVersions) {
         this.apiVersions = apiVersions;
     }
 
-    public boolean isValidIn(APIVersion apiVersion) {
+    public boolean isValidInAPIVersion(APIVersion apiVersion) {
         return apiVersions.contains(apiVersion);
     }
 

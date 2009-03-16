@@ -157,6 +157,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
                 newItemValueDefinition.setName(form.getFirstValue("name"));
                 newItemValueDefinition.setPath(form.getFirstValue("path"));
                 newItemValueDefinition.setValue(form.getFirstValue("value"));
+                newItemValueDefinition.setChoices(form.getFirstValue("choices"));
                 newItemValueDefinition.setFromData(Boolean.valueOf(form.getFirstValue("fromData")));
                 newItemValueDefinition.setFromProfile(Boolean.valueOf(form.getFirstValue("fromProfile")));
                 newItemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));

@@ -92,13 +92,13 @@ public class APIVersion implements PersistentObject, DatedObject {
 
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
-        obj.put("v", version);
+        obj.put("apiVersion", version);
         return obj;
     }
 
     public JSONObject getIdentityJSONObject() throws JSONException {
         JSONObject obj = APIUtils.getIdentityJSONObject(this);
-        obj.put("v", getVersion());
+        obj.put("apiVersion", getVersion());
         return obj;
     }
 
