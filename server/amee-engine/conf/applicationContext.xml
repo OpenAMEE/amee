@@ -45,7 +45,7 @@
     <bean id="ameeDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${DB_DRIVER}"/>
         <property name="url"
-                  value="${DB_URL_PREFIX}:mysql://${DB_HOST}:3306/${DB_NAME}?autoReconnect=true&amp;autoReconnectForPools=true&amp;useCompression=true"/>
+                  value="${DB_URL_PREFIX}:mysql://${DB_HOST}:3306/${DB_NAME}?autoReconnect=true&amp;autoReconnectForPools=true&amp;useCompression=false"/>
         <property name="username" value="${DB_USERNAME}"/>
         <property name="password" value="${DB_PSWD}"/>
         <property name="initialSize" value="10"/>
