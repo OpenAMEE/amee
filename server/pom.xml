@@ -13,7 +13,7 @@
 
   <!-- Project Properties. -->
   <properties>
-      <amee.version>2.0</amee.version>
+      <amee.version>2.1</amee.version>
       <spring.version>2.5.6</spring.version>
       <restlet.version>1.1.1</restlet.version>
       <org.json.version>2.0</org.json.version>
