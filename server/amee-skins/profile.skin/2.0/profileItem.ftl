@@ -39,6 +39,7 @@
 <h2>Profile Item Values</h2>
 <p>
     <form id="inputForm" action='#' method='POST' enctype='application/x-www-form-urlencoded'>
+        <input name="representation" value="full" type="hidden"/>
         <table id="inputTable">
         </table>
         <br/>

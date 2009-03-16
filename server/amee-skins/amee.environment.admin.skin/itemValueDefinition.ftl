@@ -28,9 +28,11 @@
   PerUnit: <input name='perUnit' value='<#if itemValueDefinition.hasPerUnits()>${itemValueDefinition.perUnit}</#if>' type='text' size="10"/><br/>
   API Version:
   <#list apiVersions as v>
-    ${v.version}<input type="checkbox" name="apiversion-${v.version}" value="true" <#if itemValueDefinition.includedInAPIVersion(v)>checked</#if>>
-  </#list><br/>
+    ${v.version}<input type="checkbox" name="apiversion-${v.version}" value="true" <#if itemValueDefinition.isValidInAPIVersion(v)>checked</#if>>
+  </#list><br/>                                             
   Alias To: <select name='aliasedTo'>
+
+
     <#if !itemValueDefinition.aliasedTo??>
         <option value='' selected>None</option>
     </#if>

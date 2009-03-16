@@ -34,6 +34,7 @@
 <h2>Update Profile Item Value</h2>
 <p>
     <form id="inputForm" action='#' method='POST' enctype='application/x-www-form-urlencoded'>
+        <input name="representation" value="full" type="hidden"/>
         <span id="inputValues"></span>
         <br/>
         <div id="inputSubmit"></div><div id="updateStatusSubmit"></div>

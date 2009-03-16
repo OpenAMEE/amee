@@ -119,6 +119,7 @@
 <#if dataCategory.itemDefinition?? && browser.profileItemActions.allowCreate>
     <h2 id="createProfileHeading"></h2>
     <form id="createProfileFrm" onSubmit="return false;">
+        <input name="representation" value="full" type="hidden"/>
         <div id="createProfileItemDiv">
         </div>
     </form>
