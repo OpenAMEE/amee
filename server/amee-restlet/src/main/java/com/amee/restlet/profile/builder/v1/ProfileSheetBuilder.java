@@ -62,7 +62,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
             sheet.setKey(getKey());
             sheet.setLabel("ProfileItems");
             for (ItemValueDefinition itemValueDefinition : itemDefinition.getItemValueDefinitions()) {
-                if (itemValueDefinition.isFromProfile() && itemValueDefinition.isValidIn(APIVersion.ONE)) {
+                if (itemValueDefinition.isFromProfile() && itemValueDefinition.isValidInAPIVersion(APIVersion.ONE)) {
                     new Column(sheet, itemValueDefinition.getPath(), itemValueDefinition.getName());
                 }
             }
