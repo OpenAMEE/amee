@@ -37,10 +37,6 @@ namespace :install do
     # Remove the previous install artifacts
     FileUtils.rm_r Dir.glob("#{package_dir}/*")
     
-    # Copy amee intellij-built libs to src lib folder
-    puts "Copying amee intellij-built libs to src lib directory #{src_dir}/lib/amee"
-    FileUtils.cp_r "#{src_dir}/output/lib/.","#{src_dir}/lib/amee"  
-     
   end
   
   desc "Build the AMEE deployment package"  
@@ -69,7 +65,8 @@ namespace :install do
     # Create lib
     puts "Creating new deployment lib directory #{package_dir}/lib"
     FileUtils.mkdir_p("#{package_dir}/lib")
-    FileUtils.cp_r "#{src_dir}/lib/.","#{package_dir}/lib"  
+    FileUtils.cp_r Dir.glob("#{src_dir}/server/target/dependency/*.jar"), "#{package_dir}/lib", :verbose => true  
+    FileUtils.cp_r Dir.glob("#{src_dir}/server/*/target/dependency/*.jar"), "#{package_dir}/lib", :verbose => true  
 
     # Create db
     puts "Creating new deployment db directory #{package_dir}/db"
