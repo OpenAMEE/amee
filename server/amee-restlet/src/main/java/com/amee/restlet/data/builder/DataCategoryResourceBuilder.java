@@ -8,8 +8,8 @@ import com.amee.domain.path.PathItem;
 import com.amee.domain.sheet.Sheet;
 import com.amee.restlet.data.DataCategoryResource;
 import com.amee.service.data.DataService;
-import com.amee.service.environment.EnvironmentService;
 import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.environment.EnvironmentService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +20,6 @@ import org.w3c.dom.Element;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * This file is part of AMEE.
@@ -61,11 +60,13 @@ public class DataCategoryResourceBuilder {
 
             // add DataCategory
             obj.put("dataCategory", resource.getDataCategory().getJSONObject(true));
+
+            // for the admin interface
             obj.put("actions", resource.getActions(resource.getDataBrowser().getDataCategoryActions()));
             obj.put("dataItemActions", resource.getActions(resource.getDataBrowser().getDataItemActions()));
 
             //TODO - Query with Dig
-            // add ItemDefinition list
+            // for the admin interface - add ItemDefinition list
             //JSONArray itemDefinitions = new JSONArray();
             //for (ItemDefinition iDefinition : definitionServiceDAO.getItemDefinitions(resource.getEnvironment())) {
             //    itemDefinitions.put(iDefinition.getJSONObject(false));
@@ -207,5 +208,4 @@ public class DataCategoryResourceBuilder {
     public org.apache.abdera.model.Element getAtomElement() {
         return null;
     }
-
 }

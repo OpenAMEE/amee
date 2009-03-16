@@ -110,11 +110,11 @@ public class ServiceResource extends AMEEResource {
 
     private void addCollections(PathItem pi, Workspace ws) {
 
-        Set<PathItem> pathItems = pi.findChildrenByType("DC");
+        Set<PathItem> pathItems = pi.getChildrenByType("DC");
         if (pathItems.isEmpty()) {
             addCollection(ws, pi, false);
         } else {
-            for (PathItem pii : pi.findChildrenByType("DC")) {
+            for (PathItem pii : pi.getChildrenByType("DC")) {
                 addCollection(ws, pii, true);
             }
         }

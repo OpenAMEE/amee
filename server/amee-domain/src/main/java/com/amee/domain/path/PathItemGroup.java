@@ -43,14 +43,12 @@ public class PathItemGroup implements Serializable {
         pathItem.setPathItemGroup(this);
     }
 
-    public PathItem findByUid(String uid) {
-        return pathItems.get(uid);
-    }
-
+    // Used by DataFinder * ServiceResource.
     public PathItem findByPath(String path) {
         return findBySegments(new ArrayList<String>(Arrays.asList(path.split("/")))); 
     }
 
+    // Used by DataFilter & ProfileFilter.
     public PathItem findBySegments(List<String> segments) {
         PathItem rootDataPathItem = getRootPathItem();
         if (rootDataPathItem != null) {
@@ -64,10 +62,12 @@ public class PathItemGroup implements Serializable {
         }
     }
 
+    // Used by BasePIGFactory & ProfilePIGFactory.
     public Map<String, PathItem> getPathItems() {
         return pathItems;
     }
 
+    // Used by ServiceResource.
     public PathItem getRootPathItem() {
         return rootPathItem;
     }

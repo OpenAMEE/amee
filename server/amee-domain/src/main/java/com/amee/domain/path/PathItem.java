@@ -117,12 +117,14 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return getFullPath();
     }
 
+    // Used by BasePIGFactory & ProfilePIGFactory.
     public void add(PathItem child) {
         children.add(child);
         child.setParent(this);
         getPathItemGroup().add(child);
     }
 
+    // Used by PathItemGroup.
     public PathItem findLastPathItem(List<String> segments) {
         PathItem result = null;
         PathItem child;
@@ -144,7 +146,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return result;
     }
 
-    public PathItem findChildPathItem(String segment) {
+    protected PathItem findChildPathItem(String segment) {
         for (PathItem child : getChildren()) {
             if (child.getPath().equalsIgnoreCase(segment)) {
                 return child;
@@ -153,6 +155,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return null;
     }
 
+    // used in dataTrail.ftl & profileTrail.ftl
     public List<PathItem> getPathItems() {
         List<PathItem> pathItems = new ArrayList<PathItem>();
         if (hasParent()) {
@@ -162,7 +165,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return pathItems;
     }
 
-    public List<String> getSegments() {
+    protected List<String> getSegments() {
         String path;
         List<String> segments = new ArrayList<String>();
         for (PathItem pathItem : getPathItems()) {
@@ -174,6 +177,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return segments;
     }
 
+    // Used lots.
     public String getFullPath() {
         String path = "";
         for (String segment : getSegments()) {
@@ -183,29 +187,18 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return path;
     }
 
-    public Set<String> findChildUidsByType(String typeName) {
-        Set<String> uids = new TreeSet<String>();
-        for (PathItem pathItem : getChildrenByType(typeName, true)) {
-            uids.add(pathItem.getUid());
-        }
-        return uids;
-    }
-
-    /**
-     * For template languages like FreeMarker.
-     *
-     * @param typeName
-     * @return the children
-     */
+    // Only used by dataCategory.ftl & profileCategory.ftl. FreeMarker needed a distinct method name.
     public Set<PathItem> findChildrenByType(String typeName) {
         return getChildrenByType(typeName);
     }
 
+    // Used by DataCategoryResourceBuilder, BaseProfileResource & ProfileCategoryResourceBuilder.
     public Set<PathItem> getChildrenByType(String typeName) {
         return getChildrenByType(typeName, false);
     }
 
-    public Set<PathItem> getChildrenByType(String typeName, boolean recurse) {
+    // Used by DataCategoryResourceBuilder, BaseProfileResource & ProfileCategoryResourceBuilder.
+    protected Set<PathItem> getChildrenByType(String typeName, boolean recurse) {
         Set<PathItem> childrenByType = new TreeSet<PathItem>();
         for (PathItem child : getChildren()) {
             if (child.getObjectType().getName().equalsIgnoreCase(typeName)) {
@@ -218,10 +211,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return childrenByType;
     }
 
-    public boolean hasChildrenByType(ObjectType type) {
-        return hasChildrenByType(type, false);
-    }
-
+    // Only used by ProfileCategoryResourceBuilder.
     public boolean hasChildrenByType(ObjectType type, boolean recurse) {
         boolean result = false;
         for (PathItem pi : getChildren()) {
@@ -237,6 +227,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return result;
     }
 
+    // Used internally & by DataFilter, ProfileFilter.
     public String getInternalPath() {
         ObjectType ot = getObjectType();
         if (ot.equals(ObjectType.DC)) {
