@@ -273,15 +273,16 @@ ApiService.prototype = {
         this.headingElement.innerHTML = this.heading;
 
         // create table headings
-        var tableElement = new Element('table', {id : this.contentElementName}).insert(this.getHeadingElement(json));
+        var tableBody = new Element('tbody', {id : this.contentElementName}).insert(this.getHeadingElement(json));
 
         // create table details
         var detailRows = this.getDetailRows(json);
         for (var i = 0; i < detailRows.length; i++) {
-            tableElement.insert(detailRows[i]);
+            tableBody.insert(detailRows[i]);
         }
 
         // replace table
+        var tableElement = new Element('table').insert(tableBody);
         this.contentElement.replace(tableElement);
 
         // replace pager(s)

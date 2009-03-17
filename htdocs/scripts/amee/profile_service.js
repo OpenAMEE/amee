@@ -254,15 +254,16 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
             this.headingCategoryElement.innerHTML = this.headingCategory;
 
             // create table headings
-            var tableElement = new Element('table', {id : this.contentElementName}).insert(this.getHeadingCategoryElement());
+            var tableBody = new Element('tbody', {id : this.contentElementName}).insert(this.getHeadingCategoryElement());
 
             // create table details
             var detailRows = this.getCategoryDetailRows(json);
             for (var i = 0; i < detailRows.length; i++) {
-                tableElement.insert(detailRows[i]);
+                tableBody.insert(detailRows[i]);
             }
 
             // replace table
+            var tableElement = new Element('table').insert(tableBody);
             this.headingContentElement.replace(tableElement);
         }
     },
@@ -365,17 +366,16 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
 
 
             // render form table info
-            var tableElement = new Element('table', {id : 'inputTable'});
-            tableElement.insert(this.getHeadingElement());
-            tableElement.insert(this.getFormInfoElement('Name', 'name', profileItem.name, 30));
-            tableElement.insert(this.getFormInfoElement('Start Date', 'startDate', profileItem.startDate, 20));
-            tableElement.insert(this.getFormInfoElement('End Date', 'endDate', profileItem.endDate, 20));
+            var tableBody = new Element('tbody', {id : 'inputTable'});
+            tableBody.insert(this.getHeadingElement());
+            tableBody.insert(this.getFormInfoElement('Name', 'name', profileItem.name, 30));
+            tableBody.insert(this.getFormInfoElement('Start Date', 'startDate', profileItem.startDate, 20));
+            tableBody.insert(this.getFormInfoElement('End Date', 'endDate', profileItem.endDate, 20));
 
             for (var i = 0; i < profileItem.itemValues.length; i++) {
                 var itemValue = profileItem.itemValues[i];
 
                 if (this.allowModify) {
-                    var tableRow;
 
                     var newRow = new Element("tr");
                     var dataLabel = new Element("td").insert(
@@ -440,19 +440,19 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
                     newRow.insert(dataLabel);
                     newRow.insert(dataInfo);
 
-                    tableElement.insert(newRow);
+                    tableBody.insert(newRow);
 
                 } else {
-                    tableElement.insert(new Element("td").update(itemValue.displayName));
+                    tableBody.insert(new Element("td").update(itemValue.displayName));
                     if (itemValue.perUnit) {
-                        tableElement.insert(new Element("td").update(itemValue.value + " " + itemValue.perUnit));
+                        tableBody.insert(new Element("td").update(itemValue.value + " " + itemValue.perUnit));
                     } else {
-                        tableElement.insert(new Element("td").update(itemValue.value));
+                        tableBody.insert(new Element("td").update(itemValue.value));
                     }
                 }
             }
 
-
+            var tableElement = new Element('table').insert(tableBody);
             $('inputTable').replace(tableElement);
 
             if (this.allowModify) {
