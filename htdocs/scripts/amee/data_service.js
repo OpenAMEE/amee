@@ -89,7 +89,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             this.headingCategoryElement.innerHTML = this.headingCategory;
 
             // create table headings
-            var tableBody = new Element('tbody', {id : this.contentElementName}).insert(this.getHeadingCategoryElement());
+            var tableBody = new Element('tbody').insert(this.getHeadingCategoryElement());
 
             // create table details
             var detailRows = this.getCategoryDetailRows(json);
@@ -98,7 +98,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             }
 
             // replace table
-            var tableElement = new Element('table').insert(tableBody);
+            var tableElement = new Element('table', {id : this.contentElementName}).insert(tableBody);
             this.headingContentElement.replace(tableElement);
         }
 

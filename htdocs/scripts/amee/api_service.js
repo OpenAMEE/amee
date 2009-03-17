@@ -21,7 +21,7 @@ Pager.prototype = {
     // Initialization
     initialize: function(params) {
         if (params.json) {
-            json = params.json;
+            var json = params.json;
             this.start = json.start;
             this.from = json.from;
             this.to = json.to;
@@ -104,7 +104,6 @@ Pager.prototype = {
         return formElement;
     },
     getPageLink: function(page, current) {
-        var numberLink;
         if (current) {
             var numberElement = new Element("b");
             numberElement.update(" " + page + " ");
@@ -131,7 +130,7 @@ Pager.prototype = {
     },
     // Navigation
     goPage: function(page) {
-        this.apiService.apiRequest("page=" + page)
+        this.apiService.apiRequest("page=" + page);
     }
 };
 
@@ -273,7 +272,7 @@ ApiService.prototype = {
         this.headingElement.innerHTML = this.heading;
 
         // create table headings
-        var tableBody = new Element('tbody', {id : this.contentElementName}).insert(this.getHeadingElement(json));
+        var tableBody = new Element('tbody').insert(this.getHeadingElement(json));
 
         // create table details
         var detailRows = this.getDetailRows(json);
@@ -282,7 +281,7 @@ ApiService.prototype = {
         }
 
         // replace table
-        var tableElement = new Element('table').insert(tableBody);
+        var tableElement = new Element('table', {id : this.contentElementName}).insert(tableBody);
         this.contentElement.replace(tableElement);
 
         // replace pager(s)

@@ -254,7 +254,7 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
             this.headingCategoryElement.innerHTML = this.headingCategory;
 
             // create table headings
-            var tableBody = new Element('tbody', {id : this.contentElementName}).insert(this.getHeadingCategoryElement());
+            var tableBody = new Element('tbody').insert(this.getHeadingCategoryElement());
 
             // create table details
             var detailRows = this.getCategoryDetailRows(json);
@@ -263,7 +263,7 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
             }
 
             // replace table
-            var tableElement = new Element('table').insert(tableBody);
+            var tableElement = new Element('table', {id : this.contentElementName}).insert(tableBody);
             this.headingContentElement.replace(tableElement);
         }
     },
@@ -366,7 +366,7 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
 
 
             // render form table info
-            var tableBody = new Element('tbody', {id : 'inputTable'});
+            var tableBody = new Element('tbody');
             tableBody.insert(this.getHeadingElement());
             tableBody.insert(this.getFormInfoElement('Name', 'name', profileItem.name, 30));
             tableBody.insert(this.getFormInfoElement('Start Date', 'startDate', profileItem.startDate, 20));
@@ -452,7 +452,7 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
                 }
             }
 
-            var tableElement = new Element('table').insert(tableBody);
+            var tableElement = new Element('table', {id : 'inputTable'}).insert(tableBody);
             $('inputTable').replace(tableElement);
 
             if (this.allowModify) {
