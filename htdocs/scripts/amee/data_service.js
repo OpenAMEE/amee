@@ -263,7 +263,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
 
             actions.insert(new Element('a', 
             {
-              onClick : dMethod + '("' + dUrl + '") ; return false;',
+              onClick : dMethod + '(' + dUrl + ') ; return false;',
               href : 'javascript:' + dMethod + '(' + dUrl + ');'
             })
                 .insert(new Element('img',
