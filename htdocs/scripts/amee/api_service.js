@@ -391,12 +391,20 @@ ApiService.prototype = {
 
         if (this.getActionsAllowDelete()) {
             var dUrl = "'" + urlKey + "','" + this.getUrl(uid) + "'";
-            actions.insert(new Element('input',
+
+            actions.insert(new Element('a', 
             {
-                onClick : dMethod + '(' + dUrl + ') ; return false;',
-                type : 'image',
-                src : '/images/icons/page_delete.png',
-                title : 'Delete', alt : 'Delete', border : 0}));
+              onClick : dMethod + '("' + dUrl + '") ; return false;',
+              href : 'javascript:' + dMethod + '(' + dUrl + ');'
+            })
+                .insert(new Element('img',
+                {
+                  src : '/images/icons/page_delete.png', 
+                  title : 'Delete', 
+                  alt : 'Delete', 
+                  border : 0 
+                })));
+
         }
         return actions;
     },

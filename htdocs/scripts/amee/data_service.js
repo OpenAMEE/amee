@@ -79,7 +79,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         if (json.children.dataItems.rows) {
             $super(response, json.children.pager);
         }
-        
+
         if (json.children.dataCategories.length > 0) {
             // update elements
             this.headingCategoryElement = $(this.headingElementName);
@@ -139,11 +139,14 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             // item definitions
             selectElement.insert(new Element('option', {value : ''}).update('(No Item Definition)'));
             formElement.insert('Item Definition: ');
+
             for (var i = 0; i < itemDefinitions.length; i++) {
                 var itemDefinition = itemDefinitions[i];
                 selectElement.insert(new Element('option', {value : itemDefinition.uid}).update(itemDefinition.name));
             }
+
             formElement.insert(selectElement).insert(new Element('br')).insert(new Element('br'));
+
 
             // sumbit and event
             var btnSubmit = new Element('input', {type : 'button', value : 'Create'});
@@ -153,8 +156,8 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             pElement.insert(formElement);
             createCatElement.insert(pElement);
         }
+        
         return createCatElement;
-
     },
     getUpdateCategoryElement: function(id, json) {
 
@@ -257,15 +260,20 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
 
         if (this.allowDelete) {
             var dUrl = "'" + uid + "','" + window.location.pathname + "/" + path + "'";
-            actions.insert(new Element('input',
+
+            actions.insert(new Element('a', 
+            {
+              onClick : dMethod + '("' + dUrl + '") ; return false;',
+              href : 'javascript:' + dMethod + '(' + dUrl + ');'
+            })
+                .insert(new Element('img',
                 {
-                onClick : dMethod + '(' + dUrl + ') ; return false;',
-                type : 'image',
-                src : '/images/icons/page_delete.png',
-                title : 'Delete', alt : 'Delete', border : 0}));
+                  src : '/images/icons/page_delete.png', 
+                  title : 'Delete', 
+                  alt : 'Delete', 
+                  border : 0 
+                })));
         }
-
-
         return actions;
     },
     createDataCategory: function() {

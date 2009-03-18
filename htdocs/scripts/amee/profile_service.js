@@ -550,12 +550,20 @@ var ProfilesApiService = Class.create(BaseProfileApiService, ({
         }
 
         if (this.allowDelete) {
-            actions.insert(new Element('input',
+
+            actions.insert(new Element('a', 
             {
-                onClick : dMethod + '("' + uid + '") ; return false;',
-                type : 'image',
-                src : '/images/icons/page_delete.png',
-                title : 'Delete', alt : 'Delete', border : 0}));
+              onClick : dMethod + '("' + uid + '") ; return false;',
+              href : 'javascript:' + dMethod + '("' + uid + '");'
+            })
+                .insert(new Element('img',
+                {
+                  src : '/images/icons/page_delete.png', 
+                  title : 'Delete', 
+                  alt : 'Delete', 
+                  border : 0 
+                })));
+
         }
         return actions;
     },

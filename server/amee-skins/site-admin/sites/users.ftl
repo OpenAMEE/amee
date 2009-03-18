@@ -70,7 +70,7 @@ Password: <input name='password' type='password' size='30'/><br/>
 Email: <input name='email' type='text' size='60'/><br/><br/>
 <#if !activeUser.APIVersion.versionOne>
     API Version: <select name='APIVersion'> <br/>
-      <#list APIVersions as APIVersion>
+      <#list apiVersions as APIVersion>
           <option value='${APIVersion.version}'>${APIVersion.version}</option>
       </#list>
     </select><br/>

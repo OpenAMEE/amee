@@ -22,7 +22,7 @@ public class EnvironmentConstants {
     public final static String VIEW_ROLE_ACTIONS = "sites/roleActions.ftl";
 
     public final static String VIEW_USERS = "sites/users.ftl";
-    public final static String VIEW_USER = "sites/auth.ftl";
+    public final static String VIEW_USER = "sites/user.ftl";
     public final static String VIEW_USER_UPLOAD = "sites/userUpload.ftl";
 
     public final static String VIEW_USER_GROUPS = "sites/userGroups.ftl";

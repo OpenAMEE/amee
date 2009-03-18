@@ -63,7 +63,7 @@ public class UserResource extends BaseResource {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", environmentBrowser);
         values.put("environment", environmentBrowser.getEnvironment());
-        values.put("auth", environmentBrowser.getUser());
+        values.put("user", environmentBrowser.getUser());
         values.put("apiVersions", environmentBrowser.getApiVersions());
         return values;
     }
