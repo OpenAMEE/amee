@@ -22,6 +22,7 @@ package com.amee.domain.path;
 import com.amee.core.ObjectType;
 import com.amee.domain.APIObject;
 import com.amee.domain.APIUtils;
+import com.amee.domain.UidGen;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -147,12 +148,36 @@ public class PathItem implements APIObject, Serializable, Comparable {
     }
 
     protected PathItem findChildPathItem(String segment) {
-        for (PathItem child : getChildren()) {
-            if (child.getPath().equalsIgnoreCase(segment)) {
-                return child;
+        PathItem child = null;
+        // find child in the 'persistent' children set
+        for (PathItem pi : getChildren()) {
+            if (pi.getPath().equalsIgnoreCase(segment)) {
+                child = pi;
+                break;
             }
         }
-        return null;
+        if (child == null) {
+            // create 'transient' child if it looks like an item or value
+            switch (getObjectType()) {
+                case DC:
+                    child = new PathItem();
+                    child.setObjectType(getPathItemGroup().isForProfile() ? ObjectType.PI : ObjectType.DI);
+                    child.setPath(segment);
+                    child.setUid(UidGen.isValid(segment) ? segment : "");
+                    child.setParent(this);
+                    child.setPathItemGroup(getPathItemGroup());
+                    break;
+                case DI:
+                case PI:
+                    child = new PathItem();
+                    child.setObjectType(ObjectType.IV);
+                    child.setPath(segment);
+                    child.setParent(this);
+                    child.setPathItemGroup(getPathItemGroup());
+                    break;
+            }
+        }
+        return child;
     }
 
     // used in dataTrail.ftl & profileTrail.ftl
@@ -233,11 +258,11 @@ public class PathItem implements APIObject, Serializable, Comparable {
         if (ot.equals(ObjectType.DC)) {
             return "/categories/" + getUid();
         } else if (ot.equals(ObjectType.DI)) {
-            return getParent().getInternalPath() + "/items/" + getUid();
+            return getParent().getInternalPath() + "/items/" + getPath();
         } else if (ot.equals(ObjectType.PI)) {
             return getParent().getInternalPath() + "/items/" + getUid();
         } else if (ot.equals(ObjectType.IV)) {
-            return getParent().getInternalPath() + "/values/" + getUid();
+            return getParent().getInternalPath() + "/values/" + getPath();
         } else {
             log.error("Unexpected ObjectType.");
             throw new RuntimeException("Unexpected ObjectType.");

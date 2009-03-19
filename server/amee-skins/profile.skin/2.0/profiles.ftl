@@ -50,7 +50,7 @@
 
 <h1>Profiles</h1>
 
-<p><a href='/profiles'>Profiles</a></p>
+<p><a href='/profiles'>profiles</a></p>
 
 <h2 id="apiHeading"></h2>
 <div id="apiTopPager"></div>

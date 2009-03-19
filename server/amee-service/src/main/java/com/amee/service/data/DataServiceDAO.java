@@ -212,7 +212,7 @@ class DataServiceDAO implements Serializable {
     // DataItems
 
     @SuppressWarnings(value="unchecked")
-    public DataItem getDataItem(String uid) {
+    public DataItem getDataItemByUid(String uid) {
         DataItem dataItem = null;
         List<DataItem> dataItems;
         dataItems = entityManager.createQuery(
@@ -221,6 +221,29 @@ class DataServiceDAO implements Serializable {
                         "LEFT JOIN FETCH di.itemValues " +
                         "WHERE di.uid = :uid")
                 .setParameter("uid", uid)
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", "query.dataService")
+                .getResultList();
+        if (dataItems.size() == 1) {
+            log.debug("found DataItem");
+            dataItem = dataItems.get(0);
+            checkDataItem(dataItem);
+        } else {
+            log.debug("DataItem NOT found");
+        }
+        return dataItem;
+    }
+
+    @SuppressWarnings(value="unchecked")
+    public DataItem getDataItemByPath(String path) {
+        DataItem dataItem = null;
+        List<DataItem> dataItems;
+        dataItems = entityManager.createQuery(
+                "SELECT DISTINCT di " +
+                        "FROM DataItem di " +
+                        "LEFT JOIN FETCH di.itemValues " +
+                        "WHERE di.path = :path")
+                .setParameter("path", path)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.dataService")
                 .getResultList();

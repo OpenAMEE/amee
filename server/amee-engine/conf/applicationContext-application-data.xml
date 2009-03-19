@@ -66,20 +66,14 @@
                         <lookup-method name="createResource" bean="drillDownResource"/>
                     </bean>
                 </entry>
-                <entry key="/categories/{categoryUid}/items/{itemUid}">
+                <entry key="/categories/{categoryUid}/items/{itemPath}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="dataItemResource"/>
                     </bean>
                 </entry>
-                <entry key="/categories/{categoryUid}/items/{itemUid}/values/{valueUid}">
+                <entry key="/categories/{categoryUid}/items/{itemPath}/values/{valuePath}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="dataItemValueResource"/>
-                    </bean>
-                </entry>
-                <!-- TODO: is this actually used by anybody? -->
-                <entry key="/categories/{categoryUid}/sheet">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="dataCategorySheetResource"/>
                     </bean>
                 </entry>
             </map>

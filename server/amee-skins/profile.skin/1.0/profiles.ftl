@@ -18,7 +18,7 @@
 
 <h1>Profiles</h1>
 
-<p><a href='/profiles'>Profiles</a></p>
+<p><a href='/profiles'>profiles</a></p>
 
 <#if profiles?? && browser.profileActions.allowList>
     <h2>Profiles</h2>

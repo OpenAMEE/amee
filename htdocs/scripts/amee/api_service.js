@@ -214,7 +214,7 @@ ApiService.prototype = {
 
             // root path
             if (rootPath != '') {
-                apiTrailElement.insert(new Element('a', {href : '/' + this.getUrlWithSearch(rootPath)}).update(this.titleCase(rootPath)));
+                apiTrailElement.insert(new Element('a', {href : '/' + this.getUrlWithSearch(rootPath)}).update(rootPath));
                 linkPath = "/" + rootPath;
             }
 
@@ -241,17 +241,12 @@ ApiService.prototype = {
                 }
                 linkPath = linkPath + "/" + pathItem;
                 apiTrailElement.insert(" / ");
-                apiTrailElement.insert(new Element('a', {href : this.getUrlWithSearch(linkPath)}).update(this.titleCase(pathItem)));
+                apiTrailElement.insert(new Element('a', {href : this.getUrlWithSearch(linkPath)}).update(pathItem));
             }
         }
     },
     getUrlWithSearch: function(path) {
         return path + window.location.search;
-    },
-    titleCase: function(inStr) {
-        var outStr = inStr.substr(0, 1).toUpperCase();
-        outStr = outStr + inStr.substr(1, inStr.length - 1);
-        return outStr;
     },
     getTrailRootPath: function() {
         return '';

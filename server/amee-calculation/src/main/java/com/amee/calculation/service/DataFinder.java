@@ -83,7 +83,7 @@ public class DataFinder implements Serializable {
         if (dataCategory != null) {
             choices = drillDownService.getValueChoices(dataCategory, Choice.parseChoices(drillDown), getStartDate(), getEndDate());
             if (choices.getName().equals("uid") && (choices.getChoices().size() > 0)) {
-                dataItem = dataService.getDataItem(choices.getChoices().get(0).getValue());
+                dataItem = dataService.getDataItemByUid(choices.getChoices().get(0).getValue());
             }
         }
         return dataItem;

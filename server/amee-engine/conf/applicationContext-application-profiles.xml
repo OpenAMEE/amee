@@ -71,7 +71,7 @@
                         <lookup-method name="createResource" bean="profileItemResource"/>
                     </bean>
                 </entry>
-                <entry key="/categories/{categoryUid}/items/{itemUid}/values/{valueUid}">
+                <entry key="/categories/{categoryUid}/items/{itemUid}/values/{valuePath}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="profileItemValueResource"/>
                     </bean>

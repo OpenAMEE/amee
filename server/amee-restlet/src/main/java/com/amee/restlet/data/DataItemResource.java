@@ -68,7 +68,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         Form query = request.getResourceRef().getQueryAsForm();
-        setDataItem(request.getAttributes().get("itemUid").toString());
+        setDataItem(request.getAttributes().get("itemPath").toString());
         for (String key : query.getNames()) {
             parameters.add(new Choice(key, query.getValues(key)));
         }

@@ -58,19 +58,18 @@ public class ProfilePIGFactory extends BasePIGFactory implements CacheableFactor
     public Object create() {
         PathItemGroup pathItemGroup = null;
         Environment environment = EnvironmentService.getEnvironment();
-        Profile profile = (Profile) ThreadBeanHolder.get("profile");
         List<DataCategory> dataCategories = dataService.getDataCategories(environment);
         DataCategory rootDataCategory = findRootDataCategory(dataCategories);
         if (rootDataCategory != null) {
-            pathItemGroup = new PathItemGroup(new PathItem(rootDataCategory));
+            pathItemGroup = new PathItemGroup(new PathItem(rootDataCategory), true);
             while (!dataCategories.isEmpty()) {
                 addDataCategories(pathItemGroup, dataCategories);
             }
-            definitionServiceDAO.getItemDefinitions(environment); // preload so we can iterate over ItemValues later
-            List<ProfileItem> profileItems = profileService.getProfileItems(profile);
-            while (!profileItems.isEmpty()) {
-                addProfileItems(pathItemGroup, profileItems);
-            }
+//            definitionServiceDAO.getItemDefinitions(environment); // preload so we can iterate over ItemValues later
+//            List<ProfileItem> profileItems = profileService.getProfileItems(profile);
+//            while (!profileItems.isEmpty()) {
+//                addProfileItems(pathItemGroup, profileItems);
+//            }
         }
         return pathItemGroup;
     }

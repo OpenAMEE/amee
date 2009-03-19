@@ -11,7 +11,8 @@ public class UidGen {
     public final static String SEPARATOR = "";
     public final static int PARTS = 6;
     public final static int PART_SIZE = 2;
-    public final static int RANGE = (int) Math.pow(16, PART_SIZE);
+    public final static int RADIX = 16;
+    public final static int RANGE = (int) Math.pow(RADIX, PART_SIZE);
 
     private static Random random = new Random();
 
@@ -40,5 +41,14 @@ public class UidGen {
             part.insert(0, '0'); // left pad with 0's
         }
         uid.append(part);
+    }
+
+    public static boolean isValid(String uid) {
+        if (uid == null) return false;
+        if (uid.length() != (PARTS * PART_SIZE)) return false;
+        for (int i = 0; i < uid.length(); i++) {
+            if (Character.digit(uid.charAt(i), RADIX) == -1) return false;
+        }
+        return true;
     }
 }

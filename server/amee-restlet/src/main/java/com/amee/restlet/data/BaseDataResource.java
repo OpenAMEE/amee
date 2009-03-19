@@ -50,9 +50,9 @@ public abstract class BaseDataResource extends AMEEResource {
         dataBrowser.setDataCategory(getDataCategory());
     }
 
-    public void setDataItem(String dataItemUid) {
-        if (dataItemUid.isEmpty()) return;
-        dataItem = dataService.getDataItem(dataItemUid);
+    public void setDataItem(String path) {
+        if (path.isEmpty()) return;
+        dataItem = dataService.getDataItem(path);
     }
 
     public DataItem getDataItem() {

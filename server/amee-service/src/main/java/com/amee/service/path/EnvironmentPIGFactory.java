@@ -21,7 +21,6 @@ package com.amee.service.path;
 
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
@@ -53,15 +52,15 @@ public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFa
         List<DataCategory> dataCategories = dataService.getDataCategories(environment);
         DataCategory rootDataCategory = findRootDataCategory(dataCategories);
         if (rootDataCategory != null) {
-            pathItemGroup = new PathItemGroup(new PathItem(rootDataCategory));
+            pathItemGroup = new PathItemGroup(new PathItem(rootDataCategory), false);
             while (!dataCategories.isEmpty()) {
                 addDataCategories(pathItemGroup, dataCategories);
             }
-            definitionServiceDAO.getItemDefinitions(environment); // preload so we can iterate over ItemValues later
-            List<DataItem> dataItems = dataService.getDataItems(environment);
-            while (!dataItems.isEmpty()) {
-                addDataItems(pathItemGroup, dataItems);
-            }
+            // definitionServiceDAO.getItemDefinitions(environment); // preload so we can iterate over ItemValues later
+            // List<DataItem> dataItems = dataService.getDataItems(environment);
+            // while (!dataItems.isEmpty()) {
+            // addDataItems(pathItemGroup, dataItems);
+            // }
         }
         return pathItemGroup;
     }

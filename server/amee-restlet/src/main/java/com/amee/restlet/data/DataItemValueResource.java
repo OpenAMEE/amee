@@ -52,14 +52,15 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        setDataItem(request.getAttributes().get("itemUid").toString());
-        setItemValueUid(request.getAttributes().get("valueUid").toString());
+        setDataItem(request.getAttributes().get("itemPath").toString());
+        setDataItemValue(request.getAttributes().get("valuePath").toString());
         setAvailable(isValid());
     }
 
-    private void setItemValueUid(String itemValueUid) {
-        if (itemValueUid.isEmpty()) return;
-        this.itemValue = dataService.getItemValue(itemValueUid);
+    private void setDataItemValue(String itemValuePath) {
+        if (itemValuePath.isEmpty()) return;
+        if (getDataItem() == null) return;
+        this.itemValue = getDataItem().getItemValuesMap().get(itemValuePath);
     }
 
     private ItemValue getItemValue() {

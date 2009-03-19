@@ -27,14 +27,16 @@ public class PathItemGroup implements Serializable {
     private Map<String, PathItem> pathItems = new HashMap<String, PathItem>();
     private PathItem rootPathItem = null;
     private String key = "";
+    private boolean forProfile = false;
 
     private PathItemGroup() {
         super();
     }
 
-    public PathItemGroup(PathItem rootPathItem) {
+    public PathItemGroup(PathItem rootPathItem, boolean forProfile) {
         this();
         setRootPathItem(rootPathItem);
+        setForProfile(forProfile);
         add(rootPathItem);
     }
 
@@ -82,5 +84,13 @@ public class PathItemGroup implements Serializable {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public boolean isForProfile() {
+        return forProfile;
+    }
+
+    public void setForProfile(boolean forProfile) {
+        this.forProfile = forProfile;
     }
 }

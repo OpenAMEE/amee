@@ -58,5 +58,4 @@ public enum ObjectType implements Serializable {
     public String getLabel() {
         return labels[this.ordinal()];
     }
-
 }

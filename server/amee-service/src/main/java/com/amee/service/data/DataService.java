@@ -27,6 +27,7 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Choices;
 import com.amee.domain.sheet.Sheet;
+import com.amee.domain.UidGen;
 import com.amee.service.definition.DefinitionServiceDAO;
 import com.amee.service.path.PathItemService;
 import org.apache.commons.logging.Log;
@@ -76,8 +77,23 @@ public class DataService {
         return dao.getDataCategory(dataCategoryUid);
     }
 
-    public DataItem getDataItem(String dataItemUid) {
-        return dao.getDataItem(dataItemUid);
+    public DataItem getDataItem(String path) {
+        DataItem dataItem = null;
+        if (UidGen.isValid(path)) {
+            dataItem = getDataItemByUid(path);
+        }
+        if (dataItem == null) {
+            dataItem = getDataItemByPath(path);
+        }
+        return dataItem;
+    }
+
+    public DataItem getDataItemByUid(String uid) {
+        return dao.getDataItemByUid(uid);
+    }
+
+    public DataItem getDataItemByPath(String path) {
+        return dao.getDataItemByPath(path);
     }
 
     public List<DataItem> getDataItems(Environment env) {

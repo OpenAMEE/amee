@@ -71,13 +71,14 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
         super.init(context, request, response);
         setDataCategory(request.getAttributes().get("categoryUid").toString());
         setProfileItem(request.getAttributes().get("itemUid").toString());
-        setProfileItemValueUid(request.getAttributes().get("valueUid").toString());
+        setProfileItemValue(request.getAttributes().get("valuePath").toString());
         setAvailable(isValid());
     }
 
-    private void setProfileItemValueUid(String profileItemValueUid) {
-        if (profileItemValueUid.isEmpty()) return;
-        this.itemValue = profileService.getProfileItemValue(profileItemValueUid);
+    private void setProfileItemValue(String itemValuePath) {
+        if (itemValuePath.isEmpty()) return;
+        if (getProfileItem() == null) return;
+        this.itemValue = getProfileItem().getItemValuesMap().get(itemValuePath);
     }
 
     @Override
