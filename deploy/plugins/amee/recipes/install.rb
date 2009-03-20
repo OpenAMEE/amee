@@ -88,6 +88,11 @@ namespace :install do
   
   desc "Tag the src and deployment repositories"
   task :tag do
+    unless @tag_name
+      puts "You must specify a tag for this release using TAG=name"
+      exit
+    end
+    
     # Tag the deployment repository
     `git tag -a "#{@tag_name}" -m "#{@tag_name}"`
     Dir.chdir(@pwd)
