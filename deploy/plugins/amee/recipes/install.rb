@@ -99,9 +99,11 @@ namespace :install do
     
     # Tag the deployment repository
     `git tag -f -a "#{@tag_name}" -m "#{@tag_name}"`
+    `git push --tag`
     Dir.chdir(@pwd)
     # Tag the src repository
     `git tag -f -a "#{@tag_name}" -m "#{@tag_name}"`
+    `git push --tag`
   end
   
 end

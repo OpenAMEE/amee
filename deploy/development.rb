@@ -1,5 +1,5 @@
 # The Git branch we are deploying from
-set :branch, "development"
+#set :branch, "development"
 
 # The hosts where are are deploying 
 role :app, "dev.amee.com"
