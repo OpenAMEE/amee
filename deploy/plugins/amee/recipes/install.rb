@@ -37,7 +37,7 @@ namespace :install do
     # Switch the the correct branch
     @pwd = Dir.pwd
     Dir.chdir(package_dir)
-    `git checkout #{branch}`
+    `git checkout master`
     `git fetch`
     
     # Remove the previous install artifacts
