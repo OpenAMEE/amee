@@ -26,9 +26,10 @@ namespace :install do
     end
     
     # Check that local repository contains no local modifications
-    return if `git status` =~ /working directory clean/
-    puts "Must have clean working directory - #{src_dir} contains local modifications."
-    exit
+    unless `git status` =~ /working directory clean/
+      puts "Must have clean working directory - #{src_dir} contains local modifications."
+      exit
+    end
 
   end
   
