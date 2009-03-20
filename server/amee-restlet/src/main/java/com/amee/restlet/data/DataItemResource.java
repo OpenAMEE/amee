@@ -88,7 +88,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         DataItem dataItem = getDataItem();
-        Choices userValueChoices = dataService.getUserValueChoices(dataItem);
+        Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
@@ -102,7 +102,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Override
     public JSONObject getJSONObject() throws JSONException {
         DataItem dataItem = getDataItem();
-        Choices userValueChoices = dataService.getUserValueChoices(dataItem);
+        Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         JSONObject obj = new JSONObject();
         obj.put("actions", getActions(dataBrowser.getDataItemActions()));        
@@ -116,7 +116,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Override
     public Element getElement(Document document) {
         DataItem dataItem = getDataItem();
-        Choices userValueChoices = dataService.getUserValueChoices(dataItem);
+        Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         Element element = document.createElement("DataItemResource");
         element.appendChild(dataItem.getElement(document, true));
