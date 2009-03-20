@@ -19,6 +19,7 @@
  */
 package com.amee.service.data;
 
+import com.amee.domain.APIVersion;
 import com.amee.domain.data.*;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.event.ObserveEventService;
@@ -312,10 +313,10 @@ class DataServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value="unchecked")
-    public Choices getUserValueChoices(DataItem dataItem) {
+    public Choices getUserValueChoices(DataItem dataItem, APIVersion apiVersion) {
         List<Choice> userValueChoices = new ArrayList<Choice>();
         for (ItemValueDefinition ivd : dataItem.getItemDefinition().getItemValueDefinitions()) {
-            if (ivd.isFromProfile()) {
+            if (ivd.isFromProfile() && ivd.isValidInAPIVersion(apiVersion)) {
                 // start default value with value from ItemValueDefinition
                 String defaultValue = ivd.getValue();
                 // next give DataItem a chance to set the default value, if appropriate

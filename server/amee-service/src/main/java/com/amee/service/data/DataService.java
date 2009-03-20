@@ -19,6 +19,7 @@
  */
 package com.amee.service.data;
 
+import com.amee.domain.APIVersion;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
@@ -171,8 +172,8 @@ public class DataService {
         dao.remove(di);
     }
 
-    public Choices getUserValueChoices(DataItem di) {
-        return dao.getUserValueChoices(di);
+    public Choices getUserValueChoices(DataItem di, APIVersion apiVersion) {
+        return dao.getUserValueChoices(di, apiVersion);
     }
 
     public Sheet getSheet(DataBrowser browser) {

@@ -3,10 +3,10 @@ namespace :install do
   desc "Package AMEE and install into the SCM"
   task :default do
     check
-    begin_install
+    prepare
     package
-    git
-    end_install
+    deploy_to_git
+    tag
   end
   
   desc "Check install dependencies"
@@ -14,25 +14,31 @@ namespace :install do
     
     # Check package directory has been checked-out from Git repository
     if !File.directory?(package_dir)
-      puts "ERROR: Abandoning install - #{package_dir} does not exist. Please clone the release Git respository before continuing."
+      puts "ERROR: Abandoning install - #{package_dir} does not exist. Please clone the deployment Git respository before continuing."
+      exit
+    end
+    
+    # Ensure a release tag has been supplied 
+    @tag_name = ENV['TAG']
+    unless @tag_name
+      puts "You must specify a tag for this release using TAG=name"
+      exit
+    end
+    
+    # Check that local repository contains no local modifications
+    unless `git status` =~ /working directory clean/
+      puts "Must have clean working directory - #{src_dir} contains local modifications."
       exit
     end
 
-    # Check that local repository contains no local modifications
-    status = `git status | tail -1`
-    if !status.include?("nothing to commit")
-      puts "ERROR: Abandoning install - #{src_dir} contains local modifications."
-      exit
-    end
-    
-    
   end
   
-  task :begin_install do
+  task :prepare do
     # Switch the the correct branch
     @pwd = Dir.pwd
     Dir.chdir(package_dir)
-    system("git checkout #{branch}")
+    `git checkout #{branch}`
+    `git fetch`
     
     # Remove the previous install artifacts
     FileUtils.rm_r Dir.glob("#{package_dir}/*")
@@ -76,15 +82,26 @@ namespace :install do
     
   end
 
-  desc "Send the package to Git repository"
-  task :git do
-    system("git add .")
-    system("git commit -m 'Capistrano install on #{Time.now}'")
-    system("git push")
+  desc "Send the deployment package to Git repository"
+  task :deploy_to_git do
+    `git add .`
+    `git commit -m 'Install from capistrano on #{Time.now}'`
+    `git push`
   end
-
-  task :end_install do
+  
+  desc "Tag the src and deployment repositories"
+  task :tag do
+    
+    unless @tag_name
+      puts "You must specify a tag for this release using TAG=name"
+      exit
+    end
+    
+    # Tag the deployment repository
+    `git tag -f -a "#{@tag_name}" -m "#{@tag_name}"`
     Dir.chdir(@pwd)
+    # Tag the src repository
+    `git tag -f -a "#{@tag_name}" -m "#{@tag_name}"`
   end
   
 end

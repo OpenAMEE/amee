@@ -72,7 +72,7 @@ public class UserResource extends BaseResource {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
-        obj.put("auth", environmentBrowser.getUser().getJSONObject());
+        obj.put("user", environmentBrowser.getUser().getJSONObject());
         return obj;
     }
 
