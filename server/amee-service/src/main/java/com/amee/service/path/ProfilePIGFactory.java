@@ -21,35 +21,23 @@ package com.amee.service.path;
 
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.ItemValue;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
-import com.amee.domain.profile.ProfileItem;
 import com.amee.service.ThreadBeanHolder;
 import com.amee.service.data.DataService;
-import com.amee.service.definition.DefinitionServiceDAO;
 import com.amee.service.environment.EnvironmentService;
-import com.amee.service.profile.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ProfilePIGFactory extends BasePIGFactory implements CacheableFactory {
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
-
-    @Autowired
     private DataService dataService;
-
-    @Autowired
-    private ProfileService profileService;
 
     public ProfilePIGFactory() {
         super();
@@ -65,32 +53,8 @@ public class ProfilePIGFactory extends BasePIGFactory implements CacheableFactor
             while (!dataCategories.isEmpty()) {
                 addDataCategories(pathItemGroup, dataCategories);
             }
-//            definitionServiceDAO.getItemDefinitions(environment); // preload so we can iterate over ItemValues later
-//            List<ProfileItem> profileItems = profileService.getProfileItems(profile);
-//            while (!profileItems.isEmpty()) {
-//                addProfileItems(pathItemGroup, profileItems);
-//            }
         }
         return pathItemGroup;
-    }
-
-    protected void addProfileItems(PathItemGroup pathItemGroup, List<ProfileItem> profileItems) {
-        PathItem parent;
-        PathItem child;
-        Map<String, PathItem> pathItems = pathItemGroup.getPathItems();
-        Iterator<ProfileItem> iterator = profileItems.iterator();
-        while (iterator.hasNext()) {
-            ProfileItem profileItem = iterator.next();
-            parent = pathItems.get(profileItem.getDataCategory().getUid());
-            if (parent != null) {
-                iterator.remove();
-                child = new PathItem(profileItem);
-                parent.add(child);
-                for (ItemValue itemValue : profileItem.getItemValues()) {
-                    child.add(new PathItem(itemValue));
-                }
-            }
-        }
     }
 
     public String getKey() {

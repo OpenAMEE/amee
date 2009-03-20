@@ -41,7 +41,6 @@ public class PathItem implements APIObject, Serializable, Comparable {
     private final Log log = LogFactory.getLog(getClass());
 
     private PathItemGroup pathItemGroup = null;
-    private Long id = 0L;
     private String uid = "";
     private ObjectType objectType = null;
     private String path = "";
@@ -55,7 +54,6 @@ public class PathItem implements APIObject, Serializable, Comparable {
 
     public PathItem(Pathable pathable) {
         super();
-        setId(pathable.getId());
         setUid(pathable.getUid());
         setObjectType(pathable.getObjectType());
         setPath(pathable.getDisplayPath());
@@ -275,14 +273,6 @@ public class PathItem implements APIObject, Serializable, Comparable {
 
     public void setPathItemGroup(PathItemGroup pathItemGroup) {
         this.pathItemGroup = pathItemGroup;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUid() {

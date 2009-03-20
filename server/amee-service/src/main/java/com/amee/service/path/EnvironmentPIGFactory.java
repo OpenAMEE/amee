@@ -25,7 +25,6 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.service.data.DataService;
-import com.amee.service.definition.DefinitionServiceDAO;
 import com.amee.service.environment.EnvironmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,16 +35,12 @@ import java.util.List;
 public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFactory {
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
-
-    @Autowired
     private DataService dataService;
 
     public EnvironmentPIGFactory() {
         super();
     }
 
-    // TODO: This uses up lots of memory, so what?
     public Object create() {
         PathItemGroup pathItemGroup = null;
         Environment environment = EnvironmentService.getEnvironment();
@@ -56,11 +51,6 @@ public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFa
             while (!dataCategories.isEmpty()) {
                 addDataCategories(pathItemGroup, dataCategories);
             }
-            // definitionServiceDAO.getItemDefinitions(environment); // preload so we can iterate over ItemValues later
-            // List<DataItem> dataItems = dataService.getDataItems(environment);
-            // while (!dataItems.isEmpty()) {
-            // addDataItems(pathItemGroup, dataItems);
-            // }
         }
         return pathItemGroup;
     }

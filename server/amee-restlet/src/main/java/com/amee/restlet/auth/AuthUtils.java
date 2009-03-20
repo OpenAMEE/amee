@@ -66,14 +66,14 @@ public class AuthUtils {
             }
         }
         if ((next == null) || next.length() == 0) {
-            // third, determine 'next' from current URL
+            // forth, determine 'next' from current URL
             next = request.getResourceRef().toString();
             if ((next != null) && ((next.endsWith("/signIn") || next.endsWith("/signOut") || next.endsWith("/protected")))) {
                 next = null;
             }
         }
         if ((next == null) || next.length() == 0) {
-            // forth, use a default
+            // fifth, use a default
             next = "/auth";
         }
         return next;
