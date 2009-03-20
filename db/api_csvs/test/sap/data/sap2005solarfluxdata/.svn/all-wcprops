@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/2758/internal/api_csvs/test/sap/data/sap2005solarfluxdata
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/2758/internal/api_csvs/test/sap/data/sap2005solarfluxdata/data.csv
+END
+algorithm_alg.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/!svn/ver/2758/internal/api_csvs/test/sap/data/sap2005solarfluxdata/algorithm_alg.js
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/!svn/ver/2758/internal/api_csvs/test/sap/data/sap2005solarfluxdata/itemdef.csv
+END

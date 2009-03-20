@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/!svn/ver/2759/internal/api_csvs/test/sap/data/boilers/backup/solidfuelboilerdata.old
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/!svn/ver/2759/internal/api_csvs/test/sap/data/boilers/backup/solidfuelboilerdata.old/data.csv
+END
+algorithm_alg.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/!svn/ver/2759/internal/api_csvs/test/sap/data/boilers/backup/solidfuelboilerdata.old/algorithm_alg.js
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/!svn/ver/2759/internal/api_csvs/test/sap/data/boilers/backup/solidfuelboilerdata.old/itemdef.csv
+END

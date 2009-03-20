@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/1217/projects/GlobalCoolEngine/co2-engine/src/data
+END
+data-appliances.csv
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/!svn/ver/1217/projects/GlobalCoolEngine/co2-engine/src/data/data-appliances.csv
+END
+data-heating.csv
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/1536/projects/GlobalCoolEngine/co2-engine/src/data/data-heating.csv
+END
+data-seasonal-billing.csv
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/1108/projects/GlobalCoolEngine/co2-engine/src/data/data-seasonal-billing.csv
+END
+data-lighting.csv
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/!svn/ver/1093/projects/GlobalCoolEngine/co2-engine/src/data/data-lighting.csv
+END
+data-cooking.csv
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/1217/projects/GlobalCoolEngine/co2-engine/src/data/data-cooking.csv
+END
+data-fuel-price.csv
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/!svn/ver/1536/projects/GlobalCoolEngine/co2-engine/src/data/data-fuel-price.csv
+END
+data-fuel.csv
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/1536/projects/GlobalCoolEngine/co2-engine/src/data/data-fuel.csv
+END
+data-transport.csv
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/!svn/ver/1181/projects/GlobalCoolEngine/co2-engine/src/data/data-transport.csv
+END
+data-tvs.csv
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/1179/projects/GlobalCoolEngine/co2-engine/src/data/data-tvs.csv
+END

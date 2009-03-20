@@ -1,0 +1,153 @@
+
+
+,,"Direct Emissions - Stationary Fuel Combustion, (including methane and nitrous oxide emissions from biomass fuels)"
+,,"Note: Where mills are exporting CO2 to precipitated calcium carbonate (PCC) plants, these exports are not considered emissions.  Amounts of exported CO2 are calculated in the sheet for ""CO2 Imports and Exports.""  On the ""Direct - Fuel Combustion"" sheet (this sheet), the amounts of exported CO2 are automatically subtracted from the sum of direct emissions from stationary fossil fuel combustion.  
+
+Also, emissions from mobile sources are reported on the ""Direct - Mobile & Transportation"" spreadsheet immediately behind this spreadsheet
+
+Facilities with boilers that are equiped with flue gas desulfurization (FGD) systems may need to estimate CO2 emissions associated with limestone or dolomite consumption in these scrubbers.  These emissions may be estimated in the ""Make-up Chemicals"" worksheet."
+
+,,"These spreadsheets include significant amounts of material copied from other WRI and WBCSD calculation tools. 
+ Intellectual property rights of the WRI and WBCSD calculation tools belong to WRI and WBCSD, unless stated otherwise."
+
+,EXPLANATION OF CELL COLOR SCHEME
+,User entry: Source / fuel description
+,User entry: Fuel use / emission factor values,,,Suggested default emission factors are shown below
+,Auto calculated value:
+
+
+,Direct Emissions - Stationary Fuel Combustion
+,,,,Step 1,Step 2,,,Step 3
+,,,,A,B,C ,D,E,F,G,H
+,,,,Quantity of fuel burned,"CO2 emission factor
+Suggested default emission factors shown below","CH4 emission factor
+Suggested default emission factors shown below","N2O emission factor
+Suggested default emission factors shown below",CO2 emissions in metric tonnes,CH4 emissions in metric tonnes,N2O emissions in metric tonnes,"Total emissions in terms of  CO2 equivalents 
+(metric tons)"
+,,,,(GJ LHV),(kg CO2/GJ LHV),(kg CH4/GJ LHV),(kg N2O/GJ LHV),E = A * B / 1000,F = A * C / 1000,G = A * D / 1000,H = E + (F * 21) + (G * 310)
+,,,,,"IMPORTANT! For equations to function correctly, numerator of emission factors must be in terms of kg of GHG and denominator must match units of fuel quantity!!"
+,,Example: Source 1,Natural gas,1000000.00,55.90,0.0014,0.0001,"55,900",1.40,0.100,"55,960.4"
+,,Source description,Fuel type
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,0,0.00,0.000,0.0
+,,,,,,,,CO2,CH4,N2O,CO2 Equivalents
+,,,,,,Step 4: Sum GHG emissions and CO2 exports: ,,0,0,0,0.00,metric tonnes
+,,,,,,"Step 5: CO2 exported to PCC plant 
+(calculated in ""CO2 Imports and Exports"" worksheet)",,0,N/A,N/A,N/A,metric tonnes CO2
+,,,,,,Step 6:  GHG emissions from stationary fossil fuel combustion,,0,0,0,0.00,metric tonnes
+
+
+,,"Note:  Under the WRI/WBCSD GHG Protocol, the direct emissions associated with stationary combustion should be reported in scope 1 as direct emissions from stationary sources."
+
+,,,Suggested Default Emission Factors
+
+,,,"Emission Factors are from Revised 2006 IPCC Guidelines for National Greenhouse Gas Inventories: Volume 2 Energy, Chapter 2 Stationary Combustion (unless noted otherwise)"
+,,Fuel type,"kg CO2 / GJ fuel
+[based on lower heating value, net calorific value]","kg CH4 / GJ fuel 
+[based on lower heating value, net calorific value]","kg N2O / GJ fuel 
+[based on lower heating value, net calorific value]","kg CO2 equiv. / GJ fuel
+[based on lower heating value, net calorific value]",Notes
+,,Liquid fossil
+,,Kerosene,71.9,0.00,0.00,72.15,All factors are IPCC Tier 1
+,,"Distillate fuel 
+(No.1, No.2, No.4 fuel oil and diesel)
+Stationary sources except lime kilns and calciners",74.1,0.00,0.00,74.22,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Distillate fuel 
+(No.1, No.2, No.4 fuel oil and diesel)
+Lime kilns",74.1,0.00,0.00,74.17,"CH4 factor from NCASI 1981
+N2O factor from IPCC discussion of formation requirements"
+,,"Distillate fuel 
+(No.1, No.2, No.4 fuel oil and diesel)
+Calciners",74.1,0.00,0.00,74.35,"CH4 factor from NCASI 1981
+N2O factor is IPCC Tier 1"
+,,"Residual fuel oil (No.5, No.6 fuel oil)",77.4,0.00,0.00,77.56,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Residual fuel oil (No.5, No.6 fuel oil)
+Lime kilns",77.4,0.00,0.00,77.47,"CH4 factor from NCASI 1981
+N2O factor from IPCC discussion of formation requirements"
+,,"Residual fuel oil (No.5, No.6 fuel oil)
+Calciners",77.4,0.00,0.00,77.65,"CH4 factor from NCASI 1981
+N2O factor is IPCC Tier 1"
+,,LPG,63.1,0.00,0.00,64.31,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,Gaseous fossil
+,,Natural gas (dry) - boilers and IR dryers,56.1,0.00,0.00,56.42,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,Natural gas (dry) - turbines > 3 MW,56.1,0.00,0.00,56.50,CH4 and N2O factors are IPCC Tier 3 
+,,Natural gas (dry) - lime kiln,56.1,0.00,0.00,56.17,"CH4 factor from NCASI 1981
+N2O factor from IPCC discussion of formation requirements"
+,,Natural gas (dry) - calciners,56.1,0.00,0.00,56.20,"CH4 factor from NCASI 1981
+N2O factor is IPCC Tier 1 for natural gas"
+,,"Natural gas (dry) - Int. Comb. Engine
+2 - cycle lean burn",56.1,0.69,0.00,73.45,"CH4 factor is IPCC Tier 3
+N2O factor is IPCC Tier 1"
+,,"Natural gas (dry) - Int. Comb. Engine
+4 - cycle lean burn",56.1,0.60,0.00,71.05,"CH4 factor is IPCC Tier 3
+N2O factor is IPCC Tier 1"
+,,"Natural gas (dry) - Int. Comb. Engine
+4 - cycle rich burn",56.1,0.11,0.00,58.88,"CH4 factor is IPCC Tier 3
+N2O factor is IPCC Tier 1"
+,,Solid fossil
+,,Anthracite,98.3,0.01,0.00,99.00,CH4 and N2O factors are IPCC Tier 1
+,,"Bituminous coal
+Overfeed stoker boiler",94.6,0.00,0.00,94.83,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Bituminous coal
+Underfeed stoker boiler",94.6,0.01,0.00,95.16,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Bituminous coal - Pulverized
+Dry bottom, wall fired",94.6,0.00,0.00,94.77,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Bituminous coal - Pulverized
+Dry bottom, tangential firing",94.6,0.00,0.00,95.03,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Bituminous coal - Pulverized
+Wet bottom",94.6,0.00,0.00,95.04,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Bituminous coal
+Spreader stoker boiler",94.6,0.00,0.00,94.83,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Bituminous coal - fluidized bed
+Circulating or bubbling",94.6,0.00,0.06,112.80,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Sub-bituminous coal
+Overfeed stoker boiler",96.1,0.00,0.00,96.33,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Sub-bituminous coal
+Underfeed stoker boiler",96.1,0.01,0.00,96.66,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Sub-bituminous coal - Pulverized
+Dry bottom, wall fired",96.1,0.00,0.00,96.27,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,"Sub-bituminous coal - fluidized bed
+Circulating or bubbling",96.1,0.00,0.06,114.30,CH4 and N2O factors are IPCC Tier 3 for industrial boilers
+,,Lignite,101.0,0.01,0.00,101.70,CH4 and N2O factors are IPCC Tier 1
+,,Peat ,106.0,0.00,0.00,106.50,CH4 and N2O factors are IPCC Tier 1
+,,Other fossil fuels
+,,Petroleum coke,97.5,0.00,0.00,97.75,CH4 and N2O factors are IPCC Tier 1
+,,Coke oven,107.0,0.01,0.00,107.70,CH4 and N2O factors are IPCC Tier 1
+,,Gas coke,107.0,0.00,0.00,107.05,CH4 and N2O factors are IPCC Tier 1
+,,Alternative fossil fuels
+,,Lubricants,73.30,0.00,0.00,73.55,CH4 and N2O factors are IPCC Tier 1
+,,Coal Tar,80.70,0.01,0.00,81.40,CH4 and N2O factors are IPCC Tier 1
+,,Waste Oil,73.30,0.03,0.00,75.24,CH4 and N2O factors are IPCC Tier 1
+,,Plastic (portion of MSW),2885 kg CO2 / tonne,,,,"CO2 factor from EIA 2007
+IPCC does not provide CH4 nor N2O factors"
+,,Tires and tire derived fuel,85.78,,,85.78,"CO2 factor from EIA 2007
+IPCC does not provide CH4 or N2O factors"
+,,Municipal solid waste (non biomass fraction),91.7,0.03,0.00,93.64,CH4 and N2O factors are IPCC Tier 1
+,,Biofuels
+,,Wood and wood waste,"Should not be included in GHG inventory.
+See ""Biomass Combustion CO2"" worksheet",0.01,0.00,1.49,"CH4 and N2O factors are median values determined from a data set originating from a variety of sources, see NCASI 2004."
+,,Pulping liquors,"Should not be included in GHG inventory.
+See ""Biomass Combustion CO2"" worksheet",0.00,0.00,0.66,"CH4 and N2O factors are median values determined from a data set originating from a variety of sources, see NCASI 2004."
+,,Biogas used in boilers or kilns,"Should not be included in GHG inventory.
+See ""Biomass Combustion CO2"" worksheet",0.00,0.00,0.07,"CH4 factor from NCASI 1981
+N2O factor from IPCC discussion of formation requirements"
+
+,,Other Sources:,"U.S. Department of Energy Energy Information Administration (EIA).  2007.  Instructions for Form EIA-1605, Voluntary Reporting of Greenhouse Gases.  Available on the internet at <http://www.eia.doe.gov/oiaf/1605/pdf/EIA1605_Instructions_10-23-07.pdf> (6 May 2008).  Factors from this source were converted to SI units, and converted from HHV basis to LHV basis using IPCC recommendations:
+           Emission factor (LHV) = Emission factor (HHV) / 0.95    for solid/liquid fuels
+           Emission factor (LHV) = Emission factor (HHV) / 0.90    for gaseous fuels"
+
+,,,"National Council for Air and Stream Improvement, Inc. (NCASI).  1981.  A study of the kraft process lime kiln total gaseous non-methane organic emissions.  Technical Bulletin No. 358.  Research Triangle Park, NC: National Council for Air and Stream Improvement, Inc."
+
+,,,"National Council for Air and Stream Improvement, Inc. (NCASI).  2004.  Calculation Tools for Estimating Greenhouse Gas Emissions from Pulp and Paper Mills, Version 1.1.  Research Triangle Park, NC: National Council for Air and Stream Improvement, Inc."

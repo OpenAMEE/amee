@@ -1,0 +1,14 @@
+name,Wall Thickness By Age Band,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Wall Thickness Age Band A,wallThicknessAgeBandA,DECIMAL,TRUE,FALSE
+Wall Thickness Age Band B,wallThicknessAgeBandB,DECIMAL,TRUE,FALSE
+Wall Thickness Age Band C,wallThicknessAgeBandC,DECIMAL,TRUE,FALSE
+Wall Thickness Age Band D,wallThicknessAgeBandD,DECIMAL,TRUE,FALSE
+Wall Thickness Age Band E,wallThicknessAgeBandE,DECIMAL,TRUE,FALSE
+Wall Thickness Age Band F,wallThicknessAgeBandF,DECIMAL,TRUE,FALSE
+Wall Thickness Age Band G,wallThicknessAgeBandG,DECIMAL,TRUE,FALSE
+Wall Thickness Age Band H,wallThicknessAgeBandH,DECIMAL,TRUE,FALSE
+"Wall Thickness Age Band I,J,K",wallThicknessAgeBandIJK,DECIMAL,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

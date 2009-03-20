@@ -1,0 +1,11 @@
+fuelType,fuelKgCO2PerKWh,fuelKgCO2PerLitre,fuelKgCO2perKg,units,fuelSource,algorithm,default
+Gas,0.206,0.0,0.0,kgCO2/kWh,defra 2008,value*user_gas_kWh,
+Oil,0.0,2.52,0.0,kgCO2/L,defra 2008,value*user_oil_litres,
+Coal,0.0,0.0,2.52,kgCO2/kg,defra 2008,value*user_coal_kg,
+Electricity,0.527,0.0,0.0,kgCO2/kWh,defra 2008,value*user_electricity_kWh,
+Petrol,0.0,2.32,0.0,kgCO2/L,defra 2008,value*user_petrol_litres,
+Diesel,0.0,2.63,0.0,kgCO2/L,defra 2008,value*user_diesel_litres,
+Kerosene,0.0,2.52,0.0,kgCO2/L,defra 2008,value*user_kerosene_litres,
+Biodiesel,0.0,2.5,0.0,kgCO2/L,AMEE 2007,value*user_biodiesel_litres,
+LPG,0.0,1.49,0.0,kgCO2/L,defra 2008,value*user_LPG_litres,
+Biomass,0.0,0.0,0.119,kgCO2/kg,defra 2008,value*user_biomass_kg,

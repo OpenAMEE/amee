@@ -1,0 +1,21 @@
+type,value,unit,unit,source
+Chimneys,Number of open fireplaces,,,sap 2005
+Flues,Number of open flues (main and secondary heating systems),,,sap 2005
+Ventilation system,"Natural with intermittent extract fans, unless mechanical system clearly identified",,,sap 2005
+Extract fans,"Age bands A to E all cases 0
+Age bands F to G all cases 1
+Age bands H to K up to 2 habiable rooms 1
+Age bands H to K 3 to 5 habitable rooms 2
+Age bands H to K 6 to 8 habitable rooms 3
+Age bands H to K more than 8 habitable rooms 4",,,sap 2005
+Wall infiltration,"According to the largest area of wall, system build treated as masonry, and infiltration according to masonry if equal. Net wall area after deduction of openings is used for this purpose, walls of roof rooms are not included.",,,sap 2005
+"Floor infiltration
+(suspended timber
+floor only)","Age band of main dwelling A to E: unsealed
+Age band of main dwelling F to K: sealed",,,sap 2005
+Draught lobby,"House or bungalow: no
+Flat or maisonette: yes if heated or unheated corridor",,,sap 2005
+Percent of doors and windows draughtstripped,Windows draughtstripped equal to percentage of double or secondary glazing doors not draughtstripped,,,sap 2005
+Number of storeys,Greater of the number of storeys in the main part of the dwelling and in any extension,,,sap 2005
+Sheltered sides,"4 for flat/maisonette up to third storey above ground level
+2 in other cases",,,sap 2005

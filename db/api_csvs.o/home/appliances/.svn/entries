@@ -1,0 +1,43 @@
+8
+
+dir
+2699
+http://svn.amee.com/internal/api_csvs/home/appliances
+http://svn.amee.com
+
+
+
+2009-02-11T15:06:12.125777Z
+2568
+james.hetherington
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+b293a2d2-da53-4cb3-b1bf-c591e3edcd7a
+
+computers
+dir
+
+televisions
+dir
+
+kitchen
+dir
+
+cooking
+dir
+
+entertainment
+dir
+

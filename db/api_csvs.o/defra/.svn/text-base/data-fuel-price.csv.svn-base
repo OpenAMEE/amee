@@ -1,0 +1,11 @@
+fuelPriceType,fuelPricePayment,fuelKgCO2PerPound,units,fuelPriceSource,algorithm
+Gas,normal,7.083,kgCO2/£,defra/est/amee average calendar year 2007,user_gas_cost*value
+Gas,prepayment,6.280,kgCO2/£,defra/est/amee average calendar year 2007,user_gas_prepayment_cost*value
+Electricity,normal,4.862,kgCO2/£,defra/est/amee average calendar year 2007,user_electricity_cost*value
+Electricity,prepayment,4.419,kgCO2/£,defra/est/amee average calendar year 2007,user_electricity_prepayment_cost*value
+Oil,-,8.134,kgCO2/£,defra/est/amee average calendar year 2007,user_oil_cost*value
+LPG,-,4.509,kgCO2/£,defra/est/amee average calendar year 2007,user_LPG_cost*value
+Coal,-,12.74,kgCO2/£,defra/est/amee average calendar year 2007,user_coal_cost*value
+Biomass,-,0.7367,kgCO2/£,CERT price for bulk pellets/defra/est/amee average at july 2008,user_biomass_cost*value
+ElectricityE7,normal,6.654,kgCO2/£,defra/est/amee average calendar year 2007,user_electricity_cost*value
+ElectricityE7,prepayment,6.272,kgCO2/£,defra/est/amee average calendar year 2007,user_electricity_prepayment_cost*value

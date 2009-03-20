@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/2354/internal/api_csvs/import/ict/webclick
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/2354/internal/api_csvs/import/ict/webclick/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/2354/internal/api_csvs/import/ict/webclick/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/2354/internal/api_csvs/import/ict/webclick/perMonth.js
+END

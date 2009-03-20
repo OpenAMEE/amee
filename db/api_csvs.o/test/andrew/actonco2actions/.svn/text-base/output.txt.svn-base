@@ -1,0 +1,1073 @@
+init:
+deps-jar:
+compile:
+run:
+Loading local data item def...
+Loading local data...
+valueColumns={1,2,3,4,5,6,7,8,9,10,}
+nDrill=1
+...local loading done
+Opening confirmation dialog...
+...update confirmed.
+>>>>>>>>>>>>>>>>>>>>>>>> i = 1    key       = no laptop num fails = 0    num diffs = 0 num missing = 0  time = 0
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 2    key       = few PSUs num fails = 0    num diffs = 0 num missing = 1  time = 1
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 3    key       = no dishwasher num fails = 0    num diffs = 0 num missing = 2  time = 1
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 4    key       = kettle too full num fails = 0    num diffs = 0 num missing = 3  time = 1
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 5    key       = no microwave num fails = 0    num diffs = 0 num missing = 4  time = 1
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 6    key       = has microwave num fails = 0    num diffs = 0 num missing = 5  time = 1
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 7    key       = has TVs num fails = 0    num diffs = 0 num missing = 6  time = 2
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 8    key       = no under floor insulation num fails = 0    num diffs = 0 num missing = 7  time = 2
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 9    key       = no cavity insulation num fails = 0    num diffs = 0 num missing = 8  time = 2
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 10    key       = no double glazing num fails = 0    num diffs = 0 num missing = 9  time = 2
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 11    key       = no draught proof num fails = 0    num diffs = 0 num missing = 10  time = 2
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 12    key       = has renewables num fails = 0    num diffs = 0 num missing = 11  time = 2
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 13    key       = no green tariff num fails = 0    num diffs = 0 num missing = 12  time = 2
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 14    key       = low car mileage num fails = 0    num diffs = 0 num missing = 13  time = 2
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 15    key       = has vehicles num fails = 0    num diffs = 0 num missing = 14  time = 2
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 16    key       = low aircon usage num fails = 0    num diffs = 0 num missing = 15  time = 2
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 17    key       = cycles walks num fails = 0    num diffs = 0 num missing = 16  time = 3
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 18    key       = any flights num fails = 0    num diffs = 0 num missing = 17  time = 3
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 19    key       = no long flights num fails = 0    num diffs = 0 num missing = 18  time = 3
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 20    key       = laptop num fails = 0    num diffs = 0 num missing = 19  time = 3
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 21    key       = has printer num fails = 0    num diffs = 0 num missing = 20  time = 3
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 22    key       = high computers standby num fails = 0    num diffs = 0 num missing = 21  time = 3
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 23    key       = low computers standby num fails = 0    num diffs = 0 num missing = 22  time = 3
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 24    key       = any PSUs num fails = 0    num diffs = 0 num missing = 23  time = 3
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 25    key       = has digital radio num fails = 0    num diffs = 0 num missing = 24  time = 3
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 26    key       = high entertainment standby num fails = 0    num diffs = 0 num missing = 25  time = 3
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 27    key       = low entertainment standby num fails = 0    num diffs = 0 num missing = 26  time = 4
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 28    key       = has dishwasher num fails = 0    num diffs = 0 num missing = 27  time = 4
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 29    key       = old fridge freezer num fails = 0    num diffs = 0 num missing = 28  time = 4
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 30    key       = good washing machine num fails = 0    num diffs = 0 num missing = 29  time = 4
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 31    key       = bad washing machine num fails = 0    num diffs = 0 num missing = 30  time = 4
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 32    key       = washing machine high temperature num fails = 0    num diffs = 0 num missing = 31  time = 4
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 33    key       = old freezer num fails = 0    num diffs = 0 num missing = 32  time = 5
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 34    key       = has dryer num fails = 0    num diffs = 0 num missing = 33  time = 5
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 35    key       = old fridge num fails = 0    num diffs = 0 num missing = 34  time = 5
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 36    key       = good fridge num fails = 0    num diffs = 0 num missing = 35  time = 5
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 37    key       = bad fridge num fails = 0    num diffs = 0 num missing = 36  time = 5
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 38    key       = no insulation num fails = 0    num diffs = 0 num missing = 37  time = 5
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 39    key       = has cavity insulation num fails = 0    num diffs = 0 num missing = 38  time = 5
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 40    key       = has under floor insulation num fails = 0    num diffs = 0 num missing = 39  time = 6
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 41    key       = has double glazing num fails = 0    num diffs = 0 num missing = 40  time = 6
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 42    key       = has draught proof num fails = 0    num diffs = 0 num missing = 41  time = 6
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 43    key       = has loft insulation num fails = 0    num diffs = 0 num missing = 42  time = 6
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 44    key       = no loft insulation num fails = 0    num diffs = 0 num missing = 43  time = 6
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 45    key       = no bills given num fails = 0    num diffs = 0 num missing = 44  time = 6
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 46    key       = no renewables num fails = 0    num diffs = 0 num missing = 45  time = 6
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 47    key       = majority lel bulbs num fails = 0    num diffs = 0 num missing = 46  time = 7
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 48    key       = few lel bulbs num fails = 0    num diffs = 0 num missing = 47  time = 7
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 49    key       = green tariff num fails = 0    num diffs = 0 num missing = 48  time = 7
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 50    key       = high car mileage num fails = 0    num diffs = 0 num missing = 49  time = 7
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 51    key       = no vehicles num fails = 0    num diffs = 0 num missing = 50  time = 7
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 52    key       = large car num fails = 0    num diffs = 0 num missing = 51  time = 7
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 53    key       = small car num fails = 0    num diffs = 0 num missing = 52  time = 7
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 54    key       = high aircon usage num fails = 0    num diffs = 0 num missing = 53  time = 7
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 55    key       = car share num fails = 0    num diffs = 0 num missing = 54  time = 7
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 56    key       = bad driving num fails = 0    num diffs = 0 num missing = 55  time = 8
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 57    key       = little public transport urban num fails = 0    num diffs = 0 num missing = 56  time = 8
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 58    key       = frequent public transport num fails = 0    num diffs = 0 num missing = 57  time = 8
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 59    key       = no public transport num fails = 0    num diffs = 0 num missing = 58  time = 8
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 60    key       = car short journeys num fails = 0    num diffs = 0 num missing = 59  time = 8
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+>>>>>>>>>>>>>>>>>>>>>>>> i = 61    key       = has long flights num fails = 0    num diffs = 0 num missing = 60  time = 8
+Failed to find uid: try clearing uid_cache?
+    MISSING*****************************
+Sending POST batch...
+    POST /data/test/andrew/actonco2actions
+    <?xml version="1.0" encoding="ISO-8859-1"?>
+<DataCategory>
+<DataItems>
+<DataItem>
+<type>no laptop</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>If you are thinking of buying a computer consider choosing a laptop over a desktop, they are much more efficient in their consumption of energy, using only around 30% of a desktop's energy consumption.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/appliances/computers/generic:device=Personal Computers%26rating=Laptop</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>39</id>
+<briefTipContent><strong>When buying computer, consider choosing a laptop instead of a desktop model</strong></briefTipContent>
+<order>6</order>
+</DataItem>
+<DataItem>
+<type>few PSUs</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>You don't generally leave charging plugs switched on whilst not charging. Congratulations on realising that external power supplies left on whilst not charging use energy. This energy is wasted energy.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/appliances/entertainment/generic:device=PSU%26rating=typical:numberOwned>4</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>49</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>no dishwasher</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You don't have a dishwasher - if you have a big household, or find yourself doing lots of washing up by hand throughout the day, it may be worth investing in an A-rated dishwasher, as a well-filled dishwasher load once a day will be more efficient than many bowls of hot water, or a running tap, to wash many dishes.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/appliances/kitchen/generic:device=*Dishwasher*</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>36</id>
+<briefTipContent><strong>Consider investing in an A-rated dishwasher</strong></briefTipContent>
+<order>3</order>
+</DataItem>
+<DataItem>
+<type>kettle too full</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You have stated that you fill the kettle with more water than you need for 1 cup of tea. Did you know that if every UK household only boiled enough water for one cup of tea, instead of filling most of the kettle each time they wanted a cuppa they could each save 20kg of CO2 a year.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/appliances/kitchen/generic:device=kettle%26rating=-%26age=-%26temperature=-:comment=1/4</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>34</id>
+<briefTipContent><strong>Only fill the kettle to the required level</strong></briefTipContent>
+<order>12</order>
+</DataItem>
+<DataItem>
+<type>no microwave</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Why not invest in a microwave? They can make significant energy savings over ordinary electric ovens in a range of cooking options.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/appliances/kitchen/generic:device=microwave</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>33</id>
+<briefTipContent><strong>Consider investing in a microwave</strong></briefTipContent>
+<order>11</order>
+</DataItem>
+<DataItem>
+<type>has microwave</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You own a microwave.  Did you know that microwave cooking can make significant reductions in your energy bills as they are much more energy efficient than conventional ovens. You don't even have to sacrifice your cooking abilities as most microwaves these days allow you to do many of the cooking functions of a normal oven.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/appliances/kitchen/generic:device=microwave</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>32</id>
+<briefTipContent><strong>Consider using your microwave more frequently</strong></briefTipContent>
+<order>11</order>
+</DataItem>
+<DataItem>
+<type>has TVs</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Did you know that as much as 15% energy (and CO2) savings can be achieved by turning down the brightness and contrast levels on your TV? The manufacturer's settings are always set for showroom viewing, which is much brighter than needed for an average living room. This can amount to significant savings, particularly for larger flat-screen televisions, and will also improve the picture quality. It will also increase the lifespan of tubes, backlights and plasma elements.<br>If you are looking to buy a new TV, make sure that you buy an IDTV (Integrated Digital TV). It has the capacity to receive digital signals without the need for a set top box - this will save CO2 as you won't be powering a separate device to watch digital TV channels.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/appliances/televisions/generic:EMPTY</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>45</id>
+<briefTipContent><strong>Turn the brightness and contrast down on brand new TVs</strong></briefTipContent>
+<order>9</order>
+</DataItem>
+<DataItem>
+<type>no under floor insulation</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Consider installing underfloor insulation, unless you have solid floors in contact with the ground. The average 3-bed semi-detached house could reduce its CO2 emissions by around a third of a tonne per year.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/energy/insulation:type=cavity</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>17</id>
+<briefTipContent><strong>Install underfloor insulation and save 1/3 tonne CO2/year</strong></briefTipContent>
+<order>5</order>
+</DataItem>
+<DataItem>
+<type>no cavity insulation</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Around a third of all the heat lost in an un-insulated home is lost through the walls. If you have cavity walls, insulating them will make a great difference. In fact an average 3-bed semi-detached house could reduce its CO2 emissions by around 0.7 tonnes per year by having its cavity walls insulated.<br>If you have solid walls you can insulate them too. Check out the link below.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/energy/insulation:type=cavity</condition1>
+<condition2>/home/heating:homeDwellingType=*house*|*bungalow*|*maisonette*%26homeAge=1930-1995</condition2>
+<condition3></condition3>
+<id>16</id>
+<briefTipContent><strong>Fill your cavity walls and save 1 tonne / year</strong></briefTipContent>
+<order>1</order>
+</DataItem>
+<DataItem>
+<type>no double glazing</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Think about installing double glazing. Around 20% of the heat lost from your home occurs through the windows, if they are single glazed. By fitting the minimum 'C' rating Energy Saving Recommended windows in place of standard windows the average 3-bed semi-detached house could cut its CO2 emissions by over half a tonne per year.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/energy/insulation:type=double glazing</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>19</id>
+<briefTipContent><strong>Double glaze your windows and save 0.5 tonne / year</strong></briefTipContent>
+<order>4</order>
+</DataItem>
+<DataItem>
+<type>no draught proof</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Have you thought about installing draught proofing? It's inexpensive and simple to fit and can greatly increase comfort through eliminating draughts as well as reducing energy consumption. The average 3-bed semi-detached house could reduce its CO2 emissions by around 140kg per year by installing effective draught proofing.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/energy/insulation:type=draft exclusion</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>20</id>
+<briefTipContent><strong>Fit draught-proofing around doors and windows</strong></briefTipContent>
+<order>3</order>
+</DataItem>
+<DataItem>
+<type>has renewables</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>Congratulations on investing in renewable technology in your own home. You are helping the UK on its way to its Kyoto and other international targets.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/home/energy/renewable:EMPTY</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>8</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>no green tariff</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Why not investigate green tariffs? Send a signal to energy suppliers that you value electricity that comes from renewable and low carbon sources. Check out what additional carbon benefits a tariff delivers above and beyond the suppliers' legal obligation to source a certain proportion of electricity from renewable sources.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/metadata::greenTariff=yes</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>7</id>
+<briefTipContent><strong>Switch to a green tariff and support renewable energy</strong></briefTipContent>
+<order>10</order>
+</DataItem>
+<DataItem>
+<type>low car mileage</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Whenever possible, walk, bike, car share, or use public transport. Every litre of fuel you save reduces the amount of CO2 emissions that are released into the atmosphere.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/transport/car/generic:ANY:distanceKmPerMonth>402</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>55</id>
+<briefTipContent><strong>Whenever possible, walk, bike, car share, or use public transport</strong></briefTipContent>
+<order>4</order>
+</DataItem>
+<DataItem>
+<type>has vehicles</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Keeping your vehicle well tuned will mean it is operating at its most efficient, which means it will use less fuel and save you money.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/transport/car/generic:EMPTY</condition1>
+<condition2>!/transport/motorcycle/generic:EMPTY</condition2>
+<condition3></condition3>
+<id>57</id>
+<briefTipContent><strong>Keep your vehicle well maintained</strong></briefTipContent>
+<order>12</order>
+</DataItem>
+<DataItem>
+<type>low aircon usage</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>By not using your air conditioning you're improving your fuel consumption by between 5 and 25%. But remember, at speeds above 50-60mph it is generally more efficient to keep windows closed even if this means using aircon because open windows increase drag.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/transport/metadata:type=normal:airConUsage=It's on most of the time</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>61</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>cycles walks</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>Walking and cycling are the perfect options for both CO2 savings and to improve your health.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/transport/other:EMPTY</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>62</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>any flights</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Air travel makes a growing contribution to CO2 emissions. Consider the need for a flight and the alternatives to taking a plane. If you do fly then consider offsetting your CO2.<br>If you can, travel by public transport to and from the airport. Rail links are usually quicker and easier than driving, and travelling by rail or bus may also save you money on parking.<br>Air travel currently accounts for 6.3% of the UK total CO2 emissions. The full climate impact of aviation goes beyond the effects of CO2 emissions, although there is still scientific uncertainty about the scale of the impacts of these effects. The climate impacts of non-CO2 emissions from flights (such as water vapour and nitrogen oxides) could mean the total impacts are larger (than those for CO2 alone) by a factor of 2-4 times, due to an effect known as radiative forcing.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/transport/plane/generic:EMPTY</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>67</id>
+<briefTipContent><strong>Air travel is making a growing contribution to CO2 emissions</strong></briefTipContent>
+<order>1</order>
+</DataItem>
+<DataItem>
+<type>no long flights</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>On average travelling by rail will result in about a third of the CO2 emissions of the equivalent domestic or short-haul flight in Europe. A similar journey for two people in an average-sized car would result in under two thirds of the CO2 emissions compared with flying.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>!/transport/plane/generic:type=*long haul*</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>63</id>
+<briefTipContent><strong>Consider the need for a flight and the alternatives to taking a plane</strong></briefTipContent>
+<order>5</order>
+</DataItem>
+<DataItem>
+<type>laptop</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>You own a laptop. Congratulations, choosing a laptop instead of a desktop is the wise energy choice. A laptop, on average, consumes around 30% of the power of a desktop, whilst in 'on-mode'.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/computers/generic:device=Personal Computers%26rating=Laptop</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>40</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>has printer</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>If you have a choice of printers (especially in the office), avoid using a laser printer for draft-quality printouts. From an energy efficiency perspective, the order of preference should be inkjet, dot matrix and then laser printers. Always use the 'eco' function on your print option for drafts, it uses less energy and ink.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/computers/generic:device=Printer%26rating=Inkjet|Laser</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>51</id>
+<briefTipContent><strong>Choose more efficient printers and use 'eco' functions for draft/personal material</strong></briefTipContent>
+<order>13</order>
+</DataItem>
+<DataItem>
+<type>high computers standby</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You say you leave your ICT equipment on standby. Across the UK we waste the equivalent of nearly two power stations' worth of electricity each year simply by leaving our appliances on standby mode. By turning your PC and printer off you'll be doing your part to help tackle climate change.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/computers/generic:device=standby%26rating=-:onStandby=always</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>52</id>
+<briefTipContent><strong>Avoid leaving computers and their peripherals on stand-by when not in use</strong></briefTipContent>
+<order>14</order>
+</DataItem>
+<DataItem>
+<type>low computers standby</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>You infrequently or never leave entertainment equipment on stand-by. Congratulations on realising that stand-by energy is wasted energy. By switching everything off you are saving yourself around ___GBP___37 each year.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/computers/generic:device=standby%26rating=-:onStandby=never</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>41</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>any PSUs</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Across the UK, mobile phone chargers, and similar rechargeable products, left plugged in waste over %26#163;60 million and are responsible for a quarter of a million tonnes of CO2 every year. You can reduce your CO2 emissions by turning the charger off at the plug once the electrical items are fully charged. If you have chargers or other power supplies that are turned on at the wall socket, they will still use energy, regardless of whether they are charging something or not.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/entertainment/generic:device=PSU%26rating=typical:numberOwned>0</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>50</id>
+<briefTipContent><strong>Avoid leaving phone chargers and other external power supply plugs turned on when not in use</strong></briefTipContent>
+<order>10</order>
+</DataItem>
+<DataItem>
+<type>has digital radio</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You own a Digital radio. Did you know that, on average, they consume up to 5 times the energy of a traditional analogue radio. They also tend to consume energy when they are supposedly switched off - to be sure yours is not wasting energy when it is off, turn it off at the socket.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/entertainment/generic:device=Radio%26rating=digital</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>38</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>high entertainment standby</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Across the UK we waste the equivalent of nearly two power stations' worth of electricity each year simply by leaving our appliances on standby mode. So when you turn off your appliances make sure they are really off, and not damaging the environment unnecessarily. It can also save up around %26#163;37 per year.<br>Every year TVs in the UK waste %26#163;80 million worth of electricity just waiting to be switched on. Reduce your CO2 emissions by turning your TVs and other appliances completely off rather than using the remote to leave them on standby.<br>The UK's DVDs and VCRs consume over %26#163;150 million worth of electricity each year whilst on standby, producing over 750,000 tonnes of CO2. Turn them off when you're not using them.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/entertainment/generic:device=standby%26rating=-:onStandby=always</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>48</id>
+<briefTipContent><strong>Avoid leaving electrical appliances and equipment on stand-by</strong></briefTipContent>
+<order>7</order>
+</DataItem>
+<DataItem>
+<type>low entertainment standby</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>You never leave entertainment equipment on stand-by. Congratulations on realising that stand-by energy is wasted energy. By switching everything off you are saving yourself around %26#163;37 each year and reducing your CO2 emissions.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/entertainment/generic:device=standby%26rating=-:onStandby=never</condition1>
+<condition2>/home/appliances/entertainment/generic:device=standby%26rating=-:onStandby=sometimes</condition2>
+<condition3></condition3>
+<id>47</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>has dishwasher</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You own a dishwasher. You can start reducing its CO2 emissions right now, simply make sure that you try to completely fill your dishwasher before each use, and always use the more energy efficient economy settings/cooler wash cycles whenever possible. If you're in the market for a new dishwasher, investing in an Energy Saving Recommended appliance could save around 85kg of CO2 a year.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/kitchen/generic:device=*Dishwasher*</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>35</id>
+<briefTipContent><strong>Fill your dishwasher up fully and use the economy setting more frequently</strong></briefTipContent>
+<order>4</order>
+</DataItem>
+<DataItem>
+<type>old fridge freezer</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You indicate that your fridge-freezer is over 12 years old. Replacing your old fridge-freezer with a new A++ rated one could save up to 66% of the energy, and 211 kg CO2, per year and will also reduce your electricity bill.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/kitchen/generic:device=*Fridge/Freezer*%26age=over 12 years</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>30</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>good washing machine</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You state you have an A/A+ washing machine. Well done on purchasing one of the most efficient washing machines on the market. You are already saving around 35kg of CO2 each year compared to a less efficient model. Don't forget to ensure you do full loads for each wash, on the economy setting. You will then save even more.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/kitchen/generic:device=*ing machine*%26rating=A|A+</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>42</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>bad washing machine</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You state you have a B or below energy rated washing machine. By upgrading your machine to an Energy Saving Recommended appliance you could save around 35kg of CO2 a year. You'd also cut your water consumption considerably. You can start reducing your washing machine's CO2 emissions right now by making sure that you always use the more energy efficient economy settings, and by running shorter, cooler wash cycles whenever possible. And make sure that you do full loads every time you wash: if your machine has, say, a 6kg load, then measure out how many items of clothes makes up 6kgs - you'll be surprised at the amount you can wash in one load!</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/kitchen/generic:device=*ing machine*%26rating=B|C|D|E|F|G|Other</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>37</id>
+<briefTipContent><strong>Consider replacing your washing machine with a top rated/Energy Saving Recommended model</strong></briefTipContent>
+<order>5</order>
+</DataItem>
+<DataItem>
+<type>washing machine high temperature</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Washing at lower temperatures will reduce your CO2 emissions. Using a 40 degrees celsius wash cycle rather than 60 degrees centigrade means you use a third less energy. Reduce the wash to a degrees celsius cycle for lightly soiled / 'worn once' garments and the amount of energy saved will be even higher. Today's detergents have been specifically designed to clean at lower temperatures so don't worry - your clothes will be as clean as they would have been at higher temperatures.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/kitchen/generic:device=*ing machine*%26temperature=60|90</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>43</id>
+<briefTipContent><strong>Wash clothes at low (30/40 degree) temperatures whenever possible</strong></briefTipContent>
+<order>8</order>
+</DataItem>
+<DataItem>
+<type>old freezer</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You indicate that your freezer is over 12 years old. Replacing your old freezer with a new A++ rated one could save up to 66% of the energy, and 211 kg CO2, per year and will also reduce your electricity bill.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/kitchen/generic:device=*upright Freezer%26age=over 12 years</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>29</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>has dryer</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You own a tumble dryer. In drier weather, if you have access to a suitable outside space, hanging your clothes outside rather than using the tumble dryer will reduce your CO2 emissions. They will dry quickly and smell fresh too. If you can't go outside and have space inside, a clothes drying rack is also a great alternative to using the tumble dryer but remember, it's always better to open the window and turn off the heating in the room where the rack is, rather than draping clothes over radiators if the heating is on, as you'll use more energy trying to maintain the room temperature and dry your clothes at the same time.<br>If you are considering replacing your existing clothes drying machine, buying a new Heat Pump type could save up to 28%, 58 kg CO2 per year and will also reduce your electricity bill.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/kitchen/generic:device=*Washer/dryer*</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>44</id>
+<briefTipContent><strong>In dry weather use an outside line rather than your dryer</strong></briefTipContent>
+<order>2</order>
+</DataItem>
+<DataItem>
+<type>old fridge</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You indicate that your fridge is over 12 years old. Replacing your old fridge with a new A++ rated one could save up to 65% of the energy, and 97 kg CO2, per year and will also reduce your electricity bill.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/kitchen/generic:device=Fridge%26age=over 12 years</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>28</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>good fridge</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>You indicate you have already bought an Energy Saving Recommended cold appliance. You are already saving 155kg of CO2 over an typical older model each year.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/appliances/kitchen/generic:device=Fridge%26rating=A+|A++</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>31</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>bad fridge</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Your fridge can be one of the biggest energy consumers in your house as it is permanently on the go 24 hours a day, 7 days a week. Upgrading to an Energy Saving Recommended appliance could cut your CO2 emissions by around 155kg per year. If you are in the market for a new fridge it also pays to be wary of frost-free fridge-freezers as they generally use up to 50% more energy to run than conventional fridges.</content>
+<links></links>
+<useOR>TRUE</useOR>
+<condition1>/home/appliances/kitchen/generic:device=Fridge%26rating=C|D|E|F|G|Other</condition1>
+<condition2>/home/appliances/kitchen/generic:device=*fridge*%26age=*over*</condition2>
+<condition3></condition3>
+<id>27</id>
+<briefTipContent><strong>Consider replacing your fridge/freezer with a more efficient model</strong></briefTipContent>
+<order>1</order>
+</DataItem>
+<DataItem>
+<type>no insulation</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Insulating your home can significantly reduce your utility bills. Here are a few simple suggestions:</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/energy/insulation:EMPTY</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>10</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>has cavity insulation</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>Your answer indicates you have already insulated your walls - by making this investment you are already saving around 0.7 tonnes of CO2 each year.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/energy/insulation:type=cavity</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>11</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>has under floor insulation</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>Your answer indicates you have already installed underfloor insulation - this measure means you are already saving a third of a tonne of CO2 each year.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/energy/insulation:type=cavity</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>18</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>has double glazing</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>You indicate you've already installed double glazing - by having double glazing you are already saving half a tonne of CO2 each year.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/energy/insulation:type=double glazing</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>12</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>has draught proof</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>You indicate that you've already draught-proofed your home - by insulating your doors and windows you are saving around a tenth of a tonne of CO2 every year.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/energy/insulation:type=draft exclusion</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>21</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>has loft insulation</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>Your answer indicates you have insulated your loft. This simple action is already saving you up to 0.9 tonnes of CO2 every year.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/energy/insulation:type=loft</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>13</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>no loft insulation</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>If you have access to the loft, you may want to consider loft insulation. As much as a third of your space heating energy could be escaping through your roof. Loft insulation is the most cost-effective and energy efficient measure to reduce losses and the easiest to install. By simply insulating the loft to the recommended depth of 270mm the average 3-bed semi-detached house could reduce its CO2 emissions by around 0.9 tonnes per year and save energy costs too.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/energy/insulation:type=loft:description=no</condition1>
+<condition2>/home/heating:homeDwellingType=*house*|*bungalow*|*maisonette*</condition2>
+<condition3></condition3>
+<id>14</id>
+<briefTipContent><strong>Insulate your loft and save 1.5 tonnes / year</strong></briefTipContent>
+<order>2</order>
+</DataItem>
+<DataItem>
+<type>no bills given</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>You can track changes in your carbon footprint more accurately if you regularly check the kWh or fuel consumption figures on your energy bills. Compare the kWh figures before and after you act on the recommendations in this action plan, and see the difference it makes to your carbon footprint and your pocket.<br>If your winter heating bills are burning a hole in your pocket try turning down your thermostat by just one degree at a time. Each degree drop can reduce your bill by 10%. We recommend aiming for around 19-20 degrees celsius in your living room and around 18 degrees celsius in your bedroom.<br>Also think about the temperature on your immersion heater if you have one - can you reduce this by a degree or two?<br>Take care to set the timer control so that heating is only on at full temperature when there is somebody at home to benefit from it. If your home is occupied for different times each day of the week, consider getting a 7-day timer so that you can set different programmes depending on when people are at home.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/energy/quantity:EMPTY</condition1>
+<condition2>/home/energy/uk/price:EMPTY</condition2>
+<condition3></condition3>
+<id>5</id>
+<briefTipContent><strong>Check your fuel bills for your real energy useage - you might be using less than is estimated</strong></briefTipContent>
+<order>7</order>
+</DataItem>
+<DataItem>
+<type>no renewables</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>If you have made your home as energy efficient as it can be, why not look into renewable energy technologies (such as solar hot water, or wind turbines). Installing these technologies can help save you money on your energy bills, and reduce your carbon emissions. Solar hot water heating alone can meet up to 30% of your hot water needs.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/energy/renewable:EMPTY</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>9</id>
+<briefTipContent><strong>After making your house energy efficient, why not think about generating your own power through renewable technologies</strong></briefTipContent>
+<order>11</order>
+</DataItem>
+<DataItem>
+<type>majority lel bulbs</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>Congratulations, by replacing over half the bulbs in your home to energy saving ones you are already saving anything between 50 - 75% of the energy used for lighting your home.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/lighting:type=lel:noOfLightBulbs:GREATER:/home/lighting:type=normal:noOfLightBulbs</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>22</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>few lel bulbs</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>If you want a fast and effective way to cut your energy bills start with your home's lighting. An average household spends around 18% of its electricity budget on lighting. Using low energy lighting can reduce the amount of energy used in lighting your home by around 50% to 75% if all bulbs are replaced. Best of all, they last up to 12 times longer than ordinary bulbs and save you money.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/home/lighting:type=normal:noOfLightBulbs:GREATER:/home/lighting:type=lel:noOfLightBulbs</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>23</id>
+<briefTipContent><strong>Fit energy efficient lightbulbs in your most used fittings</strong></briefTipContent>
+<order>8</order>
+</DataItem>
+<DataItem>
+<type>green tariff</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>You have already opted for a green/renewable tariff and sent a signal to suppliers about the demand for more clean, renewable supply in the UK. Why not send another signal by checking the terms of your tariff with your supplier? Check out what additional environmental benefits it offers above and beyond the suppliers' legal obligation to source a certain proportion of electricity from renewable sources.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/metadata::greenTariff=yes</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>6</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>high car mileage</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>Congratulations, your yearly  car mileage is around half that of the average UK citizen.  By using your car less you are saving up to 2 tonnes of CO2 per annum</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/car/generic:ANY:distanceKmPerMonth>402</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>56</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>no vehicles</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>You state you do not own a vehicle. Congratulations, by not owning a car or motorbike you are reducing your CO2 footprint by about 3 tonnes compared to the typical footprint for a household with a car.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/car/generic:EMPTY</condition1>
+<condition2>/transport/motorcycle/generic:EMPTY</condition2>
+<condition3></condition3>
+<id>25</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>large car</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Consider choosing a lower CO2 car when get a replacement. Choosing the lowest CO2 car within a car category (eg family car, estate, MPV, etc) you can reduce CO2 emissions and therefore fuel consumption by up to 24%.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/car/generic:size=*large*</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>54</id>
+<briefTipContent><strong>When replacing your car, consider choosing the lowest CO2 model in its category</strong></briefTipContent>
+<order>3</order>
+</DataItem>
+<DataItem>
+<type>small car</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>Congratulations on choosing a low CO2 car. Choosing the lowest CO2 new car within a car category (e.g. family car, estate, MPV, etc) can reduce CO2 emissions, and therefore fuel consumption, by up to 24%.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/car/generic:size=*small*</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>53</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>high aircon usage</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Typical mixed use of air conditioning can add around 5% to a car's fuel consumption and up to around 25% when working at full power - so use air conditioning sparingly. But remember that at speeds above 50-60mph it is generally more efficient to keep windows closed even if this means using aircon because open windows increase drag. Ordinary fan heaters/coolers generally have a lower impact on fuel consumption.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/metadata:type=normal:airConUsage=It's on most of the time</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>60</id>
+<briefTipContent><strong>Try to minimise the use of air conditioning</strong></briefTipContent>
+<order>9</order>
+</DataItem>
+<DataItem>
+<type>car share</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>Not only is a car sharing a great way to help reduce your CO2 emissions, it's a great way to save you money as well. By sharing the cost of driving one car you save on fuel, the cost of parking and wear and tear on a vehicle. Car sharing with just one person will reduce your emissions by half and with four people this rises to three-quarters. It will also help address congestion.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/metadata:type=normal:carShare=yes</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>64</id>
+<briefTipContent><strong>Try to avoid using several vehicles and  car-share for journeys where-ever possible</strong></briefTipContent>
+<order>7</order>
+</DataItem>
+<DataItem>
+<type>bad driving</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Erratic braking and accelerating uses more fuel than driving at a consistent speed. Drive at a good distance from the car in front, so you can anticipate and travel with the flow of traffic. Stay at or within the speed limit. This increases driver safety. It also reduces CO2 emissions and saves money on your petrol costs. At 70mph you could be using up to 9% more fuel than at 60mph and up to 15% more than at 50mph.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/metadata:type=normal:ecoDriving=no</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>59</id>
+<briefTipContent><strong>Try to adopt a smoother driving style and avoid exessive speed</strong></briefTipContent>
+<order>8</order>
+</DataItem>
+<DataItem>
+<type>little public transport urban</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>22% of all UK emissions come from cars, buses, lorries and any other transport we use on the road. If we all start to use more public transport there will be fewer CO2 emitting vehicles on the road.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/metadata:type=normal:locality=urban</condition1>
+<condition2>/transport/metadata:type=normal:localPublicTransport=never</condition2>
+<condition3></condition3>
+<id>73</id>
+<briefTipContent><strong>22% of all UK emissions come from cars, buses, lorries and any other transport we use on the road. If we all start to use more public transport there will be fewer CO2 emitting vehicles on the road. </strong></briefTipContent>
+<order>150</order>
+</DataItem>
+<DataItem>
+<type>frequent public transport</type>
+<source>defra 2008</source>
+<isWellDone>TRUE</isWellDone>
+<content>Congratulations for using public transport regularly. By doing so you are cutting your own CO2 emissions and contributing to less congestion, and pollution, on the road.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/metadata:type=normal:localPublicTransport=frequently</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>26</id>
+<briefTipContent></briefTipContent>
+<order>100</order>
+</DataItem>
+<DataItem>
+<type>no public transport</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Road transport accounts for 22% of all UK domestic CO2 emissions (i.e. excluding international aviation and shipping). Using public transport not only helps reduce traffic congestion but helps lower the country's CO2 emissions as well.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/metadata:type=normal:localPublicTransport=never</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>65</id>
+<briefTipContent><strong>Try to make more use of public transport where possible</strong></briefTipContent>
+<order>10</order>
+</DataItem>
+<DataItem>
+<type>car short journeys</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Nearly 25% of car journeys are less than 2 miles and cars consume most fuel at the start of their journey. Walking or cycling for short journeys is not only good for your health but could also reduce your carbon footprint. Walking or cycling your children a mile to and from school each day would save 280kg of CO2 each year compared to the journey in an average car.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/metadata:type=normal:shortJourneys=I drive my car or moped</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>66</id>
+<briefTipContent><strong>Try to avoid using your car for short journeys - walking or cycling can be good alternatives</strong></briefTipContent>
+<order>6</order>
+</DataItem>
+<DataItem>
+<type>has long flights</type>
+<source>defra 2008</source>
+<isWellDone>FALSE</isWellDone>
+<content>Just one long haul return flight can give you the same (or larger) footprint as driving a car for an entire year.<br>For example, if you and a partner flew to Italy instead of Australia for a holiday you could save 7.52 tonnes of CO2.</content>
+<links></links>
+<useOR>FALSE</useOR>
+<condition1>/transport/plane/generic:type=*long haul*</condition1>
+<condition2></condition2>
+<condition3></condition3>
+<id>68</id>
+<briefTipContent><strong>Just one long haul return flight can give a footprint similar to a years use for a typical car</strong></briefTipContent>
+<order>2</order>
+</DataItem>
+</DataItems>
+</DataCategory>
+ERROR: failed to batch POST data items:
+POST /data/test/andrew/actonco2actions
+HTTP/1.1 400 BAD_REQUEST
+Date: Fri, 13 Feb 2009 11:57:41 GMT
+Server: Apache/2.2.9 (Debian) DAV/2 SVN/1.4.4 mod_jk/1.2.18 mod_python/3.2.10 Python/2.4.4 PHP/5.2.0-10 mod_ssl/2.2.9 OpenSSL/0.9.8g Phusion_Passenger/2.0.3
+Set-Cookie: authToken=Nx4vRkWwdphaJAqiuMWaVuJ98ZSjalsH54Uc92dq3gT1m4Ro/L/i/C2faVKFvXxERl+zdNXdyY+bx1wpsFmvkXJVym2IA4jlnVfF88yS7Phf8kS8W5pfoA==; Path=/
+Content-Length: 0
+authToken: Nx4vRkWwdphaJAqiuMWaVuJ98ZSjalsH54Uc92dq3gT1m4Ro/L/i/C2faVKFvXxERl+zdNXdyY+bx1wpsFmvkXJVym2IA4jlnVfF88yS7Phf8kS8W5pfoA==
+Cache-Control: max-age=3600
+Expires: Fri, 13 Feb 2009 12:57:41 GMT
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/plain; charset=ISO-8859-1
+
+
+ERROR - POST batch failed
+number of created items = 61
+BUILD SUCCESSFUL (total time: 12 seconds)

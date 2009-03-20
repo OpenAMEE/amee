@@ -1,0 +1,8 @@
+#!/usr/bin/gawk  -f
+BEGIN {
+      FS=",";
+      OFS=",";
+      print "zip","subregion";
+}
+NF==11&&$5!=subregion{subregion=$5;print $1,subregion}
+NF==12&&$6!=subregion{subregion=$6;print $1,subregion}

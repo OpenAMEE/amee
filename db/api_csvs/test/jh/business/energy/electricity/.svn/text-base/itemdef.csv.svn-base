@@ -1,0 +1,9 @@
+name,JHTestElectricity
+algFile,perMonth.js
+name,path,type,isDataItemValue,isDrillDown
+Country,country,TEXT,true,true
+kg CO2 per kWh,kgCO2PerkWh,DECIMAL,true,false
+kWh Per Month,kWhPerMonth,DECIMAL,false,false
+Total area, totalArea,DECIMAL,false,false
+Responsible area,responsibleArea,DECIMAL,false,false
+Source,source,TEXT,true,false

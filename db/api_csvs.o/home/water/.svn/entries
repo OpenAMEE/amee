@@ -1,0 +1,83 @@
+8
+
+dir
+2699
+http://svn.amee.com/internal/api_csvs/home/water
+http://svn.amee.com
+
+
+
+2009-02-13T17:01:06.179200Z
+2633
+james
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+b293a2d2-da53-4cb3-b1bf-c591e3edcd7a
+
+reductions
+dir
+
+data.csv
+file
+
+
+
+
+2009-02-03T18:02:46.000000Z
+8270bb469d2a35a07fd1e9385cc9816f
+2009-01-18T20:37:40.855517Z
+2378
+david
+has-props
+
+usage
+dir
+
+itemdef.csv
+file
+
+
+
+
+2009-02-03T18:02:46.000000Z
+5bcee78d8dbe8b7444b50c108c82d7e6
+2008-12-21T15:11:04.570071Z
+2284
+aleks
+
+perMonth.js
+file
+
+
+
+
+2009-02-03T18:02:46.000000Z
+47663fda2bdc9fa156b2bfbc5c62749e
+2008-12-21T15:11:04.570071Z
+2284
+aleks
+
+v2Algorithm.js
+file
+
+
+
+
+2009-02-09T07:56:01.000000Z
+80a2c013293ea7c7d31e901f235859de
+2009-02-04T14:03:00.027226Z
+2523
+james.hetherington
+

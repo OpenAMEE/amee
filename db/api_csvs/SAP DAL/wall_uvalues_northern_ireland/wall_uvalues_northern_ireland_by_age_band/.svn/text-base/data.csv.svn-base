@@ -1,0 +1,16 @@
+type,wallUvaluesNorthernIrelandAgeBandA,wallUvaluesNorthernIrelandAgeBandB,wallUvaluesNorthernIrelandAgeBandC,wallUvaluesNorthernIrelandAgeBandD,wallUvaluesNorthernIrelandAgeBandE,wallUvaluesNorthernIrelandAgeBandF,wallUvaluesNorthernIrelandAgeBandG,wallUvaluesNorthernIrelandAgeBandH,wallUvaluesNorthernIrelandAgeBandI,wallUvaluesNorthernIrelandAgeBandJ,wallUvaluesNorthernIrelandAgeBandK,unit,source
+Stone: granite or whin (as built),2.4,2.4,2.4,2.4,1.7,1,0.6,0.45,0.45,,0.3,,sap 2005
+"Stone: sandstone
+(as built)",2.1,2.1,2.1,2.1,1.7,1,0.6,0.45,0.45,,0.3,,sap 2005
+Solid brick (as built),2.1,2.1,2.1,2.1,1.7,1,0.6,0.45,0.45,,0.3,,sap 2005
+Stone/solid brick (external insulation),0.6,0.6,0.6,0.6,0.55,0.45,0.35,0.3,0.3,,0.21,,sap 2005
+Stone/solid brick (internal insulation),0.6,0.6,0.6,0.6,0.55,0.45,0.35,0.3,0.3,,0.21,,sap 2005
+Cob (as built),0.8,0.8,0.8,0.8,0.8,0.8,0.6,0.6,0.45,,0.3,,sap 2005
+Cob (external insulation),0.4,0.4,0.4,0.4,0.4,0.4,0.35,0.35,0.3,,0.21,,sap 2005
+Cob (internal insulation),0.4,0.4,0.4,0.4,0.4,0.4,0.35,0.35,0.3,,0.21,,sap 2005
+Cavity (as built),2.1,1.6,1.6,1.6,1.5,1,0.6,0.45,0.45,,0.3,,sap 2005
+Filled cavity+,0.5,0.5,0.5,0.5,0.5,0.4,0.35,0.45,0.45,,0.3,,sap 2005
+Timber frame,2.5,1.9,1.9,1,0.8,0.45,0.4,0.4,0.4,,0.3,,sap 2005
+System build (as built),2,2,2,2,1.7,1,0.6,0.45,0.45,,0.3,,sap 2005
+System build (external insulation),0.6,0.6,0.6,0.6,0.55,0.45,0.35,0.3,0.3,,0.21,,sap 2005
+System build (internal insulation),0.6,0.6,0.6,0.6,0.55,0.45,0.35,0.3,0.3,,0.21,,sap 2005

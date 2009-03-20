@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/!svn/ver/2568/internal/api_csvs/home/heating/us
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/2201/internal/api_csvs/home/heating/us/data.csv
+END
+v2Algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/2568/internal/api_csvs/home/heating/us/v2Algorithm.js
+END
+perMonth.js.migrate
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/2568/internal/api_csvs/home/heating/us/perMonth.js.migrate
+END

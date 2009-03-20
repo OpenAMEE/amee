@@ -1,0 +1,3 @@
+type,EnergyCostDeflator,EnergyCostFactor,SAPRating,error,units,source
+dummy,0,0,0,valid,0,0
+saprating,0,0,0,valid,0,0

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/2330/internal/api_csvs/test/sap/waterheatingenergy
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/2330/internal/api_csvs/test/sap/waterheatingenergy/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/2330/internal/api_csvs/test/sap/waterheatingenergy/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/2330/internal/api_csvs/test/sap/waterheatingenergy/perMonth.js
+END

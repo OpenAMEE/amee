@@ -1,0 +1,90 @@
+,"Appendix B: Default N2O and CH4  emission factors",,,,,,,,,
+,,,,,,,,,,
+,"Please note: If you have information on the specific type of combustion technology used please use the CH4 and N2O emisison factors in Table 2. ",,,,,,,,,
+,,,,,,,,,,
+,"Table 1: Tier 1 default values",,,,,,,,,
+,,,,,,,,,,
+,,,"Lower Heating Value(LHV)/Net Calorific Value (NCV) Basis",,,,"Higher Heating Value(HHV)/Gross Calorific Value (GCV) Basis",,,
+,,,"kg GHG / TJ fuel",,"kg GHG / ton fuel",,"kg GHG / TJ fuel",,"kg GHG / ton fuel",
+,"Fuel",,"CH4 ","N2O ","CH4 ","N2O ","CH4 ","N2O ","CH4 ","N2O "
+,"Crude oil and derived substances","Crude oil",3.000,0.600,0.134,0.027,2.850,0.570,0.127,0.025
+,,"Orimulsion",3.000,0.600,0.087,0.017,2.850,0.570,0.083,0.017
+,,"Natural Gas Liquids",3.000,0.600,0.140,0.028,2.850,0.570,0.133,0.027
+,,"Motor Gasoline",3.000,0.600,0.140,0.028,2.850,0.570,0.133,0.027
+,,"Aviation Gasoline",3.000,0.600,0.140,0.028,2.850,0.570,0.133,0.027
+,,"Jet Gasoline",3.000,0.600,0.140,0.028,2.850,0.570,0.133,0.027
+,,"Jet Kerosene",3.000,0.600,0.139,0.028,2.850,0.570,0.132,0.026
+,,"Other Kerosene",3.000,0.600,0.138,0.028,2.850,0.570,0.131,0.026
+,,"Shale oil",3.000,0.600,0.120,0.024,2.850,0.570,0.114,0.023
+,,"Gas/.Diesel oil",3.000,0.600,0.136,0.027,2.850,0.570,0.129,0.026
+,,"Residual Fuel oil",3.000,0.600,0.128,0.026,2.850,0.570,0.121,0.024
+,,"Liquified Petroleum Gases",1.000,0.100,0.053,0.005,0.900,0.090,0.047,0.005
+,,"Ethane",1.000,0.100,0.052,0.005,0.900,0.090,0.046,0.005
+,,"Naphtha",3.000,0.600,0.141,0.028,2.850,0.570,0.134,0.027
+,,"Bitumen",3.000,0.600,0.127,0.025,2.850,0.570,0.121,0.024
+,,"Lubricants",3.000,0.600,0.127,0.025,2.850,0.570,0.121,0.024
+,,"Petroleum coke",3.000,0.600,0.103,0.021,2.850,0.570,0.098,0.020
+,,"Refinery feedstocks",3.000,0.600,0.136,0.027,2.850,0.570,0.129,0.026
+,,"Refinery Gas",1.000,0.100,0.055,0.006,0.900,0.090,0.050,0.005
+,,"Paraffin waxes",3.000,0.600,0.127,0.025,2.850,0.570,0.121,0.024
+,,"White Spirit & SBP",3.000,0.600,0.127,0.025,2.850,0.570,0.121,0.024
+,,"Other petroleum products",3.000,0.600,0.127,0.025,2.850,0.570,0.121,0.024
+,"Coal and derived products","Anthracite",1.000,1.500,0.028,0.042,0.950,1.425,0.027,0.040
+,,"Coking coal",10.000,1.500,0.297,0.045,9.500,1.425,0.282,0.042
+,,"Other bituminous coal",10.000,1.500,0.272,0.041,9.500,1.425,0.258,0.039
+,,"Sub-bituminous coal",10.000,1.500,0.199,0.030,9.500,1.425,0.189,0.028
+,,"Lignite",10.000,1.500,0.125,0.019,9.500,1.425,0.119,0.018
+,,"Oil shale and tar sands",10.000,1.500,0.094,0.014,9.500,1.425,0.089,0.013
+,,"Brown coal briquettes",10.000,1.500,0.218,0.033,9.500,1.425,0.207,0.031
+,,"Patent fuel",10.000,1.500,0.218,0.033,9.500,1.425,0.207,0.031
+,,"Coke oven coke & lignite coke",10.000,1.500,0.297,0.045,9.500,1.425,0.282,0.042
+,,"Gas coke",1.000,0.100,0.030,0.003,0.950,0.095,0.028,0.003
+,,"Coal tar",10.000,1.500,0.295,0.044,9.500,1.425,0.280,0.042
+,,"Gas works gas",1.000,0.100,0.043,0.004,0.900,0.090,0.039,0.004
+,,"Coke oven gas",1.000,0.100,0.043,0.004,0.900,0.090,0.039,0.004
+,,"Blast furnace gas",1.000,0.100,0.003,0.000,0.900,0.090,0.002,0.000
+,,"Oxygen steel furnace gas",1.000,0.100,0.008,0.001,0.900,0.090,0.007,0.001
+,"Natural Gas","Natural Gas ",1.000,0.100,0.053,0.005,0.900,0.090,0.051,0.005
+,"Non-biomass waste ","Municipal wastes (non-biomass fraction)",30.000,4.000,0.316,0.042,28.500,3.800,0.300,0.040
+,,"Industrial wastes",30.000,4.000,"N/A","N/A",28.500,3.800,"N/A","N/A"
+,,"Waste oils",30.000,4.000,1.269,0.169,28.500,3.800,1.206,0.161
+,"Peat","Peat",2.000,1.500,0.021,0.015,1.900,1.425,0.020,0.015
+,"Biomass waste","Wood/Wood waste",30.000,4.000,0.493,0.066,28.500,3.800,0.468,0.062
+,,"Sulphite lyes (Black liqour)",3.000,2.000,0.037,0.025,2.850,1.900,0.035,0.024
+,,"Other primary solid biomass fuels",30.000,4.000,0.366,0.049,28.500,3.800,0.348,0.046
+,,"Charcoal",200.000,4.000,6.211,0.124,190.000,3.800,5.900,0.118
+,,"Biogasoline",3.000,0.600,0.085,0.017,2.850,0.570,0.081,0.016
+,,"Biodiesels",3.000,0.600,0.085,0.017,2.850,0.570,0.081,0.016
+,,"Other liquid biofuels",3.000,0.600,0.087,0.017,2.850,0.570,0.082,0.016
+,,"Landfill gas",1.000,0.100,0.056,0.006,0.900,0.090,0.050,0.005
+,,"Sludge gas",1.000,0.100,0.056,0.006,0.900,0.090,0.050,0.005
+,,"Other biogas",1.000,0.100,0.056,0.006,0.900,0.090,0.050,0.005
+,,"Municipal wastes (biomass fraction)",30.000,4.000,0.366,0.049,28.500,3.800,0.348,0.046
+,"Source: 2006 IPCC Guidelines for National Greenhouse Gas Inventories. The IPCC values were originally on a NCV (LHV) basis and have been converted to a GCV (HHV) basis using rule of thumb.Gross calorific (higher heating) values are preferred because they are more closely related to the carbon content of fuels than net calorific (lower heating) values.",,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,"Table 2: Tier 3 equipment-specific default values ",,,,,,,,,
+,,,,,,,,,,
+,"When the type of combustion technology is known, the following defaults should be used for N2O and CH4:",,,,,,,,,
+,,,,,,,,,,
+,"Technology",,,"LHV/NCV basis:          kg/TJ fuel",,"HHV/GCV basis:         kg/TJ fuel",,,,
+,"Basic Technology",,"Configuration","CH4","N2O","CH4","N2O",,,
+,"Liquid fuels","Residual fuel oil/ Shale oil boilers",,3.000,0.300,2.850,0.285,,,
+,,"Gas/Diesel oil boilers",,0.200,0.400,0.190,0.380,,,
+,,"Large stationary diesel oil engines >600hp (447kW)",,4.000,"N/A",3.800,"Err:529",,,
+,,"Liquified Petroleum Gases (LPG) boilers",,0.900,4.000,0.855,3.800,,,
+,"Solid fuels","Other bituminous /Sub-bituminous overfeed stoker boilers",,1.000,0.700,0.950,0.665,,,
+,,"Other bituminous /Sub-bituminous underfeed stoker boilers",,14.000,0.700,13.300,0.665,,,
+,,"Other bituminous/sub-bituminous pulverised","Dry bottom, wall fired",0.700,0.500,0.665,0.475,,,
+,,,"Dry bottom, tangentially fired",0.700,1.400,0.665,1.330,,,
+,,,"Wet bottom",0.900,1.400,0.855,1.330,,,
+,,"Other bituminous spreader stokers",,1.000,0.700,0.950,0.665,,,
+,,"Other bituminous/sub-bituminous fluidised bed combustor","Circulating bed",1.000,61.000,0.950,57.950,,,
+,,,"Bubbling bed",1.000,61.000,0.950,57.950,,,
+,"Natural Gas","Boilers",,1.000,1.000,0.900,0.900,,,
+,,"Gas-fired gas turbines >3MW",,4.000,1.000,3.600,0.900,,,
+,,"Natural gas-fired reciprocating engines","2-Stroke lean burn",693.000,"N/A",623.700,"N/A",,,
+,,,"4-Stroke lean burn",597.000,"N/A",537.300,"N/A",,,
+,,,"4-Stroke rich burn",110.000,"N/A",99.000,"N/A",,,
+,"Biomass","Wood/wood waste boilers",,11.000,7.000,10.450,6.650,,,
+,"Source: 2006 IPCC Guidelines for National Greenhouse Gas Inventories. The IPCC values were originally on a NCV (LHV) basis and have been converted to a GCV (HHV) basis using rule of thumb.Gross calorific (higher heating) values are preferred because they are more closely related to the carbon content of fuels than net calorific (lower heating) values.",,,,,,,,,

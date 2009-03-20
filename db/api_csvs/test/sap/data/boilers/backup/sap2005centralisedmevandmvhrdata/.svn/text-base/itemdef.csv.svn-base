@@ -1,0 +1,36 @@
+name,Sap 2005 Centralised MEV and MVHR Data,,,
+algFile,algorithm_alg.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Index,index,TEXT,TRUE,TRUE
+Manufacturers reference no,mrn,TEXT,TRUE,FALSE
+Manufacturer’s name,manufacturersname,TEXT,TRUE,FALSE
+Brand name,brandname,TEXT,TRUE,FALSE
+Model name,modelname,TEXT,TRUE,FALSE
+Model qualifier,modelqualifier,TEXT,TRUE,FALSE
+First year of manufacture,firstyearofmanufacture,TEXT,TRUE,FALSE
+Final year of manufacture,finalyearofmanufacture,TEXT,TRUE,FALSE
+Main type,maintype,TEXT,TRUE,FALSE
+Flexible or rigid ducting,flexibleorrigidducting,TEXT,TRUE,FALSE
+Number of exhaust terminal configurations,numberofexhaustterminalconfigurations,TEXT,TRUE,FALSE
+A: number of additional wet rooms,a:numberofadditionalwetrooms,TEXT,TRUE,FALSE
+A: Fan speed setting,a:fanspeedsetting,TEXT,TRUE,FALSE
+A: Specific fan power,a:specificfanpower,TEXT,TRUE,FALSE
+A: Heat exchanger efficiency percentage,a:heatexchangerefficiencypercentage,TEXT,TRUE,FALSE
+B: number of additional wet rooms,b:numberofadditionalwetrooms,TEXT,TRUE,FALSE
+B: Fan speed setting,b:fanspeedsetting,TEXT,TRUE,FALSE
+B: Specific fan power,b:specificfanpower,TEXT,TRUE,FALSE
+B: Heat exchanger efficiency percentage,b:Heatexchangerefficiencypercentage,TEXT,TRUE,FALSE
+C: number of additional wet rooms,c:numberofadditionalwetrooms,TEXT,TRUE,FALSE
+C: Fan speed setting,c:fanspeedsetting,TEXT,TRUE,FALSE
+C: Specific fan power,c:specificfanpower,TEXT,TRUE,FALSE
+C: Heat exchanger efficiency percentage,c:Heatexchangerefficiencypercentage,TEXT,TRUE,FALSE
+D: number of additional wet rooms,d:numberofadditionalwetrooms,TEXT,TRUE,FALSE
+D: Fan speed setting,d:fanspeedsetting,TEXT,TRUE,FALSE
+D: Specific fan power,d:specificfanpower,TEXT,TRUE,FALSE
+D: Heat exchanger efficiency percentage,d:Heatexchangerefficiencypercentage,TEXT,TRUE,FALSE
+E: number of additional wet rooms,e:numberofadditionalwetrooms,TEXT,TRUE,FALSE
+E: Fan speed setting,e:fanspeedsetting,TEXT,TRUE,FALSE
+E: Specific fan power,e:specificfanpower,TEXT,TRUE,FALSE
+E: Heat exchanger efficiency percentage,e:Heatexchangerefficiencypercentage,TEXT,TRUE,FALSE
+DB entry updated,dbentryupdated,TEXT,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE

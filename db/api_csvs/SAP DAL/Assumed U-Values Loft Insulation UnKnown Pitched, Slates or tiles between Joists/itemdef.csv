@@ -1,0 +1,8 @@
+name,"Assumed U-Values Loft Insulation UnKnown Pitched, Slates or tiles between Joists",,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+"Pitched, slates or tiles,
+insulation 
+between joists",pitchedSlatesOrTilesInsulationBetweenJoists,TEXT,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

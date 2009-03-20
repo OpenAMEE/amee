@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/!svn/ver/2910/internal/api_csvs/home/heating/uk
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/2848/internal/api_csvs/home/heating/uk/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/2848/internal/api_csvs/home/heating/uk/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/2848/internal/api_csvs/home/heating/uk/perMonth.js
+END
+t2d.txt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/2793/internal/api_csvs/home/heating/uk/t2d.txt
+END
+v2Algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/2910/internal/api_csvs/home/heating/uk/v2Algorithm.js
+END
