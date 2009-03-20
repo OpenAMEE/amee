@@ -29,7 +29,15 @@ try {//see if season exists
   else {
     fuel='oil';
   }
-  seasonFac = 0.25/dataFinder.getDataItemValue('home/energy/uk/seasonal', 'name='+season+',energy='+fuel, 'percentage');
+
+  var fac = dataFinder.getDataItemValue('home/energy/uk/seasonal', 'name='+season+',energy='+fuel, 'percentage');
+
+  if (fac != null) {
+    seasonFac = 0.25 / fac;
+  } else {
+    seasonFac = 1.;
+  }
+  
 }
 catch(err){
   seasonFac=1.;

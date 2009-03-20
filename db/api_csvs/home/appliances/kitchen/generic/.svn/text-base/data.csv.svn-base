@@ -42,7 +42,11 @@ Dishwasher,Economy,1-2 years,-,0,1.108,kWh/cycle,MTP/defra/amee 2008,value*user_
 Dishwasher,Economy,3-5 years,-,0,1.151,kWh/cycle,MTP/defra/amee 2008,value*user_cycles*fuel_electricity,default
 Dishwasher,Economy,over 5 years,-,0,1.339,kWh/cycle,MTP/defra/amee 2008,value*user_cycles*fuel_electricity,default
 Dishwasher,Economy,I don't know,-,0,1.239,kWh/cycle,MTP/defra/amee 2008,value*user_cycles*fuel_electricity,
-Washer/dryer,-,-,-,0,2.5,kWh/cycle,MTP/defra/amee 2008,value*user_cycles*fuel_electricity,default
+Washer/dryer,-,-,-,0,3.148,kWh/cycle,Washing machine Other up to 12 years 40 plus Washer/dryer Dry only ,value*user_cycles*fuel_electricity,default
+Washer/dryer,Dry only,-,-,0,2.5,kWh/cycle,Same as Standard Tumble Dryer,,
+Tumble dryer,Standard,-,-,0,2.5,kWh/cycle,MTP/defra/amee 2008,,
+Tumble dryer,Gas,-,-,0,1.313,kWh/cycle,MTP/EST/amee 2009 - note kWh assumes gas to elec kWh equivalence,value*user_cycles*fuel_electricity,
+Tumble dryer,Heat pump,-,-,0,1.9,kWh/cycle,MTP/EST/amee 2009,value*user_cycles*fuel_electricity,
 Washing line,-,-,-,0,0,N/A,N/A,,
 Washing machine,A+,up to 12 years,30,0,0.418,kWh/cycle,MTP/defra/amee 2008,value*user_cycles*fuel_electricity,
 Washing machine,A,up to 12 years,30,0,0.447,kWh/cycle,MTP/defra/amee 2008,value*user_cycles*fuel_electricity,

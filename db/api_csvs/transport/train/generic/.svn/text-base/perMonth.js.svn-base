@@ -24,4 +24,40 @@ if (country == 'Ireland' || country == 'IE') {
     fac= kgCO2PerKmPassenger;
 }
 
-fac * distanceKmPerMonth;
+isJourneyBased=false;
+try {
+	var c = distanceKmPerMonth;
+} catch(err){
+	isJourneyBased=true;
+}
+
+if(!isJourneyBased){
+	fac * distanceKmPerMonth;
+} else {
+	try {
+		var c = useTypicalDistance;
+	} catch(err){
+		useTypicalDistance="false";
+	}
+
+	if(useTypicalDistance=="true"){
+		distancePerJourney=typicalJourneyDistance;
+	}
+
+	if(journeyFrequency=="yearly"){
+		numberOfJourneys/=12.;
+	} else if(journeyFrequency=="weekly"){
+		numberOfJourneys*=4.333;
+	} else if(journeyFrequency=="daily"){
+		numberOfJourneys*=30.42;
+	}
+	try {
+		var c = isReturn;
+		if(isReturn=="true"){
+			numberOfJourneys*=2;
+		}
+	} catch(err){
+		isReturn=false;
+	}
+	fac*numberOfJourneys*distancePerJourney;
+}

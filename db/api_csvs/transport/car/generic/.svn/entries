@@ -1,15 +1,15 @@
 8
 
 dir
-2699
+2911
 http://svn.amee.com/internal/api_csvs/transport/car/generic
 http://svn.amee.com
 
 
 
-2009-02-04T14:03:00.027226Z
-2523
-james.hetherington
+2009-03-17T19:50:08.866896Z
+2848
+andrew
 
 
 svn:special svn:externals svn:needs-lock
@@ -44,11 +44,11 @@ file
 
 
 
-2009-02-03T18:02:47.000000Z
-37e07382e525f11decc7deea2fa43bc2
-2008-12-03T20:32:38.594389Z
-2201
-aleks
+2009-03-20T16:43:54.000000Z
+5e944380b09960449c98c9a41b34701c
+2009-03-17T19:50:08.866896Z
+2848
+andrew
 has-props
 
 itemdef.csv
@@ -57,10 +57,10 @@ file
 
 
 
-2009-02-03T18:02:47.000000Z
-a2dfad81d377dd50565ddf43f36fc06c
-2009-01-18T19:46:18.492921Z
-2376
+2009-03-20T16:43:54.000000Z
+5e1ca98079d6e35590ffc0ea3d97156e
+2009-03-08T22:37:49.882580Z
+2795
 andrew
 
 perMonth.js
@@ -69,10 +69,10 @@ file
 
 
 
-2009-02-03T18:02:47.000000Z
-adc7cb9adbd04d238ecab8b3240e3b02
-2009-01-18T19:46:18.492921Z
-2376
+2009-03-20T16:43:54.000000Z
+9d2d5e0929996041e20a45281f401e2a
+2009-03-08T22:37:49.882580Z
+2795
 andrew
 
 v2Algorithm.js

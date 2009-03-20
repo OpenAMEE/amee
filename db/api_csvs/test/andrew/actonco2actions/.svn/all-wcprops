@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions
+/!svn/ver/2793/internal/api_csvs/test/andrew/actonco2actions
 END
 example_links_utf8.txt
 K 25
@@ -13,7 +13,7 @@ data.csv
 K 25
 svn:wc:ra_dav:version-url
 V 69
-/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/data.csv
+/!svn/ver/2793/internal/api_csvs/test/andrew/actonco2actions/data.csv
 END
 data_orig.csv
 K 25

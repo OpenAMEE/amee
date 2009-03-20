@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 59
-/!svn/ver/2523/internal/api_csvs/home/energy/electricityISO
+/!svn/ver/2795/internal/api_csvs/home/energy/electricityISO
 END
 data.csv-test
 K 25
@@ -14,6 +14,18 @@ K 25
 svn:wc:ra_dav:version-url
 V 68
 /!svn/ver/2201/internal/api_csvs/home/energy/electricityISO/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/2795/internal/api_csvs/home/energy/electricityISO/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/2795/internal/api_csvs/home/energy/electricityISO/perMonth.js
 END
 v2Algorithm.js
 K 25

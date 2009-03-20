@@ -16,6 +16,8 @@ Individual saving per year,individualSavingPerYear,TEXT,TRUE,FALSE
 Countrywide saving per year,countryWideSavingPerYear,TEXT,TRUE,FALSE
 Cost,cost,TEXT,TRUE,FALSE
 Links,links,TEXT,TRUE,FALSE
+Easiest to do,easiestToDo,TEXT,TRUE,FALSE
+Save you money,saveYouMoney,TEXT,TRUE,FALSE
 Is selected,isSelected,TEXT,FALSE,FALSE
 Is done,isDone,TEXT,FALSE,FALSE
 Brief tip content,briefTipContent,TEXT,TRUE,FALSE

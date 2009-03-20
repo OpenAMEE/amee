@@ -1,6 +1,6 @@
-type,kgCO2PerKmPassenger,kgCO2PerPassengerKmIE,units,source,algorithm,default
-national,0.0602,0.044,kgCO2/km.passenger,UK:defra/amee 2008; IE:Irish Rail 2006 Via Agency.com (Based on diesel used and passenger km travelled),value*user_distance,
-underground,0.0650,0.053,kgCO2/km.passenger,london underground defra/amee 2008,value*user_distance,
-local rail,0.0780,0.044,kgCO2/km.passenger,UK: NAEI; IE:Irish Rail 2006 Via Agency.com (Based on diesel used and occupancy passenger km travelled),value*user_distance,
-tram,0.0780,0.0780,kgCO2/km.passenger,UK: NAEI,value*user_distance,
-international,0.0177,0.0177,kgCO2/km.passenger,eurostar defra/amee 2008,,
+type,kgCO2PerKmPassenger,kgCO2PerPassengerKmIE,typicalJourneyDistance,units,source,algorithm,default
+national,0.0602,0.0440,51.2000,kgCO2/km.passenger,UK:defra/amee 2008; IE:Irish Rail 2006 Via Agency.com (Based on diesel used and passenger km travelled),value*user_distance,
+underground,0.0650,0.0530,13.9000,kgCO2/km.passenger,london underground defra/amee 2008,value*user_distance,
+local rail,0.0780,0.0440,13.9000,kgCO2/km.passenger,UK: NAEI; IE:Irish Rail 2006 Via Agency.com (Based on diesel used and occupancy passenger km travelled),value*user_distance,
+tram,0.0780,0.0780,13.9000,kgCO2/km.passenger,UK: NAEI,value*user_distance,
+international,0.0177,0.0177,434.0000,kgCO2/km.passenger,eurostar defra/amee 2008,,

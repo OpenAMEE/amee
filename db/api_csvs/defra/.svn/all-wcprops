@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 38
-/!svn/ver/2650/internal/api_csvs/defra
+/!svn/ver/2734/internal/api_csvs/defra
 END
 data-appliances.csv
 K 25
@@ -62,6 +62,12 @@ K 25
 svn:wc:ra_dav:version-url
 V 57
 /!svn/ver/2650/internal/api_csvs/defra/data-transport.csv
+END
+drilldowns.txt
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/2734/internal/api_csvs/defra/drilldowns.txt
 END
 data-heating_orig.csv
 K 25

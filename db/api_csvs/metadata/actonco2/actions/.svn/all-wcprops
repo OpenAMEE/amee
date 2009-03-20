@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/!svn/ver/2511/internal/api_csvs/metadata/actonco2/actions
+/!svn/ver/2906/internal/api_csvs/metadata/actonco2/actions
 END
 old.zip
 K 25
@@ -19,7 +19,7 @@ data.csv
 K 25
 svn:wc:ra_dav:version-url
 V 67
-/!svn/ver/2511/internal/api_csvs/metadata/actonco2/actions/data.csv
+/!svn/ver/2906/internal/api_csvs/metadata/actonco2/actions/data.csv
 END
 data_orig.csv
 K 25
@@ -31,7 +31,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 70
-/!svn/ver/2354/internal/api_csvs/metadata/actonco2/actions/itemdef.csv
+/!svn/ver/2793/internal/api_csvs/metadata/actonco2/actions/itemdef.csv
 END
 perMonth.js
 K 25
