@@ -20,7 +20,7 @@ namespace :install do
     
     # Ensure a release tag has been supplied 
     @tag_name = ENV['TAG']
-    puts "You must specify a tag for this release using TAG=name" unless tag_name
+    puts "You must specify a tag for this release using TAG=name" unless @tag_name
     exit
     
     # Check that local repository contains no local modifications
