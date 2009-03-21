@@ -1,8 +1,0 @@
-name,Plane Class,,,
-algFile,perMonth.js,,,
-name,path,type,isDataItemValue,isDrillDown
-kgCO2 Per Passenger Km,kgCO2PerPassengerKm,DECIMAL,TRUE,FALSE
-Source,source,TEXT,TRUE,FALSE
-Type,type,TEXT,TRUE,TRUE
-Passenger class,passengerClass,TEXT,TRUE,TRUE
-

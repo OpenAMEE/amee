@@ -1,5 +1,0 @@
-name,Hotel Metadata
-algFile,perMonth.js
-name,path,type,isDataItemValue,isDrillDown
-Type,type,TEXT,true,true
-Refrigerant volume,refrigerantVolume,DECIMAL,false,false

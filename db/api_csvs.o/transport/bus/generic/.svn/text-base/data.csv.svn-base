@@ -1,5 +1,0 @@
-type,kgCO2PerKmPassenger,kgCO2PerPassengerKmIE,units,source,algorithm,default
-typical,0.0686,0.0772,kgCO2/km.passenger,UK: defra/NAEI assumes 8.7 occupancy; IE: Dublin Bus 2006 Via Agency.com (Based on diesel used and passenger km travelled),value*user_distance,
-local,0.1158,0.1158,kgCO2/km.passenger,defra/amee 2008,value*user_distance,
-london,0.0818,0.0818,kgCO2/km.passenger,defra/amee 2008,value*user_distance,
-coach,0.0290,0.0290,kgCO2/km.passenger,defra/amee 2008,value*user_distance,

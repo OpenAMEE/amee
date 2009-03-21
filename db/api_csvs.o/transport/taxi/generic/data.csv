@@ -1,2 +1,0 @@
-type,kgCO2PerKm,units,source,algorithm,default
-typical,0.264,kgCO2/km ,based on large diesel car,value*user_distance*user_multipliers,
