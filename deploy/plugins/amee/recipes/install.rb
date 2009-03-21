@@ -85,7 +85,7 @@ namespace :install do
   desc "Send the deployment package to Git repository"
   task :deploy_to_git do
     `git add .`
-    `git commit -m 'Install from capistrano on #{Time.now}'`
+    `git commit -a -m 'Install from capistrano on #{Time.now}'`
     `git push`
   end
   
