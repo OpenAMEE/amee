@@ -1,0 +1,926 @@
+2009/03/22 16:34:04 INFO  - jmeter.util.JMeterUtils: Setting Locale to en_US 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: Loading user properties from: /Users/stevematthew/development/jakarta-jmeter-2.3.2/bin/user.properties 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: Loading system properties from: /Users/stevematthew/development/jakarta-jmeter-2.3.2/bin/system.properties 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: Copyright (c) 1998-2008 The Apache Software Foundation 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: Version 2.3.2 r665936 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: java.version=1.6.0_07 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: os.name=Mac OS X 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: os.arch=x86_64 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: os.version=10.5.6 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: file.encoding=MacRoman 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: Default Locale=English (United States) 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: JMeter  Locale=English (United States) 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: JMeterHome=/Users/stevematthew/development/jakarta-jmeter-2.3.2 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: user.dir  =/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: PWD       =/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: IP: 192.168.1.75 Name: macbook.lan FullName: macbook.lan 
+2009/03/22 16:34:04 INFO  - jmeter.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties 
+2009/03/22 16:34:06 INFO  - jmeter.engine.util.CompoundVariable: Note: Function class names must contain the string: '.functions.' 
+2009/03/22 16:34:06 INFO  - jmeter.engine.util.CompoundVariable: Note: Function class names must not contain the string: '.gui.' 
+2009/03/22 16:34:08 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Cannot find .className property for htmlParser, using default 
+2009/03/22 16:34:08 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Parser for text/html is  
+2009/03/22 16:34:08 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Parser for application/xhtml+xml is  
+2009/03/22 16:34:08 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Parser for application/xml is  
+2009/03/22 16:34:08 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Parser for text/xml is  
+2009/03/22 16:34:08 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser 
+2009/03/22 16:34:09 INFO  - jmeter.gui.util.MenuFactory: Skipping org.apache.jmeter.protocol.http.modifier.gui.ParamModifierGui 
+2009/03/22 16:34:09 INFO  - jmeter.gui.util.MenuFactory: Skipping org.apache.jmeter.protocol.http.modifier.gui.UserParameterModifierGui 
+2009/03/22 16:34:09 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Maximum connection retries = 10 
+2009/03/22 16:34:10 WARN  - jmeter.gui.util.MenuFactory: Missing jar? Could not create org.apache.jmeter.visualizers.MailerVisualizer. java.lang.NoClassDefFoundError: javax/mail/MessagingException 
+2009/03/22 16:34:10 INFO  - jmeter.samplers.SampleResult: Note: Sample TimeStamps are START times 
+2009/03/22 16:34:10 INFO  - jmeter.samplers.SampleResult: sampleresult.default.encoding is set to ISO-8859-1 
+2009/03/22 16:34:13 INFO  - jmeter.services.FileServer: Default base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:34:13 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:34:13 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:34:13 INFO  - jmeter.save.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2 
+2009/03/22 16:34:13 INFO  - jmeter.save.SaveService: Using SaveService properties file encoding UTF-8 
+2009/03/22 16:34:13 INFO  - jmeter.save.SaveService: Using SaveService properties file version 661482 
+2009/03/22 16:34:13 INFO  - jmeter.save.SaveService: Using SaveService properties version 2.1 
+2009/03/22 16:34:13 INFO  - jmeter.save.SaveService: All converter versions present and correct 
+2009/03/22 16:34:13 ERROR - jmeter.save.SaveService: Conversion error com.thoughtworks.xstream.converters.ConversionException: org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+---- Debugging information ----
+message             : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+cause-exception     : java.lang.ClassCastException
+cause-message       : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/ThreadGroup
+line number         : 26
+------------------------------- : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+---- Debugging information ----
+message             : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+cause-exception     : java.lang.ClassCastException
+cause-message       : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/ThreadGroup
+line number         : 26
+-------------------------------
+message             : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+---- Debugging information ----
+message             : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+cause-exception     : java.lang.ClassCastException
+cause-message       : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/ThreadGroup
+line number         : 26
+-------------------------------
+cause-exception     : com.thoughtworks.xstream.converters.ConversionException
+cause-message       : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+first-jmeter-class  : org.apache.jmeter.save.ScriptWrapperConverter.unmarshal(ScriptWrapperConverter.java:96)
+class               : org.apache.jmeter.save.ScriptWrapper
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/ThreadGroup
+line number         : 26
+------------------------------- 
+2009/03/22 16:34:13 WARN  - jmeter.gui.action.Load: Unexpected error java.lang.Exception: Error in TestPlan - see log file
+	at org.apache.jmeter.gui.action.Load.insertLoadedTree(Load.java:153)
+	at org.apache.jmeter.gui.action.Load.loadProjectFile(Load.java:108)
+	at org.apache.jmeter.gui.action.LoadRecentProject.doAction(LoadRecentProject.java:64)
+	at org.apache.jmeter.gui.action.ActionRouter.performAction(ActionRouter.java:80)
+	at org.apache.jmeter.gui.action.ActionRouter.access$000(ActionRouter.java:42)
+	at org.apache.jmeter.gui.action.ActionRouter$1.run(ActionRouter.java:59)
+	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:209)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:597)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:300)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:210)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:200)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:195)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:187)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:121)
+
+2009/03/22 16:35:14 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:35:14 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:35:14 ERROR - jmeter.save.SaveService: Conversion error com.thoughtworks.xstream.converters.ConversionException: org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+---- Debugging information ----
+message             : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+cause-exception     : java.lang.ClassCastException
+cause-message       : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/ThreadGroup
+line number         : 26
+------------------------------- : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+---- Debugging information ----
+message             : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+cause-exception     : java.lang.ClassCastException
+cause-message       : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/ThreadGroup
+line number         : 26
+-------------------------------
+message             : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+---- Debugging information ----
+message             : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+cause-exception     : java.lang.ClassCastException
+cause-message       : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/ThreadGroup
+line number         : 26
+-------------------------------
+cause-exception     : com.thoughtworks.xstream.converters.ConversionException
+cause-message       : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree : org.apache.jmeter.threads.ThreadGroup cannot be cast to org.apache.jorphan.collections.HashTree
+first-jmeter-class  : org.apache.jmeter.save.ScriptWrapperConverter.unmarshal(ScriptWrapperConverter.java:96)
+class               : org.apache.jmeter.save.ScriptWrapper
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/ThreadGroup
+line number         : 26
+------------------------------- 
+2009/03/22 16:35:14 WARN  - jmeter.gui.action.Load: Unexpected error java.lang.Exception: Error in TestPlan - see log file
+	at org.apache.jmeter.gui.action.Load.insertLoadedTree(Load.java:153)
+	at org.apache.jmeter.gui.action.Load.loadProjectFile(Load.java:108)
+	at org.apache.jmeter.gui.action.LoadRecentProject.doAction(LoadRecentProject.java:64)
+	at org.apache.jmeter.gui.action.ActionRouter.performAction(ActionRouter.java:80)
+	at org.apache.jmeter.gui.action.ActionRouter.access$000(ActionRouter.java:42)
+	at org.apache.jmeter.gui.action.ActionRouter$1.run(ActionRouter.java:59)
+	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:209)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:597)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:300)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:210)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:200)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:195)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:187)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:121)
+
+2009/03/22 16:35:25 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:35:25 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:35:25 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:35:59 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 16:36:56 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:36:56 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:36:56 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:37:55 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:37:55 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:37:55 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:39:00 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:39:00 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:39:00 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:39:38 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:39:38 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:39:38 ERROR - jmeter.save.SaveService: Conversion error com.thoughtworks.xstream.converters.ConversionException:  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18) 
+---- Debugging information ----
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18) 
+cause-exception     : com.thoughtworks.xstream.io.StreamException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18) 
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree
+line number         : 174
+------------------------------- :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18) 
+---- Debugging information ----
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18) 
+cause-exception     : com.thoughtworks.xstream.io.StreamException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18) 
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree
+line number         : 174
+-------------------------------
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18) 
+---- Debugging information ----
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18) 
+cause-exception     : com.thoughtworks.xstream.io.StreamException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18) 
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree
+line number         : 174
+-------------------------------
+cause-exception     : com.thoughtworks.xstream.converters.ConversionException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @174:18) 
+first-jmeter-class  : org.apache.jmeter.save.ScriptWrapperConverter.unmarshal(ScriptWrapperConverter.java:96)
+class               : org.apache.jmeter.save.ScriptWrapper
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree
+line number         : 174
+------------------------------- 
+2009/03/22 16:39:38 WARN  - jmeter.gui.action.Load: Unexpected error java.lang.Exception: Error in TestPlan - see log file
+	at org.apache.jmeter.gui.action.Load.insertLoadedTree(Load.java:153)
+	at org.apache.jmeter.gui.action.Load.loadProjectFile(Load.java:108)
+	at org.apache.jmeter.gui.action.LoadRecentProject.doAction(LoadRecentProject.java:64)
+	at org.apache.jmeter.gui.action.ActionRouter.performAction(ActionRouter.java:80)
+	at org.apache.jmeter.gui.action.ActionRouter.access$000(ActionRouter.java:42)
+	at org.apache.jmeter.gui.action.ActionRouter$1.run(ActionRouter.java:59)
+	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:209)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:597)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:300)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:210)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:200)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:195)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:187)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:121)
+
+2009/03/22 16:39:48 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:39:48 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:39:48 ERROR - jmeter.save.SaveService: Conversion error com.thoughtworks.xstream.converters.ConversionException:  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18) 
+---- Debugging information ----
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18) 
+cause-exception     : com.thoughtworks.xstream.io.StreamException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18) 
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree
+line number         : 173
+------------------------------- :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18) 
+---- Debugging information ----
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18) 
+cause-exception     : com.thoughtworks.xstream.io.StreamException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18) 
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree
+line number         : 173
+-------------------------------
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18) 
+---- Debugging information ----
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18) 
+cause-exception     : com.thoughtworks.xstream.io.StreamException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18) 
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree
+line number         : 173
+-------------------------------
+cause-exception     : com.thoughtworks.xstream.converters.ConversionException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 3 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @173:18) 
+first-jmeter-class  : org.apache.jmeter.save.ScriptWrapperConverter.unmarshal(ScriptWrapperConverter.java:96)
+class               : org.apache.jmeter.save.ScriptWrapper
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree
+line number         : 173
+------------------------------- 
+2009/03/22 16:39:48 WARN  - jmeter.gui.action.Load: Unexpected error java.lang.Exception: Error in TestPlan - see log file
+	at org.apache.jmeter.gui.action.Load.insertLoadedTree(Load.java:153)
+	at org.apache.jmeter.gui.action.Load.loadProjectFile(Load.java:108)
+	at org.apache.jmeter.gui.action.LoadRecentProject.doAction(LoadRecentProject.java:64)
+	at org.apache.jmeter.gui.action.ActionRouter.performAction(ActionRouter.java:80)
+	at org.apache.jmeter.gui.action.ActionRouter.access$000(ActionRouter.java:42)
+	at org.apache.jmeter.gui.action.ActionRouter$1.run(ActionRouter.java:59)
+	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:209)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:597)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:300)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:210)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:200)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:195)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:187)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:121)
+
+2009/03/22 16:40:00 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:40:00 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:40:00 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:40:40 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:40:40 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:40:40 ERROR - jmeter.save.SaveService: Conversion error com.thoughtworks.xstream.converters.ConversionException:  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18) 
+---- Debugging information ----
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18) 
+cause-exception     : com.thoughtworks.xstream.io.StreamException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18) 
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/hashTree
+line number         : 171
+------------------------------- :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18) 
+---- Debugging information ----
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18) 
+cause-exception     : com.thoughtworks.xstream.io.StreamException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18) 
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/hashTree
+line number         : 171
+-------------------------------
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18) 
+---- Debugging information ----
+message             :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18) 
+cause-exception     : com.thoughtworks.xstream.io.StreamException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18) 
+class               : org.apache.jorphan.collections.ListedHashTree
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/hashTree
+line number         : 171
+-------------------------------
+cause-exception     : com.thoughtworks.xstream.converters.ConversionException
+cause-message       :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18)  :  : end tag name </jmeterTestPlan> must match start tag name <hashTree> from line 13 (position: TEXT seen ...</hashTree>\n</jmeterTestPlan>... @171:18) 
+first-jmeter-class  : org.apache.jmeter.save.converters.HashTreeConverter.unmarshal(HashTreeConverter.java:87)
+class               : org.apache.jmeter.save.ScriptWrapper
+required-type       : org.apache.jorphan.collections.ListedHashTree
+path                : /jmeterTestPlan/hashTree/hashTree
+line number         : 171
+------------------------------- 
+2009/03/22 16:40:40 WARN  - jmeter.gui.action.Load: Unexpected error java.lang.Exception: Error in TestPlan - see log file
+	at org.apache.jmeter.gui.action.Load.insertLoadedTree(Load.java:153)
+	at org.apache.jmeter.gui.action.Load.loadProjectFile(Load.java:108)
+	at org.apache.jmeter.gui.action.LoadRecentProject.doAction(LoadRecentProject.java:64)
+	at org.apache.jmeter.gui.action.ActionRouter.performAction(ActionRouter.java:80)
+	at org.apache.jmeter.gui.action.ActionRouter.access$000(ActionRouter.java:42)
+	at org.apache.jmeter.gui.action.ActionRouter$1.run(ActionRouter.java:59)
+	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:209)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:597)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:300)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:210)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:200)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:195)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:187)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:121)
+
+2009/03/22 16:41:41 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:41:41 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:41:41 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:42:42 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 16:42:42 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:42:42 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 16:46:17 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 16:46:20 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 16:52:47 INFO  - jmeter.protocol.http.sampler.HTTPSampler2: Local host = macbook.lan 
+2009/03/22 17:01:19 INFO  - jmeter.engine.StandardJMeterEngine: Listeners will be started after enabling running version 
+2009/03/22 17:01:19 INFO  - jmeter.engine.StandardJMeterEngine: To revert to the earlier behaviour, define jmeterengine.startlistenerslater=false 
+2009/03/22 17:01:19 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 17:01:19 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 17:01:19 INFO  - jmeter.engine.StandardJMeterEngine: Starting 5 threads for group AMEE. Ramp up = 1. 
+2009/03/22 17:01:19 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 17:01:19 INFO  - jmeter.threads.JMeterThread: jmeterthread.startearlier=true (see jmeter.properties) 
+2009/03/22 17:01:19 INFO  - jmeter.threads.JMeterThread: Running PostProcessors in forward order 
+2009/03/22 17:01:19 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 17:01:19 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-2 started 
+2009/03/22 17:01:20 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-3 started 
+2009/03/22 17:01:20 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-4 started 
+2009/03/22 17:01:20 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-5 started 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/ 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/ 
+2009/03/22 17:01:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/ 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/ 
+2009/03/22 17:01:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/ 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/ 
+2009/03/22 17:01:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/ 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/ 
+2009/03/22 17:01:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/ 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/ 
+2009/03/22 17:01:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:01:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 401 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:01:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 401 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:01:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 401 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:01:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 401 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:01:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:01:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 401 
+2009/03/22 17:01:28 INFO  - jmeter.threads.JMeterThread: Stopping AMEE 1-3 
+2009/03/22 17:01:28 INFO  - jmeter.threads.JMeterThread: Stopping AMEE 1-5 
+2009/03/22 17:01:28 INFO  - jmeter.threads.JMeterThread: Stopping AMEE 1-4 
+2009/03/22 17:01:28 INFO  - jmeter.threads.JMeterThread: Stopping AMEE 1-1 
+2009/03/22 17:01:28 INFO  - jmeter.threads.JMeterThread: Stopping AMEE 1-2 
+2009/03/22 17:01:33 INFO  - jmeter.engine.StandardJMeterEngine: Thread won't die: AMEE 1-3 
+2009/03/22 17:01:38 INFO  - jmeter.engine.StandardJMeterEngine: Thread won't die: AMEE 1-5 
+2009/03/22 17:01:42 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:01:42 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:01:42 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-4 is done 
+2009/03/22 17:01:42 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-4 
+2009/03/22 17:01:44 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:01:44 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:01:44 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-3 is done 
+2009/03/22 17:01:44 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-3 
+2009/03/22 17:01:45 ERROR - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value) java.io.IOException: Server returned HTTP response code: 503 for URL: http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1241)
+	at org.apache.xerces.impl.XMLEntityManager.setupCurrentEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLEntityManager.startEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLEntityManager.startEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLDTDScannerImpl.startPE(Unknown Source)
+	at org.apache.xerces.impl.XMLDTDScannerImpl.skipSeparator(Unknown Source)
+	at org.apache.xerces.impl.XMLDTDScannerImpl.scanDecls(Unknown Source)
+	at org.apache.xerces.impl.XMLDTDScannerImpl.scanDTDExternalSubset(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentScannerImpl$DTDDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.DocumentBuilderImpl.parse(Unknown Source)
+	at javax.xml.parsers.DocumentBuilder.parse(DocumentBuilder.java:124)
+	at org.apache.jmeter.util.XPathUtil.makeDocument(XPathUtil.java:167)
+	at org.apache.jmeter.extractor.XPathExtractor.parseResponse(XPathExtractor.java:221)
+	at org.apache.jmeter.extractor.XPathExtractor.process(XPathExtractor.java:105)
+	at org.apache.jmeter.threads.JMeterThread.runPostProcessors(JMeterThread.java:532)
+	at org.apache.jmeter.threads.JMeterThread.run(JMeterThread.java:299)
+	at java.lang.Thread.run(Thread.java:637)
+
+2009/03/22 17:01:45 ERROR - jmeter.threads.JMeterThread: Test failed! org.apache.jorphan.util.JMeterError: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)
+	at org.apache.jmeter.extractor.XPathExtractor.process(XPathExtractor.java:110)
+	at org.apache.jmeter.threads.JMeterThread.runPostProcessors(JMeterThread.java:532)
+	at org.apache.jmeter.threads.JMeterThread.run(JMeterThread.java:299)
+	at java.lang.Thread.run(Thread.java:637)
+Caused by: java.io.IOException: Server returned HTTP response code: 503 for URL: http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1241)
+	at org.apache.xerces.impl.XMLEntityManager.setupCurrentEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLEntityManager.startEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLEntityManager.startEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLDTDScannerImpl.startPE(Unknown Source)
+	at org.apache.xerces.impl.XMLDTDScannerImpl.skipSeparator(Unknown Source)
+	at org.apache.xerces.impl.XMLDTDScannerImpl.scanDecls(Unknown Source)
+	at org.apache.xerces.impl.XMLDTDScannerImpl.scanDTDExternalSubset(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentScannerImpl$DTDDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.DocumentBuilderImpl.parse(Unknown Source)
+	at javax.xml.parsers.DocumentBuilder.parse(DocumentBuilder.java:124)
+	at org.apache.jmeter.util.XPathUtil.makeDocument(XPathUtil.java:167)
+	at org.apache.jmeter.extractor.XPathExtractor.parseResponse(XPathExtractor.java:221)
+	at org.apache.jmeter.extractor.XPathExtractor.process(XPathExtractor.java:105)
+	... 3 more
+
+2009/03/22 17:01:45 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-5 is done 
+2009/03/22 17:01:45 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-5 
+2009/03/22 17:01:45 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:01:45 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:01:46 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-2 is done 
+2009/03/22 17:01:46 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-2 
+2009/03/22 17:01:47 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:01:47 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:01:47 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 17:01:47 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 17:01:47 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 17:01:47 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 17:01:47 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 17:01:47 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 17:02:59 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 17:02:59 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 17:02:59 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 17:02:59 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 17:02:59 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 17:03:00 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:03:00 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:03:00 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 401 
+2009/03/22 17:03:04 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:03:04 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:03:04 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 17:03:04 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 17:03:04 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 17:03:04 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 17:03:04 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 17:03:04 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 17:05:03 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 17:05:03 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 17:05:03 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 17:05:03 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 17:05:03 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 17:05:04 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:05:04 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 401 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 17:05:04 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 401 
+2009/03/22 17:05:08 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:05:08 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:05:08 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 17:05:08 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 17:05:08 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 17:05:08 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 17:05:08 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 17:05:08 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 17:06:02 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:06:05 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:06:56 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 17:06:56 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 17:06:56 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 17:06:56 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 17:06:56 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 17:06:58 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 401 for URL: http://local.stage.co2.dgen.net/profiles 
+2009/03/22 17:06:58 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 401 for URL: http://local.stage.co2.dgen.net/profiles 
+2009/03/22 17:06:58 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 401 
+2009/03/22 17:07:07 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:07:07 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:07:07 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 17:07:07 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 17:07:07 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 17:07:07 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 17:07:07 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 17:07:07 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 17:09:06 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 17:09:06 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 17:09:06 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 17:09:06 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 17:09:06 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 17:09:06 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://local.stage.co2.dgen.net/profiles 
+2009/03/22 17:09:06 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://local.stage.co2.dgen.net/profiles 
+2009/03/22 17:09:06 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 17:09:43 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:10:28 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:10:33 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:11:49 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:11:49 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:11:49 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 17:11:49 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 17:11:49 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 17:11:49 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 17:11:49 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 17:11:49 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 17:14:54 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 17:14:54 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 17:14:54 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 17:14:54 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 17:14:54 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 17:14:54 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://local.stage.co2.dgen.net/profiles 
+2009/03/22 17:14:54 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://local.stage.co2.dgen.net/profiles 
+2009/03/22 17:14:54 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 17:17:09 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:17:09 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:17:09 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 17:17:09 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 17:17:09 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 17:17:09 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 17:17:09 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 17:17:09 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 17:19:02 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 17:19:02 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 17:19:02 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 17:19:02 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 17:19:02 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 17:19:02 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://local.stage.co2.dgen.net/profiles 
+2009/03/22 17:19:02 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://local.stage.co2.dgen.net/profiles 
+2009/03/22 17:19:02 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 17:21:16 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:21:16 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:21:16 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 17:21:16 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 17:21:16 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 17:21:16 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 17:21:16 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 17:21:16 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 17:22:08 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 17:22:08 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 17:22:08 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 17:22:08 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 17:22:08 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 17:22:08 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://local.stage.co2.dgen.net/profiles 
+2009/03/22 17:22:08 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://local.stage.co2.dgen.net/profiles 
+2009/03/22 17:22:08 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 17:24:04 INFO  - jmeter.threads.JMeterThread: Stopping AMEE 1-1 
+2009/03/22 17:24:09 INFO  - jmeter.engine.StandardJMeterEngine: Thread won't die: AMEE 1-1 
+2009/03/22 17:24:09 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 17:24:09 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 17:24:09 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 17:24:14 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:24:14 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:24:14 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 17:24:14 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 17:24:14 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 17:24:17 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 17:24:17 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 17:24:17 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 17:24:17 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 17:24:17 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 17:27:39 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:27:39 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)The element type "p" must be terminated by the matching end-tag "</p>". 
+2009/03/22 17:27:40 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 17:27:40 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 17:27:40 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 17:27:40 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 17:27:40 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 17:27:40 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 17:30:44 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 17:30:44 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 17:30:44 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 17:30:44 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 17:30:44 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 17:30:44 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 17:30:44 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 17:30:44 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 17:36:34 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 404 
+2009/03/22 17:36:36 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 17:36:36 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 17:36:36 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 17:36:36 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 17:36:36 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 17:36:36 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 17:38:18 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 17:38:18 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 17:38:18 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 17:38:18 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 17:38:18 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 17:38:18 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 17:38:18 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 17:38:18 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 17:39:20 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:40:12 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:42:32 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:42:35 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:44:14 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:44:17 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:45:44 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 17:45:44 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 17:45:44 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 17:45:44 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 17:45:44 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 17:45:44 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 17:48:16 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:48:20 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:48:23 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:49:34 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:49:37 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:51:02 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:51:06 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:52:48 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:52:51 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:52:54 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:53:23 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:53:28 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:53:44 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:53:47 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 17:59:10 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 17:59:10 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 17:59:10 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 18:00:36 INFO  - jmeter.gui.action.Load: Loading file: /Development/AMEE/amee.2.1/jmeter/AMEE2.jmx 
+2009/03/22 18:00:36 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 18:00:36 INFO  - jmeter.services.FileServer: Set new base=/Development/AMEE/amee.2.1/jmeter 
+2009/03/22 18:01:48 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 18:01:48 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 18:01:49 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 18:01:49 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 18:01:49 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 18:01:49 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 18:01:53 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 18:01:53 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic 
+2009/03/22 18:06:34 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:34 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: White spaces are required between publicId and systemId. 
+2009/03/22 18:06:34 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)White spaces are required between publicId and systemId. 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/home/appliances/kitchen/generic 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/home/appliances/kitchen/generic 
+2009/03/22 18:06:34 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/home/appliances/kitchen/generic 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/home/appliances/kitchen/generic 
+2009/03/22 18:06:34 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/home/appliances/televisions/generic 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/home/appliances/televisions/generic 
+2009/03/22 18:06:34 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/home/appliances/televisions/generic?hoursPerMonth=100 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/home/appliances/televisions/generic?hoursPerMonth=100 
+2009/03/22 18:06:34 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/home/appliances/television/generic 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/home/appliances/television/generic 
+2009/03/22 18:06:34 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/transport/plane/generic 
+2009/03/22 18:06:34 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/transport/plane/generic 
+2009/03/22 18:06:34 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:34 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: White spaces are required between publicId and systemId. 
+2009/03/22 18:06:34 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)White spaces are required between publicId and systemId. 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/transport/plane/generic 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/transport/plane/generic 
+2009/03/22 18:06:35 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/transport/plane/generic 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/transport/plane/generic 
+2009/03/22 18:06:35 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/transport/car/generic 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/transport/car/generic 
+2009/03/22 18:06:35 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:35 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: White spaces are required between publicId and systemId. 
+2009/03/22 18:06:35 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)White spaces are required between publicId and systemId. 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/transport/car/generic 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/transport/car/generic 
+2009/03/22 18:06:35 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/transport/car/generic 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/62A9B647C799/transport/car/generic 
+2009/03/22 18:06:35 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:35 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/auth/signOut 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/auth/signOut 
+2009/03/22 18:06:35 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:35 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/auth/signIn 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/auth/signIn 
+2009/03/22 18:06:35 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:35 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles 
+2009/03/22 18:06:35 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:35 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: White spaces are required between publicId and systemId. 
+2009/03/22 18:06:35 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/ProfilesResource/Profile/@uid)White spaces are required between publicId and systemId. 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic 
+2009/03/22 18:06:35 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:35 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: White spaces are required between publicId and systemId. 
+2009/03/22 18:06:35 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)White spaces are required between publicId and systemId. 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/kitchen/generic 
+2009/03/22 18:06:35 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/kitchen/generic 
+2009/03/22 18:06:35 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/kitchen/generic?startDate=2009-01-01T00:00:00%2B0000 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/kitchen/generic?startDate=2009-01-01T00:00:00%2B0000 
+2009/03/22 18:06:36 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/home/appliances/televisions/generic 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/home/appliances/televisions/generic 
+2009/03/22 18:06:36 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/televisions/generic?hoursOn=100&startDate=2009-01-01T00%3A00%3A00%2B0000&endDate=2009-01-31T00%3A00%3A00%2B0000 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/televisions/generic?hoursOn=100&startDate=2009-01-01T00%3A00%3A00%2B0000&endDate=2009-01-31T00%3A00%3A00%2B0000 
+2009/03/22 18:06:36 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/television/generic?startDate=2009-01-01T00:00:00%2B0000 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/television/generic?startDate=2009-01-01T00:00:00%2B0000 
+2009/03/22 18:06:36 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/transport/plane/generic 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/transport/plane/generic 
+2009/03/22 18:06:36 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:36 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: White spaces are required between publicId and systemId. 
+2009/03/22 18:06:36 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)White spaces are required between publicId and systemId. 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/transport/plane/generic 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/transport/plane/generic 
+2009/03/22 18:06:36 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/television/generic?startDate=2009-01-01T00:00:00%2B0000 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/television/generic?startDate=2009-01-01T00:00:00%2B0000 
+2009/03/22 18:06:36 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/transport/car/generic 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/data/transport/car/generic 
+2009/03/22 18:06:36 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:36 ERROR - jmeter.util.XPathUtil: Type=Val=false Tol=false org.xml.sax.SAXParseException: White spaces are required between publicId and systemId. 
+2009/03/22 18:06:36 WARN  - jmeter.extractor.XPathExtractor: error on (/Resources/DrillDownResource/Choices/Choices/Choice/Value)White spaces are required between publicId and systemId. 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/transport/car/generic 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/transport/car/generic 
+2009/03/22 18:06:36 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/television/generic?startDate=2009-01-01T00:00:00%2B0000 
+2009/03/22 18:06:36 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 503 for URL: http://sandbox.amee.com/profiles/NULL/home/appliances/television/generic?startDate=2009-01-01T00:00:00%2B0000 
+2009/03/22 18:06:36 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 503 
+2009/03/22 18:06:36 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 18:06:36 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 18:06:36 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 18:06:36 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 18:06:36 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 18:06:36 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 18:08:10 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 18:08:10 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 18:08:10 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 18:08:10 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 18:08:10 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 18:08:10 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 18:08:12 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 18:08:13 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 18:12:14 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 404 
+2009/03/22 18:15:55 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:17:05 INFO  - jmeter.threads.JMeterThread: Stopping AMEE 1-1 
+2009/03/22 18:17:10 INFO  - jmeter.engine.StandardJMeterEngine: Thread won't die: AMEE 1-1 
+2009/03/22 18:17:10 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 18:17:10 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 18:17:10 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 18:17:12 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 18:17:12 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 18:17:12 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 18:18:42 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:18:58 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:19:16 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:19:53 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:20:04 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:20:08 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:20:24 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 18:20:24 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 18:20:24 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 18:20:24 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 18:20:24 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 18:20:25 WARN  - jmeter.protocol.http.sampler.HTTPSamplerBase: Existing HeaderManager HTTP Header Manager superseded by HTTP Header Manager 
+2009/03/22 18:20:51 INFO  - jmeter.threads.JMeterThread: Stopping AMEE 1-1 
+2009/03/22 18:20:56 INFO  - jmeter.engine.StandardJMeterEngine: Thread won't die: AMEE 1-1 
+2009/03/22 18:20:56 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 18:20:56 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 18:20:56 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 18:21:05 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:21:08 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:21:28 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:21:39 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:21:44 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:21:53 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:22:25 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:22:32 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:22:41 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic 
+2009/03/22 18:22:41 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic 
+2009/03/22 18:22:41 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:22:41 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 18:22:41 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 18:22:41 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 18:22:41 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:22:56 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 18:22:56 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 18:22:56 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 18:22:56 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 18:22:56 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 18:25:13 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic 
+2009/03/22 18:25:13 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic 
+2009/03/22 18:25:13 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:25:14 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/5ADD68F23D6A/home/appliances/kitchen/generic 
+2009/03/22 18:25:14 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/5ADD68F23D6A/home/appliances/kitchen/generic 
+2009/03/22 18:25:14 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:25:17 INFO  - jmeter.threads.JMeterThread: Stopping AMEE 1-1 
+2009/03/22 18:25:22 INFO  - jmeter.engine.StandardJMeterEngine: Thread won't die: AMEE 1-1 
+2009/03/22 18:25:22 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 18:25:22 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 18:25:22 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 18:26:15 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/data/home/appliances/televisions/generic 
+2009/03/22 18:26:15 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/data/home/appliances/televisions/generic 
+2009/03/22 18:26:15 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:26:15 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 18:26:15 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 18:26:15 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 18:26:53 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 18:26:53 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 18:26:53 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 18:26:53 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 18:26:53 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 18:29:20 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic/drill 
+2009/03/22 18:29:20 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic/drill 
+2009/03/22 18:29:20 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 18:29:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F52FACD01326/home/appliances/kitchen/generic 
+2009/03/22 18:29:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F52FACD01326/home/appliances/kitchen/generic 
+2009/03/22 18:29:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:29:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/home/appliances/televisions/generic/drill 
+2009/03/22 18:29:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/home/appliances/televisions/generic/drill 
+2009/03/22 18:29:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 18:29:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/transport/plane/generic/drill 
+2009/03/22 18:29:21 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/transport/plane/generic/drill 
+2009/03/22 18:29:21 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 18:29:22 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F52FACD01326/transport/plane/generic 
+2009/03/22 18:29:22 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F52FACD01326/transport/plane/generic 
+2009/03/22 18:29:22 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:29:22 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/transport/car/generic/drill 
+2009/03/22 18:29:22 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/transport/car/generic/drill 
+2009/03/22 18:29:22 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 18:29:22 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F52FACD01326/transport/car/generic 
+2009/03/22 18:29:22 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F52FACD01326/transport/car/generic 
+2009/03/22 18:29:22 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:29:23 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic/drill 
+2009/03/22 18:29:23 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/home/appliances/kitchen/generic/drill 
+2009/03/22 18:29:23 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 18:29:23 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F761A9C62CBC/home/appliances/kitchen/generic 
+2009/03/22 18:29:23 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F761A9C62CBC/home/appliances/kitchen/generic 
+2009/03/22 18:29:23 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:29:24 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/home/appliances/televisions/generic/drill 
+2009/03/22 18:29:24 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/home/appliances/televisions/generic/drill 
+2009/03/22 18:29:24 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 18:29:25 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/transport/plane/generic/drill 
+2009/03/22 18:29:25 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/transport/plane/generic/drill 
+2009/03/22 18:29:25 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 18:29:25 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F761A9C62CBC/transport/plane/generic 
+2009/03/22 18:29:25 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F761A9C62CBC/transport/plane/generic 
+2009/03/22 18:29:25 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:29:25 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/transport/car/generic/drill 
+2009/03/22 18:29:25 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 405 for URL: http://sandbox.amee.com/data/transport/car/generic/drill 
+2009/03/22 18:29:25 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 405 
+2009/03/22 18:29:25 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F761A9C62CBC/transport/car/generic 
+2009/03/22 18:29:25 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/F761A9C62CBC/transport/car/generic 
+2009/03/22 18:29:25 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:29:26 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 18:29:26 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 18:29:26 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 18:29:26 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 18:29:26 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 18:29:26 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 18:33:09 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 18:33:09 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 18:33:09 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 18:33:09 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 18:33:09 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 18:33:14 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/4DF5562BEC46/home/appliances/kitchen/generic 
+2009/03/22 18:33:14 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/4DF5562BEC46/home/appliances/kitchen/generic 
+2009/03/22 18:33:14 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:33:15 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/4DF5562BEC46/transport/plane/generic 
+2009/03/22 18:33:15 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/4DF5562BEC46/transport/plane/generic 
+2009/03/22 18:33:15 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:33:17 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/4DF5562BEC46/transport/car/generic 
+2009/03/22 18:33:17 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/4DF5562BEC46/transport/car/generic 
+2009/03/22 18:33:17 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:33:19 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/8D3ACEDA9DB2/home/appliances/kitchen/generic 
+2009/03/22 18:33:19 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/8D3ACEDA9DB2/home/appliances/kitchen/generic 
+2009/03/22 18:33:19 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:33:19 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/8D3ACEDA9DB2/transport/plane/generic 
+2009/03/22 18:33:19 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/8D3ACEDA9DB2/transport/plane/generic 
+2009/03/22 18:33:19 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:33:20 ERROR - jmeter.protocol.http.sampler.HTTPSampler: readResponse: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/8D3ACEDA9DB2/transport/car/generic 
+2009/03/22 18:33:20 ERROR - jmeter.protocol.http.sampler.HTTPSampler: Cause: java.io.IOException: Server returned HTTP response code: 400 for URL: http://sandbox.amee.com/profiles/8D3ACEDA9DB2/transport/car/generic 
+2009/03/22 18:33:20 INFO  - jmeter.protocol.http.sampler.HTTPSampler: Error Response Code: 400 
+2009/03/22 18:33:20 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 18:33:20 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 18:33:20 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 18:33:20 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 18:33:20 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 18:33:20 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
+2009/03/22 18:37:36 WARN  - jmeter.gui.tree.JMeterTreeListener: Shouldn't be here 
+2009/03/22 18:38:58 INFO  - jmeter.engine.StandardJMeterEngine: Running the test! 
+2009/03/22 18:38:58 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(true,*local*) 
+2009/03/22 18:38:59 INFO  - jmeter.engine.StandardJMeterEngine: Starting 1 threads for group AMEE. Ramp up = 1. 
+2009/03/22 18:38:59 INFO  - jmeter.engine.StandardJMeterEngine: Continue on error 
+2009/03/22 18:38:59 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 started 
+2009/03/22 18:39:11 INFO  - jmeter.threads.JMeterThread: Thread AMEE 1-1 is done 
+2009/03/22 18:39:11 INFO  - jmeter.engine.StandardJMeterEngine: Ending thread AMEE 1-1 
+2009/03/22 18:39:11 INFO  - jmeter.engine.StandardJMeterEngine: Stopping test 
+2009/03/22 18:39:11 INFO  - jmeter.engine.StandardJMeterEngine: Notifying test listeners of end of test 
+2009/03/22 18:39:11 INFO  - jmeter.gui.util.JMeterMenuBar: setRunning(false,*local*) 
+2009/03/22 18:39:11 INFO  - jmeter.engine.StandardJMeterEngine: Test has ended 
