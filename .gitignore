@@ -6,3 +6,4 @@ lib/restlet-1.1.1
 scripts/curl/.headers
 scripts/curl/.cookies
 */target/
+jmeter/*.jtl
