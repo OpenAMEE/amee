@@ -7,3 +7,6 @@ scripts/curl/.headers
 scripts/curl/.cookies
 */target/
 jmeter/*.jtl
+jmeter/*.log
+jmeter/results
+jmeter/jchav
