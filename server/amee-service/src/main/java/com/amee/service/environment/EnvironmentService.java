@@ -2,7 +2,6 @@ package com.amee.service.environment;
 
 import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
-import com.amee.domain.ScheduledTask;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.event.ObserveEventService;
 import com.amee.domain.event.ObservedEvent;
@@ -34,7 +33,7 @@ public class EnvironmentService implements Serializable {
         super();
     }
 
-    @ServiceActivator(inputChannel="beforeSiteDelete")
+    @ServiceActivator(inputChannel = "beforeSiteDelete")
     public void beforeSiteDelete(ObservedEvent oe) {
         log.debug("beforeSiteDelete" + (Site) oe.getPayload());
     }
@@ -131,93 +130,11 @@ public class EnvironmentService implements Serializable {
         return (Environment) ThreadBeanHolder.get("environment");
     }
 
-    // ScheduledTasks
-
-    public List<ScheduledTask> getScheduledTasks(Environment environment) {
-        log.debug("getScheduledTasks()");
-        List<ScheduledTask> scheduledTasks = entityManager.createQuery(
-                "FROM ScheduledTask st " +
-                        "WHERE st.environment.id = :environmentId")
-                .setParameter("environmentId", environment.getId())
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
-                .getResultList();
-        return scheduledTasks;
-    }
-
-    public ScheduledTask getScheduledTaskByUid(Environment environment, String uid) {
-        ScheduledTask scheduledTask = null;
-        if ((environment != null) && (uid != null)) {
-            List<ScheduledTask> scheduledTasks = entityManager.createQuery(
-                    "SELECT st FROM ScheduledTask st " +
-                            "WHERE st.environment.id = :environmentId " +
-                            "AND st.uid = :scheduledTaskUid")
-                    .setParameter("environmentId", environment.getId())
-                    .setParameter("scheduledTaskUid", uid)
-                    .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", "query.siteService")
-                    .getResultList();
-            if (scheduledTasks.size() == 1) {
-                scheduledTask = scheduledTasks.get(0);
-            }
-        }
-        return scheduledTask;
-    }
-
-    public ScheduledTask getScheduledTaskByName(Environment environment, String name) {
-        ScheduledTask scheduledTask = null;
-        if ((environment != null) && (name != null)) {
-            List<ScheduledTask> scheduledTasks = entityManager.createQuery(
-                    "SELECT st FROM ScheduledTask st " +
-                            "WHERE st.environment.id = :environmentId " +
-                            "AND st.name = :name")
-                    .setParameter("environmentId", environment.getId())
-                    .setParameter("name", name.trim())
-                    .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", "query.siteService")
-                    .getResultList();
-            if (scheduledTasks.size() == 1) {
-                scheduledTask = scheduledTasks.get(0);
-            }
-        }
-        return scheduledTask;
-    }
-
-    public List<ScheduledTask> getScheduledTasks(Environment environment, Pager pager) {
-        // first count all objects
-        long count = (Long) entityManager.createQuery(
-                "SELECT count(st) " +
-                        "FROM ScheduledTask st " +
-                        "WHERE st.environment.id = :environmentId ")
-                .setParameter("environmentId", environment.getId())
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.siteService")
-                .getSingleResult();
-        // tell pager how many objects there are and give it a chance to select the requested page again
-        pager.setItems(count);
-        pager.goRequestedPage();
-        // now get the objects for the current page
-        List<ScheduledTask> scheduledTasks = entityManager.createQuery(
-                "SELECT st " +
-                        "FROM ScheduledTask st " +
-                        "WHERE st.environment.id = :environmentId " +
-                        "ORDER BY st.name")
-                .setParameter("environmentId", environment.getId())
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.siteService")
-                .setMaxResults(pager.getItemsPerPage())
-                .setFirstResult((int) pager.getStart())
-                .getResultList();
-        // update the pager
-        pager.setItemsFound(scheduledTasks.size());
-        // all done, return results
-        return scheduledTasks;
-    }
-
+    // API Versions
 
     public List<APIVersion> getAPIVersions() {
         List<APIVersion> apiVersions = entityManager.createQuery(
-                        "FROM APIVersion apiv " +
+                "FROM APIVersion apiv " +
                         "ORDER BY apiv.version")
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
@@ -227,20 +144,11 @@ public class EnvironmentService implements Serializable {
 
     public APIVersion getAPIVersion(String version) {
         return (APIVersion) entityManager.createQuery(
-                        "FROM APIVersion apiv " +
+                "FROM APIVersion apiv " +
                         "WHERE apiv.version = :version")
                 .setParameter("version", version)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
                 .getSingleResult();
-    }
-
-
-    public void save(ScheduledTask scheduledTask) {
-        entityManager.persist(scheduledTask);
-    }
-
-    public void remove(ScheduledTask scheduledTask) {
-        entityManager.remove(scheduledTask);
     }
 }

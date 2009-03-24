@@ -124,18 +124,10 @@ public class Engine implements WrapperListener, Serializable {
                     (UserPasswordToMD5) springContext.getBean("userPasswordToMD5");
             userPasswordToMD5.updateUserPasswordToMD5(false);
         }
-        // TODO: scheduled tasks are disabled until this is needed
-        // start scheduled tasks
-        // ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) springContext.getBean("scheduledTaskManager");
-        // scheduledTaskManager.setServerName(serverName);
-        // scheduledTaskManager.onStart();
     }
 
     protected void onShutdown() {
-        // TODO: scheduled tasks are disabled until this is needed
-        // shutdown scheduled tasks
-        // ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) springContext.getBean("scheduledTaskManager");
-        // scheduledTaskManager.onShutdown();
+        // do nothing
     }
 
     public int stop(int exitCode) {

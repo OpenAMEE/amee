@@ -9,7 +9,6 @@
         <class>com.amee.domain.auth.Permission</class>
         <class>com.amee.domain.auth.Role</class>
         <class>com.amee.domain.site.Site</class>
-        <class>com.amee.domain.ScheduledTask</class>
         <class>com.amee.domain.site.SiteApp</class>
         <class>com.amee.domain.auth.User</class>
         <class>com.amee.domain.APIVersion</class>

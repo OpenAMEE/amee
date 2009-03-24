@@ -1,7 +1,6 @@
 package com.amee.admin.restlet.environment;
 
 import com.amee.domain.APIVersion;
-import com.amee.domain.ScheduledTask;
 import com.amee.domain.auth.*;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.site.Site;
@@ -61,10 +60,6 @@ public class EnvironmentBrowser extends BaseBrowser {
     @Qualifier("appActions")
     private ResourceActions appActions;
 
-    @Autowired
-    @Qualifier("scheduledTaskActions")
-    private ResourceActions scheduledTaskActions;
-
     // Environments
 
     private String environmentUid = null;
@@ -104,11 +99,6 @@ public class EnvironmentBrowser extends BaseBrowser {
     // GroupUsers
 
     private GroupUser groupUser = null;
-
-    // ScheduledTasks
-
-    private String scheduledTaskUid = null;
-    private ScheduledTask scheduledTask = null;
 
     // Environments
 
@@ -251,23 +241,6 @@ public class EnvironmentBrowser extends BaseBrowser {
         return groupUser;
     }
 
-    // ScheduledTasks
-
-    public String getScheduledTaskUid() {
-        return scheduledTaskUid;
-    }
-
-    public void setScheduledTaskUid(String scheduledTaskUid) {
-        this.scheduledTaskUid = scheduledTaskUid;
-    }
-
-    public ScheduledTask getScheduledTask() {
-        if ((scheduledTask == null) && (getEnvironment() != null) && (scheduledTaskUid != null)) {
-            scheduledTask = environmentService.getScheduledTaskByUid(environment, scheduledTaskUid);
-        }
-        return scheduledTask;
-    }
-
     // ResourceActions
 
     public ResourceActions getEnvironmentActions() {
@@ -296,10 +269,6 @@ public class EnvironmentBrowser extends BaseBrowser {
 
     public ResourceActions getAppActions() {
         return appActions;
-    }
-
-    public ResourceActions getScheduledTaskActions() {
-        return scheduledTaskActions;
     }
 
     // APIVersion

@@ -17,7 +17,6 @@ Modified: ${environment.modified?string.short}<br/>
 <a href='/environments/${environment.uid}/users'>Users</a><br/>
 <a href='/environments/${environment.uid}/groups'>Groups</a><br/>
 <a href='/environments/${environment.uid}/roles'>Roles</a><br/>
-<a href='/environments/${environment.uid}/tasks'>Tasks</a><br/>
 <#include '/sites/environment_child_options.ftl'>
 </p>
 <#if browser.environmentActions.allowModify>

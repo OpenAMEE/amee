@@ -31,9 +31,6 @@ public class EnvironmentConstants {
     public final static String VIEW_USER_GROUP_ROLES = "sites/userGroupRoles.ftl";
     public final static String VIEW_USER_GROUP_ROLE = "sites/userGroupRole.ftl";
 
-    public final static String VIEW_TASKS = "sites/tasks.ftl";
-    public final static String VIEW_TASK = "sites/task.ftl";
-
     public final static String VIEW_ATTRIBUTE_GROUPS = "sites/attributeGroups.ftl";
     public final static String VIEW_ATTRIBUTE_GROUP = "sites/attributeGroup.ftl";
 
@@ -85,13 +82,6 @@ public class EnvironmentConstants {
     public final static String ACTION_USER_MODIFY = ACTION_USER_PREFIX + ResourceActions.ACTION_MODIFY;
     public final static String ACTION_USER_DELETE = ACTION_USER_PREFIX + ResourceActions.ACTION_DELETE;
     public final static String ACTION_USER_LIST = ACTION_USER_PREFIX + ResourceActions.ACTION_LIST;
-
-    public final static String ACTION_SCHEDULED_TASK_PREFIX = "scheduledTask";
-    public final static String ACTION_SCHEDULED_TASK_VIEW = ACTION_SCHEDULED_TASK_PREFIX + ResourceActions.ACTION_VIEW;
-    public final static String ACTION_SCHEDULED_TASK_CREATE = ACTION_SCHEDULED_TASK_PREFIX + ResourceActions.ACTION_CREATE;
-    public final static String ACTION_SCHEDULED_TASK_MODIFY = ACTION_SCHEDULED_TASK_PREFIX + ResourceActions.ACTION_MODIFY;
-    public final static String ACTION_SCHEDULED_TASK_DELETE = ACTION_SCHEDULED_TASK_PREFIX + ResourceActions.ACTION_DELETE;
-    public final static String ACTION_SCHEDULED_TASK_LIST = ACTION_SCHEDULED_TASK_PREFIX + ResourceActions.ACTION_LIST;
 
     public final static String ACTION_ATTRIBUTE_GROUP_PREFIX = "attributeGroup";
     public final static String ACTION_ATTRIBUTE_GROUP_VIEW = ACTION_ATTRIBUTE_GROUP_PREFIX + ResourceActions.ACTION_VIEW;

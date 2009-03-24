@@ -90,9 +90,6 @@
                 <entry key="/roles">
                     <ref local="rolesRouter"/>
                 </entry>
-                <entry key="/tasks">
-                    <ref local="tasksRouter"/>
-                </entry>
             </map>
         </property>
     </bean>
@@ -357,32 +354,6 @@
 
     <bean id="roleActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
         <constructor-arg index="0" value="site.role"/>
-    </bean>
-
-    <!-- Tasks -->
-
-    <bean id="tasksRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentsApplication"/>
-        <property name="defaultMatchingMode" ref="modeEquals"/>
-        <property name="defaultMatchQuery" value="false"/>
-        <property name="attachments">
-            <map>
-                <entry key="">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="tasksResource"/>
-                    </bean>
-                </entry>
-                <entry key="/{scheduledTaskUid}">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="taskResource"/>
-                    </bean>
-                </entry>
-            </map>
-        </property>
-    </bean>
-
-    <bean id="scheduledTaskActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="scheduledTask"/>
     </bean>
 
 </beans>
