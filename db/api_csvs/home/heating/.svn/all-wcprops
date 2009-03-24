@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 45
-/!svn/ver/2568/internal/api_csvs/home/heating
+/!svn/ver/2910/internal/api_csvs/home/heating
 END
 data-old.csv
 K 25
@@ -14,6 +14,18 @@ K 25
 svn:wc:ra_dav:version-url
 V 54
 /!svn/ver/2201/internal/api_csvs/home/heating/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/2795/internal/api_csvs/home/heating/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/2795/internal/api_csvs/home/heating/perMonth.js
 END
 v2Algorithm.js
 K 25

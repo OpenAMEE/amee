@@ -1,0 +1,6 @@
+name,Seasonal Efficiency Oil Boiler Type,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Equation Number,equationNumber,INTEGER,TRUE,FALSE
+Equation,equation,TEXT,TRUE,FALSE
+Type,type,text,TRUE,FALSE

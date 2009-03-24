@@ -11,3 +11,4 @@ lpg,medium,0.2594,0.2594,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
 lpg,large,0.2243,0.2243,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
 cng,medium,0.2594,0.2594,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
 cng,large,0.2243,0.2243,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
+average,average,0.2042,0.2700,kgCO2/km,defra/amee 2008,1.15*value*user_distance_km

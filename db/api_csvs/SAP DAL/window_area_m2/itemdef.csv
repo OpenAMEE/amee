@@ -1,0 +1,7 @@
+name,Window area m2,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+House or Bungalow,houseOrBungalow,TEXT,TRUE,FALSE
+Flat or Maisonette,flatOrMaisonette,TEXT,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

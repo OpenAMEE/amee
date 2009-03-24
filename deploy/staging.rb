@@ -1,5 +1,5 @@
 # The Git branch we are deploying from
-set :branch, "staging"
+#set :branch, "staging"
 
 # The hosts where are are deploying 
 role :app, "stage.co2.dgen.net"

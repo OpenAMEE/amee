@@ -1,4 +1,5 @@
-//kgCO2PerKmPassenger * distance
+//kgCO2PerKmPassenger * distanceKmPerMonth
+//kgCO2PerKmPassenger * distanceKmPerMonth
 //throws an error if country undeclared
 try { 
   var c=country;
@@ -23,4 +24,40 @@ if (country == 'Ireland' || country == 'IE') {
     fac= kgCO2PerKmPassenger;
 }
 
-fac * distance;
+isJourneyBased=false;
+try {
+	var c = distance;
+} catch(err){
+	isJourneyBased=true;
+}
+
+if(!isJourneyBased){
+	fac * distance;
+} else {
+	try {
+		var c = useTypicalDistance;
+	} catch(err){
+		useTypicalDistance="false";
+	}
+
+	if(useTypicalDistance=="true"){
+		distancePerJourney=typicalJourneyDistance;
+	}
+
+	if(journeyFrequency=="monthly"){
+		numberOfJourneys*=12.;
+	} else if(journeyFrequency=="weekly"){
+		numberOfJourneys*=52;
+	} else if(journeyFrequency=="daily"){
+		numberOfJourneys*=365;
+	}
+	try {
+		var c = isReturn;
+		if(isReturn=="true"){
+			numberOfJourneys*=2;
+		}
+	} catch(err){
+		isReturn=false;
+	}
+	fac*numberOfJourneys*distancePerJourney;
+}

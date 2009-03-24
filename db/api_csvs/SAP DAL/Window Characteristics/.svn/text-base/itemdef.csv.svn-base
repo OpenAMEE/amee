@@ -1,0 +1,9 @@
+name,Window Characteristics,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Frame (for Table 6c),frame,TEXT,TRUE,FALSE
+U-value (window),uvalueWindow,DECIMAL,TRUE,FALSE
+U-value (roof window),uvalueRoofWindow,DECIMAL,TRUE,FALSE
+g-value,gValue,DECIMAL,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

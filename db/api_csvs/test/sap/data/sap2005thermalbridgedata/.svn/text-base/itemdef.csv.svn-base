@@ -1,0 +1,21 @@
+name,Sap 2005 Thermal Bridges Data,,,
+algFile,algorithm_alg.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Type,type,TEXT,TRUE,TRUE
+Steel lintel,steellintel,TEXT,TRUE,FALSE
+Other lintels,otherlintels,TEXT,TRUE,FALSE
+Sill,sill,TEXT,TRUE,FALSE
+Jamb,jamb,TEXT,TRUE,FALSE
+Ground floor,groundfloor,TEXT,TRUE,FALSE
+Intermediate floor within a dwelling,intermediatefloorwithindwelling,TEXT,TRUE,FALSE
+Intermediate floor between dwellings,intermediatefloorbetweendwellings,TEXT,TRUE,FALSE
+Balcony within a dwelling,balconywithindwelling,TEXT,TRUE,FALSE
+Balcony between dwellings,balconybetweendwellings,TEXT,TRUE,FALSE
+Eaves (insulation at ceiling level),eavesinsulationatceilinglevel,TEXT,TRUE,FALSE
+Eaves (insulation at rafter level),eavesinsulationatrafterlevel,TEXT,TRUE,FALSE
+Gable (insulation at ceiling level),gableinsulationatceilinglevel,TEXT,TRUE,FALSE
+Gable (insulation at rafter level),gableinsulationatrafterlevel,TEXT,TRUE,FALSE
+Corner (normal),cornernormal,TEXT,TRUE,FALSE
+Corner (inverted),cornerinverted,TEXT,TRUE,FALSE
+Party wall between dwellings,partywallbetweendwellings,TEXT,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE

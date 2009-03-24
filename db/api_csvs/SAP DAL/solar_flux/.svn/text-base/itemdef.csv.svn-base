@@ -1,0 +1,11 @@
+name,Solar Flux,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Horizontal,horizontal,DECIMAL,TRUE,FALSE
+Vertical North,verticalNorth,DECIMAL,TRUE,FALSE
+Vertical NE/NW,verticalNeNw,DECIMAL,TRUE,FALSE
+Vertical E/W,verticalEw,DECIMAL,TRUE,FALSE
+Vertical SE/SW,verticalSeSw,DECIMAL,TRUE,FALSE
+Vertical South,verticalSouth,DECIMAL,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

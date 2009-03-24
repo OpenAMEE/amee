@@ -112,7 +112,7 @@ public class AuthService implements Serializable {
                     // swallow
                 }
             } else {
-                // ignore max auth duration check
+                    // ignore max auth duration check
                 maxAuthDurationCheckPassed = true;
             }
             if (!maxAuthDurationCheckPassed) {

@@ -1,0 +1,8 @@
+name,Plane Freight
+algFile,algorithm.js
+name,path,type,isDataItemValue,isDrillDown,default,choices
+CO2,CO2,DECIMAL,true,false
+Source,source,TEXT,true,false
+Type,type,TEXT,true,true
+Distance,distance,DECIMAL,false,false
+Mass,mass,DECIMAL,false,false

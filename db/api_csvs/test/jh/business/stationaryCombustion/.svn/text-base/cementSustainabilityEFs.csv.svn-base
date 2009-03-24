@@ -1,0 +1,40 @@
+"WBCSD Cement Sustainability Initiative
+CO2 Emissions Inventory Protocol, Version 2.0 ",,,Default CO2 Emission Factors for Fuels
+
+,Date of latest update,,,18/ Jan/ 2005
+
+Type,Category,,"IPCC default
+kg CO2/GJ","CSI default
+kg CO2/GJ",Comments
+,Fossil fuels
+1,,coal + anthracite + waste coal,96,,"IPCC defaults are: 94.5 for coking coal and other bituminous coal, 96.0 for sub-bituminous coal, and 98.2 for anthracite"
+2,,petrol coke,,92.8,"Based on measurements compiled by CSI Task Force 1. See Guidance Document, Appendix 5 for details."
+3,,(ultra) heavy fuel,77.3,,IPCC default for residual fuel oil
+4,,diesel oil,74.0
+5,,natural gas (dry),56.1
+6,,oil shale,107
+6a,,lignite,101
+7,,gasoline,69.2
+,Alternative fossil fuels
+8,,waste oil,,74,"Based on measurements compiled by CSI Task Force 1. See Guidance Document, Appendix 5 for details."
+9,,tyres ,,85,Best estimate of CSI Task Force 1
+10,,plastics,,75,Best estimate of CSI Task Force 1
+11,,solvents,,74,"Based on measurements compiled by CSI Task Force 1. See Guidance Document, Appendix 5 for details."
+12,,impregnated saw dust,,75,Best estimate of CSI Task Force 1
+12a,,mixed industrial waste,,83,Best estimate of CSI Task Force 1
+13,,other fossil based wastes,,80,Best estimate of CSI Task Force 1
+,Biomass fuels
+14,,dried sewage sludge,,110,= IPCC default for solid biomass fuels
+15,,"wood, non impregnated saw dust",,110,= IPCC default for solid biomass fuels
+16,,"paper, carton",,110,= IPCC default for solid biomass fuels
+17,,animal meal,,89,"Based on measurements compiled by CSI Task Force 1. See Guidance Document, Appendix 5 for details."
+18,,animal bone meal,,89,Best estimate of CSI Task Force 1
+19,,animal fat,,89,Best estimate of CSI Task Force 1
+20,,"agricultural, organic, diaper waste, charcoal",,110,= IPCC default for solid biomass fuels
+21,,other biomass,,110,= IPCC default for solid biomass fuels
+
+
+"IPCC defaults are from: Revised 1996 IPCC Guidelines for National Greenhouse Gas Inventories, Vol. III "
+"(Reference Manual), p. 1.13"
+
+Some fuels have been clustered for simplicity.

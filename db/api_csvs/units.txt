@@ -1,0 +1,8 @@
+AMEE understands all these units:
+
+http://jscience.org/api/javax/measure/unit/SI.html
+http://jscience.org/api/javax/measure/unit/NonSI.html
+
+For metres squared set unit=m^2 - rendered with unicode superscript in web interface.
+
+Setting unit somethimg invalid yields a 500.

@@ -1,7 +1,0 @@
-#!/bin/bash
-./dataGenerateGHGP.gk Worksheet.csv > ghgData.csv
-./dataGenerate.gk VikingEgridData.csv > vikingData.csv
-#sort -t, -k1,1 ghgData.csv>ghgDataSorted.csv
-#sort -t, -k1,1 vikingData.csv>vikingDataSorted.csv
-#join -a1 -a2 -e- -t, vikingDataSorted.csv ghgDataSorted.csv -o 1.1,2.1,1.2,2.2 | ./dataClean.gk  > data.csv
-cp ghgData.csv data.csv

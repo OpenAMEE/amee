@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/2904/internal/api_csvs/SAP%20DAL/heating_system_kwh
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/2904/internal/api_csvs/SAP%20DAL/heating_system_kwh/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/2904/internal/api_csvs/SAP%20DAL/heating_system_kwh/itemdef.csv
+END

@@ -1,0 +1,6 @@
+name,Degree-days as a function of base temperature,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Degrees-Days,degreesDays,INTEGER,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

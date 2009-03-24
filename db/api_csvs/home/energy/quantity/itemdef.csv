@@ -1,16 +1,16 @@
 name,Energy Quantity
 algFile,perMonth.js
-name,path,type,isDataItemValue,isDrillDown
+name,path,type,isDataItemValue,isDrillDown,default,choices
 Green tariff,greenTariff,TEXT,false,false
-Includes Heating,includesHeating,TEXT,false,false
-kg Per Month,kgPerMonth,DECIMAL,false,false
+Includes Heating,includesHeating,TEXT,false,false,false,true=true,false=false
+kg Per Month,kgPerMonth,DECIMAL,false,false,0
 kgCO2 Per Kg,kgCO2PerKg,DECIMAL,true,false
 kgCO2 Per KWh,kgCO2PerKWh,DECIMAL,true,false
 kgCO2 Per Litre,kgCO2PerLitre,DECIMAL,true,false
-kWh Per Month,kWhPerMonth,DECIMAL,false,false
-kWh reading current,kWhReadingCurrent,DECIMAL,false,false
-kWh reading last,kWhReadingLast,DECIMAL,false,false
-Litres Per Month,litresPerMonth,DECIMAL,false,false
+kWh Per Month,kWhPerMonth,DECIMAL,false,false,0
+kWh reading current,kWhReadingCurrent,DECIMAL,false,false,0
+kWh reading last,kWhReadingLast,DECIMAL,false,false,0
+Litres Per Month,litresPerMonth,DECIMAL,false,false,0
 Number of deliveries,numberOfDeliveries,DECIMAL,false,false
 Payment frequency,paymentFrequency,TEXT,false,false
 Season,season,TEXT,false,false

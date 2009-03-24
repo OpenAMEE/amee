@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/2818/internal/api_csvs/test/jh/planet/country/aggregate
+END
+change.csv
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/2818/internal/api_csvs/test/jh/planet/country/aggregate/change.csv
+END
+algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/!svn/ver/2775/internal/api_csvs/test/jh/planet/country/aggregate/algorithm.js
+END
+percapita.csv
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/!svn/ver/2818/internal/api_csvs/test/jh/planet/country/aggregate/percapita.csv
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/2818/internal/api_csvs/test/jh/planet/country/aggregate/data.csv
+END
+rank.csv
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/2818/internal/api_csvs/test/jh/planet/country/aggregate/rank.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/2818/internal/api_csvs/test/jh/planet/country/aggregate/itemdef.csv
+END
+cumulative.csv
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/!svn/ver/2818/internal/api_csvs/test/jh/planet/country/aggregate/cumulative.csv
+END
+import.rb
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/2818/internal/api_csvs/test/jh/planet/country/aggregate/import.rb
+END
+historic.csv
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/!svn/ver/2818/internal/api_csvs/test/jh/planet/country/aggregate/historic.csv
+END

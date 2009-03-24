@@ -39,3 +39,7 @@ api_csvs/home/waste,Waste
 api_csvs/home/water,Water
 api_csvs/home/water/reductions,Water Reductions
 api_csvs/home/water/usage,Water Usage
+api_csvs/home/heating/uk,Heating UK
+api_csvs/transport/plane/generic,Plane Generic
+api_csvs/transport/bus/generic,Bus Generic
+api_csvs/transport/taxi/perpassenger/generic,Taxi Per Passenger Generic

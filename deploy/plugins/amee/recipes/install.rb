@@ -37,7 +37,7 @@ namespace :install do
     # Switch the the correct branch
     @pwd = Dir.pwd
     Dir.chdir(package_dir)
-    `git checkout #{branch}`
+    `git checkout master`
     `git fetch`
     
     # Remove the previous install artifacts
@@ -85,7 +85,7 @@ namespace :install do
   desc "Send the deployment package to Git repository"
   task :deploy_to_git do
     `git add .`
-    `git commit -m 'Install from capistrano on #{Time.now}'`
+    `git commit -a -m 'Install from capistrano on #{Time.now}'`
     `git push`
   end
   
@@ -99,9 +99,11 @@ namespace :install do
     
     # Tag the deployment repository
     `git tag -f -a "#{@tag_name}" -m "#{@tag_name}"`
+    `git push --tag`
     Dir.chdir(@pwd)
     # Tag the src repository
     `git tag -f -a "#{@tag_name}" -m "#{@tag_name}"`
+    `git push --tag`
   end
   
 end

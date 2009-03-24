@@ -19,14 +19,16 @@ function greatCircle() {
 function getEFForClass(atype){
 	fac = kgCO2PerPassengerKm;
 	try {
+        if(atype=='short haul'){
+           passengerClass="business";//no first class
+        }
 	fac = dataFinder.getDataItemValue('transport/plane/generic/passengerclass', 'type='+atype+',passengerClass='+passengerClass,'kgCO2PerPassengerKm');
 	}
-	catch(err){
-//wasn't a class for this type, so use default
-          if(fac<0){//i.e. auto
+	catch(err){}//do nothing
+
+        if(fac<=0){//i.e. auto
 fac=dataFinder.getDataItemValue('transport/plane/generic', 'type='+atype+',size=-','kgCO2PerPassengerKm');
-          }
-	}
+        }
 	return fac;
 }
 
@@ -40,6 +42,13 @@ try {
 }
 catch(err){
   //do nothing
+}
+
+try {
+  var n=numberOfPassengers;
+}
+catch(err){
+  numberOfPassengers=1;
 }
 
 if(long1>=-180){
@@ -58,11 +67,11 @@ if(long1>=-180){
        dist=2.*dist;
      }
   }
-  dist * getEFForClass(atype);
+  numberOfPassengers * dist * getEFForClass(atype);
 } else if (kgCO2PerPassengerKm != 0) {
-  (distance * getEFForClass(type));
+  (numberOfPassengers * distance * getEFForClass(type));
 } else if (kgCO2PerPassengerJourney != 0) {
-     (journeys * kgCO2PerPassengerJourney);
+     (numberOfPassengers * journeys * kgCO2PerPassengerJourney);
 } else {
   0;
 }

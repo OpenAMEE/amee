@@ -1,0 +1,6 @@
+name,Roof U-Values Loft Insulation Known Thatched Roof,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+roof U-value (W/m²K) Thatched roof,roofUvalue(W/m²K)Thatchedroof,DECIMAL,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

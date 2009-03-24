@@ -1,0 +1,7 @@
+name,Cylinder Size,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Indicative size range,indicativeSizeRange,TEXT,TRUE,FALSE
+Size to be used in SAP calculation,sizeToBeUsedInSAPCalculation,TEXT,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE
