@@ -36,7 +36,7 @@ else {
 || country == 'US' || country == 'CA') {
       fac = 1.15*kgCO2PerKmUS;
   } else {
-    fac= 1.15*kgCO2PerKm;
+    fac= kgCO2PerKm;
   }
 
   var multiplier=1.;
@@ -62,6 +62,10 @@ else {
   }
 
   fac*=multiplier;
+}
+
+if(useTypicalDistance=='true'){
+  distance=typicalDistance;
 }
 
 if(occupants>0)

@@ -13,6 +13,11 @@ else if(fuelConsumption!=null && fuelConsumption>0){
 else {
     fac= kgCO2PerKm;
 }
+
+if(useTypicalDistance=='true'){
+  distance=typicalDistance;
+}
+
 if(occupants>0)
     fac * distance/occupants;
 else //unlike generic cars, 1.15 factor already applied

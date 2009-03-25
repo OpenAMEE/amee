@@ -69,7 +69,8 @@ module AMEEImportHelpers
         table[key].keys.each do |inner_key|
           if hash[key].has_key? inner_key
             if !close(hash[key][inner_key].to_f, table[key][inner_key].to_f)
-              print "Inconsistent values: #{key}/#{inner_key} #{hash[key][inner_key]} , #{table[key][inner_key]}! \n" if verbose
+              print "Inconsistent values (overwriting): #{key}/#{inner_key} #{hash[key][inner_key]} , #{table[key][inner_key]}! \n" if verbose
+              hash[key][inner_key]=table[key][inner_key]
             else
               # print "val ok"
             end
@@ -79,7 +80,7 @@ module AMEEImportHelpers
         end
       else 
         print "New key: '#{key}'\n" if verbose
-        hash[key]=table[key]
+        hash[key]=table[key].dup
       end
     end
   end
