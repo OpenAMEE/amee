@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/2922/internal/api_csvs/test/jh/business/mobileCombustion
+END
+paper.csv
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/2922/internal/api_csvs/test/jh/business/mobileCombustion/paper.csv
+END
+businessTravelFuels.csv
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/!svn/ver/2922/internal/api_csvs/test/jh/business/mobileCombustion/businessTravelFuels.csv
+END
+employee.csv
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/!svn/ver/2922/internal/api_csvs/test/jh/business/mobileCombustion/employee.csv
+END
+generate.rb
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/!svn/ver/2922/internal/api_csvs/test/jh/business/mobileCombustion/generate.rb
+END
+businessTravelDistance.csv
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/!svn/ver/2922/internal/api_csvs/test/jh/business/mobileCombustion/businessTravelDistance.csv
+END
