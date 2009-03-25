@@ -24,10 +24,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * This file is part of AMEE.
@@ -88,7 +86,6 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     protected JSONObject getProfileCategoryJSONObject(ProfileCategoryResource resource, PathItem pathItem) throws JSONException {
 
         DataCategory dataCategory = dataService.getDataCategory(pathItem.getUid());
-        Collection<Long> profileDataCategoryIds = profileService.getProfileDataCategoryIds(resource.getProfile());
 
         JSONObject obj = new JSONObject();
 
@@ -97,7 +94,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         obj.put("dataCategory", dataCategory.getJSONObject());
 
         // only add children if ProfileItems are available
-        if (pathItem.hasDataCategories(profileDataCategoryIds, true)) {
+        if (pathItem.hasDataCategories(resource.getProfileDataCategoryIds(), true)) {
             addProfileCategoryChildren(resource, obj, pathItem, dataCategory);
         }
 
@@ -198,7 +195,6 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     protected Element getProfileCategoryElement(ProfileCategoryResource resource, Document document, PathItem pathItem) {
 
         DataCategory dataCategory = dataService.getDataCategory(pathItem.getUid());
-        Collection<Long> profileDataCategoryIds = profileService.getProfileDataCategoryIds(resource.getProfile());
 
         Element element = document.createElement("ProfileCategory");
 
@@ -207,7 +203,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         element.appendChild(dataCategory.getIdentityElement(document));
 
         // only add children if ProfileItems are available
-        if (pathItem.hasDataCategories(profileDataCategoryIds, true)) {
+        if (pathItem.hasDataCategories(resource.getProfileDataCategoryIds(), true)) {
             addProfileCategoryChildren(resource, document, element, pathItem, dataCategory);
         }
 

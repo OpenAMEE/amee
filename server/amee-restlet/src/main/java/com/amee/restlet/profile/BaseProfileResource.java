@@ -17,6 +17,7 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -38,11 +39,11 @@ import java.util.Set;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-@Component("baseProfileResource")
 public abstract class BaseProfileResource extends AMEEResource {
 
     protected ProfileBrowser profileBrowser;
     protected ProfileItem profileItem;
+    protected Collection<Long> getProfileDataCategoryIds;
 
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -77,9 +78,16 @@ public abstract class BaseProfileResource extends AMEEResource {
     public ProfileItem getProfileItem() {
         return profileItem;
     }
-    
+
     public Profile getProfile() {
         return (Profile) getRequest().getAttributes().get("profile");
+    }
+
+    public Collection<Long> getProfileDataCategoryIds() {
+        if (getProfileDataCategoryIds == null) {
+            getProfileDataCategoryIds = profileService.getProfileDataCategoryIds(getProfile());
+        }
+        return getProfileDataCategoryIds;
     }
 
     public ProfileService getProfileService() {

@@ -48,13 +48,13 @@ public class ProfileSheetBuilder implements CacheableFactory {
         DataCategory dataCategory = resource.getDataCategory();
 
         if (ThreadBeanHolder.get("dataCategoryForFactory") != null) {
-            dataCategory  =(DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
+            dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
         }
 
         itemDefinition = dataCategory.getItemDefinition();
         if (itemDefinition != null) {
 
-            List<ProfileItem> profileItems = profileService.getProfileItems(resource.getProfile(), 
+            List<ProfileItem> profileItems = profileService.getProfileItems(resource.getProfile(),
                     dataCategory, resource.getProfileBrowser().getProfileDate());
 
             // create sheet and columns
@@ -135,7 +135,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
 
         DataCategory dataCategory = resource.getDataCategory();
         if (ThreadBeanHolder.get("dataCategoryForFactory") != null) {
-            dataCategory  =(DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
+            dataCategory = (DataCategory) ThreadBeanHolder.get("dataCategoryForFactory");
         }
         return "ProfileSheet_" + resource.getProfile().getUid() + "_" + dataCategory.getUid() + "_" +
                 resource.getProfileBrowser().getProfileDate().getTime();
