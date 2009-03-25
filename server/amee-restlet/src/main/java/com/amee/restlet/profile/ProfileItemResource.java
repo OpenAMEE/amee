@@ -89,10 +89,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
-        values.put("browser", profileBrowser);
-        values.put("profile", getProfileItem().getProfile());
-        values.put("profileItem", getProfileItem());
-        values.put("node", getProfileItem());
+        values.putAll(builder.getTemplateValues(this));
         return values;
     }
 
@@ -135,7 +132,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     private void setBuilderStrategy() {
-        builder = builderFactory.createProfileItemBuilder(this);
+        builder = builderFactory.createProfileItemResourceBuilder(this);
     }
 
     @Override

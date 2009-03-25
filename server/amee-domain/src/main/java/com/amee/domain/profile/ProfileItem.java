@@ -127,6 +127,8 @@ public class ProfileItem extends Item {
         setAmount(newAmount);
     }
 
+    @Override
+    @Transient
     public JSONObject getJSONObject(boolean b) throws JSONException {
         return builder.getJSONObject(b);
     }

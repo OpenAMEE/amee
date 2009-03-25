@@ -82,7 +82,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     private void setBuilderStrategy() {
-        builder = builderFactory.createProfileCategoryBuilder(this);
+        builder = builderFactory.createProfileCategoryResourceBuilder(this);
     }
 
     @Override

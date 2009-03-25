@@ -75,7 +75,7 @@ function calcGHG(gaslabel,massAmount,volumeAmount,energyAmount,
 
 function energyfactor(gaslabel) {
     var conv;
-    if (useHHV) {
+    if (useHHV=="true") {
 	conv=HHVConversion;
     }
     else {

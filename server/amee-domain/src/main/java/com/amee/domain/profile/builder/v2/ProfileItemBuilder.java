@@ -25,6 +25,7 @@ import com.amee.domain.Builder;
 import com.amee.domain.data.CO2AmountUnit;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.StartEndDate;
 import org.json.JSONArray;
@@ -55,6 +56,7 @@ public class ProfileItemBuilder implements Builder {
         obj.put("name", item.getName().isEmpty() ? JSONObject.NULL : item.getName());
         JSONArray itemValues = new JSONArray();
         for (ItemValue itemValue : item.getItemValues()) {
+            itemValue.setBuilder(new ItemValueBuilder(itemValue));
             itemValues.put(itemValue.getJSONObject(false));
         }
         obj.put("itemValues", itemValues);
@@ -73,6 +75,7 @@ public class ProfileItemBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "Name", item.getName()));
         Element itemValuesElem = document.createElement("ItemValues");
         for (ItemValue itemValue : item.getItemValues()) {
+            itemValue.setBuilder(new ItemValueBuilder(itemValue));
             itemValuesElem.appendChild(itemValue.getElement(document, false));
         }
         element.appendChild(itemValuesElem);

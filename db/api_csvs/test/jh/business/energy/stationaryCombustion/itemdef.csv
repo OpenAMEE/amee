@@ -13,4 +13,4 @@ Energy used,NRG,DECIMAL,false,false
 Mass used,mass,DECIMAL,false,false
 Volume used,volume,DECIMAL,false,false
 HHV Conversion,HHVConversion,DECIMAL,true,false
-Use HHV,useHHV,BOOLEAN,false,false
+Use HHV,useHHV,TEXT,false,false

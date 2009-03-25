@@ -26,8 +26,8 @@
 #    the login password  
 #
 require 'java'
-require '../server/amee-domain/target/amee-domain-2.0.jar'
-require '../../AMEE.git/lib/mysql/mysql-connector-java.jar'
+require '../server/amee-domain/target/amee-domain-2.1.jar'
+require '../../AMEE.deploy/lib/mysql-connector-java-5.1.6.jar'
 require 'getoptlong'
 require 'rdoc/usage'
     
@@ -124,6 +124,59 @@ def migrate_pi
     puts "Finished ITEM migrations"
     rs.close
     stmt.close
+    conn.close
+  end
+    
+end
+
+# Migration ProfileItem amounts
+# Add this to migrate_pi for live migration
+def migrate_amount
+  puts "Starting AMOUNT migrations"
+
+  begin
+    conn = JavaSql::DriverManager.get_connection(@url, @user, @pswd)
+    stmt = conn.create_statement()
+    stmt2 = conn.create_statement()
+
+    # Get a count of rows to be updated
+    rs = stmt.execute_query("select * from ITEM where modified > DATE('2009-03-23 05:56:23') and type = 'PI'")
+    while(rs.next) 
+      id = rs.getString("Id")
+      amount = rs.getString("Amount")
+      item_value_query = "select ivd.name, iv.value from ITEM_VALUE iv, ITEM_VALUE_DEFINITION ivd where iv.item_id = #{id} and iv.item_value_definition_id = ivd.id"
+      rs2 = stmt2.execute_query(item_value_query)
+      puts "Running - #{item_value_query}"
+      while(rs2.next)
+        name = rs2.getString("name")
+        value = rs2.getString("value")
+        puts("#{id}: #{name} - #{value}")
+        if 
+        (
+          (name.startsWith("IATA") && value.length > 0) ||
+          (name.startsWith("Lat") && value != "-999") ||
+          (name.startsWith("Lon") && value != "-999")
+        )
+          puts "Found single flight so not updating amount, id: #{id}"  
+        else
+          # TODO - Format this number to 3dp
+          new_amount = amount.to_f * 12.0
+          # Log out the rollback sql...
+          puts "Found perTime item so updating amount: #{amount} to new_amount: #{new_amount} where id: #{id}"
+          item_update_query = "update ITEM set Amount = ${new_amount} where id = #{id}"
+          puts "Running - #{item_update_query}"
+        end
+          
+      end
+      rs2.close
+    end
+    
+  ensure
+    puts "Finished AMOUNT migrations"
+    rs.close
+    rs2.close
+    stmt.close
+    stmt2.close
     conn.close
   end
     
@@ -291,10 +344,17 @@ def run_sql(file)
   puts "Finished #{file} migrations"
 end
 
+class String
+  def startsWith str
+    return self[0...str.length] == str
+  end
+end
+
 # Run the migrations
-run_sql("ddl.sql")
-migrate_ivd
-run_sql("dml.sql")
-migrate_pi
-migrate_algo
-run_sql("innodb.sql")
+#run_sql("ddl.sql")
+#migrate_ivd
+#run_sql("dml.sql")
+#migrate_pi
+migrate_amount
+#migrate_algo
+#run_sql("innodb.sql")

@@ -22,7 +22,6 @@ package com.amee.domain.data;
 import com.amee.core.ObjectType;
 import com.amee.domain.*;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -84,7 +83,6 @@ public class ItemValue implements PersistentObject, Pathable {
     public ItemValue() {
         super();
         setUid(UidGen.getUid());
-        setBuilder(new ItemValueBuilder(this));
     }
 
     public ItemValue(ItemValueDefinition itemValueDefinition, Item item, String value) {

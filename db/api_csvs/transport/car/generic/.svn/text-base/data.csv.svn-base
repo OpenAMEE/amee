@@ -1,14 +1,14 @@
-fuel,size,kgCO2PerKm,kgCO2PerKmUS,units,source,algorithm
-petrol,small,0.1809,0.2240,kgCO2/km ,UK NAEI / Company Reporting Guidelines; US EPA/dgen,1.15*value*user_distance_km
-petrol,medium,0.2139,0.2700,kgCO2/km ,UK NAEI / Company Reporting Guidelines; US EPA/dgen,1.15*value*user_distance_km
-petrol,large,0.2958,0.3490,kgCO2/km ,UK NAEI / Company Reporting Guidelines; US EPA/dgen,1.15*value*user_distance_km
-diesel,small,0.1513,0.1310,kgCO2/km ,NAEI / Company Reporting Guidelines,1.15*value*user_distance_km
-diesel,medium,0.1881,0.1630,kgCO2/km ,NAEI / Company Reporting Guidelines,1.15*value*user_distance_km
-diesel,large,0.2580,0.2300,kgCO2/km ,NAEI / Company Reporting Guidelines,1.15*value*user_distance_km
-petrol hybrid,medium,0.1262,0.1100,kgCO2/km ,VCA CO2 database is source of original gCO2/km data,1.15*value*user_distance_km
-petrol hybrid,large,0.2240,0.1950,kgCO2/km ,VCA CO2 database is source of original gCO2/km data,1.15*value*user_distance_km
-lpg,medium,0.2594,0.2594,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
-lpg,large,0.2243,0.2243,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
-cng,medium,0.2594,0.2594,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
-cng,large,0.2243,0.2243,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
-average,average,0.2042,0.2700,kgCO2/km,defra/amee 2008,1.15*value*user_distance_km
+fuel,size,kgCO2PerKm,kgCO2PerKmUS,typicalDistance,units,source,algorithm
+petrol,small,0.181,0.224,14481,kgCO2/km ,UK NAEI / Company Reporting Guidelines; US EPA/dgen,1.15*value*user_distance_km
+petrol,medium,0.214,0.27,14481,kgCO2/km ,UK NAEI / Company Reporting Guidelines; US EPA/dgen,1.15*value*user_distance_km
+petrol,large,0.296,0.349,14481,kgCO2/km ,UK NAEI / Company Reporting Guidelines; US EPA/dgen,1.15*value*user_distance_km
+diesel,small,0.151,0.131,14481,kgCO2/km ,NAEI / Company Reporting Guidelines,1.15*value*user_distance_km
+diesel,medium,0.188,0.163,14481,kgCO2/km ,NAEI / Company Reporting Guidelines,1.15*value*user_distance_km
+diesel,large,0.258,0.23,14481,kgCO2/km ,NAEI / Company Reporting Guidelines,1.15*value*user_distance_km
+petrol hybrid,medium,0.126,0.11,14481,kgCO2/km ,VCA CO2 database is source of original gCO2/km data,1.15*value*user_distance_km
+petrol hybrid,large,0.224,0.195,14481,kgCO2/km ,VCA CO2 database is source of original gCO2/km data,1.15*value*user_distance_km
+lpg,medium,0.259,0.259,14481,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
+lpg,large,0.224,0.224,14481,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
+cng,medium,0.259,0.259,14481,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
+cng,large,0.224,0.224,14481,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
+average,average,0.204,0.27,14481,kgCO2/km,defra/amee 2008,1.15*value*user_distance_km

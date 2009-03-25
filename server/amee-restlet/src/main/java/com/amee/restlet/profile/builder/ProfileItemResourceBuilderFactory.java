@@ -32,7 +32,7 @@ public class ProfileItemResourceBuilderFactory {
     @Autowired
     private com.amee.restlet.profile.builder.v2.ProfileItemResourceBuilder v2ProfileItemResourceBuilder;
 
-    public IProfileItemResourceBuilder createProfileItemBuilder(ProfileItemResource resource) {
+    public IProfileItemResourceBuilder createProfileItemResourceBuilder(ProfileItemResource resource) {
         if (resource.getAPIVersion().isVersionOne()) {
             return v1ProfileItemResourceBuilder;
         } else {

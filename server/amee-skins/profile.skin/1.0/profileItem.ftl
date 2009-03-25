@@ -16,7 +16,7 @@
 <p>
     <#if profileItem.name != ''>Name: ${profileItem.name}<br/></#if>
     <#if !profileItem.end>
-        kgCO2 pcm: ${profileItem.amount}<br/>
+        kgCO2 pcm: ${amountPerMonth}<br/>
         Valid From: ${profileItem.startDate?string(getDateFormatV1())}<br/>
         End: No<br/>
     <#else>

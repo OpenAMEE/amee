@@ -1,0 +1,152 @@
+,,Direct or Indirect - Mobile and Transportation Source Emissions
+,,"Note: Emissions from stationary sources are reported on the ""Direct-Fuel Combust."" spreadsheet immediately in front of this spreadsheet"
+
+,,"These spreadsheets include significant amounts of material copied from other WRI and WBCSD calculation tools. 
+ Intellectual property rights of the WRI and WBCSD calculation tools belong to WRI and WBCSD, unless stated otherwise."
+
+,,"This worksheet can be used to calculate emissions from mobile combustion sources, including transportation.
+The worksheet contains three parts:
+    Part 1 is used to calculate transportation emissions based on quantity of fuels consumed.
+    Part 2 is used to calculate transportation emissions based on distance traveled.
+    Part 3 is used to calculate emissions from non-transportation mobile sources such as harvesting equipment
+
+WRI/WBCSD recommends the following approach. - For transportation emissions, because the data on fuel are generally more reliable, the estimation methods incorporated into Part 1 are preferred over those in Part 2 (distance-based).  Part 2 (the distance-based approach) should only be used as a last resort as it can introduce considerably higher levels of uncertainty in the CO2 estimates.
+
+Be careful to avoid double counting!  If transportation emissions for a fleet are estimated using Part 1, do not also estimate emissions for this same fleet using Part 2.
+
+Do not include any combustion sources on this page that were already addressed in the ""Direct - Fuel Combust."" sheet."
+
+,EXPLANATION OF CELL COLOR SCHEME
+,User entry: Source / fuel description
+,User entry: Fuel use / emission factor values,, ,"Suggested default emission factors and ""typical emission factors"" included below"
+,User enrty: Physical units:
+,Auto calculated value:
+
+
+
+,Emissions from Transportation and Mobile Equipment
+
+,Part 1.  Emissions Calculated from Fuel Used:  All Modes of Transport 
+,Note:  Use this worksheet to calculate your emissions from amount of fuel consumed. ,,,,,,,,,,,,,,,Optional Calculator
+,,,A1,A2,B,C,D,E1,E2,F,G1,G2,H1,H2,,"1,000", = Distance traveled,<<< enter this value
+,,,,Fraction of total emissions claimed as direct for this entry (between 0 and 1),Fuel used,,,Energy used,,,Emissions Factor,,Direct Emissions,Indirect Emissions,,0, = miles per gallon
+,,,,,,Type of Fuel Used,,GJ per Fuel Unit,,GJ energy,kg CO2 per GJ,,metric tonnes,metric tonnes,,,        OR,<<< enter one of these
+,,,,,Amount of,Fuel,Fuel,Default [1],Custom,Used,Default [2],Custom,H1 =A1xFxG/1000,H2 =(1-A1)xFxG/1000,,30, = litres per 100 km
+,,,Source Description,,fuel used,Units,Type,GJ LHV/unit,GJ LHV/unit,F = B x E,kg CO2/GJ LHV,kg CO2/GJ LHV,Metric tonnes  CO2,Metric tonnes  CO2,,300,litres used,<<< calculated
+,,Road transportation,,,,,,,,0.00,,,0.0,0.0
+,,Example >>>,Sample fleet,0.8,"30,000.00",US gals,Gasoline,0.13,,"3,906.12",69.3,,216.6,54.1,,,,,,,,,,Emission Factors for Road Transportation Sources
+,,,,,,US gals,Gasoline,0.13,,0.00,69.3,,0.0,0.0,,,,,,,,"Default emission factors are from Revised 2006 IPCC Guidelines for National Greenhouse Gas Inventories:  Volume 2 Energy, Chapter 3 Mobile Combustion if not otherwise noted."
+,,,,,,Imp. gals,Gasoline,0.16,,0.00,69.3,,0.0,0.0
+,,,,,,litres,Gasoline,0.03,,0.00,69.3,,0.0,0.0,,,,,,,,Fuel type,,,(Derived),(Derived),(Derived),Typical density (API 2004)
+,,,,,,litres,Gasoline,0.03,,0.00,69.3,,0.0,0.0,,,,,,,,,kg CO2 / GJ LHV, GJ LHV/ litre (API 2004),GJ LHV/ US gallon,GJ LHV/Imp gallon,GJ LHV/tonne,( lb / gal )
+,,,,,,Metric tonnes,Gasoline,46.53,,0.00,69.3,,0.0,0.0
+,,,,,,US gals,Diesel,0.14,,0.00,74.1,,0.0,0.0,,,,,,,,Gasoline / petrol,69.30,0.0344,0.1302,0.1564,46.5316,6.17
+,,,,,,Imp. gals,Diesel,0.16,,0.00,74.1,,0.0,0.0,,,,,,,,Kerosene,71.90,0.0357,0.1351,0.1623,44.0754,6.76
+,,,,,,litres,Diesel,0.04,,0.00,74.1,,0.0,0.0,,,,,,,,Diesel,74.10,0.0362,0.1370,0.1646,42.5525,7.10
+,,,,,,Metric tonnes,Diesel,42.55,,0.00,74.1,,0.0,0.0,,,,,,,,LPG,63.10,0.0249,0.0942,0.1132,45.9764,4.52
+,,,,,,lbs.,CNG,0.0230,,0.00,56.1,,0.0,0.0,,,,,,,,Lubricants,73.30,0.0382,0.1446,0.1736
+,,,,,,kg,CNG,0.0508,,0.00,56.1,,0.0,0.0,,,,,,,,Natural gas,56.10,0.0342 GJ / ,,,,0.042 lb/ft3
+,,,,,,lbs.,LPG,0.0209,,0.00,63.1,,0.0,0.0,,,,,,,,,,standard cubic meter
+,,,,,,kg,LPG,0.0460,,0.00,63.1,,0.0,0.0
+,,,,,,US gals,LPG,0.0942,,0.00,63.1,,0.0,0.0
+,,,,,,litres,LPG,0.0249,,0.00,63.1,,0.0,0.0,,,,,,,,Other Sources:, American Petroleum Institute (API).  2004. Compendium of Greenhouse Gas Emissions Estimation Methodologies for the Oil & Gas Industry
+,,Rail transportation ,,,,,,,,0.00,,,0.0,0.0
+,,,,,,US gals,Gasoline,0.13,,0.00,69.3,,0.0,0.0
+,,,,,,Imp. gals,Gasoline,0.16,,0.00,69.3,,0.0,0.0
+,,,,,,litres,Gasoline,0.03,,0.00,69.3,,0.0,0.0
+,,,,,,Metric tonnes,Gasoline,46.53,,0.00,69.3,,0.0,0.0
+,,,,,,US gals,Diesel,0.14,,0.00,74.1,,0.0,0.0
+,,,,,,Imp. gals,Diesel,0.16,,0.00,74.1,,0.0,0.0
+,,,,,,litres,Diesel,0.04,,0.00,74.1,,0.0,0.0
+,,,,,,Metric tonnes,Diesel,42.55,,0.00,74.1,,0.0,0.0
+,,,,,,US gals,Residual #6,0.15,,0.00,77.4,,0.0,0.0
+,,,,,,Imp gals,Residual #6,0.1841,,0.00,77.4,,0.0,0.0
+,,,,,,Barrels (42 gallon),Residual #6,6.4390,,0.00,77.4,,0.0,0.0
+,,,,,,Metric tonnes,Residual #6,40.00,,0.00,77.4,,0.0,0.0
+,,,,,,Short tons,Coal - Bituminous,27.4200 [3],,0.00,94.6 [4],,0.0,0.0
+,,,,,,Metric tonnes,Coal - Bituminous,30.2300,,0.00,94.6,,0.0,0.0
+,,,,,,,Other fuel,,,0.00,,,0.0,0.0
+,,Water transportation ,,,,,,,,0.00,,,0.0,0.0
+,,,,,,US gals,Gasoline,0.13,,0.00,69.3,,0.0,0.0
+,,,,,,Imp. gals,Gasoline,0.16,,0.00,69.3,,0.0,0.0
+,,,,,,litres,Gasoline,0.03,,0.00,69.3,,0.0,0.0
+,,,,,,Metric tonnes,Gasoline,46.53,,0.00,69.3,,0.0,0.0
+,,,,,,US gals,Diesel,0.14,,0.00,74.1,,0.0,0.0
+,,,,,,Imp. gals,Diesel,0.16,,0.00,74.1,,0.0,0.0
+,,,,,,litres,Diesel,0.04,,0.00,74.1,,0.0,0.0
+,,,,,,Metric tonnes,Diesel,42.55,,0.00,74.1,,0.0,0.0
+,,,,,,US gals,Residual #6,0.15,,0.00,77.4,,0.0,0.0
+,,,,,,Imp gals,Residual #6,0.1841,,0.00,77.4,,0.0,0.0
+,,,,,,Barrels (42 gallon),Residual #6,6.4390,,0.00,77.4,,0.0,0.0
+,,,,,,Metric tonnes,Residual #6,40.00,,0.00,77.4,,0.0,0.0
+,,,,,,Short tons,Coal - Bituminous,27.4200 [3],,0.00,94.6 [4],,0.0,0.0
+,,,,,,Metric tonnes,Coal - Bituminous,30.2300,,0.00,94.6,,0.0,0.0
+,,,,,,,Other fuel,,,0.00,,,0.0,0.0
+,,Last row above totals enter no data here
+,,Total transportation emissons based on fuel use >>>,,,,,,,,,,,0.0,0.0
+
+
+
+
+,Emissions from Transportation and Mobile Equipment
+,,Part 2.  Emissions Associated with Non-road Mobile Equipment Based on Fuel Consumption 
+
+,Fuel Combustion in mobile devices such as harvesting equipment,,,,,,,,,,,,,,,,,,,,,,Suggested Default Emission Factors (for non-road mobile sources)
+,,,,Step 1,,Step 2,,,Step 3,,,Step 4,,,,,,,,,,"Default emission factors are from Revised 2006 IPCC Guidelines for National Greenhouse Gas Inventories: Volume 2 Energy, Chapter 3 Mobile Combustion, if not otherwise noted."
+,,,,A1,A2,B,C ,D,E,F,G,E,F,G,,,,,,,,Fuel type,"kg CO2 / GJ fuel
+[based on lower heating value, net calorific value]","kg CH4 / GJ fuel 
+[based on lower heating value, net calorific value]","kg N2O / GJ fuel 
+[based on lower heating value, net calorific value]","kg CO2 equiv. / GJ fuel
+[based on lower heating value, net calorific value]"
+,,,,Fraction of total emissions claimed as direct for this entry (between 0 and 1),Quantity of fuel burned,"CO2 emission factor
+Suggested default emission factors are shown at right","CH4 emission factor
+Suggested default emission factors are shown at right","N2O emission factor
+Suggested default emission factors are shown at right","DIRECT
+CO2 emissions (metric tonnes)","DIRECT
+CH4 emissions (metric tonnes)","DIRECT
+N2O emissions (metric tonnes)","INDIRECT
+CO2 emissions (metric tonnes)","INDIRECT
+CH4 emissions (metric tonnes)","INDIRECT
+N2O emissions (metric tonnes)",,,,,,,,Liquid fossil
+,,,,,(GJ LHV),(kg CO2/GJ LHV),(kg CH4/GJ LHV),(kg N2O/GJ LHV),E = A1 × A2 × B / 1000,F = A1 × A2 × C / 1000,E = A1 × A2 × D / 1000,E = (1-A1) × A2 × B / 1000,F = (1-A1) × A2 × C / 1000,E = (1-A1) × A2 × D / 1000,,,,,,,,"Gasoline / petrol 
+Mobile 4-stroke engines, industry",69.3,0.05,0.002,71.15
+,,,,,,"IMPORTANT! For equations to function correctly, numerator of emission factors must be in terms of kg of GHG and denominator must match units of fuel quantity!!",,,,,,,,,,,,,,,,"Gasoline / petrol 
+Mobile 2-stroke engines, industry",69.3,0.13,0.0004,72.67
+,,Example: Source 1,Natural gas,0.75,1000000.00,55.90,0.0050,0.0001,"41,925",3.75,0.075,"13,975",1.25,0.025,,,,,,,,"Gasoline / petrol 
+Mobile 2-stroke engines, forestry",69.3,0.17,0.0004,73.67
+,,Source description,Fuel type,Fraction Owned,,,,,,,,,,,,,,,,,,Kerosene*,71.9,0.003,0.0006,72.15
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000,,,,,,,,"Distillate fuel 
+(No.1, No.2, No.4 fuel oil and diesel)
+Mobile sources",74.1,0.004,0.03,83.14
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000,,,,,,,,LPG**,63.1,0.062,0.0002,64.71
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000,,,,,,,,Gaseous fossil
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000,,,,,,,,Natural gas (dry)**,56.1,0.092,0.003,59.29
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000,,,,,,,,* CH4 and N2O factors for kerosene are IPCC Tier 1 for stationary mobile sources (IPCC does not provided CH4 or N2O factors for these fuels in mobile sources)
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000,,,,,,,,** CH4 and N2O factors for LPG and natural gas are IPCC Tier 1 for on-road mobile sources (Tier 3 factors for off-road mobile sources not provided by IPCC for these fuels)
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000
+,,,,,,,,,0,0.00,0.000,0,0.00,0.000
+,,,,,,,,,DIRECT EMISSIONS,,,INDIRECT EMISSIONS
+,,,,,,,,,tonnes CO2,tonnes CH4,tonnes N2O,tonnes CO2,tonnes CH4,tonnes N2O
+,,Total emissions from mobile equipment: ,,,,,,,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+
+
+,,,,,,,,Direct,,,Indirect
+,,,,,,,,tonnes CO2,tonnes CH4,tonnes N2O,tonnes CO2,tonnes CH4,tonnes N2O
+,,,,,,,Grand Total of all Mobil and Transportation Emissions (sum of results from Parts 1 and 2):,0.00,0.00,0.00,0.00,0.00,0.00
+,,,,,,,Note: Do not double count emissions by estimating the same fuel consumption by two different methods above.
+
+
+"[1] These are lower heating values sourced from American Petroleum Institute, 2004, if not otherwise indicated.
+"
+"[2] Default emission factors are based on lower heating values. They are sourced from IPCC, 1997, Vol. 3, if not otherwise noted"
+[3] Coal varies in heat content.  Check Revised 1996 IPCC Guidelines for National Greenhouse Gas Inventories: Reference Manual (Volume 3) for country specific and coal grade specific energy content values
+"[4] IPCC emission factor for Bituminous coal
+"

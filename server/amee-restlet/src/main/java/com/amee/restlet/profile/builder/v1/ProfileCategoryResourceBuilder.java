@@ -14,7 +14,6 @@ import com.amee.domain.sheet.Row;
 import com.amee.domain.sheet.Sheet;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
-import com.amee.restlet.profile.builder.v2.AtomFeed;
 import com.amee.service.data.DataService;
 import com.amee.service.profile.ProfileService;
 import org.json.JSONArray;
@@ -271,7 +270,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     }
 
     public org.apache.abdera.model.Element getAtomElement(ProfileCategoryResource resource) {
-        return AtomFeed.getInstance().newFeed();
+        throw new UnsupportedOperationException();
     }
 
     private void setBuilder(ProfileItem pi) {
