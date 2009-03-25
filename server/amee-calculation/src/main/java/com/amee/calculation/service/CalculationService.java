@@ -58,7 +58,7 @@ public class CalculationService implements BeanFactoryAware, Serializable {
         if (!profileItem.supportsCalculation()) return;
 
         if (profileItem.isEnd()) {
-            profileItem.updateAmount(CO2Amount.ZERO);
+            profileItem.setAmount(CO2Amount.ZERO);
             return;
         }
 
@@ -74,7 +74,7 @@ public class CalculationService implements BeanFactoryAware, Serializable {
         }
 
         if (amount != null) {
-            profileItem.updateAmount(new CO2Amount(amount));
+            profileItem.setAmount(new CO2Amount(amount));
         }
     }
 
@@ -127,7 +127,7 @@ public class CalculationService implements BeanFactoryAware, Serializable {
     }
 
     // Collect all relevant algorithm input values for a ProfileItem calculation.
-    public Map<String, Object> getValues(ProfileItem profileItem) {
+    private Map<String, Object> getValues(ProfileItem profileItem) {
 
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
         profileItem.getItemDefinition().appendInternalValues(values, profileItem.getProfile().getAPIVersion());
@@ -160,7 +160,7 @@ public class CalculationService implements BeanFactoryAware, Serializable {
     }
 
     // Collect all relevant algorithm input values for a DataItem + auth Choices calculation.
-    public Map<String, Object> getValues(DataItem dataItem, Choices userValueChoices, APIVersion version) {
+    private Map<String, Object> getValues(DataItem dataItem, Choices userValueChoices, APIVersion version) {
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
         dataItem.getItemDefinition().appendInternalValues(values, version);
         dataItem.appendInternalValues(values);

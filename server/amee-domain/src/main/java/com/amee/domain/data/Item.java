@@ -83,10 +83,10 @@ public abstract class Item implements Pathable {
     protected Date endDate;
 
     @Column(name = "CREATED")
-    private Date created = Calendar.getInstance().getTime();
+    protected Date created = Calendar.getInstance().getTime();
 
     @Column(name = "MODIFIED")
-    private Date modified = Calendar.getInstance().getTime();
+    protected Date modified = Calendar.getInstance().getTime();
 
     public Item() {
         super();
