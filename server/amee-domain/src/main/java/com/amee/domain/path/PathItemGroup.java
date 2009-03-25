@@ -26,16 +26,14 @@ public class PathItemGroup implements Serializable {
 
     private Map<String, PathItem> pathItems = new HashMap<String, PathItem>();
     private PathItem rootPathItem = null;
-    private boolean forProfile = false;
 
     private PathItemGroup() {
         super();
     }
 
-    public PathItemGroup(PathItem rootPathItem, boolean forProfile) {
+    public PathItemGroup(PathItem rootPathItem) {
         this();
         setRootPathItem(rootPathItem);
-        setForProfile(forProfile);
         add(rootPathItem);
     }
 
@@ -45,18 +43,18 @@ public class PathItemGroup implements Serializable {
     }
 
     // Used by DataFinder * ServiceResource.
-    public PathItem findByPath(String path) {
-        return findBySegments(new ArrayList<String>(Arrays.asList(path.split("/"))));
+    public PathItem findByPath(String path, boolean forProfile) {
+        return findBySegments(new ArrayList<String>(Arrays.asList(path.split("/"))), forProfile);
     }
 
     // Used by DataFilter & ProfileFilter.
-    public PathItem findBySegments(List<String> segments) {
-        PathItem rootDataPathItem = getRootPathItem();
-        if (rootDataPathItem != null) {
+    public PathItem findBySegments(List<String> segments, boolean forProfile) {
+        PathItem rootPathItem = getRootPathItem();
+        if (rootPathItem != null) {
             if (segments.isEmpty()) {
-                return rootDataPathItem;
+                return rootPathItem;
             } else {
-                return rootDataPathItem.findLastPathItem(segments);
+                return rootPathItem.findLastPathItem(segments, forProfile);
             }
         } else {
             return null;
@@ -75,13 +73,5 @@ public class PathItemGroup implements Serializable {
 
     public void setRootPathItem(PathItem rootPathItem) {
         this.rootPathItem = rootPathItem;
-    }
-
-    public boolean isForProfile() {
-        return forProfile;
-    }
-
-    public void setForProfile(boolean forProfile) {
-        this.forProfile = forProfile;
     }
 }

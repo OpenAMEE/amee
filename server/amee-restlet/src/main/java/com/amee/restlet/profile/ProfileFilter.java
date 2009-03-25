@@ -86,7 +86,7 @@ public class ProfileFilter extends BaseFilter {
                     ThreadBeanHolder.set("permission", profile.getPermission());
                     // look for path match
                     PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
-                    PathItem pathItem = pathItemGroup.findBySegments(segments);
+                    PathItem pathItem = pathItemGroup.findBySegments(segments, true);
                     if (pathItem != null) {
 
                         // rewrite paths

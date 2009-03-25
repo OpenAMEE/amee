@@ -95,14 +95,13 @@ public class DataFinder implements Serializable {
         PathItem pi;
         pig = pathItemService.getPathItemGroup();
         if (pig != null) {
-            pi = pig.findByPath(path);
+            pi = pig.findByPath(path, false);
             if ((pi != null) && pi.getObjectType().equals(ObjectType.DC)) {
                 dataCategory = dataService.getDataCategory(pi.getUid());
             }
         }
         return dataCategory;
     }
-
 
     public Date getEndDate() {
         return endDate;

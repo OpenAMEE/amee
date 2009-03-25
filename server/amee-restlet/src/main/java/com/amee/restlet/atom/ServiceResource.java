@@ -91,7 +91,8 @@ public class ServiceResource extends AMEEResource {
         if (path.isEmpty()) {
             addCollections(pathItemGroup.getRootPathItem(), ws);
         } else {
-            PathItem pathItem = pathItemGroup.findByPath(path);
+            // TODO: does this still do as intended?
+            PathItem pathItem = pathItemGroup.findByPath(path, false);
             if (pathItem != null) {
                 addCollections(pathItem, ws);
             }

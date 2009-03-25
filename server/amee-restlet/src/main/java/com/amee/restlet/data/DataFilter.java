@@ -71,7 +71,7 @@ public class DataFilter extends BaseFilter {
             String suffix = handleSuffix(segments);
             // look for path match
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
-            PathItem pathItem = pathItemGroup.findBySegments(segments);
+            PathItem pathItem = pathItemGroup.findBySegments(segments, false);
             if (pathItem != null) {
                 // found matching path, rewrite
                 ThreadBeanHolder.set("pathItem", pathItem);

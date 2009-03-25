@@ -124,16 +124,16 @@ public class PathItem implements APIObject, Serializable, Comparable {
     }
 
     // Used by PathItemGroup.
-    public PathItem findLastPathItem(List<String> segments) {
+    public PathItem findLastPathItem(List<String> segments, boolean forProfile) {
         PathItem result = null;
         PathItem child;
         if (segments.size() > 0) {
             String segment = segments.get(0);
-            result = findChildPathItem(segment);
+            result = findChildPathItem(segment, forProfile);
             if (result != null) {
                 segments.remove(0);
                 if (segments.size() > 0) {
-                    child = result.findLastPathItem(segments);
+                    child = result.findLastPathItem(segments, forProfile);
                     if (child != null) {
                         result = child;
                     } else {
@@ -145,7 +145,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return result;
     }
 
-    protected PathItem findChildPathItem(String segment) {
+    protected PathItem findChildPathItem(String segment, boolean forProfile) {
         PathItem child = null;
         // find child in the 'persistent' children set
         for (PathItem pi : getChildren()) {
@@ -159,7 +159,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
             switch (getObjectType()) {
                 case DC:
                     child = new PathItem();
-                    child.setObjectType(getPathItemGroup().isForProfile() ? ObjectType.PI : ObjectType.DI);
+                    child.setObjectType(forProfile ? ObjectType.PI : ObjectType.DI);
                     child.setPath(segment);
                     child.setUid(UidGen.isValid(segment) ? segment : "");
                     child.setParent(this);

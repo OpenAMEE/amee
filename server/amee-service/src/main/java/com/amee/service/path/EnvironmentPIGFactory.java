@@ -47,7 +47,7 @@ public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFa
         List<DataCategory> dataCategories = dataService.getDataCategories(environment);
         DataCategory rootDataCategory = findRootDataCategory(dataCategories);
         if (rootDataCategory != null) {
-            pathItemGroup = new PathItemGroup(new PathItem(rootDataCategory), false);
+            pathItemGroup = new PathItemGroup(new PathItem(rootDataCategory));
             while (!dataCategories.isEmpty()) {
                 addDataCategories(pathItemGroup, dataCategories);
             }
