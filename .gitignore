@@ -10,3 +10,4 @@ jmeter/*.jtl
 jmeter/*.log
 jmeter/results
 jmeter/jchav
+jmeter/*.properties

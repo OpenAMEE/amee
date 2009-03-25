@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * This file is part of AMEE.
@@ -48,6 +49,9 @@ public class ProfileItem extends Item {
 
     @Transient
     private Builder builder;
+
+    @Transient
+    private Date V2_RELEASE = new StartEndDate("2009-03-23T05:56:23+0000").toDate();
 
     public ProfileItem() {
         super();
@@ -122,11 +126,6 @@ public class ProfileItem extends Item {
         this.amount = amount.getValue();
     }
 
-    @Transient
-    public void updateAmount(CO2Amount newAmount) {
-        setAmount(newAmount);
-    }
-
     @Override
     @Transient
     public JSONObject getJSONObject(boolean b) throws JSONException {
@@ -153,6 +152,11 @@ public class ProfileItem extends Item {
 
     //TEMP HACK - will remove as soon we decide how to handle return units in V1 correctly.
     public boolean isSingleFlight() {
+        // UBER TEMP HACK TO FIX PROB ON STAGE - WILL RELEASE MORE PERMANENT FIX AT END OF DAY (SM - 25/03/09)
+
+        if (isLegacy())
+            return true;
+
         for (ItemValue iv : getItemValues()) {
             if ((iv.getName().startsWith("IATA") && iv.getValue().length() > 0) ||
                 (iv.getName().startsWith("Lat") && !iv.getValue().equals("-999")) ||
@@ -162,6 +166,14 @@ public class ProfileItem extends Item {
 
         }
         return false;
+    }
+
+    private boolean isLegacy() {
+        if (modified.before(V2_RELEASE)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean supportsCalculation() {

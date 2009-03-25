@@ -1,8 +1,9 @@
 package com.amee.restlet.profile.builder;
 
 import com.amee.restlet.profile.ProfileItemResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * This file is part of AMEE.
@@ -26,11 +27,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProfileItemResourceBuilderFactory {
 
-    @Autowired
-    private com.amee.restlet.profile.builder.v1.ProfileItemResourceBuilder v1ProfileItemResourceBuilder;
+    @Resource
+    private IProfileItemResourceBuilder v1ProfileItemResourceBuilder;
 
-    @Autowired
-    private com.amee.restlet.profile.builder.v2.ProfileItemResourceBuilder v2ProfileItemResourceBuilder;
+    @Resource
+    private IProfileItemResourceBuilder v2ProfileItemResourceBuilder;
 
     public IProfileItemResourceBuilder createProfileItemResourceBuilder(ProfileItemResource resource) {
         if (resource.getAPIVersion().isVersionOne()) {

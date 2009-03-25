@@ -22,17 +22,18 @@
 package com.amee.restlet.profile.builder;
 
 import com.amee.restlet.profile.ProfileItemValueResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Service
 public class ProfileItemValueResourceBuilderFactory {
 
-    @Autowired
-    private com.amee.restlet.profile.builder.v1.ProfileItemValueResourceBuilder v1ProfileItemValueResourceBuilder;
+    @Resource
+    private IProfileItemValueResourceBuilder v1ProfileItemValueResourceBuilder;
 
-    @Autowired
-    private com.amee.restlet.profile.builder.v2.ProfileItemValueResourceBuilder v2ProfileItemValueResourceBuilder;
+    @Resource
+    private IProfileItemValueResourceBuilder v2ProfileItemValueResourceBuilder;
 
     public IProfileItemValueResourceBuilder createProfileItemValueResourceBuilder(ProfileItemValueResource resource) {
         if (resource.getAPIVersion().isVersionOne()) {

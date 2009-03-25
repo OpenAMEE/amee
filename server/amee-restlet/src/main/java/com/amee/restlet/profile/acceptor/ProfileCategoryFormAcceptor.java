@@ -3,6 +3,7 @@ package com.amee.restlet.profile.acceptor;
 import com.amee.calculation.service.CalculationService;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.CO2AmountUnit;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.profile.ValidFromDate;
@@ -119,6 +120,12 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                 profileItem.setEndDate(profileItem.getStartDate());
             }
         } else {
+
+           // Clients can set units for the calculated CO2Amount in API > 1.0
+            String unit = form.getFirstValue("returnUnit");
+            String perUnit = form.getFirstValue("returnPerUnit");
+            resource.getProfileBrowser().setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
+
             profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
             if (form.getNames().contains("endDate") && form.getFirstValue("endDate") != null) {
                 profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
