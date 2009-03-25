@@ -43,7 +43,7 @@ public abstract class BaseProfileResource extends AMEEResource {
 
     protected ProfileBrowser profileBrowser;
     protected ProfileItem profileItem;
-    protected Collection<Long> getProfileDataCategoryIds;
+    protected Collection<Long> profileDataCategoryIds;
 
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -84,10 +84,10 @@ public abstract class BaseProfileResource extends AMEEResource {
     }
 
     public Collection<Long> getProfileDataCategoryIds() {
-        if (getProfileDataCategoryIds == null) {
-            getProfileDataCategoryIds = profileService.getProfileDataCategoryIds(getProfile());
+        if (profileDataCategoryIds == null) {
+            profileDataCategoryIds = profileService.getProfileDataCategoryIds(getProfile());
         }
-        return getProfileDataCategoryIds;
+        return profileDataCategoryIds;
     }
 
     public ProfileService getProfileService() {

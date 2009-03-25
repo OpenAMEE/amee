@@ -238,7 +238,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
     }
 
     /**
-     * Returns true if this PathItem contains PathItems representing DataCategories (ObjectType.DC) with
+     * Returns true if this PathItem represents or contains PathItems representing DataCategories (ObjectType.DC) with
      * the supplied IDs. Will optionally search recursivly.
      *
      * @param dataCategoryIds the DataCategory IDs to search for
@@ -246,18 +246,18 @@ public class PathItem implements APIObject, Serializable, Comparable {
      * @return true if this PathItem contains matching PathItems
      */
     public boolean hasDataCategories(Collection<Long> dataCategoryIds, boolean recurse) {
-        boolean result = false;
+        if (dataCategoryIds.contains(getId())) {
+            return true;
+        }
         for (PathItem pi : getChildren()) {
             if (pi.getObjectType().equals(ObjectType.DC) && dataCategoryIds.contains(pi.getId())) {
-                result = true;
-                break;
+                return true;
             }
             if (recurse && pi.hasDataCategories(dataCategoryIds, recurse)) {
-                result = true;
-                break;
+                return true;
             }
         }
-        return result;
+        return false;
     }
 
     // Used internally & by DataFilter, ProfileFilter.
