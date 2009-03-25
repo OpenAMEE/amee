@@ -20,7 +20,6 @@
 package com.amee.domain.data;
 
 import com.amee.domain.APIUtils;
-import com.amee.domain.PersistentObject;
 import com.amee.domain.UidGen;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.InternalValue;
@@ -30,7 +29,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
 import org.joda.time.Duration;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -45,7 +43,7 @@ import java.util.*;
 // TODO: add index to TYPE
 @DiscriminatorColumn(name = "TYPE", length = 3)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public abstract class Item implements PersistentObject, Pathable {
+public abstract class Item implements Pathable {
 
     public final static int NAME_SIZE = 255;
 
@@ -135,42 +133,6 @@ public abstract class Item implements PersistentObject, Pathable {
     @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
-    }
-
-    @Transient
-    public void buildElement(JSONObject obj, boolean detailed) throws JSONException {
-        obj.put("uid", getUid());
-        obj.put("name", getDisplayName());
-        JSONArray itemValues = new JSONArray();
-        for (ItemValue itemValue : getItemValues()) {
-            itemValues.put(itemValue.getJSONObject(false));
-        }
-        obj.put("itemValues", itemValues);
-        if (detailed) {
-            obj.put("created", getCreated());
-            obj.put("modified", getModified());
-            obj.put("environment", getEnvironment().getJSONObject());
-            obj.put("itemDefinition", getItemDefinition().getJSONObject());
-            obj.put("dataCategory", getDataCategory().getIdentityJSONObject());
-        }
-    }
-
-    @Transient
-    public void buildElement(Document document, Element element, boolean detailed) {
-        element.setAttribute("uid", getUid());
-        element.appendChild(APIUtils.getElement(document, "Name", getDisplayName()));
-        Element itemValuesElem = document.createElement("ItemValues");
-        for (ItemValue itemValue : getItemValues()) {
-            itemValuesElem.appendChild(itemValue.getElement(document, false));
-        }
-        element.appendChild(itemValuesElem);
-        if (detailed) {
-            element.setAttribute("created", getCreated().toString());
-            element.setAttribute("modified", getModified().toString());
-            element.appendChild(getEnvironment().getIdentityElement(document));
-            element.appendChild(getItemDefinition().getIdentityElement(document));
-            element.appendChild(getDataCategory().getIdentityElement(document));
-        }
     }
 
     @PrePersist

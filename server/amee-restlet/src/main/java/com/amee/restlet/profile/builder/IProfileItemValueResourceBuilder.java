@@ -1,8 +1,13 @@
 package com.amee.restlet.profile.builder;
 
-import com.amee.restlet.profile.ProfileCategoryResource;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.amee.restlet.profile.ProfileItemValueResource;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import java.util.Map;
 
 /**
  * This file is part of AMEE.
@@ -24,19 +29,13 @@ import org.springframework.stereotype.Service;
  * Website http://www.amee.cc
  */
 @Service
-public class ProfileCategoryResourceBuilderFactory {
+public interface IProfileItemValueResourceBuilder {
 
-    @Autowired
-    private com.amee.restlet.profile.builder.v1.ProfileCategoryResourceBuilder v1ProfileCategoryResourceBuilder;
+    public abstract JSONObject getJSONObject(ProfileItemValueResource resource) throws JSONException;
 
-    @Autowired
-    private com.amee.restlet.profile.builder.v2.ProfileCategoryResourceBuilder v2ProfileCategoryResourceBuilder;
+    public abstract Element getElement(ProfileItemValueResource resource, Document document);
 
-    public IProfileCategoryResourceBuilder createProfileCategoryResourceBuilder(ProfileCategoryResource resource) {
-        if (resource.getAPIVersion().isVersionOne()) {
-            return v1ProfileCategoryResourceBuilder;
-        } else {
-            return v2ProfileCategoryResourceBuilder;
-        }
-    }
+    public abstract Map<String, Object> getTemplateValues(ProfileItemValueResource resource);
+
+    public abstract org.apache.abdera.model.Element getAtomElement(ProfileItemValueResource resource);
 }

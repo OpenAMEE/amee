@@ -123,11 +123,11 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         } else if (resource.isPost() || resource.isPut()) {
 
             if (!profileItems.isEmpty()) {
-                JSONArray profileItemsJSonn = new JSONArray();
+                JSONArray profileItemsJSONArray = new JSONArray();
                 obj.put("profileItems", profileItems);
                 for (ProfileItem pi : profileItems) {
                     setProfileItemBuilder(resource.getProfileBrowser(), pi);
-                    profileItemsJSonn.put(pi.getJSONObject(false));
+                    profileItemsJSONArray.put(pi.getJSONObject(false));
                 }
             }
 

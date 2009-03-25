@@ -21,10 +21,12 @@ package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
 import com.amee.domain.APIUtils;
+import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -93,6 +95,45 @@ public class DataItem extends Item {
     }
 
     @Transient
+    private void buildElement(Document document, Element element, boolean detailed) {
+        element.setAttribute("uid", getUid());
+        element.appendChild(APIUtils.getElement(document, "Name", getDisplayName()));
+        Element itemValuesElem = document.createElement("ItemValues");
+        for (ItemValue itemValue : getItemValues()) {
+            itemValue.setBuilder(new ItemValueBuilder(itemValue));
+            itemValuesElem.appendChild(itemValue.getElement(document, false));
+        }
+        element.appendChild(itemValuesElem);
+        if (detailed) {
+            element.setAttribute("created", getCreated().toString());
+            element.setAttribute("modified", getModified().toString());
+            element.appendChild(getEnvironment().getIdentityElement(document));
+            element.appendChild(getItemDefinition().getIdentityElement(document));
+            element.appendChild(getDataCategory().getIdentityElement(document));
+        }
+    }
+
+    @Transient
+    private void buildElement(JSONObject obj, boolean detailed) throws JSONException {
+        obj.put("uid", getUid());
+        obj.put("name", getDisplayName());
+        JSONArray itemValues = new JSONArray();
+        for (ItemValue itemValue : getItemValues()) {
+            itemValue.setBuilder(new ItemValueBuilder(itemValue));
+            itemValues.put(itemValue.getJSONObject(false));
+        }
+        obj.put("itemValues", itemValues);
+        if (detailed) {
+            obj.put("created", getCreated());
+            obj.put("modified", getModified());
+            obj.put("environment", getEnvironment().getJSONObject());
+            obj.put("itemDefinition", getItemDefinition().getJSONObject());
+            obj.put("dataCategory", getDataCategory().getIdentityJSONObject());
+        }
+    }
+
+    @Transient
+    @Override
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);

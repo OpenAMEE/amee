@@ -22,6 +22,7 @@ package com.amee.restlet.data;
 import com.amee.domain.APIUtils;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.service.data.DataConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -90,6 +91,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("actions", getActions(dataBrowser.getDataItemActions()));
+        getItemValue().setBuilder(new ItemValueBuilder(getItemValue()));
         obj.put("itemValue", getItemValue().getJSONObject());
         obj.put("dataItem", getDataItem().getIdentityJSONObject());
         obj.put("path", pathItem.getFullPath());
@@ -99,6 +101,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public Element getElement(Document document) {
         Element element = document.createElement("DataItemValueResource");
+        getItemValue().setBuilder(new ItemValueBuilder(getItemValue()));
         element.appendChild(getItemValue().getElement(document));
         element.appendChild(getDataItem().getIdentityElement(document));
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));

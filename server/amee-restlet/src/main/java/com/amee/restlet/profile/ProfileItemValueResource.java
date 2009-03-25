@@ -19,18 +19,14 @@
  */
 package com.amee.restlet.profile;
 
-import com.amee.domain.APIUtils;
 import com.amee.domain.data.ItemValue;
 import com.amee.restlet.profile.acceptor.IItemValueFormAcceptor;
 import com.amee.restlet.profile.acceptor.IItemValueRepresentationAcceptor;
-import com.amee.restlet.profile.builder.v2.AtomFeed;
+import com.amee.restlet.profile.builder.IProfileItemValueResourceBuilder;
+import com.amee.restlet.profile.builder.ProfileItemValueResourceBuilderFactory;
 import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.ProfileConstants;
 import com.amee.service.profile.ProfileService;
-import org.apache.abdera.model.Category;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.IRIElement;
-import org.apache.abdera.model.Text;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -66,6 +62,11 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     @Autowired
     private IItemValueRepresentationAcceptor atomAcceptor;
 
+    @Autowired
+    private ProfileItemValueResourceBuilderFactory builderFactory;
+
+    private IProfileItemValueResourceBuilder builder;
+
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -73,11 +74,16 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
         setProfileItem(request.getAttributes().get("itemUid").toString());
         setProfileItemValueUid(request.getAttributes().get("valueUid").toString());
         setAvailable(isValid());
+        setBuilderStrategy();
     }
 
     private void setProfileItemValueUid(String profileItemValueUid) {
         if (profileItemValueUid.isEmpty()) return;
         this.itemValue = profileService.getProfileItemValue(profileItemValueUid);
+    }
+
+    private void setBuilderStrategy() {
+        builder = builderFactory.createProfileItemValueResourceBuilder(this);
     }
 
     @Override
@@ -93,72 +99,23 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
-        values.put("browser", profileBrowser);
-        values.put("profileItemValue", getProfileItemValue());
-        values.put("node", getProfileItemValue());
-        values.put("profileItem", getProfileItem());
-        values.put("profile", getProfile());
+        values.putAll(builder.getTemplateValues(this));
         return values;
     }
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        JSONObject obj = new JSONObject();
-        obj.put("itemValue", getProfileItemValue().getJSONObject(true));
-        obj.put("path", getPathItem().getFullPath());
-        obj.put("profile", getProfile().getIdentityJSONObject());
-        obj.put("actions", getActions(profileBrowser.getProfileItemValueActions()));
-        return obj;
+        return builder.getJSONObject(this);
     }
 
     @Override
     public Element getElement(Document document) {
-        ItemValue itemValue = getProfileItemValue();
-        Element element = document.createElement("ProfileItemValueResource");
-        element.appendChild(itemValue.getElement(document));
-        element.appendChild(APIUtils.getElement(document, "Path", getPathItem().getFullPath()));
-        element.appendChild(getProfile().getIdentityElement(document));
-        return element;
+        return builder.getElement(this, document);
     }
 
     @Override
     public org.apache.abdera.model.Element getAtomElement() {
-
-        AtomFeed atomFeed = AtomFeed.getInstance();
-        Entry entry = atomFeed.newEntry();
-
-        entry.setBaseUri(getRequest().getAttributes().get("previousHierachicalPart").toString());
-
-        Text title = atomFeed.newTitle(entry);
-        title.setText(getProfileItemValue().getDisplayName());
-
-        atomFeed.addLinks(entry, "");
-
-        IRIElement eid = atomFeed.newID(entry);
-        eid.setText("urn:itemValue:" + getProfileItemValue().getUid());
-
-        entry.setPublished(getProfileItemValue().getCreated());
-        entry.setUpdated(getProfileItemValue().getModified());
-
-        atomFeed.addItemValue(entry, getProfileItemValue());
-
-        StringBuilder content = new StringBuilder(getProfileItemValue().getName());
-        content.append("=");
-        content.append(getProfileItemValue().getValue().isEmpty() ? "N/A" : getProfileItemValue().getValue());
-        if (getProfileItemValue().hasUnit())
-            content.append(", unit=");
-            content.append(getProfileItemValue().getUnit());
-        if (getProfileItemValue().hasPerUnit())
-            content.append(", v=");
-            content.append(getProfileItemValue().getPerUnit());
-        entry.setContent(content.toString());
-
-        Category cat = atomFeed.newItemValueCategory(entry);
-        cat.setTerm(getProfileItemValue().getItemValueDefinition().getUid());
-        cat.setLabel(getProfileItemValue().getItemValueDefinition().getName());
-
-        return entry;
-
+        return builder.getAtomElement(this);
     }
 
     @Override
