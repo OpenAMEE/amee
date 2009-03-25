@@ -34,9 +34,6 @@ public class PathItemService implements Serializable {
     @Autowired
     private EnvironmentPIGFactory environmentPIGFactory;
 
-    @Autowired
-    private ProfilePIGFactory profilePIGFactory;
-
     private CacheHelper cacheHelper = CacheHelper.getInstance();
 
     public PathItemService() {
@@ -49,13 +46,5 @@ public class PathItemService implements Serializable {
 
     public void removePathItemGroup(Environment environment) {
         cacheHelper.remove("EnvironmentPIGs", environment.getUid());
-    }
-
-    public PathItemGroup getProfilePathItemGroup() {
-        return (PathItemGroup) cacheHelper.getCacheable(profilePIGFactory);
-    }
-
-    public void removePathItemGroup(Profile profile) {
-        cacheHelper.remove("ProfilePIGs", profile.getUid());
     }
 }

@@ -78,7 +78,7 @@ public class ServiceResource extends AMEEResource {
     @Override
     public org.apache.abdera.model.Element getAtomElement() {
 
-        PathItemGroup pathItemGroup = pathItemService.getProfilePathItemGroup();
+        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
 
         final Service service = ATOM_FEED.newService();
 
@@ -91,7 +91,6 @@ public class ServiceResource extends AMEEResource {
         if (path.isEmpty()) {
             addCollections(pathItemGroup.getRootPathItem(), ws);
         } else {
-            // TODO: does this still do as intended?
             PathItem pathItem = pathItemGroup.findByPath(path, false);
             if (pathItem != null) {
                 addCollections(pathItem, ws);
@@ -101,6 +100,7 @@ public class ServiceResource extends AMEEResource {
 
     }
 
+    @Override
     protected Representation getAtomRepresentation() {
         return new WriterRepresentation(MediaType.APPLICATION_ATOM_SERVICE_XML) {
             public void write(Writer writer) throws IOException {
@@ -109,27 +109,26 @@ public class ServiceResource extends AMEEResource {
         };
     }
 
-    private void addCollections(PathItem pi, Workspace ws) {
-
-        Set<PathItem> pathItems = pi.getChildrenByType("DC");
+    private void addCollections(PathItem pathItem, Workspace ws) {
+        Set<PathItem> pathItems = pathItem.getChildrenByType("DC");
         if (pathItems.isEmpty()) {
-            addCollection(ws, pi, false);
+            addCollection(ws, pathItem, false);
         } else {
-            for (PathItem pii : pi.getChildrenByType("DC")) {
-                addCollection(ws, pii, true);
+            for (PathItem pi : pathItem.getChildrenByType("DC")) {
+                addCollection(ws, pi, true);
             }
         }
     }
 
-    private void addCollection(Workspace ws, PathItem pii, boolean recurse) {
-        DataCategory dc = dataService.getDataCategory(pii.getUid());
+    private void addCollection(Workspace ws, PathItem pathItem, boolean recurse) {
+        DataCategory dc = dataService.getDataCategory(pathItem.getUid());
         if (dc.getItemDefinition() != null) {
 
-            Reference href = new Reference(getRequest().getResourceRef().getParentRef(), pii.getFullPath());
+            Reference href = new Reference(getRequest().getResourceRef().getParentRef(), pathItem.getFullPath());
 
             Collection col = ATOM_FEED.newCollection(ws);
             col.setHref(href.toString().substring(1));
-            col.setTitle(pii.getFullPath());
+            col.setTitle(pathItem.getFullPath());
             col.setAcceptsEntry();
 
             Categories cats = ATOM_FEED.newItemCategories(col);
@@ -139,13 +138,13 @@ public class ServiceResource extends AMEEResource {
                 cat.setTerm(di.getUid());
                 cat.setLabel(di.getItemDefinition().getName() + " (" + di.getItemValuesString() + ")");
             }
-            if (recurse)
-                addCollections(pii, ws);
+            if (recurse) {
+                addCollections(pathItem, ws);
+            }
         } else {
-            if (recurse)
-                addCollections(pii, ws);
+            if (recurse) {
+                addCollections(pathItem, ws);
+            }
         }
     }
-
 }
-

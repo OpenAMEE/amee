@@ -31,16 +31,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class PathItem implements APIObject, Serializable, Comparable {
+
+    // TODO: store full path in each PathItem (don't work out full path via parents)
+    // TODO: more tightly match the AMEE domain model, less abstraction
+    // TODO: don't navigate the graph unnecessarilly
 
     private final Log log = LogFactory.getLog(getClass());
 
     private PathItemGroup pathItemGroup = null;
+    private Long id = 0L;
     private String uid = "";
     private ObjectType objectType = null;
     private String path = "";
@@ -54,6 +56,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
 
     public PathItem(Pathable pathable) {
         super();
+        setId(pathable.getId());
         setUid(pathable.getUid());
         setObjectType(pathable.getObjectType());
         setPath(pathable.getDisplayPath());
@@ -234,15 +237,22 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return childrenByType;
     }
 
-    // Only used by ProfileCategoryResourceBuilder.
-    public boolean hasChildrenByType(ObjectType type, boolean recurse) {
+    /**
+     * Returns true if this PathItem contains PathItems representing DataCategories (ObjectType.DC) with
+     * the supplied IDs. Will optionally search recursivly.
+     *
+     * @param dataCategoryIds the DataCategory IDs to search for
+     * @param recurse         optionally search recursively
+     * @return true if this PathItem contains matching PathItems
+     */
+    public boolean hasDataCategories(Collection<Long> dataCategoryIds, boolean recurse) {
         boolean result = false;
         for (PathItem pi : getChildren()) {
-            if (pi.getObjectType().equals(type)) {
+            if (pi.getObjectType().equals(ObjectType.DC) && dataCategoryIds.contains(pi.getId())) {
                 result = true;
                 break;
             }
-            if (recurse && pi.hasChildrenByType(type, recurse)) {
+            if (recurse && pi.hasDataCategories(dataCategoryIds, recurse)) {
                 result = true;
                 break;
             }
@@ -273,6 +283,14 @@ public class PathItem implements APIObject, Serializable, Comparable {
 
     public void setPathItemGroup(PathItemGroup pathItemGroup) {
         this.pathItemGroup = pathItemGroup;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUid() {

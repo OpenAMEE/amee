@@ -73,14 +73,9 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-
         initVariants();
-
-        //TODO - Use Spring to wire the Environment
-        environment = EnvironmentService.getEnvironment();
-
-        //TODO - This could be retrieved as a request attribute
-        pathItem = (PathItem) ThreadBeanHolder.get("pathItem");
+        environment = (Environment) request.getAttributes().get("environment");
+        pathItem = (PathItem) request.getAttributes().get("pathItem");
     }
 
     private void initVariants() {

@@ -37,6 +37,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.Hibernate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -73,7 +76,7 @@ class ProfileServiceDAO implements Serializable {
 
     // Handle events
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     @ServiceActivator(inputChannel = "beforeDataItemDelete")
     public void beforeDataItemDelete(ObservedEvent oe) {
         DataItem dataItem = (DataItem) oe.getPayload();
@@ -93,7 +96,7 @@ class ProfileServiceDAO implements Serializable {
                 .executeUpdate();
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     @ServiceActivator(inputChannel = "beforeDataItemsDelete")
     public void beforeDataItemsDelete(ObservedEvent oe) {
         ItemDefinition itemDefinition = (ItemDefinition) oe.getPayload();
@@ -113,7 +116,7 @@ class ProfileServiceDAO implements Serializable {
                 .executeUpdate();
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     @ServiceActivator(inputChannel = "beforeDataCategoryDelete")
     public void beforeDataCategoryDelete(ObservedEvent oe) {
         DataCategory dataCategory = (DataCategory) oe.getPayload();
@@ -133,7 +136,7 @@ class ProfileServiceDAO implements Serializable {
                 .executeUpdate();
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     @ServiceActivator(inputChannel = "beforeUserDelete")
     public void beforeUserDelete(ObservedEvent oe) {
         User user = (User) oe.getPayload();
@@ -152,7 +155,7 @@ class ProfileServiceDAO implements Serializable {
 
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     @ServiceActivator(inputChannel = "beforeGroupDelete")
     public void beforeGroupDelete(ObservedEvent oe) {
         Group group = (Group) oe.getPayload();
@@ -170,7 +173,7 @@ class ProfileServiceDAO implements Serializable {
         }
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     @ServiceActivator(inputChannel = "beforeEnvironmentDelete")
     public void beforeEnvironmentDelete(ObservedEvent oe) {
         Environment environment = (Environment) oe.getPayload();
@@ -196,7 +199,7 @@ class ProfileServiceDAO implements Serializable {
         return profile;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public Profile getProfileByUid(String uid) {
         Profile profile = null;
         List<Profile> profiles;
@@ -219,7 +222,7 @@ class ProfileServiceDAO implements Serializable {
         return profile;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public Profile getProfileByPath(String path) {
         Profile profile = null;
         List<Profile> profiles;
@@ -242,7 +245,7 @@ class ProfileServiceDAO implements Serializable {
         return profile;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<Profile> getProfiles(Pager pager) {
         Environment environment = EnvironmentService.getEnvironment();
         User user = AuthService.getUser();
@@ -317,7 +320,7 @@ class ProfileServiceDAO implements Serializable {
 
     // ProfileItems
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public ProfileItem getProfileItem(String uid, APIVersion apiVersion) {
         ProfileItem profileItem = null;
         List<ProfileItem> profileItems;
@@ -339,7 +342,7 @@ class ProfileServiceDAO implements Serializable {
         return profileItem;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public boolean equivilentProfileItemExists(ProfileItem profileItem) {
         List<ProfileItem> profileItems = entityManager.createQuery(
                 "SELECT DISTINCT pi " +
@@ -367,7 +370,7 @@ class ProfileServiceDAO implements Serializable {
         }
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<ProfileItem> getProfileItems(Profile profile) {
         return (List<ProfileItem>) entityManager.createQuery(
                 "SELECT DISTINCT pi " +
@@ -380,7 +383,7 @@ class ProfileServiceDAO implements Serializable {
                 .getResultList();
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, Date profileDate) {
         if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
 
@@ -465,7 +468,7 @@ class ProfileServiceDAO implements Serializable {
 
     // ItemValues
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public ItemValue getProfileItemValue(String uid) {
         ItemValue profileItemValue = null;
         List<ItemValue> profileItemValues;
@@ -490,7 +493,7 @@ class ProfileServiceDAO implements Serializable {
 
     // check Profile Item objects
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public void checkProfileItem(ProfileItem profileItem, APIVersion apiVersion) {
         // find ItemValueDefinitions not currently implemented in this Item
         List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
@@ -529,5 +532,37 @@ class ProfileServiceDAO implements Serializable {
                 new ItemValue(ivd, profileItem, defaultValue);
             }
         }
+    }
+
+    // Profile DataCategories
+
+    @SuppressWarnings(value = "unchecked")
+    public Collection<Long> getProfileDataCategoryIds(Profile profile) {
+
+        StringBuilder sql;
+        SQLQuery query;
+
+        // check arguments
+        if (profile == null) {
+            throw new IllegalArgumentException("A required argument is missing.");
+        }
+
+        // create SQL
+        sql = new StringBuilder();
+        sql.append("SELECT DISTINCT DATA_CATEGORY_ID ID ");
+        sql.append("FROM ITEM ");
+        sql.append("WHERE TYPE = 'PI' ");
+        sql.append("AND PROFILE_ID = :profileId");
+
+        // create query
+        Session session = (Session) entityManager.getDelegate();
+        query = session.createSQLQuery(sql.toString());
+        query.addScalar("ID", Hibernate.LONG);
+
+        // set parameters
+        query.setLong("profileId", profile.getId());
+
+        // execute SQL
+        return (List<Long>) query.list();
     }
 }

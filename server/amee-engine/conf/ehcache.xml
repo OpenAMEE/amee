@@ -257,18 +257,6 @@
            memoryStoreEvictionPolicy="LRU">
     </cache>
 
-    <!-- Profile Path Item Groups -->
-    <cache name="ProfilePIGs"
-           maxElementsInMemory="50"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=false, replicateUpdates=false, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
-    </cache>
-
     <!-- Data Sheets -->
     <cache name="DataSheets"
            maxElementsInMemory="60"

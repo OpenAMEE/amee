@@ -79,20 +79,14 @@ public class ProfileFilter extends BaseFilter {
                 Profile profile = profileService.getProfile(segment);
                 if (profile != null) {
                     // we found a Profile. Make available to request scope.
-                    // TODO - remove from Threadlocal scope - only used in ProfilePIGFactory and these will be refactored-out in short order.
-                    ThreadBeanHolder.set("profile", profile);
                     request.getAttributes().put("profile", profile);
-
                     ThreadBeanHolder.set("permission", profile.getPermission());
                     // look for path match
                     PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
                     PathItem pathItem = pathItemGroup.findBySegments(segments, true);
                     if (pathItem != null) {
-
                         // rewrite paths
-                        // TODO - remove from Threadlocal scope - only used in ProfilePIGFactory and these will be refactored-out in short order.
                         request.getAttributes().put("pathItem", pathItem);
-                        ThreadBeanHolder.set("pathItem", pathItem);
                         path = pathItem.getInternalPath();
                         if (path != null) {
                             path = "/profiles" + path;
@@ -101,26 +95,26 @@ public class ProfileFilter extends BaseFilter {
                 }
             }
 
-            //TODO - Quick fix to allow /service paths
+            // TODO: Quick fix to allow /service paths
             if (!segments.isEmpty() && segments.get(0).equals("service"))
                 return CONTINUE;
 
             if (path != null) {
                 // rewrite paths
                 request.getAttributes().put("previousResourceRef", reference.toString());
-                //TODO - There must be a better way of doing this...
+                // TODO: There must be a better way of doing this...
                 request.getAttributes().put("previousHierachicalPart", reference.getScheme() + ":" + reference.getHierarchicalPart().toString());
                 reference.setPath(path);
             } else {
                 response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
                 return STOP;
             }
-
         }
         log.info("rewrite() - end profile path rewrite");
         return CONTINUE;
     }
 
+    // TODO: these paths are no longer needed
     protected boolean matchesReservedPaths(String segment) {
         return (segment.equalsIgnoreCase("stats") ||
                 segment.equalsIgnoreCase("js"));

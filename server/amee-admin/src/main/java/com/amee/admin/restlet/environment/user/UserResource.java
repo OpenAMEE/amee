@@ -137,10 +137,10 @@ public class UserResource extends BaseResource {
                 if (form.getNames().contains("email")) {
                     user.setEmail(form.getFirstValue("email"));
                 }
-                if (form.getNames().contains("apiVersion")) {
-                    user.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
+                if (form.getNames().contains("APIVersion")) {
+                    user.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("APIVersion")));
                     if (user.getAPIVersion() == null) {
-                        log.error("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
+                        log.error("Unable to find api version '" + form.getFirstValue("APIVersion") + "'");
                         badRequest();
                         return;
                     }

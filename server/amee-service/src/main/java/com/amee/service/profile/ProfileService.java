@@ -19,12 +19,13 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Primary service interface for Profile Resources.
- *
+ * <p/>
  * This file is part of AMEE.
  * <p/>
  * AMEE is free software; you can redistribute it and/or modify
@@ -62,7 +63,6 @@ public class ProfileService {
 
     public void clearCaches(Profile profile) {
         log.debug("clearCaches()");
-        pathItemService.removePathItemGroup(profile);
         profileSheetService.removeSheets(profile);
     }
 
@@ -72,13 +72,13 @@ public class ProfileService {
     }
 
     public void persist(Profile p) {
-        em.persist(p);    
+        em.persist(p);
     }
 
     public void remove(ProfileItem pi) {
         em.remove(pi);
     }
-    
+
     public void remove(Profile p) {
         dao.remove(p);
     }
@@ -104,13 +104,17 @@ public class ProfileService {
     public Profile getProfile(String path) {
         return dao.getProfile(path);
     }
-    
+
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
         return dao.getProfileItems(profile, dataCategory, startDate, endDate);
     }
 
     public List<ProfileItem> getProfileItems(Profile p, DataCategory dc, Date date) {
         return dao.getProfileItems(p, dc, date);
+    }
+
+    public Collection<Long> getProfileDataCategoryIds(Profile profile) {
+        return dao.getProfileDataCategoryIds(profile);
     }
 
     public Sheet getSheet(CacheableFactory sheetFactory) {

@@ -74,11 +74,11 @@ public class DataFilter extends BaseFilter {
             PathItem pathItem = pathItemGroup.findBySegments(segments, false);
             if (pathItem != null) {
                 // found matching path, rewrite
-                ThreadBeanHolder.set("pathItem", pathItem);
                 path = pathItem.getInternalPath() + suffix;
             }
             if (path != null) {
                 // rewrite paths
+                request.getAttributes().put("pathItem", pathItem);
                 request.getAttributes().put("previousResourceRef", reference.toString());
                 reference.setPath("/data" + path);
             } else {
