@@ -19,10 +19,10 @@
                 <td>UID:</td>
                 <td>${node.uid}</td>
             </tr>
-        <#if node.amount??>
+        <#if amountPerMonth??>
             <tr>
                 <td>kgCO2 pcm:</td>
-                <td>${node.amount}</td>
+                <td>${amountPerMonth}</td>
             </tr>
         </#if>
         <tr>
