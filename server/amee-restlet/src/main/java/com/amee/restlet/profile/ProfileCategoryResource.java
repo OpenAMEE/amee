@@ -192,13 +192,6 @@ public class ProfileCategoryResource extends BaseProfileResource {
 
     public List<ProfileItem> doAcceptOrStore(Representation entity) {
 
-        // Clients can set units for the calculated CO2Amount in API > 1.0
-        if (getAPIVersion().isNotVersionOne()) {
-            String unit = getForm().getFirstValue("returnUnit");
-            String perUnit = getForm().getFirstValue("returnPerUnit");
-            profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
-        }
-
         // Accept the representation according to the MediaType
         MediaType type = entity.getMediaType();
         if (MediaType.APPLICATION_JSON.includes(type)) {
