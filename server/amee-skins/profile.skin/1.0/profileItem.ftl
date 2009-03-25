@@ -50,7 +50,7 @@
         <tr>
             <td>Valid From</td>
             <#if browser.profileItemActions.allowModify>
-                <td><input name='startDate' value='${profileItem.startDate?string(getDateFormatV1())}' type='text' size='13'/>
+                <td><input name='validFrom' value='${profileItem.startDate?string(getDateFormatV1())}' type='text' size='13'/>
                     (${getDateFormatV1()})<br/>
                     <#else>
                 <td>${profileItem.startDate?datetime}</td>
