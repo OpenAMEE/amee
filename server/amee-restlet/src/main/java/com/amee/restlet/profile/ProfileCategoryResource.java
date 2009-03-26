@@ -179,7 +179,8 @@ public class ProfileCategoryResource extends BaseProfileResource {
                     successfulPost(getFullPath(), getProfileItems().get(0).getUid());
                 } else {
                     successfulPut(getFullPath());
-                }            }
+                }
+            }
         } else {
             notAuthorized();
         }

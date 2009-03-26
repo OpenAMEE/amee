@@ -7,6 +7,10 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Filter to allow the TransactionController to commit or rollback a transactino depending on
+ * the error state of the response or if a Throwable is caught.
+ */
 public class TransactionFilter extends Filter {
 
     @Autowired
@@ -17,10 +21,14 @@ public class TransactionFilter extends Filter {
     }
 
     protected int doHandle(Request request, Response response) {
+        boolean success = true;
         try {
             return super.doHandle(request, response);
+        } catch (Throwable t) {
+            success = false;
+            throw new RuntimeException(t);
         } finally {
-            transactionController.afterHandle(!response.getStatus().isError());
+            transactionController.afterHandle(success && !response.getStatus().isError());
         }
     }
 }

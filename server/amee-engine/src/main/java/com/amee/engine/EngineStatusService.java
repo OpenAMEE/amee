@@ -1,10 +1,10 @@
 package com.amee.engine;
 
-import freemarker.template.Configuration;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.MediaTypeUtils;
 import com.amee.service.ThreadBeanHolder;
 import com.amee.service.auth.AuthService;
+import freemarker.template.Configuration;
 import org.apache.commons.lang.StringUtils;
 import org.restlet.Application;
 import org.restlet.data.*;
@@ -53,7 +53,7 @@ public class EngineStatusService extends StatusService {
             }
         } else {
             // just return status code for API calls
-            return new StringRepresentation("");
+            return new StringRepresentation("You got an error! Don't worry, please visit: http://my.amee.com/developers\n");
         }
     }
 
