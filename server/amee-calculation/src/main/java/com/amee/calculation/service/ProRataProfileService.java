@@ -94,7 +94,7 @@ public class ProRataProfileService {
                 for (ItemValue iv : pi.getItemValues()) {
                     ItemValue ivc = iv.getCopy();
                     if(ivc.hasPerTimeUnit() && ivc.getItemValueDefinition().isFromProfile() && ivc.getValue().length() > 0) {
-                        pic.add(getProRatedItemValue(intersect, ivc));
+                        pic.addItemValue(getProRatedItemValue(intersect, ivc));
 
                         if(log.isDebugEnabled())
                             log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
@@ -103,7 +103,7 @@ public class ProRataProfileService {
 
                     } else {
                         log.debug("getProfileItems() - ProfileItem: " + pi.getName() + ". Unchanged ItemValue: " + ivc.getName());
-                        pic.add(ivc);
+                        pic.addItemValue(ivc);
                     }
                 }
 

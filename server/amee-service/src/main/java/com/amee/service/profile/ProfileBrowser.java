@@ -107,7 +107,7 @@ public class ProfileBrowser extends BaseBrowser {
 
     public void setDuration(String duration) {
         if ((duration != null) && (endDate == null)) {
-            endDate = getStartDate().plus(duration);
+            endDate = getQueryStartDate().plus(duration);
         }
     }
 
@@ -130,4 +130,5 @@ public class ProfileBrowser extends BaseBrowser {
     public void setCO2AmountUnit(CO2AmountUnit co2AmountUnit) {
         this.co2AmountUnit = co2AmountUnit;
     }
+
 }

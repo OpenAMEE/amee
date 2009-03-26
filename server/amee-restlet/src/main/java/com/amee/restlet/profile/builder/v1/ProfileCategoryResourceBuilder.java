@@ -69,18 +69,18 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
     public void addProfileCategoryInfo(ProfileCategoryResource resource, JSONObject obj) throws JSONException {
 
-        // add objects
+        // addItemValue objects
         obj.put("path", resource.getPathItem().getFullPath());
         obj.put("profileDate", resource.getProfileBrowser().getProfileDate());
 
-        // add relevant Profile info depending on whether we are at root
+        // addItemValue relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
             obj.put("profile", resource.getProfile().getIdentityJSONObject());
         } else {
             obj.put("profile", resource.getProfile().getJSONObject());
         }
 
-        // add Data Category
+        // addItemValue Data Category
         obj.put("dataCategory", resource.getDataCategory().getIdentityJSONObject());
     }
 
@@ -90,11 +90,11 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         JSONObject obj = new JSONObject();
 
-        // add path and DataCategory
+        // addItemValue path and DataCategory
         obj.put("path", pathItem.getFullPath());
         obj.put("dataCategory", dataCategory.getJSONObject());
 
-        // only add children if ProfileItems are available
+        // only addItemValue children if ProfileItems are available
         if (pathItem.hasChildrenByType(ObjectType.PI, true)) {
             addProfileCategoryChildren(resource, obj, pathItem, dataCategory);
         }
@@ -109,7 +109,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         // create children JSON
         JSONObject children = new JSONObject();
 
-        // add Data Categories via pathItem to children
+        // addItemValue Data Categories via pathItem to children
         JSONArray dataCategories = new JSONArray();
         for (PathItem pi : pathItem.getChildrenByType("DC")) {
             if (resource.isRecurse()) {
@@ -120,7 +120,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         }
         children.put("dataCategories", dataCategories);
 
-        // add Sheet containing Profile Items & totalAmountPerMonth
+        // addItemValue Sheet containing Profile Items & totalAmountPerMonth
         Sheet sheet = getSheet(resource, dataCategory);
         if (sheet != null) {
             // don't use pagination in recursive mode
@@ -142,7 +142,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             obj.put("totalAmountPerMonth", "0");
         }
 
-        // add chilren
+        // addItemValue chilren
         obj.put("children", children);
     }
 
@@ -176,20 +176,20 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
     protected void addProfileCategoryInfo(ProfileCategoryResource resource, Document document, Element element) {
 
-        // add objects
+        // addItemValue objects
         element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
 
-        // add profile date
+        // addItemValue profile date
         element.appendChild(APIUtils.getElement(document, "ProfileDate", resource.getProfileBrowser().getProfileDate().toString()));
 
-        // add relevant Profile info depending on whether we are at root
+        // addItemValue relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
             element.appendChild(resource.getProfile().getIdentityElement(document));
         } else {
             element.appendChild(resource.getProfile().getElement(document));
         }
 
-        // add DataCategory and Profile elements
+        // addItemValue DataCategory and Profile elements
         element.appendChild(resource.getDataCategory().getIdentityElement(document));
     }
 
@@ -199,11 +199,11 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         Element element = document.createElement("ProfileCategory");
 
-        // add path and DataCategory
+        // addItemValue path and DataCategory
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
         element.appendChild(dataCategory.getIdentityElement(document));
 
-        // only add children if ProfileItems are available
+        // only addItemValue children if ProfileItems are available
         if (pathItem.hasChildrenByType(ObjectType.PI, true)) {
             addProfileCategoryChildren(resource, document, element, pathItem, dataCategory);
         }
@@ -219,7 +219,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         org.w3c.dom.Element childrenElement = document.createElement("Children");
         element.appendChild(childrenElement);
 
-        // add Profile Categories via pathItem
+        // addItemValue Profile Categories via pathItem
         org.w3c.dom.Element profileCategoriesElement = document.createElement("ProfileCategories");
         for (PathItem pi : pathItem.getChildrenByType("DC")) {
             if (resource.isRecurse()) {
@@ -246,7 +246,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             if (pager != null) {
                 childrenElement.appendChild(pager.getElement(document));
             }
-            // add CO2 amount
+            // addItemValue CO2 amount
             element.appendChild(APIUtils.getElement(document, "TotalAmountPerMonth",
                     getTotalAmountPerMonth(sheet).toString()));
         }

@@ -36,9 +36,9 @@ import org.w3c.dom.Element;
 import javax.persistence.*;
 import java.util.*;
 
-// TODO: add a way to define UI widget
-// TODO: add a way to define range of values
-// TODO: add state (draft, live)
+// TODO: addItemValue a way to define UI widget
+// TODO: addItemValue a way to define range of values
+// TODO: addItemValue state (draft, live)
 // TODO: max & min values (for numbers)
 // TODO: regex validation?
 

@@ -1,6 +1,5 @@
 package com.amee.restlet.profile.acceptor;
 
-import com.amee.calculation.service.CalculationService;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.StartEndDate;
@@ -47,9 +46,6 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
     @Autowired
     private ProfileService profileService;
 
-    @Autowired
-    private CalculationService calculationService;
-
     public List<ProfileItem> accept(ProfileItemResource resource, Form form) {
 
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
@@ -90,8 +86,7 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
             }
             log.debug("storeRepresentation() - ProfileItem updated");
 
-            // All done, need to recalculate and clear caches
-            calculationService.calculate(profileItem);
+            // All done, need to clear caches
             profileService.clearCaches(resource.getProfile());
 
         } else {

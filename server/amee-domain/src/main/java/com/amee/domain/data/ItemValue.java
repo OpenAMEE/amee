@@ -90,7 +90,7 @@ public class ItemValue implements PersistentObject, Pathable {
         setItemValueDefinition(itemValueDefinition);
         setItem(item);
         setValue(value);
-        item.add(this);
+        item.addItemValue(this);
     }
 
     public String toString() {

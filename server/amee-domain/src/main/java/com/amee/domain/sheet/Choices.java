@@ -62,7 +62,7 @@ public class Choices implements Serializable, APIObject {
                 }
             }
         }
-        // add remaining new choices
+        // addItemValue remaining new choices
         existingChoices.addAll(newChoices);
     }
 
