@@ -194,7 +194,7 @@ public class Sheet implements Serializable {
         newSheet.setDisplayBy(Choices.getNewChoices(sheet.getDisplayBy()));
         newSheet.setLabel(sheet.getLabel());
         newSheet.setKey(sheet.getKey());
-        // add the columns
+        // addItemValue the columns
         for (Column column : sheet.getColumns()) {
             new Column(newSheet, column.getName(), column.getLabel(), column.isAttribute(), column.getSortOrder());
         }

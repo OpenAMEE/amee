@@ -27,6 +27,7 @@ import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.path.InternalValue;
+import com.amee.domain.profile.CO2CalculationService;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choices;
 import org.apache.commons.logging.Log;
@@ -43,7 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CalculationService implements BeanFactoryAware, Serializable {
+public class CalculationService implements BeanFactoryAware, Serializable, CO2CalculationService {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -59,7 +60,6 @@ public class CalculationService implements BeanFactoryAware, Serializable {
      * @param profileItem - the ProfileItem for which to calculate CO2 amount
      */
     public void calculate(ProfileItem profileItem) {
-        if (!profileItem.supportsCalculation()) return;
 
         if (profileItem.isEnd()) {
             profileItem.setAmount(CO2Amount.ZERO);

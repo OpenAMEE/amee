@@ -138,9 +138,9 @@ public abstract class BaseResource extends com.amee.restlet.ComponentResource {
         values.put("activeSite", ThreadBeanHolder.get("site"));
         values.put("activeApp", ThreadBeanHolder.get("app"));
         values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));
-        // add enums
+        // addItemValue enums
         values.put("SortOrder", getEnumForTemplate(SortOrder.class));
-        // add request params
+        // addItemValue request params
         values.put("Parameters", getRequest().getResourceRef().getQueryAsForm().getValuesMap());
         return values;
     }

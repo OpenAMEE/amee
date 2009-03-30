@@ -3,16 +3,18 @@ package com.amee.domain.profile;
 import com.amee.core.ObjectType;
 import com.amee.domain.Builder;
 import com.amee.domain.core.CO2Amount;
-import com.amee.domain.core.Decimal;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.Item;
 import com.amee.domain.data.ItemValue;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -37,6 +39,7 @@ import java.util.Date;
  * Website http://www.amee.cc
  */
 
+@Configurable(autowire= Autowire.BY_TYPE)
 @Entity
 @DiscriminatorValue("PI")
 public class ProfileItem extends Item {
@@ -49,14 +52,18 @@ public class ProfileItem extends Item {
     @JoinColumn(name = "DATA_ITEM_ID")
     private DataItem dataItem;
 
-    @Column(name = "AMOUNT", precision = Decimal.PRECISION, scale = Decimal.SCALE)
-    private BigDecimal amount = Decimal.BIG_DECIMAL_ZERO;
+    @Transient
+    private BigDecimal amount = null;
 
     @Transient
     private Builder builder;
 
     @Transient
     private Date V2_RELEASE = new StartEndDate("2009-03-23T05:56:23+0000").toDate();
+
+    @Transient
+    @Resource
+    private CO2CalculationService calculationService;
 
     public ProfileItem() {
         super();
@@ -123,7 +130,24 @@ public class ProfileItem extends Item {
         return (endDate != null) && (startDate.compareTo(endDate) == 0);
     }
 
+    /**
+     * Get the {@link com.amee.domain.core.CO2Amount CO2Amount} for this ProfileItem.
+     *
+     * If the ProfileItem does not support CO2 calculations (i.e. metadata) CO2Amount.ZERO is returned.
+     *
+     * @return - the {@link com.amee.domain.core.CO2Amount CO2Amount} for this ProfileItem
+     */
     public CO2Amount getAmount() {
+        
+        // Some ProfileItems are from ItemDefinitions which do not have algorithms and hence do not
+        // support calculations.
+        if (!supportsCalculation())
+            return CO2Amount.ZERO;
+
+        // CO2 amounts are lazily calculated.
+        if (amount == null)
+            calculationService.calculate(this);
+
         return new CO2Amount(amount);
     }
 

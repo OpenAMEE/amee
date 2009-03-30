@@ -113,7 +113,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
                     } else if ("dataItemLabel".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.getDataItem().getLabel(), ValueType.TEXT);
                     } else {
-                        // add empty cell
+                        // addItemValue empty cell
                         new Cell(column, row);
                     }
                 }

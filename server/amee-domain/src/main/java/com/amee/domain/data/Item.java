@@ -40,7 +40,7 @@ import java.util.*;
 @Entity
 @Inheritance
 @Table(name = "ITEM")
-// TODO: add index to TYPE
+// TODO: addItemValue index to TYPE
 @DiscriminatorColumn(name = "TYPE", length = 3)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class Item implements Pathable {
@@ -100,7 +100,7 @@ public abstract class Item implements Pathable {
         setItemDefinition(itemDefinition);
     }
 
-    public void add(ItemValue itemValue) {
+    public void addItemValue(ItemValue itemValue) {
         getItemValues().add(itemValue);
     }
 
@@ -282,5 +282,5 @@ public abstract class Item implements Pathable {
         } else {
             return getDisplayPath();
         }
-    }    
+    }
 }

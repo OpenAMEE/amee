@@ -131,8 +131,8 @@ public class ProfileCategoryResource extends BaseProfileResource {
             if (getAPIVersion().isVersionOne()) {
                 profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
             } else {
-                profileBrowser.setStartDate(form.getFirstValue("startDate"));
-                profileBrowser.setEndDate(form.getFirstValue("endDate"));
+                profileBrowser.setQueryStartDate(form.getFirstValue("startDate"));
+                profileBrowser.setQueryEndDate(form.getFirstValue("endDate"));
                 profileBrowser.setDuration(form.getFirstValue("duration"));
                 profileBrowser.setSelectBy(form.getFirstValue("selectby"));
                 profileBrowser.setMode(form.getFirstValue("mode"));
@@ -179,7 +179,8 @@ public class ProfileCategoryResource extends BaseProfileResource {
                     successfulPost(getFullPath(), getProfileItems().get(0).getUid());
                 } else {
                     successfulPut(getFullPath());
-                }            }
+                }
+            }
         } else {
             notAuthorized();
         }
