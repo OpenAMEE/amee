@@ -3,9 +3,9 @@ package com.amee.restlet.profile.builder.v2;
 import com.amee.calculation.service.ProRataProfileService;
 import com.amee.domain.APIUtils;
 import com.amee.domain.Pager;
-import com.amee.domain.data.CO2AmountUnit;
+import com.amee.domain.core.CO2AmountUnit;
+import com.amee.domain.core.Decimal;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.Decimal;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
@@ -244,7 +244,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     }
 
     private BigDecimal getTotalAmount(List<ProfileItem> profileItems, CO2AmountUnit returnUnit) {
-        BigDecimal totalAmount = Decimal.ZERO;
+        BigDecimal totalAmount = Decimal.BIG_DECIMAL_ZERO;
         BigDecimal amount;
         for (ProfileItem profileItem : profileItems) {
             amount = profileItem.getAmount().convert(returnUnit).getValue();

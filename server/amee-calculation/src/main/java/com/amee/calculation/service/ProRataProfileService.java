@@ -1,8 +1,8 @@
 package com.amee.calculation.service;
 
-import com.amee.domain.data.CO2Amount;
+import com.amee.domain.core.CO2Amount;
+import com.amee.domain.core.Decimal;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.Decimal;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;

@@ -1,4 +1,4 @@
-package com.amee.domain.data;
+package com.amee.domain.core;
 
 import java.math.BigDecimal;
 
@@ -25,14 +25,13 @@ import java.math.BigDecimal;
  */
 public class CO2Amount extends Decimal {
 
-    public static final CO2Amount ZERO = new CO2Amount(BigDecimal.ZERO);
+    public static final CO2Amount ZERO = new CO2Amount(Decimal.ZERO);
 
     /**
      * A CO2Amount representing the supplied decimal and default unit.
      *
      * @param decimal
      *
-     * @see com.amee.domain.data.CO2AmountUnit:DEFAULT
      */
     public CO2Amount(String decimal) {
         super(decimal, CO2AmountUnit.DEFAULT);
@@ -43,11 +42,21 @@ public class CO2Amount extends Decimal {
      *
      * @param decimal
      *
-     * @see com.amee.domain.data.CO2AmountUnit:DEFAULT
      */
     public CO2Amount(BigDecimal decimal) {
+        this(decimal.toString());
+    }
+
+    /**
+     * A CO2Amount representing the supplied decimal and default unit.
+     *
+     * @param decimal
+     *
+     */
+    public CO2Amount(Decimal decimal) {
         this(decimal, CO2AmountUnit.DEFAULT);
     }
+
 
     /**
      * A CO2Amount representing the supplied decimal and unit.
@@ -56,7 +65,7 @@ public class CO2Amount extends Decimal {
      * @param unit
      *
      */
-    public CO2Amount(BigDecimal decimal, CO2AmountUnit unit) {
+    public CO2Amount(Decimal decimal, CO2AmountUnit unit) {
         super(decimal.toString(), unit);
     }
 }

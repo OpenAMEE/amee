@@ -1,5 +1,6 @@
-package com.amee.domain;
+package com.amee.domain.core;
 
+import com.amee.domain.APIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -26,28 +27,28 @@ import javax.measure.unit.Unit;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class AMEECompoundUnit extends AMEEUnit {
+public class DecimalCompoundUnit extends DecimalUnit {
 
-    private AMEEPerUnit perUnit;
+    private DecimalPerUnit perUnit;
 
-    protected AMEECompoundUnit(AMEEUnit unit, AMEEPerUnit perUnit) {
+    protected DecimalCompoundUnit(DecimalUnit unit, DecimalPerUnit perUnit) {
         super(unit.toUnit());
         this.perUnit = perUnit;
     }
 
-    public static AMEECompoundUnit valueOf(AMEEUnit unit, AMEEPerUnit perUnit) {
-        return new AMEECompoundUnit(unit, perUnit);
+    public static DecimalCompoundUnit valueOf(DecimalUnit unit, DecimalPerUnit perUnit) {
+        return new DecimalCompoundUnit(unit, perUnit);
     }
 
     public Unit toUnit() {
         return unit.divide(perUnit.toUnit());
     }
 
-    public boolean hasDifferentPerUnit(AMEEPerUnit perUnit) {
+    public boolean hasDifferentPerUnit(DecimalPerUnit perUnit) {
         return !this.perUnit.equals(perUnit);
     }
 
-    public AMEEPerUnit getPerUnit() {
+    public DecimalPerUnit getPerUnit() {
         return perUnit;
     }
     

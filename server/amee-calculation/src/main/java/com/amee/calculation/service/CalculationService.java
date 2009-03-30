@@ -21,7 +21,11 @@ package com.amee.calculation.service;
 
 import com.amee.domain.APIVersion;
 import com.amee.domain.algorithm.Algorithm;
-import com.amee.domain.data.*;
+import com.amee.domain.core.CO2Amount;
+import com.amee.domain.core.Decimal;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.path.InternalValue;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choices;
@@ -70,7 +74,7 @@ public class CalculationService implements BeanFactoryAware, Serializable {
             amount = calculate(algoService.getAlgorithm(profileItem.getItemDefinition()), values);
         } catch (Exception e) {
             log.error("calculate() - caught Exception: " + e.getMessage(), e);
-            amount = Decimal.ZERO;
+            amount = Decimal.BIG_DECIMAL_ZERO;
         }
 
         if (amount != null) {
@@ -96,7 +100,7 @@ public class CalculationService implements BeanFactoryAware, Serializable {
             amount = calculate(algoService.getAlgorithm(dataItem.getItemDefinition()), values);
         } catch (Exception e) {
             log.error("calculate() - caught Exception: " + e.getMessage(), e);
-            amount = Decimal.ZERO;
+            amount = Decimal.BIG_DECIMAL_ZERO;
         }
         return amount;
     }

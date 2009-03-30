@@ -19,10 +19,10 @@
  */
 package com.amee.domain.profile.builder.v2;
 
-import com.amee.domain.AMEECompoundUnit;
 import com.amee.domain.APIUtils;
 import com.amee.domain.Builder;
-import com.amee.domain.data.CO2AmountUnit;
+import com.amee.domain.core.CO2AmountUnit;
+import com.amee.domain.core.DecimalCompoundUnit;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
@@ -37,9 +37,9 @@ import org.w3c.dom.Element;
 public class ProfileItemBuilder implements Builder {
 
     private ProfileItem item;
-    private AMEECompoundUnit returnUnit = CO2AmountUnit.DEFAULT;
+    private DecimalCompoundUnit returnUnit = CO2AmountUnit.DEFAULT;
 
-    public ProfileItemBuilder(ProfileItem item, AMEECompoundUnit returnUnit) {
+    public ProfileItemBuilder(ProfileItem item, DecimalCompoundUnit returnUnit) {
         this.item = item;
         this.returnUnit = returnUnit;
     }

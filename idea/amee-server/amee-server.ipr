@@ -198,7 +198,7 @@
   </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectKey">
-    <option name="state" value="project:///Development/AMEE/amee.2.1/idea/amee-server/amee-server.ipr" />
+    <option name="state" value="project:///Development/AMEE/amee/idea/amee-server/amee-server.ipr" />
   </component>
   <component name="ProjectModuleManager">
     <modules>
@@ -1152,6 +1152,17 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="Maven: junit:junit:4.5">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/junit/junit/4.5/junit-4.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/junit/junit/4.5/junit-4.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/junit/junit/4.5/junit-4.5-sources.jar!/" />
+      </SOURCES>
     </library>
   </component>
   <UsedPathMacros>

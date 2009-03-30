@@ -22,6 +22,9 @@ package com.amee.domain.data;
 import com.amee.core.ObjectType;
 import com.amee.core.ValueType;
 import com.amee.domain.*;
+import com.amee.domain.core.DecimalCompoundUnit;
+import com.amee.domain.core.DecimalPerUnit;
+import com.amee.domain.core.DecimalUnit;
 import com.amee.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.Choice;
@@ -357,12 +360,12 @@ public class ItemValueDefinition implements PersistentObject {
         this.unit = unit;
     }
 
-    public AMEEUnit getUnit() {
-        return (unit != null) ? AMEEUnit.valueOf(unit) : AMEEUnit.ONE;
+    public DecimalUnit getUnit() {
+        return (unit != null) ? DecimalUnit.valueOf(unit) : DecimalUnit.ONE;
     }
 
-    public AMEEPerUnit getPerUnit() {
-        return (perUnit != null) ? AMEEPerUnit.valueOf(perUnit) : AMEEPerUnit.ONE;
+    public DecimalPerUnit getPerUnit() {
+        return (perUnit != null) ? DecimalPerUnit.valueOf(perUnit) : DecimalPerUnit.ONE;
     }
 
     public boolean hasUnits() {
@@ -381,11 +384,11 @@ public class ItemValueDefinition implements PersistentObject {
         return getPerUnit().isCompatibleWith(perUnit);
     }
 
-    public AMEECompoundUnit getCompoundUnit() {
+    public DecimalCompoundUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
 
-    public AMEECompoundUnit getCanonicalCompoundUnit() {
+    public DecimalCompoundUnit getCanonicalCompoundUnit() {
         if (aliasedTo != null) {
             return aliasedTo.getCompoundUnit();
         } else {

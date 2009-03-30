@@ -3,7 +3,7 @@ package com.amee.restlet.profile.acceptor;
 import com.amee.calculation.service.CalculationService;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.CO2AmountUnit;
+import com.amee.domain.core.CO2AmountUnit;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.profile.ValidFromDate;

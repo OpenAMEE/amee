@@ -1,8 +1,5 @@
-package com.amee.domain.data;
+package com.amee.domain.core;
 
-import com.amee.domain.AMEECompoundUnit;
-import com.amee.domain.AMEEPerUnit;
-import com.amee.domain.AMEEUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -44,11 +41,12 @@ public class Decimal {
     public final static RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
     public static final MathContext CONTEXT = new MathContext(PRECISION, ROUNDING_MODE);
 
-    // Representing a decimal amount of BigDecimal.ZERO
-    public final static BigDecimal ZERO = BigDecimal.valueOf(0, SCALE);
+    // Representing a decimal amount of 0.000000
+    public final static BigDecimal BIG_DECIMAL_ZERO = BigDecimal.valueOf(0, SCALE);
+    public final static Decimal ZERO = new Decimal(BIG_DECIMAL_ZERO);
 
-    private BigDecimal decimal = ZERO;
-    private AMEEUnit unit = AMEEUnit.ONE;
+    private BigDecimal decimal = BIG_DECIMAL_ZERO;
+    private DecimalUnit unit = DecimalUnit.ONE;
 
     /**
      * A Decimal representing the supplied value and unit.
@@ -56,7 +54,7 @@ public class Decimal {
      * @param decimal
      * @param unit
      */
-    public Decimal(String decimal, AMEEUnit unit) {
+    public Decimal(String decimal, DecimalUnit unit) {
         this(decimal);
         this.unit = unit;
     }
@@ -71,23 +69,27 @@ public class Decimal {
 
         // Many decimal DataItem values in the DB have values of "-" so we need to handle this here. 
         if (decimal.isEmpty() || decimal.equals("-")) {
-            this.decimal = ZERO;
+            this.decimal = BIG_DECIMAL_ZERO;
         } else {
-            scale(decimal);
+            scale(Long.parseLong(decimal));
         }
+    }
+
+    public Decimal(long decimal) {
+        scale(decimal);    
     }
 
     private Decimal(BigDecimal decimal) {
         this.decimal = decimal;
     }
 
-    private Decimal(BigDecimal decimal, AMEEUnit unit) {
+    private Decimal(BigDecimal decimal, DecimalUnit unit) {
         this.decimal = decimal;
         this.unit = unit;
     }
 
     // Scale the algorithm result according to the AMEE standard precision and scale.
-    protected void scale(String decimal) {
+    protected void scale(Long decimal) {
         try {
             BigDecimal bd = new BigDecimal(decimal);
             this.decimal = bd.setScale(SCALE, ROUNDING_MODE);
@@ -100,14 +102,14 @@ public class Decimal {
     }
 
     /**
-     * Convert and return a new Decimal instance in the target AMEEUnit.
+     * Convert and return a new Decimal instance in the target DecimalUnit.
      *
      * @param targetUnit - the target unit
      * @return the decimal in the target unit
      *
-     * @see com.amee.domain.AMEEUnit
+     * @see DecimalUnit
      */
-    public Decimal convert(AMEEUnit targetUnit) {
+    public Decimal convert(DecimalUnit targetUnit) {
         if (!unit.equals(targetUnit)) {
             DecimalMeasure dm = DecimalMeasure.valueOf(getValue(), unit.toUnit());
             BigDecimal converted = dm.to(targetUnit.toUnit(), Decimal.CONTEXT).getValue();
@@ -119,18 +121,18 @@ public class Decimal {
     }
 
     /**
-     * Convert and return a new Decimal instance in the target AMEEPerUnit.
+     * Convert and return a new Decimal instance in the target DecimalPerUnit.
      *
      * @param targetPerUnit - the target perUnit
      * @return the Decimal in the target perUnit
      *
-     * @see com.amee.domain.AMEEPerUnit
+     * @see DecimalPerUnit
      */
-    public Decimal convert(AMEEPerUnit targetPerUnit) {
+    public Decimal convert(DecimalPerUnit targetPerUnit) {
 
-        if (!(unit instanceof AMEECompoundUnit)) return new Decimal(getValue());
+        if (!(unit instanceof DecimalCompoundUnit)) return new Decimal(getValue());
 
-        AMEECompoundUnit cUnit = (AMEECompoundUnit) unit;
+        DecimalCompoundUnit cUnit = (DecimalCompoundUnit) unit;
 
         if (cUnit.hasDifferentPerUnit(targetPerUnit)) {
             DecimalMeasure dm = DecimalMeasure.valueOf(getValue(), cUnit.getPerUnit().toUnit().inverse());
@@ -144,10 +146,10 @@ public class Decimal {
 
     /**
      * @param unit
-     * @return returns true is the supplied AMEEUnit is not considered equal to the unit of the current instance.
+     * @return returns true is the supplied DecimalUnit is not considered equal to the unit of the current instance.
      *
      */
-    public boolean hasDifferentUnits(AMEEUnit unit) {
+    public boolean hasDifferentUnits(DecimalUnit unit) {
         return !this.unit.equals(unit);
     }
 
@@ -155,12 +157,28 @@ public class Decimal {
         return decimal;
     }
 
-    public AMEEUnit getUnit() {
+    public DecimalUnit getUnit() {
         return unit;
     }
     
     public String toString() {
-        return decimal.toString();
+        return getValue().toString();
+    }
+
+    public Decimal add(Decimal decimal) {
+        return new Decimal(getValue().add(decimal.getValue(), CONTEXT));
+    }
+
+    public Decimal subtract(Decimal decimal) {
+        return new Decimal(getValue().subtract(decimal.getValue(), CONTEXT));
+    }
+
+    public Decimal divide(Decimal decimal) {
+        return new Decimal(getValue().divide(decimal.getValue(), CONTEXT));
+    }
+
+    public Decimal mulitply(Decimal decimal) {
+        return new Decimal(getValue().multiply(decimal.getValue(), CONTEXT));
     }
 
 }

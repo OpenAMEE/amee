@@ -2,7 +2,12 @@ package com.amee.domain.profile;
 
 import com.amee.core.ObjectType;
 import com.amee.domain.Builder;
-import com.amee.domain.data.*;
+import com.amee.domain.core.CO2Amount;
+import com.amee.domain.core.Decimal;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.Item;
+import com.amee.domain.data.ItemValue;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -45,7 +50,7 @@ public class ProfileItem extends Item {
     private DataItem dataItem;
 
     @Column(name = "AMOUNT", precision = Decimal.PRECISION, scale = Decimal.SCALE)
-    private BigDecimal amount = Decimal.ZERO;
+    private BigDecimal amount = Decimal.BIG_DECIMAL_ZERO;
 
     @Transient
     private Builder builder;

@@ -1,11 +1,10 @@
-package com.amee.domain;
+package com.amee.domain.core;
 
 import org.joda.time.Duration;
 import org.joda.time.format.ISOPeriodFormat;
 
 import javax.measure.unit.Dimension;
-import static javax.measure.unit.SI.MILLI;
-import static javax.measure.unit.SI.SECOND;
+import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 
 /*
@@ -27,29 +26,29 @@ import javax.measure.unit.Unit;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class AMEEPerUnit extends AMEEUnit {
+public class DecimalPerUnit extends DecimalUnit {
 
-    public static final AMEEPerUnit ONE = new AMEEPerUnit(Unit.ONE);
-    public static final AMEEPerUnit MONTH = AMEEPerUnit.valueOf("month");
+    public static final DecimalPerUnit ONE = new DecimalPerUnit(Unit.ONE);
+    public static final DecimalPerUnit MONTH = DecimalPerUnit.valueOf("month");
 
     private String string;
 
-    public AMEEPerUnit(Unit unit) {
+    public DecimalPerUnit(Unit unit) {
         super(unit);
         this.string = unit.toString();
     }
 
-    private AMEEPerUnit(Duration duration) {
-        super(MILLI(SECOND).times(duration.getMillis()));
+    private DecimalPerUnit(Duration duration) {
+        super(SI.MILLI(SI.SECOND).times(duration.getMillis()));
         this.string = ISOPeriodFormat.standard().print(duration.toPeriod());
     }
 
-    public static AMEEPerUnit valueOf(String unit) {
-        return new AMEEPerUnit(internalValueOf(unit));
+    public static DecimalPerUnit valueOf(String unit) {
+        return new DecimalPerUnit(internalValueOf(unit));
     }
 
-    public static AMEEPerUnit valueOf(Duration duration) {
-        return new AMEEPerUnit(duration);
+    public static DecimalPerUnit valueOf(Duration duration) {
+        return new DecimalPerUnit(duration);
     }
 
     public boolean isCompatibleWith(String unit) {

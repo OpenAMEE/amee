@@ -19,7 +19,7 @@
  */
 package com.amee.service.profile;
 
-import com.amee.domain.data.CO2AmountUnit;
+import com.amee.domain.core.CO2AmountUnit;
 import com.amee.domain.profile.ProfileDate;
 import com.amee.service.BaseBrowser;
 import com.amee.service.auth.ResourceActions;
