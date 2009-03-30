@@ -8,7 +8,6 @@ import com.amee.domain.path.PathItem;
 import com.amee.restlet.profile.builder.v2.AtomFeed;
 import com.amee.restlet.utils.HeaderUtils;
 import com.amee.service.ThreadBeanHolder;
-import com.amee.service.auth.ResourceActions;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.profile.ProfileService;
@@ -251,16 +250,6 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     public APIVersion getAPIVersion() {
         User user = (User) ThreadBeanHolder.get("user");
         return user.getAPIVersion();
-    }
-
-    public JSONObject getActions(ResourceActions rActions) throws JSONException {
-        JSONObject obj = new JSONObject();
-        obj.put("allowList", rActions.isAllowList());
-        obj.put("allowView", rActions.isAllowView());
-        obj.put("allowCreate", rActions.isAllowCreate());
-        obj.put("allowModify", rActions.isAllowModify());
-        obj.put("allowDelete", rActions.isAllowDelete());
-        return obj;
     }
 
     /**

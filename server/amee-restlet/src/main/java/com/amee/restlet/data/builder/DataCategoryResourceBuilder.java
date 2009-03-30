@@ -4,7 +4,6 @@ import com.amee.domain.APIUtils;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.sheet.Sheet;
 import com.amee.restlet.data.DataCategoryResource;
@@ -61,17 +60,6 @@ public class DataCategoryResourceBuilder {
 
             // add DataCategory
             obj.put("dataCategory", resource.getDataCategory().getJSONObject(true));
-
-            // for the admin interface
-            obj.put("actions", resource.getActions(resource.getDataBrowser().getDataCategoryActions()));
-            obj.put("dataItemActions", resource.getActions(resource.getDataBrowser().getDataItemActions()));
-
-            // Add ItemDefinition list
-            JSONArray itemDefinitions = new JSONArray();
-            for (ItemDefinition iDefinition : definitionServiceDAO.getItemDefinitions(resource.getEnvironment())) {
-                itemDefinitions.put(iDefinition.getJSONObject(false));
-            }
-            obj.put("itemDefinitions", itemDefinitions);
 
             // list child Data Categories and child Data Items
             JSONObject children = new JSONObject();

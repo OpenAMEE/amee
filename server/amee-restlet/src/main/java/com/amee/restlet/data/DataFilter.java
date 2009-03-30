@@ -21,11 +21,8 @@ package com.amee.restlet.data;
 
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
-import com.amee.restlet.BaseFilter;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.restlet.RewriteFilter;
 import com.amee.service.path.PathItemService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
@@ -35,33 +32,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class DataFilter extends BaseFilter {
-
-    private final Log log = LogFactory.getLog(getClass());
+public class DataFilter extends RewriteFilter {
 
     @Autowired
     private PathItemService pathItemService;
-
-    public DataFilter() {
-        super();
-    }
 
     public DataFilter(Application application) {
         super(application);
     }
 
-    protected int beforeHandle(Request request, Response response) {
-        log.debug("beforeHandle()");
-        return rewrite(request, response);
-    }
-
-    protected void afterHandle(Request request, Response response) {
-        log.debug("afterHandle()");
-    }
-
+    @Override
     protected int rewrite(Request request, Response response) {
         log.debug("rewrite() - start data path rewrite ");
-        String path = null;
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
         removeEmptySegmentAtEnd(segments);
@@ -74,14 +56,12 @@ public class DataFilter extends BaseFilter {
             PathItem pathItem = pathItemGroup.findBySegments(segments, false);
             if (pathItem != null) {
                 // found matching path, rewrite
-                path = pathItem.getInternalPath() + suffix;
-            }
-            if (path != null) {
-                // rewrite paths
+                String path = pathItem.getInternalPath() + suffix;
                 request.getAttributes().put("pathItem", pathItem);
                 request.getAttributes().put("previousResourceRef", reference.toString());
                 reference.setPath("/data" + path);
             } else {
+                // nothing to be found, 404
                 response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
                 return STOP;
             }
@@ -95,16 +75,13 @@ public class DataFilter extends BaseFilter {
     }
 
     protected boolean matchesReservedPrefixes(String segment) {
-        return segment.equalsIgnoreCase("upload") ||
-                segment.equalsIgnoreCase("admin") ||
-                segment.equalsIgnoreCase("js");
+        return segment.equalsIgnoreCase("actions");
     }
 
     protected String handleSuffix(List<String> segments) {
         if (segments.size() > 0) {
             String segment = segments.get(segments.size() - 1);
-            if ("sheet".equalsIgnoreCase(segment) ||
-                    "drill".equalsIgnoreCase(segment)) {
+            if ("drill".equalsIgnoreCase(segment)) {
                 return "/" + segments.remove(segments.size() - 1);
             }
         }

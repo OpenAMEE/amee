@@ -109,10 +109,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        JSONObject obj = builder.getJSONObject(this);
-        obj.put("actions", getActions(profileBrowser.getProfileActions()));
-        obj.put("profileItemActions", getActions(profileBrowser.getProfileItemActions()));
-        return obj;
+        return builder.getJSONObject(this);
     }
 
     @Override

@@ -88,7 +88,7 @@ public class SiteFilter extends Filter implements ApplicationContextAware {
     private VirtualHost getVirtualHost() {
 
         VirtualHost host = null;
-        final Integer hostHashCode = VirtualHost.getCurrent();
+        final int hostHashCode = VirtualHost.getCurrent();
 
         for (VirtualHost h : ameeContainer.getHosts()) {
             if (h.hashCode() == hostHashCode) {

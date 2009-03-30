@@ -1,5 +1,7 @@
 package com.amee.service.auth;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
@@ -42,6 +44,16 @@ public class ResourceActions implements Serializable {
         this.resourceModifyAction = resource + ACTION_MODIFY;
         this.resourceDeleteAction = resource + ACTION_DELETE;
         this.resourceListAction = resource + ACTION_LIST;
+    }
+
+    public JSONObject getJSONObject() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("allowList", isAllowList());
+        obj.put("allowView", isAllowView());
+        obj.put("allowCreate", isAllowCreate());
+        obj.put("allowModify", isAllowModify());
+        obj.put("allowDelete", isAllowDelete());
+        return obj;
     }
 
     public boolean isAllowView() {

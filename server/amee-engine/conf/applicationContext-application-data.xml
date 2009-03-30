@@ -31,6 +31,7 @@
                                                 <constructor-arg index="0" ref="dataApplication"/>
                                                 <property name="next">
                                                     <bean class="com.amee.restlet.data.DataFilter">
+                                                        <constructor-arg index="0" ref="dataApplication"/>
                                                         <property name="next">
                                                             <bean class="com.amee.restlet.LogFilter">
                                                                 <property name="next" ref="dataRouter"/>
@@ -74,6 +75,11 @@
                 <entry key="/categories/{categoryUid}/items/{itemPath}/values/{valuePath}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="dataItemValueResource"/>
+                    </bean>
+                </entry>
+                <entry key="/actions">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="dataActionsResource"/>
                     </bean>
                 </entry>
             </map>

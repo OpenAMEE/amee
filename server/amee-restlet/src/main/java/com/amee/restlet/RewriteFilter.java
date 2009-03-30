@@ -20,21 +20,36 @@
 package com.amee.restlet;
 
 import com.amee.restlet.utils.MediaTypeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
 import org.restlet.Filter;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
+import org.restlet.data.Response;
 
 import java.util.List;
 
-public abstract class BaseFilter extends Filter {
+public abstract class RewriteFilter extends Filter {
 
-    public BaseFilter() {
-        super();
+    protected final Log log = LogFactory.getLog(getClass());
+
+    protected boolean handleAccept = false;
+
+    public RewriteFilter(Application application) {
+        super(application.getContext());
     }
 
-    public BaseFilter(Application application) {
-        super(application.getContext());
+    protected int beforeHandle(Request request, Response response) {
+        log.debug("beforeHandle()");
+        if (handleAccept) {
+            setAccept(request);
+        }
+        return rewrite(request, response);
+    }
+
+    protected void afterHandle(Request request, Response response) {
+        log.debug("afterHandle()");
     }
 
     protected void removeEmptySegmentAtEnd(List<String> segments) {
@@ -55,4 +70,6 @@ public abstract class BaseFilter extends Filter {
             }
         }
     }
+
+    protected abstract int rewrite(Request request, Response response);
 }
