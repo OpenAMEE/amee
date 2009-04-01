@@ -65,7 +65,7 @@ public class ProfileActionsResource extends BaseResource implements Serializable
         obj.put("profile", profileActions.getJSONObject());
         obj.put("profileCategory", profileCategoryActions.getJSONObject());
         obj.put("profileItem", profileItemActions.getJSONObject());
-        obj.put("profileItemValu", profileItemValueActions.getJSONObject());
+        obj.put("profileItemValue", profileItemValueActions.getJSONObject());
         return obj;
     }
 
