@@ -3,6 +3,7 @@
 <#include '/includes/before_content.ftl'>
 
 <script src="/scripts/amee/api_service.js" type="text/javascript"></script>
+<script src="/scripts/amee/data_service.js" type="text/javascript"></script>
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -31,35 +32,38 @@
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
 
+    // create resource objects
+    var PROFILE_ACTIONS = new ActionsResource({path: '/profiles/actions'});
+    var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
+    var profileCategoryApiService = new ProfileCategoryApiService({
+        heading: "Profile Items",
+        headingElementName: "apiHeading",
+        contentElementName: "apiContent",
+        tAmountElementName: 'apiTAmount',
+        pagerTopElementName: 'apiTopPager',
+        pagerBtmElementName: 'apiBottomPager',
+        headingCategory: 'Profile Categories',
+        dataHeadingCategory: 'Profile Category Details',
+        dataHeadingCategoryElementName: 'apiDataCategoryHeading',
+        dataContentElementName: "apiDataCategoryContent",
+        APIVersion: '2.0'});
+    var drillDown = new DrillDown(
+        "/data${pathItem.fullPath}",
+        "2.0",
+        "yyyy-MM-dd'T'HH:mm:ssZ");
+
+    // use resource loader to load resources and notify on loaded
+    var resourceLoader = new ResourceLoader();
+    resourceLoader.addResource(PROFILE_ACTIONS);
+    resourceLoader.addResource(DATA_ACTIONS);
+    resourceLoader.observe('loaded', function() {
+        profileCategoryApiService.start();
+        drillDown.start();
+    });
+
     document.observe('dom:loaded', function() {
-
-        <#if browser.profileItemActions.allowList>
-
-            var profileCategoryApiService = new ProfileCategoryApiService({
-                heading : "Profile Items",
-                headingElementName : "apiHeading",
-                contentElementName : "apiContent",
-                tAmountElementName : 'apiTAmount',
-                pagerTopElementName : 'apiTopPager',
-                pagerBtmElementName : 'apiBottomPager',
-                headingCategory : 'Profile Categories',
-                dataHeadingCategory : 'Profile Category Details',
-                dataHeadingCategoryElementName : 'apiDataCategoryHeading',
-                dataContentElementName : "apiDataCategoryContent",
-                APIVersion : '2.0'
-            });
-            profileCategoryApiService.apiRequest();
-
-        </#if>
-
-        <#if dataCategory.itemDefinition?? && browser.profileItemActions.allowCreate>
-            new DrillDown(
-                "/data${pathItem.fullPath}",
-                "2.0",
-                "yyyy-MM-dd'T'HH:mm:ssZ",
-                true
-            ).loadDrillDown();
-        </#if>
+        // start everything
+        resourceLoader.start();
     });
 
 </script>

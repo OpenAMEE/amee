@@ -1,4 +1,4 @@
-var BaseDataApiService  = Class.create(ApiService, ({
+var BaseDataApiService = Class.create(ApiService, ({
     // Initialization
     initialize: function($super, params) {
         $super(params);
@@ -64,20 +64,13 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         $super(params);
         this.updateCategory = params.updateCategory || false;
         this.createCategory = params.createCategory || false;
-        this.allowItemCreate = params.allowItemCreate || false;
     },
-    updatePermissions: function($super, response) {
-        $super(response);
-        var dataItemActions = response.responseJSON.dataItemActions;
-        if (dataItemActions) {
-            this.allowItemCreate = dataItemActions.allowCreate;
-        }
-    },
-    renderApiResponse: function($super, response) {
-        var json = response.responseJSON;
+    renderApiResponse: function($super) {
+
+        var json = this.response.responseJSON;
 
         if (json.children.dataItems.rows) {
-            $super(response, json.children.pager);
+            $super(json.children.pager);
         }
 
         if (json.children.dataCategories.length > 0) {
@@ -111,24 +104,27 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         }
     },
     getCreateCategoryElement: function(id, json) {
+
+        var dataCategoryActions = DATA_ACTIONS.getActions('dataCategory');
+        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
+
         var createCatElement = new Element('div', {id : id});
 
-        if(this.allowCreate || this.allowItemCreate) {
+        if (dataCategoryActions.isAllowCreate() || dataItemActions.isAllowCreate()) {
             createCatElement.insert(new Element('h2').update('Create Data Category'));
 
             var dataCategory = json.dataCategory;
-            var itemDefinitions = json.itemDefinitions;
-            
+
             var formElement = new Element('form', {action : "#", id : this.createFormName});
             var typeSelectElement = new Element('select', {id : 'newObjectType', name : 'newObjectType', style : 'margin-left:52px'});
             var selectElement = new Element('select', {name : 'itemDefinitionUid'});
             var pElement = new Element('p');
 
             formElement.insert('Type: ');
-            if (this.allowCreate) {
+            if (dataCategoryActions.isAllowCreate()) {
                 typeSelectElement.insert(new Element('option', {value : 'DC'}).update('Data Category'));
             }
-            if (dataCategory.itemDefinition && this.allowItemCreate) {
+            if (dataCategory.itemDefinition && dataItemActions.isAllowCreate()) {
                 typeSelectElement.insert(new Element('option', {value : 'DI'}).update('Data Item (for' + dataCategory.itemDefinition.name + ')'));
             }
             formElement.insert(typeSelectElement).insert(new Element('br'));
@@ -140,8 +136,8 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             selectElement.insert(new Element('option', {value : ''}).update('(No Item Definition)'));
             formElement.insert('Item Definition: ');
 
-            for (var i = 0; i < itemDefinitions.length; i++) {
-                var itemDefinition = itemDefinitions[i];
+            for (var i = 0; i < ITEM_DEFINITIONS.length; i++) {
+                var itemDefinition = ITEM_DEFINITIONS[i];
                 selectElement.insert(new Element('option', {value : itemDefinition.uid}).update(itemDefinition.name));
             }
 
@@ -156,18 +152,19 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             pElement.insert(formElement);
             createCatElement.insert(pElement);
         }
-        
+
         return createCatElement;
     },
     getUpdateCategoryElement: function(id, json) {
 
+        var dataCategoryActions = DATA_ACTIONS.getActions('dataCategory');
+
         var updateCatElement = new Element('div', {id : id});
 
-        if(this.allowModify) {
+        if (dataCategoryActions.isAllowModify()) {
             updateCatElement.insert(new Element('h2').update('Update Data Category'));
 
             var dataCategory = json.dataCategory;
-            var itemDefinitions = json.itemDefinitions;
 
             var formElement = new Element('form', {action : "#", id : this.updateFormName});
             var selectElement = new Element('select', {name : 'itemDefinitionUid'});
@@ -179,8 +176,8 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             // item definitions
             selectElement.insert(new Element('option', {value : ''}).update('(No Item Definition)'));
             formElement.insert('Item Definition: ');
-            for (var i = 0; i < itemDefinitions.length; i++) {
-                var itemDefinition = itemDefinitions[i];
+            for (var i = 0; i < ITEM_DEFINITIONS.length; i++) {
+                var itemDefinition = ITEM_DEFINITIONS[i];
                 var option = new Element('option', {value : itemDefinition.uid}).update(itemDefinition.name);
 
                 if (dataCategory.itemDefinition && dataCategory.itemDefinition.uid == itemDefinition.uid) {
@@ -194,7 +191,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
             formElement.insert(btnSubmit);
             Event.observe(btnSubmit, "click", this.updateDataCategory.bind(this));
-            
+
             pElement.insert(formElement);
             updateCatElement.insert(pElement);
 
@@ -207,15 +204,21 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
                 .insert(this.getHeadingData('Actions'));
     },
     getDetailRows: function(json) {
+        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
+        var rows = [];
         if (json.children.dataItems) {
-            var rows = [];
             for (var i = 0; i < json.children.dataItems.rows.length; i++) {
                 var dataItem = json.children.dataItems.rows[i];
                 var detailRow = new Element('tr', {id : 'Elem_' + dataItem.uid})
-                    .insert(new Element('td').insert(dataItem.label));
+                        .insert(new Element('td').insert(dataItem.label));
 
                 // create actions
-                detailRow.insert(this.getActionsTableData(dataItem.path, 'deleteDataItem', dataItem.uid, dataItem.path));
+                detailRow.insert(this.getActionsTableData({
+                    deleteable: true,
+                    actions: dataItemActions,
+                    method: 'deleteDataItem',
+                    uid: dataItem.uid,
+                    path: dataItem.path}));
 
                 // update array
                 rows[i] = detailRow;
@@ -236,11 +239,10 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             for (var i = 0; i < json.children.dataCategories.length; i++) {
                 var dataCategory = json.children.dataCategories[i];
                 var detailRow = new Element('tr', {id : dataCategory.uid})
-                    .insert(new Element('td').insert(dataCategory.name));
+                        .insert(new Element('td').insert(dataCategory.name));
 
                 // create actions
                 detailRow.insert(this.getCategoryActionsTableData('deleteDataCategory', dataCategory.uid, dataCategory.path));
-
 
                 // update array
                 rows[i] = detailRow;
@@ -251,36 +253,39 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         return rows;
     },
     getCategoryActionsTableData: function(dMethod, uid, path) {
+
+        var dataCategoryActions = DATA_ACTIONS.getActions('dataCategory');
+
         var actions = new Element('td');
 
-        if (this.allowView) {
+        if (dataCategoryActions.isAllowView()) {
             actions.insert(new Element('a', {href : this.getUrl(path)})
-                .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
+                    .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
         }
 
-        if (this.allowDelete) {
+        if (dataCategoryActions.isAllowDelete()) {
             var dUrl = "'" + uid + "','" + window.location.pathname + "/" + path + "'";
 
-            actions.insert(new Element('a', 
+            actions.insert(new Element('a',
             {
-              onClick : dMethod + '(' + dUrl + ') ; return false;',
-              href : 'javascript:' + dMethod + '(' + dUrl + ');'
+                onClick : dMethod + '(' + dUrl + ') ; return false;',
+                href : 'javascript:' + dMethod + '(' + dUrl + ');'
             })
-                .insert(new Element('img',
-                {
-                  src : '/images/icons/page_delete.png', 
-                  title : 'Delete', 
-                  alt : 'Delete', 
-                  border : 0 
-                })));
+                    .insert(new Element('img',
+            {
+                src : '/images/icons/page_delete.png',
+                title : 'Delete',
+                alt : 'Delete',
+                border : 0
+            })));
         }
         return actions;
     },
     createDataCategory: function() {
         var elementList = [$(this.createFormName + "-name"), $(this.createFormName + "-path")];
 
-        $(this.createFormStatusName).innerHTML='';
-        this.resetStyles(elementList)
+        $(this.createFormStatusName).innerHTML = '';
+        this.resetStyles(elementList);
 
         if (this.validateElementList(elementList)) {
             this.resetStyles(elementList)
@@ -302,7 +307,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         $(this.createFormStatusName).replace(new Element('div', {id : this.createFormStatusName}).insert(new Element('b').update('ERROR!')));
     },
     updateDataCategory: function() {
-        $(this.updateFormStatusName).innerHTML='';
+        $(this.updateFormStatusName).innerHTML = '';
         var elementList = [$(this.updateFormName + "-name"), $(this.updateFormName + "-path")];
 
         if (this.validateElementList(elementList)) {
@@ -333,29 +338,27 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
 }));
 
 var DataItemApiService = Class.create(BaseDataApiService, ({
-        // Initialization
+    // Initialization
     initialize: function($super, params) {
         $super(params);
         this.dataHeadingItem = params.dataHeadingItem || 'Data Item Details';
         this.dataHeadingItemElementName = params.dataHeadingItemElementName || 'apiDataItemHeading';
         this.dataContentElementName = params.dataContentElementName || "apiDataItemContent";
-
         this.updateItem = params.updateItem || false;
     },
-    renderApiResponse: function($super, response) {
-        var json = response.responseJSON;
+    renderApiResponse: function($super) {
 
+        var json = this.response.responseJSON;
         this.path = json.path;
 
         if (json.dataItem) {
             this.uid = json.dataItem.uid;
             this.renderDataItemApiResponse(json.dataItem);
         }
-        $super(response);
+        $super();
         if (this.updateItem && json.dataItem) {
             $('apiUpdateDataItem').replace(this.getUpdateItemElement('apiUpdateDataItem', json.dataItem));
         }
-
     },
     renderDataItemApiResponse: function(dataItem) {
         // update elements
@@ -423,21 +426,24 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
                 .insert(this.getHeadingData('Actions'));
     },
     getDetailRows: function(json) {
+        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
         var rows = [];
-
         if (json.dataItem.itemValues) {
             var itemValues = json.dataItem.itemValues;
             for (var i = 0; i < itemValues.length; i++) {
                 var itemValue = itemValues[i];
 
                 var detailRow = new Element('tr', {id : 'Elem_' + itemValue.uid})
-                    .insert(new Element('td').insert(itemValue.itemValueDefinition.name))
-                    .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.name))
-                    .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.valueType))
-                    .insert(new Element('td').insert(itemValue.value));
+                        .insert(new Element('td').insert(itemValue.itemValueDefinition.name))
+                        .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.name))
+                        .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.valueType))
+                        .insert(new Element('td').insert(itemValue.value));
 
                 // create actions
-                detailRow.insert(this.getActionsTableData('', '', itemValue.displayPath));
+                detailRow.insert(this.getActionsTableData({
+                    actions: dataItemActions,
+                    method: '',
+                    path: itemValue.displayPath}));
 
                 // update array
                 rows[i] = detailRow;
@@ -449,7 +455,8 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
 
         var updateItemElement = new Element('div', {id : id});
 
-        if(this.allowModify) {
+        // TODO: actions
+        if (this.allowModify) {
             var dateFormat = " (" + this.getDateFormat() + ")";
             var formElement = new Element('form', {action : "#", id : this.updateFormName});
             var pElement = new Element('p');
@@ -503,7 +510,7 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         return linkPath;
     },
     updateDataItem: function(event, elementList) {
-        $(this.updateFormStatusName).innerHTML='';
+        $(this.updateFormStatusName).innerHTML = '';
 
         if (!elementList) {
             elementList = [];
@@ -531,12 +538,12 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
     updateDataItemSuccess: function() {
         // update elements and status
         $(this.updateFormStatusName).replace(new Element('div', {id : this.updateFormStatusName}).insert(new Element('b').update('UPDATED!')));
-        
+
         var pathElement = $(this.updateFormName + "-path");
         if (pathElement && pathElement.value != '') {
             window.location.href = this.getParentPath() + "/" + $(this.updateFormName + "-path").value;
         } else {
-            window.location.href =  this.getParentPath() + "/" + this.uid;
+            window.location.href = this.getParentPath() + "/" + this.uid;
         }
     },
     updateDataItemFail: function() {
@@ -550,10 +557,11 @@ var DataItemValueApiService = Class.create(DataItemApiService, ({
     initialize: function($super, params) {
         $super(params);
     },
-    renderApiResponse: function($super, response) {
-        var json = response.responseJSON;
+    renderApiResponse: function($super) {
+
+        var json = this.response.responseJSON;
         this.uid = json.itemValue.uid;
-        
+
         if (json.itemValue) {
             this.renderDataItemValueApiResponse(json.itemValue);
         }
@@ -564,6 +572,7 @@ var DataItemValueApiService = Class.create(DataItemApiService, ({
 
     },
     renderDataItemValueApiResponse: function(itemValue) {
+
         // update elements
         this.dataHeadingItemElement = $(this.dataHeadingItemElementName);
         this.dataContentElement = $(this.dataContentElementName);
@@ -613,9 +622,11 @@ var DataItemValueApiService = Class.create(DataItemApiService, ({
     },
     getUpdateItemValueElement: function(id, itemValue) {
 
+        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
+
         var updateItemElement = new Element('div', {id : id});
 
-        if(this.allowModify) {
+        if (dataItemActions.isAllowModify()) {
             var formElement = new Element('form', {action : "#", id : this.updateFormName});
             var pElement = new Element('p');
 
@@ -625,12 +636,12 @@ var DataItemValueApiService = Class.create(DataItemApiService, ({
 
                 var selectElement = new Element('select', {name : 'value'});
                 var choices = itemValue.itemValueDefinition.choices.split(",");
-                
+
                 for (var i = 0; i < choices.length; i++) {
                     var choice = choices[i];
                     var optionElement = new Element('option', {value : choice}).update(choice);
                     if (itemValue.value == choice) {
-                        optionElement.selected = true;    
+                        optionElement.selected = true;
                     }
                     selectElement.insert(optionElement);
                 }
@@ -662,8 +673,149 @@ var DataItemValueApiService = Class.create(DataItemApiService, ({
     },
     updateDataItemSuccess: function() {
         // update elements and status
-        $(this.updateFormStatusName).replace(new Element('div', {id : this.updateFormStatusName}).insert(new Element('b').update('UPDATED!')));
-
+        $(this.updateFormStatusName).replace(new Element('div', {id : this.updateFormStatusName})
+                .insert(new Element('b')
+                .update('UPDATED!')));
         window.location.href = window.location.href;
     }
 }));
+
+var DrillDown = Class.create({
+    initialize: function(fullPath, apiVersion, dateFormat) {
+        this.fullPath = fullPath;
+        this.apiVersion = apiVersion || '1.0';
+        this.dateFormat = dateFormat || 'date format not specified';
+    },
+    start: function() {
+        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
+        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
+        if (profileItemActions.isAllowCreate() && dataItemActions.isAllowView()) {
+            this.load();
+        }
+    },
+    load: function(params) {
+        params = params || {};
+        this.response = null;
+        var url = this.fullPath + '/drill';
+        params['method'] = 'get';
+        url = url + '?' + Object.toQueryString(params);
+        new Ajax.Request(url, {
+            method: 'post',
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.loadSuccess.bind(this)
+        });
+    },
+    loadSuccess: function(response) {
+        this.response = response;
+        this.render();
+    },
+    addProfileItem: function() {
+        new Ajax.Request(window.location.href, {
+            method: 'post',
+            parameters: $('createProfileFrm').serialize(),
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.addProfileItemSuccess.bind(this)
+        });
+    },
+    addProfileItemSuccess: function(response) {
+        window.location.href = window.location.href;
+    },
+    render: function() {
+
+        var resource = this.response.responseJSON;
+
+        // store stuff locally
+        this.selectName = resource.choices.name;
+        this.selections = resource.selections;
+
+        // reset heading
+        $("createProfileHeading").innerHTML = "Create Profile Item";
+
+        // get and reset our div
+        var div = $("createProfileItemDiv");
+        div.innerHTML = '';
+        // add list of previous selections
+        var list = document.createElement('ul');
+        for (var i = 0; i < resource.selections.length; i++) {
+            var item = document.createElement('li');
+            item.innerHTML = resource.selections[i].name + ': ' + resource.selections[i].value;
+            list.appendChild(item);
+        }
+        div.appendChild(list);
+        if (this.selectName == 'uid') {
+            var choice = resource.choices.choices[0];
+            this.uid = choice.value;
+            // params for V1 and V2
+            // dataItemUid
+            div.appendChild(new Element('input', {type : 'hidden', name : 'dataItemUid', value : this.uid}));
+            // name
+            div.appendChild(document.createTextNode('Name: '));
+            var nameInput = new Element('input', {type : 'text', name : 'name', id : 'name', style : 'margin-left:49px'});
+            div.appendChild(nameInput);
+            div.appendChild(document.createElement('br'));
+            // V1 or V2 params?
+            if (this.apiVersion == '1.0') {
+                // V1 params
+                div.appendChild(document.createTextNode('Valid From: '));
+                var validFromInput = new Element('input', {type : 'text', name : 'validFrom', id : 'validFrom'});
+                div.appendChild(validFromInput);
+            } else {
+                // V2 params
+                // startDate
+                div.appendChild(document.createTextNode('Start Date: '));
+                var startDateInput = new Element('input', {type : 'text', name : 'startDate', id : 'startDate', style : 'margin-left:20px'});
+                div.appendChild(startDateInput);
+                div.appendChild(document.createTextNode("  (" + this.dateFormat + ")"));
+                div.appendChild(document.createElement('br'));
+                // endDate
+                div.appendChild(document.createTextNode('End Date: '));
+                var endDateInput = new Element('input', {type : 'text', name : 'endDate', id : 'endDate', style : 'margin-left:25px'});
+                div.appendChild(endDateInput);
+                div.appendChild(document.createTextNode("  (" + this.dateFormat + ")"));
+                div.appendChild(document.createElement('br'));
+                // duration
+                div.appendChild(document.createTextNode('Duration: '));
+                var durationInput = new Element('input', {type : 'text', name : 'duration', id : 'duration', style : 'margin-left:31px'});
+                div.appendChild(durationInput);
+                div.appendChild(document.createTextNode("  (e.g PT30M [30 mins])"));
+                div.appendChild(document.createElement('br'));
+            }
+            div.appendChild(document.createElement('br'));
+            var button = document.createElement('input');
+            button.type = 'button';
+            button.value = 'Add: ' + choice.value;
+            button.name = 'Add: ' + choice.value;
+            Event.observe(button, "click", this.addProfileItem.bind(this));
+            div.appendChild(button);
+        } else {
+            // add the form select
+            var select = document.createElement('select');
+            select.id = resource.choices.name;
+            select.name = resource.choices.name;
+            var defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.appendChild(document.createTextNode('(select ' + resource.choices.name + ')'));
+            select.appendChild(defaultOpt);
+            for (var i = 0; i < resource.choices.choices.length; i++) {
+                var choice = resource.choices.choices[i];
+                var opt = document.createElement('option');
+                opt.value = choice.value;
+                opt.appendChild(document.createTextNode(choice.name));
+                select.appendChild(opt);
+            }
+            Event.observe(select, "change", this.drillDownSelect.bind(this));
+            div.appendChild(select);
+        }
+    },
+    drillDownSelect: function(e) {
+        var select = $(this.selectName);
+        if (select.value != '') {
+            var params = {};
+            for (var i = 0; i < this.selections.length; i++) {
+                params[this.selections[i].name] = this.selections[i].value;
+            }
+            params[this.selectName] = select.value;
+            this.load(params);
+        }
+    }
+});

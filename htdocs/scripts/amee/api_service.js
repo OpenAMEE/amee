@@ -16,8 +16,7 @@ Ajax.Responders.register({
 });
 
 // ------------------ pager ------------------------------
-var Pager = Class.create();
-Pager.prototype = {
+var Pager = Class.create({
     // Initialization
     initialize: function(params) {
         if (params.json) {
@@ -130,21 +129,17 @@ Pager.prototype = {
     },
     // Navigation
     goPage: function(page) {
-        this.apiService.apiRequest("page=" + page);
+        this.apiService.load("page=" + page);
     }
-};
+});
 
 // ------------------ pager ------------------------------
 
-var ApiService = Class.create();
-ApiService.prototype = {
+var ApiService = Class.create({
     initialize: function(params) {
+        params = params || {};
 
-        if (!params) {
-            params = {};
-        }
-
-        // api items
+        // set element names
         this.heading = params.heading || "";
         this.headingElementName = params.headingElementName || "apiHeading";
         this.contentElementName = params.contentElementName || "apiContent";
@@ -152,20 +147,14 @@ ApiService.prototype = {
         this.pagerTopElementName = params.pagerTopElementName || "apiTopPager";
         this.pagerBtmElementName = params.pagerBtmElementName || "apiBottomPager";
 
-        this.apiVersion = params.apiVersion || '1.0';
-
         // api data category items
         this.dataHeadingCategory = params.dataHeadingCategory || "";
         this.dataHeadingCategoryElementName = params.dataHeadingCategoryElementName || 'apiDataCategoryHeading';
         this.dataContentElementName = params.dataHeadingContentElementName || 'apiDataCategoryContent';
 
-        // permissions
-        this.allowList = params.allowList || false;
-        this.allowView = params.allowView || false;
-        this.allowDelete = params.allowDelete || false;
-        this.allowModify = params.allowModify || false;
-        this.allowCreate = params.allowCreate || false;
-
+        // init internal
+        this.apiVersion = params.apiVersion || '1.0';
+        this.response = null;
         this.pager = null;
     },
     getDateFormat: function() {
@@ -175,34 +164,32 @@ ApiService.prototype = {
             return "yyyy-MM-dd'T'HH:mm:ssZ";
         }
     },
-    apiRequest: function(params) {
+    start: function() {
+        this.load();
+    },
+    load: function(params) {
+        this.response = null;
         params = params || "";
         params = params.toQueryParams();
         params['method'] = 'get';
         new Ajax.Request(window.location.href + '?' + Object.toQueryString(params), {
             method: 'post',
             requestHeaders: ['Accept', 'application/json'],
-            onSuccess: this.processApiResponse.bind(this)
+            onSuccess: this.loadSuccess.bind(this)
         });
     },
-    updatePermissions: function(response) {
-        var actions = response.responseJSON.actions;
-        if (actions) {
-            this.allowList = actions.allowList;
-            this.allowView = actions.allowView;
-            this.allowDelete = actions.allowDelete;
-            this.allowModify = actions.allowModify;
-            this.allowCreate = actions.allowCreate;
-        }
+    loadSuccess: function(response) {
+        this.response = response;
+        this.render();
     },
-    processApiResponse: function(response) {
-        this.renderTrail(response);
-        this.updatePermissions(response);
-        this.renderDataCategoryApiResponse(response);
-        this.renderApiResponse(response);
+    render: function() {
+        this.renderTrail();
+        this.renderDataCategoryApiResponse();
+        this.renderApiResponse();
     },
-    renderTrail : function(response) {
-        var json = response.responseJSON;
+    renderTrail : function() {
+
+        var json = this.response.responseJSON;
         var rootPath = this.getTrailRootPath();
         var otherPaths = this.getTrailOtherPaths(json);
         var linkPath = '';
@@ -254,8 +241,9 @@ ApiService.prototype = {
     getTrailOtherPaths: function(json) {
         return [];
     },
-    renderApiResponse: function(response, pagerJSON) {
-        var json = response.responseJSON;
+    renderApiResponse: function(pagerJSON) {
+
+        var json = this.response.responseJSON;
 
         // update elements
         this.headingElement = $(this.headingElementName);
@@ -281,7 +269,7 @@ ApiService.prototype = {
 
         // replace pager(s)
         if (!pagerJSON) {
-            pagerJSON = response.responseJSON.pager;
+            pagerJSON = json.pager;
         }
         if (this.pagerTopElement) {
             this.pager = new Pager({json : pagerJSON, apiService : this, pagerElementName : this.pagerTopElementName});
@@ -293,9 +281,9 @@ ApiService.prototype = {
             this.pagerBtmElement.replace(this.getPagerElements());
         }
     },
-    renderDataCategoryApiResponse: function(response) {
+    renderDataCategoryApiResponse: function() {
 
-        var json = response.responseJSON;
+        var json = this.response.responseJSON;
 
         // data category information and drill down
         if (json.dataCategory) {
@@ -374,43 +362,28 @@ ApiService.prototype = {
         rows[0] = new Element("tr").insert(new Element("td"));
         return rows;
     },
-    getActionsTableData: function(urlKey, dMethod, uid, optViewPath) {
+    getActionsTableData: function(params) {
+        params.deleteable = params.deleteable || false;
         var actions = new Element('td');
-
-        if (this.getActionsAllowView()) {
-            var eUrl = optViewPath || uid;
-
-            actions.insert(new Element('a', {href : this.getUrl(eUrl)})
+        if (params.actions.isAllowView()) {
+            var path = params.path || params.uid;
+            actions.insert(new Element('a', {href : this.getUrl(path)})
                     .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
         }
-
-        if (this.getActionsAllowDelete()) {
-            var dUrl = "'" + urlKey + "','" + this.getUrl(uid) + "'";
-
-            actions.insert(new Element('a', 
-            {
-              onClick : dMethod + '("' + dUrl + '") ; return false;',
-              href : 'javascript:' + dMethod + '(' + dUrl + ');'
-            })
-                .insert(new Element('img',
-                {
-                  src : '/images/icons/page_delete.png', 
-                  title : 'Delete', 
-                  alt : 'Delete', 
-                  border : 0 
-                })));
-
+        if (params.deleteable && params.actions.isAllowDelete()) {
+            var methodParams = '"' + params.uid + '", "' + this.getUrl(params.uid) + '"';
+            var link = new Element('a', {
+                onClick: params.method + '(' + methodParams + ') ; return false;',
+                href: 'javascript:' + params.method + '(' + methodParams + ');'});
+            var image = new Element('img', {
+                src: '/images/icons/page_delete.png',
+                title: 'Delete',
+                alt: 'Delete',
+                border: 0});
+            link.insert(image);
+            actions.insert(link);
         }
         return actions;
-    },
-    getActionsAllowView: function() {
-        return this.allowView;
-    },
-    getActionsAllowCreate : function() {
-        return this.allowCreate;
-    },
-    getActionsAllowDelete: function() {
-        return this.allowDelete;
     },
     getUrl: function(params) {
         var url = window.location.href;
@@ -424,4 +397,91 @@ ApiService.prototype = {
             return url;
         }
     }
-};
+});
+
+// Actions
+var Actions = Class.create({
+    initialize: function(actions) {
+        Object.extend(this, actions);
+    },
+    isAllowView: function() {
+        return this.allowView;
+    },
+    isAllowCreate: function() {
+        return this.allowCreate;
+    },
+    isAllowModify: function() {
+        return this.allowModify;
+    },
+    isAllowDelete: function() {
+        return this.allowDelete;
+    },
+    isAllowList: function() {
+        return this.allowList;
+    }
+});
+
+// Actions Resource
+var ActionsResource = Class.create({
+    initialize: function(params) {
+        this.actions = new Hash();
+        this.path = params.path;
+    },
+    start: function() {
+        if (this.path) {
+            this.load();
+        }
+    },
+    load: function() {
+        new Ajax.Request(this.path + '?method=get', {
+            method: 'post',
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.loadSuccess.bind(this)});
+    },
+    loadSuccess: function(response) {
+        var resource = response.responseJSON;
+        resource = new Hash(resource);
+        resource.keys().each(function(key) {
+            this.actions.set(key, new Actions(resource.get(key)));
+        }.bind(this));
+        this.notify('loaded', this);
+    },
+    getActions: function(name) {
+        return this.actions.get(name);
+    }
+});
+Object.Event.extend(ActionsResource);
+
+// Resource Loader
+var ResourceLoader = Class.create({
+    initialize: function() {
+        this.resources = [];
+    },
+    start: function() {
+        this.resources.each(function(resource) {
+            if (resource.start) {
+                resource.observe('loaded', this.onLoaded.bind(this));
+                resource.start();
+            }
+        }.bind(this));
+    },
+    onLoaded: function(resource) {
+        resource.loaded = true;
+        this.checkLoadStatus();
+    },
+    checkLoadStatus: function() {
+        var loaded = true;
+        this.resources.each(function(resource) {
+            if (!resource.loaded) {
+                loaded = false;
+            }
+        });
+        if (loaded) {
+            this.notify('loaded', this);
+        }
+    },
+    addResource: function(resource) {
+        this.resources.push(resource);
+    }
+});
+Object.Event.extend(ResourceLoader);

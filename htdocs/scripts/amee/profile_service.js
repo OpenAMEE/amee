@@ -1,5 +1,20 @@
-var ProfileCategoryResource = Class.create();
-ProfileCategoryResource.prototype = {
+var Profile = Class.create({
+    initialize: function() {
+    },
+    addProfile: function() {
+        new Ajax.Request(window.location.href, {
+            method: 'post',
+            parameters: 'profile=true',
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.addProfileSuccess.bind(this)
+        });
+    },
+    addProfileSuccess: function(t) {
+        window.location.href = window.location.href;
+    }
+});
+
+var ProfileCategoryResource = Class.create({
     initialize: function(profileUid, categoryPath) {
         this.profileUid = profileUid;
         this.categoryPath = categoryPath;
@@ -15,149 +30,14 @@ ProfileCategoryResource.prototype = {
         });
     },
     loadSuccess: function(response) {
-        this.resource = eval('(' + response.responseText + ')');
-        this.loaded = true;
+        this.response = response;
         this.loadedCallback();
     },
     loadedCallback: function() {
     },
     update: function() {
     }
-};
-
-var DrillDown = Class.create();
-DrillDown.prototype = {
-    initialize: function(fullPath, apiVersion, dateFormat, allowCreate) {
-        this.fullPath = fullPath;
-        this.apiVersion = apiVersion || '1.0';
-        this.dateFormat = dateFormat || 'date format not specified';
-        this.allowCreate = allowCreate || false;
-    },
-    addProfileItem: function() {
-        new Ajax.Request(window.location.href, {
-            method: 'post',
-            parameters: $('createProfileFrm').serialize(),
-            requestHeaders: ['Accept', 'application/json'],
-            onSuccess: this.addProfileItemSuccess.bind(this)
-        });
-    },
-    addProfileItemSuccess: function(response) {
-        window.location.href = window.location.href;
-    },
-    loadDrillDown: function(params) {
-        params = params || {};
-        if (this.allowCreate) {
-            var url = this.fullPath + '/drill';
-            params['method'] = 'get';
-            url = url + '?' + Object.toQueryString(params);
-            new Ajax.Request(url, {
-                method: 'post',
-                requestHeaders: ['Accept', 'application/json'],
-                onSuccess: this.loadDrillDownSuccess.bind(this)
-            });
-        }
-    },
-    loadDrillDownSuccess: function(response) {
-        var obj = eval('(' + response.responseText + ')');
-        this.drillDownLoadedCallback(obj);
-    },
-    drillDownLoadedCallback: function(obj) {
-
-        // store stuff locally
-        this.selectName = obj.choices.name;
-        this.selections = obj.selections;
-
-        // reset heading 
-        $("createProfileHeading").innerHTML = "Create Profile Item";
-
-        // get and reset our div
-        var div = $("createProfileItemDiv");
-        div.innerHTML = '';
-        // add list of previous selections
-        var list = document.createElement('ul');
-        for (var i = 0; i < obj.selections.length; i++) {
-            var item = document.createElement('li');
-            item.innerHTML = obj.selections[i].name + ': ' + obj.selections[i].value;
-            list.appendChild(item);
-        }
-        div.appendChild(list);
-        if (this.selectName == 'uid') {
-            var choice = obj.choices.choices[0];
-            this.uid = choice.value;
-            // params for V1 and V2
-            // dataItemUid
-            div.appendChild(new Element('input', {type : 'hidden', name : 'dataItemUid', value : this.uid}));
-            // name
-            div.appendChild(document.createTextNode('Name: '));
-            var nameInput = new Element('input', {type : 'text', name : 'name', id : 'name', style : 'margin-left:49px'});
-            div.appendChild(nameInput);
-            div.appendChild(document.createElement('br'));
-            // V1 or V2 params?
-            if (this.apiVersion == '1.0') {
-                // V1 params
-                div.appendChild(document.createTextNode('Valid From: '));
-                var validFromInput = new Element('input', {type : 'text', name : 'validFrom', id : 'validFrom'});
-                div.appendChild(validFromInput);
-            } else {
-                // V2 params
-                // startDate
-                div.appendChild(document.createTextNode('Start Date: '));
-                var startDateInput = new Element('input', {type : 'text', name : 'startDate', id : 'startDate', style : 'margin-left:20px'});
-                div.appendChild(startDateInput);
-                div.appendChild(document.createTextNode("  (" + this.dateFormat + ")"));
-                div.appendChild(document.createElement('br'));
-                // endDate
-                div.appendChild(document.createTextNode('End Date: '));
-                var endDateInput = new Element('input', {type : 'text', name : 'endDate', id : 'endDate', style : 'margin-left:25px'});
-                div.appendChild(endDateInput);
-                div.appendChild(document.createTextNode("  (" + this.dateFormat + ")"));
-                div.appendChild(document.createElement('br'));
-                // duration
-                div.appendChild(document.createTextNode('Duration: '));
-                var durationInput = new Element('input', {type : 'text', name : 'duration', id : 'duration', style : 'margin-left:31px'});
-                div.appendChild(durationInput);
-                div.appendChild(document.createTextNode("  (e.g PT30M [30 mins])"));
-                div.appendChild(document.createElement('br'));
-            }
-            div.appendChild(document.createElement('br'));
-            var button = document.createElement('input');
-            button.type = 'button';
-            button.value = 'Add: ' + choice.value;
-            button.name = 'Add: ' + choice.value;
-            Event.observe(button, "click", this.addProfileItem.bind(this));
-            div.appendChild(button);
-        } else {
-            // add the form select
-            var select = document.createElement('select');
-            select.id = obj.choices.name;
-            select.name = obj.choices.name;
-            var defaultOpt = document.createElement('option');
-            defaultOpt.value = '';
-            defaultOpt.appendChild(document.createTextNode('(select ' + obj.choices.name + ')'));
-            select.appendChild(defaultOpt);
-            for (var i = 0; i < obj.choices.choices.length; i++) {
-                var choice = obj.choices.choices[i];
-                var opt = document.createElement('option');
-                opt.value = choice.value;
-                opt.appendChild(document.createTextNode(choice.name));
-                select.appendChild(opt);
-            }
-            Event.observe(select, "change", this.drillDownSelect.bind(this));
-            div.appendChild(select);
-        }
-    },
-    drillDownSelect: function(e) {
-        var select = $(this.selectName);
-        if (select.value != '') {
-            var params = {};
-            for (var i = 0; i < this.selections.length; i++) {
-                params[this.selections[i].name] = this.selections[i].value;
-            }
-            params[this.selectName] = select.value;
-            this.loadDrillDown(params);
-        }
-    }
-};
+});
 
 var BaseProfileApiService = Class.create(ApiService, ({
     // Initialization
@@ -181,11 +61,11 @@ var ProfileItemsApiService = Class.create(BaseProfileApiService, ({
     initialize: function($super, params) {
         $super(params);
     },
-    renderApiResponse: function($super, response) {
+    renderApiResponse: function($super) {
 
-        var json = response.responseJSON;
+        $super();
 
-        $super(response);
+        var json = this.response.responseJSON;
 
         // update elements
         this.totalAmountElement = $(this.tAmountElementName);
@@ -199,6 +79,7 @@ var ProfileItemsApiService = Class.create(BaseProfileApiService, ({
         } else {
             totalElement = new Element('p', {id : this.tAmountElementName}).insert("Total ");
         }
+
         // replace total amount
         this.totalAmountElement.replace(totalElement);
     },
@@ -219,33 +100,19 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
         $super(params);
         // api category items
         this.headingCategory = params.headingCategory || "";
-        this.itemAllowList = false;
-        this.itemAllowView = false;
-        this.itemAllowCreate = false;
-        this.itemAllowModify = false;
-        this.itemAllowDelete = false;
     },
-    updatePermissions: function($super, response) {
-        $super(response);
-        var profileItemActions = response.responseJSON.profileItemActions;
-        if (profileItemActions) {
-            this.itemAllowList = profileItemActions.allowList;
-            this.itemAllowView = profileItemActions.allowView;
-            this.itemAllowCreate = profileItemActions.allowCreate;
-            this.itemAllowModify = profileItemActions.allowModify;
-            this.itemAllowDelete = profileItemActions.allowDelete;
-        }
-    },
-    renderApiResponse: function($super, response) {
-        var json = response.responseJSON;
+    renderApiResponse: function($super) {
 
-        if (json.profileItems.length > 0) {
-            if (this.itemAllowList) {
-                $super(response);
-            }
-        } 
-        
-        if (json.profileCategories.length > 0) {
+        var json = this.response.responseJSON;
+
+        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
+        var profileCategoryActions = PROFILE_ACTIONS.getActions('profileCategory');
+
+        if ((json.profileItems.length > 0) && profileItemActions.isAllowList()) {
+            $super();
+        }
+
+        if ((json.profileCategories.length > 0) && profileCategoryActions.isAllowList()) {
             // update elements
             this.headingCategoryElement = $(this.headingElementName);
             this.headingContentElement = $(this.headingElementName);
@@ -267,19 +134,8 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
             this.headingContentElement.replace(tableElement);
         }
     },
-    getActionsAllowView: function() {
-        return this.itemAllowView;
-    },
-    getActionsAllowCreate : function() {
-        return this.itemAllowCreate;
-    },
-    getActionsAllowDelete: function() {
-        return this.itemAllowDelete;
-    },
-    getActionsTableData: function($super, uid) {
-        return $super("profileItem.uid", "deleteProfileItem", uid);
-    },
     getDetailRows: function(json) {
+        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
         var rows = [];
         if (json.profileItems) {
             for (var i = 0; i < json.profileItems.length; i++) {
@@ -292,7 +148,11 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
                         .insert(new Element('td').insert(profileItem.endDate));
 
                 // create actions
-                detailRow.insert(this.getActionsTableData(profileItem.uid));
+                detailRow.insert(this.getActionsTableData({
+                    deleteable: true,
+                    method: "deleteProfileItem",
+                    actions: profileItemActions,
+                    uid: profileItem.uid}));
 
                 // update array
                 rows[i] = detailRow;
@@ -318,7 +178,6 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
                 // create actions
                 detailRow.insert(this.getCategoryActionsTableData(profileCategory.path));
 
-
                 // update array
                 rows[i] = detailRow;
             }
@@ -328,9 +187,9 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
         return rows;
     },
     getCategoryActionsTableData: function(path) {
+        var profileCategoryActions = PROFILE_ACTIONS.getActions('profileCategory');
         var actions = new Element('td');
-
-        if (this.allowView) {
+        if (profileCategoryActions.isAllowView()) {
             actions.insert(new Element('a', {href : this.getUrl(path)})
                     .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
         }
@@ -343,8 +202,11 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
     initialize: function($super, params) {
         $super(params);
     },
-    renderApiResponse: function(response) {
-        var json = response.responseJSON;
+    renderApiResponse: function() {
+
+        var json = this.response.responseJSON;
+
+        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
 
         if (json.profileItem) {
             var profileItem = json.profileItem;
@@ -375,7 +237,7 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
             for (var i = 0; i < profileItem.itemValues.length; i++) {
                 var itemValue = profileItem.itemValues[i];
 
-                if (this.allowModify) {
+                if (profileItemActions.isAllowModify()) {
 
                     var newRow = new Element("tr");
                     var dataLabel = new Element("td").insert(
@@ -455,7 +317,7 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
             var tableElement = new Element('table', {id : 'inputTable'}).insert(tableBody);
             $('inputTable').replace(tableElement);
 
-            if (this.allowModify) {
+            if (profileItemActions.isAllowModify()) {
                 var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
                 $("inputSubmit").replace(btnSubmit);
                 Event.observe(btnSubmit, "click", this.updateProfileItem.bind(this));
@@ -463,10 +325,10 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
         }
     },
     getFormInfoElement: function(label, name, info, size) {
+        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
         var newRow = new Element("tr").insert(new Element("td").update(label));
-
         var dataElement = new Element("td");
-        if (this.allowModify) {
+        if (profileItemActions.isAllowModify()) {
             dataElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size}));
         } else {
             dataElement.insert(info);
@@ -509,29 +371,22 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
     },
     updateProfileItemSuccess: function(response) {
         // update elements and status
+        this.response = response;
         $('updateStatusSubmit').replace(new Element('div', {id : 'updateStatusSubmit'}).insert(new Element('b').update('UPDATED!')));
-        this.renderApiResponse(response);
+        this.renderApiResponse();
     },
-    updateProfileItemFail: function(response) {
+    updateProfileItemFail: function() {
         $('updateStatusSubmit').replace(new Element('div', {id : 'updateStatusSubmit'}).insert(new Element('b').update('ERROR!')));
     }
 }));
-
 
 var ProfilesApiService = Class.create(BaseProfileApiService, ({
     // Initialization
     initialize: function($super, params) {
         $super(params);
     },
-    renderApiResponse: function($super, response) {
-        $super(response);
-    },
-    renderDataCategoryApiResponse: function(response) {
-
-    },
-    renderApiResponse: function($super, response) {
-        var json = response.responseJSON;
-        $super(response);
+    renderDataCategoryApiResponse: function() {
+        // override but do nothing
     },
     getHeadingElement: function(json) {
         return new Element('tr')
@@ -541,46 +396,44 @@ var ProfilesApiService = Class.create(BaseProfileApiService, ({
                 .insert(this.getHeadingData('Created'))
                 .insert(this.getHeadingData('Actions'));
     },
-    getActionsTableData: function(dMethod, uid) {
+    getActionsTableData: function(params) {
+        params.deleteable = params.deleteable || false;
         var actions = new Element('td');
-
-        if (this.allowView) {
-            actions.insert(new Element('a', {href : this.getUrl(uid)})
+        if (params.actions.isAllowView()) {
+            actions.insert(new Element('a', {href : this.getUrl(params.uid)})
                     .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
         }
-
-        if (this.allowDelete) {
-
-            actions.insert(new Element('a', 
-            {
-              onClick : dMethod + '("' + uid + '") ; return false;',
-              href : 'javascript:' + dMethod + '("' + uid + '");'
-            })
-                .insert(new Element('img',
-                {
-                  src : '/images/icons/page_delete.png', 
-                  title : 'Delete', 
-                  alt : 'Delete', 
-                  border : 0 
-                })));
-
+        if (params.deleteable && params.actions.isAllowDelete()) {
+            actions.insert(new Element('a', {
+                onClick: params.method + '("' + params.uid + '") ; return false;',
+                href: 'javascript:' + params.method + '("' + params.uid + '");'})
+                    .insert(new Element('img', {
+                src: '/images/icons/page_delete.png',
+                title: 'Delete',
+                alt: 'Delete',
+                border: 0})));
         }
         return actions;
     },
     getDetailRows: function($super, json) {
+        var profileActions = PROFILE_ACTIONS.getActions('profile');
+        var rows = [];
         if (json.profiles) {
-            var rows = [];
             for (var i = 0; i < json.profiles.length; i++) {
                 var profile = json.profiles[i];
                 // TODO: deal with permissions
                 var detailRow = new Element('tr', {id : 'Elem_' + profile.uid})
                         .insert(new Element('td').insert(profile.path))
-                        // .insert(new Element('td').insert(profile.permission.group.name))
-                        // .insert(new Element('td').insert(profile.permission.user.username))
+                    // .insert(new Element('td').insert(profile.permission.group.name))
+                    // .insert(new Element('td').insert(profile.permission.user.username))
                         .insert(new Element('td').insert(profile.created));
 
                 // create actions
-                detailRow.insert(this.getActionsTableData('deleteProfile', profile.path));
+                detailRow.insert(this.getActionsTableData({
+                    deleteable: true,
+                    actions: profileActions,
+                    method: 'deleteProfile',
+                    uid: profile.uid}));
 
                 // update array
                 rows[i] = detailRow;
@@ -597,8 +450,9 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
     initialize: function($super, params) {
         $super(params);
     },
-    renderApiResponse: function(response) {
-        var json = response.responseJSON;
+    renderApiResponse: function() {
+
+        var json = this.response.responseJSON;
 
         if (json.itemValue) {
             var itemValue = json.itemValue;
@@ -652,10 +506,9 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
             Event.observe(btnSubmit, "click", this.updateProfileItemValue.bind(this));
         }
     },
-    processApiResponse: function(response) {
-        this.renderTrail(response);
-        this.updatePermissions(response);
-        this.renderApiResponse(response);
+    render: function() {
+        this.renderTrail();
+        this.renderApiResponse();
     },
     addFormInfoElement: function(label, pElement, name, info, size, style) {
         pElement.insert(label);
@@ -688,12 +541,13 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
             onFailure: this.updateProfileItemValueFail.bind(this)
         });
     },
-    updateProfileItemValueSuccess: function(response) {
+    updateProfileItemValueSuccess: function() {
         // update elements and status
+        this.response = response;
         $('updateStatusSubmit').replace(new Element('div', {id : 'updateStatusSubmit'}).insert(new Element('b').update('UPDATED!')));
-        this.renderApiResponse(response);
+        this.renderApiResponse();
     },
-    updateProfileItemValueFail: function(response) {
+    updateProfileItemValueFail: function() {
         $('updateStatusSubmit').replace(new Element('div', {id : 'updateStatusSubmit'}).insert(new Element('b').update('ERROR!')));
     }
 }));

@@ -10,9 +10,20 @@
 
 <script type='text/javascript'>
 
+    // create resource objects
+    var PROFILE_ACTIONS = new ActionsResource({path: '/profiles/actions'});
+    var profileItemApiService = new ProfileItemApiService();
+
+    // use resource loader to load resources and notify on loaded
+    var resourceLoader = new ResourceLoader();
+    resourceLoader.addResource(PROFILE_ACTIONS);
+    resourceLoader.observe('loaded', function() {
+        profileItemApiService.start();
+    });
+
     document.observe('dom:loaded', function() {
-        var profileItemApiService = new ProfileItemApiService();
-        profileItemApiService.apiRequest();
+        // start everything
+        resourceLoader.start();
     });
 
 </script>
