@@ -24,6 +24,7 @@
 
     // create resource objects
     var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
+    var ITEM_DEFINITIONS = new ItemDefinitionsResource();
     var dataCategoryApiService = new DataCategoryApiService({
         heading : "Data Items",
         headingElementName : "apiHeading",
@@ -40,15 +41,15 @@
     // use resource loader to load resources and notify on loaded
     var resourceLoader = new ResourceLoader();
     resourceLoader.addResource(DATA_ACTIONS);
+    resourceLoader.addResource(ITEM_DEFINITIONS);
     resourceLoader.observe('loaded', function() {
         dataCategoryApiService.start();
     });
+    resourceLoader.start();
 
     document.observe('dom:loaded', function() {
         // hide n/a atom option
         $('showAPIATOM').style.visibility = "hidden";
-        // start everything
-        resourceLoader.start();
     });
 
 </script>

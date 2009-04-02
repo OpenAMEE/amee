@@ -6,7 +6,6 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.restlet.profile.builder.v2.AtomFeed;
-import com.amee.restlet.utils.HeaderUtils;
 import com.amee.service.ThreadBeanHolder;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
@@ -199,18 +198,6 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
                 AtomFeed.getInstance().getWriter().writeTo(atomElement, writer);
             }
         };
-    }
-
-    public int getItemsPerPage() {
-        int itemsPerPage = EnvironmentService.getEnvironment().getItemsPerPage();
-        String itemsPerPageStr = getRequest().getResourceRef().getQueryAsForm().getFirstValue("itemsPerPage");
-        if (itemsPerPageStr == null) {
-            itemsPerPageStr = HeaderUtils.getHeaderFirstValue("ItemsPerPage", getRequest());
-        }
-        if (itemsPerPageStr != null) {
-            itemsPerPage = Integer.parseInt(itemsPerPageStr);
-        }
-        return itemsPerPage;
     }
 
     public PathItem getPathItem() {

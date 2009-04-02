@@ -20,11 +20,7 @@
     resourceLoader.observe('loaded', function() {
         profileItemApiService.start();
     });
-
-    document.observe('dom:loaded', function() {
-        // start everything
-        resourceLoader.start();
-    });
+    resourceLoader.start();
 
 </script>
 

@@ -25,12 +25,11 @@
     resourceLoader.observe('loaded', function() {
         dataItemApiService.start();
     });
+    resourceLoader.start();
 
     document.observe('dom:loaded', function() {
         // hide n/a atom option
         $('showAPIATOM').style.visibility = "hidden";
-        // start everything
-        resourceLoader.start();
     });
 
 </script>

@@ -60,11 +60,7 @@
         profileCategoryApiService.start();
         drillDown.start();
     });
-
-    document.observe('dom:loaded', function() {
-        // start everything
-        resourceLoader.start();
-    });
+    resourceLoader.start();
 
 </script>
 

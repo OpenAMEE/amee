@@ -111,7 +111,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         var createCatElement = new Element('div', {id : id});
 
         if (dataCategoryActions.isAllowCreate() || dataItemActions.isAllowCreate()) {
-            createCatElement.insert(new Element('h2').update('Create Data Category'));
+            createCatElement.insert(new Element('h2').update('Create Data Category / Data Item'));
 
             var dataCategory = json.dataCategory;
 
@@ -125,7 +125,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
                 typeSelectElement.insert(new Element('option', {value : 'DC'}).update('Data Category'));
             }
             if (dataCategory.itemDefinition && dataItemActions.isAllowCreate()) {
-                typeSelectElement.insert(new Element('option', {value : 'DI'}).update('Data Item (for' + dataCategory.itemDefinition.name + ')'));
+                typeSelectElement.insert(new Element('option', {value : 'DI'}).update('Data Item (for ' + dataCategory.itemDefinition.name + ')'));
             }
             formElement.insert(typeSelectElement).insert(new Element('br'));
 
@@ -135,14 +135,12 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             // item definitions
             selectElement.insert(new Element('option', {value : ''}).update('(No Item Definition)'));
             formElement.insert('Item Definition: ');
-
-            for (var i = 0; i < ITEM_DEFINITIONS.length; i++) {
-                var itemDefinition = ITEM_DEFINITIONS[i];
+            var itemDefinitions = ITEM_DEFINITIONS.getItemDefinitions();
+            for (var i = 0; i < itemDefinitions.length; i++) {
+                var itemDefinition = itemDefinitions[i];
                 selectElement.insert(new Element('option', {value : itemDefinition.uid}).update(itemDefinition.name));
             }
-
             formElement.insert(selectElement).insert(new Element('br')).insert(new Element('br'));
-
 
             // sumbit and event
             var btnSubmit = new Element('input', {type : 'button', value : 'Create'});
@@ -176,8 +174,9 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             // item definitions
             selectElement.insert(new Element('option', {value : ''}).update('(No Item Definition)'));
             formElement.insert('Item Definition: ');
-            for (var i = 0; i < ITEM_DEFINITIONS.length; i++) {
-                var itemDefinition = ITEM_DEFINITIONS[i];
+            var itemDefinitions = ITEM_DEFINITIONS.getItemDefinitions();
+            for (var i = 0; i < itemDefinitions.length; i++) {
+                var itemDefinition = itemDefinitions[i];
                 var option = new Element('option', {value : itemDefinition.uid}).update(itemDefinition.name);
 
                 if (dataCategory.itemDefinition && dataCategory.itemDefinition.uid == itemDefinition.uid) {
@@ -551,7 +550,6 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
     }
 }));
 
-
 var DataItemValueApiService = Class.create(DataItemApiService, ({
     // Initialization
     initialize: function($super, params) {
@@ -819,3 +817,42 @@ var DrillDown = Class.create({
         }
     }
 });
+
+// ItemDefinition
+var ItemDefinition = Class.create({
+    initialize: function(itemDefinition) {
+        Object.extend(this, itemDefinition);
+    }
+});
+
+// ItemDefinitions Resource
+var ItemDefinitionsResource = Class.create({
+    initialize: function() {
+        this.itemDefinitions = [];
+        this.path = '/admin/itemDefinitions';
+    },
+    start: function() {
+        this.load();
+    },
+    load: function() {
+        this.itemDefinitions = [];
+        var params = new Hash();
+        params.set('method', 'get');
+        params.set('itemsPerPage', '500');
+        new Ajax.Request(this.path + '?' + Object.toQueryString(params), {
+            method: 'post',
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.loadSuccess.bind(this)});
+    },
+    loadSuccess: function(response) {
+        var resource = response.responseJSON;
+        resource.itemDefinitions.each(function(itemDefinition) {
+            this.itemDefinitions.push(new ItemDefinition(itemDefinition));
+        }.bind(this));
+        this.notify('loaded', this);
+    },
+    getItemDefinitions: function() {
+        return this.itemDefinitions;
+    }
+});
+Object.Event.extend(ItemDefinitionsResource);

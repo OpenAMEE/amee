@@ -452,12 +452,33 @@ var ActionsResource = Class.create({
 });
 Object.Event.extend(ActionsResource);
 
-// Resource Loader
-var ResourceLoader = Class.create({
+// Mock DOM Resource
+var MockDomResource = Class.create({
     initialize: function() {
-        this.resources = [];
     },
     start: function() {
+        this.load();
+    },
+    load: function() {
+        document.observe('dom:loaded', this.loadSuccess.bind(this));
+    },
+    loadSuccess: function() {
+        this.notify('loaded', this);
+    }
+});
+Object.Event.extend(MockDomResource);
+
+// Resource Loader
+var ResourceLoader = Class.create({
+    initialize: function(params) {
+        params = params || {};
+        this.resources = [];
+        this.observeDom = params.observeDom || true;
+    },
+    start: function() {
+        if (this.observeDom) {
+            this.addResource(new MockDomResource());
+        }
         this.resources.each(function(resource) {
             if (resource.start) {
                 resource.observe('loaded', this.onLoaded.bind(this));

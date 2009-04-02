@@ -31,13 +31,7 @@
     resourceLoader.observe('loaded', function() {
         profilesApiService.start();
     });
-
-    document.observe('dom:loaded', function() {
-        // don't show ATOM option
-        $('showAPIATOM').style.visibility = "hidden";
-        // start everything
-        resourceLoader.start();
-    });
+    resourceLoader.start();
 
 </script>
 

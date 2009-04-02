@@ -83,7 +83,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(getItemsPerPage());
         Environment environment = definitionBrowser.getEnvironment();
         List<ItemDefinition> itemDefinitions = definitionServiceDAO.getItemDefinitions(environment, pager);
         pager.setCurrentPage(getPage());
@@ -99,7 +99,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             Environment environment = definitionBrowser.getEnvironment();
             List<ItemDefinition> itemDefinitions = definitionServiceDAO.getItemDefinitions(environment, pager);
             pager.setCurrentPage(getPage());
@@ -119,7 +119,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     public Element getElement(Document document) {
         Element element = document.createElement("ItemDefinitionsResource");
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             Environment environment = definitionBrowser.getEnvironment();
             List<ItemDefinition> itemDefinitions = definitionServiceDAO.getItemDefinitions(environment, pager);
             pager.setCurrentPage(getPage());
