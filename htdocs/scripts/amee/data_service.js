@@ -110,7 +110,8 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
 
         var createCatElement = new Element('div', {id : id});
 
-        if (dataCategoryActions.isAllowCreate() || dataItemActions.isAllowCreate()) {
+        if ((dataCategoryActions.isAllowCreate() || dataItemActions.isAllowCreate()) &&
+                ITEM_DEFINITIONS.available) {
             createCatElement.insert(new Element('h2').update('Create Data Category / Data Item'));
 
             var dataCategory = json.dataCategory;
@@ -159,7 +160,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
 
         var updateCatElement = new Element('div', {id : id});
 
-        if (dataCategoryActions.isAllowModify()) {
+        if (dataCategoryActions.isAllowModify() && ITEM_DEFINITIONS.available) {
             updateCatElement.insert(new Element('h2').update('Update Data Category'));
 
             var dataCategory = json.dataCategory;
@@ -700,8 +701,7 @@ var DrillDown = Class.create({
         new Ajax.Request(url, {
             method: 'post',
             requestHeaders: ['Accept', 'application/json'],
-            onSuccess: this.loadSuccess.bind(this)
-        });
+            onSuccess: this.loadSuccess.bind(this)});
     },
     loadSuccess: function(response) {
         this.response = response;
@@ -842,13 +842,21 @@ var ItemDefinitionsResource = Class.create({
         new Ajax.Request(this.path + '?' + Object.toQueryString(params), {
             method: 'post',
             requestHeaders: ['Accept', 'application/json'],
-            onSuccess: this.loadSuccess.bind(this)});
+            onSuccess: this.loadSuccess.bind(this),
+            onFailure: this.loadFailure.bind(this)});
     },
     loadSuccess: function(response) {
         var resource = response.responseJSON;
         resource.itemDefinitions.each(function(itemDefinition) {
             this.itemDefinitions.push(new ItemDefinition(itemDefinition));
         }.bind(this));
+        this.loaded = true;
+        this.available = true;
+        this.notify('loaded', this);
+    },
+    loadFailure: function() {
+        this.loaded = true;
+        this.available = false;
         this.notify('loaded', this);
     },
     getItemDefinitions: function() {

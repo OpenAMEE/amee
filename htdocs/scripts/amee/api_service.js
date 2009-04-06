@@ -175,12 +175,15 @@ var ApiService = Class.create({
         new Ajax.Request(window.location.href + '?' + Object.toQueryString(params), {
             method: 'post',
             requestHeaders: ['Accept', 'application/json'],
-            onSuccess: this.loadSuccess.bind(this)
-        });
+            onSuccess: this.loadSuccess.bind(this),
+            onFailure: this.loadFailure.bind(this)});
     },
     loadSuccess: function(response) {
         this.response = response;
         this.render();
+    },
+    loadFailure: function() {
+        // TODO
     },
     render: function() {
         this.renderTrail();
@@ -405,19 +408,19 @@ var Actions = Class.create({
         Object.extend(this, actions);
     },
     isAllowView: function() {
-        return this.allowView;
+        return this.available && this.allowView;
     },
     isAllowCreate: function() {
-        return this.allowCreate;
+        return this.available && this.allowCreate;
     },
     isAllowModify: function() {
-        return this.allowModify;
+        return this.available && this.allowModify;
     },
     isAllowDelete: function() {
-        return this.allowDelete;
+        return this.available && this.allowDelete;
     },
     isAllowList: function() {
-        return this.allowList;
+        return this.available && this.allowList;
     }
 });
 
@@ -436,7 +439,8 @@ var ActionsResource = Class.create({
         new Ajax.Request(this.path + '?method=get', {
             method: 'post',
             requestHeaders: ['Accept', 'application/json'],
-            onSuccess: this.loadSuccess.bind(this)});
+            onSuccess: this.loadSuccess.bind(this),
+            onFailure: this.loadFailure.bind(this)});
     },
     loadSuccess: function(response) {
         var resource = response.responseJSON;
@@ -444,6 +448,13 @@ var ActionsResource = Class.create({
         resource.keys().each(function(key) {
             this.actions.set(key, new Actions(resource.get(key)));
         }.bind(this));
+        this.loaded = true;
+        this.available = true;
+        this.notify('loaded', this);
+    },
+    loadFailure: function() {
+        this.loaded = true;
+        this.available = false;
         this.notify('loaded', this);
     },
     getActions: function(name) {
@@ -463,6 +474,8 @@ var MockDomResource = Class.create({
         document.observe('dom:loaded', this.loadSuccess.bind(this));
     },
     loadSuccess: function() {
+        this.loaded = true;
+        this.available = false;
         this.notify('loaded', this);
     }
 });
@@ -487,7 +500,6 @@ var ResourceLoader = Class.create({
         }.bind(this));
     },
     onLoaded: function(resource) {
-        resource.loaded = true;
         this.checkLoadStatus();
     },
     checkLoadStatus: function() {
