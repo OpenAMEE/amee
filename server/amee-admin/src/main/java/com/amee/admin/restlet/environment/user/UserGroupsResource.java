@@ -73,7 +73,7 @@ public class UserGroupsResource extends BaseResource implements Serializable {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", environmentBrowser);
         values.put("environment", environmentBrowser.getEnvironment());
-        values.put("auth", environmentBrowser.getUser());
+        values.put("user", environmentBrowser.getUser());
         values.put("groups", groups);
         values.put("groupUserMap", groupUserMap);
         values.put("pager", pager);
@@ -88,7 +88,7 @@ public class UserGroupsResource extends BaseResource implements Serializable {
             List<GroupUser> groupUsers = siteService.getGroupUsers(environmentBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
-            obj.put("auth", environmentBrowser.getUser().getJSONObject());
+            obj.put("user", environmentBrowser.getUser().getJSONObject());
             JSONArray groupUsersArr = new JSONArray();
             for (GroupUser groupUser : groupUsers) {
                 groupUsersArr.put(groupUser.getJSONObject());

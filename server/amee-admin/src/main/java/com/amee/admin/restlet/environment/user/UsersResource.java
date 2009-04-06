@@ -87,7 +87,7 @@ public class UsersResource extends BaseResource implements Serializable {
             obj.put("users", usersArr);
             obj.put("pager", pager.getJSONObject());
         } else if (isPost()) {
-            obj.put("auth", newUser.getJSONObject());
+            obj.put("user", newUser.getJSONObject());
         }
         return obj;
     }

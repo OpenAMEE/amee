@@ -116,7 +116,7 @@ public class GroupUser implements EnvironmentObject, DatedObject, Comparable, Se
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
         obj.put("group", getGroup().getIdentityJSONObject());
-        obj.put("auth", getUser().getIdentityJSONObject());
+        obj.put("user", getUser().getIdentityJSONObject());
         if (detailed) {
             obj.put("environment", getEnvironment().getIdentityJSONObject());
             obj.put("created", getCreated());

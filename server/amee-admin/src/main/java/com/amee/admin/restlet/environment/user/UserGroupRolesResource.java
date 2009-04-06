@@ -71,7 +71,7 @@ public class UserGroupRolesResource extends BaseResource {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", environmentBrowser);
         values.put("environment", environmentBrowser.getEnvironment());
-        values.put("auth", environmentBrowser.getUser());
+        values.put("user", environmentBrowser.getUser());
         values.put("group", environmentBrowser.getGroup());
         values.put("groupUser", environmentBrowser.getGroupUser());
         values.put("roleMap", roleMap);
@@ -86,7 +86,7 @@ public class UserGroupRolesResource extends BaseResource {
         if (isGet()) {
             Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
             pager.setCurrentPage(getPage());
-            obj.put("auth", environmentBrowser.getUser().getJSONObject());
+            obj.put("user", environmentBrowser.getUser().getJSONObject());
             obj.put("groupUser", environmentBrowser.getGroupUser().getJSONObject());
             GroupUser gu = siteService.getGroupUser(environmentBrowser.getGroup(), environmentBrowser.getUser());
             obj.put("roles", gu.getRoles());

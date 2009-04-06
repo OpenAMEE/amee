@@ -46,6 +46,7 @@ public class AuthService implements Serializable {
 
     public void reset() {
         ThreadBeanHolder.set("auth", null);
+        ThreadBeanHolder.set("user", null);
         ThreadBeanHolder.set("groupUsers", null);
         ThreadBeanHolder.set("group", null);
         ThreadBeanHolder.set("permission", null);

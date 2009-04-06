@@ -48,7 +48,7 @@ public class UserGroupRoleResource extends BaseResource {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", environmentBrowser);
         values.put("environment", environmentBrowser.getEnvironment());
-        values.put("auth", environmentBrowser.getUser());
+        values.put("user", environmentBrowser.getUser());
         values.put("group", environmentBrowser.getGroup());
         values.put("groupUser", environmentBrowser.getGroupUser());
         values.put("role", environmentBrowser.getRole());
@@ -59,7 +59,7 @@ public class UserGroupRoleResource extends BaseResource {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
-        obj.put("auth", environmentBrowser.getUser().getJSONObject());
+        obj.put("user", environmentBrowser.getUser().getJSONObject());
         obj.put("groupUser", environmentBrowser.getGroupUser().getJSONObject());
         obj.put("role", environmentBrowser.getRole().getJSONObject());
         return obj;
