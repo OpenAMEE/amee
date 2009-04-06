@@ -5,11 +5,18 @@
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 
 <script type='text/javascript'>
+    
+    // create resource objects
+    var PROFILE_ACTIONS = new ActionsResource({path: '/profiles/actions'});
+    var profileItemValueApiService = new ProfileItemValueApiService();
 
-    document.observe('dom:loaded', function() {
-        var profileItemValueApiService = new ProfileItemValueApiService();
-        profileItemValueApiService.apiRequest();
+    // use resource loader to load resources and notify on loaded
+    var resourceLoader = new ResourceLoader();
+    resourceLoader.addResource(PROFILE_ACTIONS);
+    resourceLoader.observe('loaded', function() {
+        profileItemValueApiService.start();
     });
+    resourceLoader.start();
 
 </script>
 

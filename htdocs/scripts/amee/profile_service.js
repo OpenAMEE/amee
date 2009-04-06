@@ -452,6 +452,7 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
     },
     renderApiResponse: function() {
 
+        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
         var json = this.response.responseJSON;
 
         if (json.itemValue) {
@@ -475,7 +476,7 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
         // render form
         var inputValuesElement = new Element('span', {id : 'inputValues'});
 
-        if (itemValue.itemValueDefinition.choices && this.allowModify) {
+        if (itemValue.itemValueDefinition.choices && profileItemActions.isAllowModify()) {
             var choices = itemValue.itemValueDefinition.choices.split(",");
             var selectElement = new Element('select', {name : 'value'});
             var selectedOption = false;
@@ -500,7 +501,7 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
 
         $('inputValues').replace(inputValuesElement);
 
-        if (this.allowModify) {
+        if (profileItemActions.isAllowModify()) {
             var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
             $("inputSubmit").replace(btnSubmit);
             Event.observe(btnSubmit, "click", this.updateProfileItemValue.bind(this));
@@ -511,8 +512,9 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
         this.renderApiResponse();
     },
     addFormInfoElement: function(label, pElement, name, info, size, style) {
+        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
         pElement.insert(label);
-        if (this.allowModify) {
+        if (profileItemActions.isAllowModify()) {
             if (style) {
                 pElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size, style : style}));
             } else {
