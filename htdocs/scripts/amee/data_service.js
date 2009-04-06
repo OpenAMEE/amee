@@ -452,10 +452,10 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
     },
     getUpdateItemElement: function(id, dataItem) {
 
+        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
         var updateItemElement = new Element('div', {id : id});
 
-        // TODO: actions
-        if (this.allowModify) {
+        if (dataItemActions.isAllowModify()) {
             var dateFormat = " (" + this.getDateFormat() + ")";
             var formElement = new Element('form', {action : "#", id : this.updateFormName});
             var pElement = new Element('p');
