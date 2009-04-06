@@ -110,12 +110,13 @@ public class ItemValueDefinition implements PersistentObject {
     @Column(name = "MODIFIED")
     private Date modified = Calendar.getInstance().getTime();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "ITEM_VALUE_DEFINITION_API_VERSION",
         joinColumns = {@JoinColumn(name = "ITEM_VALUE_DEFINITION_ID")},
         inverseJoinColumns = {@JoinColumn(name = "API_VERSION_ID")}
     )
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<APIVersion> apiVersions = new HashSet<APIVersion>();
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -149,6 +150,17 @@ public class ItemValueDefinition implements PersistentObject {
 
     public String toString() {
         return "ItemValueDefinition_" + getUid();
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!ItemValueDefinition.class.isAssignableFrom(o.getClass())) return false;
+        ItemValueDefinition itemValueDefinition = (ItemValueDefinition) o;
+        return getUid().equals(itemValueDefinition.getUid());
+    }
+
+    public int hashCode() {
+        return getUid().hashCode();
     }
 
     public void setBuilder(Builder builder) {

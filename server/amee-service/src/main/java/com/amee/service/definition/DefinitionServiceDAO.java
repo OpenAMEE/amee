@@ -61,7 +61,7 @@ public class DefinitionServiceDAO implements Serializable {
 
     // Handle events
 
-    @ServiceActivator(inputChannel="beforeEnvironmentDelete")
+    @ServiceActivator(inputChannel = "beforeEnvironmentDelete")
     public void beforeEnvironmentDelete(ObservedEvent oe) {
         log.debug("beforeEnvironmentDelete");
         // TODO: what?
@@ -98,14 +98,14 @@ public class DefinitionServiceDAO implements Serializable {
         entityManager.persist(algorithm);
     }
 
-
     // TODO: Scope to something
 
     public List<AlgorithmContext> getAlgorithmContexts(Environment environment) {
         List<AlgorithmContext> algorithmContexts =
-                entityManager.createQuery("FROM AlgorithmContext ac " +
-                        "WHERE ac.environment = :environment")
-                        .setParameter("environment", environment)
+                entityManager.createQuery(
+                        "FROM AlgorithmContext ac " +
+                                "WHERE ac.environment.id = :environmentId")
+                        .setParameter("environmentId", environment.getId())
                         .setHint("org.hibernate.cacheable", true)
                         .setHint("org.hibernate.cacheRegion", "query.environmentService")
                         .getResultList();
@@ -120,10 +120,11 @@ public class DefinitionServiceDAO implements Serializable {
     public AlgorithmContext getAlgorithmContext(Environment environment, String algorithmContextUid) {
         AlgorithmContext algorithmContext = null;
         List<AlgorithmContext> algorithmContexts =
-                entityManager.createQuery("FROM AlgorithmContext ac " +
-                        "WHERE ac.environment = :environment "
-                        + "AND ac.uid = :uid")
-                        .setParameter("environment", environment)
+                entityManager.createQuery(
+                        "FROM AlgorithmContext ac " +
+                                "WHERE ac.environment.id = :environmentId " +
+                                "AND ac.uid = :uid")
+                        .setParameter("environmentId", environment.getId())
                         .setParameter("uid", algorithmContextUid)
                         .setHint("org.hibernate.cacheable", true)
                         .setHint("org.hibernate.cacheRegion", "query.environmentService")
@@ -161,9 +162,9 @@ public class DefinitionServiceDAO implements Serializable {
                 "SELECT DISTINCT id " +
                         "FROM ItemDefinition id " +
                         "LEFT JOIN FETCH id.itemValueDefinitions ivd " +
-                        "WHERE id.environment = :environment AND " +
+                        "WHERE id.environment.id = :environmentId AND " +
                         "id.uid = :uid")
-                .setParameter("environment", environment)
+                .setParameter("environmentId", environment.getId())
                 .setParameter("uid", uid)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
@@ -182,9 +183,9 @@ public class DefinitionServiceDAO implements Serializable {
                 "SELECT DISTINCT id " +
                         "FROM ItemDefinition id " +
                         "LEFT JOIN FETCH id.itemValueDefinitions ivd " +
-                        "WHERE id.environment = :environment " +
+                        "WHERE id.environment.id = :environmentId " +
                         "ORDER BY id.name")
-                .setParameter("environment", environment)
+                .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
                 .getResultList();
@@ -196,8 +197,8 @@ public class DefinitionServiceDAO implements Serializable {
         long count = (Long) entityManager.createQuery(
                 "SELECT count(id) " +
                         "FROM ItemDefinition id " +
-                        "WHERE id.environment = :environment")
-                .setParameter("environment", environment)
+                        "WHERE id.environment.id = :environmentId")
+                .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
                 .getSingleResult();
@@ -208,9 +209,9 @@ public class DefinitionServiceDAO implements Serializable {
         List<ItemDefinition> itemDefinitions = entityManager.createQuery(
                 "SELECT id " +
                         "FROM ItemDefinition id " +
-                        "WHERE id.environment = :environment " +
+                        "WHERE id.environment.id = :environmentId " +
                         "ORDER BY id.name")
-                .setParameter("environment", environment)
+                .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
                 .setMaxResults(pager.getItemsPerPage())
@@ -260,9 +261,9 @@ public class DefinitionServiceDAO implements Serializable {
     public List<ValueDefinition> getValueDefinitions(Environment environment) {
         return entityManager.createQuery(
                 "FROM ValueDefinition vd " +
-                        "WHERE vd.environment = :environment " +
+                        "WHERE vd.environment.id = :environmentId " +
                         "ORDER BY vd.name")
-                .setParameter("environment", environment)
+                .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
                 .getResultList();
@@ -273,8 +274,8 @@ public class DefinitionServiceDAO implements Serializable {
         long count = (Long) entityManager.createQuery(
                 "SELECT count(vd) " +
                         "FROM ValueDefinition vd " +
-                        "WHERE vd.environment = :environment")
-                .setParameter("environment", environment)
+                        "WHERE vd.environment.id = :environmentId")
+                .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
                 .getSingleResult();
@@ -285,9 +286,9 @@ public class DefinitionServiceDAO implements Serializable {
         List<ValueDefinition> valueDefinitions = entityManager.createQuery(
                 "SELECT vd " +
                         "FROM ValueDefinition vd " +
-                        "WHERE vd.environment = :environment " +
+                        "WHERE vd.environment.id = :environmentId " +
                         "ORDER BY id.name")
-                .setParameter("environment", environment)
+                .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
                 .setMaxResults(pager.getItemsPerPage())
@@ -303,9 +304,9 @@ public class DefinitionServiceDAO implements Serializable {
         List<ValueDefinition> valueDefinitions = entityManager.createQuery(
                 "FROM ValueDefinition vd " +
                         "WHERE vd.uid = :uid " +
-                        "AND vd.environment = :environment")
+                        "AND vd.environment.id = :environmentId")
                 .setParameter("uid", uid)
-                .setParameter("environment", environment)
+                .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")
                 .getResultList();
@@ -328,8 +329,8 @@ public class DefinitionServiceDAO implements Serializable {
         List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
                 "SELECT DISTINCT ivd " +
                         "FROM ItemValueDefinition ivd " +
-                        "WHERE ivd.valueDefinition = :valueDefinition")
-                .setParameter("valueDefinition", valueDefinition)
+                        "WHERE ivd.valueDefinition.id = :valueDefinitionId")
+                .setParameter("valueDefinitionId", valueDefinition.getId())
                 .getResultList();
         for (ItemValueDefinition itemValueDefinition : itemValueDefinitions) {
             remove(itemValueDefinition);

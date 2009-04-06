@@ -1,0 +1,20 @@
+# Application parameters
+wrapper.app.parameter.1=-serverName
+wrapper.app.parameter.2=development
+
+# Extra java parameters
+wrapper.java.additional.13=-Xdebug
+wrapper.java.additional.14=-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+
+# Database settings
+set.DB_USERNAME=amee
+set.DB_PSWD=amee
+set.DB_HOST=localhost
+set.DB_NAME=amee
+
+# Host names
+set.HOST_NAME=local.stage.co2.dgen.net
+set.HOST_NAME.ADMIN=local.stage.co2.dgen.net
+
+# AJP port
+set.AJP_PORT=8010

@@ -25,6 +25,7 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalId;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -51,6 +52,7 @@ public class ItemValue implements PersistentObject, Pathable {
     @Column(name = "ID")
     private Long id;
 
+    @NaturalId
     @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
@@ -95,6 +97,17 @@ public class ItemValue implements PersistentObject, Pathable {
 
     public String toString() {
         return "ItemValue_" + getUid();
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!ItemValue.class.isAssignableFrom(o.getClass())) return false;
+        ItemValue itemValue = (ItemValue) o;
+        return getUid().equals(itemValue.getUid());
+    }
+
+    public int hashCode() {
+        return getUid().hashCode();
     }
 
     public void setBuilder(Builder builder) {
@@ -264,11 +277,11 @@ public class ItemValue implements PersistentObject, Pathable {
     public AMEEPerUnit getPerUnit() {
         if (perUnit != null) {
             if (perUnit.equals("none")) {
-                 return AMEEPerUnit.valueOf(getItem().getDuration());
-             } else {
-                 return AMEEPerUnit.valueOf(perUnit);
-             }
-         } else {                                                             
+                return AMEEPerUnit.valueOf(getItem().getDuration());
+            } else {
+                return AMEEPerUnit.valueOf(perUnit);
+            }
+        } else {
             return itemValueDefinition.getPerUnit();
         }
     }
@@ -293,13 +306,13 @@ public class ItemValue implements PersistentObject, Pathable {
     }
 
     public boolean hasPerTimeUnit() {
-        return hasPerUnit() && getPerUnit().isTime();     
+        return hasPerUnit() && getPerUnit().isTime();
     }
-    
+
     public boolean isNonZero() {
         return getItemValueDefinition().isDecimal() &&
-               getUsableValue() != null &&
-               !new BigDecimal(getValue()).equals(BigDecimal.ZERO);
+                getUsableValue() != null &&
+                !new BigDecimal(getValue()).equals(BigDecimal.ZERO);
     }
 
     public ItemValue getCopy() {

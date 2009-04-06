@@ -1,22 +1,22 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
@@ -28,6 +28,7 @@ import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
+import org.hibernate.annotations.NaturalId;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -50,6 +51,7 @@ public class DataCategory implements PersistentObject, Pathable {
     @Column(name = "ID")
     private Long id;
 
+    @NaturalId
     @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
@@ -112,6 +114,17 @@ public class DataCategory implements PersistentObject, Pathable {
 
     public String toString() {
         return "DataCategory_" + getUid();
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!DataCategory.class.isAssignableFrom(o.getClass())) return false;
+        DataCategory dataCategory = (DataCategory) o;
+        return getUid().equals(dataCategory.getUid());
+    }
+
+    public int hashCode() {
+        return getUid().hashCode();
     }
 
     public JSONObject getJSONObject() throws JSONException {

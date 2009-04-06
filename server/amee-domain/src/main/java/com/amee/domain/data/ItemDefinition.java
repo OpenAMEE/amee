@@ -30,6 +30,7 @@ import com.amee.domain.path.InternalValue;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalId;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -51,6 +52,7 @@ public class ItemDefinition implements PersistentObject {
     @Column(name = "ID")
     private Long id;
 
+    @NaturalId
     @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
 
@@ -97,6 +99,17 @@ public class ItemDefinition implements PersistentObject {
 
     public String toString() {
         return "ItemDefinition_" + getUid();
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!ItemDefinition.class.isAssignableFrom(o.getClass())) return false;
+        ItemDefinition itemDefinition = (ItemDefinition) o;
+        return getUid().equals(itemDefinition.getUid());
+    }
+
+    public int hashCode() {
+        return getUid().hashCode();
     }
 
     public void add(Algorithm algorithm) {
