@@ -1,8 +1,8 @@
 package com.amee.domain.auth;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.DatedObject;
-import com.amee.domain.UidGen;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.environment.EnvironmentObject;
 import org.hibernate.annotations.Cache;
@@ -28,15 +28,7 @@ import java.util.Set;
 @Entity
 @Table(name = "GROUP_USER")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class GroupUser implements EnvironmentObject, DatedObject, Comparable, Serializable {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
+public class GroupUser extends AMEEEntity implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -70,7 +62,6 @@ public class GroupUser implements EnvironmentObject, DatedObject, Comparable, Se
 
     public GroupUser() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public GroupUser(Group group, User user) {
@@ -88,22 +79,11 @@ public class GroupUser implements EnvironmentObject, DatedObject, Comparable, Se
         return "GroupUser_" + getUid();
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof GroupUser)) return false;
-        GroupUser groupUser = (GroupUser) o;
-        return getUid().equals(groupUser.getUid());
-    }
-
     public int compareTo(Object o) throws ClassCastException {
         if (this == o) return 0;
         if (equals(o)) return 0;
         GroupUser groupUser = (GroupUser) o;
         return getUid().compareTo(groupUser.getUid());
-    }
-
-    public int hashCode() {
-        return getUid().hashCode();
     }
 
     @Transient
@@ -243,24 +223,6 @@ public class GroupUser implements EnvironmentObject, DatedObject, Comparable, Se
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid != null) {
-            this.uid = uid;
-        }
     }
 
     public Environment getEnvironment() {

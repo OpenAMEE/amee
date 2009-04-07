@@ -20,15 +20,13 @@
 package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
-import com.amee.domain.PersistentObject;
-import com.amee.domain.UidGen;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
-import org.hibernate.annotations.NaturalId;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -41,19 +39,10 @@ import java.util.Date;
 @Entity
 @Table(name = "DATA_CATEGORY")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class DataCategory implements PersistentObject, Pathable {
+public class DataCategory extends AMEEEntity implements Pathable {
 
     public final static int NAME_SIZE = 255;
     public final static int PATH_SIZE = 255;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @NaturalId
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -82,7 +71,6 @@ public class DataCategory implements PersistentObject, Pathable {
 
     public DataCategory() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public DataCategory(Environment environment) {
@@ -114,17 +102,6 @@ public class DataCategory implements PersistentObject, Pathable {
 
     public String toString() {
         return "DataCategory_" + getUid();
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!DataCategory.class.isAssignableFrom(o.getClass())) return false;
-        DataCategory dataCategory = (DataCategory) o;
-        return getUid().equals(dataCategory.getUid());
-    }
-
-    public int hashCode() {
-        return getUid().hashCode();
     }
 
     public JSONObject getJSONObject() throws JSONException {
@@ -199,25 +176,6 @@ public class DataCategory implements PersistentObject, Pathable {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid == null) {
-            uid = "";
-        }
-        this.uid = uid;
     }
 
     public Environment getEnvironment() {

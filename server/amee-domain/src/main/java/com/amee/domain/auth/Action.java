@@ -1,8 +1,8 @@
 package com.amee.domain.auth;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.DatedObject;
-import com.amee.domain.UidGen;
 import com.amee.domain.site.App;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -28,19 +28,11 @@ import java.util.Date;
 @Entity
 @Table(name = "ACTION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Action implements DatedObject, Comparable {
+public class Action extends AMEEEntity implements DatedObject, Comparable {
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
     public final static int ACTION_KEY_SIZE = 100;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "APP_ID")
@@ -66,7 +58,6 @@ public class Action implements DatedObject, Comparable {
 
     public Action() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public Action(App app) {
@@ -85,23 +76,11 @@ public class Action implements DatedObject, Comparable {
         return "Action_" + getUid();
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Action)) return false;
-        Action action = (Action) o;
-        return getApp().equals(action.getApp()) &&
-                getKey().equalsIgnoreCase(action.getKey());
-    }
-
     public int compareTo(Object o) throws ClassCastException {
         if (this == o) return 0;
         if (equals(o)) return 0;
         Action action = (Action) o;
         return getKey().compareToIgnoreCase(action.getKey());
-    }
-
-    public int hashCode() {
-        return getKey().toLowerCase().hashCode();
     }
 
     @Transient
@@ -175,24 +154,6 @@ public class Action implements DatedObject, Comparable {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid != null) {
-            this.uid = uid;
-        }
     }
 
     public App getApp() {

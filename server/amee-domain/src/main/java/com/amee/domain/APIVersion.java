@@ -33,18 +33,10 @@ import java.util.Date;
 @Entity
 @Table(name = "API_VERSION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class APIVersion implements PersistentObject, DatedObject {
+public class APIVersion extends AMEEEntity implements DatedObject {
 
     public static final APIVersion ONE = new APIVersion("1.0");
     public final static int API_VERSION_SIZE = 3;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED", nullable = false)
@@ -63,7 +55,6 @@ public class APIVersion implements PersistentObject, DatedObject {
     public APIVersion(String version) {
         super();
         this.version = version;
-        setUid(UidGen.getUid());
     }
 
     public boolean equals(Object o) {
@@ -73,7 +64,7 @@ public class APIVersion implements PersistentObject, DatedObject {
     public int hashCode() {
         return toString().hashCode();
     }
-    
+
     public String getVersion() {
         return version;
     }
@@ -121,7 +112,7 @@ public class APIVersion implements PersistentObject, DatedObject {
     }
 
     public boolean isNotVersionOne() {
-        return !this.equals(ONE);    
+        return !this.equals(ONE);
     }
 
     @PrePersist
@@ -133,24 +124,6 @@ public class APIVersion implements PersistentObject, DatedObject {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid != null) {
-            this.uid = uid;
-        }
     }
 
     public Date getCreated() {

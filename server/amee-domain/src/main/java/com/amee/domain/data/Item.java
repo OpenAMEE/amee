@@ -19,8 +19,8 @@
  */
 package com.amee.domain.data;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
-import com.amee.domain.UidGen;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.InternalValue;
 import com.amee.domain.path.Pathable;
@@ -28,7 +28,6 @@ import com.amee.domain.profile.StartEndDate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
-import org.hibernate.annotations.NaturalId;
 import org.joda.time.Duration;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,18 +42,9 @@ import java.util.*;
 @Table(name = "ITEM")
 @DiscriminatorColumn(name = "TYPE", length = 3)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public abstract class Item implements Pathable {
+public abstract class Item extends AMEEEntity implements Pathable {
 
     public final static int NAME_SIZE = 255;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @NaturalId
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -91,7 +81,6 @@ public abstract class Item implements Pathable {
 
     public Item() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public Item(DataCategory dataCategory, ItemDefinition itemDefinition) {
@@ -99,17 +88,6 @@ public abstract class Item implements Pathable {
         setDataCategory(dataCategory);
         setEnvironment(dataCategory.getEnvironment());
         setItemDefinition(itemDefinition);
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!Item.class.isAssignableFrom(o.getClass())) return false;
-        Item item = (Item) o;
-        return getUid().equals(item.getUid());
-    }
-
-    public int hashCode() {
-        return getUid().hashCode();
     }
 
     public void add(ItemValue itemValue) {
@@ -156,25 +134,6 @@ public abstract class Item implements Pathable {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid == null) {
-            uid = "";
-        }
-        this.uid = uid;
     }
 
     public Environment getEnvironment() {
@@ -294,5 +253,5 @@ public abstract class Item implements Pathable {
         } else {
             return getDisplayPath();
         }
-    }    
+    }
 }

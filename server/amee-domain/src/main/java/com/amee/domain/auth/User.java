@@ -1,9 +1,9 @@
 package com.amee.domain.auth;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.APIVersion;
 import com.amee.domain.DatedObject;
-import com.amee.domain.UidGen;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;
 import com.amee.domain.environment.Environment;
@@ -40,7 +40,7 @@ import java.util.List;
 @Entity
 @Table(name = "USER")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class User implements EnvironmentObject, DatedObject, Comparable, Serializable {
+public class User extends AMEEEntity implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
     @Transient
     private final Log log = LogFactory.getLog(getClass());
@@ -50,14 +50,6 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     public final static int PASSWORD_CLEAR_SIZE = 40;
     public final static int NAME_SIZE = 100;
     public final static int EMAIL_SIZE = 255;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -100,7 +92,6 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
 
     public User() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public User(Environment environment) {
@@ -119,21 +110,10 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
         return "User: " + getUsername();
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return getUsername().equalsIgnoreCase(user.getUsername());
-    }
-
     public int compareTo(Object o) throws ClassCastException {
         if (this == o) return 0;
         User user = (User) o;
         return getUsername().compareToIgnoreCase(user.getUsername());
-    }
-
-    public int hashCode() {
-        return getUsername().toLowerCase().hashCode();
     }
 
     @Transient
@@ -235,24 +215,6 @@ public class User implements EnvironmentObject, DatedObject, Comparable, Seriali
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid != null) {
-            this.uid = uid;
-        }
     }
 
     public Environment getEnvironment() {

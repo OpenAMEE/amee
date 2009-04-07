@@ -24,9 +24,9 @@ import com.amee.domain.APIUtils;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Index;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -52,19 +52,6 @@ public class DataItem extends Item {
 
     public DataItem(DataCategory dataCategory, ItemDefinition itemDefinition) {
         super(dataCategory, itemDefinition);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DataItem)) return false;
-        DataItem dataItem = (DataItem) o;
-        return getId().equals(dataItem.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getId().hashCode();
     }
 
     public String toString() {

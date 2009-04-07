@@ -25,7 +25,6 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.NaturalId;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -39,22 +38,13 @@ import java.util.Date;
 @Entity
 @Table(name = "ITEM_VALUE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ItemValue implements PersistentObject, Pathable {
+public class ItemValue extends AMEEEntity implements Pathable {
 
     // 32767 because this is bigger than 255, smaller
     // than 65535 and fits into an exact number of bits
     public final static int VALUE_SIZE = 32767;
     public final static int UNIT_SIZE = 255;
     public final static int PER_UNIT_SIZE = 255;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @NaturalId
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ITEM_VALUE_DEFINITION_ID")
@@ -84,7 +74,6 @@ public class ItemValue implements PersistentObject, Pathable {
 
     public ItemValue() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public ItemValue(ItemValueDefinition itemValueDefinition, Item item, String value) {
@@ -97,17 +86,6 @@ public class ItemValue implements PersistentObject, Pathable {
 
     public String toString() {
         return "ItemValue_" + getUid();
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!ItemValue.class.isAssignableFrom(o.getClass())) return false;
-        ItemValue itemValue = (ItemValue) o;
-        return getUid().equals(itemValue.getUid());
-    }
-
-    public int hashCode() {
-        return getUid().hashCode();
     }
 
     public void setBuilder(Builder builder) {
@@ -191,25 +169,6 @@ public class ItemValue implements PersistentObject, Pathable {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid == null) {
-            uid = "";
-        }
-        this.uid = uid;
     }
 
     public ItemValueDefinition getItemValueDefinition() {

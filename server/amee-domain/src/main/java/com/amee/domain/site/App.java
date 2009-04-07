@@ -1,8 +1,8 @@
 package com.amee.domain.site;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.DatedObject;
-import com.amee.domain.UidGen;
 import com.amee.domain.auth.Action;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -31,18 +31,10 @@ import java.util.Set;
 @Entity
 @Table(name = "APP")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class App implements DatedObject, Comparable {
+public class App extends AMEEEntity implements DatedObject, Comparable {
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
@@ -68,7 +60,6 @@ public class App implements DatedObject, Comparable {
 
     public App() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public App(String name) {
@@ -94,22 +85,11 @@ public class App implements DatedObject, Comparable {
         return "App_" + getUid();
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof App)) return false;
-        App app = (App) o;
-        return getName().equalsIgnoreCase(app.getName());
-    }
-
     public int compareTo(Object o) throws ClassCastException {
         if (this == o) return 0;
         if (equals(o)) return 0;
         App app = (App) o;
         return getName().compareToIgnoreCase(app.getName());
-    }
-
-    public int hashCode() {
-        return getName().toLowerCase().hashCode();
     }
 
     @Transient
@@ -179,24 +159,6 @@ public class App implements DatedObject, Comparable {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid != null) {
-            this.uid = uid;
-        }
     }
 
     public String getName() {

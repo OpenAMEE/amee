@@ -20,39 +20,28 @@
 package com.amee.domain.profile;
 
 import com.amee.core.ObjectType;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.APIVersion;
-import com.amee.domain.UidGen;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
-import org.hibernate.annotations.NaturalId;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
 @Entity
 @Table(name = "PROFILE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Profile implements Serializable, Pathable {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @NaturalId
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
-    private String uid = "";
+public class Profile extends AMEEEntity implements Pathable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -78,7 +67,6 @@ public class Profile implements Serializable, Pathable {
 
     public Profile() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public Profile(Environment environment, Permission permission) {
@@ -90,17 +78,6 @@ public class Profile implements Serializable, Pathable {
 
     public String toString() {
         return "Profile_" + getUid();
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!Profile.class.isAssignableFrom(o.getClass())) return false;
-        Profile profile = (Profile) o;
-        return getUid().equals(profile.getUid());
-    }
-
-    public int hashCode() {
-        return getUid().hashCode();
     }
 
     @Transient
@@ -163,25 +140,6 @@ public class Profile implements Serializable, Pathable {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid == null) {
-            uid = "";
-        }
-        this.uid = uid;
     }
 
     public Environment getEnvironment() {

@@ -1,36 +1,34 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.APIVersion;
-import com.amee.domain.PersistentObject;
-import com.amee.domain.UidGen;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.InternalValue;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.NaturalId;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -42,19 +40,10 @@ import java.util.*;
 @Entity
 @Table(name = "ITEM_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ItemDefinition implements PersistentObject {
+public class ItemDefinition extends AMEEEntity {
 
     public final static int NAME_SIZE = 255;
     public final static int DRILL_DOWN_SIZE = 255;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @NaturalId
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -84,7 +73,6 @@ public class ItemDefinition implements PersistentObject {
 
     public ItemDefinition() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public ItemDefinition(Environment environment) {
@@ -99,17 +87,6 @@ public class ItemDefinition implements PersistentObject {
 
     public String toString() {
         return "ItemDefinition_" + getUid();
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!ItemDefinition.class.isAssignableFrom(o.getClass())) return false;
-        ItemDefinition itemDefinition = (ItemDefinition) o;
-        return getUid().equals(itemDefinition.getUid());
-    }
-
-    public int hashCode() {
-        return getUid().hashCode();
     }
 
     public void add(Algorithm algorithm) {
@@ -208,25 +185,6 @@ public class ItemDefinition implements PersistentObject {
         setModified(Calendar.getInstance().getTime());
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid == null) {
-            uid = "";
-        }
-        this.uid = uid;
-    }
-
     public Environment getEnvironment() {
         return environment;
     }
@@ -302,7 +260,6 @@ public class ItemDefinition implements PersistentObject {
      *
      * @param name - the name of the Algorithm to retreive
      * @return the Algorithm corresponding to the supplied name
-     *
      */
     public Algorithm getAlgorithm(String name) {
         for (Algorithm algorithm : getAlgorithms()) {
