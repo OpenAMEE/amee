@@ -1,28 +1,28 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package com.amee.domain.profile;
 
 import com.amee.core.ObjectType;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.APIVersion;
-import com.amee.domain.UidGen;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
@@ -35,22 +35,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
 @Entity
 @Table(name = "PROFILE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Profile implements Serializable, Pathable {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = 12)
-    private String uid = "";
+public class Profile extends AMEEEntity implements Pathable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -76,7 +67,6 @@ public class Profile implements Serializable, Pathable {
 
     public Profile() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public Profile(Environment environment, Permission permission) {
@@ -150,25 +140,6 @@ public class Profile implements Serializable, Pathable {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid == null) {
-            uid = "";
-        }
-        this.uid = uid;
     }
 
     public Environment getEnvironment() {

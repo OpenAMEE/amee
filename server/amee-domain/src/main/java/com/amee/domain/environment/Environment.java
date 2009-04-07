@@ -1,8 +1,8 @@
 package com.amee.domain.environment;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.DatedObject;
-import com.amee.domain.UidGen;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -18,20 +18,12 @@ import java.util.Date;
 @Entity
 @Table(name = "ENVIRONMENT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Environment implements DatedObject, Comparable, Serializable {
+public class Environment extends AMEEEntity implements DatedObject, Comparable, Serializable {
 
     public final static int NAME_SIZE = 255;
     public final static int PATH_SIZE = 255;
     public final static int DESCRIPTION_SIZE = 1000;
     public final static int OWNER_SIZE = 255;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
@@ -61,7 +53,6 @@ public class Environment implements DatedObject, Comparable, Serializable {
 
     public Environment() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public Environment(String name) {
@@ -73,22 +64,11 @@ public class Environment implements DatedObject, Comparable, Serializable {
         return "Environment_" + getUid();
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Environment)) return false;
-        Environment environment = (Environment) o;
-        return getUid().equals(environment.getUid());
-    }
-
     public int compareTo(Object o) {
         if (this == o) return 0;
         if (equals(o)) return 0;
         Environment environment = (Environment) o;
         return getUid().compareTo(environment.getUid());
-    }
-
-    public int hashCode() {
-        return getUid().hashCode();
     }
 
     @Transient
@@ -165,24 +145,6 @@ public class Environment implements DatedObject, Comparable, Serializable {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid != null) {
-            this.uid = uid;
-        }
     }
 
     public String getName() {

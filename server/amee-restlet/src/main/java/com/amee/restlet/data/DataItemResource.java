@@ -105,7 +105,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         JSONObject obj = new JSONObject();
-        obj.put("actions", getActions(dataBrowser.getDataItemActions()));        
         obj.put("dataItem", dataItem.getJSONObject(true));
         obj.put("path", pathItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());

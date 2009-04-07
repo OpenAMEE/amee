@@ -20,6 +20,7 @@
 package com.amee.service.data;
 
 import com.amee.domain.APIVersion;
+import com.amee.domain.UidGen;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
@@ -28,9 +29,9 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Choices;
 import com.amee.domain.sheet.Sheet;
-import com.amee.domain.UidGen;
 import com.amee.service.definition.DefinitionServiceDAO;
 import com.amee.service.path.PathItemService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,16 +76,18 @@ public class DataService {
     }
 
     public DataCategory getDataCategory(String dataCategoryUid) {
-        return dao.getDataCategory(dataCategoryUid);
+        return dao.getDataCategoryByUid(dataCategoryUid);
     }
 
     public DataItem getDataItem(String path) {
         DataItem dataItem = null;
-        if (UidGen.isValid(path)) {
-            dataItem = getDataItemByUid(path);
-        }
-        if (dataItem == null) {
-            dataItem = getDataItemByPath(path);
+        if (!StringUtils.isBlank(path)) {
+            if (UidGen.isValid(path)) {
+                dataItem = getDataItemByUid(path);
+            }
+            if (dataItem == null) {
+                dataItem = getDataItemByPath(path);
+            }
         }
         return dataItem;
     }
@@ -95,10 +98,6 @@ public class DataService {
 
     public DataItem getDataItemByPath(String path) {
         return dao.getDataItemByPath(path);
-    }
-
-    public List<DataItem> getDataItems(Environment env) {
-        return dao.getDataItems(env);
     }
 
     public List<DataCategory> getDataCategories(Environment env) {
@@ -152,7 +151,7 @@ public class DataService {
     }
 
     public ItemValue getItemValue(String uid) {
-        return dao.getItemValue(uid);
+        return dao.getItemValueByUid(uid);
     }
 
     public void persist(DataCategory dc) {

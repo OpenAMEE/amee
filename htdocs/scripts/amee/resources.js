@@ -82,8 +82,7 @@ function alertModal(message) {
     });
 }
 
-var DeleteResource = Class.create();
-DeleteResource.prototype = {
+var DeleteResource = Class.create({
     initialize: function() {
         this.action = "delete";
         this.resourceUrl = '';
@@ -117,8 +116,7 @@ DeleteResource.prototype = {
             this.modal.close();
             this.modal = null;
         }
-        var myAjax = new Ajax.Request(
-                this.resourceUrl, {
+        new Ajax.Request(this.resourceUrl, {
             method: 'post',
             parameters: 'method=delete',
             requestHeaders: ['Accept', 'application/json'],
@@ -138,10 +136,9 @@ DeleteResource.prototype = {
     failureCallback: function(response) {
         alertModal("This " + this.resourceType + " cannot be deleted.");
     }
-};
+});
 
-var CreateResource = Class.create();
-CreateResource.prototype = {
+var CreateResource = Class.create({
     initialize: function() {
         this.action = "create";
         this.resourceUrl = '';
@@ -181,7 +178,7 @@ CreateResource.prototype = {
             this.modal.close();
             this.modal = null;
         }
-        var myAjax = new Ajax.Request(
+        new Ajax.Request(
                 this.resourceUrl, {
             method: 'post',
             parameters: this.params,
@@ -201,4 +198,4 @@ CreateResource.prototype = {
     successCallback: function() {
         Effect.Highlight(this.resourceElem);
     }
-};
+});

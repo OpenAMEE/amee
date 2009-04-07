@@ -38,21 +38,13 @@ import java.util.Date;
 @Entity
 @Table(name = "ITEM_VALUE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ItemValue implements PersistentObject, Pathable {
+public class ItemValue extends AMEEEntity implements Pathable {
 
     // 32767 because this is bigger than 255, smaller
     // than 65535 and fits into an exact number of bits
     public final static int VALUE_SIZE = 32767;
     public final static int UNIT_SIZE = 255;
     public final static int PER_UNIT_SIZE = 255;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ITEM_VALUE_DEFINITION_ID")
@@ -82,7 +74,6 @@ public class ItemValue implements PersistentObject, Pathable {
 
     public ItemValue() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public ItemValue(ItemValueDefinition itemValueDefinition, Item item, String value) {
@@ -180,25 +171,6 @@ public class ItemValue implements PersistentObject, Pathable {
         setModified(Calendar.getInstance().getTime());
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid == null) {
-            uid = "";
-        }
-        this.uid = uid;
-    }
-
     public ItemValueDefinition getItemValueDefinition() {
         return itemValueDefinition;
     }
@@ -264,11 +236,11 @@ public class ItemValue implements PersistentObject, Pathable {
     public AMEEPerUnit getPerUnit() {
         if (perUnit != null) {
             if (perUnit.equals("none")) {
-                 return AMEEPerUnit.valueOf(getItem().getDuration());
-             } else {
-                 return AMEEPerUnit.valueOf(perUnit);
-             }
-         } else {                                                             
+                return AMEEPerUnit.valueOf(getItem().getDuration());
+            } else {
+                return AMEEPerUnit.valueOf(perUnit);
+            }
+        } else {
             return itemValueDefinition.getPerUnit();
         }
     }
@@ -293,13 +265,13 @@ public class ItemValue implements PersistentObject, Pathable {
     }
 
     public boolean hasPerTimeUnit() {
-        return hasPerUnit() && getPerUnit().isTime();     
+        return hasPerUnit() && getPerUnit().isTime();
     }
-    
+
     public boolean isNonZero() {
         return getItemValueDefinition().isDecimal() &&
-               getUsableValue() != null &&
-               !new BigDecimal(getValue()).equals(BigDecimal.ZERO);
+                getUsableValue() != null &&
+                !new BigDecimal(getValue()).equals(BigDecimal.ZERO);
     }
 
     public ItemValue getCopy() {

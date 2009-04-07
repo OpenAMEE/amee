@@ -16,7 +16,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-
 /**
  * Permission.
  *
@@ -25,18 +24,11 @@ import java.util.Date;
 @Entity
 @Table(name = "PERMISSION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Permission implements EnvironmentObject, DatedObject, Comparable, Serializable {
+public class Permission extends AMEEEntity implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
     public final static int OBJECT_CLASS_SIZE = 255;
     public final static int OBJECT_UID_SIZE = 12;
 
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -80,7 +72,6 @@ public class Permission implements EnvironmentObject, DatedObject, Comparable, S
 
     public Permission() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public Permission(Group group, User user) {
@@ -105,15 +96,6 @@ public class Permission implements EnvironmentObject, DatedObject, Comparable, S
     }
 
     // TODO: do this properly
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Permission)) return false;
-        Permission permission = (Permission) o;
-        return getGroup().equals(permission.getGroup()) &&
-                getUser().equals(permission.getUser());
-    }
-
-    // TODO: do this properly
     public int compareTo(Object o) throws ClassCastException {
         if (this == o) return 0;
         if (equals(o)) return 0;
@@ -126,10 +108,6 @@ public class Permission implements EnvironmentObject, DatedObject, Comparable, S
             }
         }
         return result;
-    }
-
-    public int hashCode() {
-        return getUid().hashCode();
     }
 
     @Transient
@@ -195,24 +173,6 @@ public class Permission implements EnvironmentObject, DatedObject, Comparable, S
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid != null) {
-            this.uid = uid;
-        }
     }
 
     public Environment getEnvironment() {

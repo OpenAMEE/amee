@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.Map;
+
 // TODO: may be better to have a global filter that intelligently hooks into per module init functions
 // TODO: define attributes required from site/application objects
 
@@ -46,10 +48,18 @@ public class SiteFilter extends Filter implements ApplicationContextAware {
         if (site != null) {
             SiteApp siteApp = siteService.getSiteApp(site, Application.getCurrent().getName());
             if (siteApp != null) {
+                // setup request/thread values for current request
+                Map<String, Object> attributes = request.getAttributes();
                 // siteAppUid is used by SiteAppResource 
-                request.getAttributes().put("siteAppUid", siteApp.getUid());
+                attributes.put("siteAppUid", siteApp.getUid());
+                // environmentUid can be part of the URL (environment admin site)
+                // if environmentUid is not already set then we add it to enable admin
+                // resources outside the main environment admin site
+                if (!attributes.containsKey("environmentUid")) {
+                    attributes.put("environmentUid", site.getEnvironment().getUid());
+                }
                 // globally useful values
-                request.getAttributes().put("environment", site.getEnvironment());
+                attributes.put("environment", site.getEnvironment());
                 ThreadBeanHolder.set("springContext", applicationContext); // used in BaseResource
                 ThreadBeanHolder.set("environment", site.getEnvironment());
                 // set details about the SiteApp & App being visited
@@ -88,7 +98,7 @@ public class SiteFilter extends Filter implements ApplicationContextAware {
     private VirtualHost getVirtualHost() {
 
         VirtualHost host = null;
-        final Integer hostHashCode = VirtualHost.getCurrent();
+        final int hostHashCode = VirtualHost.getCurrent();
 
         for (VirtualHost h : ameeContainer.getHosts()) {
             if (h.hashCode() == hostHashCode) {

@@ -1,8 +1,8 @@
 package com.amee.domain.site;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.DatedObject;
-import com.amee.domain.UidGen;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.environment.EnvironmentObject;
 import org.hibernate.annotations.Cache;
@@ -33,19 +33,11 @@ import java.util.Set;
 @Entity
 @Table(name = "SITE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Site implements EnvironmentObject, DatedObject, Comparable, Serializable {
+public class Site extends AMEEEntity implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
     public final static int AUTH_COOKIE_DOMAIN_SIZE = 255;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -86,7 +78,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
 
     public Site() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public Site(Environment environment) {
@@ -107,22 +98,11 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
         return "Site_" + getUid();
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Site)) return false;
-        Site site = (Site) o;
-        return getName().equalsIgnoreCase(site.getName());
-    }
-
     public int compareTo(Object o) throws ClassCastException {
         if (this == o) return 0;
         if (equals(o)) return 0;
         Site site = (Site) o;
         return getName().compareToIgnoreCase(site.getName());
-    }
-
-    public int hashCode() {
-        return getName().toLowerCase().hashCode();
     }
 
     @Transient
@@ -201,24 +181,6 @@ public class Site implements EnvironmentObject, DatedObject, Comparable, Seriali
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid != null) {
-            this.uid = uid;
-        }
     }
 
     public Environment getEnvironment() {

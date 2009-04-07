@@ -1,8 +1,7 @@
 package com.amee.domain.algorithm;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
-import com.amee.domain.PersistentObject;
-import com.amee.domain.UidGen;
 import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -21,17 +20,9 @@ import java.util.Date;
 @Table(name = "ALGORITHM")
 @DiscriminatorColumn(name = "TYPE", length = 3)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public abstract class AbstractAlgorithm implements PersistentObject {
+public abstract class AbstractAlgorithm extends AMEEEntity {
 
     public final static int NAME_SIZE = 255;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = PersistentObject.UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -53,7 +44,6 @@ public abstract class AbstractAlgorithm implements PersistentObject {
 
     public AbstractAlgorithm() {
         super();
-        setUid(UidGen.getUid());
     }
 
     @Transient
@@ -110,25 +100,6 @@ public abstract class AbstractAlgorithm implements PersistentObject {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid == null) {
-            uid = "";
-        }
-        this.uid = uid;
     }
 
     public Environment getEnvironment() {

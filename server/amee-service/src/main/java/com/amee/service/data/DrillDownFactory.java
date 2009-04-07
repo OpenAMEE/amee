@@ -22,13 +22,17 @@
 package com.amee.service.data;
 
 import com.amee.domain.cache.CacheableFactory;
-import com.amee.domain.data.*;
-import com.amee.domain.sheet.*;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.sheet.Choice;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 public class DrillDownFactory implements CacheableFactory {
+
+    private final Log log = LogFactory.getLog(getClass());
 
     private DrillDownDAO drillDownDao;
     private DataCategory dataCategory;
@@ -36,6 +40,7 @@ public class DrillDownFactory implements CacheableFactory {
     private Date endDate;
     private List<Choice> selections;
     private List<Choice> drillDownChoices;
+    private String key;
 
     private DrillDownFactory() {
         super();
@@ -59,41 +64,43 @@ public class DrillDownFactory implements CacheableFactory {
 
     // TODO: give choices from itemValueDefinition priority?
     public Object create() {
+        log.debug("create() cache: " + getCacheName() + " key: " + getKey());
         // have we reached the end of the choices list?
         if (drillDownChoices.size() > 0) {
             // get DataItem value choice list
             return drillDownDao.getDataItemValueChoices(
                     dataCategory,
                     drillDownChoices.get(0).getName(), selections, startDate,
-                    endDate
-            );
+                    endDate);
         } else {
             // get DataItem UID choice list
             return drillDownDao.getDataItemUIDChoices(
                     dataCategory,
                     selections, startDate,
-                    endDate
-            );
+                    endDate);
         }
     }
 
     public String getKey() {
-        StringBuilder key = new StringBuilder();
-        key.append("DrillDown_");
-        key.append(dataCategory.getUid());
-        for (Choice selection : selections) {
-            key.append("_SL_");
-            key.append(selection.getValue().hashCode());
+        if (key == null) {
+            StringBuilder keyBuilder = new StringBuilder();
+            keyBuilder.append("DrillDown_");
+            keyBuilder.append(dataCategory.getUid());
+            for (Choice selection : selections) {
+                keyBuilder.append("_SL_");
+                keyBuilder.append(selection.getValue().hashCode());
+            }
+            if (startDate != null) {
+                keyBuilder.append("_SD_");
+                keyBuilder.append(startDate.getTime());
+            }
+            if (endDate != null) {
+                keyBuilder.append("_ED_");
+                keyBuilder.append(endDate.getTime());
+            }
+            key = keyBuilder.toString();
         }
-        if (startDate != null) {
-            key.append("_SD_");
-            key.append(startDate.getTime());
-        }
-        if (endDate != null) {
-            key.append("_ED_");
-            key.append(endDate.getTime());
-        }
-        return key.toString();
+        return key;
     }
 
     public String getCacheName() {
