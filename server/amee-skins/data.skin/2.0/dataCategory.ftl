@@ -22,23 +22,34 @@
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
 
+    // create resource objects
+    var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
+    var ITEM_DEFINITIONS = new ItemDefinitionsResource();
+    var dataCategoryApiService = new DataCategoryApiService({
+        heading : "Data Items",
+        headingElementName : "apiHeading",
+        contentElementName : "apiContent",
+        pagerTopElementName : 'apiTopPager',
+        pagerBtmElementName : 'apiBottomPager',
+        dataHeadingCategory : 'Data Category Details',
+        dataHeadingCategoryElementName : 'apiDataCategoryHeading',
+        dataContentElementName : "apiDataCategoryContent",
+        APIVersion : '2.0',
+        updateCategory: true,
+        createCategory: true});
+
+    // use resource loader to load resources and notify on loaded
+    var resourceLoader = new ResourceLoader();
+    resourceLoader.addResource(DATA_ACTIONS);
+    resourceLoader.addResource(ITEM_DEFINITIONS);
+    resourceLoader.observe('loaded', function() {
+        dataCategoryApiService.start();
+    });
+    resourceLoader.start();
+
     document.observe('dom:loaded', function() {
         // hide n/a atom option
         $('showAPIATOM').style.visibility = "hidden";
-        var dataCategoryApiService = new DataCategoryApiService({
-            heading : "Data Items",
-            headingElementName : "apiHeading",
-            contentElementName : "apiContent",
-            pagerTopElementName : 'apiTopPager',
-            pagerBtmElementName : 'apiBottomPager',
-            dataHeadingCategory : 'Data Category Details',
-            dataHeadingCategoryElementName : 'apiDataCategoryHeading',
-            dataContentElementName : "apiDataCategoryContent",
-            APIVersion : '2.0',
-            updateCategory: true,
-            createCategory: true
-        });
-        dataCategoryApiService.apiRequest();
     });
 
 </script>

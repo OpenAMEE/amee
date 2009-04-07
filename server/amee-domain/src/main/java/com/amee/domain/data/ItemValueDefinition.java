@@ -1,22 +1,22 @@
 /**
-* This file is part of AMEE.
-*
-* AMEE is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* AMEE is free software and is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* Created by http://www.dgen.net.
-* Website http://www.amee.cc
-*/
+ * This file is part of AMEE.
+ *
+ * AMEE is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AMEE is free software and is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created by http://www.dgen.net.
+ * Website http://www.amee.cc
+ */
 package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
@@ -48,21 +48,13 @@ import java.util.*;
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ItemValueDefinition implements PersistentObject {
+public class ItemValueDefinition extends AMEEEntity {
 
     public final static int NAME_SIZE = 255;
     public final static int PATH_SIZE = 255;
     public final static int VALUE_SIZE = 255;
     public final static int CHOICES_SIZE = 255;
     public final static int ALLOWED_ROLES_SIZE = 255;
-            
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -113,14 +105,15 @@ public class ItemValueDefinition implements PersistentObject {
     @Column(name = "MODIFIED")
     private Date modified = Calendar.getInstance().getTime();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "ITEM_VALUE_DEFINITION_API_VERSION",
-        joinColumns = {@JoinColumn(name = "ITEM_VALUE_DEFINITION_ID")},
-        inverseJoinColumns = {@JoinColumn(name = "API_VERSION_ID")}
+            name = "ITEM_VALUE_DEFINITION_API_VERSION",
+            joinColumns = {@JoinColumn(name = "ITEM_VALUE_DEFINITION_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "API_VERSION_ID")}
     )
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<APIVersion> apiVersions = new HashSet<APIVersion>();
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ALIASED_TO_ID")
     private ItemValueDefinition aliasedTo = null;
@@ -134,7 +127,6 @@ public class ItemValueDefinition implements PersistentObject {
 
     public ItemValueDefinition() {
         super();
-        setUid(UidGen.getUid());
         setBuilder(new ItemValueDefinitionBuilder(this));
     }
 
@@ -213,25 +205,6 @@ public class ItemValueDefinition implements PersistentObject {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid == null) {
-            uid = "";
-        }
-        this.uid = uid;
     }
 
     public Environment getEnvironment() {
@@ -409,7 +382,7 @@ public class ItemValueDefinition implements PersistentObject {
     }
 
     public boolean addAPIVersion(APIVersion apiVersion) {
-        return apiVersions.add(apiVersion);    
+        return apiVersions.add(apiVersion);
     }
 
     public boolean removeAPIVersion(APIVersion apiVersion) {
@@ -421,16 +394,16 @@ public class ItemValueDefinition implements PersistentObject {
     }
 
     public void setAliasedTo(ItemValueDefinition ivd) {
-        this.aliasedTo = ivd;    
+        this.aliasedTo = ivd;
     }
 
     public List<ItemValueDefinition> getAliases() {
-        return aliases;    
+        return aliases;
     }
 
     public String getCannonicalPath() {
         if (aliasedTo != null) {
-            return aliasedTo.getPath();  
+            return aliasedTo.getPath();
         } else {
             return getPath();
         }

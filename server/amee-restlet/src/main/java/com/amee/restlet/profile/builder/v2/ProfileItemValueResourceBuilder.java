@@ -111,7 +111,6 @@ public class ProfileItemValueResourceBuilder implements IProfileItemValueResourc
         obj.put("itemValue", itemValue.getJSONObject(true));
         obj.put("path", resource.getPathItem().getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
-        obj.put("actions", resource.getActions(resource.getProfileBrowser().getProfileItemValueActions()));
         return obj;
     }
 }

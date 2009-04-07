@@ -1,8 +1,8 @@
 package com.amee.domain.auth;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.DatedObject;
-import com.amee.domain.UidGen;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.environment.EnvironmentObject;
 import org.hibernate.annotations.Cache;
@@ -32,18 +32,10 @@ import java.util.Date;
 // can't use 'GROUP' as that is a resevered word in SQL
 @Table(name = "GROUPS")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Group implements EnvironmentObject, DatedObject, Comparable, Serializable {
+public class Group extends AMEEEntity implements EnvironmentObject, DatedObject, Comparable, Serializable {
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -66,7 +58,6 @@ public class Group implements EnvironmentObject, DatedObject, Comparable, Serial
 
     public Group() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public Group(Environment environment) {
@@ -78,22 +69,11 @@ public class Group implements EnvironmentObject, DatedObject, Comparable, Serial
         return "Group_" + getUid();
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Group)) return false;
-        Group group = (Group) o;
-        return getName().equalsIgnoreCase(group.getName());
-    }
-
     public int compareTo(Object o) throws ClassCastException {
         if (this == o) return 0;
         if (equals(o)) return 0;
         Group group = (Group) o;
         return getName().compareToIgnoreCase(group.getName());
-    }
-
-    public int hashCode() {
-        return getUid().hashCode();
     }
 
     @Transient
@@ -169,24 +149,6 @@ public class Group implements EnvironmentObject, DatedObject, Comparable, Serial
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid != null) {
-            this.uid = uid;
-        }
     }
 
     public Environment getEnvironment() {

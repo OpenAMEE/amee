@@ -4,6 +4,7 @@
 
 <script src="/scripts/amee/api_service.js" type="text/javascript"></script>
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
+<script src="/scripts/amee/data_service.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 
@@ -30,17 +31,23 @@
         deleteResource.deleteResourceCallback = profileItemDeleted;
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
+    
+    // create resource objects
+    var PROFILE_ACTIONS = new ActionsResource({path: '/profiles/actions'});
+    var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
+    var drillDown = new DrillDown(
+        "/data${pathItem.fullPath}",
+        "1.0",
+        "yyyyMMdd");
 
-    document.observe('dom:loaded', function() {
-        <#if dataCategory.itemDefinition?? && browser.profileItemActions.allowCreate>
-            new DrillDown(
-                "/data${pathItem.fullPath}",
-                "1.0",
-                "yyyyMMdd",
-                true
-            ).loadDrillDown();
-        </#if>
+    // use resource loader to load resources and notify on loaded
+    var resourceLoader = new ResourceLoader();
+    resourceLoader.addResource(PROFILE_ACTIONS);
+    resourceLoader.addResource(DATA_ACTIONS);
+    resourceLoader.observe('loaded', function() {
+        drillDown.start();
     });
+    resourceLoader.start();
 
 </script>
 

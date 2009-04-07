@@ -29,8 +29,13 @@ import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.path.PathItemService;
 import com.amee.service.transaction.TransactionController;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
@@ -52,6 +57,8 @@ import java.util.Map;
 class DataServiceDAO implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    private static final String CACHE_REGION = "query.dataService";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -77,23 +84,24 @@ class DataServiceDAO implements Serializable {
 
     // Handle events
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     @ServiceActivator(inputChannel = "beforeEnvironmentDelete")
     public void beforeEnvironmentDelete(ObservedEvent oe) {
         log.debug("beforeEnvironmentDelete");
         // delete root DataCategories
+        Environment environment = (Environment) oe.getPayload();
         List<DataCategory> dataCategories = entityManager.createQuery(
                 "FROM DataCategory dc " +
-                        "WHERE dc.environment = :environment " +
+                        "WHERE dc.environment.id = :environmentId " +
                         "AND dc.dataCategory IS NULL")
-                .setParameter("environment", oe.getPayload())
+                .setParameter("environmentId", environment.getId())
                 .getResultList();
         for (DataCategory dataCategory : dataCategories) {
             remove(dataCategory);
         }
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     @ServiceActivator(inputChannel = "beforeItemDefinitionDelete")
     public void beforeItemDefinitionDelete(ObservedEvent oe) {
         ItemDefinition itemDefinition = (ItemDefinition) oe.getPayload();
@@ -103,62 +111,64 @@ class DataServiceDAO implements Serializable {
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
                         "WHERE iv.item IN " +
-                        "(SELECT di FROM DataItem di WHERE di.itemDefinition = :itemDefinition)")
-                .setParameter("itemDefinition", itemDefinition)
+                        "(SELECT di FROM DataItem di WHERE di.itemDefinition.id = :itemDefinitionId)")
+                .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
         // remove DataItems
         entityManager.createQuery(
                 "DELETE FROM DataItem di " +
-                        "WHERE di.itemDefinition = :itemDefinition")
-                .setParameter("itemDefinition", itemDefinition)
+                        "WHERE di.itemDefinition.id = :itemDefinitionId")
+                .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     @ServiceActivator(inputChannel = "beforeItemValueDefinitionDelete")
     public void beforeItemValueDefinitionDelete(ObservedEvent oe) {
         log.debug("beforeItemValueDefinitionDelete");
         // remove ItemValues (from DataItems and ProfileItems)
+        ItemValueDefinition itemValueDefinition = (ItemValueDefinition) oe.getPayload();
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
-                        "WHERE iv.itemValueDefinition = :itemValueDefinition")
-                .setParameter("itemValueDefinition", oe.getPayload())
+                        "WHERE iv.itemValueDefinition.id = :itemValueDefinitionId")
+                .setParameter("itemValueDefinitionId", itemValueDefinition.getId())
                 .executeUpdate();
     }
 
     // DataCategories
 
-    @SuppressWarnings(value="unchecked")
-    public DataCategory getDataCategory(String uid) {
+    @SuppressWarnings(value = "unchecked")
+    public DataCategory getDataCategoryByUid(String uid) {
         DataCategory dataCategory = null;
-        List<DataCategory> dataCategories = entityManager.createQuery(
-                "FROM DataCategory dc " +
-                        "WHERE dc.uid = :uid ")
-                .setParameter("uid", uid)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.dataService")
-                .getResultList();
-        if (dataCategories.size() == 1) {
-            log.debug("found DataCategory");
-            dataCategory = dataCategories.get(0);
-        } else {
-            log.debug("DataCategory NOT found");
+        if (!StringUtils.isBlank(uid)) {
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(DataCategory.class);
+            criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<DataCategory> dataCategories = criteria.list();
+            if (dataCategories.size() == 1) {
+                log.debug("getDataCategoryByUid() found: " + uid);
+                dataCategory = dataCategories.get(0);
+            } else {
+                log.debug("getDataCategoryByUid() NOT found: " + uid);
+            }
         }
         return dataCategory;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<DataCategory> getDataCategories(Environment environment) {
         return (List<DataCategory>) entityManager.createQuery(
                 "FROM DataCategory " +
-                        "WHERE environment = :environment")
-                .setParameter("environment", environment)
+                        "WHERE environment.id = :environmentId")
+                .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.dataService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public void remove(DataCategory dataCategory) {
         log.debug("remove: " + dataCategory.getName());
         observeEventService.raiseEvent("beforeDataCategoryDelete", dataCategory);
@@ -166,20 +176,20 @@ class DataServiceDAO implements Serializable {
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
                         "WHERE iv.item IN " +
-                        "(SELECT di FROM DataItem di WHERE di.dataCategory = :dataCategory)")
-                .setParameter("dataCategory", dataCategory)
+                        "(SELECT di FROM DataItem di WHERE di.dataCategory.id = :dataCategoryId)")
+                .setParameter("dataCategoryId", dataCategory.getId())
                 .executeUpdate();
         // remove DataItems
         entityManager.createQuery(
                 "DELETE FROM DataItem di " +
-                        "WHERE di.dataCategory = :dataCategory")
-                .setParameter("dataCategory", dataCategory)
+                        "WHERE di.dataCategory.id = :dataCategoryId")
+                .setParameter("dataCategoryId", dataCategory.getId())
                 .executeUpdate();
         // remove child DataCategories
         List<DataCategory> dataCategories = entityManager.createQuery(
                 "FROM DataCategory di " +
-                        "WHERE di.dataCategory = :dataCategory")
-                .setParameter("dataCategory", dataCategory)
+                        "WHERE di.dataCategory.id = :dataCategoryId")
+                .setParameter("dataCategoryId", dataCategory.getId())
                 .getResultList();
         for (DataCategory child : dataCategories) {
             remove(child);
@@ -190,89 +200,81 @@ class DataServiceDAO implements Serializable {
 
     // ItemValues
 
-    @SuppressWarnings(value="unchecked")
-    public ItemValue getItemValue(String uid) {
+    @SuppressWarnings(value = "unchecked")
+    public ItemValue getItemValueByUid(String uid) {
         ItemValue itemValue = null;
-        List<ItemValue> itemValues;
-        itemValues = entityManager.createQuery(
-                "FROM ItemValue iv " +
-                        "WHERE iv.uid = :uid ")
-                .setParameter("uid", uid)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.dataService")
-                .getResultList();
-        if (itemValues.size() == 1) {
-            log.debug("found ItemValue");
-            itemValue = itemValues.get(0);
-        } else {
-            log.debug("ItemValue NOT found");
+        if (!StringUtils.isBlank(uid)) {
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(ItemValue.class);
+            criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<ItemValue> itemValues = criteria.list();
+            if (itemValues.size() == 1) {
+                log.debug("getItemValueByUid() found: " + uid);
+                itemValue = itemValues.get(0);
+            } else {
+                log.debug("getItemValueByUid() NOT found: " + uid);
+            }
         }
         return itemValue;
     }
 
     // DataItems
 
-    @SuppressWarnings(value="unchecked")
+    /**
+     * Returns the DatItem matching the specified UID.
+     *
+     * @param uid for the requested DataItem
+     * @return the matching DataItem or null if not found
+     */
+    @SuppressWarnings(value = "unchecked")
     public DataItem getDataItemByUid(String uid) {
         DataItem dataItem = null;
-        List<DataItem> dataItems;
-        dataItems = entityManager.createQuery(
-                "SELECT DISTINCT di " +
-                        "FROM DataItem di " +
-                        "LEFT JOIN FETCH di.itemValues " +
-                        "WHERE di.uid = :uid")
-                .setParameter("uid", uid)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.dataService")
-                .getResultList();
-        if (dataItems.size() == 1) {
-            log.debug("found DataItem");
-            dataItem = dataItems.get(0);
-            checkDataItem(dataItem);
-        } else {
-            log.debug("DataItem NOT found");
+        if (!StringUtils.isBlank(uid)) {
+            // See http://www.hibernate.org/117.html#A12 for notes on DISTINCT_ROOT_ENTITY.
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(DataItem.class);
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.setFetchMode("itemValues", FetchMode.JOIN);
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<DataItem> dataItems = criteria.list();
+            if (dataItems.size() == 1) {
+                log.debug("getDataItemByUid() found: " + uid);
+                dataItem = dataItems.get(0);
+                checkDataItem(dataItem);
+            } else {
+                log.debug("getDataItemByUid() NOT found: " + uid);
+            }
         }
         return dataItem;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public DataItem getDataItemByPath(String path) {
         DataItem dataItem = null;
-        List<DataItem> dataItems;
-        dataItems = entityManager.createQuery(
+        List<DataItem> dataItems = entityManager.createQuery(
                 "SELECT DISTINCT di " +
                         "FROM DataItem di " +
                         "LEFT JOIN FETCH di.itemValues " +
                         "WHERE di.path = :path")
                 .setParameter("path", path)
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.dataService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
         if (dataItems.size() == 1) {
-            log.debug("found DataItem");
+            log.debug("getDataItemByPath() found: " + path);
             dataItem = dataItems.get(0);
             checkDataItem(dataItem);
         } else {
-            log.debug("DataItem NOT found");
+            log.debug("getDataItemByPath() NOT found: " + path);
         }
         return dataItem;
     }
 
-    //Note - This uses up lots of memory
-    @SuppressWarnings(value="unchecked")
-    public List<DataItem> getDataItems(Environment environment) {
-        return (List<DataItem>) entityManager.createQuery(
-                "SELECT DISTINCT di " +
-                        "FROM DataItem di " +
-                        "LEFT JOIN FETCH di.itemValues " +
-                        "WHERE di.environment = :environment")
-                .setParameter("environment", environment)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.dataService")
-                .getResultList();
-    }
-
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<DataItem> getDataItems(DataCategory dataCategory) {
         return (List<DataItem>) entityManager.createQuery(
                 "SELECT DISTINCT di " +
@@ -283,11 +285,11 @@ class DataServiceDAO implements Serializable {
                 .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.dataService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<DataItem> getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
 
         String q = "SELECT DISTINCT di " +
@@ -305,14 +307,14 @@ class DataServiceDAO implements Serializable {
             if (endDate != null)
                 query.setParameter("endDate", endDate.toDate());
             query.setHint("org.hibernate.cacheable", true);
-            query.setHint("org.hibernate.cacheRegion", "query.dataService");
+            query.setHint("org.hibernate.cacheRegion", CACHE_REGION);
             return query.getResultList();
         } else {
             return null;
         }
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public Choices getUserValueChoices(DataItem dataItem, APIVersion apiVersion) {
         List<Choice> userValueChoices = new ArrayList<Choice>();
         for (ItemValueDefinition ivd : dataItem.getItemDefinition().getItemValueDefinitions()) {
@@ -339,7 +341,7 @@ class DataServiceDAO implements Serializable {
         entityManager.remove(dataItem);
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public void checkDataItem(DataItem dataItem) {
         // find ItemValueDefinitions not currently implemented in this Item
         List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
@@ -347,14 +349,14 @@ class DataServiceDAO implements Serializable {
                         "WHERE ivd NOT IN (" +
                         "   SELECT iv.itemValueDefinition " +
                         "   FROM ItemValue iv " +
-                        "   WHERE iv.item = :dataItem) " +
+                        "   WHERE iv.item.id = :dataItemId) " +
                         "AND ivd.fromData = :fromData " +
                         "AND ivd.itemDefinition.id = :itemDefinitionId")
-                .setParameter("dataItem", dataItem)
+                .setParameter("dataItemId", dataItem.getId())
                 .setParameter("itemDefinitionId", dataItem.getItemDefinition().getId())
                 .setParameter("fromData", true)
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.dataService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
         if (itemValueDefinitions.size() > 0) {
             // explicitly start a transaction

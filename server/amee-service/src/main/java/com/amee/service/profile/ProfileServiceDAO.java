@@ -21,6 +21,7 @@ package com.amee.service.profile;
 
 import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
+import com.amee.domain.UidGen;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.*;
@@ -32,11 +33,14 @@ import com.amee.domain.profile.StartEndDate;
 import com.amee.service.auth.AuthService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.transaction.TransactionController;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
@@ -64,6 +68,8 @@ class ProfileServiceDAO implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
+    private static final String CACHE_REGION = "query.profileService";
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -85,14 +91,14 @@ class ProfileServiceDAO implements Serializable {
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
                         "WHERE iv.item IN " +
-                        "(SELECT pi FROM ProfileItem pi WHERE pi.dataItem = :dataItem)")
-                .setParameter("dataItem", dataItem)
+                        "(SELECT pi FROM ProfileItem pi WHERE pi.dataItem.id = :dataItemId)")
+                .setParameter("dataItemId", dataItem.getId())
                 .executeUpdate();
         // remove ProfileItems
         entityManager.createQuery(
                 "DELETE FROM ProfileItem pi " +
-                        "WHERE pi.dataItem = :dataItem")
-                .setParameter("dataItem", dataItem)
+                        "WHERE pi.dataItem.id = :dataItemId")
+                .setParameter("dataItemId", dataItem.getId())
                 .executeUpdate();
     }
 
@@ -105,14 +111,14 @@ class ProfileServiceDAO implements Serializable {
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
                         "WHERE iv.item IN " +
-                        "(SELECT pi FROM ProfileItem pi WHERE pi.itemDefinition = :itemDefinition)")
-                .setParameter("itemDefinition", itemDefinition)
+                        "(SELECT pi FROM ProfileItem pi WHERE pi.itemDefinition.id = :itemDefinitionId)")
+                .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
         // remove ProfileItems
         entityManager.createQuery(
                 "DELETE FROM ProfileItem pi " +
-                        "WHERE pi.itemDefinition = :itemDefinition")
-                .setParameter("itemDefinition", itemDefinition)
+                        "WHERE pi.itemDefinition.id = :itemDefinitionId")
+                .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
     }
 
@@ -125,14 +131,14 @@ class ProfileServiceDAO implements Serializable {
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
                         "WHERE iv.item IN " +
-                        "(SELECT pi FROM ProfileItem pi WHERE pi.dataCategory = :dataCategory)")
-                .setParameter("dataCategory", dataCategory)
+                        "(SELECT pi FROM ProfileItem pi WHERE pi.dataCategory.id = :dataCategoryId)")
+                .setParameter("dataCategoryId", dataCategory.getId())
                 .executeUpdate();
         // remove ProfileItems
         entityManager.createQuery(
                 "DELETE FROM ProfileItem pi " +
-                        "WHERE pi.dataCategory = :dataCategory")
-                .setParameter("dataCategory", dataCategory)
+                        "WHERE pi.dataCategory.id = :dataCategoryId")
+                .setParameter("dataCategoryId", dataCategory.getId())
                 .executeUpdate();
     }
 
@@ -145,14 +151,13 @@ class ProfileServiceDAO implements Serializable {
                 "SELECT p " +
                         "FROM Profile p " +
                         "WHERE p.environment.id = :environmentId " +
-                        "AND p.permission.user = :user")
+                        "AND p.permission.user.id = :userId")
                 .setParameter("environmentId", user.getEnvironment().getId())
-                .setParameter("user", user)
+                .setParameter("userId", user.getId())
                 .getResultList();
         for (Profile profile : profiles) {
             remove(profile);
         }
-
     }
 
     @SuppressWarnings(value = "unchecked")
@@ -164,9 +169,9 @@ class ProfileServiceDAO implements Serializable {
                 "SELECT p " +
                         "FROM Profile p " +
                         "WHERE p.environment.id = :environmentId " +
-                        "AND p.permission.group = :group")
+                        "AND p.permission.group.id = :groupId")
                 .setParameter("environmentId", group.getEnvironment().getId())
-                .setParameter("group", group)
+                .setParameter("groupId", group.getId())
                 .getResultList();
         for (Profile profile : profiles) {
             remove(profile);
@@ -191,10 +196,23 @@ class ProfileServiceDAO implements Serializable {
 
     // Profiles
 
+    /**
+     * Fetches a Profile based on the supplied path. If the path is a valid UID format then the
+     * Profile with this UID is returned. If a profile with the UID is not found or the path is
+     * not a valid UID format then a Profile with the matching path is searched for and returned.
+     *
+     * @param path to search for. Can be either a UID or a path alias.
+     * @return the matching Profile
+     */
     public Profile getProfile(String path) {
-        Profile profile = getProfileByPath(path);
-        if (profile == null) {
-            profile = getProfileByUid(path);
+        Profile profile = null;
+        if (!StringUtils.isBlank(path)) {
+            if (UidGen.isValid(path)) {
+                profile = getProfileByUid(path);
+            }
+            if (profile == null) {
+                profile = getProfileByPath(path);
+            }
         }
         return profile;
     }
@@ -202,22 +220,19 @@ class ProfileServiceDAO implements Serializable {
     @SuppressWarnings(value = "unchecked")
     public Profile getProfileByUid(String uid) {
         Profile profile = null;
-        List<Profile> profiles;
-        Environment environment = EnvironmentService.getEnvironment();
-        profiles = entityManager.createQuery(
-                "FROM Profile p " +
-                        "WHERE p.uid = :uid " +
-                        "AND p.environment.id = :environmentId")
-                .setParameter("uid", uid.toUpperCase())
-                .setParameter("environmentId", environment.getId())
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.profileService")
-                .getResultList();
-        if (profiles.size() == 1) {
-            log.debug("found Profile");
-            profile = profiles.get(0);
-        } else {
-            log.debug("Profile NOT found");
+        if (!StringUtils.isBlank(uid)) {
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(Profile.class);
+            criteria.add(Restrictions.naturalId().set("uid", uid));
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<Profile> profiles = criteria.list();
+            if (profiles.size() == 1) {
+                log.debug("getProfileByUid() found: " + uid);
+                profile = profiles.get(0);
+            } else {
+                log.debug("getProfileByUid() NOT found: " + uid);
+            }
         }
         return profile;
     }
@@ -234,13 +249,13 @@ class ProfileServiceDAO implements Serializable {
                 .setParameter("path", path)
                 .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.profileService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
         if (profiles.size() == 1) {
-            log.debug("found Profile");
+            log.debug("getProfileByPath() found: " + path);
             profile = profiles.get(0);
         } else {
-            log.debug("Profile NOT found");
+            log.debug("getProfileByPath() NOT found: " + path);
         }
         return profile;
     }
@@ -256,15 +271,15 @@ class ProfileServiceDAO implements Serializable {
                         "FROM Profile p " +
                         "WHERE p.environment.id = :environmentId " +
                         "AND ((p.permission.otherAllowView = :otherAllowView) " +
-                        "     OR (p.permission.group = :group AND p.permission.groupAllowView = :groupAllowView) " +
-                        "     OR (p.permission.user = :user))")
+                        "     OR (p.permission.group.id = :groupId AND p.permission.groupAllowView = :groupAllowView) " +
+                        "     OR (p.permission.user.id = :userId))")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("group", group)
-                .setParameter("user", user)
+                .setParameter("groupId", group.getId())
+                .setParameter("userId", user.getId())
                 .setParameter("otherAllowView", true)
                 .setParameter("groupAllowView", true)
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.profileService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
         // tell pager how many profiles there are and give it a chance to select the requested page again
         pager.setItems(count);
@@ -275,16 +290,16 @@ class ProfileServiceDAO implements Serializable {
                         "FROM Profile p " +
                         "WHERE p.environment.id = :environmentId " +
                         "AND ((p.permission.otherAllowView = :otherAllowView) " +
-                        "     OR (p.permission.group = :group AND p.permission.groupAllowView = :groupAllowView) " +
-                        "     OR (p.permission.user = :user)) " +
+                        "     OR (p.permission.group.id = :groupId AND p.permission.groupAllowView = :groupAllowView) " +
+                        "     OR (p.permission.user.id = :userId)) " +
                         "ORDER BY p.created DESC")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("group", group)
-                .setParameter("user", user)
+                .setParameter("groupId", group.getId())
+                .setParameter("userId", user.getId())
                 .setParameter("otherAllowView", true)
                 .setParameter("groupAllowView", true)
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.profileService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
                 .setFirstResult((int) pager.getStart())
                 .getResultList();
@@ -323,21 +338,22 @@ class ProfileServiceDAO implements Serializable {
     @SuppressWarnings(value = "unchecked")
     public ProfileItem getProfileItem(String uid, APIVersion apiVersion) {
         ProfileItem profileItem = null;
-        List<ProfileItem> profileItems;
-        Query query;
-        String hql = "SELECT DISTINCT pi " +
-                "FROM ProfileItem pi " +
-                "LEFT JOIN FETCH pi.itemValues " +
-                "WHERE pi.uid = :uid";
-        query = entityManager.createQuery(hql);
-        query.setParameter("uid", uid.toUpperCase());
-        profileItems = query.getResultList();
-        if (profileItems.size() == 1) {
-            log.debug("getProfileItem() - found ProfileItem");
-            profileItem = profileItems.get(0);
-            checkProfileItem(profileItem, apiVersion);
-        } else {
-            log.debug("getProfileItem() - ProfileItem NOT found");
+        if (!StringUtils.isBlank(uid)) {
+            // See http://www.hibernate.org/117.html#A12 for notes on DISTINCT_ROOT_ENTITY.
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(ProfileItem.class);
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<ProfileItem> profileItems = criteria.list();
+            if (profileItems.size() == 1) {
+                log.debug("getProfileItem() found: " + uid);
+                profileItem = profileItems.get(0);
+                checkProfileItem(profileItem, apiVersion);
+            } else {
+                log.debug("getProfileItem() NOT found: " + uid);
+            }
         }
         return profileItem;
     }
@@ -348,16 +364,16 @@ class ProfileServiceDAO implements Serializable {
                 "SELECT DISTINCT pi " +
                         "FROM ProfileItem pi " +
                         "LEFT JOIN FETCH pi.itemValues " +
-                        "WHERE pi.profile = :profile " +
+                        "WHERE pi.profile.id = :profileId " +
                         "AND pi.uid != :uid " +
-                        "AND pi.dataCategory = :dataCategory " +
-                        "AND pi.dataItem = :dataItem " +
+                        "AND pi.dataCategory.id = :dataCategoryId " +
+                        "AND pi.dataItem.id = :dataItemId " +
                         "AND pi.startDate = :startDate " +
                         "AND pi.name = :name")
-                .setParameter("profile", profileItem.getProfile())
+                .setParameter("profileId", profileItem.getProfile().getId())
                 .setParameter("uid", profileItem.getUid())
-                .setParameter("dataCategory", profileItem.getDataCategory())
-                .setParameter("dataItem", profileItem.getDataItem())
+                .setParameter("dataCategoryId", profileItem.getDataCategory().getId())
+                .setParameter("dataItemId", profileItem.getDataItem().getId())
                 .setParameter("startDate", profileItem.getStartDate())
                 .setParameter("name", profileItem.getName())
                 .getResultList();
@@ -376,10 +392,10 @@ class ProfileServiceDAO implements Serializable {
                 "SELECT DISTINCT pi " +
                         "FROM ProfileItem pi " +
                         "LEFT JOIN FETCH pi.itemValues " +
-                        "WHERE pi.profile = :profile")
-                .setParameter("profile", profile)
+                        "WHERE pi.profile.id = :profileId")
+                .setParameter("profileId", profile.getId())
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.profileService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
     }
 
@@ -399,15 +415,15 @@ class ProfileServiceDAO implements Serializable {
                             "FROM ProfileItem pi " +
                             "LEFT JOIN FETCH pi.itemValues " +
                             "WHERE pi.itemDefinition.id = :itemDefinitionId " +
-                            "AND pi.dataCategory = :dataCategory " +
-                            "AND pi.profile = :profile " +
+                            "AND pi.dataCategory.id = :dataCategoryId " +
+                            "AND pi.profile.id = :profileId " +
                             "AND pi.startDate < :profileDate")
                     .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
-                    .setParameter("dataCategory", dataCategory)
-                    .setParameter("profile", profile)
+                    .setParameter("dataCategoryId", dataCategory.getId())
+                    .setParameter("profileId", profile.getId())
                     .setParameter("profileDate", profileDate)
                     .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", "query.profileService")
+                    .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
 
 
@@ -440,8 +456,8 @@ class ProfileServiceDAO implements Serializable {
         StringBuilder queryBuilder = new StringBuilder("SELECT DISTINCT pi FROM ProfileItem pi ");
         queryBuilder.append("LEFT JOIN FETCH pi.itemValues ");
         queryBuilder.append("WHERE pi.itemDefinition.id = :itemDefinitionId ");
-        queryBuilder.append("AND pi.dataCategory = :dataCategory ");
-        queryBuilder.append("AND pi.profile = :profile AND ");
+        queryBuilder.append("AND pi.dataCategory.id = :dataCategoryId ");
+        queryBuilder.append("AND pi.profile.id = :profileId AND ");
         if (endDate == null) {
             queryBuilder.append("(pi.endDate > :startDate OR pi.endDate IS NULL)");
         } else {
@@ -452,16 +468,15 @@ class ProfileServiceDAO implements Serializable {
         Query query = entityManager.createQuery(queryBuilder.toString());
 
         query.setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId());
-        query.setParameter("dataCategory", dataCategory);
-        query.setParameter("profile", profile);
+        query.setParameter("dataCategoryId", dataCategory.getId());
+        query.setParameter("profileId", profile.getId());
         query.setParameter("startDate", startDate.toDate());
 
         if (endDate != null)
             query.setParameter("endDate", endDate.toDate());
 
         query.setHint("org.hibernate.cacheable", true);
-        query.setHint("org.hibernate.cacheRegion", "query.profileService");
-
+        query.setHint("org.hibernate.cacheRegion", CACHE_REGION);
 
         return query.getResultList();
     }
@@ -501,11 +516,11 @@ class ProfileServiceDAO implements Serializable {
                         "WHERE ivd NOT IN (" +
                         "   SELECT iv.itemValueDefinition " +
                         "   FROM ItemValue iv " +
-                        "   WHERE iv.item = :profileItem) " +
+                        "   WHERE iv.item.id = :profileItemId) " +
                         "AND ivd.fromProfile = :fromProfile " +
                         "AND ivd.itemDefinition.id = :itemDefinitionId  " +
                         "AND :apiVersion MEMBER OF ivd.apiVersions")
-                .setParameter("profileItem", profileItem)
+                .setParameter("profileItemId", profileItem.getId())
                 .setParameter("itemDefinitionId", profileItem.getItemDefinition().getId())
                 .setParameter("apiVersion", apiVersion)
                 .setParameter("fromProfile", true)

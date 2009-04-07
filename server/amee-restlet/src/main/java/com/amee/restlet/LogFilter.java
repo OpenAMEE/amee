@@ -24,13 +24,13 @@ import com.amee.service.ThreadBeanHolder;
 import org.apache.log4j.MDC;
 import org.restlet.Application;
 import org.restlet.Filter;
-import org.restlet.util.Series;
+import org.restlet.data.Parameter;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.data.Parameter;
+import org.restlet.util.Series;
 
 public class LogFilter extends Filter {
-                                                                                            
+
     public LogFilter() {
         super();
     }
@@ -40,7 +40,7 @@ public class LogFilter extends Filter {
     }
 
     @Override
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     protected int doHandle(Request request, Response response) {
         try {
             // Use the orignating IP address if available in the X-Cluster-Client-Ip header, otherwise use the client address

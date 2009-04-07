@@ -6,17 +6,26 @@
 
 <script type='text/javascript'>
 
+    // create resource objects
+    var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
+    var dataItemValueApiService = new DataItemValueApiService({
+        dataHeadingItem : 'Data Item Value Details',
+        dataHeadingItemElementName : 'apiDataItemHeading',
+        dataContentElementName : "apiDataItemContent",
+        APIVersion : '2.0',
+        updateItem: true});
+
+    // use resource loader to load resources and notify on loaded
+    var resourceLoader = new ResourceLoader();
+    resourceLoader.addResource(DATA_ACTIONS);
+    resourceLoader.observe('loaded', function() {
+        dataItemValueApiService.start();
+    });
+    resourceLoader.start();
+
     document.observe('dom:loaded', function() {
         // hide n/a atom option
         $('showAPIATOM').style.visibility = "hidden";
-        var dataItemValueApiService = new DataItemValueApiService({
-            dataHeadingItem : 'Data Item Value Details',
-            dataHeadingItemElementName : 'apiDataItemHeading',
-            dataContentElementName : "apiDataItemContent",
-            APIVersion : '2.0',
-            updateItem: true
-        });
-        dataItemValueApiService.apiRequest();
     });
 
 </script>

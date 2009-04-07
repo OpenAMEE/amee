@@ -22,12 +22,10 @@ package com.amee.restlet.profile;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
-import com.amee.restlet.BaseFilter;
+import com.amee.restlet.RewriteFilter;
 import com.amee.service.ThreadBeanHolder;
 import com.amee.service.path.PathItemService;
 import com.amee.service.profile.ProfileService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
@@ -37,9 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class ProfileFilter extends BaseFilter {
-
-    private final Log log = LogFactory.getLog(getClass());
+public class ProfileFilter extends RewriteFilter {
 
     @Autowired
     private ProfileService profileService;
@@ -47,26 +43,14 @@ public class ProfileFilter extends BaseFilter {
     @Autowired
     private PathItemService pathItemService;
 
-    public ProfileFilter() {
-        super();
-    }
-
     public ProfileFilter(Application application) {
         super(application);
+        handleAccept = true;
     }
 
-    protected int beforeHandle(Request request, Response response) {
-        log.debug("beforeHandle()");
-        setAccept(request);
-        return rewrite(request, response);
-    }
-
-    protected void afterHandle(Request request, Response response) {
-        log.debug("afterHandle()");
-    }
-
+    @Override
     protected int rewrite(Request request, Response response) {
-        log.info("rewrite() - start profile path rewrite");
+        log.debug("rewrite() - start profile path rewrite");
         String path = null;
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
@@ -74,7 +58,9 @@ public class ProfileFilter extends BaseFilter {
         segments.remove(0); // remove '/profiles'
         if (segments.size() > 0) {
             String segment = segments.remove(0);
-            if (!matchesReservedPaths(segment)) {
+            if (!matchesReservedPrefixes(segment)) {
+                // handle suffixes
+                String suffix = handleSuffix(segments);
                 // look for Profile matching path
                 Profile profile = profileService.getProfile(segment);
                 if (profile != null) {
@@ -86,37 +72,38 @@ public class ProfileFilter extends BaseFilter {
                     PathItem pathItem = pathItemGroup.findBySegments(segments, true);
                     if (pathItem != null) {
                         // rewrite paths
-                        request.getAttributes().put("pathItem", pathItem);
                         path = pathItem.getInternalPath();
                         if (path != null) {
                             path = "/profiles" + path;
+                            // rewrite paths
+                            request.getAttributes().put("pathItem", pathItem);
+                            request.getAttributes().put("previousResourceRef", reference.toString());
+                            request.getAttributes().put("previousHierachicalPart", reference.getScheme() + ":" + reference.getHierarchicalPart().toString());
+                            reference.setPath(path + suffix);
                         }
                     }
                 }
-            }
-
-            // TODO: Quick fix to allow /service paths
-            if (!segments.isEmpty() && segments.get(0).equals("service"))
-                return CONTINUE;
-
-            if (path != null) {
-                // rewrite paths
-                request.getAttributes().put("previousResourceRef", reference.toString());
-                // TODO: There must be a better way of doing this...
-                request.getAttributes().put("previousHierachicalPart", reference.getScheme() + ":" + reference.getHierarchicalPart().toString());
-                reference.setPath(path);
-            } else {
-                response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-                return STOP;
+                if (path == null) {
+                    response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                    return STOP;
+                }
             }
         }
-        log.info("rewrite() - end profile path rewrite");
+        log.debug("rewrite() - end profile path rewrite");
         return CONTINUE;
     }
 
-    // TODO: these paths are no longer needed
-    protected boolean matchesReservedPaths(String segment) {
-        return (segment.equalsIgnoreCase("stats") ||
-                segment.equalsIgnoreCase("js"));
+    protected boolean matchesReservedPrefixes(String segment) {
+        return segment.equalsIgnoreCase("actions");
+    }
+
+    protected String handleSuffix(List<String> segments) {
+        if (segments.size() > 0) {
+            String segment = segments.get(segments.size() - 1);
+            if ("service".equalsIgnoreCase(segment)) {
+                return "/" + segments.remove(segments.size() - 1);
+            }
+        }
+        return "";
     }
 }

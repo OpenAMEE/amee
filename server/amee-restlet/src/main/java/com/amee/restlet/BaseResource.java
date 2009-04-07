@@ -5,8 +5,10 @@ import com.amee.domain.PagerSetType;
 import com.amee.domain.sheet.SortOrder;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.APIFault;
+import com.amee.restlet.utils.HeaderUtils;
 import com.amee.restlet.utils.MediaTypeUtils;
 import com.amee.service.ThreadBeanHolder;
+import com.amee.service.environment.EnvironmentService;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateHashModel;
@@ -202,6 +204,18 @@ public abstract class BaseResource extends Resource {
 
     public Element getElement(Document document, boolean detailed) throws ResourceException {
         throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
+    }
+
+    public int getItemsPerPage() {
+        int itemsPerPage = EnvironmentService.getEnvironment().getItemsPerPage();
+        String itemsPerPageStr = getRequest().getResourceRef().getQueryAsForm().getFirstValue("itemsPerPage");
+        if (itemsPerPageStr == null) {
+            itemsPerPageStr = HeaderUtils.getHeaderFirstValue("ItemsPerPage", getRequest());
+        }
+        if (itemsPerPageStr != null) {
+            itemsPerPage = Integer.parseInt(itemsPerPageStr);
+        }
+        return itemsPerPage;
     }
 
     public void setPage(Request request) {

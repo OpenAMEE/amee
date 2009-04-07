@@ -35,15 +35,7 @@ import java.util.Date;
 @Entity
 @Table(name = "VALUE_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ValueDefinition implements PersistentObject {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
-    private String uid = "";
+public class ValueDefinition extends AMEEEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
@@ -66,7 +58,6 @@ public class ValueDefinition implements PersistentObject {
 
     public ValueDefinition() {
         super();
-        setUid(UidGen.getUid());
     }
 
     public ValueDefinition(Environment environment, String name, ValueType valueType) {
@@ -140,25 +131,6 @@ public class ValueDefinition implements PersistentObject {
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        if (uid == null) {
-            uid = "";
-        }
-        this.uid = uid;
     }
 
     public Environment getEnvironment() {

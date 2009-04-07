@@ -48,6 +48,7 @@
             <map>
                 <entry key="" value-ref="defaultApplication"/>
                 <entry key="/auth" value-ref="authApplication"/>
+                <entry key="/admin" value-ref="adminApplication"/>
                 <entry key="/data" value-ref="dataApplication"/>
                 <entry key="/profiles" value-ref="profilesApplication"/>
             </map>

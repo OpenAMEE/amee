@@ -14,37 +14,24 @@
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
 
-    var Profile = Class.create();
-    Profile.prototype = {
-        initialize: function() {
-        },
-        addProfile: function() {
-            var myAjax = new Ajax.Request(window.location.href, {
-                method: 'post',
-                parameters: 'profile=true',
-                requestHeaders: ['Accept', 'application/json'],
-                onSuccess: this.addProfileSuccess.bind(this)
-            });
-        },
-        addProfileSuccess: function(t) {
-            window.location.href = window.location.href;
-        }
-    };
-    var p = new Profile();
+    // create resource objects
+    var profile = new Profile();
+    var PROFILE_ACTIONS = new ActionsResource({path: '/profiles/actions'});
+    var profilesApiService = new ProfilesApiService({
+        heading: "Profiles",
+        headingElementName: "apiHeading",
+        contentElementName: "apiContent",
+        pagerTopElementName: 'apiTopPager',
+        pagerBtmElementName: 'apiBottomPager',
+        APIVersion: '2.0'});
 
-    document.observe('dom:loaded', function() {
-        // hide n/a atom option
-        $('showAPIATOM').style.visibility = "hidden";
-        var profilesApiService = new ProfilesApiService({
-            heading : "Profiles",
-            headingElementName : "apiHeading",
-            contentElementName : "apiContent",
-            pagerTopElementName : 'apiTopPager',
-            pagerBtmElementName : 'apiBottomPager',
-            APIVersion : '2.0'
-        });
-        profilesApiService.apiRequest();
+    // use resource loader to load resources and notify on loaded
+    var resourceLoader = new ResourceLoader();
+    resourceLoader.addResource(PROFILE_ACTIONS);
+    resourceLoader.observe('loaded', function() {
+        profilesApiService.start();
     });
+    resourceLoader.start();
 
 </script>
 
@@ -60,7 +47,7 @@
 <#if browser.profileActions.allowCreate>
     <h2>Create Profile</h2>
     <form onSubmit="return false;">
-        <input type='button' value='Create Profile' onClick='p.addProfile();'/>
+        <input type='button' value='Create Profile' onClick='profile.addProfile();'/>
     </form>
 </#if>
 

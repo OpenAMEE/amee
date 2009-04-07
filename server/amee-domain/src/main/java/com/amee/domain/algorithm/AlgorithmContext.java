@@ -21,7 +21,6 @@ public class AlgorithmContext extends AbstractAlgorithm {
         super();
     }
 
-
     public AlgorithmContext(Environment environment) {
         this();
         setEnvironment(environment);
@@ -50,5 +49,4 @@ public class AlgorithmContext extends AbstractAlgorithm {
     public ObjectType getObjectType() {
         return ObjectType.ALC;
     }
-
 }
