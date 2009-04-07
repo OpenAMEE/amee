@@ -59,13 +59,11 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
-    private Environment environment;
     private ItemDefinition newItemDefinition;
 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        environment = EnvironmentService.getEnvironment();
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
         setAvailable(isValid());

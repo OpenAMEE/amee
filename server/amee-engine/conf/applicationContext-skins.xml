@@ -26,6 +26,7 @@
                 <entry key="amee.environment.admin.skin" value-ref="ameeEnvironmentAdminSkin"/>
                 <entry key="data.skin" value-ref="dataSkin"/>
                 <entry key="profile.skin" value-ref="profileSkin"/>
+                <entry key="admin.skin" value-ref="adminSkin"/>
             </map>
         </property>
     </bean>
@@ -150,6 +151,15 @@
 
     <bean id="profileSkin" class="com.amee.restlet.site.Skin">
         <property name="path" value="profile.skin"/>
+        <property name="importedSkins">
+            <set>
+                <ref local="clientImportSkin"/>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="adminSkin" class="com.amee.restlet.site.Skin">
+        <property name="path" value="admin.skin"/>
         <property name="importedSkins">
             <set>
                 <ref local="clientImportSkin"/>

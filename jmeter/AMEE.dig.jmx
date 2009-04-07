@@ -12,14 +12,14 @@
     <hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="AMEE" enabled="true">
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <longProp name="ThreadGroup.start_time">1237739743000</longProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <stringProp name="LoopController.loops">1</stringProp>
+          <stringProp name="LoopController.loops">50</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
         <longProp name="ThreadGroup.end_time">1237739743000</longProp>
@@ -42,7 +42,7 @@
           <collectionProp name="CookieManager.cookies"/>
         </CookieManager>
         <hashTree/>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="1.0" enabled="true"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="1.0" enabled="false"/>
         <hashTree>
           <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Auth" enabled="true"/>
           <hashTree>
@@ -153,8 +153,8 @@
             </HTTPSampler>
             <hashTree>
               <XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="ProfileUID" enabled="true">
-                <boolProp name="XPathExtractor.tolerant">false</boolProp>
                 <stringProp name="XPathExtractor.xpathQuery">/Resources/ProfilesResource/Profile/@uid</stringProp>
+                <boolProp name="XPathExtractor.tolerant">false</boolProp>
                 <boolProp name="XPathExtractor.namespace">false</boolProp>
                 <stringProp name="XPathExtractor.refname">ProfileUID</stringProp>
                 <stringProp name="XPathExtractor.default">NULL</stringProp>
@@ -179,14 +179,14 @@
             <hashTree/>
             <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="Create Profile Item (Batch V1)" enabled="true">
               <stringProp name="SoapSampler.URL_DATA">http://local.stage.co2.dgen.net/profiles/${ProfileUID}</stringProp>
-              <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
               <stringProp name="SoapSampler.xml_data_file">/Development/AMEE.2.1/jmeter/batch-profile-create.large.xml</stringProp>
+              <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
               <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
                 <collectionProp name="Arguments.arguments"/>
               </elementProp>
-              <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
               <stringProp name="HTTPSamper.xml_data"></stringProp>
+              <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
             </SoapSampler>
             <hashTree/>
           </hashTree>
@@ -254,8 +254,8 @@
                     </HTTPSampler>
                     <hashTree>
                       <XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="DataItemUID" enabled="true">
-                        <boolProp name="XPathExtractor.tolerant">false</boolProp>
                         <stringProp name="XPathExtractor.xpathQuery">/Resources/DrillDownResource/Choices/Choices/Choice/Value</stringProp>
+                        <boolProp name="XPathExtractor.tolerant">false</boolProp>
                         <boolProp name="XPathExtractor.namespace">false</boolProp>
                         <stringProp name="XPathExtractor.refname">DataItemUID</stringProp>
                         <stringProp name="XPathExtractor.default">NULL</stringProp>
@@ -466,8 +466,8 @@
                   </HTTPSampler>
                   <hashTree>
                     <XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="DataItemUID" enabled="true">
-                      <boolProp name="XPathExtractor.tolerant">false</boolProp>
                       <stringProp name="XPathExtractor.xpathQuery">/Resources/DrillDownResource/Choices/Choices/Choice/Value</stringProp>
+                      <boolProp name="XPathExtractor.tolerant">false</boolProp>
                       <boolProp name="XPathExtractor.namespace">false</boolProp>
                       <stringProp name="XPathExtractor.refname">DataItemUID</stringProp>
                       <stringProp name="XPathExtractor.default">NULL</stringProp>
@@ -568,8 +568,8 @@
                   </HTTPSampler>
                   <hashTree>
                     <XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="DataItemUID" enabled="true">
-                      <boolProp name="XPathExtractor.tolerant">false</boolProp>
                       <stringProp name="XPathExtractor.xpathQuery">/Resources/DrillDownResource/Choices/Choices/Choice/Value</stringProp>
+                      <boolProp name="XPathExtractor.tolerant">false</boolProp>
                       <boolProp name="XPathExtractor.namespace">false</boolProp>
                       <stringProp name="XPathExtractor.refname">DataItemUID</stringProp>
                       <stringProp name="XPathExtractor.default">NULL</stringProp>
@@ -632,7 +632,7 @@
             </hashTree>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="2.0" enabled="false"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="2.0" enabled="true"/>
         <hashTree>
           <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Auth" enabled="true"/>
           <hashTree>
@@ -743,8 +743,8 @@
             </HTTPSampler>
             <hashTree>
               <XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="ProfileUID" enabled="true">
-                <boolProp name="XPathExtractor.tolerant">false</boolProp>
                 <stringProp name="XPathExtractor.xpathQuery">/Resources/ProfilesResource/Profile/@uid</stringProp>
+                <boolProp name="XPathExtractor.tolerant">false</boolProp>
                 <boolProp name="XPathExtractor.namespace">false</boolProp>
                 <stringProp name="XPathExtractor.refname">ProfileUID</stringProp>
                 <stringProp name="XPathExtractor.default">NULL</stringProp>
@@ -816,8 +816,8 @@
                     </HTTPSampler>
                     <hashTree>
                       <XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="DataItemUID" enabled="true">
-                        <boolProp name="XPathExtractor.tolerant">false</boolProp>
                         <stringProp name="XPathExtractor.xpathQuery">/Resources/DrillDownResource/Choices/Choices/Choice/Value</stringProp>
+                        <boolProp name="XPathExtractor.tolerant">false</boolProp>
                         <boolProp name="XPathExtractor.namespace">false</boolProp>
                         <stringProp name="XPathExtractor.refname">DataItemUID</stringProp>
                         <stringProp name="XPathExtractor.default">NULL</stringProp>
@@ -1056,8 +1056,8 @@
                   </HTTPSampler>
                   <hashTree>
                     <XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="DataItemUID" enabled="true">
-                      <boolProp name="XPathExtractor.tolerant">false</boolProp>
                       <stringProp name="XPathExtractor.xpathQuery">/Resources/DrillDownResource/Choices/Choices/Choice/Value</stringProp>
+                      <boolProp name="XPathExtractor.tolerant">false</boolProp>
                       <boolProp name="XPathExtractor.namespace">false</boolProp>
                       <stringProp name="XPathExtractor.refname">DataItemUID</stringProp>
                       <stringProp name="XPathExtractor.default">NULL</stringProp>
@@ -1172,8 +1172,8 @@
                   </HTTPSampler>
                   <hashTree>
                     <XPathExtractor guiclass="XPathExtractorGui" testclass="XPathExtractor" testname="DataItemUID" enabled="true">
-                      <boolProp name="XPathExtractor.tolerant">false</boolProp>
                       <stringProp name="XPathExtractor.xpathQuery">/Resources/DrillDownResource/Choices/Choices/Choice/Value</stringProp>
+                      <boolProp name="XPathExtractor.tolerant">false</boolProp>
                       <boolProp name="XPathExtractor.namespace">false</boolProp>
                       <stringProp name="XPathExtractor.refname">DataItemUID</stringProp>
                       <stringProp name="XPathExtractor.default">NULL</stringProp>
@@ -1250,7 +1250,7 @@
             </hashTree>
           </hashTree>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
           <objProp>
             <value class="SampleSaveConfiguration">
               <time>true</time>
@@ -1314,7 +1314,38 @@
           <boolProp name="ResultCollector.error_logging">false</boolProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer" enabled="true">
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <objProp>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+            </value>
+            <name>saveConfig</name>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer" enabled="false">
           <objProp>
             <value class="SampleSaveConfiguration">
               <time>true</time>
