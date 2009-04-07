@@ -391,8 +391,8 @@ var ProfilesApiService = Class.create(BaseProfileApiService, ({
     getHeadingElement: function(json) {
         return new Element('tr')
                 .insert(this.getHeadingData('Path'))
-                .insert(this.getHeadingData('Group'))
-                .insert(this.getHeadingData('User'))
+                // .insert(this.getHeadingData('Group'))
+                // .insert(this.getHeadingData('User'))
                 .insert(this.getHeadingData('Created'))
                 .insert(this.getHeadingData('Actions'));
     },
@@ -421,11 +421,10 @@ var ProfilesApiService = Class.create(BaseProfileApiService, ({
         if (json.profiles) {
             for (var i = 0; i < json.profiles.length; i++) {
                 var profile = json.profiles[i];
-                // TODO: deal with permissions
                 var detailRow = new Element('tr', {id : 'Elem_' + profile.uid})
                         .insert(new Element('td').insert(profile.path))
-                    // .insert(new Element('td').insert(profile.permission.group.name))
-                    // .insert(new Element('td').insert(profile.permission.user.username))
+                        // .insert(new Element('td').insert(profile.permission.group.name))
+                        // .insert(new Element('td').insert(profile.permission.user.username))
                         .insert(new Element('td').insert(profile.created));
 
                 // create actions

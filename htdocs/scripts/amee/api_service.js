@@ -408,19 +408,19 @@ var Actions = Class.create({
         Object.extend(this, actions);
     },
     isAllowView: function() {
-        return this.available && this.allowView;
+        return this.allowView;
     },
     isAllowCreate: function() {
-        return this.available && this.allowCreate;
+        return this.allowCreate;
     },
     isAllowModify: function() {
-        return this.available && this.allowModify;
+        return this.allowModify;
     },
     isAllowDelete: function() {
-        return this.available && this.allowDelete;
+        return this.allowDelete;
     },
     isAllowList: function() {
-        return this.available && this.allowList;
+        return this.allowList;
     }
 });
 
