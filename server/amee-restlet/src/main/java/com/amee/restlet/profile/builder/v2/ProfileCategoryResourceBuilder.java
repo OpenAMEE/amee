@@ -7,11 +7,13 @@ import com.amee.domain.core.CO2AmountUnit;
 import com.amee.domain.core.Decimal;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.path.PathItem;
+import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
+import com.amee.service.path.PathItemService;
 import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.SelectByProfileService;
 import org.apache.abdera.ext.history.FeedPagingHelper;
@@ -59,16 +61,20 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     @Autowired
     private com.amee.service.profile.OnlyActiveProfileService onlyActiveProfileService;
 
+    @Autowired
+    PathItemService pathItemService;
+
     public JSONObject getJSONObject(ProfileCategoryResource resource) throws JSONException {
 
         JSONObject obj = new JSONObject();
 
-        if (resource.isBatchPost()) {
+        if (resource.isBatchPost() && !resource.isFullRepresentationRequested()) {
+
             // For batch modifications return a list of newly created URIs
             JSONArray jsonProfileItems = new JSONArray();
             for (ProfileItem item : getProfileItems(resource, resource.getPager())) {
                 JSONObject itemJSON = new JSONObject();
-                obj.put("uri", resource.getFullPath() + "/" + item.getUid());
+                obj.put("uri", getFullPath(item));
                 jsonProfileItems.put(itemJSON);
             }
             obj.put("profileItems", jsonProfileItems);
@@ -136,12 +142,13 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         Element element;
 
-        if (resource.isBatchPost()) {
+        if (resource.isBatchPost() && !resource.isFullRepresentationRequested()) {
+
             // Generate only a basic representation of the ProfileItems
             element = document.createElement("ProfileItems");
             for (ProfileItem item : getProfileItems(resource, resource.getPager())) {
                 Element itemElement = document.createElement("ProfileItem");
-                itemElement.setAttribute("uri", resource.getFullPath() + "/" + item.getUid());
+                itemElement.setAttribute("uri",getFullPath(item));
                 element.appendChild(itemElement);
             }
 
@@ -475,6 +482,11 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         cat.setLabel(profileItem.getDataItem().getItemDefinition().getName());
 
         return entry;
+    }
+
+    private String getFullPath(ProfileItem item) {
+        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
+        return "/profiles/" + item.getProfile().getUid() + pathItemGroup.findByUId(item.getDataCategory().getUid()) + "/" + item.getUid();
     }
 }
 

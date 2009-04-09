@@ -169,7 +169,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
         log.debug("acceptOrStore()");
         if (isAcceptOrStoreAuthorized()) {
             profileItems = doAcceptOrStore(entity);
-            if (!profileItems.isEmpty()) {
+            if (!isError()) {
                 // clear caches
                 profileService.clearCaches(getProfile());
                 if (isPost()) {

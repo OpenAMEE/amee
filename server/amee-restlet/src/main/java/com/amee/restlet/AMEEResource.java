@@ -10,6 +10,7 @@ import com.amee.service.ThreadBeanHolder;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.profile.ProfileService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.xerces.dom.DocumentImpl;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -340,7 +341,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
      * @return true if the request specifies that the full representation should be returned following a POST or PUT request
      */
     public boolean isFullRepresentationRequested() {
-        return representationRequested.equals(REPRESENTATION_FULL);
+        return StringUtils.equals(representationRequested,REPRESENTATION_FULL);
     }
 
     public boolean isBatchPost() {

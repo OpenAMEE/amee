@@ -70,17 +70,23 @@ public class ProfileCategoryJSONAcceptor implements IProfileCategoryRepresentati
                         return profileItems;
                     }
 
+                    // If the POST inputstream contains more than one entity it is considered a batch request.
+                    if (profileItemsJSON.length() > 1 && resource.isPost())
+                        resource.setIsBatchPost(true);
+
                     for (int i = 0; i < profileItemsJSON.length(); i++) {
                         JSONObject profileItemJSON = profileItemsJSON.getJSONObject(i);
                         Form form = new Form();
 
-                        if (profileItemsJSON.length() > 1 && resource.isPost())
-                            resource.setIsBatchPost(true);
 
                         for (Iterator iterator = profileItemJSON.keys(); iterator.hasNext();) {
                             String key = (String) iterator.next();
                             form.add(key, profileItemJSON.getString(key));
                         }
+
+                        // Representations to be returned for batch requests can be specified as a query parameter.
+                        form.add("representation", resource.getForm().getFirstValue("representation"));
+
                         List<ProfileItem> items = formAcceptor.accept(resource, form);
                         if (!items.isEmpty()) {
                             profileItems.addAll(items);

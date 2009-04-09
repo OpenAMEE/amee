@@ -73,17 +73,22 @@ public class ProfileCategoryXMLAcceptor implements IProfileCategoryRepresentatio
                             return profileItems;
                         }
 
+                        // If the POST inputstream contains more than one entity it is considered a batch request.
+                        if (elements.size() > 1 && resource.isPost())
+                            resource.setIsBatchPost(true);
+
                         for (Object o1 : elements) {
                             Element profileItemElem = (Element) o1;
                             Form form = new Form();
-
-                            if (elements.size() > 1 && resource.isPost())
-                                resource.setIsBatchPost(true);
 
                             for (Object o2 : profileItemElem.elements()) {
                                 Element profileItemValueElem = (Element) o2;
                                 form.add(profileItemValueElem.getName(), profileItemValueElem.getText());
                             }
+
+                            // Representations to be returned for batch requests can be specified as a query parameter.
+                            form.add("representation", resource.getForm().getFirstValue("representation"));
+
                             List<ProfileItem> items = formAcceptor.accept(resource, form);
                             if (!items.isEmpty()) {
                                 profileItems.addAll(items);
