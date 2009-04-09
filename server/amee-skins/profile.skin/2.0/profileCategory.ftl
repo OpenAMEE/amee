@@ -46,7 +46,7 @@
         dataHeadingCategory: 'Profile Category Details',
         dataHeadingCategoryElementName: 'apiDataCategoryHeading',
         dataContentElementName: "apiDataCategoryContent",
-        APIVersion: '2.0'});
+        apiVersion: '2.0'});
     var drillDown = new DrillDown(
         "/data${pathItem.fullPath}",
         "2.0",

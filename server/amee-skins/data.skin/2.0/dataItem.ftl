@@ -16,7 +16,7 @@
         dataHeadingItem : 'Data Item Details',
         dataHeadingItemElementName : 'apiDataItemHeading',
         dataContentElementName : "apiDataItemContent",
-        APIVersion : '2.0',
+        apiVersion : '2.0',
         updateItem: true});
 
     // use resource loader to load resources and notify on loaded
