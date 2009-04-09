@@ -20,10 +20,9 @@
 package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.Builder;
-import com.amee.domain.PersistentObject;
-import com.amee.domain.UidGen;
 import com.amee.domain.core.DecimalCompoundUnit;
 import com.amee.domain.core.DecimalPerUnit;
 import com.amee.domain.core.DecimalUnit;
