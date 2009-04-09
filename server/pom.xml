@@ -114,5 +114,66 @@
     </dependency>
 
   </dependencies>
+  
+  <!-- Site & Reporting. -->
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <configuration>
+          <webAccessUrl>https://github.com/sambogoat/amee/tree/master</webAccessUrl>
+          <anonymousConnection>scm:git@github.com:sambogoat/amee.git</anonymousConnection>
+          <developerConnection>scm:git@github.com:sambogoat/amee.git</developerConnection>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jxr-maven-plugin</artifactId>
+      </plugin>      
+      <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+       <artifactId>maven-pmd-plugin</artifactId>
+       <configuration>
+          <targetjdk>1.6</targetjdk>
+          <rulesets>
+             <!-- Add other rulesets. -->  
+             <ruleset>/rulesets/basic.xml</ruleset>
+             <!--<ruleset>/rulesets/controversial.xml</ruleset>-->
+          </rulesets>
+          <format>xml</format>
+          <linkXref>true</linkXref>
+          <sourceEncoding>utf-8</sourceEncoding>
+          <minimumTokens>100</minimumTokens>
+       </configuration>
+      </plugin>  
+    </plugins>
+  </reporting>
 
+  <scm>
+    <connection>scm:svn:http://svn.example.org/repo/project/trunk/site</connection>
+    <developerConnection>scm:git@github.com:sambogoat/amee.git</developerConnection>
+    <url>https://github.com/sambogoat/amee/tree/master</url>
+  </scm>
+  
+  <issueManagement>
+     <system>Trac</system>
+     <url>http://my.amee.com/developers/roadmap</url>
+  </issueManagement>
+   
+  <ciManagement>
+     <system>Continuum</system>
+     <url>http://localhost:81/continuum</url>
+     <notifiers>
+        <notifier>
+           <type>mail</type>
+           <address>duke@wakaleo.com</address>
+        </notifier>
+     </notifiers>
+  </ciManagement>
+
+  
 </project>
