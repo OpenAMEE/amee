@@ -1027,7 +1027,7 @@
     </library>
     <library name="Maven: org.hibernate:hibernate-entitymanager:3.4.0.GA">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../../../lib/log4jdbc/log4jdbc4-1.2alpha2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../../repository/org/hibernate/hibernate-entitymanager/3.4.0.GA/hibernate-entitymanager-3.4.0.GA.jar!/" />
       </CLASSES>
       <JAVADOC>
         <root url="jar://$PROJECT_DIR$/../../../../repository/org/hibernate/hibernate-entitymanager/3.4.0.GA/hibernate-entitymanager-3.4.0.GA-javadoc.jar!/" />
