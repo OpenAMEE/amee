@@ -71,12 +71,12 @@ public class Decimal {
         if (decimal.isEmpty() || decimal.equals("-")) {
             this.decimal = BIG_DECIMAL_ZERO;
         } else {
-            scale(Long.parseLong(decimal));
+            scale(decimal);
         }
     }
 
-    public Decimal(long decimal) {
-        scale(decimal);    
+    public Decimal(Long decimal) {
+        scale(decimal.toString());
     }
 
     private Decimal(BigDecimal decimal) {
@@ -89,7 +89,7 @@ public class Decimal {
     }
 
     // Scale the algorithm result according to the AMEE standard precision and scale.
-    protected void scale(Long decimal) {
+    protected void scale(String decimal) {
         try {
             BigDecimal bd = new BigDecimal(decimal);
             this.decimal = bd.setScale(SCALE, ROUNDING_MODE);
