@@ -7,9 +7,9 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * This file is part of AMEE.
@@ -33,18 +33,10 @@ import java.util.Date;
 @Entity
 @Table(name = "API_VERSION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class APIVersion extends AMEEEntity implements DatedObject {
+public class APIVersion extends AMEEEntity {
 
     public static final APIVersion ONE = new APIVersion("1.0");
     public final static int API_VERSION_SIZE = 3;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED", nullable = false)
-    private Date created = null;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED", nullable = false)
-    private Date modified = null;
 
     @Column(name = "VERSION", length = API_VERSION_SIZE, nullable = true)
     private String version;
@@ -113,32 +105,5 @@ public class APIVersion extends AMEEEntity implements DatedObject {
 
     public boolean isNotVersionOne() {
         return !this.equals(ONE);
-    }
-
-    @PrePersist
-    public void onCreate() {
-        setCreated(Calendar.getInstance().getTime());
-        setModified(getCreated());
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 }

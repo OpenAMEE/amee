@@ -253,23 +253,26 @@ class DataServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public DataItem getDataItemByPath(String path) {
+    public DataItem getDataItemByPath(Environment environment, String path) {
         DataItem dataItem = null;
-        List<DataItem> dataItems = entityManager.createQuery(
-                "SELECT DISTINCT di " +
-                        "FROM DataItem di " +
-                        "LEFT JOIN FETCH di.itemValues " +
-                        "WHERE di.path = :path")
-                .setParameter("path", path)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getResultList();
-        if (dataItems.size() == 1) {
-            log.debug("getDataItemByPath() found: " + path);
-            dataItem = dataItems.get(0);
-            checkDataItem(dataItem);
-        } else {
-            log.debug("getDataItemByPath() NOT found: " + path);
+        if ((environment != null) && !StringUtils.isBlank(path)) {
+            // See http://www.hibernate.org/117.html#A12 for notes on DISTINCT_ROOT_ENTITY.
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(DataItem.class);
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            criteria.add(Restrictions.eq("path", path));
+            criteria.add(Restrictions.naturalId().set("environment.uid", environment.getUid().toUpperCase()));
+            criteria.setFetchMode("itemValues", FetchMode.JOIN);
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<DataItem> dataItems = criteria.list();
+            if (dataItems.size() == 1) {
+                log.debug("getDataItemByPath() found: " + path);
+                dataItem = dataItems.get(0);
+                checkDataItem(dataItem);
+            } else {
+                log.debug("getDataItemByPath() NOT found: " + path);
+            }
         }
         return dataItem;
     }

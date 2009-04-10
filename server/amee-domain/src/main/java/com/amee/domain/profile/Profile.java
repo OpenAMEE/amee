@@ -20,7 +20,7 @@
 package com.amee.domain.profile;
 
 import com.amee.core.ObjectType;
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.APIVersion;
 import com.amee.domain.auth.Permission;
@@ -28,24 +28,17 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
 
 @Entity
 @Table(name = "PROFILE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Profile extends AMEEEntity implements Pathable {
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
+public class Profile extends AMEEEnvironmentEntity implements Pathable {
 
     @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "PERMISSION_ID")
@@ -57,21 +50,12 @@ public class Profile extends AMEEEntity implements Pathable {
     @Column(name = "NAME")
     private String name = "";
 
-    @Column(name = "CREATED")
-    @Index(name = "CREATED_IND")
-    private Date created = Calendar.getInstance().getTime();
-
-    @Column(name = "MODIFIED")
-    @Index(name = "MODIFIED_IND")
-    private Date modified = Calendar.getInstance().getTime();
-
     public Profile() {
         super();
     }
 
     public Profile(Environment environment, Permission permission) {
-        this();
-        setEnvironment(environment);
+        super(environment);
         permission.setObject(this);
         setPermission(permission);
     }
@@ -130,28 +114,6 @@ public class Profile extends AMEEEntity implements Pathable {
         return APIUtils.getIdentityElement(document, this);
     }
 
-    @PrePersist
-    public void onCreate() {
-        Date now = Calendar.getInstance().getTime();
-        setCreated(now);
-        setModified(now);
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
-        }
-    }
-
     public Permission getPermission() {
         return permission;
     }
@@ -182,22 +144,6 @@ public class Profile extends AMEEEntity implements Pathable {
             path = "";
         }
         this.path = path;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 
     @Transient

@@ -1,10 +1,8 @@
 package com.amee.domain.site;
 
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIUtils;
-import com.amee.domain.DatedObject;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.environment.EnvironmentObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -14,8 +12,6 @@ import org.w3c.dom.Element;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,15 +29,11 @@ import java.util.Set;
 @Entity
 @Table(name = "SITE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Site extends AMEEEntity implements EnvironmentObject, DatedObject, Comparable, Serializable {
+public class Site extends AMEEEnvironmentEntity implements Comparable, Serializable {
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
     public final static int AUTH_COOKIE_DOMAIN_SIZE = 255;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
 
     @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
@@ -68,21 +60,12 @@ public class Site extends AMEEEntity implements EnvironmentObject, DatedObject, 
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<SiteApp> siteApps = new HashSet<SiteApp>();
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED")
-    private Date created = null;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED")
-    private Date modified = null;
-
     public Site() {
         super();
     }
 
     public Site(Environment environment) {
-        this();
-        setEnvironment(environment);
+        super(environment);
     }
 
     public void add(SiteApp siteApp) {
@@ -170,27 +153,6 @@ public class Site extends AMEEEntity implements EnvironmentObject, DatedObject, 
         setCheckRemoteAddress(element.elementText("CheckRemoteAddress"));
         setMaxAuthDuration(element.elementText("MaxAuthDuration"));
         setMaxAuthIdle(element.elementText("MaxAuthIdle"));
-    }
-
-    @PrePersist
-    public void onCreate() {
-        setCreated(Calendar.getInstance().getTime());
-        setModified(getCreated());
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
-        }
     }
 
     public String getName() {
@@ -297,21 +259,5 @@ public class Site extends AMEEEntity implements EnvironmentObject, DatedObject, 
             siteApps = new HashSet<SiteApp>();
         }
         this.siteApps = siteApps;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 }

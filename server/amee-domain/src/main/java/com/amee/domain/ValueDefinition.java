@@ -28,18 +28,15 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "VALUE_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ValueDefinition extends AMEEEntity {
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
+public class ValueDefinition extends AMEEEnvironmentEntity {
 
     @Column(name = "NAME")
     private String name = "";
@@ -49,12 +46,6 @@ public class ValueDefinition extends AMEEEntity {
 
     @Column(name = "VALUE_TYPE")
     private ValueType valueType = ValueType.TEXT;
-
-    @Column(name = "CREATED")
-    private Date created = null;
-
-    @Column(name = "MODIFIED")
-    private Date modified = null;
 
     public ValueDefinition() {
         super();
@@ -120,27 +111,7 @@ public class ValueDefinition extends AMEEEntity {
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }
-
-    @PrePersist
-    public void onCreate() {
-        Date now = Calendar.getInstance().getTime();
-        setCreated(now);
-        setModified(now);
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-
+    
     public String getName() {
         return name;
     }
@@ -172,21 +143,5 @@ public class ValueDefinition extends AMEEEntity {
             valueType = ValueType.TEXT;
         }
         this.valueType = valueType;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 }

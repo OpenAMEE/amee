@@ -93,12 +93,9 @@ public class DefinitionServiceDAO implements Serializable {
         entityManager.remove(algorithm);
     }
 
-
     public void save(AbstractAlgorithm algorithm) {
         entityManager.persist(algorithm);
     }
-
-    // TODO: Scope to something
 
     public List<AlgorithmContext> getAlgorithmContexts(Environment environment) {
         List<AlgorithmContext> algorithmContexts =
@@ -156,15 +153,13 @@ public class DefinitionServiceDAO implements Serializable {
         return itemDefinitions;
     }
 
-    public ItemDefinition getItemDefinition(Environment environment, String uid) {
+    public ItemDefinition getItemDefinition(String uid) {
         ItemDefinition itemDefinition = null;
         List<ItemDefinition> itemDefinitions = entityManager.createQuery(
                 "SELECT DISTINCT id " +
                         "FROM ItemDefinition id " +
                         "LEFT JOIN FETCH id.itemValueDefinitions ivd " +
-                        "WHERE id.environment.id = :environmentId AND " +
-                        "id.uid = :uid")
-                .setParameter("environmentId", environment.getId())
+                        "WHERE id.uid = :uid")
                 .setParameter("uid", uid)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.environmentService")

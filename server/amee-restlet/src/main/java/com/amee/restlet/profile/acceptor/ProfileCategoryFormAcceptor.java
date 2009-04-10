@@ -1,9 +1,9 @@
 package com.amee.restlet.profile.acceptor;
 
 import com.amee.calculation.service.CalculationService;
+import com.amee.domain.data.CO2AmountUnit;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.CO2AmountUnit;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.profile.ValidFromDate;
@@ -65,7 +65,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             // new ProfileItem
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItemByUid(uid);
+                dataItem = dataService.getDataItemByUid(resource.getEnvironment(), uid);
                 if (dataItem != null) {
                     // create new ProfileItem
                     profileItem = new ProfileItem(resource.getProfile(), dataItem);

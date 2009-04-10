@@ -19,9 +19,8 @@
  */
 package com.amee.domain.data;
 
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIUtils;
-import com.amee.domain.environment.Environment;
 import com.amee.domain.path.InternalValue;
 import com.amee.domain.path.Pathable;
 import com.amee.domain.profile.StartEndDate;
@@ -42,13 +41,9 @@ import java.util.*;
 @Table(name = "ITEM")
 @DiscriminatorColumn(name = "TYPE", length = 3)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public abstract class Item extends AMEEEntity implements Pathable {
+public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
     public final static int NAME_SIZE = 255;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ITEM_DEFINITION_ID")
@@ -73,20 +68,13 @@ public abstract class Item extends AMEEEntity implements Pathable {
     @Index(name = "END_DATE_IND")
     protected Date endDate;
 
-    @Column(name = "CREATED")
-    protected Date created = Calendar.getInstance().getTime();
-
-    @Column(name = "MODIFIED")
-    protected Date modified = Calendar.getInstance().getTime();
-
     public Item() {
         super();
     }
 
     public Item(DataCategory dataCategory, ItemDefinition itemDefinition) {
-        this();
+        super(dataCategory.getEnvironment());
         setDataCategory(dataCategory);
-        setEnvironment(dataCategory.getEnvironment());
         setItemDefinition(itemDefinition);
     }
 
@@ -123,27 +111,6 @@ public abstract class Item extends AMEEEntity implements Pathable {
     @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
-    }
-
-    @PrePersist
-    public void onCreate() {
-        setCreated(Calendar.getInstance().getTime());
-        setModified(getCreated());
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
-        }
     }
 
     public ItemDefinition getItemDefinition() {
@@ -185,22 +152,6 @@ public abstract class Item extends AMEEEntity implements Pathable {
             name = "";
         }
         this.name = name;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 
     public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values) {

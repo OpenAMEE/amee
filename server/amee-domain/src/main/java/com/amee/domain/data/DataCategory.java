@@ -20,7 +20,7 @@
 package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
@@ -33,20 +33,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
 
 @Entity
 @Table(name = "DATA_CATEGORY")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class DataCategory extends AMEEEntity implements Pathable {
+public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
 
     public final static int NAME_SIZE = 255;
     public final static int PATH_SIZE = 255;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "DATA_CATEGORY_ID")
@@ -63,19 +57,12 @@ public class DataCategory extends AMEEEntity implements Pathable {
     @Index(name = "PATH_IND")
     private String path = "";
 
-    @Column(name = "CREATED")
-    private Date created = Calendar.getInstance().getTime();
-
-    @Column(name = "MODIFIED")
-    private Date modified = Calendar.getInstance().getTime();
-
     public DataCategory() {
         super();
     }
 
     public DataCategory(Environment environment) {
-        this();
-        setEnvironment(environment);
+        super(environment);
     }
 
     public DataCategory(Environment environment, String name, String path) {
@@ -166,28 +153,6 @@ public class DataCategory extends AMEEEntity implements Pathable {
         }
     }
 
-    @PrePersist
-    public void onCreate() {
-        Date now = Calendar.getInstance().getTime();
-        setCreated(now);
-        setModified(now);
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
-        }
-    }
-
     public DataCategory getDataCategory() {
         return dataCategory;
     }
@@ -228,25 +193,8 @@ public class DataCategory extends AMEEEntity implements Pathable {
         this.path = path;
     }
 
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
-    }
-
     @Transient
     public ObjectType getObjectType() {
         return ObjectType.DC;
     }
-
 }

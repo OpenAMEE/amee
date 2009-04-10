@@ -2,7 +2,6 @@ package com.amee.domain.auth;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
-import com.amee.domain.DatedObject;
 import com.amee.domain.site.App;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -13,8 +12,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Actions...
@@ -28,7 +25,7 @@ import java.util.Date;
 @Entity
 @Table(name = "ACTION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Action extends AMEEEntity implements DatedObject, Comparable {
+public class Action extends AMEEEntity implements Comparable {
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
@@ -47,14 +44,6 @@ public class Action extends AMEEEntity implements DatedObject, Comparable {
     @Column(name = "ACTION_KEY", length = ACTION_KEY_SIZE, nullable = false)
     @Index(name = "ACTION_KEY_IND")
     private String key = ""; // TODO: validate to be in right format
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED")
-    private Date created = null;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED")
-    private Date modified = null;
 
     public Action() {
         super();
@@ -145,17 +134,6 @@ public class Action extends AMEEEntity implements DatedObject, Comparable {
         setKey(element.elementText("Key"));
     }
 
-    @PrePersist
-    public void onCreate() {
-        setCreated(Calendar.getInstance().getTime());
-        setModified(getCreated());
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
     public App getApp() {
         return app;
     }
@@ -197,21 +175,5 @@ public class Action extends AMEEEntity implements DatedObject, Comparable {
             key = "";
         }
         this.key = key;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 }

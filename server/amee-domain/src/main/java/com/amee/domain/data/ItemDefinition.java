@@ -20,7 +20,7 @@
 package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIUtils;
 import com.amee.domain.APIVersion;
 import com.amee.domain.algorithm.Algorithm;
@@ -35,19 +35,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Entity
 @Table(name = "ITEM_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ItemDefinition extends AMEEEntity {
+public class ItemDefinition extends AMEEEnvironmentEntity {
 
     public final static int NAME_SIZE = 255;
     public final static int DRILL_DOWN_SIZE = 255;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
 
     @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
@@ -65,19 +64,12 @@ public class ItemDefinition extends AMEEEntity {
     @OrderBy("name")
     private Set<ItemValueDefinition> itemValueDefinitions = new HashSet<ItemValueDefinition>();
 
-    @Column(name = "CREATED")
-    private Date created = Calendar.getInstance().getTime();
-
-    @Column(name = "MODIFIED")
-    private Date modified = Calendar.getInstance().getTime();
-
     public ItemDefinition() {
         super();
     }
 
     public ItemDefinition(Environment environment) {
-        this();
-        setEnvironment(environment);
+        super(environment);
     }
 
     public ItemDefinition(Environment environment, String name) {
@@ -173,28 +165,6 @@ public class ItemDefinition extends AMEEEntity {
         return APIUtils.getIdentityElement(document, this);
     }
 
-    @PrePersist
-    public void onCreate() {
-        Date now = Calendar.getInstance().getTime();
-        setCreated(now);
-        setModified(now);
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
-        }
-    }
-
     public String getName() {
         return name;
     }
@@ -231,22 +201,6 @@ public class ItemDefinition extends AMEEEntity {
 
     public void setItemValueDefinitions(Set<ItemValueDefinition> itemValueDefinitions) {
         this.itemValueDefinitions = itemValueDefinitions;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 
     @Transient

@@ -29,6 +29,7 @@ import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.data.DataService;
 import com.amee.service.data.DrillDownService;
+import com.amee.service.environment.EnvironmentService;
 import com.amee.service.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -83,7 +84,9 @@ public class DataFinder implements Serializable {
         if (dataCategory != null) {
             choices = drillDownService.getValueChoices(dataCategory, Choice.parseChoices(drillDown), getStartDate(), getEndDate());
             if (choices.getName().equals("uid") && (choices.getChoices().size() > 0)) {
-                dataItem = dataService.getDataItemByUid(choices.getChoices().get(0).getValue());
+                dataItem = dataService.getDataItemByUid(
+                        EnvironmentService.getEnvironment(),
+                        choices.getChoices().get(0).getValue());
             }
         }
         return dataItem;

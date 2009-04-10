@@ -1,10 +1,8 @@
 package com.amee.domain.auth;
 
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIUtils;
-import com.amee.domain.DatedObject;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.environment.EnvironmentObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -16,8 +14,6 @@ import org.w3c.dom.Element;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,14 +31,10 @@ import java.util.Set;
 @Entity
 @Table(name = "ROLE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Role extends AMEEEntity implements EnvironmentObject, DatedObject, Comparable, Serializable {
+public class Role extends AMEEEnvironmentEntity implements Comparable, Serializable {
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
 
     @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     @Index(name = "NAME_IND")
@@ -61,21 +53,12 @@ public class Role extends AMEEEntity implements EnvironmentObject, DatedObject, 
     @OrderBy("name")
     private Set<Action> actions = new HashSet<Action>();
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED")
-    private Date created = null;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED")
-    private Date modified = null;
-
     public Role() {
         super();
     }
 
     public Role(Environment environment) {
-        this();
-        setEnvironment(environment);
+        super(environment);
     }
 
     public void add(Action action) {
@@ -125,7 +108,7 @@ public class Role extends AMEEEntity implements EnvironmentObject, DatedObject, 
     public JSONObject getIdentityJSONObject() throws JSONException {
         JSONObject obj = APIUtils.getIdentityJSONObject(this);
         obj.put("name", getName());
-        return obj; 
+        return obj;
     }
 
     @Transient
@@ -177,27 +160,6 @@ public class Role extends AMEEEntity implements EnvironmentObject, DatedObject, 
         return false;
     }
 
-    @PrePersist
-    public void onCreate() {
-        setCreated(Calendar.getInstance().getTime());
-        setModified(getCreated());
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
-        }
-    }
-
     public String getName() {
         return name;
     }
@@ -229,21 +191,5 @@ public class Role extends AMEEEntity implements EnvironmentObject, DatedObject, 
             actions = new HashSet<Action>();
         }
         this.actions = actions;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 }

@@ -23,13 +23,12 @@ package com.amee.domain;
 
 import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+import java.util.Calendar;
+import java.util.Date;
 
 @MappedSuperclass
-public abstract class AMEEEntity implements PersistentObject {
+public abstract class AMEEEntity implements DatedObject {
 
     public final static int UID_SIZE = 12;
 
@@ -41,6 +40,14 @@ public abstract class AMEEEntity implements PersistentObject {
     @NaturalId
     @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATED", nullable = false)
+    private Date created = null;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "MODIFIED", nullable = false)
+    private Date modified = null;
 
     public AMEEEntity() {
         super();
@@ -60,6 +67,18 @@ public abstract class AMEEEntity implements PersistentObject {
         return getUid().hashCode();
     }
 
+    @PrePersist
+    public void onCreate() {
+        Date now = Calendar.getInstance().getTime();
+        setCreated(now);
+        setModified(now);
+    }
+
+    @PreUpdate
+    public void onModify() {
+        setModified(Calendar.getInstance().getTime());
+    }
+
     public Long getId() {
         return id;
     }
@@ -77,5 +96,21 @@ public abstract class AMEEEntity implements PersistentObject {
             uid = "";
         }
         this.uid = uid;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
     }
 }

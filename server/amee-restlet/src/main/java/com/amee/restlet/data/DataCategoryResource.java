@@ -334,7 +334,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 dataCategory = new DataCategory(thisDataCategory);
                 if (form.getNames().contains("itemDefinitionUid")) {
                     ItemDefinition itemDefinition =
-                            dataService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
+                            dataService.getItemDefinition(
+                                    thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
                     if (itemDefinition != null) {
                         dataCategory.setItemDefinition(itemDefinition);
                     }
@@ -418,7 +419,9 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 // update DataItem
                 uid = form.getFirstValue("dataItemUid");
                 if (uid != null) {
-                    dataItem = dataService.getDataItemByUid(uid);
+                    dataItem = dataService.getDataItemByUid(
+                            environment,
+                            uid);
                     if (dataItem != null) {
                         dataItem = acceptDataItem(form, dataItem);
                     }

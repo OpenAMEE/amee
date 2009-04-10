@@ -52,7 +52,7 @@ public abstract class BaseDataResource extends AMEEResource {
 
     public void setDataItem(String path) {
         if (path.isEmpty()) return;
-        dataItem = dataService.getDataItem(path);
+        dataItem = dataService.getDataItem(environment, path);
     }
 
     public DataItem getDataItem() {

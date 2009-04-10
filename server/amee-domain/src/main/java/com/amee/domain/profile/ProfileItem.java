@@ -150,9 +150,9 @@ public class ProfileItem extends Item {
         return false;
     }
 
-    //TEMP HACK - will remove as soon we decide how to handle return units in V1 correctly.
+    // TODO: TEMP HACK - will remove as soon we decide how to handle return units in V1 correctly.
     public boolean isSingleFlight() {
-        // UBER TEMP HACK TO FIX PROB ON STAGE - WILL RELEASE MORE PERMANENT FIX AT END OF DAY (SM - 25/03/09)
+        // TODO: UBER TEMP HACK TO FIX PROB ON STAGE - WILL RELEASE MORE PERMANENT FIX AT END OF DAY (SM - 25/03/09)
 
         if (isLegacy())
             return true;
@@ -169,11 +169,7 @@ public class ProfileItem extends Item {
     }
 
     private boolean isLegacy() {
-        if (modified.before(V2_RELEASE)) {
-            return true;
-        } else {
-            return false;
-        }
+        return getModified().before(V2_RELEASE);
     }
 
     public boolean supportsCalculation() {

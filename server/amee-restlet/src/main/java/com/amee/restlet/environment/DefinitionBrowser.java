@@ -28,6 +28,7 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.site.Site;
 import com.amee.service.BaseBrowser;
 import com.amee.service.auth.ResourceActions;
+import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionServiceDAO;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.environment.SiteService;
@@ -47,6 +48,9 @@ public class DefinitionBrowser extends BaseBrowser {
 
     @Autowired
     private SiteService siteService;
+
+    @Autowired
+    private DataService dataService;
 
     @Autowired
     private DefinitionServiceDAO definitionServiceDAO;
@@ -238,7 +242,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public ItemDefinition getItemDefinition() {
         if (itemDefinition == null) {
             if ((itemDefinitionUid != null) && (getEnvironment() != null)) {
-                itemDefinition = definitionServiceDAO.getItemDefinition(getEnvironment(), itemDefinitionUid);
+                itemDefinition = dataService.getItemDefinition(getEnvironment(), itemDefinitionUid);
             }
         }
         return itemDefinition;

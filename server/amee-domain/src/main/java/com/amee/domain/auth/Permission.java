@@ -1,8 +1,9 @@
 package com.amee.domain.auth;
 
-import com.amee.domain.*;
-import com.amee.domain.environment.Environment;
-import com.amee.domain.environment.EnvironmentObject;
+import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.APIUtils;
+import com.amee.domain.APIVersion;
+import com.amee.domain.PersistentObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -13,8 +14,6 @@ import org.w3c.dom.Element;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Permission.
@@ -24,15 +23,10 @@ import java.util.Date;
 @Entity
 @Table(name = "PERMISSION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Permission extends AMEEEntity implements EnvironmentObject, DatedObject, Comparable, Serializable {
+public class Permission extends AMEEEnvironmentEntity implements Comparable, Serializable {
 
     public final static int OBJECT_CLASS_SIZE = 255;
     public final static int OBJECT_UID_SIZE = 12;
-
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "GROUP_ID")
@@ -62,21 +56,12 @@ public class Permission extends AMEEEntity implements EnvironmentObject, DatedOb
     @Column(name = "OTHER_ALLOW_MODIFY")
     private boolean otherAllowModify = false;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED")
-    private Date created = null;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED")
-    private Date modified = null;
-
     public Permission() {
         super();
     }
 
     public Permission(Group group, User user) {
-        this();
-        setEnvironment(group.getEnvironment());
+        super(group.getEnvironment());
         setGroup(group);
         setUser(user);
     }
@@ -164,27 +149,6 @@ public class Permission extends AMEEEntity implements EnvironmentObject, DatedOb
         return APIUtils.getIdentityElement(document, this);
     }
 
-    @PrePersist
-    public void onCreate() {
-        setCreated(Calendar.getInstance().getTime());
-        setModified(getCreated());
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
-        }
-    }
-
     public Group getGroup() {
         return group;
     }
@@ -257,22 +221,6 @@ public class Permission extends AMEEEntity implements EnvironmentObject, DatedOb
 
     public void setOtherAllowModify(boolean otherAllowModify) {
         this.otherAllowModify = otherAllowModify;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 
     public APIVersion getAPIVersion() {

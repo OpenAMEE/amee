@@ -26,6 +26,7 @@ import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.environment.Environment;
+import com.amee.domain.environment.EnvironmentObject;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Choices;
 import com.amee.domain.sheet.Sheet;
@@ -79,25 +80,30 @@ public class DataService {
         return dao.getDataCategoryByUid(dataCategoryUid);
     }
 
-    public DataItem getDataItem(String path) {
+    public DataItem getDataItem(Environment environment, String path) {
         DataItem dataItem = null;
         if (!StringUtils.isBlank(path)) {
             if (UidGen.isValid(path)) {
-                dataItem = getDataItemByUid(path);
+                dataItem = getDataItemByUid(environment, path);
             }
             if (dataItem == null) {
-                dataItem = getDataItemByPath(path);
+                dataItem = getDataItemByPath(environment, path);
             }
         }
+        checkEnvironmentObject(environment, dataItem);
         return dataItem;
     }
 
-    public DataItem getDataItemByUid(String uid) {
-        return dao.getDataItemByUid(uid);
+    public DataItem getDataItemByUid(Environment environment, String uid) {
+        DataItem dataItem = dao.getDataItemByUid(uid);
+        checkEnvironmentObject(environment, dataItem);
+        return dataItem;
     }
 
-    public DataItem getDataItemByPath(String path) {
-        return dao.getDataItemByPath(path);
+    public DataItem getDataItemByPath(Environment environment, String path) {
+        DataItem dataItem = dao.getDataItemByPath(environment, path);
+        checkEnvironmentObject(environment, dataItem);
+        return dataItem;
     }
 
     public List<DataCategory> getDataCategories(Environment env) {
@@ -179,7 +185,24 @@ public class DataService {
         return dataSheetService.getSheet(browser);
     }
 
-    public ItemDefinition getItemDefinition(Environment env, String itemDefinitionUid) {
-        return definitionServiceDAO.getItemDefinition(env, itemDefinitionUid);
+    /**
+     * Returns the ItemDefinition for the Environnment and ItemDefinition UID specified. Returns null
+     * if the ItemDefinition could not be found. Throws a RuntimeException if the specified Environment
+     * does not match the ItemDefinition Environment.
+     *
+     * @param environment within which the ItemDefinition must belong
+     * @param uid         of the ItemDefinition to fetch
+     * @return the ItemDefininition matching the Environment and ItemDefinition UID specified
+     */
+    public ItemDefinition getItemDefinition(Environment environment, String uid) {
+        ItemDefinition itemDefinition = definitionServiceDAO.getItemDefinition(uid);
+        checkEnvironmentObject(environment, itemDefinition);
+        return itemDefinition;
+    }
+
+    public void checkEnvironmentObject(Environment environment, EnvironmentObject environmentObject) {
+        if ((environmentObject != null) && (!environmentObject.getEnvironment().equals(environment))) {
+            throw new RuntimeException("Incorrect Environment for " + environmentObject.getClass().getSimpleName());
+        }
     }
 }

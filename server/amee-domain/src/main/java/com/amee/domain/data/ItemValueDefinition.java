@@ -23,7 +23,6 @@ import com.amee.core.ObjectType;
 import com.amee.core.ValueType;
 import com.amee.domain.*;
 import com.amee.domain.data.builder.v2.ItemValueDefinitionBuilder;
-import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -34,7 +33,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 // TODO: add a way to define UI widget
 // TODO: add a way to define range of values
@@ -45,17 +47,13 @@ import java.util.*;
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ItemValueDefinition extends AMEEEntity {
+public class ItemValueDefinition extends AMEEEnvironmentEntity {
 
     public final static int NAME_SIZE = 255;
     public final static int PATH_SIZE = 255;
     public final static int VALUE_SIZE = 255;
     public final static int CHOICES_SIZE = 255;
     public final static int ALLOWED_ROLES_SIZE = 255;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ITEM_DEFINITION_ID")
@@ -96,12 +94,6 @@ public class ItemValueDefinition extends AMEEEntity {
     @Column(name = "ALLOWED_ROLES", length = ALLOWED_ROLES_SIZE, nullable = true)
     private String allowedRoles = "";
 
-    @Column(name = "CREATED")
-    private Date created = Calendar.getInstance().getTime();
-
-    @Column(name = "MODIFIED")
-    private Date modified = Calendar.getInstance().getTime();
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "ITEM_VALUE_DEFINITION_API_VERSION",
@@ -124,12 +116,11 @@ public class ItemValueDefinition extends AMEEEntity {
 
     public ItemValueDefinition() {
         super();
-        setBuilder(new ItemValueDefinitionBuilder(this));
     }
 
     public ItemValueDefinition(ItemDefinition itemDefinition) {
-        this();
-        setEnvironment(itemDefinition.getEnvironment());
+        super(itemDefinition.getEnvironment());
+        setBuilder(new ItemValueDefinitionBuilder(this));
         setItemDefinition(itemDefinition);
         itemDefinition.add(this);
     }
@@ -190,28 +181,6 @@ public class ItemValueDefinition extends AMEEEntity {
     @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
-    }
-
-    @PrePersist
-    public void onCreate() {
-        Date now = Calendar.getInstance().getTime();
-        setCreated(now);
-        setModified(now);
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
-        }
     }
 
     public ItemDefinition getItemDefinition() {
@@ -299,22 +268,6 @@ public class ItemValueDefinition extends AMEEEntity {
             allowedRoles = "";
         }
         this.allowedRoles = allowedRoles;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 
     @Transient
@@ -417,5 +370,4 @@ public class ItemValueDefinition extends AMEEEntity {
     public boolean isDecimal() {
         return getValueDefinition().getValueType().equals(ValueType.DECIMAL);
     }
-
 }
