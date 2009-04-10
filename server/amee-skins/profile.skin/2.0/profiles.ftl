@@ -23,7 +23,7 @@
         contentElementName: "apiContent",
         pagerTopElementName: 'apiTopPager',
         pagerBtmElementName: 'apiBottomPager',
-        APIVersion: '2.0'});
+        apiVersion: '2.0'});
 
     // use resource loader to load resources and notify on loaded
     var resourceLoader = new ResourceLoader();

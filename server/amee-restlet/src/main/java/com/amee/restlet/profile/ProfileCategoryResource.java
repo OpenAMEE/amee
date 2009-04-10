@@ -20,7 +20,7 @@
 package com.amee.restlet.profile;
 
 import com.amee.core.ObjectType;
-import com.amee.domain.data.CO2AmountUnit;
+import com.amee.domain.core.CO2AmountUnit;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.acceptor.ProfileCategoryAtomAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileCategoryFormAcceptor;
@@ -128,8 +128,8 @@ public class ProfileCategoryResource extends BaseProfileResource {
             if (getAPIVersion().isVersionOne()) {
                 profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
             } else {
-                profileBrowser.setStartDate(form.getFirstValue("startDate"));
-                profileBrowser.setEndDate(form.getFirstValue("endDate"));
+                profileBrowser.setQueryStartDate(form.getFirstValue("startDate"));
+                profileBrowser.setQueryEndDate(form.getFirstValue("endDate"));
                 profileBrowser.setDuration(form.getFirstValue("duration"));
                 profileBrowser.setSelectBy(form.getFirstValue("selectby"));
                 profileBrowser.setMode(form.getFirstValue("mode"));
@@ -169,7 +169,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
         log.debug("acceptOrStore()");
         if (isAcceptOrStoreAuthorized()) {
             profileItems = doAcceptOrStore(entity);
-            if (!profileItems.isEmpty()) {
+            if (!isError()) {
                 // clear caches
                 profileService.clearCaches(getProfile());
                 if (isPost()) {

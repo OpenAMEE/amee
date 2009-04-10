@@ -2,15 +2,22 @@ package com.amee.domain.profile;
 
 import com.amee.core.ObjectType;
 import com.amee.domain.Builder;
-import com.amee.domain.data.*;
+import com.amee.domain.core.CO2Amount;
+import com.amee.domain.core.Decimal;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.Item;
+import com.amee.domain.data.ItemValue;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * This file is part of AMEE.
@@ -32,6 +39,7 @@ import java.util.Date;
  * Website http://www.amee.cc
  */
 
+@Configurable(autowire= Autowire.BY_TYPE)
 @Entity
 @DiscriminatorValue("PI")
 public class ProfileItem extends Item {
@@ -45,13 +53,17 @@ public class ProfileItem extends Item {
     private DataItem dataItem;
 
     @Column(name = "AMOUNT", precision = Decimal.PRECISION, scale = Decimal.SCALE)
-    private BigDecimal amount = Decimal.ZERO;
+    private BigDecimal persistentAmount = BigDecimal.ZERO;
+
+    @Transient
+    private BigDecimal amount = null;
 
     @Transient
     private Builder builder;
 
     @Transient
-    private Date V2_RELEASE = new StartEndDate("2009-03-23T05:56:23+0000").toDate();
+    @Resource
+    private CO2CalculationService calculationService;
 
     public ProfileItem() {
         super();
@@ -118,12 +130,32 @@ public class ProfileItem extends Item {
         return (endDate != null) && (startDate.compareTo(endDate) == 0);
     }
 
+    /**
+     * Get the {@link com.amee.domain.core.CO2Amount CO2Amount} for this ProfileItem.
+     *
+     * If the ProfileItem does not support CO2 calculations (i.e. metadata) CO2Amount.ZERO is returned.
+     *
+     * @return - the {@link com.amee.domain.core.CO2Amount CO2Amount} for this ProfileItem
+     */
     public CO2Amount getAmount() {
+        
+        // Some ProfileItems are from ItemDefinitions which do not have algorithms and hence do not
+        // support calculations.
+        if (!supportsCalculation())
+            return CO2Amount.ZERO;
+
+        // CO2 amounts are lazily calculated once per session.
+        if (amount == null)
+            calculationService.calculate(this);
+
         return new CO2Amount(amount);
     }
 
     public void setAmount(CO2Amount amount) {
         this.amount = amount.getValue();
+        // Persist the transient session CO2 amount if it is different from the last persisted amount.
+        if (this.amount.compareTo(persistentAmount) != 0)
+            persistentAmount = this.amount;
     }
 
     @Override
@@ -150,12 +182,8 @@ public class ProfileItem extends Item {
         return false;
     }
 
-    // TODO: TEMP HACK - will remove as soon we decide how to handle return units in V1 correctly.
+    //TODO - TEMP HACK - will remove as soon we decide how to handle return units in V1 correctly.
     public boolean isSingleFlight() {
-        // TODO: UBER TEMP HACK TO FIX PROB ON STAGE - WILL RELEASE MORE PERMANENT FIX AT END OF DAY (SM - 25/03/09)
-
-        if (isLegacy())
-            return true;
 
         for (ItemValue iv : getItemValues()) {
             if ((iv.getName().startsWith("IATA") && iv.getValue().length() > 0) ||
@@ -166,10 +194,6 @@ public class ProfileItem extends Item {
 
         }
         return false;
-    }
-
-    private boolean isLegacy() {
-        return getModified().before(V2_RELEASE);
     }
 
     public boolean supportsCalculation() {

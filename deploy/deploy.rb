@@ -1,9 +1,6 @@
-set :stages, %w(development staging production)
+set :stages, %w(development staging production aws)
 set :default_stage, "development"
 set :stage_dir, "deploy"
-
-require 'capistrano/ext/multistage'
-require 'capistrano/ext/monitor'
 
 default_run_options[:pty] = true
 
@@ -32,7 +29,7 @@ set :use_sudo, false
 set :user, "deploy"
 
 # Source code and build locations
-set :src_dir, "/Development/AMEE/amee.2.1"
+set :src_dir, "/Development/AMEE/amee"
 set :package_dir, "/Development/AMEE/amee.deploy"
 
 # Override Capistrano tasks

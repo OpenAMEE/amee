@@ -52,7 +52,6 @@ public class ProfileItemValueFormAcceptor implements IItemValueFormAcceptor {
             profileItemValue.setPerUnit(form.getFirstValue("perUnit"));
         }
 
-        // TODO - Only recalculate if necessary
         calculationService.calculate(profileItem);
 
         // path may have changed

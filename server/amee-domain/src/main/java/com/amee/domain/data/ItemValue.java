@@ -20,7 +20,12 @@
 package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
-import com.amee.domain.*;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.APIUtils;
+import com.amee.domain.Builder;
+import com.amee.domain.core.DecimalCompoundUnit;
+import com.amee.domain.core.DecimalPerUnit;
+import com.amee.domain.core.DecimalUnit;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
@@ -73,7 +78,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
         setItemValueDefinition(itemValueDefinition);
         setItem(item);
         setValue(value);
-        item.add(this);
+        item.addItemValue(this);
     }
 
     public String toString() {
@@ -186,8 +191,8 @@ public class ItemValue extends AMEEEntity implements Pathable {
         return ObjectType.IV;
     }
 
-    public AMEEUnit getUnit() {
-        return (unit != null) ? AMEEUnit.valueOf(unit) : itemValueDefinition.getUnit();
+    public DecimalUnit getUnit() {
+        return (unit != null) ? DecimalUnit.valueOf(unit) : itemValueDefinition.getUnit();
     }
 
     public void setUnit(String unit) throws IllegalArgumentException {
@@ -197,14 +202,14 @@ public class ItemValue extends AMEEEntity implements Pathable {
         this.unit = unit;
     }
 
-    public AMEEPerUnit getPerUnit() {
+    public DecimalPerUnit getPerUnit() {
         if (perUnit != null) {
             if (perUnit.equals("none")) {
-                return AMEEPerUnit.valueOf(getItem().getDuration());
-            } else {
-                return AMEEPerUnit.valueOf(perUnit);
-            }
-        } else {
+                 return DecimalPerUnit.valueOf(getItem().getDuration());
+             } else {
+                 return DecimalPerUnit.valueOf(perUnit);
+             }
+         } else {                                                             
             return itemValueDefinition.getPerUnit();
         }
     }
@@ -216,7 +221,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
         this.perUnit = perUnit;
     }
 
-    public AMEECompoundUnit getCompoundUnit() {
+    public DecimalCompoundUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
 

@@ -78,7 +78,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         setItemDefinition(itemDefinition);
     }
 
-    public void add(ItemValue itemValue) {
+    public void addItemValue(ItemValue itemValue) {
         getItemValues().add(itemValue);
     }
 

@@ -2,6 +2,7 @@ package com.amee.restlet.profile.acceptor;
 
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileCategoryResource;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -41,28 +42,51 @@ public class ProfileCategoryJSONAcceptor implements IProfileCategoryRepresentati
 
     private final Log log = LogFactory.getLog(getClass());
 
+    // The default maximum size for batch ProfileItem POSTs.
+    private static int MAX_PROFILE_BATCH_SIZE = 50;
+
     @Autowired
     ProfileCategoryFormAcceptor formAcceptor;
 
+    public ProfileCategoryJSONAcceptor() {
+        String maxProfileBatchSize = System.getProperty("amee.MAX_PROFILE_BATCH_SIZE");
+        if (StringUtils.isNumeric(maxProfileBatchSize)) {
+            MAX_PROFILE_BATCH_SIZE = Integer.parseInt(maxProfileBatchSize);
+        }
+    }
+
     public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
-        String key;
-        JSONObject rootJSON;
-        JSONArray profileItemsJSON;
-        JSONObject profileItemJSON;
-        Form form;
         if (entity.isAvailable()) {
             try {
-                rootJSON = new JSONObject(entity.getText());
+                JSONObject rootJSON = new JSONObject(entity.getText());
                 if (rootJSON.has("profileItems")) {
-                    profileItemsJSON = rootJSON.getJSONArray("profileItems");
+                    JSONArray profileItemsJSON = rootJSON.getJSONArray("profileItems");
+
+                    // AMEE 2.0 has a maximum allowed size for batch POSTs and POSTs. If this request execeeds that limit
+                    // do not process the request and return a 400 status
+                    if ((profileItemsJSON.length() > MAX_PROFILE_BATCH_SIZE) && (resource.getAPIVersion().isNotVersionOne())) {
+                        resource.badRequest();
+                        return profileItems;
+                    }
+
+                    // If the POST inputstream contains more than one entity it is considered a batch request.
+                    if (profileItemsJSON.length() > 1 && resource.isPost())
+                        resource.setIsBatchPost(true);
+
                     for (int i = 0; i < profileItemsJSON.length(); i++) {
-                        profileItemJSON = profileItemsJSON.getJSONObject(i);
-                        form = new Form();
+                        JSONObject profileItemJSON = profileItemsJSON.getJSONObject(i);
+                        Form form = new Form();
+
+
                         for (Iterator iterator = profileItemJSON.keys(); iterator.hasNext();) {
-                            key = (String) iterator.next();
+                            String key = (String) iterator.next();
                             form.add(key, profileItemJSON.getString(key));
                         }
+
+                        // Representations to be returned for batch requests can be specified as a query parameter.
+                        form.add("representation", resource.getForm().getFirstValue("representation"));
+
                         List<ProfileItem> items = formAcceptor.accept(resource, form);
                         if (!items.isEmpty()) {
                             profileItems.addAll(items);

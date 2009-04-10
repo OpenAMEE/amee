@@ -1,6 +1,6 @@
 package com.amee.restlet.profile.builder.v1;
 
-import com.amee.domain.AMEEPerUnit;
+import com.amee.domain.core.DecimalPerUnit;
 import com.amee.domain.APIUtils;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v1.ProfileItemBuilder;
@@ -64,7 +64,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         values.put("profile", profileItem.getProfile());
         values.put("profileItem", profileItem);
         if (!profileItem.isSingleFlight()) {
-            values.put("amountPerMonth", profileItem.getAmount().convert(AMEEPerUnit.MONTH).getValue());
+            values.put("amountPerMonth", profileItem.getAmount().convert(DecimalPerUnit.MONTH).getValue());
         } else {
             values.put("amountPerMonth", profileItem.getAmount().getValue());
         }

@@ -506,10 +506,20 @@ class ProfileServiceDAO implements Serializable {
         entityManager.remove(profileItemValue);
     }
 
-    // check Profile Item objects
-
+    /**
+     * Add to the {@link com.amee.domain.profile.ProfileItem} any {@link com.amee.domain.data.ItemValue}s it is missing.
+     * This will be the case on first persist (this method acting as a reification function), and between GETs if any
+     * new {@link com.amee.domain.data.ItemValueDefinition}s have been added to the underlying
+     * {@link com.amee.domain.data.ItemDefinition}.
+     *
+     * Any updates to the {@link com.amee.domain.profile.ProfileItem} will be persisted to the database.
+     *
+     * @param profileItem
+     * @param apiVersion
+     */
     @SuppressWarnings(value = "unchecked")
     public void checkProfileItem(ProfileItem profileItem, APIVersion apiVersion) {
+
         // find ItemValueDefinitions not currently implemented in this Item
         List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
                 "FROM ItemValueDefinition ivd " +
@@ -525,6 +535,7 @@ class ProfileServiceDAO implements Serializable {
                 .setParameter("apiVersion", apiVersion)
                 .setParameter("fromProfile", true)
                 .getResultList();
+
         if (itemValueDefinitions.size() > 0) {
 
             // Ensure a transaction has been opened. The implementation of open-session-in-view we are using

@@ -1,7 +1,7 @@
 package com.amee.restlet.profile.builder.v1;
 
 import com.amee.core.ValueType;
-import com.amee.domain.AMEEPerUnit;
+import com.amee.domain.core.DecimalPerUnit;
 import com.amee.domain.APIVersion;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
@@ -92,7 +92,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
                         new Cell(column, row, profileItem.getName(), ValueType.TEXT);
                     } else if ("amountPerMonth".equalsIgnoreCase(column.getName())) {
                         if (!profileItem.isSingleFlight()) {
-                            new Cell(column, row, profileItem.getAmount().convert(AMEEPerUnit.MONTH), ValueType.DECIMAL);
+                            new Cell(column, row, profileItem.getAmount().convert(DecimalPerUnit.MONTH), ValueType.DECIMAL);
                         } else {
                             new Cell(column, row, profileItem.getAmount().getValue(), ValueType.DECIMAL);
                         }
@@ -113,7 +113,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
                     } else if ("dataItemLabel".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.getDataItem().getLabel(), ValueType.TEXT);
                     } else {
-                        // add empty cell
+                        // addItemValue empty cell
                         new Cell(column, row);
                     }
                 }

@@ -58,20 +58,20 @@ public class DataCategoryResourceBuilder {
 
         if (resource.isGet()) {
 
-            // add DataCategory
+            // addItemValue DataCategory
             obj.put("dataCategory", resource.getDataCategory().getJSONObject(true));
 
             // list child Data Categories and child Data Items
             JSONObject children = new JSONObject();
 
-            // add Data Categories via pathItem to children
+            // addItemValue Data Categories via pathItem to children
             JSONArray dataCategories = new JSONArray();
             for (PathItem pi : resource.getPathItem().getChildrenByType("DC")) {
                 dataCategories.put(pi.getJSONObject());
             }
             children.put("dataCategories", dataCategories);
 
-            // add Sheet containing Data Items
+            // addItemValue Sheet containing Data Items
             Sheet sheet = dataService.getSheet(resource.getDataBrowser());
             if (sheet != null) {
                 Pager pager = resource.getPager(resource.getItemsPerPage());
@@ -84,7 +84,7 @@ public class DataCategoryResourceBuilder {
                 children.put("pager", new JSONObject());
             }
 
-            // add children
+            // addItemValue children
             obj.put("children", children);
 
         } else if (resource.isPostOrPut()) {
@@ -122,14 +122,14 @@ public class DataCategoryResourceBuilder {
 
         if (resource.isGet()) {
 
-            // add DataCategory
+            // addItemValue DataCategory
             element.appendChild(resource.getDataCategory().getElement(document, true));
 
             // list child Data Categories and child Data Items
             Element childrenElement = document.createElement("Children");
             element.appendChild(childrenElement);
 
-            // add Data Categories
+            // addItemValue Data Categories
             Element dataCategoriesElement = document.createElement("DataCategories");
             for (PathItem pi : resource.getPathItem().getChildrenByType("DC")) {
                 dataCategoriesElement.appendChild(pi.getElement(document));

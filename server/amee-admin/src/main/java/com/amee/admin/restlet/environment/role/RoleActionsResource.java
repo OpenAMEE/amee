@@ -133,7 +133,7 @@ public class RoleActionsResource extends BaseResource implements Serializable {
                     // find the Action
                     Action action = appService.getActionByUid(app, actionUid);
                     if (action != null) {
-                        // add the Action
+                        // addItemValue the Action
                         environmentBrowser.getRole().add(action);
                         success();
                     } else {

@@ -32,7 +32,7 @@ public class ItemValueBuilder implements Builder {
 
     private ItemValue itemValue;
     private Builder itemValueDefinitionRenderer;
-    
+
     public ItemValueBuilder(ItemValue itemValue) {
         this.itemValue = itemValue;
         this.itemValueDefinitionRenderer = new ItemValueDefinitionBuilder(itemValue.getItemValueDefinition());

@@ -61,6 +61,17 @@ public class PathItemGroup implements Serializable {
         }
     }
 
+    /**
+     * Return the {@link PathItem} corresponding to the passed uid.
+     *
+     * @param uid
+     * @return the {@link PathItem} corresponding to the passed uid. NULL will be returned if there exists no
+     * {@link PathItem} for the passed uid. 
+     */
+    public PathItem findByUId(String uid) {
+        return pathItems.get(uid);
+    }
+
     // Used by BasePIGFactory & ProfilePIGFactory.
     public Map<String, PathItem> getPathItems() {
         return pathItems;

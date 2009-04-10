@@ -144,9 +144,9 @@ public abstract class BaseResource extends Resource {
         values.put("activeSite", ThreadBeanHolder.get("site"));
         values.put("activeApp", ThreadBeanHolder.get("app"));
         values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));
-        // add enums
+        // addItemValue enums
         values.put("SortOrder", getEnumForTemplate(SortOrder.class));
-        // add request params
+        // addItemValue request params
         values.put("Parameters", getRequest().getResourceRef().getQueryAsForm().getValuesMap());
         return values;
     }
@@ -352,4 +352,13 @@ public abstract class BaseResource extends Resource {
         return isPost() || isPut();
     }
 
+
+    /**
+     * Indicates if the response status is an error status (for example 4XX or 500 status codes).
+     *
+     * @return True if the status is an error status.
+     */
+    public boolean isError() {
+        return getResponse().getStatus().isError();
+    }
 }

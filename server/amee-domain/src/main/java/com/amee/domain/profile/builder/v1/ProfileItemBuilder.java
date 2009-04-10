@@ -19,9 +19,9 @@
 */
 package com.amee.domain.profile.builder.v1;
 
-import com.amee.domain.AMEEPerUnit;
 import com.amee.domain.APIUtils;
 import com.amee.domain.Builder;
+import com.amee.domain.core.DecimalPerUnit;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v1.ItemValueBuilder;
 import com.amee.domain.profile.ProfileItem;
@@ -85,7 +85,7 @@ public class ProfileItemBuilder implements Builder {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);
         if (!item.isSingleFlight()) {
-            obj.put("amountPerMonth", item.getAmount().convert(AMEEPerUnit.MONTH).getValue());
+            obj.put("amountPerMonth", item.getAmount().convert(DecimalPerUnit.MONTH).getValue());
         } else {
             obj.put("amountPerMonth", item.getAmount().getValue());
         }
@@ -104,7 +104,7 @@ public class ProfileItemBuilder implements Builder {
 
         if (!item.isSingleFlight()) {
             element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
-                item.getAmount().convert(AMEEPerUnit.MONTH).toString()));
+                item.getAmount().convert(DecimalPerUnit.MONTH).toString()));
         } else {
             element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
         }

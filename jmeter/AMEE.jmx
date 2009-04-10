@@ -14,9 +14,9 @@
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="AMEE" enabled="true">
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">50</stringProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1237739743000</longProp>
         <longProp name="ThreadGroup.end_time">1237739743000</longProp>
@@ -30,7 +30,7 @@
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">stage.co2.dgen.net</stringProp>
+          <stringProp name="HTTPSampler.domain">local.stage.co2.dgen.net</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -43,7 +43,7 @@
           <stringProp name="CookieManager.policy">rfc2109</stringProp>
         </CookieManager>
         <hashTree/>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="1.0" enabled="true"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="1.0" enabled="false"/>
         <hashTree>
           <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Auth" enabled="true"/>
           <hashTree>
@@ -193,7 +193,7 @@
               </elementProp>
               <stringProp name="SoapSampler.URL_DATA">http://stage.co2.dgen.net/profiles/${ProfileUID}</stringProp>
               <stringProp name="HTTPSamper.xml_data"></stringProp>
-              <stringProp name="SoapSampler.xml_data_file">/Development/AMEE/amee.2.1/jmeter/batch-profile-create.large.xml</stringProp>
+              <stringProp name="SoapSampler.xml_data_file">/Development/AMEE/amee/jmeter/batch-profile-create.large.xml</stringProp>
               <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
               <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
               <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
@@ -678,7 +678,7 @@
             </hashTree>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="2.0" enabled="false"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="2.0" enabled="true"/>
         <hashTree>
           <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Auth" enabled="true"/>
           <hashTree>
@@ -807,7 +807,35 @@
               <hashTree/>
             </hashTree>
           </hashTree>
-          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Home" enabled="true"/>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Batch" enabled="true"/>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Content-Type</stringProp>
+                  <stringProp name="Header.value">application/xml</stringProp>
+                </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Accept</stringProp>
+                  <stringProp name="Header.value">application/xml</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="Create Profile Item (Batch V2)" enabled="true">
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments"/>
+              </elementProp>
+              <stringProp name="SoapSampler.URL_DATA">http://stage.co2.dgen.net/profiles/${ProfileUID}</stringProp>
+              <stringProp name="HTTPSamper.xml_data"></stringProp>
+              <stringProp name="SoapSampler.xml_data_file">/Development/AMEE/amee/jmeter/batch-profile-create.large.xml</stringProp>
+              <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
+              <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
+              <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
+            </SoapSampler>
+            <hashTree/>
+          </hashTree>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Home" enabled="false"/>
           <hashTree>
             <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
@@ -1074,7 +1102,7 @@
               </hashTree>
             </hashTree>
           </hashTree>
-          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Transport" enabled="true"/>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Transport" enabled="false"/>
           <hashTree>
             <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">

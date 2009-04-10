@@ -22,6 +22,9 @@ package com.amee.domain.data;
 import com.amee.core.ObjectType;
 import com.amee.core.ValueType;
 import com.amee.domain.*;
+import com.amee.domain.core.DecimalCompoundUnit;
+import com.amee.domain.core.DecimalPerUnit;
+import com.amee.domain.core.DecimalUnit;
 import com.amee.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Cache;
@@ -37,12 +40,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-// TODO: add a way to define UI widget
-// TODO: add a way to define range of values
-// TODO: add state (draft, live)
-// TODO: max & min values (for numbers)
-// TODO: regex validation?
 
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
@@ -120,7 +117,6 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
 
     public ItemValueDefinition(ItemDefinition itemDefinition) {
         super(itemDefinition.getEnvironment());
-        setBuilder(new ItemValueDefinitionBuilder(this));
         setItemDefinition(itemDefinition);
         itemDefinition.add(this);
     }
@@ -132,10 +128,6 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
 
     public String toString() {
         return "ItemValueDefinition_" + getUid();
-    }
-
-    public void setBuilder(Builder builder) {
-        this.builder = builder;
     }
 
     @Transient
@@ -160,7 +152,7 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
 
     @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
-        return builder.getJSONObject(detailed);
+        return getBuilder().getJSONObject(detailed);
     }
 
     @Transient
@@ -175,7 +167,7 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
 
     @Transient
     public Element getElement(Document document, boolean detailed) {
-        return builder.getElement(document, detailed);
+        return getBuilder().getElement(document, detailed);
     }
 
     @Transient
@@ -283,12 +275,12 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         this.unit = unit;
     }
 
-    public AMEEUnit getUnit() {
-        return (unit != null) ? AMEEUnit.valueOf(unit) : AMEEUnit.ONE;
+    public DecimalUnit getUnit() {
+        return (unit != null) ? DecimalUnit.valueOf(unit) : DecimalUnit.ONE;
     }
 
-    public AMEEPerUnit getPerUnit() {
-        return (perUnit != null) ? AMEEPerUnit.valueOf(perUnit) : AMEEPerUnit.ONE;
+    public DecimalPerUnit getPerUnit() {
+        return (perUnit != null) ? DecimalPerUnit.valueOf(perUnit) : DecimalPerUnit.ONE;
     }
 
     public boolean hasUnits() {
@@ -307,11 +299,11 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         return getPerUnit().isCompatibleWith(perUnit);
     }
 
-    public AMEECompoundUnit getCompoundUnit() {
+    public DecimalCompoundUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
 
-    public AMEECompoundUnit getCanonicalCompoundUnit() {
+    public DecimalCompoundUnit getCanonicalCompoundUnit() {
         if (aliasedTo != null) {
             return aliasedTo.getCompoundUnit();
         } else {
@@ -369,5 +361,16 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
 
     public boolean isDecimal() {
         return getValueDefinition().getValueType().equals(ValueType.DECIMAL);
+    }
+
+    public void setBuilder(Builder builder) {
+        this.builder = builder;
+    }
+
+    public Builder getBuilder() {
+        if (builder == null) {
+            setBuilder(new ItemValueDefinitionBuilder(this));
+        }
+        return builder;
     }
 }
