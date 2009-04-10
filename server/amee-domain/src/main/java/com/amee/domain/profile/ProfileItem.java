@@ -3,6 +3,7 @@ package com.amee.domain.profile;
 import com.amee.core.ObjectType;
 import com.amee.domain.Builder;
 import com.amee.domain.core.CO2Amount;
+import com.amee.domain.core.Decimal;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.Item;
@@ -17,7 +18,6 @@ import org.w3c.dom.Element;
 import javax.annotation.Resource;
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * This file is part of AMEE.
@@ -52,14 +52,14 @@ public class ProfileItem extends Item {
     @JoinColumn(name = "DATA_ITEM_ID")
     private DataItem dataItem;
 
+    @Column(name = "AMOUNT", precision = Decimal.PRECISION, scale = Decimal.SCALE)
+    private BigDecimal persistentAmount = BigDecimal.ZERO;
+
     @Transient
     private BigDecimal amount = null;
 
     @Transient
     private Builder builder;
-
-    @Transient
-    private Date V2_RELEASE = new StartEndDate("2009-03-23T05:56:23+0000").toDate();
 
     @Transient
     @Resource
@@ -144,7 +144,7 @@ public class ProfileItem extends Item {
         if (!supportsCalculation())
             return CO2Amount.ZERO;
 
-        // CO2 amounts are lazily calculated.
+        // CO2 amounts are lazily calculated once per session.
         if (amount == null)
             calculationService.calculate(this);
 
@@ -153,6 +153,9 @@ public class ProfileItem extends Item {
 
     public void setAmount(CO2Amount amount) {
         this.amount = amount.getValue();
+        // Persist the transient session CO2 amount if it is different from the last persisted amount.
+        if (this.amount.compareTo(persistentAmount) != 0)
+            persistentAmount = this.amount;
     }
 
     @Override
@@ -179,12 +182,8 @@ public class ProfileItem extends Item {
         return false;
     }
 
-    //TEMP HACK - will remove as soon we decide how to handle return units in V1 correctly.
+    //TODO - TEMP HACK - will remove as soon we decide how to handle return units in V1 correctly.
     public boolean isSingleFlight() {
-        // UBER TEMP HACK TO FIX PROB ON STAGE - WILL RELEASE MORE PERMANENT FIX AT END OF DAY (SM - 25/03/09)
-
-        if (isLegacy())
-            return true;
 
         for (ItemValue iv : getItemValues()) {
             if ((iv.getName().startsWith("IATA") && iv.getValue().length() > 0) ||
@@ -195,14 +194,6 @@ public class ProfileItem extends Item {
 
         }
         return false;
-    }
-
-    private boolean isLegacy() {
-        if (modified.before(V2_RELEASE)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public boolean supportsCalculation() {

@@ -49,6 +49,39 @@ public class TransactionController extends EntityManagerFactoryAccessor {
         super.setJpaPropertyMap(jpaProperties);
     }
 
+    /**
+     * 1) Called by TransactionServerConverter before HttpConverter.toRequest
+     *
+     * @param withTransaction specify whether a transaction should be used
+     */
+    public void beforeToRequest(boolean withTransaction) {
+        logger.debug("beforeToRequest() - >>> BEFORE TO REQUEST");
+        // Ensure any EntityManager associated with this thread is closed before handling this new request.
+        ensureEntityManagerIsClosed();
+        begin(withTransaction);
+    }
+
+    /**
+     * 2) Called by TransactionFilter after Filter.doHandle
+     *
+     * @param success true or false
+     */
+    public void afterHandle(boolean success) {
+        logger.debug("afterHandle() - <<< AFTER HANDLE");
+        if (!success) {
+            transactionRollback.set(true);
+        }
+        commitOrRollbackTransaction();
+    }
+
+    /**
+     * 3) Called by TransactionServerConverter after HttpServerConverter.commit
+     */
+    public void afterCommit() {
+        logger.debug("afterCommit() - <<< AFTER COMMIT");
+        end();
+    }
+
     public void begin(boolean withTransaction) {
         logger.debug("begin() - >>> BEGIN");
         openEntityManager();
@@ -117,39 +150,6 @@ public class TransactionController extends EntityManagerFactoryAccessor {
         if (emHolder != null) {
             EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
         }
-    }
-
-    /**
-     * 1) Called by TransactionServerConverter before HttpConverter.toRequest
-     *
-     * @param withTransaction specify whether a transaction should be used
-     */
-    public void beforeToRequest(boolean withTransaction) {
-        logger.debug("beforeToRequest() - >>> BEFORE TO REQUEST");
-        // Ensure any EntityManager associated with this thread is closed before handling this new request.
-        ensureEntityManagerIsClosed();
-        begin(withTransaction);
-    }
-
-    /**
-     * 2) Called by TransactionFilter after Filter.doHandle
-     *
-     * @param success true or false
-     */
-    public void afterHandle(boolean success) {
-        logger.debug("afterHandle() - <<< AFTER HANDLE");
-        if (!success) {
-            transactionRollback.set(true);
-        }
-        commitOrRollbackTransaction();
-    }
-
-    /**
-     * 3) Called by TransactionServerConverter after HttpServerConverter.commit
-     */
-    public void afterCommit() {
-        logger.debug("afterCommit() - <<< AFTER COMMIT");
-        end();
     }
 
     public boolean isManageTransactions() {

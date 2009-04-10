@@ -1,6 +1,8 @@
 package com.amee.restlet.profile.acceptor;
 
+import com.amee.calculation.service.CalculationService;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileItemValueResource;
 import com.amee.service.profile.ProfileService;
 import org.restlet.data.Form;
@@ -32,9 +34,13 @@ public class ProfileItemValueFormAcceptor implements IItemValueFormAcceptor {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private CalculationService calculationService;
+
     public ItemValue accept(ProfileItemValueResource resource, Form form) {
 
         ItemValue profileItemValue = resource.getProfileItemValue();
+        ProfileItem profileItem = resource.getProfileItem();
 
         if (form.getFirstValue("value") != null) {
             profileItemValue.setValue(form.getFirstValue("value"));
@@ -45,6 +51,8 @@ public class ProfileItemValueFormAcceptor implements IItemValueFormAcceptor {
         if (form.getFirstValue("perUnit") != null) {
             profileItemValue.setPerUnit(form.getFirstValue("perUnit"));
         }
+
+        calculationService.calculate(profileItem);
 
         // path may have changed
         profileService.clearCaches(resource.getProfile());

@@ -1,5 +1,6 @@
 package com.amee.restlet.profile.acceptor;
 
+import com.amee.calculation.service.CalculationService;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.core.CO2AmountUnit;
@@ -50,6 +51,9 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
 
     @Autowired
     private DataService dataService;
+
+    @Autowired
+    private CalculationService calculationService;
 
     public List<ProfileItem> accept(ProfileCategoryResource resource, Form form) {
 
@@ -171,6 +175,8 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                         }
                     }
                 }
+
+                calculationService.calculate(profileItem);
 
             } catch (IllegalArgumentException ex) {
                 log.warn("accept() - Bad parameter received", ex);
