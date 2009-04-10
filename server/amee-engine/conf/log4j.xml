@@ -58,7 +58,7 @@
     <!-- See: http://code.google.com/p/log4jdbc/ -->
 
     <category name="jdbc.sqlonly">
-        <priority value="ERROR"/>
+        <priority value="DEBUG"/>
     </category>
 
     <category name="jdbc.sqltiming">

@@ -1165,6 +1165,17 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="Maven: log4jdbc:log4jdbc:4-1.2alpha2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/log4jdbc/log4jdbc/4-1.2alpha2/log4jdbc-4-1.2alpha2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/log4jdbc/log4jdbc/4-1.2alpha2/log4jdbc-4-1.2alpha2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/log4jdbc/log4jdbc/4-1.2alpha2/log4jdbc-4-1.2alpha2-sources.jar!/" />
+      </SOURCES>
+    </library>
   </component>
   <UsedPathMacros>
     <macro name="MAVEN_REPOSITORY" description="Maven Local Repostiry" />

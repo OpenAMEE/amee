@@ -256,16 +256,17 @@ class DataServiceDAO implements Serializable {
     public DataItem getDataItemByPath(Environment environment, String path) {
         DataItem dataItem = null;
         if ((environment != null) && !StringUtils.isBlank(path)) {
-            // See http://www.hibernate.org/117.html#A12 for notes on DISTINCT_ROOT_ENTITY.
-            Session session = (Session) entityManager.getDelegate();
-            Criteria criteria = session.createCriteria(DataItem.class);
-            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-            criteria.add(Restrictions.eq("path", path));
-            criteria.add(Restrictions.naturalId().set("environment.uid", environment.getUid().toUpperCase()));
-            criteria.setFetchMode("itemValues", FetchMode.JOIN);
-            criteria.setCacheable(true);
-            criteria.setCacheRegion(CACHE_REGION);
-            List<DataItem> dataItems = criteria.list();
+            List<DataItem> dataItems = entityManager.createQuery(
+                    "SELECT DISTINCT di " +
+                            "FROM DataItem di " +
+                            "LEFT JOIN FETCH di.itemValues " +
+                            "WHERE di.path = :path " +
+                            "AND di.environment.id = :environmentId")
+                    .setParameter("path", path)
+                    .setParameter("environmentId", environment.getId())
+                    .setHint("org.hibernate.cacheable", true)
+                    .setHint("org.hibernate.cacheRegion", CACHE_REGION)
+                    .getResultList();
             if (dataItems.size() == 1) {
                 log.debug("getDataItemByPath() found: " + path);
                 dataItem = dataItems.get(0);
