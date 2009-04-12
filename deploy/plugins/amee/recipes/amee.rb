@@ -15,5 +15,11 @@ namespace :amee do
   task :chmod, roles => :app do
     sudo "chmod a+w #{shared_path}/log #{shared_path}/pids"
   end
-  after "deploy:setup", "amee:chmod"   
+
+  desc "Create symlink to amee start script"
+  task :init_d, roles => :app do
+    sudo "lns -s #{current_path}/bin/amee /etc/init.d/amee && chmod 777 /etc/init.d/amee"
+  end
+
+  after "deploy:setup", "[amee:chmod, amee:init_d]"   
 end
