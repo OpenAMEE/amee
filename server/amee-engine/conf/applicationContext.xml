@@ -21,7 +21,7 @@
 
     <!-- Annotations and other stuff -->
     <context:load-time-weaver/>
-	<context:spring-configured />
+    <context:spring-configured/>
     <context:annotation-config/>
     <context:component-scan base-package="com"/>
     <tx:annotation-driven mode="aspectj"/>
@@ -79,12 +79,24 @@
     </bean>
     <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
 
-    <!-- Scheduler configuration -->
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <!-- name used to publish applicationContext to Quartz Job instances, so they can call business services -->
-        <property name="applicationContextSchedulerContextKey">
-            <value>applicationContext</value>
+    <!-- JMX -->
+    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+        <property name="autodetect" value="false"/>
+        <property name="beans">
+            <map>
+                <entry key="org.hibernate:name=statistics">
+                    <bean class="org.hibernate.jmx.StatisticsService">
+                        <property name="statisticsEnabled" value="true"/>
+                        <property name="sessionFactory" ref="sessionFactory"/>
+                    </bean>
+                </entry>
+                <entry key="amee:name=statistics" value-ref="ameeStatistics"/>
+            </map>
         </property>
+    </bean>
+    <bean id="sessionFactory" class="org.springframework.beans.factory.config.PropertyPathFactoryBean">
+        <property name="targetBeanName" value="entityManagerFactory"/>
+        <property name="propertyPath" value="nativeEntityManagerFactory.sessionFactory"/>
     </bean>
 
     <!-- Event/messaging beans -->
