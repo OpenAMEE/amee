@@ -24,7 +24,9 @@ package com.amee.calculation;
 import com.amee.calculation.model.DataPoint;
 import com.amee.calculation.model.DataSeries;
 import com.amee.domain.core.Decimal;
+import static junit.framework.Assert.assertTrue;
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -32,38 +34,126 @@ import java.util.List;
 
 public class DecimalTest {
 
-    @Test
-    public void testAdd() {
+    DateTime now;
+    DataSeries lhs;
+    DataSeries rhs;
+    DataPoint rhp;
 
-        DateTime now = new DateTime();
+    @Before
+    public void init() {
 
+        now = new DateTime();
+
+        // Test adding two series
         List<DataPoint> a = new ArrayList<DataPoint>();
         a.add(new DataPoint(now.plusDays(1), new Decimal("1")));
         a.add(new DataPoint(now.plusDays(2), new Decimal("2")));
         a.add(new DataPoint(now.plusDays(3), new Decimal("3")));
+        lhs = new DataSeries(a);
 
         List<DataPoint> b = new ArrayList<DataPoint>();
         b.add(new DataPoint(now.plusDays(1), new Decimal("2")));
         b.add(new DataPoint(now.plusDays(2), new Decimal("3")));
         b.add(new DataPoint(now.plusDays(3), new Decimal("4")));
+        rhs = new DataSeries(b);
+
+        rhp = new DataPoint(now.plusDays(1), new Decimal("4"));
+    }
+
+    @Test
+    public void add() {
+
+        DataSeries test;
+        DataSeries actual;
+
+        List<DataPoint> sum = new ArrayList<DataPoint>();
+        sum.add(new DataPoint(now.plusDays(1), new Decimal("3")));
+        sum.add(new DataPoint(now.plusDays(2), new Decimal("5")));
+        sum.add(new DataPoint(now.plusDays(3), new Decimal("7")));
+        actual = new DataSeries(sum);
+        test = lhs.add(rhs);
+        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
 
 
-        List<DataPoint> ab = new ArrayList<DataPoint>();
-        ab.add(new DataPoint(now.plusDays(1), new Decimal("3")));
-        ab.add(new DataPoint(now.plusDays(2), new Decimal("5")));
-        ab.add(new DataPoint(now.plusDays(3), new Decimal("7")));
+        sum = new ArrayList<DataPoint>();
+        sum.add(new DataPoint(now.plusDays(1), new Decimal("5")));
+        sum.add(new DataPoint(now.plusDays(2), new Decimal("6")));
+        sum.add(new DataPoint(now.plusDays(3), new Decimal("7")));
+        actual = new DataSeries(sum);
+        test = lhs.add(rhp);
+        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+    }
 
-        DataSeries s1 = new DataSeries(a);
-        DataSeries s2 = new DataSeries(b);
+    @Test
+    public void subtract() {
 
-        DataSeries s1s2 = s1.add(s2);
+        DataSeries test;
+        DataSeries actual;
 
-        DataSeries s3 = new DataSeries(ab);
+        List<DataPoint> diff = new ArrayList<DataPoint>();
+        diff.add(new DataPoint(now.plusDays(1), new Decimal("-1")));
+        diff.add(new DataPoint(now.plusDays(2), new Decimal("-1")));
+        diff.add(new DataPoint(now.plusDays(3), new Decimal("-1")));
+        actual = new DataSeries(diff);
+        test = lhs.subtract(rhs);
+        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
 
-        //assertTrue("Integrate should produce the correct value",s1s2.integrate().equals(s3.integrate()));
-        //assertTrue("Integrate should produce the correct value",s1s2.integrate().equals(s3.integrate()));
 
-        //TODO - Add add(DataPoint)
+        diff = new ArrayList<DataPoint>();
+        diff.add(new DataPoint(now.plusDays(1), new Decimal("-3")));
+        diff.add(new DataPoint(now.plusDays(2), new Decimal("-2")));
+        diff.add(new DataPoint(now.plusDays(3), new Decimal("-1")));
+        actual = new DataSeries(diff);
+        test = lhs.subtract(rhp);
+        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+    }
+
+    @Test
+    public void divide() {
+
+        DataSeries test;
+        DataSeries actual;
+
+        List<DataPoint> diff = new ArrayList<DataPoint>();
+        diff.add(new DataPoint(now.plusDays(1), new Decimal("0.5")));
+        diff.add(new DataPoint(now.plusDays(2), new Decimal("2").divide(new Decimal("3"))));
+        diff.add(new DataPoint(now.plusDays(3), new Decimal("0.75")));
+        actual = new DataSeries(diff);
+        test = lhs.divide(rhs);
+        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+
+
+        diff = new ArrayList<DataPoint>();
+        diff.add(new DataPoint(now.plusDays(1), new Decimal("0.25")));
+        diff.add(new DataPoint(now.plusDays(2), new Decimal("0.5")));
+        diff.add(new DataPoint(now.plusDays(3), new Decimal("0.75")));
+        actual = new DataSeries(diff);
+        test = lhs.divide(rhp);
+        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+    }
+
+    @Test
+    public void multiply() {
+
+        DataSeries test;
+        DataSeries actual;
+
+        List<DataPoint> diff = new ArrayList<DataPoint>();
+        diff.add(new DataPoint(now.plusDays(1), new Decimal("2")));
+        diff.add(new DataPoint(now.plusDays(2), new Decimal("6")));
+        diff.add(new DataPoint(now.plusDays(3), new Decimal("12")));
+        actual = new DataSeries(diff);
+        test = lhs.multiply(rhs);
+        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+
+
+        diff = new ArrayList<DataPoint>();
+        diff.add(new DataPoint(now.plusDays(1), new Decimal("4")));
+        diff.add(new DataPoint(now.plusDays(2), new Decimal("8")));
+        diff.add(new DataPoint(now.plusDays(3), new Decimal("16")));
+        actual = new DataSeries(diff);
+        test = lhs.multiply(rhp);
+        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
     }
 
 }

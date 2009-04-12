@@ -77,35 +77,62 @@ public class DataSeries {
     }
 
     @SuppressWarnings("unchecked")
-    public DataSeries add(DataSeries series) {
-        // A=[(0,1)(1,0)(2,0.5)]
-        // C=[(0,0)(0.5,1)(2,3)]
-        // A.plus(C)=[(0,1)(0.5,1)(1,2)(2,5)]
+    private DataSeries combine(DataSeries series, Operation operation) {
 
         List<DateTime> dateTimePoints = (List) CollectionUtils.union(getDateTimePoints(), series.getDateTimePoints());
         Collections.sort(dateTimePoints);
 
-        List<DataPoint> additionSeries = new ArrayList<DataPoint>();
+        List<DataPoint> combinedSeries = new ArrayList<DataPoint>();
         for(DateTime dateTimePoint : dateTimePoints) {
             DataPoint lhs = getDataPoint(dateTimePoint);
             DataPoint rhs = series.getDataPoint(dateTimePoint);
-            additionSeries.add(lhs.add(rhs));
+            operation.setOperands(lhs, rhs);
+            combinedSeries.add(operation.operate());
         }
 
-        return new DataSeries(additionSeries);
+        return new DataSeries(combinedSeries);
 
     }
 
-    public DataSeries substract(DataSeries series) {
-        return null;
+    public DataSeries add(DataSeries series) {
+        return combine(series, new AddOperation());
+    }
+
+    public DataSeries add(DataPoint dataPoint) {
+        DataSeries series = new DataSeries();
+        series.addDataPoint(dataPoint);
+        return add(series);
+    }
+
+    @SuppressWarnings("unchecked")
+    public DataSeries subtract(DataSeries series) {
+        return combine(series, new SubtractOperation());
+    }
+
+    public DataSeries subtract(DataPoint dataPoint) {
+        DataSeries series = new DataSeries();
+        series.addDataPoint(dataPoint);
+        return subtract(series);
     }
 
     public DataSeries divide(DataSeries series) {
-        return null;
+        return combine(series, new DivideOperation());
+    }
+
+    public DataSeries divide(DataPoint dataPoint) {
+        DataSeries series = new DataSeries();
+        series.addDataPoint(dataPoint);
+        return divide(series);
     }
 
     public DataSeries multiply(DataSeries series) {
-        return null;
+        return combine(series, new MultiplyOperation());
+    }
+
+    public DataSeries multiply(DataPoint dataPoint) {
+        DataSeries series = new DataSeries();
+        series.addDataPoint(dataPoint);
+        return multiply(series);
     }
 
     public Decimal integrate() {
@@ -146,4 +173,46 @@ public class DataSeries {
         return selected;
     }
 
+
+    public void addDataPoint(DataPoint dataPoint) {
+        dataPoints.add(dataPoint);
+    }
+
+}
+
+abstract class Operation {
+
+    protected DataPoint lhs;
+    protected DataPoint rhs;
+
+    void setOperands(DataPoint lhs, DataPoint rhs) {
+        this.lhs = lhs;
+        this.rhs = rhs;
+    }
+
+    abstract DataPoint operate();
+}
+
+class AddOperation extends Operation {
+    public DataPoint operate() {
+        return lhs.add(rhs);
+    }
+}
+
+class SubtractOperation extends Operation {
+    public DataPoint operate() {
+        return lhs.substract(rhs);
+    }
+}
+
+class DivideOperation extends Operation {
+    public DataPoint operate() {
+        return lhs.divide(rhs);
+    }
+}
+
+class MultiplyOperation extends Operation {
+    public DataPoint operate() {
+        return lhs.multiply(rhs);
+    }
 }

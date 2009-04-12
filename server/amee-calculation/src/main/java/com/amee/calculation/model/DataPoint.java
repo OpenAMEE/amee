@@ -49,18 +49,17 @@ public class DataPoint implements Comparable<DataPoint> {
     }
 
     public DataPoint substract(DataPoint point) {
-        return null;
+        return new DataPoint(dateTime, decimal.subtract(point.getValue()));
     }
 
     public DataPoint divide(DataPoint point) {
-        return null;
+        return new DataPoint(dateTime, decimal.divide(point.getValue()));
     }
 
     public DataPoint multiply(DataPoint point) {
-        return null;
+        return new DataPoint(dateTime, decimal.mulitply(point.getValue()));
     }
 
-    //TODO - Comment with meaning of compareTo vs Equals
     @Override
     public int compareTo(DataPoint that) {
         return getDateTime().compareTo(that.getDateTime());

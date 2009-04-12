@@ -51,8 +51,8 @@ public class Decimal {
     /**
      * A Decimal representing the supplied value and unit.
      *
-     * @param decimal
-     * @param unit
+     * @param decimal - the String representation of the decimal value
+     * @param unit - the unit of the decimal value
      */
     public Decimal(String decimal, DecimalUnit unit) {
         this(decimal);
@@ -62,7 +62,7 @@ public class Decimal {
     /**
      * A Decimal representing the supplied unit-less value.
      *
-     * @param decimal
+     * @param decimal - the String representation of the decimal value
      */
     public Decimal(String decimal) {
         if (decimal == null) throw new IllegalArgumentException("The String decimal must be non-null");
@@ -109,6 +109,7 @@ public class Decimal {
      *
      * @see DecimalUnit
      */
+    @SuppressWarnings("unchecked")
     public Decimal convert(DecimalUnit targetUnit) {
         if (!unit.equals(targetUnit)) {
             DecimalMeasure dm = DecimalMeasure.valueOf(getValue(), unit.toUnit());
@@ -128,6 +129,7 @@ public class Decimal {
      *
      * @see DecimalPerUnit
      */
+    @SuppressWarnings("unchecked")
     public Decimal convert(DecimalPerUnit targetPerUnit) {
 
         if (!(unit instanceof DecimalCompoundUnit)) return new Decimal(getValue());
@@ -145,7 +147,7 @@ public class Decimal {
     }
 
     /**
-     * @param unit
+     * @param unit - the unit to compare
      * @return returns true is the supplied DecimalUnit is not considered equal to the unit of the current instance.
      *
      */
@@ -163,6 +165,19 @@ public class Decimal {
     
     public String toString() {
         return getValue().toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Decimal))
+            return false;
+        
+        return getValue().compareTo(((Decimal)o).getValue()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return getValue().hashCode();
     }
 
     public Decimal add(Decimal decimal) {
