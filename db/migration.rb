@@ -27,7 +27,10 @@
 #
 require 'java'
 require '../server/amee-domain/target/amee-domain-2.1.jar'
-require '../../AMEE.deploy/lib/mysql-connector-java-5.1.6.jar'
+require '../../amee.deploy/lib/mysql-connector-java-5.1.6.jar'
+require '../../amee.deploy/lib/commons-logging-1.1.jar'
+require '../../amee.deploy/lib/jscience-4.3.1.jar'
+
 require 'getoptlong'
 require 'rdoc/usage'
     
@@ -43,6 +46,10 @@ end
 
 module JM
   include_package 'com.amee.domain' 
+end
+
+module Core
+  include_package 'com.amee.domain.core' 
 end
 
 # JDBC Default Parameters
@@ -135,42 +142,72 @@ def migrate_amount
   puts "Starting AMOUNT migrations"
 
   begin
+
+    out = File.new("migrate_amount.out","w+")
+
+    converted_count = 0
+    single_flight_count = 0
+    twelve = Core::Decimal.new("12")
+    
     conn = JavaSql::DriverManager.get_connection(@url, @user, @pswd)
     stmt = conn.create_statement()
     stmt2 = conn.create_statement()
+    stmt3 = conn.create_statement()
 
-    # Get a count of rows to be updated
-    rs = stmt.execute_query("select * from ITEM where modified > DATE('2009-03-23 05:56:23') and type = 'PI'")
+    # TODO - Get a count of rows to be updated
+    # TODO - THE DATE CLAUSE SHOULD BE REMOVED FOR LIVE RELEASE
+    #item_query = "select id, amount from ITEM where modified < DATE('2009-03-23 05:56:23') and type = 'PI'"
+    item_query = "select id, amount from ITEM where type = 'PI' and amount != 0.0"
+    rs = stmt.execute_query(item_query)
+    #puts "Running - #{item_query}"
     while(rs.next) 
-      id = rs.getString("Id")
-      amount = rs.getString("Amount")
-      item_value_query = "select ivd.name, iv.value from ITEM_VALUE iv, ITEM_VALUE_DEFINITION ivd where iv.item_id = #{id} and iv.item_value_definition_id = ivd.id"
+      
+      id = rs.getString("id")
+      amount = rs.getString("amount")
+
+      item_value_query = "select iv.id, ivd.name, iv.value from ITEM_VALUE iv, ITEM_VALUE_DEFINITION ivd where iv.item_id = #{id} and iv.item_value_definition_id = ivd.id"
       rs2 = stmt2.execute_query(item_value_query)
-      puts "Running - #{item_value_query}"
+      item_value_s = ""
+      single_flight = false
       while(rs2.next)
+        iv_id = rs2.getString("id")
         name = rs2.getString("name")
         value = rs2.getString("value")
-        puts("#{id}: #{name} - #{value}")
+        item_value_s += "#{iv_id}:#{name}=#{value},"
         if 
         (
           (name.startsWith("IATA") && value.length > 0) ||
           (name.startsWith("Lat") && value != "-999") ||
           (name.startsWith("Lon") && value != "-999")
         )
-          puts "Found single flight so not updating amount, id: #{id}"  
-        else
-          # TODO - Format this number to 3dp
-          new_amount = amount.to_f * 12.0
-          # Log out the rollback sql...
-          puts "Found perTime item so updating amount: #{amount} to new_amount: #{new_amount} where id: #{id}"
-          item_update_query = "update ITEM set Amount = ${new_amount} where id = #{id}"
-          puts "Running - #{item_update_query}"
+          single_flight = true
         end
-          
       end
-      rs2.close
+
+      if single_flight
+        out.puts "singleflight,id:#{id},#{item_value_s}"  
+        single_flight_count = single_flight_count + 1
+      
+      else
+        if (amount != "0.000")
+          new_amount = Core::Decimal.new(amount).mulitply(twelve)
+          out.puts "perTime,#{id},#{amount},#{new_amount.getValue()}"
+          item_update_query = "update ITEM set amount = #{new_amount} where id = #{id}"
+          # puts "Running - #{item_update_query}"
+          stmt3.execute(item_update_query)
+          converted_count = converted_count + 1
+        end
+      end
+
     end
-    
+
+    puts "converted: #{converted_count}"
+    puts "single_flights: #{single_flight_count}"
+
+  rescue => err
+    puts err
+    break
+  
   ensure
     puts "Finished AMOUNT migrations"
     rs.close
@@ -178,14 +215,17 @@ def migrate_amount
     stmt.close
     stmt2.close
     conn.close
+    out.close
   end
-    
+  
 end
 
 def migrate_ivd 
   puts "Starting ITEM_VALUE_DEFINITION migrations"
 
   begin
+    out = File.new("migrate_ivd.out","w+")
+    
     conn = JavaSql::DriverManager.get_connection(@url, @user, @pswd)
     stmt = conn.create_statement(JavaSql::ResultSet::TYPE_SCROLL_SENSITIVE, JavaSql::ResultSet::CONCUR_UPDATABLE)
     conn.setAutoCommit(false)
@@ -204,7 +244,7 @@ def migrate_ivd
       old_path, old_unit, old_per_unit, new_name, new_path, new_unit, new_per_unit = line.split(",")
 
       query = select_old.sub(/\{OLD_PATH\}/, old_path)
-      puts query 
+      out.puts query 
       rs = stmt.executeQuery(query)
       
       while(rs.next())
@@ -220,21 +260,21 @@ def migrate_ivd
         query = query.sub(/\{NEW_PER_UNIT\}/, new_per_unit)
         query = query.sub(/\{VALUE\}/, value)
         query = query.sub(/\{CHOICES\}/, choices)
-        puts query
+        out.puts query
         stmt.addBatch(query)
         
         query = update_old.sub(/\{OLD_PATH\}/, old_path)
         query = query.sub(/\{OLD_UNIT\}/, old_unit)
         query = query.sub(/\{OLD_PER_UNIT\}/, old_per_unit)
         query = query.sub(/\{ID\}/, item_value_definition_id)
-        puts query
+        out.puts query
         stmt.addBatch(query)
 
-        puts insert_new_api_version
+        out.puts insert_new_api_version
         stmt.addBatch(insert_new_api_version)
 
         query = insert_old_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
-        puts query
+        out.puts query
         stmt.addBatch(query)
         
       end
@@ -245,7 +285,7 @@ def migrate_ivd
         stmt.clearBatch()
       end
 
-      puts "\n"
+      out.puts "\n"
               
     end
 
@@ -253,15 +293,15 @@ def migrate_ivd
     insert_old_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},1)"
     insert_new_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},2)"
     query = "SELECT ID FROM ITEM_VALUE_DEFINITION WHERE ID NOT IN (SELECT ITEM_VALUE_DEFINITION_ID FROM ITEM_VALUE_DEFINITION_API_VERSION)"
-    puts query
+    out.puts query
     rs = stmt.executeQuery(query)
     while(rs.next())
       item_value_definition_id = rs.getInt("ID").to_s
       query = insert_old_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
-      puts query
+      out.puts query
       stmt.addBatch(query)
       query = insert_new_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
-      puts query
+      out.puts query
       stmt.addBatch(query)
     end
 
@@ -279,6 +319,7 @@ def migrate_ivd
     rs.close
     stmt.close
     conn.close
+    out.close
   end
 
 end
@@ -288,6 +329,9 @@ def migrate_algo
   puts "Starting ALGORITHM migrations"
 
   begin
+    
+    out = File.new("migrate_algo.out","w+")
+    
     conn = JavaSql::DriverManager.get_connection(@url, @user, @pswd)
     stmt = conn.create_statement()
 
@@ -299,9 +343,9 @@ def migrate_algo
     file = File.new("algo.csv","r")
     while(line = file.gets)
       path, name = line.split(",")
-      puts "Migrating #{name.chomp} : #{path}"
+      out.puts "Migrating #{name.chomp} : #{path}"
       query = select.sub(/\{NAME\}/, name.chomp)
-      puts query 
+      out.puts query 
       rs = stmt.executeQuery(query)
       if rs.next()
         id = rs.getInt("ID") 
@@ -315,12 +359,12 @@ def migrate_algo
         end
         query = query.sub(/\{CONTENT\}/,lines.join("\\n"))
         query = query.sub(/\{ID\}/,id.to_s)
-        puts query
+        out.puts query
         count = stmt.executeUpdate(query)
-        puts "migrate_algo - updated #{count} rows"
-        puts "\n"
+        out.puts "migrate_algo - updated #{count} rows"
+        out.puts "\n"
       else
-        puts "Error: ID not found - #{id}"
+        out.puts "Error: ID not found - #{id}"
       end
     end
 
@@ -333,6 +377,7 @@ def migrate_algo
     rs.close
     stmt.close
     conn.close
+    out.close
   end
    
 end
@@ -351,10 +396,10 @@ class String
 end
 
 # Run the migrations
-#run_sql("ddl.sql")
-#migrate_ivd
-#run_sql("dml.sql")
-#migrate_pi
+run_sql("ddl.sql")
+migrate_ivd
+run_sql("dml.sql")
+migrate_pi
 migrate_amount
-#migrate_algo
-#run_sql("innodb.sql")
+migrate_algo
+run_sql("innodb.sql")
