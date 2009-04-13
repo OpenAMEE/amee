@@ -19,9 +19,8 @@
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-package com.amee.calculation.model;
+package com.amee.core;
 
-import com.amee.domain.core.Decimal;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.joda.time.DateTime;

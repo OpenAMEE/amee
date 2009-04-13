@@ -1,5 +1,7 @@
 package com.amee.domain;
 
+import com.amee.core.PersistentObject;
+
 import java.util.Date;
 
 public interface DatedObject extends PersistentObject {

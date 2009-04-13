@@ -108,31 +108,21 @@ public class DataService {
         return getDataItems(dc, startDate, null);
     }
 
+    //TODO: Date logic here should share code in com.amee.service.data.DrillDownDAO#isWithinTimeFrame
     public List<DataItem> getDataItems(DataCategory dc, StartEndDate startDate, StartEndDate endDate) {
-
         DataItem dataItem;
-        List<DataItem> dataItems;
-        Iterator<DataItem> i;
-
-        // code below replicates the query in:
-        // com.amee.data.dao.DataServiceDAO#getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate)
-
-        // TODO: date logic here should share code in com.amee.service.data.DrillDownDAO#isWithinTimeFrame
-        dataItems = dao.getDataItems(dc);
-        i = dataItems.iterator();
+        List<DataItem> dataItems = dao.getDataItems(dc);
+        Iterator<DataItem> i = dataItems.iterator();
         if (endDate != null) {
             while (i.hasNext()) {
                 dataItem = i.next();
-                // "di.startDate < :endDate AND (di.endDate > :startDate OR di.endDate IS NULL)" :
-                if (!(dataItem.getStartDate().before(endDate) &&
-                        ((dataItem.getEndDate() == null) || dataItem.getEndDate().after(startDate)))) {
+                if (!(dataItem.getStartDate().before(endDate) && ((dataItem.getEndDate() == null) || dataItem.getEndDate().after(startDate)))) {
                     i.remove();
                 }
             }
         } else {
             while (i.hasNext()) {
                 dataItem = i.next();
-                // "(di.endDate > :startDate OR di.endDate IS NULL)");
                 if (!((dataItem.getEndDate() == null) || dataItem.getEndDate().after(startDate))) {
                     i.remove();
                 }
@@ -141,10 +131,6 @@ public class DataService {
 
         return dataItems;
     }
-
-    // public List<DataItem> getDataItems(DataCategory dc, StartEndDate startDate, StartEndDate endDate) {
-    //    return dao.getDataItems(dc, startDate, endDate);
-    //}
 
     public List<DataItem> getDataItems(DataCategory dc) {
         return dao.getDataItems(dc);

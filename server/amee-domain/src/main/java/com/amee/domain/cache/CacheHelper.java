@@ -1,6 +1,6 @@
 package com.amee.domain.cache;
 
-import com.amee.domain.PersistentObject;
+import com.amee.core.PersistentObject;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;

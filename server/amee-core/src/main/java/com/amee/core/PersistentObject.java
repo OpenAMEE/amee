@@ -1,4 +1,4 @@
-package com.amee.domain;
+package com.amee.core;
 
 public interface PersistentObject {
 

@@ -1,4 +1,4 @@
-package com.amee.domain.core;
+package com.amee.core;
 
 import javax.measure.quantity.Power;
 import javax.measure.quantity.Quantity;

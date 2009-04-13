@@ -1,4 +1,4 @@
-package com.amee.domain.core;
+package com.amee.core;
 
 import java.math.BigDecimal;
 

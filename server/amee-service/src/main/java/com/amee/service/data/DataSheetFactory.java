@@ -82,7 +82,6 @@ public class DataSheetFactory implements CacheableFactory {
             columns = sheet.getColumns();
             StartEndDate startDate = dataBrowser.getQueryStartDate();
             StartEndDate endDate = dataBrowser.getQueryEndDate();
-            // TODO - Will need to switch between OnlyActive - for DC GET and EarliestActive for Finder - tho need to ask AC this
             for (DataItem dataItem : new OnlyActiveDataService(dataService).getDataItems(dataBrowser.getDataCategory(), startDate, endDate)) {
                 itemValuesMap = dataItem.getItemValuesMap();
                 row = new Row(sheet, dataItem.getUid());

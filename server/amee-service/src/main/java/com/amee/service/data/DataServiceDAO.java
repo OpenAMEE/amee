@@ -24,7 +24,6 @@ import com.amee.domain.data.*;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.event.ObserveEventService;
 import com.amee.domain.event.ObservedEvent;
-import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.path.PathItemService;
@@ -42,7 +41,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -287,31 +285,6 @@ class DataServiceDAO implements Serializable {
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
-    }
-
-    @SuppressWarnings(value = "unchecked")
-    public List<DataItem> getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
-
-        String q = "SELECT DISTINCT di " +
-                "FROM DataItem di " +
-                "LEFT JOIN FETCH di.itemValues " +
-                "WHERE di.itemDefinition.id = :itemDefinitionId " +
-                "AND di.dataCategory.id = :dataCategoryId AND " +
-                ((endDate != null) ? "di.startDate < :endDate AND (di.endDate > :startDate OR di.endDate IS NULL)" : "(di.endDate > :startDate OR di.endDate IS NULL)");
-
-        if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
-            Query query = entityManager.createQuery(q);
-            query.setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId());
-            query.setParameter("dataCategoryId", dataCategory.getId());
-            query.setParameter("startDate", startDate.toDate());
-            if (endDate != null)
-                query.setParameter("endDate", endDate.toDate());
-            query.setHint("org.hibernate.cacheable", true);
-            query.setHint("org.hibernate.cacheRegion", CACHE_REGION);
-            return query.getResultList();
-        } else {
-            return null;
-        }
     }
 
     @SuppressWarnings(value = "unchecked")

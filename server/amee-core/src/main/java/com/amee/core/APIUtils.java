@@ -1,4 +1,4 @@
-package com.amee.domain;
+package com.amee.core;
 
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;

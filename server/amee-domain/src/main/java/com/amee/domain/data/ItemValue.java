@@ -19,17 +19,17 @@
  */
 package com.amee.domain.data;
 
-import com.amee.core.ObjectType;
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.Builder;
-import com.amee.domain.core.DecimalCompoundUnit;
-import com.amee.domain.core.DecimalPerUnit;
-import com.amee.domain.core.DecimalUnit;
+import com.amee.core.DecimalPerUnit;
+import com.amee.core.*;
+import com.amee.core.DecimalUnit;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -73,6 +73,14 @@ public class ItemValue extends AMEEEntity implements Pathable {
 
     @Column(name = "PER_UNIT", nullable = true, length = PER_UNIT_SIZE)
     private String perUnit;
+
+    @Column(name = "START_DATE")
+    @Index(name = "START_DATE_IND")
+    protected Date startDate = Calendar.getInstance().getTime();
+
+    @Column(name = "END_DATE")
+    @Index(name = "END_DATE_IND")
+    protected Date endDate;
 
     @Transient
     private Builder builder;

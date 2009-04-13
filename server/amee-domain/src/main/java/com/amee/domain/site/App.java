@@ -1,7 +1,7 @@
 package com.amee.domain.site;
 
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.DatedObject;
 import com.amee.domain.auth.Action;
 import org.hibernate.annotations.Cache;

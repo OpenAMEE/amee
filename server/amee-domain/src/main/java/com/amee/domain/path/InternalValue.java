@@ -1,7 +1,7 @@
 package com.amee.domain.path;
 
-import com.amee.domain.core.DecimalCompoundUnit;
-import com.amee.domain.core.Decimal;
+import com.amee.core.DecimalCompoundUnit;
+import com.amee.core.Decimal;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import org.apache.commons.logging.Log;

@@ -1,7 +1,7 @@
 package com.amee.restlet.profile.builder.v1;
 
-import com.amee.domain.core.DecimalPerUnit;
-import com.amee.domain.APIUtils;
+import com.amee.core.DecimalPerUnit;
+import com.amee.core.APIUtils;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v1.ProfileItemBuilder;
 import com.amee.restlet.profile.ProfileItemResource;

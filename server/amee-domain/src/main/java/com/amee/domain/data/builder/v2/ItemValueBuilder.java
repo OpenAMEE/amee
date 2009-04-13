@@ -19,7 +19,7 @@
  */
 package com.amee.domain.data.builder.v2;
 
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.Builder;
 import com.amee.domain.data.Item;
 import com.amee.domain.data.ItemValue;

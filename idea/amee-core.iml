@@ -5,6 +5,7 @@
     <output-test url="file://$MODULE_DIR$/../server/amee-core/target/test-classes" />
     <content url="file://$MODULE_DIR$/../server/amee-core">
       <sourceFolder url="file://$MODULE_DIR$/../server/amee-core/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../server/amee-core/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/../server/amee-core/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -20,6 +21,16 @@
     <orderEntry type="library" exported="" name="Maven: javax.servlet:servlet-api:2.3" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.5" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.json:org.json:2.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: joda-time:joda-time:1.6" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.jscience:jscience:4.3.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-lang:commons-lang:2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-collections:commons-collections:3.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: dom4j:dom4j:1.6.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.hibernate:hibernate-core:3.3.1.GA" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.slf4j:slf4j-api:1.5.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: antlr:antlr:2.7.6" level="project" />
+    <orderEntry type="library" exported="" name="Maven: javax.transaction:jta:1.1" level="project" />
   </component>
 </module>
 

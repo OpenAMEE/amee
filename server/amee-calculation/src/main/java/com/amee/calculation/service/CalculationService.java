@@ -21,8 +21,8 @@ package com.amee.calculation.service;
 
 import com.amee.domain.APIVersion;
 import com.amee.domain.algorithm.Algorithm;
-import com.amee.domain.core.CO2Amount;
-import com.amee.domain.core.Decimal;
+import com.amee.core.CO2Amount;
+import com.amee.core.Decimal;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValueDefinition;

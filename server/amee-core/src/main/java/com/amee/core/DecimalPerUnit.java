@@ -1,4 +1,4 @@
-package com.amee.domain.core;
+package com.amee.core;
 
 import org.joda.time.Duration;
 import org.joda.time.format.ISOPeriodFormat;

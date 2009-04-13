@@ -1,6 +1,5 @@
-package com.amee.domain.core;
+package com.amee.core;
 
-import com.amee.domain.APIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;

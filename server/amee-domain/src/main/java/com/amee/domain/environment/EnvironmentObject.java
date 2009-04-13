@@ -1,6 +1,6 @@
 package com.amee.domain.environment;
 
-import com.amee.domain.PersistentObject;
+import com.amee.core.PersistentObject;
 
 public interface EnvironmentObject extends PersistentObject {
 

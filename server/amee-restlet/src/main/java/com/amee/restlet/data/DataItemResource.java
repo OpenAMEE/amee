@@ -20,7 +20,7 @@
 package com.amee.restlet.data;
 
 import com.amee.calculation.service.CalculationService;
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.StartEndDate;

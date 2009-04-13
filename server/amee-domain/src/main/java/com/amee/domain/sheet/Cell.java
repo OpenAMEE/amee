@@ -1,7 +1,7 @@
 package com.amee.domain.sheet;
 
 import com.amee.core.ValueType;
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.UidGen;
 import org.json.JSONException;
 import org.json.JSONObject;

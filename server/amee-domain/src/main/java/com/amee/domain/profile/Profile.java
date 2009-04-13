@@ -20,8 +20,8 @@
 package com.amee.domain.profile;
 
 import com.amee.core.ObjectType;
+import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.APIUtils;
 import com.amee.domain.APIVersion;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.environment.Environment;

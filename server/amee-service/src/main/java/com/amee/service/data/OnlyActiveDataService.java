@@ -69,6 +69,7 @@ public class OnlyActiveDataService extends DataService {
         return labelsToDataItems;
     }
 
+    @SuppressWarnings("unchecked")
     private List<DataItem> getActiveItems(final Set<DataItem> dataItems, final StartEndDate startDate) {
         return (List) CollectionUtils.select(dataItems, new Predicate() {
             public boolean evaluate(Object o) {

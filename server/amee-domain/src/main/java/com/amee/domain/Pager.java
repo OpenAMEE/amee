@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.amee.core.APIUtils;
+
 public class Pager implements APIObject, Serializable {
 
     public static final int OUT_OF_RANGE = -1;

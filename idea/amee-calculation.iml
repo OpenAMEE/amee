@@ -5,7 +5,6 @@
     <output-test url="file://$MODULE_DIR$/../server/amee-calculation/target/test-classes" />
     <content url="file://$MODULE_DIR$/../server/amee-calculation">
       <sourceFolder url="file://$MODULE_DIR$/../server/amee-calculation/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../server/amee-calculation/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/../server/amee-calculation/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -32,21 +31,21 @@
     <orderEntry type="module" module-name="amee-domain" exported="" />
     <orderEntry type="module" module-name="amee-core" exported="" />
     <orderEntry type="library" exported="" name="Maven: org.json:org.json:2.0" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.hibernate:hibernate-annotations:3.4.0.GA" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.hibernate:ejb3-persistence:1.0.2.GA" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.hibernate:hibernate-commons-annotations:3.1.0.GA" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.slf4j:slf4j-api:1.4.2" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.hibernate:hibernate-core:3.3.0.SP1" level="project" />
-    <orderEntry type="library" exported="" name="Maven: antlr:antlr:2.7.6" level="project" />
+    <orderEntry type="library" exported="" name="Maven: joda-time:joda-time:1.6" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.jscience:jscience:4.3.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-lang:commons-lang:2.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: commons-collections:commons-collections:3.2" level="project" />
     <orderEntry type="library" exported="" name="Maven: dom4j:dom4j:1.6.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.hibernate:hibernate-core:3.3.1.GA" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.slf4j:slf4j-api:1.4.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: antlr:antlr:2.7.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: javax.transaction:jta:1.1" level="project" />
-    <orderEntry type="library" exported="" name="Maven: joda-time:joda-time:1.6" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.jscience:jscience:4.3.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.hibernate:hibernate-annotations:3.4.0.GA" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.hibernate:ejb3-persistence:1.0.2.GA" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.hibernate:hibernate-commons-annotations:3.1.0.GA" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework.integration:spring-integration:1.0.0" level="project" />
     <orderEntry type="library" exported="" name="Maven: commons-codec:commons-codec:1.3" level="project" />
-    <orderEntry type="library" exported="" name="Maven: commons-lang:commons-lang:2.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: net.sf.ehcache:ehcache:1.5.0" level="project" />
     <orderEntry type="library" exported="" name="Maven: backport-util-concurrent:backport-util-concurrent:3.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: net.sf.jsr107cache:jsr107cache:1.0" level="project" />

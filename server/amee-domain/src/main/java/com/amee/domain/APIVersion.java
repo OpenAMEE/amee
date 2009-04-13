@@ -11,6 +11,8 @@ import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.amee.core.APIUtils;
+
 /**
  * This file is part of AMEE.
  * <p/>

@@ -1,7 +1,7 @@
 package com.amee.restlet.profile.builder.v2;
 
-import com.amee.domain.APIUtils;
-import com.amee.domain.core.CO2AmountUnit;
+import com.amee.core.APIUtils;
+import com.amee.core.CO2AmountUnit;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.restlet.profile.ProfileItemResource;

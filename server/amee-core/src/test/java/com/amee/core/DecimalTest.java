@@ -19,11 +19,8 @@
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-package com.amee.calculation;
+package com.amee.core;
 
-import com.amee.calculation.model.DataPoint;
-import com.amee.calculation.model.DataSeries;
-import com.amee.domain.core.Decimal;
 import static junit.framework.Assert.assertTrue;
 import org.joda.time.DateTime;
 import org.junit.Before;

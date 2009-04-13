@@ -20,7 +20,7 @@
 package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Index;

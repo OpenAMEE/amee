@@ -3,6 +3,8 @@ package com.amee.domain.auth;
 import com.amee.domain.*;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.environment.EnvironmentObject;
+import com.amee.core.APIUtils;
+import com.amee.core.PersistentObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;

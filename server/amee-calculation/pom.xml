@@ -25,12 +25,11 @@
         <artifactId>amee-service</artifactId>
         <version>${amee.version}</version>
     </dependency>
-    <!-- External Dependencies. -->
     <dependency>
-        <groupId>joda-time</groupId>
-        <artifactId>joda-time</artifactId>
-        <version>${joda-time.version}</version>
-    </dependency>
+        <groupId>com.amee</groupId>
+        <artifactId>amee-core</artifactId>
+        <version>${amee.version}</version>
+    </dependency>    
   </dependencies>
 
 </project>

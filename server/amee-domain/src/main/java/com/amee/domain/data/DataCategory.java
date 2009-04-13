@@ -21,7 +21,7 @@ package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;

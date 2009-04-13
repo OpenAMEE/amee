@@ -1,6 +1,6 @@
 package com.amee.admin.restlet.auth;
 
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.auth.User;
 import com.amee.domain.site.Site;
 import com.amee.restlet.BaseResource;
