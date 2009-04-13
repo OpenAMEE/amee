@@ -6,7 +6,7 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.StartEndDate;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -20,12 +20,9 @@
 package com.amee.service.data;
 
 import com.amee.core.ValueType;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.cache.CacheableFactory;
-import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemDefinition;
-import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.data.*;
 import com.amee.domain.sheet.Cell;
 import com.amee.domain.sheet.Column;
 import com.amee.domain.sheet.Row;
@@ -35,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class DataSheetFactory implements CacheableFactory {
@@ -51,7 +47,7 @@ public class DataSheetFactory implements CacheableFactory {
 
         List<Column> columns;
         Row row;
-        Map<String, ItemValue> itemValuesMap;
+        ItemValueMap itemValuesMap;
         ItemValue itemValue;
         Sheet sheet = null;
         ItemDefinition itemDefinition;

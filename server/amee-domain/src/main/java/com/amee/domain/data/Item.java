@@ -19,12 +19,14 @@
  */
 package com.amee.domain.data;
 
-import com.amee.domain.AMEEEntity;
 import com.amee.core.APIUtils;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.InternalValue;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.path.InternalValue;
 import com.amee.domain.path.Pathable;
-import com.amee.domain.profile.StartEndDate;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -90,26 +92,18 @@ public abstract class Item extends AMEEEntity implements Pathable {
         setItemDefinition(itemDefinition);
     }
 
+    @Transient
     public void addItemValue(ItemValue itemValue) {
-        getItemValues().add(itemValue);
+        itemValues.add(itemValue);
     }
 
-    public Map<String, ItemValue> getItemValuesMap() {
-        Map<String, ItemValue> itemValuesMap = new HashMap<String, ItemValue>();
+    @Transient
+    public ItemValueMap getItemValuesMap() {
+        ItemValueMap itemValuesMap = new ItemValueMap();
         for (ItemValue itemValue : getItemValues()) {
             itemValuesMap.put(itemValue.getDisplayPath(), itemValue);
         }
         return itemValuesMap;
-    }
-
-    public String getItemValuesString() {
-        StringBuilder builder = new StringBuilder();
-        List<ItemValue> itemValues = getItemValues();
-        builder.append(itemValues.get(0).getDisplayPath() + "=" + itemValues.get(0).getValue());
-        for (int i = 1; i < itemValues.size(); i++) {
-            builder.append(", " + itemValues.get(i).getDisplayPath() + "=" + itemValues.get(i).getValue());
-        }
-        return builder.toString();
     }
 
     @Transient
@@ -136,50 +130,59 @@ public abstract class Item extends AMEEEntity implements Pathable {
         setModified(Calendar.getInstance().getTime());
     }
 
+    @Transient
     public Environment getEnvironment() {
         return environment;
     }
 
+    @Transient
     public void setEnvironment(Environment environment) {
         if (environment != null) {
             this.environment = environment;
         }
     }
 
+    @Transient
     public ItemDefinition getItemDefinition() {
         return itemDefinition;
     }
 
+    @Transient
     public void setItemDefinition(ItemDefinition itemDefinition) {
         if (itemDefinition != null) {
             this.itemDefinition = itemDefinition;
         }
     }
 
+    @Transient
     public DataCategory getDataCategory() {
         return dataCategory;
     }
 
+    @Transient
     public void setDataCategory(DataCategory dataCategory) {
         if (dataCategory != null) {
             this.dataCategory = dataCategory;
         }
     }
 
+    /**
+     * Get an unmodifiable List of {@link ItemValue} owned by this Item. For an historical sequence of {@link ItemValue}, only the
+     * latest in that sequence is returned.
+     *  
+     * @return - the List of {@link ItemValue}
+     */
+    @Transient
     public List<ItemValue> getItemValues() {
-        return itemValues;
+        return Collections.unmodifiableList(getActiveItemValues());
     }
 
-    public void setItemValues(List<ItemValue> itemValues) {
-        if (itemValues != null) {
-            this.itemValues = itemValues;
-        }
-    }
-
+    @Transient
     public String getName() {
         return name;
     }
 
+    @Transient
     public void setName(String name) {
         if (name == null) {
             name = "";
@@ -187,38 +190,63 @@ public abstract class Item extends AMEEEntity implements Pathable {
         this.name = name;
     }
 
+    @Transient
     public Date getCreated() {
         return created;
     }
 
+    @Transient
     public void setCreated(Date created) {
         this.created = created;
     }
 
+    @Transient
     public Date getModified() {
         return modified;
     }
 
+    @Transient
     public void setModified(Date modified) {
         this.modified = modified;
     }
 
+    /**
+     * Add the collection of {@link ItemValue} belonging to this Item to the passed vistor collection of
+     * {@link com.amee.domain.InternalValue}.
+     *
+     * @param values - the visitor collection of {@link com.amee.domain.InternalValue} to which to add this Item's values.
+     */
+    @Transient
     public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values) {
-        for (ItemValue iv : getItemValues()) {
-            if (iv.getUsableValue() != null) {
-                values.put(iv.getItemValueDefinition(), new InternalValue(iv));
+        ItemValueMap itemValueMap = getItemValuesMap(); 
+        for (Object path : itemValueMap.keySet()) {
+            Set<ItemValue> itemValues = itemValueMap.getAll((String) path);
+            if (itemValues.size() == 1) {
+                ItemValue iv = itemValueMap.get((String) path);
+                if (iv.isUsableValue()) {
+                    values.put(iv.getItemValueDefinition(), new InternalValue(iv));
+                }
+            } else if (itemValues.size() > 1) {
+                ItemValueDefinition ivd = itemValueMap.get((String) path).getItemValueDefinition();
+                @SuppressWarnings("unchecked")
+                // Add all ItemValues with usable values
+                Set<ItemValue> usableSet = (Set<ItemValue>) CollectionUtils.select(itemValues, new UsableValuePredicate());
+                values.put(ivd, new InternalValue(usableSet));
             }
         }
     }
 
+    @Transient
     public StartEndDate getStartDate() {
         return new StartEndDate(startDate);
     }
 
+    @Transient
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
+    @Transient
     public StartEndDate getEndDate() {
         if (endDate != null) {
             return new StartEndDate(endDate);
@@ -227,10 +255,12 @@ public abstract class Item extends AMEEEntity implements Pathable {
         }
     }
 
+    @Transient
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
+    @Transient
     public Duration getDuration() {
         if (endDate != null) {
             return new Duration(startDate.getTime(), endDate.getTime());
@@ -239,6 +269,7 @@ public abstract class Item extends AMEEEntity implements Pathable {
         }
     }
 
+    @Transient
     public String getDisplayPath() {
         if (getPath().length() > 0) {
             return getPath();
@@ -247,11 +278,44 @@ public abstract class Item extends AMEEEntity implements Pathable {
         }
     }
 
+    @Transient
     public String getDisplayName() {
         if (getName().length() > 0) {
             return getName();
         } else {
             return getDisplayPath();
         }
+    }
+
+    // Filter-out any ItemValue instances within an historical sequence of ItemValiues that are not the final entry in
+    // the given datetime range.
+    @Transient
+    @SuppressWarnings("unchecked")
+    private List<ItemValue> getActiveItemValues() {
+        return (List) CollectionUtils.select(itemValues, new Predicate() {
+            public boolean evaluate(Object o) {
+                ItemValue iv = (ItemValue) o;
+                StartEndDate startDate = iv.getStartDate();
+                String path = iv.getItemValueDefinition().getPath();
+                for (ItemValue itemValue : itemValues) {
+                    if (startDate.before(itemValue.getStartDate()) &&
+                        itemValue.getItemValueDefinition().getPath().equals(path)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        });
+    }
+}
+
+/**
+ * Basic Predicate testing {@link ItemValue} instances for usable values.
+ * {@see ItemValue#isUsableValue()}
+ */
+class UsableValuePredicate implements Predicate {
+    @Override
+    public boolean evaluate(Object o) {
+        return ((ItemValue) o).isUsableValue();
     }
 }

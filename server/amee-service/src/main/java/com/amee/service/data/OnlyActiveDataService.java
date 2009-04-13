@@ -2,7 +2,7 @@ package com.amee.service.data;
 
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
-import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.StartEndDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
@@ -39,6 +39,15 @@ public class OnlyActiveDataService extends DataService {
         this.delegatee = delegatee;
     }
 
+    /**
+     * Retreive only the active {@link com.amee.domain.data.DataItem} instances.
+     * Active in this scenario means the latest in any historical sequence within the given datetime range.
+     *
+     * @param dataCategory - the containing {@link com.amee.domain.data.DataCategory}
+     * @param startDate - the opening {@link com.amee.domain.StartEndDate} of the datatime range.
+     * @param endDate - the closing {@link com.amee.domain.StartEndDate} of the datatime range.
+     * @return the List of active {@link com.amee.domain.data.DataItem}
+     */
     public List<DataItem> getDataItems(final DataCategory dataCategory, final StartEndDate startDate, final StartEndDate endDate) {
         log.debug("getDataItems() start");
         final List<DataItem> dataItems = delegatee.getDataItems(dataCategory, startDate, endDate);
@@ -53,6 +62,7 @@ public class OnlyActiveDataService extends DataService {
         return requestedItems;
     }
 
+    // Generate a map of label->DataItems. The active DataItem is later retreived from each entry.
     private Map<String, Set<DataItem>> getLabelsToDataItems(List<DataItem> dataItems) {
         String label;
         Set<DataItem> dataItemSet;
@@ -69,6 +79,8 @@ public class OnlyActiveDataService extends DataService {
         return labelsToDataItems;
     }
 
+    // Filter-out any DataItem instances within an historical sequence of DataItems
+    // that are not the final entry in the given datetime range.
     @SuppressWarnings("unchecked")
     private List<DataItem> getActiveItems(final Set<DataItem> dataItems, final StartEndDate startDate) {
         return (List) CollectionUtils.select(dataItems, new Predicate() {

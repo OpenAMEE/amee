@@ -22,6 +22,7 @@ package com.amee.service.profile;
 import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
 import com.amee.domain.UidGen;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.*;
@@ -29,7 +30,6 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.event.ObservedEvent;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.StartEndDate;
 import com.amee.service.auth.AuthService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.transaction.TransactionController;
@@ -548,7 +548,7 @@ class ProfileServiceDAO implements Serializable {
                 String defaultValue = ivd.getValue();
                 // next give DataItem a chance to set the default value, if appropriate
                 if (ivd.isFromData()) {
-                    Map<String, ItemValue> dataItemValues = profileItem.getDataItem().getItemValuesMap();
+                    ItemValueMap dataItemValues = profileItem.getDataItem().getItemValuesMap();
                     ItemValue dataItemValue = dataItemValues.get(ivd.getPath());
                     if ((dataItemValue != null) && (dataItemValue.getValue().length() > 0)) {
                         defaultValue = dataItemValue.getValue();

@@ -1,5 +1,6 @@
-package com.amee.domain.profile;
+package com.amee.domain;
 
+import com.amee.domain.profile.GCDate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;

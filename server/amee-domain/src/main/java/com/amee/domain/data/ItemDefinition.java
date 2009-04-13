@@ -25,7 +25,7 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.path.InternalValue;
+import com.amee.domain.InternalValue;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

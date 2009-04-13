@@ -19,14 +19,13 @@
  */
 package com.amee.domain.data;
 
-import com.amee.domain.AMEEEntity;
-import com.amee.core.APIUtils;
-import com.amee.domain.Builder;
-import com.amee.core.DecimalPerUnit;
 import com.amee.core.*;
-import com.amee.core.DecimalUnit;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.Builder;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -45,8 +44,7 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemValue extends AMEEEntity implements Pathable {
 
-    // 32767 because this is bigger than 255, smaller
-    // than 65535 and fits into an exact number of bits
+    // 32767 because this is bigger than 255, smaller than 65535 and fits into an exact number of bits
     public final static int VALUE_SIZE = 32767;
     public final static int UNIT_SIZE = 255;
     public final static int PER_UNIT_SIZE = 255;
@@ -95,22 +93,29 @@ public class ItemValue extends AMEEEntity implements Pathable {
         setItem(item);
         setValue(value);
         item.addItemValue(this);
+        // Default startDate is that of the parent Item.
+        this.startDate = item.getStartDate();
     }
 
     public String toString() {
         return "ItemValue_" + getUid();
     }
 
+    @Transient
     public void setBuilder(Builder builder) {
         this.builder = builder;
     }
 
+    @Transient
     public String getUsableValue() {
-        String value = getValue();
-        if ((value != null) && value.isEmpty()) {
-            value = null;
-        }
-        return value;
+        if (!isUsableValue())
+            return null;
+
+        return getValue();
+    }
+
+    public boolean isUsableValue() {
+        return !StringUtils.isBlank(getValue());
     }
 
     @Transient
@@ -169,7 +174,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
 
     @Transient
     public String getDisplayPath() {
-        return getItemValueDefinition().getPath();
+        return getPath();
     }
 
     @PrePersist
@@ -184,26 +189,32 @@ public class ItemValue extends AMEEEntity implements Pathable {
         setModified(Calendar.getInstance().getTime());
     }
 
+    @Transient
     public ItemValueDefinition getItemValueDefinition() {
         return itemValueDefinition;
     }
 
+    @Transient
     public void setItemValueDefinition(ItemValueDefinition itemValueDefinition) {
         this.itemValueDefinition = itemValueDefinition;
     }
 
+    @Transient
     public Item getItem() {
         return item;
     }
 
+    @Transient
     public void setItem(Item item) {
         this.item = item;
     }
 
+    @Transient
     public String getValue() {
         return value;
     }
 
+    @Transient
     public void setValue(String value) {
         if (value == null) {
             value = "";
@@ -214,20 +225,48 @@ public class ItemValue extends AMEEEntity implements Pathable {
         this.value = value;
     }
 
+    @Transient
     public Date getCreated() {
         return created;
     }
 
+    @Transient
     public void setCreated(Date created) {
         this.created = created;
     }
 
+    @Transient
     public Date getModified() {
         return modified;
     }
 
+    @Transient
     public void setModified(Date modified) {
         this.modified = modified;
+    }
+
+    @Transient
+    public StartEndDate getStartDate() {
+        return new StartEndDate(startDate);
+    }
+
+    @Transient
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    @Transient
+    public StartEndDate getEndDate() {
+        if (endDate != null) {
+            return new StartEndDate(endDate);
+        } else {
+            return null;
+        }
+    }
+
+    @Transient
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     @Transient
@@ -235,10 +274,12 @@ public class ItemValue extends AMEEEntity implements Pathable {
         return ObjectType.IV;
     }
 
+    @Transient
     public DecimalUnit getUnit() {
         return (unit != null) ? DecimalUnit.valueOf(unit) : itemValueDefinition.getUnit();
     }
 
+    @Transient
     public void setUnit(String unit) throws IllegalArgumentException {
         if (!itemValueDefinition.isValidUnit(unit)) {
             throw new IllegalArgumentException();
@@ -246,6 +287,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
         this.unit = unit;
     }
 
+    @Transient
     public DecimalPerUnit getPerUnit() {
         if (perUnit != null) {
             if (perUnit.equals("none")) {
@@ -258,6 +300,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
         }
     }
 
+    @Transient
     public void setPerUnit(String perUnit) throws IllegalArgumentException {
         if (!itemValueDefinition.isValidPerUnit(perUnit)) {
             throw new IllegalArgumentException();
@@ -265,6 +308,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
         this.perUnit = perUnit;
     }
 
+    @Transient
     public DecimalCompoundUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
@@ -283,10 +327,11 @@ public class ItemValue extends AMEEEntity implements Pathable {
 
     public boolean isNonZero() {
         return getItemValueDefinition().isDecimal() &&
-                getUsableValue() != null &&
+                !StringUtils.isBlank(getValue()) &&
                 !new BigDecimal(getValue()).equals(BigDecimal.ZERO);
     }
 
+    @Transient
     public ItemValue getCopy() {
         ItemValue clone = new ItemValue();
         clone.setUid(getUid());

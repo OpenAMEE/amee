@@ -44,7 +44,6 @@ import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * TODO: Clear caches after entity removal.
@@ -296,7 +295,7 @@ class DataServiceDAO implements Serializable {
                 String defaultValue = ivd.getValue();
                 // next give DataItem a chance to set the default value, if appropriate
                 if (ivd.isFromData()) {
-                    Map<String, ItemValue> dataItemValues = dataItem.getItemValuesMap();
+                    ItemValueMap dataItemValues = dataItem.getItemValuesMap();
                     ItemValue dataItemValue = dataItemValues.get(ivd.getPath());
                     if ((dataItemValue != null) && (dataItemValue.getValue().length() > 0)) {
                         defaultValue = dataItemValue.getValue();

@@ -156,7 +156,7 @@ def migrate_amount
 
     # TODO - Get a count of rows to be updated
     # TODO - THE DATE CLAUSE SHOULD BE REMOVED FOR LIVE RELEASE
-    #item_query = "select id, amount from ITEM where modified < DATE('2009-03-23 05:56:23') and type = 'PI'"
+    #item_query = "select id, amount from ITEM where modified < DATE('2009-03-23 05:56:23') and type = 'PI' and amount != 0.0"
     item_query = "select id, amount from ITEM where type = 'PI' and amount != 0.0"
     rs = stmt.execute_query(item_query)
     #puts "Running - #{item_query}"
@@ -189,6 +189,7 @@ def migrate_amount
         single_flight_count = single_flight_count + 1
       
       else
+        # NOT NEEDED
         if (amount != "0.000")
           new_amount = Core::Decimal.new(amount).mulitply(twelve)
           out.puts "perTime,#{id},#{amount},#{new_amount.getValue()}"

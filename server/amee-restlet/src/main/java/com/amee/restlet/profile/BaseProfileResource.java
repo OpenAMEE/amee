@@ -4,7 +4,7 @@ import com.amee.domain.Pager;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.StartEndDate;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataService;
@@ -15,7 +15,6 @@ import org.restlet.Context;
 import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Set;

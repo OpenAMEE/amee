@@ -20,13 +20,13 @@
 package com.amee.calculation.service;
 
 import com.amee.domain.APIVersion;
+import com.amee.domain.InternalValue;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.core.CO2Amount;
 import com.amee.core.Decimal;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.path.InternalValue;
 import com.amee.domain.profile.CO2CalculationService;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choices;

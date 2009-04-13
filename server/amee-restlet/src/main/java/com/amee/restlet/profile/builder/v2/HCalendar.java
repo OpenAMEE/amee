@@ -1,6 +1,6 @@
 package com.amee.restlet.profile.builder.v2;
 
-import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.StartEndDate;
 
 /**
  * This file is part of AMEE.
