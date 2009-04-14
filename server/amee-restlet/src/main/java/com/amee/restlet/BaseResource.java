@@ -41,15 +41,27 @@ public abstract class BaseResource extends Resource {
 
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        List<Variant> variants = super.getVariants();
+        initialise(context, request, response);
+        setAvailable(isValid());
+    }
+
+    public void initialise(Context context, Request request, Response response) {
+        List<Variant> varients = super.getVariants();
         if (isStandardWebBrowser()) {
-            variants.add(new Variant(MediaType.TEXT_HTML));
+            varients.add(new Variant(MediaType.TEXT_HTML));
         } else {
-            variants.add(new Variant(MediaType.APPLICATION_XML));
-            variants.add(new Variant(MediaType.APPLICATION_JSON));
+            varients.add(new Variant(MediaType.APPLICATION_XML));
+            varients.add(new Variant(MediaType.APPLICATION_JSON));
         }
     }
 
+    /**
+     * Determine if this resource is valid. All subsequent resource activity will assume that this validity
+     * check has passed (returned true). Resources should check for existence of objects/entities required
+     * for the resource and for consistency of these objects (hierarchy, for example).
+     *
+     * @return true if this resource is valid
+     */
     public boolean isValid() {
         return true;
     }

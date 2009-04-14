@@ -15,7 +15,6 @@ import org.restlet.Context;
 import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Set;
@@ -45,9 +44,16 @@ public abstract class BaseProfileResource extends AMEEResource {
     protected ProfileItem profileItem;
     protected Collection<Long> profileDataCategoryIds;
 
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         this.profileBrowser = (ProfileBrowser) beanFactory.getBean("profileBrowser");
+    }
+
+    @Override
+    public boolean isValid() {
+        return super.isValid() &&
+                (getProfile() != null) &&
+                getProfile().getEnvironment().equals(environment);
     }
 
     public Pager getPager() {

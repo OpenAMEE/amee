@@ -56,11 +56,10 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
     private DefinitionBrowser definitionBrowser;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setValueDefinitionUid(request.getAttributes().get("valueDefinitionUid").toString());
-        setAvailable(isValid());
     }
 
     @Override

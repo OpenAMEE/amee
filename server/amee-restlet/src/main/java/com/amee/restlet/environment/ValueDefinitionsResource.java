@@ -64,12 +64,11 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
     private ValueDefinition newValueDefinition;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         environment = EnvironmentService.getEnvironment();
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
-        setAvailable(isValid());
     }
 
     @Override

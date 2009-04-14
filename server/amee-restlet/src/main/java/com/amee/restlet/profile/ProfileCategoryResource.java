@@ -19,7 +19,6 @@
  */
 package com.amee.restlet.profile;
 
-import com.amee.core.ObjectType;
 import com.amee.domain.core.CO2AmountUnit;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.acceptor.ProfileCategoryAtomAcceptor;
@@ -72,22 +71,19 @@ public class ProfileCategoryResource extends BaseProfileResource {
     private boolean recurse = false;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         setDataCategory(request.getAttributes().get("categoryUid").toString());
         setPage(request);
         setBuilderStrategy();
         recurse = request.getResourceRef().getQueryAsForm().getFirstValue("recurse", "false").equals("true");
-        setAvailable(isValid());
-    }
-
-    private void setBuilderStrategy() {
-        builder = builderFactory.createProfileCategoryResourceBuilder(this);
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (getDataCategory() != null) && (pathItem.getObjectType().equals(ObjectType.DC));
+        return super.isValid() &&
+                (getDataCategory() != null) &&
+                getDataCategory().getEnvironment().equals(environment);
     }
 
     @Override
@@ -223,6 +219,10 @@ public class ProfileCategoryResource extends BaseProfileResource {
 
     public List<ProfileItem> getProfileItems() {
         return profileItems;
+    }
+
+    private void setBuilderStrategy() {
+        builder = builderFactory.createProfileCategoryResourceBuilder(this);
     }
 
     public boolean isRecurse() {

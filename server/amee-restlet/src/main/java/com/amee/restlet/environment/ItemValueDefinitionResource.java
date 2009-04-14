@@ -61,12 +61,11 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     private DefinitionBrowser definitionBrowser;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
         definitionBrowser.setItemValueDefinitionUid(request.getAttributes().get("itemValueDefinitionUid").toString());
-        setAvailable(isValid());
     }
 
     @Override

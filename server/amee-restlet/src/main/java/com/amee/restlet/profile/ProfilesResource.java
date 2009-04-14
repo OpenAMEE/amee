@@ -67,12 +67,11 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     private Profile newProfile = null;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         user = AuthService.getUser();
         group = AuthService.getGroup();
         setPage(request);
-        setAvailable(isValid());
     }
 
     @Override

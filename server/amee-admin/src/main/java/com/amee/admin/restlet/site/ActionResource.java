@@ -31,11 +31,10 @@ public class ActionResource extends BaseResource {
     private AppBrowser appBrowser;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         appBrowser.setAppUid(request.getAttributes().get("appUid").toString());
         appBrowser.setActionUid(request.getAttributes().get("actionUid").toString());
-        setAvailable(isValid());
     }
 
     @Override

@@ -38,11 +38,10 @@ public class SitesResource extends BaseResource implements Serializable {
     private Site newSite;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
-        setAvailable(isValid());
     }
 
     @Override

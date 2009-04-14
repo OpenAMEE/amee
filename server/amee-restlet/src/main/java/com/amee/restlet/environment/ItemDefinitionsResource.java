@@ -25,7 +25,6 @@ import com.amee.domain.environment.Environment;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionServiceDAO;
-import com.amee.service.environment.EnvironmentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -62,11 +61,10 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     private ItemDefinition newItemDefinition;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
-        setAvailable(isValid());
     }
 
     @Override

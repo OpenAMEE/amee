@@ -44,15 +44,14 @@ public class CacheResource extends BaseResource implements Serializable {
     private CacheSort cacheSort;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         Form form = request.getResourceRef().getQueryAsForm();
         cacheName = request.getAttributes().get("cacheName").toString();
         CacheManager cacheManager = (CacheManager) CacheHelper.getInstance().getInternal();
         cacheAdmin.setCache(cacheManager.getEhcache(cacheName));
         setPage(request);
         cacheSort = cacheAdmin.getCacheSort(request, response, form);
-        setAvailable(isValid());
     }
 
     @Override

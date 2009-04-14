@@ -36,10 +36,9 @@ public class EnvironmentsResource extends BaseResource implements Serializable {
     private Environment newEnvironment;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         setPage(request);
-        setAvailable(isValid());
     }
 
     @Override

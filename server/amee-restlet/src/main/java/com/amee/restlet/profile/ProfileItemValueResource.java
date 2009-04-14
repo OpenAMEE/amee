@@ -68,28 +68,24 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     private IProfileItemValueResourceBuilder builder;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         setDataCategory(request.getAttributes().get("categoryUid").toString());
         setProfileItem(request.getAttributes().get("itemUid").toString());
         setProfileItemValue(request.getAttributes().get("valuePath").toString());
-        setAvailable(isValid());
         setBuilderStrategy();
-    }
-
-    private void setProfileItemValue(String itemValuePath) {
-        if (itemValuePath.isEmpty()) return;
-        if (getProfileItem() == null) return;
-        this.itemValue = getProfileItem().getItemValuesMap().get(itemValuePath);
-    }
-
-    private void setBuilderStrategy() {
-        builder = builderFactory.createProfileItemValueResourceBuilder(this);
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (getProfileItem() != null) && (getProfileItemValue() != null);
+        return super.isValid() &&
+                (getProfileItemValue() != null) &&
+                (getProfileItem() != null) &&
+                (getDataCategory() != null) &&
+                getProfileItem().getDataCategory().equals(getDataCategory()) &&
+                getProfileItem().getProfile().equals(getProfile()) &&
+                getProfileItemValue().getItem().equals(getProfileItem()) &&
+                getProfileItemValue().getEnvironment().equals(environment);
     }
 
     @Override
@@ -156,5 +152,15 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
 
     public ItemValue getProfileItemValue() {
         return itemValue;
+    }
+
+    private void setProfileItemValue(String itemValuePath) {
+        if (itemValuePath.isEmpty()) return;
+        if (getProfileItem() == null) return;
+        this.itemValue = getProfileItem().getItemValuesMap().get(itemValuePath);
+    }
+
+    private void setBuilderStrategy() {
+        builder = builderFactory.createProfileItemValueResourceBuilder(this);
     }
 }

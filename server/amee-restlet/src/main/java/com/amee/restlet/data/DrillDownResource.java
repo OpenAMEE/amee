@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Set;
 
 // TODO - need to define actions for this resource
+
 // TODO - move to builder resource
 @Component
 @Scope("prototype")
@@ -58,15 +59,16 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
     private DrillDownService drillDownService;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         setDataCategory(request.getAttributes().get("categoryUid").toString());
-        setAvailable(isValid());
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (getDataCategory() != null);
+        return super.isValid() &&
+                (getDataCategory() != null) &&
+                getDataCategory().getEnvironment().equals(environment);
     }
 
     @Override

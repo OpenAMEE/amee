@@ -73,12 +73,11 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     AlgorithmTestWrapper algorithmTestWrapper = null;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
         definitionBrowser.setAlgorithmUid(request.getAttributes().get("algorithmUid").toString());
-        setAvailable(isValid());
     }
 
     @Override

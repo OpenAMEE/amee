@@ -80,8 +80,8 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     protected DataCategory dataCategory;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         initVariants();
         environment = (Environment) request.getAttributes().get("environment");
         pathItem = (PathItem) request.getAttributes().get("pathItem");

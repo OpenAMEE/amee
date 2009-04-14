@@ -51,11 +51,10 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     private ItemValue itemValue;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         setDataItem(request.getAttributes().get("itemPath").toString());
         setDataItemValue(request.getAttributes().get("valuePath").toString());
-        setAvailable(isValid());
     }
 
     private void setDataItemValue(String itemValuePath) {
@@ -70,7 +69,11 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (getDataItem() != null) && (getItemValue() != null);
+        return super.isValid() &&
+                (getDataItem() != null) &&
+                (getItemValue() != null) &&
+                getItemValue().getItem().equals(getDataItem()) &&
+                getItemValue().getEnvironment().equals(environment);
     }
 
     @Override

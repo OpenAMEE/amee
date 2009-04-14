@@ -53,13 +53,12 @@ public class UserUploadResource extends BaseResource implements Serializable {
     private FileItemFactory fileItemFactory;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         DiskFileItemFactory diskFileItemFactory = new DiskFileItemFactory();
         diskFileItemFactory.setSizeThreshold(SIZE_THRESHOLD);
         fileItemFactory = diskFileItemFactory;
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
-        setAvailable(isValid());
     }
 
     @Override

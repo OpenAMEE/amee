@@ -70,16 +70,17 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     private DataCategoryResourceBuilder builder;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         setDataCategory(request.getAttributes().get("categoryUid").toString());
         setPage(request);
-        setAvailable(isValid());
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (getDataCategory() != null);
+        return super.isValid() &&
+                (getDataCategory() != null) &&
+                getDataCategory().getEnvironment().equals(environment);
     }
 
     @Override
