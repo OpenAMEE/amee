@@ -82,6 +82,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         getItemValues().add(itemValue);
     }
 
+    @Transient
     public Map<String, ItemValue> getItemValuesMap() {
         Map<String, ItemValue> itemValuesMap = new HashMap<String, ItemValue>();
         for (ItemValue itemValue : getItemValues()) {
@@ -90,6 +91,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         return itemValuesMap;
     }
 
+    @Transient
     public String getItemValuesString() {
         StringBuilder builder = new StringBuilder();
         List<ItemValue> itemValues = getItemValues();
@@ -98,6 +100,15 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
             builder.append(", " + itemValues.get(i).getDisplayPath() + "=" + itemValues.get(i).getValue());
         }
         return builder.toString();
+    }
+
+    @Transient
+    public Set<ItemValueDefinition> getItemValueDefinitions() {
+        Set<ItemValueDefinition> itemValueDefinitions = new HashSet<ItemValueDefinition>();
+        for (ItemValue itemValue : getItemValues()) {
+            itemValueDefinitions.add(itemValue.getItemValueDefinition());
+        }
+        return itemValueDefinitions;
     }
 
     @Transient

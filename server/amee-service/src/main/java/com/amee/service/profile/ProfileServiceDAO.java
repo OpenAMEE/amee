@@ -309,18 +309,29 @@ class ProfileServiceDAO implements Serializable {
         return profiles;
     }
 
-    // TODO: Work out the implication of using native queries for deletes. Does the EntityManager get confused?
+    /**
+     * Removes a Profile along with associated ProfileItems and ItemValues.
+     *
+     * Native SQL is used to remove ItemValues as HQL cannot use joins in DELETEs. Care is
+     * taken to tell Hibernate to only invalidate the ItemValue cache (via the
+     * SQLQuery.addSynchronizedEntityClass method call).
+     *
+     * @param profile to remove
+     */
     public void remove(Profile profile) {
         log.debug("remove: " + profile.getUid());
         // delete all ItemValues for ProfileItems within this Profile
-        entityManager.createNativeQuery(
-                "DELETE iv " +
-                        "FROM ITEM_VALUE iv, ITEM i " +
-                        "WHERE iv.ITEM_ID = i.ID " +
-                        "AND i.TYPE = 'PI' " +
-                        "AND i.PROFILE_ID = :profileId")
-                .setParameter("profileId", profile.getId())
-                .executeUpdate();
+        Session session = (Session) entityManager.getDelegate();
+        SQLQuery query = session.createSQLQuery(
+                new StringBuilder()
+                        .append("DELETE iv ")
+                        .append("FROM ITEM_VALUE iv, ITEM i ")
+                        .append("WHERE iv.ITEM_ID = i.ID ")
+                        .append("AND i.TYPE = 'PI' ")
+                        .append("AND i.PROFILE_ID = :profileId").toString());
+        query.setLong("profileId", profile.getId());
+        query.addSynchronizedEntityClass(ItemValue.class);
+        query.executeUpdate();
         // delete all ProfileItems within this Profile
         entityManager.createQuery(
                 new StringBuilder()
@@ -511,7 +522,7 @@ class ProfileServiceDAO implements Serializable {
      * This will be the case on first persist (this method acting as a reification function), and between GETs if any
      * new {@link com.amee.domain.data.ItemValueDefinition}s have been added to the underlying
      * {@link com.amee.domain.data.ItemDefinition}.
-     *
+     * <p/>
      * Any updates to the {@link com.amee.domain.profile.ProfileItem} will be persisted to the database.
      *
      * @param profileItem
@@ -520,30 +531,27 @@ class ProfileServiceDAO implements Serializable {
     @SuppressWarnings(value = "unchecked")
     public void checkProfileItem(ProfileItem profileItem, APIVersion apiVersion) {
 
-        // find ItemValueDefinitions not currently implemented in this Item
-        List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
-                "FROM ItemValueDefinition ivd " +
-                        "WHERE ivd NOT IN (" +
-                        "   SELECT iv.itemValueDefinition " +
-                        "   FROM ItemValue iv " +
-                        "   WHERE iv.item.id = :profileItemId) " +
-                        "AND ivd.fromProfile = :fromProfile " +
-                        "AND ivd.itemDefinition.id = :itemDefinitionId  " +
-                        "AND :apiVersion MEMBER OF ivd.apiVersions")
-                .setParameter("profileItemId", profileItem.getId())
-                .setParameter("itemDefinitionId", profileItem.getItemDefinition().getId())
-                .setParameter("apiVersion", apiVersion)
-                .setParameter("fromProfile", true)
-                .getResultList();
+        Set<ItemValueDefinition> existingItemValueDefinitions = profileItem.getItemValueDefinitions();
+        Set<ItemValueDefinition> missingItemValueDefinitions = new HashSet<ItemValueDefinition>();
 
-        if (itemValueDefinitions.size() > 0) {
+        // find ItemValueDefinitions not currently implemented in this Item
+        for (ItemValueDefinition ivd : profileItem.getItemDefinition().getItemValueDefinitions()) {
+            if (ivd.isFromProfile() && ivd.getAPIVersions().contains(apiVersion)) {
+                if (!existingItemValueDefinitions.contains(ivd)) {
+                    missingItemValueDefinitions.add(ivd);
+                }
+            }
+        }
+
+        // Do we need to add any ItemValueDefinitions?
+        if (missingItemValueDefinitions.size() > 0) {
 
             // Ensure a transaction has been opened. The implementation of open-session-in-view we are using
             // does not open transactions for GETs. This method is called for certain GETs.
             transactionController.begin(true);
 
             // create missing ItemValues
-            for (ItemValueDefinition ivd : itemValueDefinitions) {
+            for (ItemValueDefinition ivd : missingItemValueDefinitions) {
                 // start default value with value from ItemValueDefinition
                 String defaultValue = ivd.getValue();
                 // next give DataItem a chance to set the default value, if appropriate

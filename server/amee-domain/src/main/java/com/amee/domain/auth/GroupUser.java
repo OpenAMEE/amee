@@ -11,7 +11,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +22,7 @@ import java.util.Set;
 @Entity
 @Table(name = "GROUP_USER")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class GroupUser extends AMEEEnvironmentEntity implements Comparable, Serializable {
+public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "GROUP_ID")

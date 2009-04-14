@@ -138,17 +138,17 @@ public class CachesResource extends BaseResource implements Serializable {
                 new Cell(hits, row, "" + statistics.getCacheHits(), ValueType.INTEGER);
                 new Cell(misses, row, "" + statistics.getCacheMisses(), ValueType.INTEGER);
                 new Cell(objectCount, row, "" + statistics.getObjectCount(), ValueType.INTEGER);
-                new Cell(timeToIdleSeconds, row, "" + cache.getTimeToIdleSeconds(), ValueType.INTEGER);
-                new Cell(timeToLiveSeconds, row, "" + cache.getTimeToLiveSeconds(), ValueType.INTEGER);
+                // new Cell(timeToIdleSeconds, row, "" + cache.getTimeToIdleSeconds(), ValueType.INTEGER);
+                // new Cell(timeToLiveSeconds, row, "" + cache.getTimeToLiveSeconds(), ValueType.INTEGER);
                 new Cell(accuracy, row, "" + statistics.getStatisticsAccuracy(), ValueType.INTEGER);
                 new Cell(inMemoryHits, row, "" + statistics.getInMemoryHits(), ValueType.INTEGER);
                 new Cell(memoryStoreSize, row, "" + cache.getMemoryStoreSize(), ValueType.INTEGER);
-                new Cell(maxElementsInMemory, row, "" + cache.getMaxElementsInMemory(), ValueType.INTEGER);
-                new Cell(memoryStoreEvictionPolicy, row, cache.getMemoryStoreEvictionPolicy().toString(), ValueType.INTEGER);
+                // new Cell(maxElementsInMemory, row, "" + cache.getMaxElementsInMemory(), ValueType.INTEGER);
+                // new Cell(memoryStoreEvictionPolicy, row, cache.getMemoryStoreEvictionPolicy().toString(), ValueType.INTEGER);
                 new Cell(onDiskHits, row, "" + statistics.getOnDiskHits(), ValueType.INTEGER);
                 new Cell(diskStoreSize, row, "" + cache.getDiskStoreSize(), ValueType.INTEGER);
-                new Cell(maxElementsOnDisk, row, "" + cache.getMaxElementsOnDisk(), ValueType.INTEGER);
-                new Cell(diskExpiryThreadIntervalSeconds, row, "" + cache.getDiskExpiryThreadIntervalSeconds(), ValueType.INTEGER);
+                // new Cell(maxElementsOnDisk, row, "" + cache.getMaxElementsOnDisk(), ValueType.INTEGER);
+                // new Cell(diskExpiryThreadIntervalSeconds, row, "" + cache.getDiskExpiryThreadIntervalSeconds(), ValueType.INTEGER);
             }
         }
         sheet.addSortBy(cs.getSortBy());

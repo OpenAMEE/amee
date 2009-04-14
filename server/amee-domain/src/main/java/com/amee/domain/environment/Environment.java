@@ -13,12 +13,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "ENVIRONMENT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Environment extends AMEEEntity implements Comparable, Serializable {
+public class Environment extends AMEEEntity implements Comparable {
 
     public final static int NAME_SIZE = 255;
     public final static int PATH_SIZE = 255;

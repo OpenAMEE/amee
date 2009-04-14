@@ -16,11 +16,9 @@ public class CacheHelper implements Serializable {
     private final Log log = LogFactory.getLog(getClass());
 
     private static CacheHelper instance = new CacheHelper();
-    private CacheManager cacheManager;
 
     private CacheHelper() {
         super();
-        cacheManager = CacheManager.getInstance();
     }
 
     public static CacheHelper getInstance() {
@@ -28,21 +26,26 @@ public class CacheHelper implements Serializable {
     }
 
     public Object getInternal() {
-        return cacheManager;
+        return CacheManager.getInstance();
+    }
+
+    public CacheManager getCacheManager() {
+        return CacheManager.getInstance();
     }
 
     public BlockingCache getBlockingCache(String cacheName) {
-        Ehcache cache = getCacheManager().getEhcache(cacheName);
+        CacheManager cacheManager = getCacheManager();
+        Ehcache cache = cacheManager.getEhcache(cacheName);
         if ((cache != null) && !(cache instanceof BlockingCache)) {
             synchronized (this) {
-                cache = getCacheManager().getEhcache(cacheName);
+                cache = cacheManager.getEhcache(cacheName);
                 if ((cache != null) && !(cache instanceof BlockingCache)) {
                     BlockingCache newBlockingCache = new BlockingCache(cache);
-                    getCacheManager().replaceCacheWithDecoratedCache(cache, newBlockingCache);
+                    cacheManager.replaceCacheWithDecoratedCache(cache, newBlockingCache);
                 }
             }
         }
-        return (BlockingCache) getCacheManager().getEhcache(cacheName);
+        return (BlockingCache) cacheManager.getEhcache(cacheName);
     }
 
     public Object getCacheable(CacheableFactory factory) {
@@ -84,17 +87,17 @@ public class CacheHelper implements Serializable {
     }
 
     public void clearCache(String cacheName, String elementKeyPrefix) {
-       BlockingCache cache = getBlockingCache(cacheName);
-       if (cache != null) {
-           log.debug("cache: " + cacheName + " elementKeyPrefix: " + elementKeyPrefix);
-           for (Object o : cache.getKeys()) {
-               String elementKey = (String) o;
-               if (elementKey.startsWith(elementKeyPrefix)) {
-                   log.debug("removing: " + elementKey);
-                   cache.remove(elementKey);
-               }
-               }
-       }
+        BlockingCache cache = getBlockingCache(cacheName);
+        if (cache != null) {
+            log.debug("cache: " + cacheName + " elementKeyPrefix: " + elementKeyPrefix);
+            for (Object o : cache.getKeys()) {
+                String elementKey = (String) o;
+                if (elementKey.startsWith(elementKeyPrefix)) {
+                    log.debug("removing: " + elementKey);
+                    cache.remove(elementKey);
+                }
+            }
+        }
     }
 
     public void clearCache(String cacheName) {
@@ -120,10 +123,6 @@ public class CacheHelper implements Serializable {
             log.debug("remove() - cache: " + cacheName + " key: " + key);
             cache.remove(key);
         }
-    }
-
-    public CacheManager getCacheManager() {
-        return cacheManager;
     }
 
     public void add(String cacheName, String scope, String key, Object o) {

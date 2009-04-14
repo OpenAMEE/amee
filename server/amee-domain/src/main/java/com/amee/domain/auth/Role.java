@@ -13,7 +13,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,7 +30,7 @@ import java.util.Set;
 @Entity
 @Table(name = "ROLE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Role extends AMEEEnvironmentEntity implements Comparable, Serializable {
+public class Role extends AMEEEnvironmentEntity implements Comparable {
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;

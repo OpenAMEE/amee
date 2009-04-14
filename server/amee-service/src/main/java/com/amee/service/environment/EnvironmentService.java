@@ -5,7 +5,6 @@ import com.amee.domain.Pager;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.event.ObserveEventService;
 import com.amee.domain.event.ObservedEvent;
-import com.amee.domain.site.Site;
 import com.amee.service.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,7 +34,7 @@ public class EnvironmentService implements Serializable {
 
     @ServiceActivator(inputChannel = "beforeSiteDelete")
     public void beforeSiteDelete(ObservedEvent oe) {
-        log.debug("beforeSiteDelete" + (Site) oe.getPayload());
+        log.debug("beforeSiteDelete" + oe.getPayload());
     }
 
     // Environments

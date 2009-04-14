@@ -26,8 +26,12 @@ import org.springframework.stereotype.Service;
 @Service("ameeStatistics")
 public class AMEEStatistics {
 
+    // Profile Items
     private long profileItemCreateCount;
     private long profileItemUpdateCount;
+
+    // Errors
+    private long errorCount;
 
     public void createProfileItem() {
         profileItemCreateCount++;
@@ -43,5 +47,15 @@ public class AMEEStatistics {
 
     public long getProfileItemUpdateCount() {
         return profileItemUpdateCount;
+    }
+
+    // Errors
+
+    public void error() {
+        errorCount++;
+    }
+
+    public long getErrorCount() {
+        return errorCount;
     }
 }

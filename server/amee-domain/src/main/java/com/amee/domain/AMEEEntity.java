@@ -24,11 +24,12 @@ package com.amee.domain;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
 @MappedSuperclass
-public abstract class AMEEEntity implements DatedObject {
+public abstract class AMEEEntity implements DatedObject, Serializable {
 
     public final static int UID_SIZE = 12;
 

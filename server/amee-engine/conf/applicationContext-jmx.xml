@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+    <!-- MBeanServerFactoryBean -->
+    <bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean">
+        <property name="locateExistingServerIfPossible" value="true"/>
+    </bean>
+
+    <!-- MBeanExporter -->
+    <bean class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+        <property name="autodetect" value="false"/>
+        <property name="beans">
+            <map>
+                <entry key="org.hibernate:name=statistics" value-ref="hibernateStatisticsService"/>
+                <entry key="com.amee:name=statistics" value-ref="ameeStatistics"/>
+            </map>
+        </property>
+    </bean>
+
+    <!-- Hibernate Statistics -->
+    <bean id="sessionFactory" class="org.springframework.beans.factory.config.PropertyPathFactoryBean">
+        <property name="targetBeanName" value="entityManagerFactory"/>
+        <property name="propertyPath" value="nativeEntityManagerFactory.sessionFactory"/>
+    </bean>
+    <bean id="hibernateStatisticsService" class="org.hibernate.jmx.StatisticsService">
+        <property name="statisticsEnabled" value="true"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- EHCache MBeans -->
+    <bean id="ehCacheMBeanRegistration" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="net.sf.ehcache.management.ManagementService.registerMBeans"/>
+        <property name="arguments">
+            <list>
+                <ref bean="cacheManager"/>
+                <ref bean="mbeanServer"/>
+                <value>true</value>
+                <value>true</value>
+                <value>true</value>
+                <value>true</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>

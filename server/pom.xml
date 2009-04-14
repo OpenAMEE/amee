@@ -20,6 +20,8 @@
       <joda-time.version>1.6</joda-time.version>
       <hibernate-core.version>3.3.0.SP1</hibernate-core.version>
       <hibernate-entitymanager.version>3.4.0.GA</hibernate-entitymanager.version>
+      <jetty.version>6.1.9</jetty.version>
+      <ehcache.version>1.6.0-beta4</ehcache.version>
   </properties>
 
   <!-- AMEE Modules. -->

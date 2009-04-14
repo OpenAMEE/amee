@@ -13,7 +13,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Permission.
@@ -23,7 +22,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "PERMISSION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Permission extends AMEEEnvironmentEntity implements Comparable, Serializable {
+public class Permission extends AMEEEnvironmentEntity implements Comparable {
 
     public final static int OBJECT_CLASS_SIZE = 255;
     public final static int OBJECT_UID_SIZE = 12;

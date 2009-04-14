@@ -40,6 +40,12 @@
         </property>
     </bean>
 
+    <!-- EHCache -->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+        <property name="shared" value="true"/>
+    </bean>
+
     <!-- DataSource, em/tx configuration -->
     <!-- See: http://commons.apache.org/dbcp/configuration.html -->
     <!-- See: http://dev.mysql.com/doc/refman/5.1/en/connector-j-reference-configuration-properties.html -->
@@ -78,26 +84,6 @@
         <property name="jpaDialect" ref="jpaDialect"/>
     </bean>
     <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
-
-    <!-- JMX -->
-    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
-        <property name="autodetect" value="false"/>
-        <property name="beans">
-            <map>
-                <entry key="org.hibernate:name=statistics">
-                    <bean class="org.hibernate.jmx.StatisticsService">
-                        <property name="statisticsEnabled" value="true"/>
-                        <property name="sessionFactory" ref="sessionFactory"/>
-                    </bean>
-                </entry>
-                <entry key="amee:name=statistics" value-ref="ameeStatistics"/>
-            </map>
-        </property>
-    </bean>
-    <bean id="sessionFactory" class="org.springframework.beans.factory.config.PropertyPathFactoryBean">
-        <property name="targetBeanName" value="entityManagerFactory"/>
-        <property name="propertyPath" value="nativeEntityManagerFactory.sessionFactory"/>
-    </bean>
 
     <!-- Event/messaging beans -->
     <springIntegration:annotation-config/>

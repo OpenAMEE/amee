@@ -44,9 +44,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * TODO: Clear caches after entity removal.
@@ -345,30 +343,43 @@ class DataServiceDAO implements Serializable {
         entityManager.remove(dataItem);
     }
 
+    /**
+     * Add to the {@link com.amee.domain.data.DataItem} any {@link com.amee.domain.data.ItemValue}s it is missing.
+     * This will be the case on first persist (this method acting as a reification function), and between GETs if any
+     * new {@link com.amee.domain.data.ItemValueDefinition}s have been added to the underlying
+     * {@link com.amee.domain.data.ItemDefinition}.
+     * <p/>
+     * Any updates to the {@link com.amee.domain.data.DataItem} will be persisted to the database.
+     *
+     * @param dataItem
+     */
     @SuppressWarnings(value = "unchecked")
     public void checkDataItem(DataItem dataItem) {
+
+        Set<ItemValueDefinition> existingItemValueDefinitions = dataItem.getItemValueDefinitions();
+        Set<ItemValueDefinition> missingItemValueDefinitions = new HashSet<ItemValueDefinition>();
+
         // find ItemValueDefinitions not currently implemented in this Item
-        List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
-                "FROM ItemValueDefinition ivd " +
-                        "WHERE ivd NOT IN (" +
-                        "   SELECT iv.itemValueDefinition " +
-                        "   FROM ItemValue iv " +
-                        "   WHERE iv.item.id = :dataItemId) " +
-                        "AND ivd.fromData = :fromData " +
-                        "AND ivd.itemDefinition.id = :itemDefinitionId")
-                .setParameter("dataItemId", dataItem.getId())
-                .setParameter("itemDefinitionId", dataItem.getItemDefinition().getId())
-                .setParameter("fromData", true)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getResultList();
-        if (itemValueDefinitions.size() > 0) {
-            // explicitly start a transaction
+        for (ItemValueDefinition ivd : dataItem.getItemDefinition().getItemValueDefinitions()) {
+            if (ivd.isFromData()) {
+                if (!existingItemValueDefinitions.contains(ivd)) {
+                    missingItemValueDefinitions.add(ivd);
+                }
+            }
+        }
+
+        // Do we need to add any ItemValueDefinitions?
+        if (missingItemValueDefinitions.size() > 0) {
+
+            // Ensure a transaction has been opened. The implementation of open-session-in-view we are using
+            // does not open transactions for GETs. This method is called for certain GETs.
             transactionController.begin(true);
+
             // create missing ItemValues
-            for (ItemValueDefinition ivd : itemValueDefinitions) {
+            for (ItemValueDefinition ivd : missingItemValueDefinitions) {
                 entityManager.persist(new ItemValue(ivd, dataItem, ""));
             }
+
             // clear caches
             drillDownService.clearDrillDownCache();
             pathItemService.removePathItemGroup(dataItem.getEnvironment());

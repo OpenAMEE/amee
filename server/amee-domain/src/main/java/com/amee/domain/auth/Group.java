@@ -15,7 +15,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.io.Serializable;
 
 /**
  * A Group embodies a community of Users. Users belong to Groups via GroupUser and can be assigned multiple Roles
@@ -31,7 +30,7 @@ import java.io.Serializable;
 // can't use 'GROUP' as that is a resevered word in SQL
 @Table(name = "GROUPS")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Group extends AMEEEnvironmentEntity implements Comparable, Serializable {
+public class Group extends AMEEEnvironmentEntity implements Comparable {
 
     public final static int NAME_SIZE = 100;
     public final static int DESCRIPTION_SIZE = 1000;
