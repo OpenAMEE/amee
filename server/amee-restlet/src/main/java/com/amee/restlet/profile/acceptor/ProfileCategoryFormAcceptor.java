@@ -3,7 +3,7 @@ package com.amee.restlet.profile.acceptor;
 import com.amee.calculation.service.CalculationService;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.CO2AmountUnit;
+import com.amee.domain.core.CO2AmountUnit;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.profile.ValidFromDate;
@@ -125,6 +125,10 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             String unit = form.getFirstValue("returnUnit");
             String perUnit = form.getFirstValue("returnPerUnit");
             resource.getProfileBrowser().setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
+
+            // Clients can explicitly specify the return representation in API > 1.0. The default behaviour for POSTS and PUTS
+            // is not to return a representation
+            resource.setRepresentationRequested(form.getFirstValue("representation", "none"));
 
             profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
             if (form.getNames().contains("endDate") && form.getFirstValue("endDate") != null) {

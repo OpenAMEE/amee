@@ -10,6 +10,7 @@ import com.amee.service.ThreadBeanHolder;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.profile.ProfileService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.xerces.dom.DocumentImpl;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +56,16 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     protected Environment environment;
     protected PathItem pathItem;
     protected DataCategory dataCategory;
+
+    // Allowed values for the request parameter "representation".
+    // The "representation" parameter specifies whether or not a representation is required in the response
+    // to a POST or PUT and, if a representation is requested, the level of detail required.
+    public static final String REPRESENTATION_NONE = "none";
+    public static final String REPRESENTATION_FULL = "full";
+    protected String representationRequested = REPRESENTATION_NONE;
+
+    // Batch POST flag
+    private boolean isBatchPost;
 
     @Autowired
     protected ProfileService profileService;
@@ -160,7 +171,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         // flag to ensure we only do the fetching work once
         final ThreadLocal<Boolean> fetched = new ThreadLocal<Boolean>();
 
-        // No need to use JsonRepresentation directly as it doesn't add much beyond StringRepresentation
+        // No need to use JsonRepresentation directly as it doesn't addItemValue much beyond StringRepresentation
         return new StringRepresentation(null, MediaType.APPLICATION_JSON) {
 
             @Override
@@ -251,8 +262,8 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
             getResponse().setLocationRef(uri);
         } else {
             // Return a representation when the following conditions apply:
-            //  (i) API V1.X (backwards compatibility)
-            //  (ii) if the client has specifically requested a representation
+            //  (i)   API V1.X (backwards compatibility)
+            //  (ii)  if the client has specifically requested a representation
             if (getAPIVersion().isVersionOne() || isRepresentationRequested()) {
                 super.handleGet();
             } else {
@@ -302,18 +313,43 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
             // Return a representation when the following conditions apply:
             //  (i) API V1.X (backwards compatibility)
             //  (ii) if the client has specifically requested a representation
-            if (getAPIVersion().isVersionOne() || isRepresentationRequested()) {
+            //  (iii) if the request is a batch POST
+            if (getAPIVersion().isVersionOne() || isRepresentationRequested() || isBatchPost()) {
                 super.handleGet();
             } else {
-                // For POSTs in API versions >V1.X set the Location and 201 Created headers.
+                // For single POSTs in API versions >V1.X set the Location and 201 Created header.
                 getResponse().setLocationRef(parentUri + "/" + uid);
                 getResponse().setStatus(Status.SUCCESS_CREATED);
             }
         }
     }
 
-    // True if the client has explicitly requested a representation to be returned following a POST or PUT request
-    private boolean isRepresentationRequested() {
-       return getForm().getFirstValue("representation", "none").equals("full");
+    /**
+     * 
+     * @return true if the request specifies that a representation should be returned following a POST or PUT request
+     */
+    public boolean isRepresentationRequested() {
+       return isFullRepresentationRequested();
     }
+
+    public void setRepresentationRequested(String representationRequested) {
+        this.representationRequested = representationRequested;
+    }
+
+    /**
+     *
+     * @return true if the request specifies that the full representation should be returned following a POST or PUT request
+     */
+    public boolean isFullRepresentationRequested() {
+        return StringUtils.equals(representationRequested,REPRESENTATION_FULL);
+    }
+
+    public boolean isBatchPost() {
+        return isBatchPost;
+    }
+
+    public void setIsBatchPost(boolean isBatchPost) {
+        this.isBatchPost = isBatchPost;
+    }
+
 }

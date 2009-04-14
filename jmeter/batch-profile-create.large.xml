@@ -4,82 +4,102 @@
     <ProfileItem>
       <dataItemUid>A70149AF0F26</dataItemUid>
       <kWhPerMonth>100.00</kWhPerMonth>
+      <name>1</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>66056991EE23</dataItemUid>
       <kWhPerMonth>100.00</kWhPerMonth>
+      <name>2</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>60C214C583E8</dataItemUid>
       <kWhPerMonth>100.00</kWhPerMonth>
+      <name>3</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>C3220A6DE793</dataItemUid>
       <kWhPerMonth>100.00</kWhPerMonth>
+      <name>4</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>B10138EEFD0F</dataItemUid>
       <kWhPerMonth>100.00</kWhPerMonth>
+      <name>5</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>7F0D7F6AE66D</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>6</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>9B1BDFE5E16D</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>7</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>69FDAF607932</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>8</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>313B3A8A50F8</dataItemUid>
       <litresPerMonth>100.00</litresPerMonth>
+      <name>9</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>6AE49B1F2E5B</dataItemUid>
       <litresPerMonth>100.00</litresPerMonth>
+      <name>10</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>DE3BC08D09EB</dataItemUid>
       <litresPerMonth>100.00</litresPerMonth>
+      <name>11</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>FCCE3D98F3EC</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>12</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>8E6C02D4C243</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>13</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>8F9C22FBAF5F</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>14</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>711F80D86CFD</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>15</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>EC0D8B936FF7</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>16</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>ADBB2E3B1C12</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>17</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>0A3F8229732C</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>18</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>8FAB69C2691D</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>19</name>
     </ProfileItem>
     <ProfileItem>
       <dataItemUid>FCDF14760309</dataItemUid>
       <distanceKmPerMonth>100.00</distanceKmPerMonth>
+      <name>20</name>
     </ProfileItem>
   </ProfileItems>
 </ProfileCategory>

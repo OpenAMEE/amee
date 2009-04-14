@@ -1,9 +1,6 @@
-set :stages, %w(development staging production)
+set :stages, %w(development staging production aws)
 set :default_stage, "development"
 set :stage_dir, "deploy"
-
-require 'capistrano/ext/multistage'
-require 'capistrano/ext/monitor'
 
 default_run_options[:pty] = true
 

@@ -125,7 +125,7 @@ public class Permission extends AMEEEntity implements EnvironmentObject, DatedOb
         userObj.put("uid", getUser().getUid());
         userObj.put("username", getUser().getUsername());
         obj.put("auth", userObj);
-        // TODO: add flags
+        // TODO: addItemValue flags
         return obj;
     }
 
@@ -150,7 +150,7 @@ public class Permission extends AMEEEntity implements EnvironmentObject, DatedOb
                 .appendChild(APIUtils.getElement(document, "Name", getGroup().getName())));
         element.appendChild(getUser().getIdentityElement(document)
                 .appendChild(APIUtils.getElement(document, "Username", getUser().getUsername())));
-        // TODO: add flags
+        // TODO: addItemValue flags
         return element;
     }
 

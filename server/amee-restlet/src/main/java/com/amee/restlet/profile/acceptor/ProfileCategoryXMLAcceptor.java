@@ -3,6 +3,7 @@ package com.amee.restlet.profile.acceptor;
 import com.amee.domain.APIUtils;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileCategoryResource;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
@@ -40,29 +41,54 @@ public class ProfileCategoryXMLAcceptor implements IProfileCategoryRepresentatio
 
     private final Log log = LogFactory.getLog(getClass());
 
+    // The default maximum size for batch ProfileItem POSTs.
+    private static int MAX_PROFILE_BATCH_SIZE = 50;
+
+    public ProfileCategoryXMLAcceptor() {
+        String maxProfileBatchSize = System.getProperty("amee.MAX_PROFILE_BATCH_SIZE");
+        if (StringUtils.isNumeric(maxProfileBatchSize)) {
+            MAX_PROFILE_BATCH_SIZE = Integer.parseInt(maxProfileBatchSize);   
+        }
+    }
+
     @Autowired
     ProfileCategoryFormAcceptor formAcceptor;
 
     public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
-        Element rootElem;
-        Element profileItemsElem;
-        Element profileItemElem;
-        Element profileItemValueElem;
-        Form form;
         if (entity.isAvailable()) {
             try {
-                rootElem = APIUtils.getRootElement(entity.getStream());
+                Element rootElem = APIUtils.getRootElement(entity.getStream());
                 if (rootElem.getName().equalsIgnoreCase("ProfileCategory")) {
-                    profileItemsElem = rootElem.element("ProfileItems");
+                    Element profileItemsElem = rootElem.element("ProfileItems");
+
                     if (profileItemsElem != null) {
-                        for (Object o1 : profileItemsElem.elements("ProfileItem")) {
-                            profileItemElem = (Element) o1;
-                            form = new Form();
+
+                        List elements = profileItemsElem.elements("ProfileItem");
+
+                        // AMEE 2.0 has a maximum allowed size for batch POSTs and PUTs. If this request execeeds that limit
+                        // do not process the request and return a 400 status
+                        if ((elements.size() > MAX_PROFILE_BATCH_SIZE) && (resource.getAPIVersion().isNotVersionOne())) {
+                            resource.badRequest();
+                            return profileItems;
+                        }
+
+                        // If the POST inputstream contains more than one entity it is considered a batch request.
+                        if (elements.size() > 1 && resource.isPost())
+                            resource.setIsBatchPost(true);
+
+                        for (Object o1 : elements) {
+                            Element profileItemElem = (Element) o1;
+                            Form form = new Form();
+
                             for (Object o2 : profileItemElem.elements()) {
-                                profileItemValueElem = (Element) o2;
+                                Element profileItemValueElem = (Element) o2;
                                 form.add(profileItemValueElem.getName(), profileItemValueElem.getText());
                             }
+
+                            // Representations to be returned for batch requests can be specified as a query parameter.
+                            form.add("representation", resource.getForm().getFirstValue("representation"));
+
                             List<ProfileItem> items = formAcceptor.accept(resource, form);
                             if (!items.isEmpty()) {
                                 profileItems.addAll(items);

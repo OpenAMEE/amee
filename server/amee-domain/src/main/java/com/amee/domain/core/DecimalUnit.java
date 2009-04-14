@@ -1,4 +1,4 @@
-package com.amee.domain;
+package com.amee.domain.core;
 
 import javax.measure.quantity.Power;
 import javax.measure.quantity.Quantity;
@@ -28,7 +28,7 @@ import java.text.ParsePosition;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class AMEEUnit {
+public class DecimalUnit {
 
     protected final static UnitFormat UNIT_FORMAT = UnitFormat.getInstance();
     public final static Unit<Power> KILOWATT = SI.WATT.times(1000);
@@ -44,19 +44,19 @@ public class AMEEUnit {
         UNIT_FORMAT.label(NonSI.OUNCE_LIQUID_US, "oz");
     }
 
-    public static final AMEEUnit ONE = new AMEEUnit(Unit.ONE);
+    public static final DecimalUnit ONE = new DecimalUnit(Unit.ONE);
     protected Unit unit = Unit.ONE;
 
-    public AMEEUnit(Unit unit) {
+    public DecimalUnit(Unit unit) {
         this.unit = unit;
     }
 
-    public static AMEEUnit valueOf(String unit) {
-        return new AMEEUnit(internalValueOf(unit));
+    public static DecimalUnit valueOf(String unit) {
+        return new DecimalUnit(internalValueOf(unit));
     }
 
-    public AMEECompoundUnit with(AMEEPerUnit perUnit) {
-        return AMEECompoundUnit.valueOf(this, perUnit);
+    public DecimalCompoundUnit with(DecimalPerUnit perUnit) {
+        return DecimalCompoundUnit.valueOf(this, perUnit);
     }
 
     public boolean isCompatibleWith(String unit) {
@@ -72,7 +72,7 @@ public class AMEEUnit {
         }
     }
 
-    public boolean equals(AMEEUnit that) {
+    public boolean equals(DecimalUnit that) {
         return toUnit().equals(that.toUnit());
     }
 

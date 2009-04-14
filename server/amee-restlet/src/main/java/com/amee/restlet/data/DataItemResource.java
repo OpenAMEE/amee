@@ -28,6 +28,7 @@ import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -165,7 +166,11 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
             // update 'endDate' value
             if (names.contains("endDate")) {
-                dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+                if (StringUtils.isNotBlank(form.getFirstValue("endDate"))) {
+                    dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+                } else {
+                    dataItem.setEndDate(null);
+                }
             } else {
                 if (form.getNames().contains("duration")) {
                     StartEndDate endDate = dataItem.getStartDate().plus(form.getFirstValue("duration"));

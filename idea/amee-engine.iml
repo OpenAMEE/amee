@@ -52,6 +52,7 @@
     <orderEntry type="library" exported="" name="Maven: logkit:logkit:1.0.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: avalon-framework:avalon-framework:4.1.3" level="project" />
     <orderEntry type="library" exported="" name="Maven: javax.servlet:servlet-api:2.3" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.5" level="project" />
     <orderEntry type="module" module-name="amee-service" exported="" />
     <orderEntry type="module" module-name="amee-domain" exported="" />
     <orderEntry type="module" module-name="amee-core" exported="" />

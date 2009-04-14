@@ -90,7 +90,7 @@ public abstract class Item extends AMEEEntity implements Pathable {
         setItemDefinition(itemDefinition);
     }
 
-    public void add(ItemValue itemValue) {
+    public void addItemValue(ItemValue itemValue) {
         getItemValues().add(itemValue);
     }
 

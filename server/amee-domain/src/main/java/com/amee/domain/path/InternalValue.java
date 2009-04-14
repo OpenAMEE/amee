@@ -1,7 +1,7 @@
 package com.amee.domain.path;
 
-import com.amee.domain.AMEECompoundUnit;
-import com.amee.domain.data.Decimal;
+import com.amee.domain.core.DecimalCompoundUnit;
+import com.amee.domain.core.Decimal;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import org.apache.commons.logging.Log;
@@ -67,7 +67,7 @@ public class InternalValue {
 
         Decimal decimal = new Decimal(iv.getUsableValue(), iv.getCompoundUnit());
 
-        AMEECompoundUnit internalUnit = iv.getItemValueDefinition().getCanonicalCompoundUnit();
+        DecimalCompoundUnit internalUnit = iv.getItemValueDefinition().getCanonicalCompoundUnit();
 
         if (decimal.hasDifferentUnits(internalUnit)) {
             if (log.isDebugEnabled()) {

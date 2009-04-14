@@ -107,7 +107,7 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
         return profileItems;
     }
 
-    //TODO - parsing v1 and v2 params - see Acceptors which at least conditionally parse based on APIVersion. Ideal solution should be transparent tho.
+    //TODO - parsing v1 and v2 params - see Acceptors which at least conditionally parse based on APIVersion. Ideal solution should be transparent.
     protected void updateProfileItem(ProfileItemResource resource, ProfileItem profileItem, Form form) {
 
         Set<String> names = form.getNames();

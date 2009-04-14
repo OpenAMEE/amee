@@ -83,19 +83,18 @@ public class CacheHelper implements Serializable {
         remove(factory.getCacheName(), factory.getKey());
     }
 
-    // TODO: profile this method to see if it's cost effective
-    public void clearCache(String cacheName, String scope) {
-        BlockingCache cache = getBlockingCache(cacheName);
-        if (cache != null) {
-            log.debug("clearCache() - cache: " + cacheName + " scope: " + scope);
-            for (Object o : cache.getKeys()) {
-                String elementKey = (String) o;
-                if (elementKey.startsWith("E_" + scope + "_")) {
-                    log.debug("clearCache() removing: " + elementKey);
-                    cache.remove(elementKey);
-                }
-            }
-        }
+    public void clearCache(String cacheName, String elementKeyPrefix) {
+       BlockingCache cache = getBlockingCache(cacheName);
+       if (cache != null) {
+           log.debug("cache: " + cacheName + " elementKeyPrefix: " + elementKeyPrefix);
+           for (Object o : cache.getKeys()) {
+               String elementKey = (String) o;
+               if (elementKey.startsWith(elementKeyPrefix)) {
+                   log.debug("removing: " + elementKey);
+                   cache.remove(elementKey);
+               }
+               }
+       }
     }
 
     public void clearCache(String cacheName) {
