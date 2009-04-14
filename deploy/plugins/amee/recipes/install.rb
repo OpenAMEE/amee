@@ -97,10 +97,14 @@ namespace :install do
       exit
     end
     
+    # Write out the tag to file for packaging with the deployment repo.
+    system("echo #{@tag_name} > VERSION.txt")
+    
     # Tag the deployment repository
     `git tag -f -a "#{@tag_name}" -m "#{@tag_name}"`
     `git push --tag`
     Dir.chdir(@pwd)
+    
     # Tag the src repository
     `git tag -f -a "#{@tag_name}" -m "#{@tag_name}"`
     `git push --tag`
