@@ -30,6 +30,7 @@ export RUN_AS_USER=root
 #ln -s $DEV_HOME/current/server/amee-engine/conf/wrapper.conf.local $SHARED_HOME/wrapper.conf
 
 # Copy libs
+rm $LIB_HOME/*
 find $DEV_HOME -name *.jar -exec cp {} $LIB_HOME \;
 
 # Run AMEE
