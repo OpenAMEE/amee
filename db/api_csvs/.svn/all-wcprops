@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 32
-/!svn/ver/2922/internal/api_csvs
+/!svn/ver/2973/internal/api_csvs
 END
 units.txt
 K 25
@@ -19,5 +19,5 @@ changelog.ods
 K 25
 svn:wc:ra_dav:version-url
 V 46
-/!svn/ver/2912/internal/api_csvs/changelog.ods
+/!svn/ver/2973/internal/api_csvs/changelog.ods
 END

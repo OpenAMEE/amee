@@ -1,0 +1,5 @@
+type,kgCO2PerKm,kgCO2PerLaunch,units,source,algorithm,default
+walking,0,0,kgCO2/km,N/A,value*user_distance,
+cycling,0,0,kgCO2/km,N/A,value*user_distance,
+space shuttle,0,0,kgCO2/launch,"http://www-pao.ksc.nasa.gov/kscpao/nasafact/count2.htm,http://www.madsci.org/posts/archives/2000-10/973014746.Es.r.html",value*user_distance,
+ariane 5 ECA,0,0,kgCO2/launch,"http://www-pao.ksc.nasa.gov/kscpao/nasafact/count2.htm,http://www.esa.int/SPECIALS/Launchers_Access_to_Space/SEM0LR2PGQD_0.html",,

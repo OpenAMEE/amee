@@ -1,0 +1,6 @@
+name,Ventilation Parameters,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Value,value,TEXT,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

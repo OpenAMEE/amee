@@ -27,6 +27,12 @@ function getSpacekgCO2(eff) {
 function getWaterkgCO2(eff) {
 	var kWh;
 	if (fuel.equals("electricity") || (heatingType.indexOf("room heaters") < 0 && !heatingType.equals("open fires") && !heatingType.equals("stove"))) {
+		if (fuel.equals("electricity")){
+			profileFinder.setProfileItemValue('isWaterHeatingElectric','true');
+		} else {
+			profileFinder.setProfileItemValue('isWaterHeatingElectric','false');
+		}
+
 		if(age.indexOf("pre")>=0) {
 			kWh=solidWallWaterEnergy;
 		} else if(age.indexOf("post")>=0) {
@@ -36,6 +42,7 @@ function getWaterkgCO2(eff) {
 		}
 		ef=getEmissionFactor(false);
 	} else {
+		profileFinder.setProfileItemValue('isWaterHeatingElectric','true');
 		if(age.indexOf("pre")>=0) {
 			wallOption='solidWallWaterEnergy';
 		} else if(age.indexOf("post")>=0) {
@@ -63,7 +70,7 @@ function getEmissionFactor(forceElec){
 }
 
 function getScaleFactor(spaceOrWater) {
-	if(numberOfBedrooms==baseNumberOfBedrooms){
+	if(spaceOrWater=="space" && numberOfBedrooms==baseNumberOfBedrooms){
 		return 1.;
 	}
 	
@@ -147,6 +154,19 @@ function applyWaterRenewablesSavings(baseCO2){
 	return baseCO2;
 }
 
+function doElectricityRenewables(){
+	energySaved=0;
+	if(hasPhotovoltaic=="true"){
+		kWh =dataFinder.getDataItemValue('home/heating/uk/renewable', 'type=photovoltaic solar panels', 'energyGenerated');
+		energySaved -= kWh*getEmissionFactor(true);		
+	} else if(hasHydro=="true"){
+		kWh =dataFinder.getDataItemValue('home/heating/uk/renewables', 'type=hydro', 'energyGenerated');
+		energySaved -= kWh*getEmissionFactor(true);
+	}
+	//Note this will be kWh saved per year and will be negative.
+	profileFinder.setProfileItemValue('renewableElectricitySavedCO2',energySaved);
+}
+
 if(numberOfBedrooms=="more than 5"){
 	numberOfBedrooms=6;
 }
@@ -171,7 +191,8 @@ if(hasNoInsulation=="false") {
 
 if(hasNoRenewables=="false"){
 	spaceCO2=applySpaceRenewablesSavings(spaceCO2);
-	waterCO2=applyWaterRenewablesSavings(waterCO2);	
+	waterCO2=applyWaterRenewablesSavings(waterCO2);
+	doElectricityRenewables();
 }
 
 profileFinder.setProfileItemValue('spaceHeatingCO2',Math.round(spaceCO2));

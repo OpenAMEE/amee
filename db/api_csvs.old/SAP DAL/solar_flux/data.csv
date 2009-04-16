@@ -1,0 +1,3 @@
+type,horizontal,verticalNorth,verticalNeNw,verticalEw,verticalSeSw,verticalSouth,units,source
+heating season,75,29,34,48,64,72,W/m2,sap 2005
+summer period,187,75,89,109,112,107,W/m2,sap 2005

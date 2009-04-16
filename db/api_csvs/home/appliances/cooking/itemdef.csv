@@ -1,7 +1,7 @@
 name,Cooking
 algFile,perMonth.js
 name,path,type,isDataItemValue,isDrillDown
+Number Of People,numberOfPeople,INTEGER,true,true
 Fuel,fuel,TEXT,true,true
 kgCO2 Per Year,kgCO2PerYear,DECIMAL,true,false
-Number Of People,numberOfPeople,INTEGER,true,true
 Source,source,TEXT,true,false

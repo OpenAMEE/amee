@@ -1,0 +1,11 @@
+type,secondarySystem,fractionFromSecondary,unit,source
+"All gas, oil and solid fuel systems",all secondary systems,0.1,,sap 2005
+Micro-cogeneration,all secondary systems,,,sap 2005
+Heat pump,all secondary systems,0.1,,sap 2005
+Electric storage heaters (not integrated) - not fan-assisted,all secondary systems,0.15,,sap 2005
+Electric storage heaters (not integrated) - fan-assisted,all secondary systems,0.1,,sap 2005
+Integrated storage/direct-acting electric systems,,0.1,,sap 2005
+Electric CPSU,,,,sap 2005
+Electric room heaters,,0.2,,sap 2005
+Other electric systems,,0.1,,sap 2005
+Community heating,,0,,sap 2005

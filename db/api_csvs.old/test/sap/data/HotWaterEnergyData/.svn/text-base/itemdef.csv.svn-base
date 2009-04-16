@@ -1,0 +1,10 @@
+name,HotWaterEnergyData,,,
+algFile,hotwaterenergydata_alg.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Total Floor Area,tfa,DECIMAL,FALSE,FALSE
+Hot Water Usage,waterusage,DECIMAL,FALSE,FALSE
+Hot water energy usage,waterenergyusage,DECIMAL,FALSE,FALSE
+Distribution Loss,distributionloss,DECIMAL,FALSE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Error,error,TEXT,FALSE,FALSE
+Type,type,TEXT,TRUE,TRUE

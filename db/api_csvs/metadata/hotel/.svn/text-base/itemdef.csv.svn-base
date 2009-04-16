@@ -1,5 +1,26 @@
-name,Hotel Metadata
-algFile,perMonth.js
-name,path,type,isDataItemValue,isDrillDown
-Type,type,TEXT,true,true
-Refrigerant volume,refrigerantVolume,DECIMAL,false,false
+name,Hotel Metadata,,,,,,,
+algFile,perMonth.js,,,,,,,
+name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
+Type,type,TEXT,TRUE,TRUE,,,,
+Refrigerant volume,refrigerantVolume,DECIMAL,FALSE,FALSE,,,,
+Hotel rating,rating,TEXT,FALSE,FALSE,,,,
+Number of rooms,numberOfRooms,DECIMAL,FALSE,FALSE,,,,
+Total floorspace,totalFloorspace,DECIMAL,FALSE,FALSE,,,,
+Floorspace units,floorspaceUnits,TEXT,FALSE,FALSE,,,,m^2,ft^2
+Number of meeting rooms,numberOfMeetingRooms,DECIMAL,FALSE,FALSE,,,,
+Proportion of floorspace for accommodation,proportionFloorspaceaccommodation,DECIMAL,FALSE,FALSE,,,,
+Proportion of floorspace for meeting rooms,proportionFloorspaceMeetingRooms,DECIMAL,FALSE,FALSE,,,,
+Proportion of floorspace remaining,proportionFloorspaceRemaining,DECIMAL,FALSE,FALSE,,,,
+Average occupancy rate,averageOccupancyRate,DECIMAL,FALSE,FALSE,,,,
+Has Indoor pool     ,hasIndoorPool     ,TEXT,FALSE,FALSE,,,false,false,true
+Has Outdoor pool    ,hasOutdoorPool    ,TEXT,FALSE,FALSE,,,false,false,true
+Has Sauna,hasSauna,TEXT,FALSE,FALSE,,,false,false,true
+Has Solarium        ,hasSolarium        ,TEXT,FALSE,FALSE,,,false,false,true
+Has Turkish bath    ,hasTurkishBath    ,TEXT,FALSE,FALSE,,,false,false,true
+Has Fitness room,hasFitnessRoom,TEXT,FALSE,FALSE,,,false,false,true
+Has Fitness centre  ,hasFitnessCentre  ,TEXT,FALSE,FALSE,,,false,false,true
+Has Centrally controlled air con    ,hasCentrallyControlledAirCon    ,TEXT,FALSE,FALSE,,,false,false,true
+Has Room temp control,hasRoomTempControl,TEXT,FALSE,FALSE,,,false,false,true
+Has Centrally controlled ventilation        ,hasCentrallyControlledVentilation        ,TEXT,FALSE,FALSE,,,false,false,true
+Has Individually controlled ventilation     ,hasIndividuallyControlledVentilation     ,TEXT,FALSE,FALSE,,,false,false,true
+Has Ceiling fan,hasCeilingFan,TEXT,FALSE,FALSE,,,false,false,true

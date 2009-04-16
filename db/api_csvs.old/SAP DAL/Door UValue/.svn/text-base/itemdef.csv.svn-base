@@ -1,0 +1,7 @@
+name,Door UValue,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Age Band,ageBand,TEXT,TRUE,FALSE
+Door UValue,doorUValue,DECIMAL,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

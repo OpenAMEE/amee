@@ -1,0 +1,10 @@
+name,IHSFuelCosts,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Cost,cost,DECIMAL,FALSE,FALSE
+Price,price,DECIMAL,FALSE,FALSE
+Fuel,fuel,DECIMAL,FALSE,FALSE
+Scaling,scaling,DECIMAL,FALSE,FALSE
+Source,source,DECIMAL,FALSE,FALSE
+Error,error,DECIMAL,FALSE,FALSE
+Type,type,TEXT,TRUE,TRUE

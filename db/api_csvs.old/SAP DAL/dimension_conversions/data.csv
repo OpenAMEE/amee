@@ -1,0 +1,9 @@
+type,equation,unit,source
+Dwelling type,Equations,,sap 2005
+Detached,Pint = Pext – 8 w Aint = Aext – w Pint – 4 w²,,sap 2005
+"Semi-detached or
+End-terrace",If ext 2 Pext > 8A : Pint = Pext – 5 w ÷ø ö çè = æ - - ext 2 a 0.5 Pext Pext 8A Aint = Aext – w (Pext + 0.5 a) + 3 w² otherwise Pint = Pext – 3 w Aint = Aext – w Pext + 3 w²,,sap 2005
+Mid-terrace,Pint = Pext – 2 w Aint = Aext – w (Pext + 2 Aext/Pext) + 2 w²,,sap 2005
+Enclosed end-terrace,Pint = Pext – 3 w Aint = Aext – 1.5 w Pext + 2.25 w²,,sap 2005
+Enclosed mid-terrace,Pint = Pext – w Aint = Aext – w (Aext/Pext + 1.5 Pext) + 1.5 w²,,sap 2005
+All types,Perimeter ratio = Pint/Pext Area ratio = Aint/Aext,,sap 2005

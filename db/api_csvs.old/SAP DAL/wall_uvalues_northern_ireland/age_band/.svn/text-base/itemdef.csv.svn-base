@@ -1,0 +1,5 @@
+name,Wall UValues NorthernIreland Age Band,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

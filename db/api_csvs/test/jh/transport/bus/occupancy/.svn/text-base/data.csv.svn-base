@@ -1,0 +1,4 @@
+context,distancePerFuelVolume,massCO2perFuelVolume,units,source
+urban,1.7,2.6417,DUMMY,GHG based on DEFRA and USDOT
+average,2.85,2.6417,DUMMY,GHG based on DEFRA and USDOT
+intercity,3.826,2.6417,DUMMY,GHG based on DEFRA and USDOT

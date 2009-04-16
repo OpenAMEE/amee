@@ -1,0 +1,3 @@
+type,livingareameaninternaltemperature,temperatureadjustment,adjustedlivingroomtemperature,zonaltemperaturedifferentiation,livingareafraction,restofhousefraction,meaninternaltemperature,adjustmentforgains,error,units,source
+dummy,0,0,0,0,0,0,0,0,valid,0,0
+meaninternaltemperature,0,0,0,0,0,0,0,0,valid,0,0

@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/!svn/ver/2568/internal/api_csvs/home/appliances/cooking
+/!svn/ver/2925/internal/api_csvs/home/appliances/cooking
 END
 alg_pre_aug2008_update.txt
 K 25
@@ -19,7 +19,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 68
-/!svn/ver/2376/internal/api_csvs/home/appliances/cooking/itemdef.csv
+/!svn/ver/2925/internal/api_csvs/home/appliances/cooking/itemdef.csv
 END
 perMonth.js
 K 25

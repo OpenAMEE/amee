@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/2793/internal/api_csvs/test/andrew/actonco2actions
+END
+example_links_utf8.txt
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/example_links_utf8.txt
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/2793/internal/api_csvs/test/andrew/actonco2actions/data.csv
+END
+data_orig.csv
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/data_orig.csv
+END
+data_current.csv
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/data_current.csv
+END
+data_ISO-8859-1.csv
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/data_ISO-8859-1.csv
+END
+data_UTF-8.csv
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/data_UTF-8.csv
+END
+data_links_ISO-8859-1.csv
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/data_links_ISO-8859-1.csv
+END
+data_links_UTF-8.csv
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/data_links_UTF-8.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/perMonth.js
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/README.txt
+END
+output.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/output.txt
+END

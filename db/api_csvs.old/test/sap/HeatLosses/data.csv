@@ -1,0 +1,10 @@
+type,grossarea,openings,netarea,uvalue,areauvalue,error,units,source
+doors,0,0,0,0,0,valid,0,0
+windowstype1,0,0,0,0,0,valid,0,0
+windowstype2,0,0,0,0,0,valid,0,0
+rooflights,0,0,0,0,0,valid,0,0
+groundfloor,0,0,0,0,0,valid,0,0
+wallstype1,0,0,0,0,0,valid,0,0
+wallstype2,0,0,0,0,0,valid,0,0
+rooftype1,0,0,0,0,0,valid,0,0
+rooftype2,0,0,0,0,0,valid,0,0

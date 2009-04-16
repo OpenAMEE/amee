@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/!svn/ver/2201/internal/api_csvs/test/tv
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/!svn/ver/2201/internal/api_csvs/test/tv/data.csv
+END
+test.csv
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/!svn/ver/2201/internal/api_csvs/test/tv/test.csv
+END
+orig.csv
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/!svn/ver/2201/internal/api_csvs/test/tv/orig.csv
+END

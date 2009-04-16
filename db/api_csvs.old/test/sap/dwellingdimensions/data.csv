@@ -1,0 +1,7 @@
+type,area,height,volume,error,units,source
+groundfloor,0,0,0,valid,0,0
+firstfloor,0,0,0,valid,0,0
+secondfloor,0,0,0,valid,0,0
+otherfloor,0,0,0,valid,0,0
+totalarea,0,0,0,valid,0,0
+volume,0,0,0,valid,0,0

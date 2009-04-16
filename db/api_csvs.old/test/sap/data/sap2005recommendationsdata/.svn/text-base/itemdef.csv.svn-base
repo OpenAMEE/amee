@@ -1,0 +1,12 @@
+name,Sap 2005 Recommendations Data,,,
+algFile,algorithm_alg.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Dwelling Type,dwellingtype,TEXT,TRUE,TRUE
+Measure Type,measuretype,TEXT,TRUE,TRUE
+Measure,measure,TEXT,TRUE,TRUE
+Consideration Criteria,considerationcriteria,TEXT,TRUE,TRUE
+RecommendationCriteria,recommendation criteria,TEXT,TRUE,TRUE
+Item,item,TEXT,TRUE,FALSE
+Improvement,improvement,TEXT,TRUE,FALSE
+Record Number,recordnumber,TEXT,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE

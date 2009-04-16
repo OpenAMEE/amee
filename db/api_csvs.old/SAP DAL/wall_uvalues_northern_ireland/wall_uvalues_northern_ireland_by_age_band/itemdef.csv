@@ -1,0 +1,16 @@
+name,Wall UValues NorthernIreland By Age Band,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Wall Uvalues NorthernIreland Age Band A,wallUvaluesNorthernIrelandAgeBandA,DECIMAL,TRUE,FALSE
+Wall Uvalues NorthernIreland Age Band B,wallUvaluesNorthernIrelandAgeBandB,DECIMAL,TRUE,FALSE
+Wall Uvalues NorthernIreland Age Band C,wallUvaluesNorthernIrelandAgeBandC,DECIMAL,TRUE,FALSE
+Wall Uvalues NorthernIreland Age Band D,wallUvaluesNorthernIrelandAgeBandD,DECIMAL,TRUE,FALSE
+Wall Uvalues NorthernIreland Age Band E,wallUvaluesNorthernIrelandAgeBandE,DECIMAL,TRUE,FALSE
+Wall Uvalues NorthernIreland Age Band F,wallUvaluesNorthernIrelandAgeBandF,DECIMAL,TRUE,FALSE
+Wall Uvalues NorthernIreland Age Band G,wallUvaluesNorthernIrelandAgeBandG,DECIMAL,TRUE,FALSE
+Wall Uvalues NorthernIreland Age Band H,wallUvaluesNorthernIrelandAgeBandH,DECIMAL,TRUE,FALSE
+Wall Uvalues NorthernIreland Age Band I,wallUvaluesNorthernIrelandAgeBandI,DECIMAL,TRUE,FALSE
+Wall Uvalues NorthernIreland Age Band J,wallUvaluesNorthernIrelandAgeBandJ,DECIMAL,TRUE,FALSE
+Wall Uvalues NorthernIreland Age Band K,wallUvaluesNorthernIrelandAgeBandK,DECIMAL,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

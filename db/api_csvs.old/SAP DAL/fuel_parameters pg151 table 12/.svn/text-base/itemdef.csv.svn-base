@@ -1,0 +1,15 @@
+name,"Fuel prices, additional standing charges, emission factors and primary energy factors",,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Fuel Sub Cat,fuelSubCat,DECIMAL,TRUE,FALSE
+"Additional
+standing
+charge",additionalStandingCharge£,DECIMAL,TRUE,FALSE
+Unit price p/kWh,unitPriceP/kWh,DECIMAL,TRUE,FALSE
+"Emissions
+kg CO2
+per kWh",emmissionsKgCo2PerKwh,DECIMAL,TRUE,FALSE
+Primary energy factor,primaryEnergyFactor,DECIMAL,TRUE,FALSE
+Fuel code,fuelCode,DECIMAL,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

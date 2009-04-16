@@ -5,6 +5,6 @@ Source,source,TEXT,true,false
 Country,country,TEXT,true,true
 Change,change,DECIMAL,true,false
 Cumulative,cumulative,DECIMAL,true,false
-Annual (2005),annual2005,DECIMAL,true,false
+Annual (2006),annual2006,DECIMAL,true,false
 Per Capita,perCapita,DECIMAL,true,false
 Rank,rank,DECIMAL,true,false

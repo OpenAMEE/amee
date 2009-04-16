@@ -1,0 +1,10 @@
+name,Mean Internal Temperature of Living Area,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Heating Type 1,heatingType1,DECIMAL,TRUE,FALSE
+Heating Type 2,heatingType2,DECIMAL,TRUE,FALSE
+Heating Type 3,heatingType3,DECIMAL,TRUE,FALSE
+Heating Type 4,heatingType4,DECIMAL,TRUE,FALSE
+Heating Type 5,heatingType5,DECIMAL,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

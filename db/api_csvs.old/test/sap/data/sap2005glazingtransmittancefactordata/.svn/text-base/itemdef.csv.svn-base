@@ -1,0 +1,7 @@
+name,Sap 2005 Glazing Transmittance Factors Data,,,
+algFile,algorithm_alg.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Type,type,TEXT,TRUE,TRUE
+Total solar energy transmittance,totalsolarenergytransmittance,TEXT,TRUE,FALSE
+Light transmittance,lighttransmittance,TEXT,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE

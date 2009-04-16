@@ -1,0 +1,14 @@
+name,Heating System (Space and Water),,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Sub Category,subCategory,TEXT,TRUE,FALSE
+Flue,flue,TEXT,TRUE,FALSE
+Efficiency (A),efficiencyA,INTEGER,TRUE,FALSE
+Efficiency (B),efficiencyB,INTEGER,TRUE,FALSE
+Efficiency %,efficiencyPercentage,INTEGER,TRUE,FALSE
+Heating Type,heatingType,INTEGER,TRUE,FALSE
+Responsiveness (R),resonsivenessR,DECIMAL,TRUE,FALSE
+Code,code,INTEGER,TRUE,FALSE
+RD SAP,rdSap,TEXT,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

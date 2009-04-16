@@ -3,7 +3,7 @@ algFile,perMonth.js
 name,path,type,isDataItemValue,isDrillDown
 Comment,comment,TEXT,false,false
 Hours Per Month,hoursPerMonth,DECIMAL,false,false
+Type,type,TEXT,true,true
 kW,kW,DECIMAL,true,false
 Size,size,TEXT,true,true
 Source,source,TEXT,true,false
-Type,type,TEXT,true,true

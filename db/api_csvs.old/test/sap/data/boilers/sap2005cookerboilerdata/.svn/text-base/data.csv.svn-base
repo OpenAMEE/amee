@@ -1,0 +1,20 @@
+manufacturersname,brandname,modelname,modelqualifier,productid,pin,mrn,firstyearofmanufacture,finalyearofmanufacture,fuel,maintype,condensing,fluetype,fanassistance,boilerpowerrangebottom,boilerpowerrangetop,caselossatfulloutput,fulloutputpower,energyefficiencyband,energyefficiencyclass,sapseasonalefficiency,efficiencycategory,testgasforlpg,sapequationused,ignition,burnercontrol,activeelectricalpower,inactiveelectricalpower,dbentryupdated,units,source
+Aga,Rayburn,480 CD,,,800008,66,2006,current,1,1,2,2,1,23.5,23.5,0.27,23.33,A,,90,2,,102,1,2,60,0,2007/Jan/31 11:53,0,0
+Waterford Stanley,Stanley,Brandon,80K,,800004,64,1995,current,1,1,1,1,2,23.4,23.4,1,22.23,E,,75.2,2,,101,1,1,70,0,2007/Jan/31 11:56,0,0
+Aga,Rayburn,880K (M),,,800013,66,2006,current,4,1,1,1,2,24.3,24.3,1,24.1,C,,85.7,2,,201,1,1,170,0,2007/Jan/31 09:56,0,0
+Waterford Stanley,Stanley,Alpha,120 K,,800024,64,2006,current,4,1,1,1,2,37,37,1,38,C,,85.6,2,,201,1,1,170,0,2007/Nov/20 08:58,0,0
+Aga,Rayburn,8120K (M),,,800012,66,2006,current,4,1,1,1,2,37,37,1,35.9,C,,85.6,2,,201,1,1,170,0,2007/Jan/31 09:56,0,0
+Waterford Stanley,Stanley,Alpha,150 K,,800023,64,2006,current,4,1,1,1,2,43.8,43.8,1,44.8,C,,85.3,2,,201,1,1,170,0,2007/Oct/17 12:44,0,0
+Aga,Rayburn,8150K (M),,,800011,66,2006,current,4,1,1,1,2,43.8,43.8,1,44.9,C,,85.3,2,,201,1,1,170,0,2007/Jan/31 09:56,0,0
+Aga,Rayburn,480K,,,800016,66,1998,current,4,1,1,2,2,23.8,23.8,0.17,23.77,C,,85,2,,201,1,1,130,0,2007/Jun/22 09:57,0,0
+Aga,Rayburn,480 KB,,,800021,66,1998,current,4,1,1,2,2,23.8,23.8,0.17,23.77,C,,85,2,,201,1,1,130,0,2007/Jun/22 10:00,0,0
+Aga,Rayburn,460K,,,800015,66,1998,current,4,1,1,1,2,17.6,17.6,0.16,17.58,C,,84.8,2,,201,1,1,130,0,2007/Jul/09 17:08,0,0
+Aga,Rayburn,460 KB,,,800019,66,1998,current,4,1,1,2,2,17.6,17.6,0.16,17.58,C,,84.8,2,,201,1,1,130,0,2007/Jun/22 09:59,0,0
+Aga,Rayburn,499 KB,,,800022,66,1998,current,4,1,1,2,2,29.1,29.1,0.2,29.07,C,,84.6,2,,201,1,1,130,0,2007/Jun/22 10:00,0,0
+Aga,Rayburn,499K,,,800018,66,1998,current,4,1,1,2,2,29.1,29.1,0.2,29.07,C,,84.6,2,,201,1,1,130,0,2007/Oct/18 15:28,0,0
+Waterford Stanley,Stanley,Brandon,80k,,800007,64,1995,current,4,1,1,1,2,23.5,23.5,0.39,24.2,C,,84.2,2,,201,1,1,70,0,2007/Jan/31 11:59,0,0
+Esse,Esse,Oil Century,O-60,,800028,242,2000,current,4,1,1,1,2,17.5,17.5,0.62,17.5,C,,83.6,2,,201,1,1,,,2008/Sep/18 14:18,0,0
+Esse,Esse,Oil Century,O-80,,800027,242,2000,current,4,1,1,1,2,23.4,23.4,0.63,23.4,C,,83.4,2,,201,1,1,,,2008/Sep/18 14:17,0,0
+Waterford Stanley,Stanley,Brandon,60k,,800005,64,2000,current,4,1,1,1,2,17.6,17.6,0.19,18.1,C,,82.3,2,,201,1,1,70,0,2007/Jan/31 11:59,0,0
+Waterford Stanley,Stanley,Brandon,100k,,800006,64,1995,current,4,1,1,1,2,29.3,29.3,0.16,29.65,D,,81.7,2,,201,1,1,70,0,2007/Jan/31 11:59,0,0
+Esse,Esse,Oil Century,O-106,,800026,242,2000,current,4,1,1,1,2,29.3,29.3,0.39,29.3,D,,80.7,2,,201,1,1,,,2008/Sep/18 14:17,0,0

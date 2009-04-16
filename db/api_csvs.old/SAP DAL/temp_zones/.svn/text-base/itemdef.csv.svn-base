@@ -1,0 +1,8 @@
+name,difference in temperatures between zones,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+1,1,INTEGER,TRUE,FALSE
+2,2,INTEGER,TRUE,FALSE
+3,3,INTEGER,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

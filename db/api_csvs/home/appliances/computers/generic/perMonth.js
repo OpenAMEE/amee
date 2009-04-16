@@ -11,7 +11,7 @@ if(countryElecValue==null){//try ISO code
   countryElecValue = dataFinder.getDataItemValue('home/energy/electricityiso', 'country=' + country, 'kgCO2PerKWh');
 }
 
-if(device=='standbyOFF'){//standby is special!
+if(device=='standby'){//standby is special!
         standbyCO2=0;
 	profileItems = profileFinder.getProfileItems();
 	for (i = 0; i < profileItems.size(); i++) {

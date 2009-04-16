@@ -31,6 +31,15 @@ try {
 	isJourneyBased=true;
 }
 
+try {
+  var n=numberOfPassengers;
+}
+catch(err){
+  numberOfPassengers=1;
+}
+
+fac*=numberOfPassengers;
+
 if(!isJourneyBased){
 	fac * distance;
 } else {
