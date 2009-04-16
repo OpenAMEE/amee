@@ -67,7 +67,6 @@
                 <entry key="/auth" value-ref="authApplication"/>
                 <entry key="/environments" value-ref="environmentsApplication"/>
                 <entry key="/apps" value-ref="appsApplication"/>
-                <entry key="/cache" value-ref="cacheApplication"/>
             </map>
         </property>
         <!-- This value must match at least one entry in the SITE.NAME db table column. -->

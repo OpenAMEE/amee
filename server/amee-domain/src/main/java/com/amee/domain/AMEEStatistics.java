@@ -21,10 +21,15 @@
 */
 package com.amee.domain;
 
+import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("ameeStatistics")
 public class AMEEStatistics {
+
+    @Autowired
+    private BasicDataSource dataSource;
 
     // Profile Items
     private long profileItemCreateCount;
@@ -57,5 +62,31 @@ public class AMEEStatistics {
 
     public long getErrorCount() {
         return errorCount;
+    }
+
+    // Connection Pool
+
+    public int getDSInitialSize() {
+        return dataSource.getInitialSize();
+    }
+
+    public int getDSMaxIdle() {
+        return dataSource.getMaxIdle();
+    }
+
+    public int getDSMinIdle() {
+        return dataSource.getMinIdle();
+    }
+
+    public int getDSNumIdle() {
+        return dataSource.getNumIdle();
+    }
+
+    public int getDSMaxActive() {
+        return dataSource.getMaxActive();
+    }
+
+    public int getDSNumActive() {
+        return dataSource.getNumActive();
     }
 }

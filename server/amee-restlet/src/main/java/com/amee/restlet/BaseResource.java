@@ -364,7 +364,6 @@ public abstract class BaseResource extends Resource {
         return isPost() || isPut();
     }
 
-
     /**
      * Indicates if the response status is an error status (for example 4XX or 500 status codes).
      *

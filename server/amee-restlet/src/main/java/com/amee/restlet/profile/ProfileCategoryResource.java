@@ -169,7 +169,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
                 // clear caches
                 profileService.clearCaches(getProfile());
                 if (isPost()) {
-                    successfulPost(getFullPath(), getProfileItems().get(0).getUid());
+                    successfulPost(getFullPath(), profileItems.get(0).getUid());
                 } else {
                     successfulPut(getFullPath());
                 }
