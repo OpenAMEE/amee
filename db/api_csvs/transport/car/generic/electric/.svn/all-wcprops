@@ -1,13 +1,25 @@
 K 25
 svn:wc:ra_dav:version-url
 V 63
-/!svn/ver/2523/internal/api_csvs/transport/car/generic/electric
+/!svn/ver/2925/internal/api_csvs/transport/car/generic/electric
 END
 data.csv
 K 25
 svn:wc:ra_dav:version-url
 V 72
 /!svn/ver/2201/internal/api_csvs/transport/car/generic/electric/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/2925/internal/api_csvs/transport/car/generic/electric/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/2925/internal/api_csvs/transport/car/generic/electric/perMonth.js
 END
 v2Algorithm.js
 K 25

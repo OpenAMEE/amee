@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/!svn/ver/2523/internal/api_csvs/home/appliances/computers/generic
+/!svn/ver/2936/internal/api_csvs/home/appliances/computers/generic
 END
 alg.txt
 K 25
@@ -25,7 +25,7 @@ perMonth.js
 K 25
 svn:wc:ra_dav:version-url
 V 78
-/!svn/ver/2451/internal/api_csvs/home/appliances/computers/generic/perMonth.js
+/!svn/ver/2936/internal/api_csvs/home/appliances/computers/generic/perMonth.js
 END
 v2Algorithm.js
 K 25

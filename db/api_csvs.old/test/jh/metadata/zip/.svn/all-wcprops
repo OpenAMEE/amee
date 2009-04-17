@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/2518/internal/api_csvs/test/jh/metadata/zip
+END
+comressZipData.gk
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/2518/internal/api_csvs/test/jh/metadata/zip/comressZipData.gk
+END
+vikingZipCompressed.csv
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/2518/internal/api_csvs/test/jh/metadata/zip/vikingZipCompressed.csv
+END
+vikingZipData.csv
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/2518/internal/api_csvs/test/jh/metadata/zip/vikingZipData.csv
+END

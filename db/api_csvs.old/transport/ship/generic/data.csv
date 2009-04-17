@@ -1,0 +1,2 @@
+type,kgCO2PerKmPassenger,units,source,algorithm,default
+ferry,0.1152,kgCO2/km.passenger,defra 2008 based on large car ferry,,

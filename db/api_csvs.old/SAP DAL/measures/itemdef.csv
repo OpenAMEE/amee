@@ -1,0 +1,10 @@
+name,Table of Improvement Measures for NEW Dwellings,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Item,item,TEXT,TRUE,FALSE
+Measure,measure,TEXT,TRUE,FALSE
+To be considered when existing dwelling has:,considerWhenExistingDwellingHas,TEXT,TRUE,FALSE
+Recommended if existing dwelling has: ,recommendIfExistingDwellingHas,TEXT,TRUE,FALSE
+Improve to:,improveTo,TEXT,TRUE,FALSE
+Rec. Number,recordNumber,INTEGER,TRUE,FALSE
+Type,type,text,TRUE,FALSE

@@ -1,0 +1,6 @@
+name,System Type Kwh/Year,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+kWh/year,kWh/year,DECIMAL,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

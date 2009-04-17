@@ -1,0 +1,12 @@
+name,Boiler Category,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Non Condensing Gas or LPG ON/OFF,nonCondensingGasLPGOnOff,DECIMAL,TRUE,FALSE
+Non Condensing Gas or LPG Modulating,nonCondensingGasLPGModulating,DECIMAL,TRUE,FALSE
+Non Condensing Oil ON/OFF,nonCondensingOilOnOff,DECIMAL,TRUE,FALSE
+Non Condensing Oil Modulating,nonCondensingOilModulating,DECIMAL,TRUE,FALSE
+Condensing Gas or LPG ON/OFF,CondensingGasLPGOnOff,DECIMAL,TRUE,FALSE
+Condensing Gas or LPG Modulating,CondensingGasLPGModulating,DECIMAL,TRUE,FALSE
+Condensing Oil ON/OFF,CondensingOilOnOff,DECIMAL,TRUE,FALSE
+Condensing Oil Modulating,CondensingOilModulating,DECIMAL,TRUE,FALSE
+Type,type,text,TRUE,TRUE

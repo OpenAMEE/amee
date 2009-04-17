@@ -2,6 +2,7 @@ name,Global Warming Potentials
 algFile,algorithm.js
 name,path,type,isDataItemValue,isDrillDown
 Gas,gas,TEXT,true,true
+Name,name,TEXT,true,false
 Global Warming Potential,GWP,DECIMAL,true,false
 Emission Rate,emissionRate,DECIMAL,false,false
 Source,source,TEXT,true,false

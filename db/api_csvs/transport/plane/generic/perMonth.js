@@ -19,7 +19,7 @@ function greatCircle() {
 function getEFForClass(atype){
 	fac = kgCO2PerPassengerKm;
 	try {
-        if(atype=='short haul'){
+        if(passengerClass=='first' && atype=='short haul'){
            passengerClass="business";//no first class
         }
 	fac = dataFinder.getDataItemValue('transport/plane/generic/passengerclass', 'type='+atype+',passengerClass='+passengerClass,'kgCO2PerPassengerKm');

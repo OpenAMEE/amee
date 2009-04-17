@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/2772/internal/api_csvs/home/energy/insulation
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/2443/internal/api_csvs/home/energy/insulation/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/2443/internal/api_csvs/home/energy/insulation/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/2443/internal/api_csvs/home/energy/insulation/perMonth.js
+END
+v2Algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/2523/internal/api_csvs/home/energy/insulation/v2Algorithm.js
+END
+data_david.csv
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/2772/internal/api_csvs/home/energy/insulation/data_david.csv
+END

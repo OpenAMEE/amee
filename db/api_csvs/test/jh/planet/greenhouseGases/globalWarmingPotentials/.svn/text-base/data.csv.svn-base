@@ -1,17 +1,32 @@
-gas,GWP,units,source
-CO2,1,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-CH4,21,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-N2O,310,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-HFC-23,11700,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-HFC-125,2800,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-HFC-134a,1300,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-HFC-143a,3800,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-HFC-152a,140,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-HFC-227ea,2900,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-HFC-236fa,6300,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-HFC-4310mee,1300,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-CF4,6500 ,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-C2F6,9200 ,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-C4F10,7000 ,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-C6F14,7400 ,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
-SF6,23900 ,relative,EPA http://www.epa.gov/climatechange/economics/downloads/GlobalMitigationFullReport.pdf table I2.2
+gas,name,GWP,units,source
+C2F6,perfluoroethane      ,9200,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+C3F8,perfluoropropane     ,7000,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+C4F10,perfluorobutane      ,7000,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+C4F8,perfluorocyclobutane ,8700,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+C5F12,perfluoropentane     ,7500,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+C6F14,perfluorohexane,7400,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+CF4,perfluoromethane     ,6500,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+CH4,methane,21,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+CO2                  ,carbon dioxide,1,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-125            ,HFC-125            ,2800,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-134            ,HFC-134            ,1000,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-134a           ,HFC-134a           ,1300,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-143            ,HFC-143            ,300,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-143a           ,HFC-143a           ,3800,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-152a,HFC-152a,140,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-227ea          ,HFC-227ea          ,2900,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-23             ,HFC-23             ,11700,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-236fa          ,HFC-236fa          ,6300,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-245ca          ,HFC-245ca          ,560,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-32             ,HFC-32             ,650,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-41             ,HFC-41             ,150,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+HFC-4310mee,HFC-4310mee,1300,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+N2O,nitrous oxide,310,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+SF6,SF6,23900,relative,http://www.defra.gov.uk/ENVIRONMENT/business/envrp/pdf/ghg-cf-guidelines2008.pdf
+R404a,R404a,3859,relative,http://www.refrigerants.com/frame.htm
+R407c,R407c,1674,relative,http://www.refrigerants.com/frame.htm
+R410a,R410a,1997,relative,http://www.refrigerants.com/frame.htm
+R417a,R417a,1950,relative,http://www.refrigerants.com/frame.htm
+R507,R507,3925,relative,http://www.refrigerants.com/frame.htm
+R508b,R508b,11030,relative,http://www.refrigerants.com/frame.htm
+R422A,R422A,2530,relative,http://www.refrigerants.com/frame.htm

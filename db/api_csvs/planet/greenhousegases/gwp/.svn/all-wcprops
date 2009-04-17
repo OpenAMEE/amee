@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/2936/internal/api_csvs/planet/greenhousegases/gwp
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/2936/internal/api_csvs/planet/greenhousegases/gwp/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/2936/internal/api_csvs/planet/greenhousegases/gwp/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/2936/internal/api_csvs/planet/greenhousegases/gwp/perMonth.js
+END
+v2Algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/2936/internal/api_csvs/planet/greenhousegases/gwp/v2Algorithm.js
+END

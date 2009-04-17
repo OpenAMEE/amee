@@ -1,0 +1,5 @@
+fuel,size,kgCO2PerKm,kgCO2PerKmUS,units,source,algorithm
+petrol,up to 1.25 tonnes,0.2244,0.2244,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
+diesel,up to 3.5 tonnes,0.2716,0.2716,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
+lpg,up to 3.5 tonnes,0.2718,0.2718,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km
+cng,up to 3.5 tonnes,0.2718,0.2718,kgCO2/km ,defra/amee 2008,1.15*value*user_distance_km

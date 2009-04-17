@@ -1,0 +1,69 @@
+type,measure,considerWhenExistingDwellingHas,recommendIfExistingDwellingHas,improveTo,recordNumber,type,source
+A,Loft Insulation,"Pitched roof (slates or tiles), accessible loft, insulation at ceiling level. Note: This does not include insulation of a room-in-roof",<= 150 mm insulation,250 mm insulation. See Note 2,5,,sap 2005
+B,Cavity wall insulation,"Unfilled cavity wall (assessed as ""as built"" and not ""unknown"")",Wall U-value (from RdSAP tables) > 0.6,Cavity filled wall. U-value from RdSAP tables according to age of wall. See Note 3,6,,sap 2005
+C,Hot water cylinder insulation,Cylinder present and accessible.,No cylinder insulation,160 mm jacket,1,,sap 2005
+,,,Factory-applied insulation <= 25 mm,Add 80 mm jacket. See Note 1,3,,sap 2005
+,,,Jacket < 100 mm,Make up to 160 mm,2,,sap 2005
+D,Draughtproofing,Single glazed windows present,Double glazed windows between 51% and 80% of total window area,Draught-proofing for all single glazed window. Draught-proofed area includes all windows (but not doors),10,,sap 2005
+E,Low energy lights,All cases,Low energy lights < 100% of fixed outlets,Low energy lamps in all fixed outlets,35,,sap 2005
+F,Cylinder thermostat,Cylinder present and accessible.,No cylinderstat (Note: cylinderstat is assumed for electric immersions),Cylinderstat,4,,sap 2005
+G,Heating controls for wet central heating system,Main heating by boiler with radiators,No controls ,"Roomsat, programmer and TRVs",11,,sap 2005
+,,,Programmer only,do.,12,,sap 2005
+,,,Roomstat only,do.,15,,sap 2005
+,,,"Programmer, single roomstat (no TRVs)",do.,13,,sap 2005
+,,,"Programmer, TRV's (no roomstat or BEM",do.,14,,sap 2005
+,,,Programmer and at least two roomstats,Time and temperature zone control,16,,sap 2005
+,,Main heating by boiler with underfloor heating,Less than time and temperature zone control,Time and temperature zone control,16,,sap 2005
+,,Main heating by heat pump with radiators or underfloor heating,Less than time and temperature zone control,Time and temperature zone control,16,,sap 2005
+H,Heating controls for warm air system,Main heating by mains gas or LPG warm air (including heat pumps),No control ,Programmer and roomstat,17,,sap 2005
+,,,Programmer only,do.,18,,sap 2005
+I,"Upgrade boiler, same fuel",Main heating by mains gas boiler (including range cooker boiler) or CPSU or by LPG or oil boiler (including range cooker boiler) and mains gas not available,"Boiler, not condensing, hot water cylinder in dwelling","Band A regular boiler, same fuel as original. See Note 4",20,,sap 2005
+,,,"Boiler, not condensing, no hot water cylinder in dwelling","Band A combi boiler, same fuel as original. See Note 4",21,,sap 2005
+,,,"CPSU, not condensing",Condensing CPSU. See Note 5,36,,sap 2005
+,,,"Range cooker boiler, hot water cylinder in dwelling","Band A regular boiler, same fuel as original. See Note 4",37,,sap 2005
+,,,"Range cooker boiler, no hot water cylinder in dwelling","Band A combi boiler, same fuel as original. See Note 4",38,,sap 2005
+J,Biomass boiler,Independent solid fuel boiler (not biomass or dual fuel),Mains gas not available,"Manual feed biomass boiler in heated space (wood logs) with radiators, HETAS approved",22,,sap 2005
+K,Biomass room heater with boiler,Solid fuel open fire with or without boiler (not biomass or dual fuel),Mains gas not available,"Wood pellet stove with radiators, HETAS approved, summer immersion heater. See Note 8",23,,sap 2005
+,,Solid fuel room heater with or without boiler (not biomass or dual fuel) ,Mains gas not available,"Wood pellet stove with radiators, HETAS approved, summer immersion heater. See Note 8",39,,sap 2005
+L,New or replacement storage,"Main heating by storage heaters, old (large volume) or Modern (slimline)","Mains gas not available, and ho-water heating by cylinder with single immersion, or from solid-fuel secondary heater","Fan-assisted storage heaters and dual immersion water heating, large cylinder with 50 mm factory-applied insulation. Secondary electric heaters if no existing secondary",24,,sap 2005
+,,,"Mains gas not available, and any other hot water system",Fan assisted storage heaters and Secondary electric heaters if no existing secondary,25,,sap 2005
+,,"Main heating by: electric room heaters, electric ceiling heating; Also if no space heating system present","Mains gas not available, and ho-water heating by cylinder with single immersion or from solid-fuel secondary or no hot water system present","Fan-assisted heaters, 7-hour of-peak tariff and dual immersion water heating, large cylinder with 50 mm factor-applied insulation. Secondary heaters if no existing secondary ",30,,sap 2005
+,,,"Mains gas not available, and any other hot water system","Fan-assisted storage heaters, 7-hour of-peak tariff. Secondary electric heaters if no existing secondary",31,,sap 2005
+M,Replacement warm-air unit,Main heating by mains gas or LPG warm air (including heat pumps),Age before 1998,"New (non-condensing) warm-air unit, same fuel as original, on-off control, fan-assisted flue",26,,sap 2005
+N,Solar Water Heating,"House or bungalow, not thatched roof",No solar panel,Solar panel. Increase a normal size cylinder to medium (not combi or CPSU boiler or instantaneous water heater for which see Table S18;and not community heating with no cylinder in dwelling which remains at 110 litres),19,,sap 2005
+O,Double glazing,Single glazed windows present,Double glazed windows less than 51% of total opening area (total opening area includes doors),"If all windows measured, all single  glazed windows replaced by double glazing with U = 2.0 and g = 0.72. Otherwise all windows  hanged to double glazing with U = 2.0 and g = 0.72.",8,,sap 2005
+P,Secondary glazing,Single glazing present but assessor de-selected measure O. See Note 6,Double or secondary glazed windows less than 51% of total opening area (total opening area includes doors),If all windows measured apply secondary glazing to single glazed windows with U = 2.4 and g = 0.76. Otherwise all windows changed to secondary glazing with U = 2.4 and g = 0.76.,9,,sap 2005
+Q,Solid wall insulation,"Solid wall, stone or brick (assessed as ""as built"" and not ""unknown"")",Wall U-value (from RdSAP tables) > 0.6,Internal or external wall insulation. U-value from RdSAP tables according to age of wall. See Note 7,7,,sap 2005
+R,Condensing oil boiler,Main heating by oil warm air,"Mains gas not available, hot water cylinder in dwelling","Band A regular oil boiler, radiators. See Note 4",28,,sap 2005
+,,," Mains gas not available, no hot water cylinder in dwelling","Band A combi oil boiler, radiators.
+See Note 4",43,,sap 2005
+S,"Change heating to Band A gas 40 condensing boiler (no fuel
+switch)",Main heating by mains gas fires,Hot water cylinder in dwelling,"Band A regular mains gas boiler, radiators. See Note 4",40,,sap 2005
+,,,No hot water cylinder in dwelling,"Band A combi mains gas boiler,
+radiators. See Note 4",41,,sap 2005
+T,"Change heating to Band A gas
+condensing boiler (fuel switch)","Main heating by: 
+- Solid mineral fuel boiler
+- LPG boiler (non-condensing)
+- oil boiler (non-condensing)
+- LPG fires
+- oil warm air
+- solid mineral fuel room heaters
+- electric storage heating
+- electric off-peak underfloor
+heating
+- electric room heaters
+- electric ceiling heating
+Also if no space heating system
+present","Mains gas available, hot water
+cylinder in dwelling","Band A regular mains gas boiler,
+radiators. See Note 4",29,,sap 2005
+,,,"Mains gas available, no hot water
+cylinder in dwelling","Band A combi mains gas boiler,
+radiators. See Note 4",32,,sap 2005
+,,Main heating by LPG CPSU,Mains gas available,Mains gas condensing CPSU,42,,sap 2005
+U,Photovoltaics,"House or bungalow, not thatched roof",Photovoltaics less than 1.0 kWp,"Photovoltaics, 2.5 kWp
+(2.5 kWp in total, including any
+existing)",34,,sap 2005
+V,Wind turbine,House or bungalow,No wind turbine,"1 wind turbine, blade diameter
+1.75 m, hub height 2.0 m",44,,sap 2005

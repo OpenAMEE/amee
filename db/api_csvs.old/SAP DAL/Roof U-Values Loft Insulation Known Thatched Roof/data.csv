@@ -1,0 +1,11 @@
+type,roofUvalue(W/m²K)Thatchedroof,unit,source
+None,0.35,,sap 2005
+12,0.32,,sap 2005
+25,0.3,,sap 2005
+50,0.25,,sap 2005
+75,0.22,,sap 2005
+100,0.2,,sap 2005
+150,0.16,,sap 2005
+200,0.13,,sap 2005
+250,0.11,,sap 2005
+>= 300,0.1,,sap 2005

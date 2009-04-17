@@ -1,0 +1,10 @@
+type,accessfactor,area,flux,gvalue,ff,gains,error,units,source
+north,0,0,0,0,0,0,valid,0,0
+northeast,0,0,0,0,0,0,valid,0,0
+east,0,0,0,0,0,0,valid,0,0
+southeast,0,0,0,0,0,0,valid,0,0
+south,0,0,0,0,0,0,valid,0,0
+southwest,0,0,0,0,0,0,valid,0,0
+west,0,0,0,0,0,0,valid,0,0
+northwest,0,0,0,0,0,0,valid,0,0
+rooflights,0,0,0,0,0,0,valid,0,0

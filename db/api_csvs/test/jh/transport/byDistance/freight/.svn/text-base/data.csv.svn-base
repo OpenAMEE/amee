@@ -1,0 +1,10 @@
+type,subtype,massCO2perDistanceMassFreight,units,source
+Road,General,0.072,DUMMY,GHGP - see wiki
+Train,Diesel,0.02,DUMMY,GHGP - see wiki
+Train,Electric,0.04,DUMMY,GHGP - see wiki
+Train,Coal,0.026,DUMMY,GHGP - see wiki
+Ship,Inland,0.035,DUMMY,GHGP - see wiki
+Ship,Marine,0.01,DUMMY,GHGP - see wiki
+Plane,Short haul,1.58,DUMMY,GHGP - see wiki
+Plane,Medium haul,0.8,DUMMY,GHGP - see wiki
+Plane,Long haul,0.57,DUMMY,GHGP - see wiki

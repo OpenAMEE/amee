@@ -13,4 +13,4 @@ Is return,isReturn,TEXT,false,false
 Distance per journey,distancePerJourney,DECIMAL,false,false
 Typical journey distance,typicalJourneyDistance,DECIMAL,true,false
 Use typical distance,useTypicalDistance,TEXT,false,false
-
+Number of passengers,numberOfPassengers,DECIMAL,false,false

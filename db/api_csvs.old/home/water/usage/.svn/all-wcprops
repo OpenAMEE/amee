@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/!svn/ver/2633/internal/api_csvs/home/water/usage
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/2284/internal/api_csvs/home/water/usage/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/2284/internal/api_csvs/home/water/usage/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/2284/internal/api_csvs/home/water/usage/perMonth.js
+END
+v2Algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/2633/internal/api_csvs/home/water/usage/v2Algorithm.js
+END
+perMonth.js.migrate
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/2633/internal/api_csvs/home/water/usage/perMonth.js.migrate
+END

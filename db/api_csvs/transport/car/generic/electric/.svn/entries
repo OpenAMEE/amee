@@ -1,15 +1,15 @@
 8
 
 dir
-2924
+2973
 http://svn.amee.com/internal/api_csvs/transport/car/generic/electric
 http://svn.amee.com
 
 
 
-2009-02-04T14:03:00.027226Z
-2523
-james.hetherington
+2009-03-25T09:40:31.933369Z
+2925
+andrew
 
 
 svn:special svn:externals svn:needs-lock
@@ -38,6 +38,30 @@ file
 2201
 aleks
 has-props
+
+itemdef.csv
+file
+
+
+
+
+2009-04-16T12:25:12.000000Z
+ff2a81c49d3ca1c6d1155081ec34b5fc
+2009-03-25T09:40:31.933369Z
+2925
+andrew
+
+perMonth.js
+file
+
+
+
+
+2009-04-16T12:25:12.000000Z
+be1abda7dda53f162eb87784d0d96b99
+2009-03-25T09:40:31.933369Z
+2925
+andrew
 
 v2Algorithm.js
 file

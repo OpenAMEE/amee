@@ -1,0 +1,5 @@
+type,Non Condensing Gas or LPG ON/OFF,Non Condensing Gas or LPG Modulating,Non Condensing Oil ON/OFF,Non Condensing Oil Modulating,Condensing Gas or LPG ON/OFF,Condensing Gas or LPG Modulating,Condensing Oil ON/OFF,Condensing Oil Modulating,units,source
+regular boiler,101,102,201,NULL,NULL,101,102,201,sedbuk Equation Number,SAP 2005
+instantaneous combi boiler,103,104,202,NULL,NULL,103,104,202,sedbuk Equation Number,SAP 2005
+storage combi boiler,105,106,203,NULL,NULL,105,106,203,sedbuk Equation Number,SAP 2005
+combined primary storage unit ,107,107,NULL,NULL,NULL,107,107,NULL,sedbuk Equation Number,SAP 2005

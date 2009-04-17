@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/!svn/ver/2819/internal/api_csvs/test/jh/planet/greenhouseGases/globalWarmingPotentials
+END
+algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/!svn/ver/2819/internal/api_csvs/test/jh/planet/greenhouseGases/globalWarmingPotentials/algorithm.js
+END
+GlobalMitigationFullReport.txt
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/!svn/ver/2819/internal/api_csvs/test/jh/planet/greenhouseGases/globalWarmingPotentials/GlobalMitigationFullReport.txt
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/!svn/ver/2819/internal/api_csvs/test/jh/planet/greenhouseGases/globalWarmingPotentials/data.csv
+END
+dataNoUnits.csv
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/!svn/ver/2819/internal/api_csvs/test/jh/planet/greenhouseGases/globalWarmingPotentials/dataNoUnits.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/!svn/ver/2819/internal/api_csvs/test/jh/planet/greenhouseGases/globalWarmingPotentials/itemdef.csv
+END
+item_spec.rb
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/!svn/ver/2819/internal/api_csvs/test/jh/planet/greenhouseGases/globalWarmingPotentials/item_spec.rb
+END
+GlobalMitigationFullReport.pdf
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/!svn/ver/2819/internal/api_csvs/test/jh/planet/greenhouseGases/globalWarmingPotentials/GlobalMitigationFullReport.pdf
+END
+rawdata.csv
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/!svn/ver/2819/internal/api_csvs/test/jh/planet/greenhouseGases/globalWarmingPotentials/rawdata.csv
+END

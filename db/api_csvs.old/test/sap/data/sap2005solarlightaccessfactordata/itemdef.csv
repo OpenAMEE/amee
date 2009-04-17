@@ -1,0 +1,9 @@
+name,Sap 2005 Solar and Light access factors Data,,,
+algFile,algorithm_alg.js,,,
+name,path,type,isDataItemValue,isDrillDown
+Type,type,TEXT,TRUE,TRUE
+sky blocked by obstacles,skyblockedbyobstacles,TEXT,TRUE,FALSE
+Winter solar access factor,wintersolaraccessfactor,DECIMAL,TRUE,FALSE
+Summer solar access factor,summersolaraccessfactor,DECIMAL,TRUE,FALSE
+Light access factor,lightaccessfactor,DECIMAL,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE

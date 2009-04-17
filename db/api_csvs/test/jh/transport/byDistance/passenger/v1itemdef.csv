@@ -1,0 +1,9 @@
+Name,ghgPassenger
+algFile,algorithm.js
+name,path,type,isDataItemValue,isDrillDown
+Source,source,TEXT,true,false
+vehicle,vehicle,TEXT,true,true
+Type and Context,typeAndContext,TEXT,true,true
+Mass CO2 per Passenger Distance,massCO2perPassengerDistance,DECIMAL,true,false
+Distance,distance,DECIMAL,false,false
+Passengers,passengers,DECIMAL,false,false

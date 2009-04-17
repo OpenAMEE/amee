@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/2568/internal/api_csvs/home/appliances/cooking
+END
+alg_pre_aug2008_update.txt
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/!svn/ver/2201/internal/api_csvs/home/appliances/cooking/alg_pre_aug2008_update.txt
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/2201/internal/api_csvs/home/appliances/cooking/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/2376/internal/api_csvs/home/appliances/cooking/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/2376/internal/api_csvs/home/appliances/cooking/perMonth.js
+END
+v2Algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/2523/internal/api_csvs/home/appliances/cooking/v2Algorithm.js
+END
+alg_post_aug2008_update.txt
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/!svn/ver/2201/internal/api_csvs/home/appliances/cooking/alg_post_aug2008_update.txt
+END
+perMonth.js.migrate
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/2518/internal/api_csvs/home/appliances/cooking/perMonth.js.migrate
+END

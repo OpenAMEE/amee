@@ -1,0 +1,4 @@
+fuel,size,kgCO2PerKm,typicalDistance,units,source,algorithm,default
+petrol,small,0.073,4827,kgCO2/km ,Reproduced from ACEM / EC JRC,value*user_distance*user_multipliers,
+petrol,medium,0.094,4827,kgCO2/km ,Reproduced from ACEM / EC JRC,value*user_distance*user_multipliers,
+petrol,large,0.129,4827,kgCO2/km ,Reproduced from ACEM / EC JRC,value*user_distance*user_multipliers,

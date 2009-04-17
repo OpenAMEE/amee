@@ -1,0 +1,3 @@
+type,fullLoad,30PercentPartLoad,units,source
+condensing boilers,101,107,percentage,sap 2005
+non condensing boilers,92,91,percentage,sap 2005

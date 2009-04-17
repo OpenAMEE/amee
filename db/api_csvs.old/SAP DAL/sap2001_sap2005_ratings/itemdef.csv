@@ -1,0 +1,10 @@
+name,Relationship between SAP 2001 ratings and SAP 2005 ratings,,,
+algFile,perMonth.js,,,
+name,path,type,isDataItemValue,isDrillDown
+SAP 2005 for main heating fuel Mains gas,sap2005forMainHeatingFuel mainsGas,INTEGER,TRUE,FALSE
+SAP 2005 for main heating fuel LPG,sap2005forMainHeatingFuelLpg,INTEGER,TRUE,FALSE
+SAP 2005 for main heating fuel Oil,sap2005forMainHeatingFuelOil,INTEGER,TRUE,FALSE
+SAP 2005 for main heating fuel Solid Fuel,sap2005forMainHeatingFuelSolidfuel,INTEGER,TRUE,FALSE
+SAP 2005 for main heating fuel Electricity,sap2005forMainHeatingFuelElectricity,INTEGER,TRUE,FALSE
+Source,source,TEXT,TRUE,FALSE
+Type,type,TEXT,TRUE,TRUE

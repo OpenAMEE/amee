@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/2904/internal/api_csvs/SAP%20DAL/dimension_conversions
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/2904/internal/api_csvs/SAP%20DAL/dimension_conversions/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/2904/internal/api_csvs/SAP%20DAL/dimension_conversions/itemdef.csv
+END
