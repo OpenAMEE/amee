@@ -105,7 +105,7 @@ public class ServiceResource extends AMEEResource {
     }
 
     private void addCollection(Workspace ws, PathItem pathItem, boolean recurse) {
-        DataCategory dc = dataService.getDataCategory(pathItem.getUid());
+        DataCategory dc = dataService.getDataCategoryByUid(pathItem.getUid());
         if (dc.getItemDefinition() != null) {
 
             Reference href = new Reference(getRequest().getResourceRef().getParentRef(), pathItem.getFullPath());

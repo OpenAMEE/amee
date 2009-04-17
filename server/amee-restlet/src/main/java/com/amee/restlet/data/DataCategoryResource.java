@@ -360,7 +360,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 // update DataCategory
                 uid = form.getFirstValue("dataCategoryUid");
                 if (uid != null) {
-                    dataCategory = dataService.getDataCategory(uid);
+                    dataCategory = dataService.getDataCategoryByUid(uid);
                     if (dataCategory != null) {
                         dataCategory = populateDataCategory(form, dataCategory);
 

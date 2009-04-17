@@ -217,7 +217,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
 
     protected void setDataCategory(String dataCategoryUid) {
         if (dataCategoryUid.isEmpty()) return;
-        this.dataCategory = dataService.getDataCategory(dataCategoryUid);
+        this.dataCategory = dataService.getDataCategoryByUid(dataCategoryUid);
     }
 
     public DataCategory getDataCategory() {

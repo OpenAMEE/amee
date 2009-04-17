@@ -100,7 +100,7 @@ public class DataFinder implements Serializable {
         if (pig != null) {
             pi = pig.findByPath(path, false);
             if ((pi != null) && pi.getObjectType().equals(ObjectType.DC)) {
-                dataCategory = dataService.getDataCategory(pi.getUid());
+                dataCategory = dataService.getDataCategoryByUid(pi.getUid());
             }
         }
         return dataCategory;

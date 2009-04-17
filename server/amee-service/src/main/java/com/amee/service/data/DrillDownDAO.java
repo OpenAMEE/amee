@@ -107,16 +107,14 @@ class DrillDownDAO implements Serializable {
                 dataItemIds = getDataItemIds(
                         dataCategory,
                         selections, startDate,
-                        endDate
-                );
+                        endDate);
                 if (!dataItemIds.isEmpty()) {
                     for (String value : getDataItemValues(
                             itemValueDefinition.getId(),
                             getDataItemIds(
                                     dataCategory,
                                     selections, startDate,
-                                    endDate
-                            ))) {
+                                    endDate))) {
                         choices.add(new Choice(value));
                     }
                 }
@@ -174,8 +172,7 @@ class DrillDownDAO implements Serializable {
             dataItemIds = getDataItemIds(
                     dataCategory,
                     selections, startDate,
-                    endDate
-            );
+                    endDate);
             if (!dataItemIds.isEmpty()) {
                 for (String value : this.getDataItemUIDs(dataItemIds)) {
                     choices.add(new Choice(value));

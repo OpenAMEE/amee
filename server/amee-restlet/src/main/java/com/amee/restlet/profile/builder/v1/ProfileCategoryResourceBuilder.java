@@ -85,7 +85,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
     protected JSONObject getProfileCategoryJSONObject(ProfileCategoryResource resource, PathItem pathItem) throws JSONException {
 
-        DataCategory dataCategory = dataService.getDataCategory(pathItem.getUid());
+        DataCategory dataCategory = dataService.getDataCategoryByUid(pathItem.getUid());
 
         JSONObject obj = new JSONObject();
 
@@ -194,7 +194,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
     protected Element getProfileCategoryElement(ProfileCategoryResource resource, Document document, PathItem pathItem) {
 
-        DataCategory dataCategory = dataService.getDataCategory(pathItem.getUid());
+        DataCategory dataCategory = dataService.getDataCategoryByUid(pathItem.getUid());
 
         Element element = document.createElement("ProfileCategory");
 

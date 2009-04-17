@@ -27,8 +27,6 @@ import com.amee.domain.event.ObservedEvent;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
-import com.amee.service.path.PathItemService;
-import com.amee.service.transaction.TransactionController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,7 +43,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * TODO: Clear caches after entity removal.
@@ -61,20 +61,8 @@ class DataServiceDAO implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    private DataSheetService dataSheetService;
-
-    @Autowired
-    private PathItemService pathItemService;
-
-    @Autowired
-    private DrillDownService drillDownService;
-
     @Autowired(required = true)
     private ObserveEventService observeEventService;
-
-    @Autowired
-    private TransactionController transactionController;
 
     public DataServiceDAO() {
         super();
@@ -166,6 +154,10 @@ class DataServiceDAO implements Serializable {
                 .getResultList();
     }
 
+    public void persist(DataCategory dc) {
+        entityManager.persist(dc);
+    }
+
     @SuppressWarnings(value = "unchecked")
     public void remove(DataCategory dataCategory) {
         log.debug("remove: " + dataCategory.getName());
@@ -247,7 +239,6 @@ class DataServiceDAO implements Serializable {
             if (dataItems.size() == 1) {
                 log.debug("getDataItemByUid() found: " + uid);
                 dataItem = dataItems.get(0);
-                checkDataItem(dataItem);
             } else {
                 log.debug("getDataItemByUid() NOT found: " + uid);
             }
@@ -273,7 +264,6 @@ class DataServiceDAO implements Serializable {
             if (dataItems.size() == 1) {
                 log.debug("getDataItemByPath() found: " + path);
                 dataItem = dataItems.get(0);
-                checkDataItem(dataItem);
             } else {
                 log.debug("getDataItemByPath() NOT found: " + path);
             }
@@ -321,6 +311,17 @@ class DataServiceDAO implements Serializable {
         }
     }
 
+    public void persist(DataItem dataItem) {
+        entityManager.persist(dataItem);
+    }
+
+    public void remove(DataItem dataItem) {
+        observeEventService.raiseEvent("beforeDataItemDelete", dataItem);
+        entityManager.remove(dataItem);
+    }
+
+    // Choices
+
     @SuppressWarnings(value = "unchecked")
     public Choices getUserValueChoices(DataItem dataItem, APIVersion apiVersion) {
         List<Choice> userValueChoices = new ArrayList<Choice>();
@@ -341,54 +342,5 @@ class DataServiceDAO implements Serializable {
             }
         }
         return new Choices("userValueChoices", userValueChoices);
-    }
-
-    public void remove(DataItem dataItem) {
-        observeEventService.raiseEvent("beforeDataItemDelete", dataItem);
-        entityManager.remove(dataItem);
-    }
-
-    /**
-     * Add to the {@link com.amee.domain.data.DataItem} any {@link com.amee.domain.data.ItemValue}s it is missing.
-     * This will be the case on first persist (this method acting as a reification function), and between GETs if any
-     * new {@link com.amee.domain.data.ItemValueDefinition}s have been added to the underlying
-     * {@link com.amee.domain.data.ItemDefinition}.
-     * <p/>
-     * Any updates to the {@link com.amee.domain.data.DataItem} will be persisted to the database.
-     *
-     * @param dataItem
-     */
-    @SuppressWarnings(value = "unchecked")
-    public void checkDataItem(DataItem dataItem) {
-
-        Set<ItemValueDefinition> existingItemValueDefinitions = dataItem.getItemValueDefinitions();
-        Set<ItemValueDefinition> missingItemValueDefinitions = new HashSet<ItemValueDefinition>();
-
-        // find ItemValueDefinitions not currently implemented in this Item
-        for (ItemValueDefinition ivd : dataItem.getItemDefinition().getItemValueDefinitions()) {
-            if (ivd.isFromData()) {
-                if (!existingItemValueDefinitions.contains(ivd)) {
-                    missingItemValueDefinitions.add(ivd);
-                }
-            }
-        }
-
-        // Do we need to add any ItemValueDefinitions?
-        if (missingItemValueDefinitions.size() > 0) {
-
-            // Ensure a transaction has been opened. The implementation of open-session-in-view we are using
-            // does not open transactions for GETs. This method is called for certain GETs.
-            transactionController.begin(true);
-
-            // create missing ItemValues
-            for (ItemValueDefinition ivd : missingItemValueDefinitions) {
-                entityManager.persist(new ItemValue(ivd, dataItem, ""));
-            }
-
-            // clear caches
-            drillDownService.clearDrillDownCache();
-            pathItemService.removePathItemGroup(dataItem.getEnvironment());
-            dataSheetService.removeSheet(dataItem.getDataCategory());
-        }
     }
 }
