@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProfileCategory>
+  <ProfileItems>
+    <ProfileItem>
+      <dataItemUid>9A9E8852220B</dataItemUid>
+      <validFrom />
+      <name>1</name>
+      <useTypicalDistance>false</useTypicalDistance>
+      <kmPerLitre>-1</kmPerLitre>
+      <distanceKmPerMonth>297.933166666667</distanceKmPerMonth>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>0F30792D4C88</dataItemUid>
+      <validFrom />
+      <tyrePressuresChecked>yes</tyrePressuresChecked>
+      <carShare>yes</carShare>
+      <shortJourneys>i use public transport</shortJourneys>
+      <locality>rural</locality>
+      <airConUsage>sparingly</airConUsage>
+      <ecoDriving>yes</ecoDriving>
+      <vehicleService>annually</vehicleService>
+      <vehiclesHaveAirCon>yes</vehiclesHaveAirCon>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>EFB46D30C58C</dataItemUid>
+      <validFrom />
+      <name>1</name>
+      <useTypicalDistance>false</useTypicalDistance>
+      <isReturn>true</isReturn>
+      <journeyFrequency>weekly</journeyFrequency>
+      <numberOfPassengers>1</numberOfPassengers>
+      <numberOfJourneys>2</numberOfJourneys>
+      <distanceKmPerMonth>222</distanceKmPerMonth>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>E98F73AE9B40</dataItemUid>
+      <validFrom />
+      <passengerClass>regular</passengerClass>
+      <name>1</name>
+      <journeysPerYear>2</journeysPerYear>
+      <IATACode2>ALG</IATACode2>
+      <numberOfPassengers />
+      <IATACode1>BRR</IATACode1>
+    </ProfileItem>
+  </ProfileItems>
+</ProfileCategory>
+
