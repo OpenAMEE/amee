@@ -27,7 +27,7 @@ import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Choice;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
-import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.definition.DefinitionService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +61,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
+    private DefinitionService definitionService;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -246,7 +246,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
         if (definitionBrowser.getAlgorithmActions().isAllowDelete()) {
             Algorithm algorithm = definitionBrowser.getAlgorithm();
             definitionBrowser.getItemDefinition().remove(algorithm);
-            definitionServiceDAO.remove(algorithm);
+            definitionService.remove(algorithm);
             success();
         } else {
             notAuthorized();
@@ -378,5 +378,4 @@ public class AlgorithmResource extends BaseResource implements Serializable {
 
         }
     }
-
 }

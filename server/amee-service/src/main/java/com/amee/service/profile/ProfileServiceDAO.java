@@ -311,7 +311,7 @@ class ProfileServiceDAO implements Serializable {
 
     /**
      * Removes a Profile along with associated ProfileItems and ItemValues.
-     *
+     * <p/>
      * Native SQL is used to remove ItemValues as HQL cannot use joins in DELETEs. Care is
      * taken to tell Hibernate to only invalidate the ItemValue cache (via the
      * SQLQuery.addSynchronizedEntityClass method call).
@@ -490,31 +490,6 @@ class ProfileServiceDAO implements Serializable {
         query.setHint("org.hibernate.cacheRegion", CACHE_REGION);
 
         return query.getResultList();
-    }
-
-    // ItemValues
-
-    @SuppressWarnings(value = "unchecked")
-    public ItemValue getProfileItemValue(String uid) {
-        ItemValue profileItemValue = null;
-        List<ItemValue> profileItemValues;
-        profileItemValues = entityManager.createQuery(
-                "FROM ItemValue iv " +
-                        "LEFT JOIN FETCH iv.item i " +
-                        "WHERE iv.uid = :uid")
-                .setParameter("uid", uid)
-                .getResultList();
-        if (profileItemValues.size() == 1) {
-            log.debug("found ItemValue");
-            profileItemValue = profileItemValues.get(0);
-        } else {
-            log.debug("ItemValue NOT found");
-        }
-        return profileItemValue;
-    }
-
-    public void remove(ItemValue profileItemValue) {
-        entityManager.remove(profileItemValue);
     }
 
     /**

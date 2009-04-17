@@ -30,6 +30,7 @@ import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
+import com.amee.service.definition.DefinitionService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +62,10 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Autowired
     private DataService dataService;
-    
+
+    @Autowired
+    private DefinitionService definitionService;
+
     private List<DataCategory> dataCategories;
     private DataItem dataItem;
     private List<DataItem> dataItems;
@@ -335,7 +339,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 dataCategory = new DataCategory(thisDataCategory);
                 if (form.getNames().contains("itemDefinitionUid")) {
                     ItemDefinition itemDefinition =
-                            dataService.getItemDefinition(
+                            definitionService.getItemDefinition(
                                     thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
                     if (itemDefinition != null) {
                         dataCategory.setItemDefinition(itemDefinition);
@@ -484,7 +488,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             }
             if (form.getNames().contains("itemDefinitionUid")) {
                 ItemDefinition itemDefinition =
-                        dataService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
+                        definitionService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
                 if (itemDefinition != null) {
                     thisDataCategory.setItemDefinition(itemDefinition);
                 } else {

@@ -23,14 +23,12 @@ import com.amee.domain.APIVersion;
 import com.amee.domain.UidGen;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.environment.EnvironmentObject;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Choices;
 import com.amee.domain.sheet.Sheet;
-import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.BaseService;
 import com.amee.service.path.PathItemService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -47,7 +45,7 @@ import java.util.List;
  * Primary service interface to Data Resources.
  */
 @Service
-public class DataService {
+public class DataService extends BaseService {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -58,9 +56,6 @@ public class DataService {
     private DataServiceDAO dao;
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
-
-    @Autowired
     private DataSheetService dataSheetService;
 
     @Autowired
@@ -69,11 +64,16 @@ public class DataService {
     @Autowired
     private DrillDownService drillDownService;
 
-    public void clearCaches(DataCategory dc) {
+    /**
+     * Clears all caches related to the supplied DataCategory.
+     *
+     * @param dataCategory to clear caches for
+     */
+    public void clearCaches(DataCategory dataCategory) {
         log.debug("clearCaches()");
         drillDownService.clearDrillDownCache();
-        pathItemService.removePathItemGroup(dc.getEnvironment());
-        dataSheetService.removeSheet(dc);
+        pathItemService.removePathItemGroup(dataCategory.getEnvironment());
+        dataSheetService.removeSheet(dataCategory);
     }
 
     public DataCategory getDataCategory(String dataCategoryUid) {
@@ -156,7 +156,7 @@ public class DataService {
         return dao.getDataItems(dc);
     }
 
-    public ItemValue getItemValue(String uid) {
+    public ItemValue getItemValueByUID(String uid) {
         return dao.getItemValueByUid(uid);
     }
 
@@ -183,26 +183,5 @@ public class DataService {
 
     public Sheet getSheet(DataBrowser browser) {
         return dataSheetService.getSheet(browser);
-    }
-
-    /**
-     * Returns the ItemDefinition for the Environnment and ItemDefinition UID specified. Returns null
-     * if the ItemDefinition could not be found. Throws a RuntimeException if the specified Environment
-     * does not match the ItemDefinition Environment.
-     *
-     * @param environment within which the ItemDefinition must belong
-     * @param uid         of the ItemDefinition to fetch
-     * @return the ItemDefininition matching the Environment and ItemDefinition UID specified
-     */
-    public ItemDefinition getItemDefinition(Environment environment, String uid) {
-        ItemDefinition itemDefinition = definitionServiceDAO.getItemDefinition(uid);
-        checkEnvironmentObject(environment, itemDefinition);
-        return itemDefinition;
-    }
-
-    public void checkEnvironmentObject(Environment environment, EnvironmentObject environmentObject) {
-        if ((environmentObject != null) && (!environmentObject.getEnvironment().equals(environment))) {
-            throw new RuntimeException("Incorrect Environment for " + environmentObject.getClass().getSimpleName());
-        }
     }
 }

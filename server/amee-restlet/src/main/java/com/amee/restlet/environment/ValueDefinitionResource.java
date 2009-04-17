@@ -23,7 +23,7 @@ import com.amee.core.ValueType;
 import com.amee.domain.ValueDefinition;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
-import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -50,7 +50,7 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
+    private DefinitionService definitionService;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -145,7 +145,7 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
         log.debug("delete");
         if (definitionBrowser.getValueDefinitionActions().isAllowDelete()) {
             ValueDefinition valueDefinition = definitionBrowser.getValueDefinition();
-            definitionServiceDAO.remove(valueDefinition);
+            definitionService.remove(valueDefinition);
             success();
         } else {
             notAuthorized();

@@ -5,7 +5,6 @@ import com.amee.domain.Pager;
 import com.amee.domain.auth.User;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.StartEndDate;
@@ -85,10 +84,6 @@ public class ProfileService {
 
     public List<Profile> getProfiles(Pager pager) {
         return dao.getProfiles(pager);
-    }
-
-    public ItemValue getProfileItemValue(String profileItemValueUid) {
-        return dao.getProfileItemValue(profileItemValueUid);
     }
 
     public ProfileItem getProfileItem(String profileItemUid) {

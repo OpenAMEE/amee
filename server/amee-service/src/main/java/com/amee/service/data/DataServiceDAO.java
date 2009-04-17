@@ -34,6 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,6 @@ import java.util.*;
 /**
  * TODO: Clear caches after entity removal.
  * TODO: Any other cache operations to put here?
- * TODO: Consider merging with DrillDownDAO?
  */
 @Service
 class DataServiceDAO implements Serializable {
@@ -171,12 +171,17 @@ class DataServiceDAO implements Serializable {
         log.debug("remove: " + dataCategory.getName());
         observeEventService.raiseEvent("beforeDataCategoryDelete", dataCategory);
         // remove ItemValues for DataItems
-        entityManager.createQuery(
-                "DELETE FROM ItemValue iv " +
-                        "WHERE iv.item IN " +
-                        "(SELECT di FROM DataItem di WHERE di.dataCategory.id = :dataCategoryId)")
-                .setParameter("dataCategoryId", dataCategory.getId())
-                .executeUpdate();
+        Session session = (Session) entityManager.getDelegate();
+        SQLQuery query = session.createSQLQuery(
+                new StringBuilder()
+                        .append("DELETE iv ")
+                        .append("FROM ITEM_VALUE iv, ITEM i ")
+                        .append("WHERE iv.ITEM_ID = i.ID ")
+                        .append("AND i.TYPE = 'DI' ")
+                        .append("AND i.DATA_CATEGORY_ID = :dataCategoryId").toString());
+        query.setLong("dataCategoryId", dataCategory.getId());
+        query.addSynchronizedEntityClass(ItemValue.class);
+        query.executeUpdate();
         // remove DataItems
         entityManager.createQuery(
                 "DELETE FROM DataItem di " +
