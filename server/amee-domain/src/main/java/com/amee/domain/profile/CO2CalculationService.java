@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Minimal service interface allowing a ProfileItem to calculate it's own CO2 Amount.
- *
+ * <p/>
  * Note: the interface is required to mitigate circular dependencies between the amee-calculation and amee-domain
  * packages.
  */
@@ -37,7 +37,7 @@ public interface CO2CalculationService {
      * set into the passed {@link ProfileItem}.
      *
      * @param profileItem - the {@link ProfileItem} for which to calculate the
-     * {@link com.amee.domain.core.CO2Amount CO2Amount}
+     *                    {@link com.amee.domain.core.CO2Amount CO2Amount}
      */
     void calculate(ProfileItem profileItem);
 }

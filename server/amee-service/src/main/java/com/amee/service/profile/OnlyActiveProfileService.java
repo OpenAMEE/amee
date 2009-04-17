@@ -36,12 +36,16 @@ public class OnlyActiveProfileService {
     @Autowired
     ProfileService profileService;
 
-    public List<ProfileItem> getProfileItems(final Profile profile, final DataCategory dataCategory,
-                                             final StartEndDate startDate, final StartEndDate endDate) {
+    public List<ProfileItem> getProfileItems(
+            final Profile profile,
+            final DataCategory dataCategory,
+            final StartEndDate startDate,
+            final StartEndDate endDate) {
 
-       List<ProfileItem> requestedItems;
+        List<ProfileItem> requestedItems;
 
-        final List<ProfileItem> profileItems = profileService.getProfileItems(profile, dataCategory, startDate, endDate);
+        final List<ProfileItem> profileItems = profileService.getProfileItems(
+                profile, dataCategory, startDate, endDate);
         requestedItems = (List) CollectionUtils.select(profileItems, new Predicate() {
             public boolean evaluate(Object o) {
                 ProfileItem pi = (ProfileItem) o;

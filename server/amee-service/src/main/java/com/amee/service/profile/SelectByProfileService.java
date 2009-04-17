@@ -36,10 +36,15 @@ public class SelectByProfileService {
     @Autowired
     ProfileService profileService;
 
-    public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory,
-                                             StartEndDate startDate, StartEndDate endDate, String selectBy) {
+    public List<ProfileItem> getProfileItems(
+            Profile profile,
+            DataCategory dataCategory,
+            StartEndDate startDate,
+            StartEndDate endDate,
+            String selectBy) {
 
-        List<ProfileItem> profileItems = profileService.getProfileItems(profile, dataCategory, startDate, endDate);
+        List<ProfileItem> profileItems = profileService.getProfileItems(
+                profile, dataCategory, startDate, endDate);
 
         if ("start".equals(selectBy)) {
             profileItems = selectByStart(startDate, profileItems);

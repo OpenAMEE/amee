@@ -125,4 +125,4 @@ public class ProfileFinder implements Serializable {
     public void setProfileItem(ProfileItem profileItem) {
         this.profileItem = profileItem;
     }
-}
+    }

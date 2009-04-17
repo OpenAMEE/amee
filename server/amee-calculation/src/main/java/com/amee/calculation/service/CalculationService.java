@@ -44,7 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CalculationService implements BeanFactoryAware, Serializable, CO2CalculationService {
+public class CalculationService implements CO2CalculationService, BeanFactoryAware, Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -150,13 +150,12 @@ public class CalculationService implements BeanFactoryAware, Serializable, CO2Ca
 
     private void initAlgoFinders(ProfileItem profileItem, Map<String, Object> values) {
 
-        ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
-        profileFinder.setProfileItem(profileItem);
-
         DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
         dataFinder.setStartDate(profileItem.getStartDate());
         dataFinder.setEndDate(profileItem.getEndDate());
 
+        ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
+        profileFinder.setProfileItem(profileItem);
         profileFinder.setDataFinder(dataFinder);
 
         values.put("dataFinder", dataFinder);

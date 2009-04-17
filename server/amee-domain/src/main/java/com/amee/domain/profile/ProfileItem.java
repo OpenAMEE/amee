@@ -39,7 +39,7 @@ import java.math.BigDecimal;
  * Website http://www.amee.cc
  */
 
-@Configurable(autowire= Autowire.BY_TYPE)
+@Configurable(autowire = Autowire.BY_TYPE)
 @Entity
 @DiscriminatorValue("PI")
 public class ProfileItem extends Item {
@@ -132,13 +132,13 @@ public class ProfileItem extends Item {
 
     /**
      * Get the {@link com.amee.domain.core.CO2Amount CO2Amount} for this ProfileItem.
-     *
+     * <p/>
      * If the ProfileItem does not support CO2 calculations (i.e. metadata) CO2Amount.ZERO is returned.
      *
      * @return - the {@link com.amee.domain.core.CO2Amount CO2Amount} for this ProfileItem
      */
     public CO2Amount getAmount() {
-        
+
         // Some ProfileItems are from ItemDefinitions which do not have algorithms and hence do not
         // support calculations.
         if (!supportsCalculation())
@@ -184,14 +184,12 @@ public class ProfileItem extends Item {
 
     //TODO - TEMP HACK - will remove as soon we decide how to handle return units in V1 correctly.
     public boolean isSingleFlight() {
-
         for (ItemValue iv : getItemValues()) {
             if ((iv.getName().startsWith("IATA") && iv.getValue().length() > 0) ||
-                (iv.getName().startsWith("Lat") && !iv.getValue().equals("-999")) ||
-                (iv.getName().startsWith("Lon") && !iv.getValue().equals("-999"))) {
+                    (iv.getName().startsWith("Lat") && !iv.getValue().equals("-999")) ||
+                    (iv.getName().startsWith("Lon") && !iv.getValue().equals("-999"))) {
                 return true;
             }
-
         }
         return false;
     }

@@ -19,12 +19,14 @@
  */
 package com.amee.service.profile;
 
-import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
 import com.amee.domain.UidGen;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.User;
-import com.amee.domain.data.*;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.data.ItemValue;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.event.ObservedEvent;
 import com.amee.domain.profile.Profile;
@@ -32,7 +34,6 @@ import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.service.auth.AuthService;
 import com.amee.service.environment.EnvironmentService;
-import com.amee.service.transaction.TransactionController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,7 +42,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
 
@@ -72,9 +72,6 @@ class ProfileServiceDAO implements Serializable {
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    @Autowired
-    private TransactionController transactionController;
 
     public ProfileServiceDAO() {
         super();
@@ -309,6 +306,10 @@ class ProfileServiceDAO implements Serializable {
         return profiles;
     }
 
+    public void persist(Profile profile) {
+        entityManager.persist(profile);
+    }
+
     /**
      * Removes a Profile along with associated ProfileItems and ItemValues.
      * <p/>
@@ -347,7 +348,7 @@ class ProfileServiceDAO implements Serializable {
     // ProfileItems
 
     @SuppressWarnings(value = "unchecked")
-    public ProfileItem getProfileItem(String uid, APIVersion apiVersion) {
+    public ProfileItem getProfileItem(String uid) {
         ProfileItem profileItem = null;
         if (!StringUtils.isBlank(uid)) {
             // See http://www.hibernate.org/117.html#A12 for notes on DISTINCT_ROOT_ENTITY.
@@ -361,40 +362,11 @@ class ProfileServiceDAO implements Serializable {
             if (profileItems.size() == 1) {
                 log.debug("getProfileItem() found: " + uid);
                 profileItem = profileItems.get(0);
-                checkProfileItem(profileItem, apiVersion);
             } else {
                 log.debug("getProfileItem() NOT found: " + uid);
             }
         }
         return profileItem;
-    }
-
-    @SuppressWarnings(value = "unchecked")
-    public boolean equivilentProfileItemExists(ProfileItem profileItem) {
-        List<ProfileItem> profileItems = entityManager.createQuery(
-                "SELECT DISTINCT pi " +
-                        "FROM ProfileItem pi " +
-                        "LEFT JOIN FETCH pi.itemValues " +
-                        "WHERE pi.profile.id = :profileId " +
-                        "AND pi.uid != :uid " +
-                        "AND pi.dataCategory.id = :dataCategoryId " +
-                        "AND pi.dataItem.id = :dataItemId " +
-                        "AND pi.startDate = :startDate " +
-                        "AND pi.name = :name")
-                .setParameter("profileId", profileItem.getProfile().getId())
-                .setParameter("uid", profileItem.getUid())
-                .setParameter("dataCategoryId", profileItem.getDataCategory().getId())
-                .setParameter("dataItemId", profileItem.getDataItem().getId())
-                .setParameter("startDate", profileItem.getStartDate())
-                .setParameter("name", profileItem.getName())
-                .getResultList();
-        if (profileItems.size() > 0) {
-            log.debug("equivilentProfileItemExists() - found ProfileItem(s)");
-            return true;
-        } else {
-            log.debug("equivilentProfileItemExists() - no ProfileItem(s) found");
-            return false;
-        }
     }
 
     @SuppressWarnings(value = "unchecked")
@@ -492,55 +464,40 @@ class ProfileServiceDAO implements Serializable {
         return query.getResultList();
     }
 
-    /**
-     * Add to the {@link com.amee.domain.profile.ProfileItem} any {@link com.amee.domain.data.ItemValue}s it is missing.
-     * This will be the case on first persist (this method acting as a reification function), and between GETs if any
-     * new {@link com.amee.domain.data.ItemValueDefinition}s have been added to the underlying
-     * {@link com.amee.domain.data.ItemDefinition}.
-     * <p/>
-     * Any updates to the {@link com.amee.domain.profile.ProfileItem} will be persisted to the database.
-     *
-     * @param profileItem
-     * @param apiVersion
-     */
     @SuppressWarnings(value = "unchecked")
-    public void checkProfileItem(ProfileItem profileItem, APIVersion apiVersion) {
-
-        Set<ItemValueDefinition> existingItemValueDefinitions = profileItem.getItemValueDefinitions();
-        Set<ItemValueDefinition> missingItemValueDefinitions = new HashSet<ItemValueDefinition>();
-
-        // find ItemValueDefinitions not currently implemented in this Item
-        for (ItemValueDefinition ivd : profileItem.getItemDefinition().getItemValueDefinitions()) {
-            if (ivd.isFromProfile() && ivd.getAPIVersions().contains(apiVersion)) {
-                if (!existingItemValueDefinitions.contains(ivd)) {
-                    missingItemValueDefinitions.add(ivd);
-                }
-            }
+    public boolean equivilentProfileItemExists(ProfileItem profileItem) {
+        List<ProfileItem> profileItems = entityManager.createQuery(
+                "SELECT DISTINCT pi " +
+                        "FROM ProfileItem pi " +
+                        "LEFT JOIN FETCH pi.itemValues " +
+                        "WHERE pi.profile.id = :profileId " +
+                        "AND pi.uid != :uid " +
+                        "AND pi.dataCategory.id = :dataCategoryId " +
+                        "AND pi.dataItem.id = :dataItemId " +
+                        "AND pi.startDate = :startDate " +
+                        "AND pi.name = :name")
+                .setParameter("profileId", profileItem.getProfile().getId())
+                .setParameter("uid", profileItem.getUid())
+                .setParameter("dataCategoryId", profileItem.getDataCategory().getId())
+                .setParameter("dataItemId", profileItem.getDataItem().getId())
+                .setParameter("startDate", profileItem.getStartDate())
+                .setParameter("name", profileItem.getName())
+                .getResultList();
+        if (profileItems.size() > 0) {
+            log.debug("equivilentProfileItemExists() - found ProfileItem(s)");
+            return true;
+        } else {
+            log.debug("equivilentProfileItemExists() - no ProfileItem(s) found");
+            return false;
         }
+    }
 
-        // Do we need to add any ItemValueDefinitions?
-        if (missingItemValueDefinitions.size() > 0) {
+    public void persist(ProfileItem pi) {
+        entityManager.persist(pi);
+    }
 
-            // Ensure a transaction has been opened. The implementation of open-session-in-view we are using
-            // does not open transactions for GETs. This method is called for certain GETs.
-            transactionController.begin(true);
-
-            // create missing ItemValues
-            for (ItemValueDefinition ivd : missingItemValueDefinitions) {
-                // start default value with value from ItemValueDefinition
-                String defaultValue = ivd.getValue();
-                // next give DataItem a chance to set the default value, if appropriate
-                if (ivd.isFromData()) {
-                    Map<String, ItemValue> dataItemValues = profileItem.getDataItem().getItemValuesMap();
-                    ItemValue dataItemValue = dataItemValues.get(ivd.getPath());
-                    if ((dataItemValue != null) && (dataItemValue.getValue().length() > 0)) {
-                        defaultValue = dataItemValue.getValue();
-                    }
-                }
-                // create missing ItemValue
-                new ItemValue(ivd, profileItem, defaultValue);
-            }
-        }
+    public void remove(ProfileItem pi) {
+        entityManager.remove(pi);
     }
 
     // Profile DataCategories
