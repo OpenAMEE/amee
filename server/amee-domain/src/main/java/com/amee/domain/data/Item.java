@@ -216,4 +216,8 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
             return getDisplayPath();
         }
     }
+    
+    public boolean supportsCalculation() {
+        return !getItemDefinition().getAlgorithms().isEmpty();
+    }
 }

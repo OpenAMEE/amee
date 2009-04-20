@@ -50,12 +50,12 @@ public class TransactionController extends EntityManagerFactoryAccessor {
     }
 
     /**
-     * 1) Called by TransactionServerConverter before HttpConverter.toRequest
+     * 1) Called by TransactionFilter before Filter.doHandle
      *
      * @param withTransaction specify whether a transaction should be used
      */
-    public void beforeToRequest(boolean withTransaction) {
-        logger.debug("beforeToRequest() - >>> BEFORE TO REQUEST");
+    public void beforeHandle(boolean withTransaction) {
+        logger.debug("beforeHandle() - >>> BEFORE HANDLE {withTransaction=" + withTransaction + "}");
         // Ensure any EntityManager associated with this thread is closed before handling this new request.
         ensureEntityManagerIsClosed();
         begin(withTransaction);

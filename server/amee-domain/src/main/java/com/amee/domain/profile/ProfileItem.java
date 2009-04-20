@@ -8,6 +8,8 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.Item;
 import com.amee.domain.data.ItemValue;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowire;
@@ -43,6 +45,9 @@ import java.math.BigDecimal;
 @Entity
 @DiscriminatorValue("PI")
 public class ProfileItem extends Item {
+
+    @Transient
+    private final Log log = LogFactory.getLog(getClass());
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "PROFILE_ID")
@@ -138,24 +143,31 @@ public class ProfileItem extends Item {
      * @return - the {@link com.amee.domain.core.CO2Amount CO2Amount} for this ProfileItem
      */
     public CO2Amount getAmount() {
-
-        // Some ProfileItems are from ItemDefinitions which do not have algorithms and hence do not
-        // support calculations.
-        if (!supportsCalculation())
-            return CO2Amount.ZERO;
-
         // CO2 amounts are lazily calculated once per session.
-        if (amount == null)
+        if (amount == null) {
+            log.debug("getAmount() - lazily calculating amount");
             calculationService.calculate(this);
-
+        }
         return new CO2Amount(amount);
     }
 
-    public void setAmount(CO2Amount amount) {
+    /**
+     * Set the amount. If the amount is different to the current persistentAmount then set this too. Will
+     * return true if the persistentAmount was changed.
+     *
+     * @param amount to set
+     * @return true if the persistentAmount was changed
+     */
+    public boolean setAmount(CO2Amount amount) {
         this.amount = amount.getValue();
         // Persist the transient session CO2 amount if it is different from the last persisted amount.
-        if (this.amount.compareTo(persistentAmount) != 0)
+        if (this.amount.compareTo(persistentAmount) != 0) {
+            log.debug("setAmount() - amount has changed from " + persistentAmount + " to " + this.amount);
             persistentAmount = this.amount;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -192,9 +204,5 @@ public class ProfileItem extends Item {
             }
         }
         return false;
-    }
-
-    public boolean supportsCalculation() {
-        return !getItemDefinition().getAlgorithms().isEmpty();
     }
 }

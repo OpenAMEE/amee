@@ -33,8 +33,8 @@ import org.springframework.stereotype.Service;
 public interface CO2CalculationService {
 
     /**
-     * Calculate the {@link com.amee.domain.core.CO2Amount CO2Amount} of a ProfileItem. The calculated value is
-     * set into the passed {@link ProfileItem}.
+     * Calculate the {@link com.amee.domain.core.CO2Amount CO2Amount} of a ProfileItem. A calculated value is
+     * always set into the passed {@link ProfileItem}.
      *
      * @param profileItem - the {@link ProfileItem} for which to calculate the
      *                    {@link com.amee.domain.core.CO2Amount CO2Amount}

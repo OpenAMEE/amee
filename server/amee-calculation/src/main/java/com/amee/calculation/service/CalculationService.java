@@ -30,6 +30,7 @@ import com.amee.domain.path.InternalValue;
 import com.amee.domain.profile.CO2CalculationService;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choices;
+import com.amee.service.transaction.TransactionController;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -49,36 +50,42 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private AlgorithmService algoService;
+    private AlgorithmService algorithmService;
+
+    @Autowired
+    private TransactionController transactionController;
 
     // Set by Spring context. The BeanFactory used to retreive ProfileFinder and DataFinder instances.
     private BeanFactory beanFactory;
 
     /**
-     * Calculate and set the CO2 amount for a ProfileItem.
+     * Calculate and always set the CO2 amount for a ProfileItem.
      *
      * @param profileItem - the ProfileItem for which to calculate CO2 amount
      */
     public void calculate(ProfileItem profileItem) {
 
-        if (profileItem.isEnd()) {
-            profileItem.setAmount(CO2Amount.ZERO);
-            return;
+        BigDecimal amount = Decimal.BIG_DECIMAL_ZERO;
+
+        // End marker ProfileItems can only have zero amounts.
+        if (!profileItem.isEnd()) {
+            // Calculate amount for ProfileItem if an Algorithm is available.
+            // Some ProfileItems are from ItemDefinitions which do not have Algorithms and
+            // hence do not support calculations.
+            if (profileItem.supportsCalculation()) {
+                Algorithm algorithm = algorithmService.getAlgorithm(profileItem.getItemDefinition());
+                if (algorithm != null) {
+                    Map<String, Object> values = getValues(profileItem);
+                    amount = calculate(algorithm, values);
+                }
+            }
         }
 
-        Map<String, Object> values = getValues(profileItem);
-
-        //TODO - remove once we have resolved algo handling on undef values.
-        BigDecimal amount;
-        try {
-            amount = calculate(algoService.getAlgorithm(profileItem.getItemDefinition()), values);
-        } catch (Exception e) {
-            log.error("calculate() - caught Exception: " + e.getMessage(), e);
-            amount = Decimal.BIG_DECIMAL_ZERO;
-        }
-
-        if (amount != null) {
-            profileItem.setAmount(new CO2Amount(amount));
+        // Always set the ProfileItem amount.
+        // The ProfileItem will only be re-saved if the amount has changed.
+        // If the ProfileItem has changed start a transaction.
+        if (profileItem.setAmount(new CO2Amount(amount))) {
+            transactionController.begin(true);
         }
     }
 
@@ -93,14 +100,11 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      * @return the calculated CO2 amount
      */
     public BigDecimal calculate(DataItem dataItem, Choices userValueChoices, APIVersion version) {
-        Map<String, Object> values = getValues(dataItem, userValueChoices, version);
-        //TODO - remove once we have resolved algo handling on undef values.
-        BigDecimal amount;
-        try {
-            amount = calculate(algoService.getAlgorithm(dataItem.getItemDefinition()), values);
-        } catch (Exception e) {
-            log.error("calculate() - caught Exception: " + e.getMessage(), e);
-            amount = Decimal.BIG_DECIMAL_ZERO;
+        BigDecimal amount = Decimal.BIG_DECIMAL_ZERO;
+        Algorithm algorithm = algorithmService.getAlgorithm(dataItem.getItemDefinition());
+        if (algorithm != null) {
+            Map<String, Object> values = getValues(dataItem, userValueChoices, version);
+            amount = calculate(algorithmService.getAlgorithm(dataItem.getItemDefinition()), values);
         }
         return amount;
     }
@@ -116,17 +120,20 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      * @return the algorithm result as a BigDecimal
      */
     public BigDecimal calculate(Algorithm algorithm, Map<String, Object> values) {
+        CO2Amount amount;
         log.debug("calculate()");
-
         log.debug("calculate() - algorithm uid: " + algorithm.getUid());
         log.debug("calculate() - input values: " + values);
-
         log.debug("calculate() - starting calculation");
-        CO2Amount amount = new CO2Amount(algoService.evaluate(algorithm, values));
-
+        // TODO: Remove Exception catch once we have resolved algo handling on undef values.
+        try {
+            amount = new CO2Amount(algorithmService.evaluate(algorithm, values));
+        } catch (Exception e) {
+            log.warn("calculate() - caught Exception: " + e.getMessage(), e);
+            amount = new CO2Amount(Decimal.BIG_DECIMAL_ZERO);
+        }
         log.debug("calculate() - finished calculation");
         log.debug("calculate() - CO2 Amount: " + amount);
-
         return amount.getValue();
     }
 

@@ -3,6 +3,7 @@ package com.amee.restlet.transaction;
 import com.amee.service.transaction.TransactionController;
 import org.restlet.Application;
 import org.restlet.Filter;
+import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ public class TransactionFilter extends Filter {
     protected int doHandle(Request request, Response response) {
         boolean success = true;
         try {
+            transactionController.beforeHandle(!request.getMethod().equals(Method.GET));
             return super.doHandle(request, response);
         } catch (Throwable t) {
             success = false;
