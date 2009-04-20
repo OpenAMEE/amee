@@ -12,18 +12,22 @@
     <name>AMEE Platform</name>
 
     <!-- Project Properties. -->
+    <!-- Note: Keep restlet, jetty and servlet-api versions in sync. -->
+    <!-- Note: Check Restlet release notes and jetty dependencies. -->
     <properties>
         <amee.version>2.1</amee.version>
-        <spring.version>2.5.6</spring.version>
-        <restlet.version>1.1.3</restlet.version>
+        <restlet.version>1.1.4</restlet.version>
+        <jetty.version>6.1.15</jetty.version>
+        <jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>
+        <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <org.json.version>2.0</org.json.version>
         <joda-time.version>1.6</joda-time.version>
+        <spring.version>2.5.6</spring.version>
         <hibernate-core.version>3.3.0.SP1</hibernate-core.version>
         <hibernate-entitymanager.version>3.4.0.GA</hibernate-entitymanager.version>
-        <jetty.version>6.1.9</jetty.version>
+        <commons-dbcp.version>1.2.2</commons-dbcp.version>
         <ehcache.version>1.6.0-beta4</ehcache.version>
         <!--<ehcache.version>1.5.0</ehcache.version>-->
-        <commons-dbcp.version>1.2.2</commons-dbcp.version>
     </properties>
 
     <!-- AMEE Modules. -->
@@ -91,6 +95,11 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
             <version>${spring.version}</version>
         </dependency>
@@ -108,6 +117,29 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Explicit dependency & version here to avoid transitive dependency mess -->
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${jetty-servlet-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.3.04</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.0</version>
         </dependency>
 
         <!-- Test Dependencies. -->
@@ -179,6 +211,5 @@
             </notifier>
         </notifiers>
     </ciManagement>
-
 
 </project>
