@@ -85,6 +85,8 @@ class ProfileServiceDAO implements Serializable {
         DataItem dataItem = (DataItem) oe.getPayload();
         log.debug("beforeDataItemDelete");
         // remove ItemValues for ProfileItems
+        // TODO: This HQL/SQL is slow.
+        // TODO: Take inspiration from com.amee.service.data.DataServiceDAO#remove.
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
                         "WHERE iv.item IN " +
@@ -125,6 +127,8 @@ class ProfileServiceDAO implements Serializable {
         DataCategory dataCategory = (DataCategory) oe.getPayload();
         log.debug("beforeDataCategoryDelete");
         // remove ItemValues for ProfileItems
+        // TODO: This HQL/SQL is slow.
+        // TODO: Take inspiration from com.amee.service.data.DataServiceDAO#remove.
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
                         "WHERE iv.item IN " +
