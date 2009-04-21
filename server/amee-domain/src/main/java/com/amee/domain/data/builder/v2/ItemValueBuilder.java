@@ -19,7 +19,7 @@
  */
 package com.amee.domain.data.builder.v2;
 
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.Builder;
 import com.amee.domain.data.Item;
 import com.amee.domain.data.ItemValue;
@@ -46,6 +46,7 @@ public class ItemValueBuilder implements Builder {
         obj.put("value", itemValue.getValue());
         obj.put("unit", itemValue.getUnit());
         obj.put("perUnit", itemValue.getPerUnit());
+        obj.put("startDate", itemValue.getStartDate().toString());
         obj.put("itemValueDefinition", itemValue.getItemValueDefinition().getJSONObject(false));
         obj.put("displayName", itemValue.getDisplayName());
         obj.put("displayPath", itemValue.getDisplayPath());
@@ -70,6 +71,7 @@ public class ItemValueBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "Value", itemValue.getValue()));
         element.appendChild(APIUtils.getElement(document, "Unit", itemValue.getUnit().toString()));
         element.appendChild(APIUtils.getElement(document, "PerUnit", itemValue.getPerUnit().toString()));
+        element.appendChild(APIUtils.getElement(document, "StartDate", itemValue.getStartDate().toString()));
         element.appendChild(itemValue.getItemValueDefinition().getElement(document, false));
         if (detailed) {
             element.setAttribute("Created", itemValue.getCreated().toString());

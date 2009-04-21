@@ -1,5 +1,0 @@
-#!/bin/bash
-./dataGenerate.gk Worksheet.csv > ghgData.csv
-sort -t, -k1,1 ghgData.csv>ghgDataSorted.csv
-sort -t, -k1,1 ~/devel/amee/svn.amee.com/internal/api_csvs/home/energy/electricity/data.csv>dataSorted.csv
-join -a1 -e- -t, dataSorted.csv ghgDataSorted.csv -o 1.1,2.1,1.2,2.2 | ./dataClean.gk  > data.csv

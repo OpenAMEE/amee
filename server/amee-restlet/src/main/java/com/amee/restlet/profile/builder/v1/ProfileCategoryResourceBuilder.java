@@ -1,8 +1,8 @@
 package com.amee.restlet.profile.builder.v1;
 
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.Pager;
-import com.amee.domain.core.Decimal;
+import com.amee.core.Decimal;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.profile.Profile;

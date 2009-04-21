@@ -1,9 +1,0 @@
-name,Sap 2005 Boiler Fuel Prices Data,,,
-algFile,algorithm_alg.js,,,
-name,path,type,isDataItemValue,isDrillDown
-Fuel category,fuelcategory,TEXT,TRUE,TRUE
-Fuel,fuel,TEXT,TRUE,TRUE
-Standing charge,standingcharge,TEXT,TRUE,TRUE
-Fuel price,fuelprice,TEXT,TRUE,TRUE
-DB entry updated,dbentryupdated,TEXT,TRUE,FALSE
-Source,source,TEXT,TRUE,FALSE

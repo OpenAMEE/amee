@@ -1,3 +1,0 @@
-type,CO2,units,source,algorithm,default
-small container ship,0.000015,kgCO2/tonne.km,defra ghg cf 2008 9% uplift included,,
-large container ship,0.000013,kgCO2/tonne.km,defra ghg cf 2008 9% uplift included,,

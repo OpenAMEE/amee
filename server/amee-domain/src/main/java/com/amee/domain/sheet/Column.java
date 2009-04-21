@@ -1,6 +1,6 @@
 package com.amee.domain.sheet;
 
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;

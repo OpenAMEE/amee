@@ -1,5 +1,0 @@
-type,skyblockedbyobstacles,wintersolaraccessfactor,summersolaraccessfactor,lightaccessfactor,units,source
-Heavy, > 80%, 0.3, 0.5, 0.5,0,0
-More than average, >60% - 80%, 0.54, 0.7, 0.67,0,0
-Average or unknown, 20% - 60%, 0.77, 0.9, 0.83,0,0
-Very little, < 20%, 1.0, 1.0, 1.0,0,0

@@ -19,8 +19,8 @@
  */
 package com.amee.domain.data;
 
+import com.amee.core.APIUtils;
 import com.amee.core.ObjectType;
-import com.amee.domain.APIUtils;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Index;
@@ -34,7 +34,6 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import java.util.Map;
 
 @Entity
 @DiscriminatorValue("DI")
@@ -63,7 +62,7 @@ public class DataItem extends Item {
         String label = "";
         ItemValue itemValue;
         ItemDefinition itemDefinition = getItemDefinition();
-        Map<String, ItemValue> itemValuesMap = getItemValuesMap();
+        ItemValueMap itemValuesMap = getItemValuesMap();
         for (Choice choice : itemDefinition.getDrillDownChoices()) {
             itemValue = itemValuesMap.get(choice.getName());
             if ((itemValue != null) &&

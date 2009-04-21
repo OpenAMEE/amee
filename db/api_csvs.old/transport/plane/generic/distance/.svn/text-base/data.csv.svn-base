@@ -1,4 +1,0 @@
-"type","oneWayDistanceKm","nonGreatCircleFactor","units","source","algorithm","default"
-"domestic",425,1.09,"kgCO2/pass.journey ","defra/amee 2008",,
-"short haul",1200,1.09,"kgCO2/pass.journey ","defra/amee 2008",,
-"long haul","7,000",1.09,"kgCO2/pass.km","defra/amee 2008",,

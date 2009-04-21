@@ -20,6 +20,7 @@
 package com.amee.domain;
 
 import com.amee.core.ValueType;
+import com.amee.core.APIUtils;
 import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

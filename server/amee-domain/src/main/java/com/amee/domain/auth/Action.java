@@ -1,7 +1,7 @@
 package com.amee.domain.auth;
 
+import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.APIUtils;
 import com.amee.domain.site.App;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

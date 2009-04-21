@@ -19,15 +19,15 @@
  */
 package com.amee.domain.profile.builder.v2;
 
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.Builder;
-import com.amee.domain.core.CO2AmountUnit;
-import com.amee.domain.core.DecimalCompoundUnit;
+import com.amee.domain.StartEndDate;
+import com.amee.core.CO2AmountUnit;
+import com.amee.core.DecimalCompoundUnit;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.StartEndDate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

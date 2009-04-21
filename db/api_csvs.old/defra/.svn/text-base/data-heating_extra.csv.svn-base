@@ -1,9 +1,0 @@
-heatingHomeDwellingType,heatingHomeNoOfBedrooms,heatingHomeFuel,heatingHomeAge,heatingType,heatingKgCO2Year,old,diff,% diff,units,heatingSource,default
-Detached House,more than 5,Coal,Pre 1930,Open fires,41151,41051,100,0.24%,kgCO2/year,defra/BRE/dgen 2007,
-Detached House,5,Coal,Pre 1930,Open fires,37035,36945,90,0.24%,kgCO2/year,defra/BRE/dgen 2007,
-Detached House,4,Coal,Pre 1930,Open fires,32921,32841,80,0.24%,kgCO2/year,defra/BRE/dgen 2007,
-Detached House,3,Coal,Pre 1930,Open fires,28687,28614,73,0.26%,kgCO2/year,defra/BRE/dgen 2007,
-Detached House,more than 5,Gas,Pre 1930,Boiler (old - 12 - 15yrs old),13169,13201,32,0.24%,kgCO2/year,defra/BRE/dgen 2007,
-Detached House,more than 5,Coal,Pre 1930,Boiler - manual feed,25161,25129,32,0.13%,kgCO2/year,defra/BRE/dgen 2007,
-Detached House,more than 5,LPG,Pre 1930,Boiler (old - 12 - 15yrs old),14451,14419,32,0.22%,kgCO2/year,defra/BRE/dgen 2007,
-Detached House,more than 5,Gas,Pre 1930,Back boiler,12156,12186,30,0.25%,kgCO2/year,defra/BRE/dgen 2007,

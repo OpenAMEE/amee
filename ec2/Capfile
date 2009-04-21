@@ -1,0 +1,7 @@
+load 'deploy' if respond_to?(:namespace) # cap2 differentiator
+Dir['plugins/recipes/*.rb'].each { |plugin| load(plugin) }
+load 'config'
+
+require 'rubygems'
+require 'EC2'
+require 'pp'

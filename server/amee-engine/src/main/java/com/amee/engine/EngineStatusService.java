@@ -1,7 +1,7 @@
 package com.amee.engine;
 
+import com.amee.core.APIUtils;
 import com.amee.domain.AMEEStatistics;
-import com.amee.domain.APIUtils;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.MediaTypeUtils;
 import com.amee.service.ThreadBeanHolder;

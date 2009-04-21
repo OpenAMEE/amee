@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 56
-/!svn/ver/2795/internal/api_csvs/home/energy/electricity
+/!svn/ver/2983/internal/api_csvs/home/energy/electricity
 END
 data.csv
 K 25
@@ -13,7 +13,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 68
-/!svn/ver/2795/internal/api_csvs/home/energy/electricity/itemdef.csv
+/!svn/ver/2983/internal/api_csvs/home/energy/electricity/itemdef.csv
 END
 perMonth.js
 K 25

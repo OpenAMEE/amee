@@ -10,9 +10,7 @@
     </parent>
     <artifactId>amee-calculation</artifactId>
     <packaging>jar</packaging>
-
     <name>amee-calculation</name>
-
     <dependencies>
         <!-- Internal Dependencies. -->
         <dependency>
@@ -32,5 +30,4 @@
             <version>${joda-time.version}</version>
         </dependency>
     </dependencies>
-
 </project>

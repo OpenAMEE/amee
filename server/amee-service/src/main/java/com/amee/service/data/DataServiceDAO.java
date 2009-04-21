@@ -20,11 +20,11 @@
 package com.amee.service.data;
 
 import com.amee.domain.APIVersion;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.data.*;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.event.ObserveEventService;
 import com.amee.domain.event.ObservedEvent;
-import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import org.apache.commons.lang.StringUtils;
@@ -45,7 +45,6 @@ import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * TODO: Clear caches after entity removal.
@@ -331,7 +330,7 @@ class DataServiceDAO implements Serializable {
                 String defaultValue = ivd.getValue();
                 // next give DataItem a chance to set the default value, if appropriate
                 if (ivd.isFromData()) {
-                    Map<String, ItemValue> dataItemValues = dataItem.getItemValuesMap();
+                    ItemValueMap dataItemValues = dataItem.getItemValuesMap();
                     ItemValue dataItemValue = dataItemValues.get(ivd.getPath());
                     if ((dataItemValue != null) && (dataItemValue.getValue().length() > 0)) {
                         defaultValue = dataItemValue.getValue();

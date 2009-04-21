@@ -1,9 +1,0 @@
-fuelPriceType,fuelPricePayment,fuelkgCO2perPound,units,fuelPriceSource,algorithm
-Gas,normal,8.32,kgCO2/£,http://www.dti.gov.uk/energy/statistics/publications/prices/tables/page18125.html,user_gas_cost*value
-Gas,prepayment,7.44,kgCO2/£,http://www.dti.gov.uk/energy/statistics/publications/prices/tables/page18125.html,user_gas_prepayment_cost*value
-Electricity,normal,5.35,kgCO2/£,http://www.dti.gov.uk/energy/statistics/publications/prices/tables/page18125.html,user_electricity_cost*value
-Electricity,prepayment,4.85,kgCO2/£,http://www.dti.gov.uk/energy/statistics/publications/prices/tables/page18125.html,user_electricity_prepayment_cost*value
-Oil,-,7.41,kgCO2/£,http://www.dti.gov.uk/energy/statistics/publications/prices/tables/page18125.html,user_oil_cost*value
-LPG,-,4.04,kgCO2/£,EST/dgen 2007,user_LPG_cost*value
-Coal,-,14.1,kgCO2/£,EST/dgen 2007,user_coal_cost*value
-Biomass,-,0.794,kgCO2/£,EST/dgen 2007 wood pellet SAP2005,user_biomass_cost*value

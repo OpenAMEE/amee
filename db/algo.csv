@@ -28,7 +28,6 @@ api_csvs/transport/plane/generic/passengerclass,Plane Class
 api_csvs/transport/plane/generic,Plane Generic
 api_csvs/home/energy/uk/reductions,Reduction
 api_csvs/home/energy/renewable,Renewable
-api_csvs/transport/ship,Ship Generic
 api_csvs/transport/taxi/generic,Taxi Generic
 api_csvs/home/appliances/televisions/generic,Televisions Generic
 api_csvs/transport/train/generic,Train Generic
@@ -41,3 +40,6 @@ api_csvs/home/water/usage,Water Usage
 api_csvs/home/heating/uk,Heating UK
 api_csvs/transport/bus/generic,Bus Generic
 api_csvs/transport/taxi/perpassenger/generic,Taxi Per Passenger Generic
+api_csvs/transport/ship,Ship
+api_csvs/transport/ship/generic,Ship Generic
+api_csvs/planet/greenhousegases/gwp,Global Warming Potentials

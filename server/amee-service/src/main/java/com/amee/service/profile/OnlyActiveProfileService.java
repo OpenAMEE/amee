@@ -3,7 +3,7 @@ package com.amee.service.profile;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.StartEndDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,17 @@ public class OnlyActiveProfileService {
     @Autowired
     ProfileService profileService;
 
+	/**
+	 * Retreive only the active {@link com.amee.domain.profile.ProfileItem} instances.
+	 * Active in this scenario means the latest in any historical sequence within the given datetime range.
+	 *
+	 * @param profile - the owning {@link com.amee.domain.profile.Profile}
+	 * @param dataCategory - the containing {@link com.amee.domain.data.DataCategory}
+	 * @param startDate - the opening {@link com.amee.domain.StartEndDate} of the datatime range.
+	 * @param endDate - the closing {@link com.amee.domain.StartEndDate} of the datatime range.
+	 * @return the List of active {@link com.amee.domain.profile.ProfileItem} 
+	 */
+    @SuppressWarnings("unchecked")
     public List<ProfileItem> getProfileItems(
             final Profile profile,
             final DataCategory dataCategory,
@@ -47,6 +58,7 @@ public class OnlyActiveProfileService {
         final List<ProfileItem> profileItems = profileService.getProfileItems(
                 profile, dataCategory, startDate, endDate);
         requestedItems = (List) CollectionUtils.select(profileItems, new Predicate() {
+
             public boolean evaluate(Object o) {
                 ProfileItem pi = (ProfileItem) o;
                 for (ProfileItem innerProfileItem : profileItems) {

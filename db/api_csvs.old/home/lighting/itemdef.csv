@@ -1,8 +1,0 @@
-name,Lighting
-algFile,perMonth.js
-name,path,type,isDataItemValue,isDrillDown
-kWh Per Year,kWhPerYear,DECIMAL,true,false
-Number Of Light Bulbs,noOfLightBulbs,INTEGER,false,false
-Number Of Low Energy Light Bulbs,noOfLowEnergyLightBulbs,INTEGER,false,false
-Source,source,TEXT,true,false
-Type,type,TEXT,true,true

@@ -423,6 +423,7 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
                 .insert(this.getHeadingData('Value Definition'))
                 .insert(this.getHeadingData('Value Type'))
                 .insert(this.getHeadingData('Value'))
+                .insert(this.getHeadingData('Start Date'))
                 .insert(this.getHeadingData('Actions'));
     },
     getDetailRows: function(json) {
@@ -437,7 +438,8 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
                         .insert(new Element('td').insert(itemValue.itemValueDefinition.name))
                         .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.name))
                         .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.valueType))
-                        .insert(new Element('td').insert(itemValue.value));
+                        .insert(new Element('td').insert(itemValue.value))
+                        .insert(new Element('td').insert(itemValue.startDate));
 
                 // create actions
                 detailRow.insert(this.getActionsTableData({

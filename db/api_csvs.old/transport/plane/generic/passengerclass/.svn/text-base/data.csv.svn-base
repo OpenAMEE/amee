@@ -1,7 +1,0 @@
-type,passengerClass,kgCO2PerPassengerKm,units,source,algorithm,default
-short haul,economy,0.0937,kgCO2/pass.km,defra/amee 2008,,
-short haul,business,0.1405,kgCO2/pass.km,defra/amee 2008,,
-long haul,economy,0.0807,kgCO2/pass.km,defra/amee 2008,,
-long haul,economy plus,0.1291,kgCO2/pass.km,defra/amee 2008,,
-long haul,business,0.2340,kgCO2/pass.km,defra/amee 2008,,
-long haul,first,0.3228,kgCO2/pass.km,defra/amee 2008,,

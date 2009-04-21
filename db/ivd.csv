@@ -16,4 +16,4 @@
 "journeysPerYear",NULL,"year","Journeys","journeys",NULL,"year"
 "distanceMilesPerMonth","mi","month","Distance","distance","km","year"
 "mpgOwn","mi","gal","Fuel Consumption","ownFuelConsumption","km","L"
-"distancePerJourney","km",NULL,"Distance per journey","distancePerJourney","km",NULL
+"distancePerJourney","km",NULL,"Distance per journey","distancePerJourney","km",

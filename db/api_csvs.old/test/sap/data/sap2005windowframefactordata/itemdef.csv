@@ -1,6 +1,0 @@
-name,Sap 2005 Frame Factor Windows Door Data,,,
-algFile,algorithm_alg.js,,,
-name,path,type,isDataItemValue,isDrillDown
-Type,type,TEXT,TRUE,TRUE
-Frame factor,framefactor,TEXT,TRUE,FALSE
-Source,source,TEXT,TRUE,FALSE

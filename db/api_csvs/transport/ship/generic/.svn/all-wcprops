@@ -1,11 +1,29 @@
 K 25
 svn:wc:ra_dav:version-url
 V 55
-/!svn/ver/2936/internal/api_csvs/transport/ship/generic
+/!svn/ver/2977/internal/api_csvs/transport/ship/generic
 END
 data.csv
 K 25
 svn:wc:ra_dav:version-url
 V 64
 /!svn/ver/2936/internal/api_csvs/transport/ship/generic/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/2977/internal/api_csvs/transport/ship/generic/itemdef.csv
+END
+perMonth.js
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/2977/internal/api_csvs/transport/ship/generic/perMonth.js
+END
+v2Algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/2977/internal/api_csvs/transport/ship/generic/v2Algorithm.js
 END
