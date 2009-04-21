@@ -107,16 +107,14 @@ class DrillDownDAO implements Serializable {
                 dataItemIds = getDataItemIds(
                         dataCategory,
                         selections, startDate,
-                        endDate
-                );
+                        endDate);
                 if (!dataItemIds.isEmpty()) {
                     for (String value : getDataItemValues(
                             itemValueDefinition.getId(),
                             getDataItemIds(
                                     dataCategory,
                                     selections, startDate,
-                                    endDate
-                            ))) {
+                                    endDate))) {
                         choices.add(new Choice(value));
                     }
                 }
@@ -174,8 +172,7 @@ class DrillDownDAO implements Serializable {
             dataItemIds = getDataItemIds(
                     dataCategory,
                     selections, startDate,
-                    endDate
-            );
+                    endDate);
             if (!dataItemIds.isEmpty()) {
                 for (String value : this.getDataItemUIDs(dataItemIds)) {
                     choices.add(new Choice(value));
@@ -195,6 +192,7 @@ class DrillDownDAO implements Serializable {
         return choices;
     }
 
+    @SuppressWarnings(value = "unchecked")
     protected Collection<String> getDataItemUIDs(Collection<Long> dataItemIds) {
 
         StringBuilder sql;
@@ -325,6 +323,7 @@ class DrillDownDAO implements Serializable {
         }
     }
 
+    @SuppressWarnings(value = "unchecked")
     protected List<String> getDataItemValues(
             Long dataCategoryId,
             Long itemDefinitionId,
@@ -419,6 +418,7 @@ class DrillDownDAO implements Serializable {
         return allDataItemIds;
     }
 
+    @SuppressWarnings(value = "unchecked")
     protected Collection<Long> getDataItemIds(
             Long dataCategoryId,
             Long itemDefinitionId,

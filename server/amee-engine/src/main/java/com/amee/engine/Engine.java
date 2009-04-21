@@ -51,6 +51,7 @@ public class Engine implements WrapperListener, Serializable {
         // initialise Spring ApplicationContext
         springContext = new ClassPathXmlApplicationContext(new String[]{
                 "applicationContext.xml",
+                "applicationContext-jmx.xml",
                 "applicationContext-container.xml",
                 "applicationContext-application-*.xml",
                 "applicationContext-skins.xml"});

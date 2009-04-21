@@ -66,19 +66,23 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     private List<Choice> parameters = new ArrayList<Choice>();
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         Form query = request.getResourceRef().getQueryAsForm();
+        setDataCategory(request.getAttributes().get("categoryUid").toString());
         setDataItem(request.getAttributes().get("itemPath").toString());
         for (String key : query.getNames()) {
             parameters.add(new Choice(key, query.getValues(key)));
         }
-        setAvailable(isValid());
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (getDataItem() != null);
+        return super.isValid() &&
+                (getDataItem() != null) &&
+                (getDataCategory() != null) &&
+                getDataItem().getDataCategory().equals(getDataCategory()) &&
+                getDataItem().getEnvironment().equals(environment);
     }
 
     @Override

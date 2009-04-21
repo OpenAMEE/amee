@@ -22,7 +22,7 @@ package com.amee.service.path;
 import com.amee.domain.cache.CacheHelper;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItemGroup;
-import com.amee.domain.profile.Profile;
+import com.amee.service.data.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ import java.io.Serializable;
 public class PathItemService implements Serializable {
 
     @Autowired
-    private EnvironmentPIGFactory environmentPIGFactory;
+    private DataService dataService;
 
     private CacheHelper cacheHelper = CacheHelper.getInstance();
 
@@ -40,7 +40,8 @@ public class PathItemService implements Serializable {
         super();
     }
 
-    public PathItemGroup getPathItemGroup() {
+    public PathItemGroup getPathItemGroup(Environment environment) {
+        EnvironmentPIGFactory environmentPIGFactory = new EnvironmentPIGFactory(dataService, environment);
         return (PathItemGroup) cacheHelper.getCacheable(environmentPIGFactory);
     }
 

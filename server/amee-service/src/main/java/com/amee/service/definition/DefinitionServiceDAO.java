@@ -29,8 +29,13 @@ import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.event.ObserveEventService;
 import com.amee.domain.event.ObservedEvent;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
@@ -39,15 +44,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
-/**
- * TODO: Come up with more efficient way to delete Environment entities.
- */
 @Service
 public class DefinitionServiceDAO implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    private static final String CACHE_REGION = "query.environmentService";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -67,38 +70,27 @@ public class DefinitionServiceDAO implements Serializable {
         // TODO: what?
     }
 
-    // Algorithms
+    // Algorithms & AlgorithmContexts
 
-    // TODO: Scope to something
-
-    public Algorithm getAlgorithm(String uid) {
+    @SuppressWarnings(value = "unchecked")
+    public Algorithm getAlgorithmByUid(String uid) {
         Algorithm algorithm = null;
-        List<Algorithm> algorithms = entityManager.createQuery(
-                "FROM Algorithm a " +
-                        "WHERE a.uid = :uid")
-                .setParameter("uid", uid)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
-                .getResultList();
-        if (algorithms.size() == 1) {
-            log.debug("found Algorithm");
-            algorithm = algorithms.get(0);
-        } else {
-            log.debug("Algorithm NOT found");
+        if (!StringUtils.isBlank(uid)) {
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(Algorithm.class);
+            criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<Algorithm> algorithms = criteria.list();
+            if (algorithms.size() == 1) {
+                log.debug("getAlgorithmByUid() found: " + uid);
+                algorithm = algorithms.get(0);
+            } else {
+                log.debug("getAlgorithmByUid() NOT found: " + uid);
+            }
         }
         return algorithm;
     }
-
-    public void remove(AbstractAlgorithm algorithm) {
-        entityManager.remove(algorithm);
-    }
-
-
-    public void save(AbstractAlgorithm algorithm) {
-        entityManager.persist(algorithm);
-    }
-
-    // TODO: Scope to something
 
     public List<AlgorithmContext> getAlgorithmContexts(Environment environment) {
         List<AlgorithmContext> algorithmContexts =
@@ -107,7 +99,7 @@ public class DefinitionServiceDAO implements Serializable {
                                 "WHERE ac.environment.id = :environmentId")
                         .setParameter("environmentId", environment.getId())
                         .setHint("org.hibernate.cacheable", true)
-                        .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                        .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                         .getResultList();
         if (algorithmContexts.size() == 1) {
             log.debug("found AlgorithmContexts");
@@ -117,63 +109,55 @@ public class DefinitionServiceDAO implements Serializable {
         return algorithmContexts;
     }
 
-    public AlgorithmContext getAlgorithmContext(Environment environment, String algorithmContextUid) {
+    @SuppressWarnings(value = "unchecked")
+    public AlgorithmContext getAlgorithmContextByUid(String uid) {
         AlgorithmContext algorithmContext = null;
-        List<AlgorithmContext> algorithmContexts =
-                entityManager.createQuery(
-                        "FROM AlgorithmContext ac " +
-                                "WHERE ac.environment.id = :environmentId " +
-                                "AND ac.uid = :uid")
-                        .setParameter("environmentId", environment.getId())
-                        .setParameter("uid", algorithmContextUid)
-                        .setHint("org.hibernate.cacheable", true)
-                        .setHint("org.hibernate.cacheRegion", "query.environmentService")
-                        .getResultList();
-        if (algorithmContexts.size() == 1) {
-            log.debug("found AlgorithmContext");
-            algorithmContext = algorithmContexts.get(0);
-        } else {
-            log.debug("AlgorithmContext NOT found");
+        if (!StringUtils.isBlank(uid)) {
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(AlgorithmContext.class);
+            criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<AlgorithmContext> algorithmContexts = criteria.list();
+            if (algorithmContexts.size() == 1) {
+                log.debug("getAlgorithmContextByUid() found: " + uid);
+                algorithmContext = algorithmContexts.get(0);
+            } else {
+                log.debug("getAlgorithmContextByUid() NOT found: " + uid);
+            }
         }
         return algorithmContext;
     }
 
-    // ItemDefinition
-
-    // TODO: this forces a separate load of itemValueDefinitions
-
-    public List<ItemDefinition> getItemDefinitions(Set<String> categoryUids) {
-        List<ItemDefinition> itemDefinitions = entityManager.createQuery(
-                "SELECT DISTINCT id " +
-                        "FROM ItemDefinition id " +
-                        "LEFT JOIN FETCH id.itemValueDefinitions ivd " +
-                        "LEFT JOIN id.dataCategories dc " +
-                        "WHERE dc.uid IN (:categoryUids)")
-                .setParameter("categoryUids", categoryUids)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
-                .getResultList();
-        return itemDefinitions;
+    public void remove(AbstractAlgorithm algorithm) {
+        entityManager.remove(algorithm);
     }
 
-    public ItemDefinition getItemDefinition(Environment environment, String uid) {
+    public void save(AbstractAlgorithm algorithm) {
+        entityManager.persist(algorithm);
+    }
+
+    // ItemDefinition
+
+    @SuppressWarnings(value = "unchecked")
+    public ItemDefinition getItemDefinitionByUid(String uid) {
         ItemDefinition itemDefinition = null;
-        List<ItemDefinition> itemDefinitions = entityManager.createQuery(
-                "SELECT DISTINCT id " +
-                        "FROM ItemDefinition id " +
-                        "LEFT JOIN FETCH id.itemValueDefinitions ivd " +
-                        "WHERE id.environment.id = :environmentId AND " +
-                        "id.uid = :uid")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("uid", uid)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
-                .getResultList();
-        if (itemDefinitions.size() == 1) {
-            log.debug("found ItemDefinition");
-            itemDefinition = itemDefinitions.get(0);
-        } else {
-            log.debug("ItemDefinition NOT found");
+        if (!StringUtils.isBlank(uid)) {
+            // See http://www.hibernate.org/117.html#A12 for notes on DISTINCT_ROOT_ENTITY.
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(ItemDefinition.class);
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.setFetchMode("itemValueDefinitions", FetchMode.JOIN);
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<ItemDefinition> itemDefinitions = criteria.list();
+            if (itemDefinitions.size() == 1) {
+                log.debug("getItemDefinitionByUid() found: " + uid);
+                itemDefinition = itemDefinitions.get(0);
+            } else {
+                log.debug("getItemDefinitionByUid() NOT found: " + uid);
+            }
         }
         return itemDefinition;
     }
@@ -187,7 +171,7 @@ public class DefinitionServiceDAO implements Serializable {
                         "ORDER BY id.name")
                 .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
         return itemDefinitions;
     }
@@ -200,7 +184,7 @@ public class DefinitionServiceDAO implements Serializable {
                         "WHERE id.environment.id = :environmentId")
                 .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
         // tell pager how many entities there are and give it a chance to select the requested page again
         pager.setItems(count);
@@ -213,7 +197,7 @@ public class DefinitionServiceDAO implements Serializable {
                         "ORDER BY id.name")
                 .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
                 .setFirstResult((int) pager.getStart())
                 .getResultList();
@@ -233,20 +217,22 @@ public class DefinitionServiceDAO implements Serializable {
 
     // ItemValueDefinitions
 
-    public ItemValueDefinition getItemValueDefinition(String uid) {
+    @SuppressWarnings(value = "unchecked")
+    public ItemValueDefinition getItemValueDefinitionByUid(String uid) {
         ItemValueDefinition itemValueDefinition = null;
-        List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
-                "FROM ItemValueDefinition ivd " +
-                        "WHERE ivd.uid = :uid")
-                .setParameter("uid", uid)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
-                .getResultList();
-        if (itemValueDefinitions.size() == 1) {
-            log.debug("found ItemValueDefinition");
-            itemValueDefinition = itemValueDefinitions.get(0);
-        } else {
-            log.debug("ItemValueDefinition NOT found");
+        if (!StringUtils.isBlank(uid)) {
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(ItemValueDefinition.class);
+            criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<ItemValueDefinition> itemValueDefinitions = criteria.list();
+            if (itemValueDefinitions.size() == 1) {
+                log.debug("getItemValueDefinitionByUid() found: " + uid);
+                itemValueDefinition = itemValueDefinitions.get(0);
+            } else {
+                log.debug("getItemValueDefinitionByUid() NOT found: " + uid);
+            }
         }
         return itemValueDefinition;
     }
@@ -265,7 +251,7 @@ public class DefinitionServiceDAO implements Serializable {
                         "ORDER BY vd.name")
                 .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
     }
 
@@ -277,7 +263,7 @@ public class DefinitionServiceDAO implements Serializable {
                         "WHERE vd.environment.id = :environmentId")
                 .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
         // tell pager how many entities there are and give it a chance to select the requested page again
         pager.setItems(count);
@@ -290,7 +276,7 @@ public class DefinitionServiceDAO implements Serializable {
                         "ORDER BY id.name")
                 .setParameter("environmentId", environment.getId())
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
                 .setFirstResult((int) pager.getStart())
                 .getResultList();
@@ -299,22 +285,22 @@ public class DefinitionServiceDAO implements Serializable {
         return valueDefinitions;
     }
 
-    public ValueDefinition getValueDefinition(Environment environment, String uid) {
+    @SuppressWarnings(value = "unchecked")
+    public ValueDefinition getValueDefinitionByUid(String uid) {
         ValueDefinition valueDefinition = null;
-        List<ValueDefinition> valueDefinitions = entityManager.createQuery(
-                "FROM ValueDefinition vd " +
-                        "WHERE vd.uid = :uid " +
-                        "AND vd.environment.id = :environmentId")
-                .setParameter("uid", uid)
-                .setParameter("environmentId", environment.getId())
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.environmentService")
-                .getResultList();
-        if (valueDefinitions.size() == 1) {
-            log.debug("found ValueDefinition");
-            valueDefinition = valueDefinitions.get(0);
-        } else {
-            log.debug("ValueDefinition NOT found");
+        if (!StringUtils.isBlank(uid)) {
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(ValueDefinition.class);
+            criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<ValueDefinition> valueDefinitions = criteria.list();
+            if (valueDefinitions.size() == 1) {
+                log.debug("getValueDefinitionByUid() found: " + uid);
+                valueDefinition = valueDefinitions.get(0);
+            } else {
+                log.debug("getValueDefinitionByUid() NOT found: " + uid);
+            }
         }
         return valueDefinition;
     }
@@ -338,5 +324,4 @@ public class DefinitionServiceDAO implements Serializable {
         // remove ValueDefinition
         entityManager.remove(valueDefinition);
     }
-
 }

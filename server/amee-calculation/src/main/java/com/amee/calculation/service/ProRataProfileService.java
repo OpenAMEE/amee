@@ -57,17 +57,15 @@ public class ProRataProfileService {
     @Autowired
     private CalculationService calculationService;
 
-
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
 
         List<ProfileItem> requestedItems = new ArrayList<ProfileItem>();
-
         Interval requestInterval = getInterval(startDate, endDate);
 
         for (ProfileItem pi : profileService.getProfileItems(profile, dataCategory, startDate, endDate)) {
 
-            if(log.isDebugEnabled())
+            if (log.isDebugEnabled())
                 log.debug("getProfileItems() - ProfileItem: " + pi.getName() + " has un-prorated CO2 Amount: " + pi.getAmount());
 
             Interval intersect = requestInterval;
@@ -78,7 +76,7 @@ public class ProRataProfileService {
             }
 
             if (pi.getEndDate() != null && pi.getEndDate().before(intersect.getEnd().toDate())) {
-                    intersect = intersect.withEndMillis(pi.getEndDate().getTime());
+                intersect = intersect.withEndMillis(pi.getEndDate().getTime());
             }
 
             if (log.isDebugEnabled())
@@ -93,10 +91,10 @@ public class ProRataProfileService {
                 ProfileItem pic = pi.getCopy();
                 for (ItemValue iv : pi.getItemValues()) {
                     ItemValue ivc = iv.getCopy();
-                    if(ivc.hasPerTimeUnit() && ivc.getItemValueDefinition().isFromProfile() && ivc.getValue().length() > 0) {
+                    if (ivc.hasPerTimeUnit() && ivc.getItemValueDefinition().isFromProfile() && ivc.getValue().length() > 0) {
                         pic.addItemValue(getProRatedItemValue(intersect, ivc));
 
-                        if(log.isDebugEnabled())
+                        if (log.isDebugEnabled())
                             log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
                                     ". ItemValue: " + ivc.getName() + " = " + iv.getValue() + " has PerUnit: " + ivc.getPerUnit() +
                                     ". Pro-rated ItemValue = " + ivc.getValue());
@@ -109,12 +107,12 @@ public class ProRataProfileService {
 
                 calculationService.calculate(pic);
 
-                if(log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
                     log.debug("getProfileItems() - ProfileItem: " + pi.getName() + ". Adding prorated CO2 Amount: " + pic.getAmount());
                 }
 
                 requestedItems.add(pic);
-                
+
             } else if (pi.getEndDate() != null) {
                 // The ProfileItem has no perTime ItemValues and is bounded. In this case, the CO2 value is multiplied by
                 // the (intersection/event) ratio.
@@ -125,9 +123,9 @@ public class ProRataProfileService {
                 BigDecimal proratedAmount = pic.getAmount().getValue().multiply(eventIntersectRatio, Decimal.CONTEXT);
                 pic.setAmount(new CO2Amount(proratedAmount));
 
-                if(log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
                     log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
-                            " is bounded (" + getInterval(pic.getStartDate(),  pic.getEndDate()) +
+                            " is bounded (" + getInterval(pic.getStartDate(), pic.getEndDate()) +
                             ") and has no PerTime ItemValues.");
                     log.debug("getProfileItems() - Adding pro-rated CO2 Amount: " + pic.getAmount());
                 }
@@ -135,7 +133,7 @@ public class ProRataProfileService {
 
             } else {
                 // The ProfileItem has no perTime ItemValues and is unbounded. In this case, the CO2 is not prorated.
-                if(log.isDebugEnabled())
+                if (log.isDebugEnabled())
                     log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
                             " is unbounded and has no PerTime ItemValues. Adding un-prorated CO2 Amount: " + pi.getAmount());
                 requestedItems.add(pi);
@@ -146,7 +144,7 @@ public class ProRataProfileService {
         return requestedItems;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     private ItemValue getProRatedItemValue(Interval interval, ItemValue ivc) {
         BigDecimal perTime = DecimalMeasure.valueOf(new BigDecimal(1), ivc.getPerUnit().toUnit()).to(SI.MILLI(SI.SECOND)).getValue();
         BigDecimal intersectPerTimeRatio = new BigDecimal(interval.toDurationMillis()).divide(perTime, Decimal.CONTEXT);

@@ -1,10 +1,7 @@
 package com.amee.domain.site;
 
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIUtils;
-import com.amee.domain.DatedObject;
-import com.amee.domain.environment.Environment;
-import com.amee.domain.environment.EnvironmentObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -13,19 +10,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
 
 @Entity
 @Table(name = "SITE_APP")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class SiteApp extends AMEEEntity implements EnvironmentObject, DatedObject {
+public class SiteApp extends AMEEEnvironmentEntity {
 
     public final static int SKIN_PATH_SIZE = 255;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "APP_ID")
@@ -38,21 +29,12 @@ public class SiteApp extends AMEEEntity implements EnvironmentObject, DatedObjec
     @Column(name = "SKIN_PATH", length = SKIN_PATH_SIZE, nullable = false)
     private String skinPath = "";
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED")
-    private Date created = null;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED")
-    private Date modified = null;
-
     public SiteApp() {
         super();
     }
 
     public SiteApp(App app, Site site) {
-        this();
-        setEnvironment(site.getEnvironment());
+        super(site.getEnvironment());
         setApp(app);
         setSite(site);
     }
@@ -129,27 +111,6 @@ public class SiteApp extends AMEEEntity implements EnvironmentObject, DatedObjec
         setSkinPath(element.elementText("SkinPath"));
     }
 
-    @PrePersist
-    public void onCreate() {
-        setCreated(Calendar.getInstance().getTime());
-        setModified(getCreated());
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
-        }
-    }
-
     public App getApp() {
         return app;
     }
@@ -179,21 +140,5 @@ public class SiteApp extends AMEEEntity implements EnvironmentObject, DatedObjec
             skinPath = "";
         }
         this.skinPath = skinPath;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 }

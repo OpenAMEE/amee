@@ -21,7 +21,7 @@
 
     <!-- Annotations and other stuff -->
     <context:load-time-weaver/>
-	<context:spring-configured />
+    <context:spring-configured/>
     <context:annotation-config/>
     <context:component-scan base-package="com"/>
     <tx:annotation-driven mode="aspectj"/>
@@ -38,6 +38,12 @@
                 </entry>
             </map>
         </property>
+    </bean>
+
+    <!-- EHCache -->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+        <property name="shared" value="true"/>
     </bean>
 
     <!-- DataSource, em/tx configuration -->
@@ -78,14 +84,6 @@
         <property name="jpaDialect" ref="jpaDialect"/>
     </bean>
     <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
-
-    <!-- Scheduler configuration -->
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <!-- name used to publish applicationContext to Quartz Job instances, so they can call business services -->
-        <property name="applicationContextSchedulerContextKey">
-            <value>applicationContext</value>
-        </property>
-    </bean>
 
     <!-- Event/messaging beans -->
     <springIntegration:annotation-config/>

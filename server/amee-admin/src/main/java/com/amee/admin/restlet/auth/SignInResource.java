@@ -9,7 +9,6 @@ import com.amee.service.auth.AuthService;
 import com.amee.service.environment.SiteService;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.Context;
 import org.restlet.data.*;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +28,6 @@ public class SignInResource extends BaseResource implements Serializable {
 
     @Autowired
     protected AuthService authService;
-
-    @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
-        setAvailable(isValid());
-    }
 
     @Override
     public String getTemplatePath() {

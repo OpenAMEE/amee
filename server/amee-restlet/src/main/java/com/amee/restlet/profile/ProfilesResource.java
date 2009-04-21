@@ -67,12 +67,11 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     private Profile newProfile = null;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         user = AuthService.getUser();
         group = AuthService.getGroup();
         setPage(request);
-        setAvailable(isValid());
     }
 
     @Override
@@ -83,7 +82,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager(getItemsPerPage());
-        List<Profile> profiles = profileService.getProfiles(pager);
+        List<Profile> profiles = profileService.getProfiles(environment, pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", profileBrowser);
@@ -97,7 +96,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
         JSONObject obj = new JSONObject();
         if (isGet()) {
             Pager pager = getPager(getItemsPerPage());
-            List<Profile> profiles = profileService.getProfiles(pager);
+            List<Profile> profiles = profileService.getProfiles(environment, pager);
             pager.setCurrentPage(getPage());
             JSONArray profilesJSONArray = new JSONArray();
             for (Profile profile : profiles) {
@@ -116,7 +115,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
         Element element = document.createElement("ProfilesResource");
         if (isGet()) {
             Pager pager = getPager(getItemsPerPage());
-            List<Profile> profiles = profileService.getProfiles(pager);
+            List<Profile> profiles = profileService.getProfiles(environment, pager);
             pager.setCurrentPage(getPage());
             Element profilesElement = document.createElement("Profiles");
             for (Profile profile : profiles) {

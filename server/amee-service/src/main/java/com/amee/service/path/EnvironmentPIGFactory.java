@@ -25,25 +25,29 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.service.data.DataService;
-import com.amee.service.environment.EnvironmentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-@Service
-public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFactory {
 
-    @Autowired
+public class EnvironmentPIGFactory implements CacheableFactory {
+
     private DataService dataService;
+    private Environment environment;
 
-    public EnvironmentPIGFactory() {
+    private EnvironmentPIGFactory() {
         super();
+    }
+
+    public EnvironmentPIGFactory(DataService dataService, Environment environment) {
+        this();
+        this.dataService = dataService;
+        this.environment = environment;
     }
 
     public Object create() {
         PathItemGroup pathItemGroup = null;
-        Environment environment = EnvironmentService.getEnvironment();
         List<DataCategory> dataCategories = dataService.getDataCategories(environment);
         DataCategory rootDataCategory = findRootDataCategory(dataCategories);
         if (rootDataCategory != null) {
@@ -56,11 +60,36 @@ public class EnvironmentPIGFactory extends BasePIGFactory implements CacheableFa
     }
 
     public String getKey() {
-        Environment environment = EnvironmentService.getEnvironment();
         return environment.getUid();
     }
 
     public String getCacheName() {
         return "EnvironmentPIGs";
+    }
+
+    private DataCategory findRootDataCategory(List<DataCategory> dataCategories) {
+        Iterator<DataCategory> iterator = dataCategories.iterator();
+        while (iterator.hasNext()) {
+            DataCategory dataCategory = iterator.next();
+            if (dataCategory.getDataCategory() == null) {
+                iterator.remove();
+                return dataCategory;
+            }
+        }
+        return null;
+    }
+
+    private void addDataCategories(PathItemGroup pathItemGroup, List<DataCategory> dataCategories) {
+        PathItem pathItem;
+        Map<String, PathItem> pathItems = pathItemGroup.getPathItems();
+        Iterator<DataCategory> iterator = dataCategories.iterator();
+        while (iterator.hasNext()) {
+            DataCategory dataCategory = iterator.next();
+            pathItem = pathItems.get(dataCategory.getDataCategory().getUid());
+            if (pathItem != null) {
+                iterator.remove();
+                pathItem.add(new PathItem(dataCategory));
+            }
+        }
     }
 }

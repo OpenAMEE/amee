@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProfileCategory>
+  <ProfileItems>
+    <ProfileItem>
+      <dataItemUid>4F8A6CE40CD4</dataItemUid>
+      <validFrom />
+      <name>1</name>
+      <comment>up to 12 years</comment>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>6ACD3F7B9E9B</dataItemUid>
+      <validFrom />
+      <numberOfPeople>2</numberOfPeople>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>D5B8DBBCE41A</dataItemUid>
+      <validFrom />
+      <numberOfPeople>2</numberOfPeople>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>24D9442E6CA5</dataItemUid>
+      <validFrom />
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>C52D2B0B845D</dataItemUid>
+      <validFrom />
+      <comment>1/4</comment>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>238D68F1C5B2</dataItemUid>
+      <validFrom />
+      <cyclesPerMonth>8.66666666666667</cyclesPerMonth>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>A4311C44AD53</dataItemUid>
+      <validFrom />
+      <name>none</name>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>4EE0A7554DD9</dataItemUid>
+      <validFrom />
+      <name>none</name>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>AA01EA922017</dataItemUid>
+      <validFrom />
+      <comment>sometimes</comment>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>D9D92D1CCC83</dataItemUid>
+      <validFrom />
+      <name>1</name>
+      <hoursPerMonth>60.8333333333333</hoursPerMonth>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>4E7BDDF658DA</dataItemUid>
+      <validFrom />
+      <numberOwned>1</numberOwned>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>098E414EA501</dataItemUid>
+      <validFrom />
+      <numberOwned>1</numberOwned>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>FA4073308453</dataItemUid>
+      <validFrom />
+      <name>zero</name>
+      <numberOwned>1</numberOwned>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>7D5A772D40CC</dataItemUid>
+      <validFrom />
+      <onStandby>sometimes</onStandby>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>199D07098703</dataItemUid>
+      <validFrom />
+      <numberOwned>6</numberOwned>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>B32624F8CD5F</dataItemUid>
+      <validFrom />
+      <numberOwned>1</numberOwned>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>15AA2E36CEB5</dataItemUid>
+      <validFrom />
+      <numberOwned>1</numberOwned>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>7F0D7F6AE66D</dataItemUid>
+      <validFrom />
+      <name>zero</name>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>6EC8BE2EBAE6</dataItemUid>
+      <validFrom />
+      <onStandby>sometimes</onStandby>
+    </ProfileItem>
+  </ProfileItems>
+</ProfileCategory>
+

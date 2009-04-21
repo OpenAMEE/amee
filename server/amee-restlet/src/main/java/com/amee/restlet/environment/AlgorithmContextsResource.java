@@ -3,7 +3,7 @@ package com.amee.restlet.environment;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
-import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -31,7 +31,7 @@ public class AlgorithmContextsResource extends BaseResource implements Serializa
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
+    private DefinitionService definitionService;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -39,10 +39,9 @@ public class AlgorithmContextsResource extends BaseResource implements Serializa
     private AlgorithmContext newAlgorithmContext;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
-        setAvailable(isValid());
     }
 
     @Override
@@ -125,7 +124,7 @@ public class AlgorithmContextsResource extends BaseResource implements Serializa
             }
             if (newAlgorithmContext != null) {
                 if (isStandardWebBrowser()) {
-                    definitionServiceDAO.save(newAlgorithmContext);
+                    definitionService.save(newAlgorithmContext);
                     success();
                 } else {
                     // return a response for API calls

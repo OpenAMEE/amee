@@ -148,7 +148,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             element = document.createElement("ProfileItems");
             for (ProfileItem item : getProfileItems(resource, resource.getPager())) {
                 Element itemElement = document.createElement("ProfileItem");
-                itemElement.setAttribute("uri",getFullPath(item));
+                itemElement.setAttribute("uri", getFullPath(item));
                 element.appendChild(itemElement);
             }
 
@@ -244,18 +244,27 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         ProfileBrowser browser = resource.getProfileBrowser();
 
         if (browser.isProRataRequest()) {
-            return proRataProfileService.getProfileItems(resource.getProfile(), resource.getDataCategory(),
-                browser.getQueryStartDate(), browser.getQueryEndDate());
+            return proRataProfileService.getProfileItems(
+                    resource.getProfile(),
+                    resource.getDataCategory(),
+                    browser.getQueryStartDate(),
+                    browser.getQueryEndDate());
 
         } else if (browser.isSelectByRequest()) {
-            return selectByProfileService.getProfileItems(resource.getProfile(), resource.getDataCategory(),
-                    browser.getQueryStartDate(), browser.getQueryEndDate(), browser.getSelectBy());
+            return selectByProfileService.getProfileItems(
+                    resource.getProfile(),
+                    resource.getDataCategory(),
+                    browser.getQueryStartDate(),
+                    browser.getQueryEndDate(),
+                    browser.getSelectBy());
 
         } else {
-            return onlyActiveProfileService.getProfileItems(resource.getProfile(), resource.getDataCategory(),
-                    browser.getQueryStartDate(), browser.getQueryEndDate());
+            return onlyActiveProfileService.getProfileItems(
+                    resource.getProfile(),
+                    resource.getDataCategory(),
+                    browser.getQueryStartDate(),
+                    browser.getQueryEndDate());
         }
-
     }
 
     private BigDecimal getTotalAmount(List<ProfileItem> profileItems, CO2AmountUnit returnUnit) {
@@ -338,28 +347,28 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         }
 
         // If the GET contained query (search) parameters, addItemValue OpenSearch elements describing the query and the results.
-        if (resource.getProfileBrowser().isQuery())  {
+        if (resource.getProfileBrowser().isQuery()) {
 
             if (numOfProfileItems > pager.getItemsPerPage()) {
                 feed.addExtension(OpenSearchExtensionFactory.ITEMS_PER_PAGE).setText("" + pager.getItemsPerPage());
                 feed.addExtension(OpenSearchExtensionFactory.START_INDEX).setText("1");
-                feed.addExtension(OpenSearchExtensionFactory.TOTAL_RESULTS).setText(""+ pager.getItems());
+                feed.addExtension(OpenSearchExtensionFactory.TOTAL_RESULTS).setText("" + pager.getItems());
             }
             org.apache.abdera.model.Element query = feed.addExtension(OpenSearchExtensionFactory.QUERY);
-            query.setAttributeValue("role","request");
-            query.setAttributeValue(AtomFeed.Q_NAME_START_DATE,resource.getProfileBrowser().getQueryStartDate().toString());
+            query.setAttributeValue("role", "request");
+            query.setAttributeValue(AtomFeed.Q_NAME_START_DATE, resource.getProfileBrowser().getQueryStartDate().toString());
             if (resource.getProfileBrowser().getQueryEndDate() != null) {
-                query.setAttributeValue(AtomFeed.Q_NAME_END_DATE,resource.getProfileBrowser().getQueryEndDate().toString());
+                query.setAttributeValue(AtomFeed.Q_NAME_END_DATE, resource.getProfileBrowser().getQueryEndDate().toString());
             }
         }
 
-        
+
         atomFeed.addChildCategories(feed, resource);
 
         CO2AmountUnit returnUnit = resource.getProfileBrowser().getCo2AmountUnit();
 
         // Add all ProfileItems as Entries in the Atom feed.
-        for(ProfileItem profileItem : profileItems) {
+        for (ProfileItem profileItem : profileItems) {
 
             String amount = profileItem.getAmount().convert(returnUnit).toString();
 
@@ -485,7 +494,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     }
 
     private String getFullPath(ProfileItem item) {
-        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
+        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(item.getEnvironment());
         return "/profiles/" + item.getProfile().getUid() + pathItemGroup.findByUId(item.getDataCategory().getUid()) + "/" + item.getUid();
     }
 }

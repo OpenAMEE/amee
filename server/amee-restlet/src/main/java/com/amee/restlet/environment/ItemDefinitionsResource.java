@@ -24,8 +24,7 @@ import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.environment.Environment;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
-import com.amee.service.definition.DefinitionServiceDAO;
-import com.amee.service.environment.EnvironmentService;
+import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -54,7 +53,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
+    private DefinitionService definitionService;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -62,11 +61,10 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     private ItemDefinition newItemDefinition;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
-        setAvailable(isValid());
     }
 
     @Override
@@ -83,7 +81,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager(getItemsPerPage());
         Environment environment = definitionBrowser.getEnvironment();
-        List<ItemDefinition> itemDefinitions = definitionServiceDAO.getItemDefinitions(environment, pager);
+        List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(environment, pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
@@ -99,7 +97,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
         if (isGet()) {
             Pager pager = getPager(getItemsPerPage());
             Environment environment = definitionBrowser.getEnvironment();
-            List<ItemDefinition> itemDefinitions = definitionServiceDAO.getItemDefinitions(environment, pager);
+            List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(environment, pager);
             pager.setCurrentPage(getPage());
             JSONArray itemDefinitionsJSONArray = new JSONArray();
             for (ItemDefinition itemDefinition : itemDefinitions) {
@@ -119,7 +117,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
         if (isGet()) {
             Pager pager = getPager(getItemsPerPage());
             Environment environment = definitionBrowser.getEnvironment();
-            List<ItemDefinition> itemDefinitions = definitionServiceDAO.getItemDefinitions(environment, pager);
+            List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(environment, pager);
             pager.setCurrentPage(getPage());
             Element itemDefinitionsElement = document.createElement("ItemDefinitions");
             for (ItemDefinition itemDefinition : itemDefinitions) {
@@ -155,7 +153,7 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
             Form form = getForm();
             if (form.getFirstValue("name") != null) {
                 newItemDefinition = new ItemDefinition(definitionBrowser.getEnvironment(), form.getFirstValue("name"));
-                definitionServiceDAO.save(newItemDefinition);
+                definitionService.save(newItemDefinition);
             }
             if (newItemDefinition != null) {
                 if (isStandardWebBrowser()) {

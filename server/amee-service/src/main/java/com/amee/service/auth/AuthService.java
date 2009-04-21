@@ -317,7 +317,7 @@ public class AuthService implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public User getUserByUid(String userUid) {
+    public User getUserByUid(String uid) {
         Site site = (Site) ThreadBeanHolder.get("site");
         List<User> users = entityManager.createQuery(
                 "SELECT DISTINCT u " +
@@ -325,15 +325,15 @@ public class AuthService implements Serializable {
                         "WHERE u.environment.id = :environmentId " +
                         "AND u.uid = :userUid")
                 .setParameter("environmentId", site.getEnvironment().getId())
-                .setParameter("userUid", userUid)
+                .setParameter("userUid", uid)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.authService")
                 .getResultList();
         if (users.size() == 1) {
-            log.debug("auth found: " + userUid);
+            log.debug("auth found: " + uid);
             return users.get(0);
         }
-        log.debug("auth NOT found: " + userUid);
+        log.debug("auth NOT found: " + uid);
         return null;
     }
 

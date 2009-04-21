@@ -23,8 +23,6 @@ import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
 
-// TODO: SPRINGIFY - What scope?
-
 @Service
 public class SiteService implements Serializable {
 

@@ -37,8 +37,6 @@ import org.w3c.dom.Element;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
 
 @Entity
 @Table(name = "ITEM_VALUE")
@@ -61,12 +59,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
 
     @Column(name = "VALUE", nullable = false, length = VALUE_SIZE)
     private String value = "";
-
-    @Column(name = "CREATED")
-    private Date created = Calendar.getInstance().getTime();
-
-    @Column(name = "MODIFIED")
-    private Date modified = Calendar.getInstance().getTime();
 
     @Column(name = "UNIT", nullable = true, length = UNIT_SIZE)
     private String unit;
@@ -164,18 +156,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
         return getItemValueDefinition().getPath();
     }
 
-    @PrePersist
-    public void onCreate() {
-        Date now = Calendar.getInstance().getTime();
-        setCreated(now);
-        setModified(now);
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
     public ItemValueDefinition getItemValueDefinition() {
         return itemValueDefinition;
     }
@@ -204,22 +184,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
             value = value.substring(0, VALUE_SIZE - 1);
         }
         this.value = value;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 
     @Transient

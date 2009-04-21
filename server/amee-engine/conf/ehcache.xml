@@ -3,15 +3,6 @@
 
     <diskStore path="java.io.tmp"/>
 
-    <!-- **** Cluster **** -->
-
-    <!--cacheManagerPeerProviderFactory
-            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
-            properties="peerDiscovery=automatic, multicastGroupAddress=230.0.0.1, multicastGroupPort=4446, timeToLive=32"/-->
-
-    <!--cacheManagerPeerListenerFactory
-            class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"/-->
-
     <!-- **** Default cache configuration **** -->
 
     <!-- NOTE: this should not get used because caches are explicitly defined below -->
@@ -20,8 +11,6 @@
                   timeToIdleSeconds="1800"
                   timeToLiveSeconds="3600"
                   overflowToDisk="false">
-        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
-        <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </defaultCache>
 
     <!-- JavaDoc: Tracks the timestamps of the most recent updates to particular tables.
@@ -29,15 +18,11 @@
     be set to a higher value than the timeouts of any of the query caches. In fact,
     we recommend that the the underlying cache not be configured for expiry at all.
     Note, in particular, that an LRU cache expiry policy is never appropriate. -->
-    <!-- Set to two days: 172,800 -->
+    <!-- NOTE: maxElementsInMemory should match (or exceed # of tables). -->
     <cache name="org.hibernate.cache.UpdateTimestampsCache"
-           maxElementsInMemory="50000"
-           eternal="false"
-           timeToIdleSeconds="172800"
-           timeToLiveSeconds="172800"
+           maxElementsInMemory="40"
+           eternal="true"
            overflowToDisk="false">
-        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
-        <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </cache>
 
     <!-- JavaDoc: The standard implementation of the Hibernate QueryCache interface.
@@ -50,8 +35,6 @@
            timeToIdleSeconds="1800"
            timeToLiveSeconds="3600"
            overflowToDisk="false">
-        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
-        <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </cache>
 
     <!-- **** Includes **** -->
@@ -96,7 +79,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- Algorithm -->
@@ -106,7 +89,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- Algorithm -->
@@ -116,7 +99,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- DataCategory -->
@@ -126,7 +109,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- Item -->
@@ -136,9 +119,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
+           memoryStoreEvictionPolicy="LFU">
     </cache>
     <cache name="com.amee.domain.data.Item.itemValues"
            maxElementsInMemory="57500"
@@ -146,9 +127,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- ItemDefinition -->
@@ -158,7 +137,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
     <cache name="com.amee.domain.data.ItemDefinition.algorithms"
            maxElementsInMemory="200"
@@ -166,7 +145,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
     <cache name="com.amee.domain.data.ItemDefinition.itemValueDefinitions"
            maxElementsInMemory="200"
@@ -174,7 +153,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- ItemValue -->
@@ -184,9 +163,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- ItemValueDefinition -->
@@ -196,7 +173,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
     <cache name="com.amee.domain.data.ItemValueDefinition.apiVersions"
            maxElementsInMemory="1000"
@@ -205,8 +182,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
     <!-- Profile -->
@@ -216,9 +191,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- ValueDefinition -->
@@ -228,31 +201,29 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- **** Queries **** -->
 
     <!-- DataServiceDAO -->
     <cache name="query.dataService"
-           maxElementsInMemory="1000"
+           maxElementsInMemory="2000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- ProfileServiceDAO -->
     <cache name="query.profileService"
-           maxElementsInMemory="200"
+           maxElementsInMemory="2000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- **** Application objects **** -->
@@ -264,7 +235,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- Data Sheets -->
@@ -274,7 +245,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- Environment Path Item Groups -->
@@ -284,7 +255,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- Profile Sheets -->
@@ -294,9 +265,7 @@
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LRU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=false, replicateUpdates=false, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
+           memoryStoreEvictionPolicy="LFU">
     </cache>
 
     <!-- **** Kiwi - Entities **** -->
@@ -309,8 +278,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
     <!-- User -->
@@ -321,8 +288,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
     <!-- Site -->
@@ -333,8 +298,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
     <cache name="com.amee.domain.site.Site.siteApps"
            maxElementsInMemory="30"
@@ -343,8 +306,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
     <!-- SiteApps -->
@@ -356,8 +317,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
     <!-- Role -->
@@ -368,8 +327,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
     <cache name="com.amee.domain.auth.Role.actions"
            maxElementsInMemory="50"
@@ -378,8 +335,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
     <!-- Group -->
@@ -390,8 +345,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
     <!-- GroupUser -->
@@ -402,8 +355,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
     <cache name="com.amee.domain.auth.GroupUser.roles"
            maxElementsInMemory="50"
@@ -412,8 +363,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
     <!-- Permission -->
@@ -424,8 +373,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
     <!-- App -->
@@ -436,30 +383,24 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
     <cache name="com.amee.domain.site.App.actions"
-           maxElementsInMemory="100"
+           maxElementsInMemory="50"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
     <!-- Action -->
     <cache name="com.amee.domain.auth.Action"
-           maxElementsInMemory="100"
+           maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-    properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/-->
     </cache>
 
     <!-- **** Kiwi - Queries **** -->
@@ -472,8 +413,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
-        <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </cache>
 
     <!-- GroupService -->
@@ -484,8 +423,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
-        <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </cache>
 
     <!-- AuthService -->
@@ -496,20 +433,16 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
-        <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </cache>
 
     <!-- SiteService -->
     <cache name="query.siteService"
            maxElementsInMemory="200"
-           eternal="false"
+           eternal="true"
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
-        <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </cache>
 
     <!-- EnvironmentService -->
@@ -520,8 +453,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
-        <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </cache>
 
     <!-- FreeMarkerConfigurations -->
@@ -532,8 +463,6 @@
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
-        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"-->
-        <!--properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true"/>-->
     </cache>
 
 </ehcache>

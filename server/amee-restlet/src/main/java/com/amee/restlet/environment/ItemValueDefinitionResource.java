@@ -23,7 +23,7 @@ import com.amee.domain.APIVersion;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
-import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.definition.DefinitionService;
 import com.amee.service.environment.EnvironmentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,7 +52,7 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
+    private DefinitionService definitionService;
 
     @Autowired
     private EnvironmentService environmentService;
@@ -61,12 +61,11 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     private DefinitionBrowser definitionBrowser;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
         definitionBrowser.setItemValueDefinitionUid(request.getAttributes().get("itemValueDefinitionUid").toString());
-        setAvailable(isValid());
     }
 
     @Override
@@ -154,7 +153,7 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
                 itemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
             }
             if (names.contains("aliasedTo")) {
-                itemValueDefinition.setAliasedTo(definitionServiceDAO.getItemValueDefinition(form.getFirstValue("aliasedTo")));
+                itemValueDefinition.setAliasedTo(definitionService.getItemValueDefinitionByUid(form.getFirstValue("aliasedTo")));
             }
 
             // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
@@ -185,7 +184,7 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
         if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
             ItemValueDefinition itemValueDefinition = definitionBrowser.getItemValueDefinition();
             definitionBrowser.getItemDefinition().remove(itemValueDefinition);
-            definitionServiceDAO.remove(itemValueDefinition);
+            definitionService.remove(itemValueDefinition);
             success();
         } else {
             notAuthorized();

@@ -8,6 +8,8 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.Item;
 import com.amee.domain.data.ItemValue;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowire;
@@ -39,10 +41,13 @@ import java.math.BigDecimal;
  * Website http://www.amee.cc
  */
 
-@Configurable(autowire= Autowire.BY_TYPE)
+@Configurable(autowire = Autowire.BY_TYPE)
 @Entity
 @DiscriminatorValue("PI")
 public class ProfileItem extends Item {
+
+    @Transient
+    private final Log log = LogFactory.getLog(getClass());
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "PROFILE_ID")
@@ -132,30 +137,37 @@ public class ProfileItem extends Item {
 
     /**
      * Get the {@link com.amee.domain.core.CO2Amount CO2Amount} for this ProfileItem.
-     *
+     * <p/>
      * If the ProfileItem does not support CO2 calculations (i.e. metadata) CO2Amount.ZERO is returned.
      *
      * @return - the {@link com.amee.domain.core.CO2Amount CO2Amount} for this ProfileItem
      */
     public CO2Amount getAmount() {
-        
-        // Some ProfileItems are from ItemDefinitions which do not have algorithms and hence do not
-        // support calculations.
-        if (!supportsCalculation())
-            return CO2Amount.ZERO;
-
         // CO2 amounts are lazily calculated once per session.
-        if (amount == null)
+        if (amount == null) {
+            log.debug("getAmount() - lazily calculating amount");
             calculationService.calculate(this);
-
+        }
         return new CO2Amount(amount);
     }
 
-    public void setAmount(CO2Amount amount) {
+    /**
+     * Set the amount. If the amount is different to the current persistentAmount then set this too. Will
+     * return true if the persistentAmount was changed.
+     *
+     * @param amount to set
+     * @return true if the persistentAmount was changed
+     */
+    public boolean setAmount(CO2Amount amount) {
         this.amount = amount.getValue();
         // Persist the transient session CO2 amount if it is different from the last persisted amount.
-        if (this.amount.compareTo(persistentAmount) != 0)
+        if (this.amount.compareTo(persistentAmount) != 0) {
+            log.debug("setAmount() - amount has changed from " + persistentAmount + " to " + this.amount);
             persistentAmount = this.amount;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -184,19 +196,13 @@ public class ProfileItem extends Item {
 
     //TODO - TEMP HACK - will remove as soon we decide how to handle return units in V1 correctly.
     public boolean isSingleFlight() {
-
         for (ItemValue iv : getItemValues()) {
             if ((iv.getName().startsWith("IATA") && iv.getValue().length() > 0) ||
-                (iv.getName().startsWith("Lat") && !iv.getValue().equals("-999")) ||
-                (iv.getName().startsWith("Lon") && !iv.getValue().equals("-999"))) {
+                    (iv.getName().startsWith("Lat") && !iv.getValue().equals("-999")) ||
+                    (iv.getName().startsWith("Lon") && !iv.getValue().equals("-999"))) {
                 return true;
             }
-
         }
         return false;
-    }
-
-    public boolean supportsCalculation() {
-        return !getItemDefinition().getAlgorithms().isEmpty();
     }
 }

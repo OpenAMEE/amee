@@ -22,7 +22,7 @@ package com.amee.restlet.environment;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
-import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -49,17 +49,16 @@ public class AlgorithmContextResource extends BaseResource implements Serializab
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
+    private DefinitionService definitionService;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setAlgorithmContextUid(request.getAttributes().get("algorithmContentUid").toString());
-        setAvailable(isValid());
     }
 
     @Override
@@ -141,7 +140,7 @@ public class AlgorithmContextResource extends BaseResource implements Serializab
         log.debug("delete");
         if (definitionBrowser.getAlgorithmActions().isAllowDelete()) {
             AlgorithmContext algorithmContext = definitionBrowser.getAlgorithmContext();
-            definitionServiceDAO.remove(algorithmContext);
+            definitionService.remove(algorithmContext);
             success();
         } else {
             notAuthorized();

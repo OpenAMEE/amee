@@ -1,36 +1,36 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.amee</groupId>
-    <artifactId>server</artifactId>
-    <version>${amee.version}</version>
-  </parent>
-  <artifactId>amee-calculation</artifactId>
-  <packaging>jar</packaging>
-
-  <name>amee-calculation</name>
-
-  <dependencies>
-    <!-- Internal Dependencies. -->
-    <dependency>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
         <groupId>com.amee</groupId>
-        <artifactId>amee-domain</artifactId>
+        <artifactId>server</artifactId>
         <version>${amee.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>com.amee</groupId>
-        <artifactId>amee-service</artifactId>
-        <version>${amee.version}</version>
-    </dependency>
-    <!-- External Dependencies. -->
-    <dependency>
-        <groupId>joda-time</groupId>
-        <artifactId>joda-time</artifactId>
-        <version>${joda-time.version}</version>
-    </dependency>
-  </dependencies>
+    </parent>
+    <artifactId>amee-calculation</artifactId>
+    <packaging>jar</packaging>
+
+    <name>amee-calculation</name>
+
+    <dependencies>
+        <!-- Internal Dependencies. -->
+        <dependency>
+            <groupId>com.amee</groupId>
+            <artifactId>amee-domain</artifactId>
+            <version>${amee.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amee</groupId>
+            <artifactId>amee-service</artifactId>
+            <version>${amee.version}</version>
+        </dependency>
+        <!-- External Dependencies. -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${joda-time.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>

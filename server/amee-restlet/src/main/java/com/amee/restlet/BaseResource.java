@@ -2,13 +2,13 @@ package com.amee.restlet;
 
 import com.amee.domain.Pager;
 import com.amee.domain.PagerSetType;
+import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.SortOrder;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.APIFault;
 import com.amee.restlet.utils.HeaderUtils;
 import com.amee.restlet.utils.MediaTypeUtils;
 import com.amee.service.ThreadBeanHolder;
-import com.amee.service.environment.EnvironmentService;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateHashModel;
@@ -41,15 +41,27 @@ public abstract class BaseResource extends Resource {
 
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
-        List<Variant> variants = super.getVariants();
+        initialise(context, request, response);
+        setAvailable(isValid());
+    }
+
+    public void initialise(Context context, Request request, Response response) {
+        List<Variant> varients = super.getVariants();
         if (isStandardWebBrowser()) {
-            variants.add(new Variant(MediaType.TEXT_HTML));
+            varients.add(new Variant(MediaType.TEXT_HTML));
         } else {
-            variants.add(new Variant(MediaType.APPLICATION_XML));
-            variants.add(new Variant(MediaType.APPLICATION_JSON));
+            varients.add(new Variant(MediaType.APPLICATION_XML));
+            varients.add(new Variant(MediaType.APPLICATION_JSON));
         }
     }
 
+    /**
+     * Determine if this resource is valid. All subsequent resource activity will assume that this validity
+     * check has passed (returned true). Resources should check for existence of objects/entities required
+     * for the resource and for consistency of these objects (hierarchy, for example).
+     *
+     * @return true if this resource is valid
+     */
     public boolean isValid() {
         return true;
     }
@@ -207,7 +219,8 @@ public abstract class BaseResource extends Resource {
     }
 
     public int getItemsPerPage() {
-        int itemsPerPage = EnvironmentService.getEnvironment().getItemsPerPage();
+        Environment environment = (Environment) getRequest().getAttributes().get("environment");
+        int itemsPerPage = environment.getItemsPerPage();
         String itemsPerPageStr = getRequest().getResourceRef().getQueryAsForm().getFirstValue("itemsPerPage");
         if (itemsPerPageStr == null) {
             itemsPerPageStr = HeaderUtils.getHeaderFirstValue("ItemsPerPage", getRequest());
@@ -351,7 +364,6 @@ public abstract class BaseResource extends Resource {
     public boolean isPostOrPut() {
         return isPost() || isPut();
     }
-
 
     /**
      * Indicates if the response status is an error status (for example 4XX or 500 status codes).

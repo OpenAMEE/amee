@@ -1,10 +1,7 @@
 package com.amee.domain.auth;
 
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIUtils;
-import com.amee.domain.DatedObject;
-import com.amee.domain.environment.Environment;
-import com.amee.domain.environment.EnvironmentObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
@@ -14,9 +11,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,11 +22,7 @@ import java.util.Set;
 @Entity
 @Table(name = "GROUP_USER")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class GroupUser extends AMEEEntity implements EnvironmentObject, DatedObject, Comparable, Serializable {
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
+public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "GROUP_ID")
@@ -52,21 +42,12 @@ public class GroupUser extends AMEEEntity implements EnvironmentObject, DatedObj
     @OrderBy("name")
     private Set<Role> roles = new HashSet<Role>();
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED")
-    private Date created = null;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED")
-    private Date modified = null;
-
     public GroupUser() {
         super();
     }
 
     public GroupUser(Group group, User user) {
-        this();
-        setEnvironment(group.getEnvironment());
+        super(group.getEnvironment());
         setGroup(group);
         setUser(user);
     }
@@ -214,27 +195,6 @@ public class GroupUser extends AMEEEntity implements EnvironmentObject, DatedObj
         getRoles().add(role);
     }
 
-    @PrePersist
-    public void onCreate() {
-        setCreated(Calendar.getInstance().getTime());
-        setModified(getCreated());
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
-        }
-    }
-
     public Group getGroup() {
         return group;
     }
@@ -264,21 +224,5 @@ public class GroupUser extends AMEEEntity implements EnvironmentObject, DatedObj
             roles = new HashSet<Role>();
         }
         this.roles = roles;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 }

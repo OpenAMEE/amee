@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProfileCategory>
+  <ProfileItems>
+    <ProfileItem>
+      <dataItemUid>86D02FBD95AE</dataItemUid>
+      <validFrom />
+      <postcode>32</postcode>
+      <profileType>Individual</profileType>
+      <greenTariff>yes</greenTariff>
+      <peopleInHousehold>2</peopleInHousehold>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>C441C3437AD0</dataItemUid>
+      <validFrom />
+      <realTimeDisplay>yes</realTimeDisplay>
+      <homeOwnership>rent</homeOwnership>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>3D8450657B6F</dataItemUid>
+      <validFrom />
+      <hasPhotovoltaic>true</hasPhotovoltaic>
+      <hasCavityWallInsulation>true</hasCavityWallInsulation>
+      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+      <hasSolidWallInsulation>true</hasSolidWallInsulation>
+      <hasNoInsulation>false</hasNoInsulation>
+      <numberOfBedrooms>2</numberOfBedrooms>
+      <age>pre 1930</age>
+      <heatingType>boiler (average-5-10yrs old)</heatingType>
+      <hasWindTurbine>true</hasWindTurbine>
+      <hasNoRenewables>false</hasNoRenewables>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>B8FE32603E8D</dataItemUid>
+      <validFrom />
+      <currencyGBPPerMonth>37</currencyGBPPerMonth>
+      <paymentFrequency>on delivery</paymentFrequency>
+      <numberOfDeliveries>2</numberOfDeliveries>
+      <includesHeating>false</includesHeating>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>86401B790B86</dataItemUid>
+      <validFrom />
+      <currencyGBPPerMonth>41</currencyGBPPerMonth>
+      <season>summer</season>
+      <paymentFrequency>quarterly</paymentFrequency>
+      <includesHeating>false</includesHeating>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>C3220A6DE793</dataItemUid>
+      <validFrom />
+      <noOfLowEnergyLightBulbs>22</noOfLowEnergyLightBulbs>
+    </ProfileItem>
+    <ProfileItem>
+      <dataItemUid>2ACB6277A603</dataItemUid>
+      <validFrom />
+      <noOfLightBulbs>11</noOfLightBulbs>
+    </ProfileItem>
+  </ProfileItems>
+</ProfileCategory>
+

@@ -2,7 +2,6 @@ package com.amee.domain.environment;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIUtils;
-import com.amee.domain.DatedObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -10,15 +9,15 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "ENVIRONMENT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Environment extends AMEEEntity implements DatedObject, Comparable, Serializable {
+public class Environment extends AMEEEntity implements Comparable {
 
     public final static int NAME_SIZE = 255;
     public final static int PATH_SIZE = 255;
@@ -42,14 +41,6 @@ public class Environment extends AMEEEntity implements DatedObject, Comparable, 
 
     @Column(name = "ITEMS_PER_FEED", nullable = false)
     private Integer itemsPerFeed = 10;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED")
-    private Date created = Calendar.getInstance().getTime();
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED")
-    private Date modified = Calendar.getInstance().getTime();
 
     public Environment() {
         super();
@@ -136,17 +127,6 @@ public class Environment extends AMEEEntity implements DatedObject, Comparable, 
         setItemsPerFeed(element.elementText("ItemsPerFeed"));
     }
 
-    @PrePersist
-    public void onCreate() {
-        setCreated(Calendar.getInstance().getTime());
-        setModified(getCreated());
-    }
-
-    @PreUpdate
-    public void onModify() {
-        setModified(Calendar.getInstance().getTime());
-    }
-
     public String getName() {
         return name;
     }
@@ -196,22 +176,6 @@ public class Environment extends AMEEEntity implements DatedObject, Comparable, 
         } catch (NumberFormatException e) {
             // swallow
         }
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 
     public String getOwner() {

@@ -1,5 +1,6 @@
 package com.amee.engine;
 
+import com.amee.domain.AMEEStatistics;
 import com.amee.domain.APIUtils;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.MediaTypeUtils;
@@ -36,12 +37,16 @@ public class EngineStatusService extends StatusService {
     @Autowired
     private FreeMarkerConfigurationService freeMarkerConfigurationService;
 
+    @Autowired
+    private AMEEStatistics ameeStatistics;
+
     public EngineStatusService() {
         super();
     }
 
     @Override
     public Status getStatus(Throwable throwable, Request request, Response response) {
+        ameeStatistics.error();
         Application.getCurrent().getLogger()
                 .log(Level.SEVERE, "Unhandled exception or error intercepted: " + throwable, throwable);
         return new Status(Status.SERVER_ERROR_INTERNAL.getCode(), throwable);

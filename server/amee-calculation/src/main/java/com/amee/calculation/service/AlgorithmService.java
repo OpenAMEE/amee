@@ -50,7 +50,7 @@ public class AlgorithmService {
      * Evaluate an Algorithm.
      *
      * @param algorithm - the Algorithm to evaluate
-     * @param values - map of key/value input pairs
+     * @param values    - map of key/value input pairs
      * @return the value returned by the Algorithm as a String
      */
     public String evaluate(Algorithm algorithm, Map<String, Object> values) {

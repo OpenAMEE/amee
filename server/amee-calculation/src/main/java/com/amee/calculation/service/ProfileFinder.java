@@ -42,7 +42,7 @@ public class ProfileFinder implements Serializable {
     @Autowired
     private ProfileService profileService;
 
-    private DataFinder dataFinder;                                                              
+    private DataFinder dataFinder;
     private ProfileItem profileItem;
 
     public ProfileFinder() {

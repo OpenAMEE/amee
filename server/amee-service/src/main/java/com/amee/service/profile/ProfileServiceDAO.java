@@ -19,20 +19,19 @@
  */
 package com.amee.service.profile;
 
-import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
-import com.amee.domain.UidGen;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.User;
-import com.amee.domain.data.*;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.data.ItemValue;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.event.ObservedEvent;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.service.auth.AuthService;
-import com.amee.service.environment.EnvironmentService;
-import com.amee.service.transaction.TransactionController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,7 +40,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
 
@@ -73,9 +71,6 @@ class ProfileServiceDAO implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    private TransactionController transactionController;
-
     public ProfileServiceDAO() {
         super();
     }
@@ -88,6 +83,8 @@ class ProfileServiceDAO implements Serializable {
         DataItem dataItem = (DataItem) oe.getPayload();
         log.debug("beforeDataItemDelete");
         // remove ItemValues for ProfileItems
+        // TODO: This HQL/SQL is slow.
+        // TODO: Take inspiration from com.amee.service.data.DataServiceDAO#remove.
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
                         "WHERE iv.item IN " +
@@ -128,6 +125,8 @@ class ProfileServiceDAO implements Serializable {
         DataCategory dataCategory = (DataCategory) oe.getPayload();
         log.debug("beforeDataCategoryDelete");
         // remove ItemValues for ProfileItems
+        // TODO: This HQL/SQL is slow.
+        // TODO: Take inspiration from com.amee.service.data.DataServiceDAO#remove.
         entityManager.createQuery(
                 "DELETE FROM ItemValue iv " +
                         "WHERE iv.item IN " +
@@ -196,27 +195,6 @@ class ProfileServiceDAO implements Serializable {
 
     // Profiles
 
-    /**
-     * Fetches a Profile based on the supplied path. If the path is a valid UID format then the
-     * Profile with this UID is returned. If a profile with the UID is not found or the path is
-     * not a valid UID format then a Profile with the matching path is searched for and returned.
-     *
-     * @param path to search for. Can be either a UID or a path alias.
-     * @return the matching Profile
-     */
-    public Profile getProfile(String path) {
-        Profile profile = null;
-        if (!StringUtils.isBlank(path)) {
-            if (UidGen.isValid(path)) {
-                profile = getProfileByUid(path);
-            }
-            if (profile == null) {
-                profile = getProfileByPath(path);
-            }
-        }
-        return profile;
-    }
-
     @SuppressWarnings(value = "unchecked")
     public Profile getProfileByUid(String uid) {
         Profile profile = null;
@@ -238,11 +216,9 @@ class ProfileServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public Profile getProfileByPath(String path) {
+    public Profile getProfileByPath(Environment environment, String path) {
         Profile profile = null;
-        List<Profile> profiles;
-        Environment environment = EnvironmentService.getEnvironment();
-        profiles = entityManager.createQuery(
+        List<Profile> profiles = entityManager.createQuery(
                 "FROM Profile p " +
                         "WHERE p.path = :path " +
                         "AND p.environment.id = :environmentId")
@@ -261,8 +237,7 @@ class ProfileServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public List<Profile> getProfiles(Pager pager) {
-        Environment environment = EnvironmentService.getEnvironment();
+    public List<Profile> getProfiles(Environment environment, Pager pager) {
         User user = AuthService.getUser();
         Group group = AuthService.getGroup();
         // first count all profiles
@@ -309,18 +284,33 @@ class ProfileServiceDAO implements Serializable {
         return profiles;
     }
 
-    // TODO: Work out the implication of using native queries for deletes. Does the EntityManager get confused?
+    public void persist(Profile profile) {
+        entityManager.persist(profile);
+    }
+
+    /**
+     * Removes a Profile along with associated ProfileItems and ItemValues.
+     * <p/>
+     * Native SQL is used to remove ItemValues as HQL cannot use joins in DELETEs. Care is
+     * taken to tell Hibernate to only invalidate the ItemValue cache (via the
+     * SQLQuery.addSynchronizedEntityClass method call).
+     *
+     * @param profile to remove
+     */
     public void remove(Profile profile) {
         log.debug("remove: " + profile.getUid());
         // delete all ItemValues for ProfileItems within this Profile
-        entityManager.createNativeQuery(
-                "DELETE iv " +
-                        "FROM ITEM_VALUE iv, ITEM i " +
-                        "WHERE iv.ITEM_ID = i.ID " +
-                        "AND i.TYPE = 'PI' " +
-                        "AND i.PROFILE_ID = :profileId")
-                .setParameter("profileId", profile.getId())
-                .executeUpdate();
+        Session session = (Session) entityManager.getDelegate();
+        SQLQuery query = session.createSQLQuery(
+                new StringBuilder()
+                        .append("DELETE iv ")
+                        .append("FROM ITEM_VALUE iv, ITEM i ")
+                        .append("WHERE iv.ITEM_ID = i.ID ")
+                        .append("AND i.TYPE = 'PI' ")
+                        .append("AND i.PROFILE_ID = :profileId").toString());
+        query.setLong("profileId", profile.getId());
+        query.addSynchronizedEntityClass(ItemValue.class);
+        query.executeUpdate();
         // delete all ProfileItems within this Profile
         entityManager.createQuery(
                 new StringBuilder()
@@ -336,7 +326,7 @@ class ProfileServiceDAO implements Serializable {
     // ProfileItems
 
     @SuppressWarnings(value = "unchecked")
-    public ProfileItem getProfileItem(String uid, APIVersion apiVersion) {
+    public ProfileItem getProfileItem(String uid) {
         ProfileItem profileItem = null;
         if (!StringUtils.isBlank(uid)) {
             // See http://www.hibernate.org/117.html#A12 for notes on DISTINCT_ROOT_ENTITY.
@@ -350,40 +340,11 @@ class ProfileServiceDAO implements Serializable {
             if (profileItems.size() == 1) {
                 log.debug("getProfileItem() found: " + uid);
                 profileItem = profileItems.get(0);
-                checkProfileItem(profileItem, apiVersion);
             } else {
                 log.debug("getProfileItem() NOT found: " + uid);
             }
         }
         return profileItem;
-    }
-
-    @SuppressWarnings(value = "unchecked")
-    public boolean equivilentProfileItemExists(ProfileItem profileItem) {
-        List<ProfileItem> profileItems = entityManager.createQuery(
-                "SELECT DISTINCT pi " +
-                        "FROM ProfileItem pi " +
-                        "LEFT JOIN FETCH pi.itemValues " +
-                        "WHERE pi.profile.id = :profileId " +
-                        "AND pi.uid != :uid " +
-                        "AND pi.dataCategory.id = :dataCategoryId " +
-                        "AND pi.dataItem.id = :dataItemId " +
-                        "AND pi.startDate = :startDate " +
-                        "AND pi.name = :name")
-                .setParameter("profileId", profileItem.getProfile().getId())
-                .setParameter("uid", profileItem.getUid())
-                .setParameter("dataCategoryId", profileItem.getDataCategory().getId())
-                .setParameter("dataItemId", profileItem.getDataItem().getId())
-                .setParameter("startDate", profileItem.getStartDate())
-                .setParameter("name", profileItem.getName())
-                .getResultList();
-        if (profileItems.size() > 0) {
-            log.debug("equivilentProfileItemExists() - found ProfileItem(s)");
-            return true;
-        } else {
-            log.debug("equivilentProfileItemExists() - no ProfileItem(s) found");
-            return false;
-        }
     }
 
     @SuppressWarnings(value = "unchecked")
@@ -481,83 +442,40 @@ class ProfileServiceDAO implements Serializable {
         return query.getResultList();
     }
 
-    // ItemValues
-
     @SuppressWarnings(value = "unchecked")
-    public ItemValue getProfileItemValue(String uid) {
-        ItemValue profileItemValue = null;
-        List<ItemValue> profileItemValues;
-        profileItemValues = entityManager.createQuery(
-                "FROM ItemValue iv " +
-                        "LEFT JOIN FETCH iv.item i " +
-                        "WHERE iv.uid = :uid")
-                .setParameter("uid", uid)
+    public boolean equivilentProfileItemExists(ProfileItem profileItem) {
+        List<ProfileItem> profileItems = entityManager.createQuery(
+                "SELECT DISTINCT pi " +
+                        "FROM ProfileItem pi " +
+                        "LEFT JOIN FETCH pi.itemValues " +
+                        "WHERE pi.profile.id = :profileId " +
+                        "AND pi.uid != :uid " +
+                        "AND pi.dataCategory.id = :dataCategoryId " +
+                        "AND pi.dataItem.id = :dataItemId " +
+                        "AND pi.startDate = :startDate " +
+                        "AND pi.name = :name")
+                .setParameter("profileId", profileItem.getProfile().getId())
+                .setParameter("uid", profileItem.getUid())
+                .setParameter("dataCategoryId", profileItem.getDataCategory().getId())
+                .setParameter("dataItemId", profileItem.getDataItem().getId())
+                .setParameter("startDate", profileItem.getStartDate())
+                .setParameter("name", profileItem.getName())
                 .getResultList();
-        if (profileItemValues.size() == 1) {
-            log.debug("found ItemValue");
-            profileItemValue = profileItemValues.get(0);
+        if (profileItems.size() > 0) {
+            log.debug("equivilentProfileItemExists() - found ProfileItem(s)");
+            return true;
         } else {
-            log.debug("ItemValue NOT found");
+            log.debug("equivilentProfileItemExists() - no ProfileItem(s) found");
+            return false;
         }
-        return profileItemValue;
     }
 
-    public void remove(ItemValue profileItemValue) {
-        entityManager.remove(profileItemValue);
+    public void persist(ProfileItem pi) {
+        entityManager.persist(pi);
     }
 
-    /**
-     * Add to the {@link com.amee.domain.profile.ProfileItem} any {@link com.amee.domain.data.ItemValue}s it is missing.
-     * This will be the case on first persist (this method acting as a reification function), and between GETs if any
-     * new {@link com.amee.domain.data.ItemValueDefinition}s have been added to the underlying
-     * {@link com.amee.domain.data.ItemDefinition}.
-     *
-     * Any updates to the {@link com.amee.domain.profile.ProfileItem} will be persisted to the database.
-     *
-     * @param profileItem
-     * @param apiVersion
-     */
-    @SuppressWarnings(value = "unchecked")
-    public void checkProfileItem(ProfileItem profileItem, APIVersion apiVersion) {
-
-        // find ItemValueDefinitions not currently implemented in this Item
-        List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
-                "FROM ItemValueDefinition ivd " +
-                        "WHERE ivd NOT IN (" +
-                        "   SELECT iv.itemValueDefinition " +
-                        "   FROM ItemValue iv " +
-                        "   WHERE iv.item.id = :profileItemId) " +
-                        "AND ivd.fromProfile = :fromProfile " +
-                        "AND ivd.itemDefinition.id = :itemDefinitionId  " +
-                        "AND :apiVersion MEMBER OF ivd.apiVersions")
-                .setParameter("profileItemId", profileItem.getId())
-                .setParameter("itemDefinitionId", profileItem.getItemDefinition().getId())
-                .setParameter("apiVersion", apiVersion)
-                .setParameter("fromProfile", true)
-                .getResultList();
-
-        if (itemValueDefinitions.size() > 0) {
-
-            // Ensure a transaction has been opened. The implementation of open-session-in-view we are using
-            // does not open transactions for GETs. This method is called for certain GETs.
-            transactionController.begin(true);
-
-            // create missing ItemValues
-            for (ItemValueDefinition ivd : itemValueDefinitions) {
-                // start default value with value from ItemValueDefinition
-                String defaultValue = ivd.getValue();
-                // next give DataItem a chance to set the default value, if appropriate
-                if (ivd.isFromData()) {
-                    Map<String, ItemValue> dataItemValues = profileItem.getDataItem().getItemValuesMap();
-                    ItemValue dataItemValue = dataItemValues.get(ivd.getPath());
-                    if ((dataItemValue != null) && (dataItemValue.getValue().length() > 0)) {
-                        defaultValue = dataItemValue.getValue();
-                    }
-                }
-                // create missing ItemValue
-                new ItemValue(ivd, profileItem, defaultValue);
-            }
-        }
+    public void remove(ProfileItem pi) {
+        entityManager.remove(pi);
     }
 
     // Profile DataCategories

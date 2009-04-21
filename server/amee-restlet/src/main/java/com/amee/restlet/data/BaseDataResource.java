@@ -31,8 +31,8 @@ public abstract class BaseDataResource extends AMEEResource {
     protected DataBrowser dataBrowser;
     private DataItem dataItem;
 
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         this.dataBrowser = (DataBrowser) beanFactory.getBean("dataBrowser");
     }
     
@@ -52,7 +52,7 @@ public abstract class BaseDataResource extends AMEEResource {
 
     public void setDataItem(String path) {
         if (path.isEmpty()) return;
-        dataItem = dataService.getDataItem(path);
+        dataItem = dataService.getDataItem(environment, path);
     }
 
     public DataItem getDataItem() {

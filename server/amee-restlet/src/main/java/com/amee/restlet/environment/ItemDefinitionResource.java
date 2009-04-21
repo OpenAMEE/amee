@@ -23,7 +23,7 @@ import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
-import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -51,17 +51,16 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
+    private DefinitionService definitionService;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
-        setAvailable(isValid());
     }
 
     @Override
@@ -76,7 +75,7 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        List<ValueDefinition> valueDefinitions = definitionServiceDAO.getValueDefinitions(definitionBrowser.getEnvironment());
+        List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(definitionBrowser.getEnvironment());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
         values.put("environment", definitionBrowser.getEnvironment());
@@ -143,7 +142,7 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
         log.debug("removeRepresentations()");
         if (definitionBrowser.getItemDefinitionActions().isAllowDelete()) {
             ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
-            definitionServiceDAO.remove(itemDefinition);
+            definitionService.remove(itemDefinition);
             success();
         } else {
             notAuthorized();

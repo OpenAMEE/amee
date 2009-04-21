@@ -23,41 +23,39 @@ import com.amee.domain.APIVersion;
 import com.amee.domain.UidGen;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Choices;
 import com.amee.domain.sheet.Sheet;
-import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.BaseService;
 import com.amee.service.path.PathItemService;
+import com.amee.service.transaction.TransactionController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Primary service interface to Data Resources.
  */
 @Service
-public class DataService {
+public class DataService extends BaseService {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    @PersistenceContext
-    private EntityManager em;
+    @Autowired
+    private TransactionController transactionController;
 
     @Autowired
     private DataServiceDAO dao;
-
-    @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
 
     @Autowired
     private DataSheetService dataSheetService;
@@ -68,47 +66,72 @@ public class DataService {
     @Autowired
     private DrillDownService drillDownService;
 
-    public void clearCaches(DataCategory dc) {
+    // DataCategories
+
+    public DataCategory getDataCategoryByUid(String uid) {
+        return dao.getDataCategoryByUid(uid);
+    }
+
+    public List<DataCategory> getDataCategories(Environment environment) {
+        return dao.getDataCategories(environment);
+    }
+
+    public void persist(DataCategory dataCategory) {
+        dao.persist(dataCategory);
+    }
+
+    public void remove(DataCategory dataCategory) {
+        dao.remove(dataCategory);
+    }
+
+    /**
+     * Clears all caches related to the supplied DataCategory.
+     *
+     * @param dataCategory to clear caches for
+     */
+    public void clearCaches(DataCategory dataCategory) {
         log.debug("clearCaches()");
         drillDownService.clearDrillDownCache();
-        pathItemService.removePathItemGroup(dc.getEnvironment());
-        dataSheetService.removeSheet(dc);
+        pathItemService.removePathItemGroup(dataCategory.getEnvironment());
+        dataSheetService.removeSheet(dataCategory);
     }
 
-    public DataCategory getDataCategory(String dataCategoryUid) {
-        return dao.getDataCategoryByUid(dataCategoryUid);
-    }
+    // DataItems
 
-    public DataItem getDataItem(String path) {
+    public DataItem getDataItem(Environment environment, String path) {
         DataItem dataItem = null;
         if (!StringUtils.isBlank(path)) {
             if (UidGen.isValid(path)) {
-                dataItem = getDataItemByUid(path);
+                dataItem = getDataItemByUid(environment, path);
             }
             if (dataItem == null) {
-                dataItem = getDataItemByPath(path);
+                dataItem = getDataItemByPath(environment, path);
             }
         }
         return dataItem;
     }
 
-    public DataItem getDataItemByUid(String uid) {
-        return dao.getDataItemByUid(uid);
+    public DataItem getDataItemByUid(Environment environment, String uid) {
+        DataItem dataItem = dao.getDataItemByUid(uid);
+        checkEnvironmentObject(environment, dataItem);
+        return checkDataItem(dataItem);
     }
 
-    public DataItem getDataItemByPath(String path) {
-        return dao.getDataItemByPath(path);
+    public DataItem getDataItemByPath(Environment environment, String path) {
+        DataItem dataItem = dao.getDataItemByPath(environment, path);
+        checkEnvironmentObject(environment, dataItem);
+        return checkDataItem(dataItem);
     }
 
-    public List<DataCategory> getDataCategories(Environment env) {
-        return dao.getDataCategories(env);
+    public List<DataItem> getDataItems(DataCategory dataCategory) {
+        return checkDataItem(dao.getDataItems(dataCategory));
     }
 
     public List<DataItem> getDataItems(DataCategory dc, StartEndDate startDate) {
         return getDataItems(dc, startDate, null);
     }
 
-    public List<DataItem> getDataItems(DataCategory dc, StartEndDate startDate, StartEndDate endDate) {
+    public List<DataItem> getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
 
         DataItem dataItem;
         List<DataItem> dataItems;
@@ -118,7 +141,7 @@ public class DataService {
         // com.amee.data.dao.DataServiceDAO#getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate)
 
         // TODO: date logic here should share code in com.amee.service.data.DrillDownDAO#isWithinTimeFrame
-        dataItems = dao.getDataItems(dc);
+        dataItems = dao.getDataItems(dataCategory);
         i = dataItems.iterator();
         if (endDate != null) {
             while (i.hasNext()) {
@@ -139,47 +162,88 @@ public class DataService {
             }
         }
 
+        return checkDataItem(dataItems);
+    }
+
+    public List<DataItem> checkDataItem(List<DataItem> dataItems) {
+        for (DataItem dataItem : dataItems) {
+            checkDataItem(dataItem);
+        }
         return dataItems;
     }
 
-    // public List<DataItem> getDataItems(DataCategory dc, StartEndDate startDate, StartEndDate endDate) {
-    //    return dao.getDataItems(dc, startDate, endDate);
-    //}
+    /**
+     * Add to the {@link com.amee.domain.data.DataItem} any {@link com.amee.domain.data.ItemValue}s it is missing.
+     * This will be the case on first persist (this method acting as a reification function), and between GETs if any
+     * new {@link com.amee.domain.data.ItemValueDefinition}s have been added to the underlying
+     * {@link com.amee.domain.data.ItemDefinition}.
+     * <p/>
+     * Any updates to the {@link com.amee.domain.data.DataItem} will be persisted to the database.
+     *
+     * @param dataItem
+     */
+    @SuppressWarnings(value = "unchecked")
+    public DataItem checkDataItem(DataItem dataItem) {
 
-    public List<DataItem> getDataItems(DataCategory dc) {
-        return dao.getDataItems(dc);
+        if (dataItem == null) {
+            return null;
+        }
+
+        Set<ItemValueDefinition> existingItemValueDefinitions = dataItem.getItemValueDefinitions();
+        Set<ItemValueDefinition> missingItemValueDefinitions = new HashSet<ItemValueDefinition>();
+
+        // find ItemValueDefinitions not currently implemented in this Item
+        for (ItemValueDefinition ivd : dataItem.getItemDefinition().getItemValueDefinitions()) {
+            if (ivd.isFromData()) {
+                if (!existingItemValueDefinitions.contains(ivd)) {
+                    missingItemValueDefinitions.add(ivd);
+                }
+            }
+        }
+
+        // Do we need to add any ItemValueDefinitions?
+        if (missingItemValueDefinitions.size() > 0) {
+
+            // Ensure a transaction has been opened. The implementation of open-session-in-view we are using
+            // does not open transactions for GETs. This method is called for certain GETs.
+            transactionController.begin(true);
+
+            // create missing ItemValues
+            for (ItemValueDefinition ivd : missingItemValueDefinitions) {
+                new ItemValue(ivd, dataItem, "");
+            }
+
+            // clear caches
+            drillDownService.clearDrillDownCache();
+            pathItemService.removePathItemGroup(dataItem.getEnvironment());
+            dataSheetService.removeSheet(dataItem.getDataCategory());
+        }
+
+        return dataItem;
     }
 
-    public ItemValue getItemValue(String uid) {
+    public void persist(DataItem dataItem) {
+        dao.persist(dataItem);
+        checkDataItem(dataItem);
+    }
+
+    public void remove(DataItem dataItem) {
+        dao.remove(dataItem);
+    }
+
+    // ItemValues
+
+    public ItemValue getItemValueByUID(String uid) {
         return dao.getItemValueByUid(uid);
     }
-
-    public void persist(DataCategory dc) {
-        em.persist(dc);
-    }
-
-    public void persist(DataItem di) {
-        em.persist(di);
-        dao.checkDataItem(di);
-    }
-
-    public void remove(DataCategory dc) {
-        dao.remove(dc);
-    }
-
-    public void remove(DataItem di) {
-        dao.remove(di);
-    }
-
-    public Choices getUserValueChoices(DataItem di, APIVersion apiVersion) {
-        return dao.getUserValueChoices(di, apiVersion);
-    }
+    
+    // Sheets & Choices
 
     public Sheet getSheet(DataBrowser browser) {
         return dataSheetService.getSheet(browser);
     }
 
-    public ItemDefinition getItemDefinition(Environment env, String itemDefinitionUid) {
-        return definitionServiceDAO.getItemDefinition(env, itemDefinitionUid);
+    public Choices getUserValueChoices(DataItem di, APIVersion apiVersion) {
+        return dao.getUserValueChoices(di, apiVersion);
     }
 }

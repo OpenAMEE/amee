@@ -30,6 +30,7 @@ import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
+import com.amee.service.definition.DefinitionService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +62,10 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Autowired
     private DataService dataService;
-    
+
+    @Autowired
+    private DefinitionService definitionService;
+
     private List<DataCategory> dataCategories;
     private DataItem dataItem;
     private List<DataItem> dataItems;
@@ -70,16 +74,17 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     private DataCategoryResourceBuilder builder;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         setDataCategory(request.getAttributes().get("categoryUid").toString());
         setPage(request);
-        setAvailable(isValid());
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (getDataCategory() != null);
+        return super.isValid() &&
+                (getDataCategory() != null) &&
+                getDataCategory().getEnvironment().equals(environment);
     }
 
     @Override
@@ -334,7 +339,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 dataCategory = new DataCategory(thisDataCategory);
                 if (form.getNames().contains("itemDefinitionUid")) {
                     ItemDefinition itemDefinition =
-                            dataService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
+                            definitionService.getItemDefinition(
+                                    thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
                     if (itemDefinition != null) {
                         dataCategory.setItemDefinition(itemDefinition);
                     }
@@ -354,7 +360,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 // update DataCategory
                 uid = form.getFirstValue("dataCategoryUid");
                 if (uid != null) {
-                    dataCategory = dataService.getDataCategory(uid);
+                    dataCategory = dataService.getDataCategoryByUid(uid);
                     if (dataCategory != null) {
                         dataCategory = populateDataCategory(form, dataCategory);
 
@@ -418,7 +424,9 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 // update DataItem
                 uid = form.getFirstValue("dataItemUid");
                 if (uid != null) {
-                    dataItem = dataService.getDataItemByUid(uid);
+                    dataItem = dataService.getDataItemByUid(
+                            environment,
+                            uid);
                     if (dataItem != null) {
                         dataItem = acceptDataItem(form, dataItem);
                     }
@@ -480,7 +488,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             }
             if (form.getNames().contains("itemDefinitionUid")) {
                 ItemDefinition itemDefinition =
-                        dataService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
+                        definitionService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
                 if (itemDefinition != null) {
                     thisDataCategory.setItemDefinition(itemDefinition);
                 } else {

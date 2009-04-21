@@ -30,21 +30,23 @@ import com.amee.domain.sheet.Cell;
 import com.amee.domain.sheet.Column;
 import com.amee.domain.sheet.Row;
 import com.amee.domain.sheet.Sheet;
-import com.amee.service.ThreadBeanHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
-@Service
 public class DataSheetFactory implements CacheableFactory {
 
-    @Autowired
     private DataService dataService;
+    private DataBrowser dataBrowser;
 
-    public DataSheetFactory() {
+    private DataSheetFactory() {
         super();
+    }
+
+    public DataSheetFactory(DataService dataService, DataBrowser dataBrowser) {
+        this();
+        this.dataService = dataService;
+        this.dataBrowser = dataBrowser;
     }
 
     public Object create() {
@@ -55,7 +57,6 @@ public class DataSheetFactory implements CacheableFactory {
         ItemValue itemValue;
         Sheet sheet = null;
         ItemDefinition itemDefinition;
-        DataBrowser dataBrowser = (DataBrowser) ThreadBeanHolder.get("dataBrowserForFactory");
 
         // must have an ItemDefinition
         itemDefinition = dataBrowser.getDataCategory().getItemDefinition();
@@ -123,8 +124,7 @@ public class DataSheetFactory implements CacheableFactory {
     }
 
     public String getKey() {
-        DataBrowser browser = (DataBrowser) ThreadBeanHolder.get("dataBrowserForFactory");
-        return "DataSheet_" + browser.getDataCategory().getUid();
+        return "DataSheet_" + dataBrowser.getDataCategory().getUid();
     }
 
     public String getCacheName() {

@@ -25,7 +25,7 @@ import com.amee.domain.ValueDefinition;
 import com.amee.domain.environment.Environment;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
-import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.definition.DefinitionService;
 import com.amee.service.environment.EnvironmentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,7 +55,7 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
+    private DefinitionService definitionService;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -64,12 +64,11 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
     private ValueDefinition newValueDefinition;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         environment = EnvironmentService.getEnvironment();
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
-        setAvailable(isValid());
     }
 
     @Override
@@ -86,7 +85,7 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager(environment.getItemsPerPage());
         Environment environment = definitionBrowser.getEnvironment();
-        List<ValueDefinition> valueDefinitions = definitionServiceDAO.getValueDefinitions(environment, pager);
+        List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(environment, pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
@@ -103,7 +102,7 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
         if (isGet()) {
             Pager pager = getPager(environment.getItemsPerPage());
             Environment environment = definitionBrowser.getEnvironment();
-            List<ValueDefinition> valueDefinitions = definitionServiceDAO.getValueDefinitions(environment, pager);
+            List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(environment, pager);
             pager.setCurrentPage(getPage());
             JSONArray valueDefinitionsJSONArray = new JSONArray();
             for (ValueDefinition valueDefinition : valueDefinitions) {
@@ -124,7 +123,7 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
         if (isGet()) {
             Pager pager = getPager(environment.getItemsPerPage());
             Environment environment = definitionBrowser.getEnvironment();
-            List<ValueDefinition> valueDefinitions = definitionServiceDAO.getValueDefinitions(environment, pager);
+            List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(environment, pager);
             pager.setCurrentPage(getPage());
             Element valueDefinitionsElement = document.createElement("ValueDefinitions");
             for (ValueDefinition valueDefinition : valueDefinitions) {
@@ -161,10 +160,10 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
             Form form = getForm();
             if ((form.getFirstValue("name") != null) && (form.getFirstValue("valueType") != null)) {
                 newValueDefinition = new ValueDefinition(
-                    definitionBrowser.getEnvironment(),
-                    form.getFirstValue("name"),
-                    ValueType.valueOf(form.getFirstValue("valueType")));
-                definitionServiceDAO.save(newValueDefinition);
+                        definitionBrowser.getEnvironment(),
+                        form.getFirstValue("name"),
+                        ValueType.valueOf(form.getFirstValue("valueType")));
+                definitionService.save(newValueDefinition);
             }
             if (newValueDefinition != null) {
                 if (isStandardWebBrowser()) {

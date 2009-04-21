@@ -49,12 +49,11 @@ public class ServiceResource extends AMEEResource {
     public static AtomFeed ATOM_FEED = AtomFeed.getInstance();
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         List<Variant> variants = super.getVariants();
         variants.clear();
         variants.add(new Variant(MediaType.APPLICATION_ATOM_SERVICE_XML));
-        setAvailable(isValid());
     }
 
     @Override
@@ -106,7 +105,7 @@ public class ServiceResource extends AMEEResource {
     }
 
     private void addCollection(Workspace ws, PathItem pathItem, boolean recurse) {
-        DataCategory dc = dataService.getDataCategory(pathItem.getUid());
+        DataCategory dc = dataService.getDataCategoryByUid(pathItem.getUid());
         if (dc.getItemDefinition() != null) {
 
             Reference href = new Reference(getRequest().getResourceRef().getParentRef(), pathItem.getFullPath());

@@ -28,7 +28,7 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.site.Site;
 import com.amee.service.BaseBrowser;
 import com.amee.service.auth.ResourceActions;
-import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.definition.DefinitionService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.environment.SiteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class DefinitionBrowser extends BaseBrowser {
     private SiteService siteService;
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
+    private DefinitionService definitionService;
 
     @Autowired
     @Qualifier("environmentActions")
@@ -184,7 +184,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public ValueDefinition getValueDefinition() {
         if (valueDefinition == null) {
             if ((valueDefinitionUid != null) && (getEnvironment() != null)) {
-                valueDefinition = definitionServiceDAO.getValueDefinition(getEnvironment(), valueDefinitionUid);
+                valueDefinition = definitionService.getValueDefinition(getEnvironment(), valueDefinitionUid);
             }
         }
         return valueDefinition;
@@ -206,7 +206,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public Algorithm getAlgorithm() {
         if (algorithm == null) {
             if ((algorithmUid != null) && (getItemDefinition() != null)) {
-                algorithm = definitionServiceDAO.getAlgorithm(algorithmUid);
+                algorithm = definitionService.getAlgorithmByUid(algorithmUid);
             }
         }
         return algorithm;
@@ -215,14 +215,14 @@ public class DefinitionBrowser extends BaseBrowser {
     public AlgorithmContext getAlgorithmContext() {
         if (algorithmContext == null) {
             if (algorithmContextUid != null) {
-                algorithmContext = definitionServiceDAO.getAlgorithmContext(getEnvironment(), algorithmContextUid);
+                algorithmContext = definitionService.getAlgorithmContextByUid(getEnvironment(), algorithmContextUid);
             }
         }
         return algorithmContext;
     }
 
     public List<AlgorithmContext> getAlgorithmContexts() {
-        return definitionServiceDAO.getAlgorithmContexts(getEnvironment());
+        return definitionService.getAlgorithmContexts(getEnvironment());
     }
 
     // ItemDefinitions
@@ -238,7 +238,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public ItemDefinition getItemDefinition() {
         if (itemDefinition == null) {
             if ((itemDefinitionUid != null) && (getEnvironment() != null)) {
-                itemDefinition = definitionServiceDAO.getItemDefinition(getEnvironment(), itemDefinitionUid);
+                itemDefinition = definitionService.getItemDefinition(getEnvironment(), itemDefinitionUid);
             }
         }
         return itemDefinition;
@@ -257,7 +257,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public ItemValueDefinition getItemValueDefinition() {
         if (itemValueDefinition == null) {
             if ((itemValueDefinitionUid != null) && (getItemDefinition() != null)) {
-                itemValueDefinition = definitionServiceDAO.getItemValueDefinition(itemValueDefinitionUid);
+                itemValueDefinition = definitionService.getItemValueDefinitionByUid(itemValueDefinitionUid);
             }
         }
         return itemValueDefinition;

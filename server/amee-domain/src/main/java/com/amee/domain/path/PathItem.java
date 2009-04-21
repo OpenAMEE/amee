@@ -35,10 +35,6 @@ import java.util.*;
 
 public class PathItem implements APIObject, Serializable, Comparable {
 
-    // TODO: store full path in each PathItem (don't work out full path via parents)
-    // TODO: more tightly match the AMEE domain model, less abstraction
-    // TODO: don't navigate the graph unnecessarilly
-
     private final Log log = LogFactory.getLog(getClass());
 
     private PathItemGroup pathItemGroup = null;
@@ -46,6 +42,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
     private String uid = "";
     private ObjectType objectType = null;
     private String path = "";
+    private String fullPath = "";
     private String name = "";
     private PathItem parent = null;
     private Set<PathItem> children = new TreeSet<PathItem>();
@@ -203,16 +200,6 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return segments;
     }
 
-    // Used lots.
-    public String getFullPath() {
-        String path = "";
-        for (String segment : getSegments()) {
-            path = path.concat("/");
-            path = path.concat(segment);
-        }
-        return path;
-    }
-
     // Only used by dataCategory.ftl & profileCategory.ftl. FreeMarker needed a distinct method name.
     public Set<PathItem> findChildrenByType(String typeName) {
         return getChildrenByType(typeName);
@@ -317,6 +304,14 @@ public class PathItem implements APIObject, Serializable, Comparable {
         this.path = path;
     }
 
+    public String getFullPath() {
+        return fullPath;
+    }
+
+    public void setFullPath(String fullPath) {
+        this.fullPath = fullPath;
+    }
+
     public String getName() {
         return name;
     }
@@ -334,6 +329,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
     }
 
     public void setParent(PathItem parent) {
+        setFullPath(parent.getFullPath() + "/" + getPath());
         this.parent = parent;
     }
 

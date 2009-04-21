@@ -52,10 +52,8 @@ import java.util.Map;
  */
 public class AMEEResource extends BaseResource implements BeanFactoryAware {
 
-    protected BeanFactory beanFactory;
-    protected Environment environment;
-    protected PathItem pathItem;
-    protected DataCategory dataCategory;
+    // TTL for all representations is (Now - ONE_DAY)
+    private static final long ONE_DAY = 1000L * 60L * 60L * 24L;
 
     // Allowed values for the request parameter "representation".
     // The "representation" parameter specifies whether or not a representation is required in the response
@@ -76,12 +74,14 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     @Autowired
     protected EnvironmentService environmentService;
 
-    // TTL for all representations is (Now - ONE_DAY)
-    private static final long ONE_DAY = 1000L * 60L * 60L * 24L;
+    protected BeanFactory beanFactory;
+    protected Environment environment;
+    protected PathItem pathItem;
+    protected DataCategory dataCategory;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         initVariants();
         environment = (Environment) request.getAttributes().get("environment");
         pathItem = (PathItem) request.getAttributes().get("pathItem");
@@ -217,7 +217,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
 
     protected void setDataCategory(String dataCategoryUid) {
         if (dataCategoryUid.isEmpty()) return;
-        this.dataCategory = dataService.getDataCategory(dataCategoryUid);
+        this.dataCategory = dataService.getDataCategoryByUid(dataCategoryUid);
     }
 
     public DataCategory getDataCategory() {
@@ -291,7 +291,6 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
      * Produce the appropriate response for a successful POST.
      *
      * @param uri - the URI of the parent resource
-     *
      */
     public void successfulPost(String uri) {
         successfulPost(uri, getRequest().getResourceRef().getBaseRef().toString());
@@ -301,8 +300,8 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
      * Produce the appropriate response for a successful POST.
      *
      * @param parentUri - the URI of the parent resource
-     * @param uid - the uid of the created resource. This will be used to create the Location URI when a
-     * representation has not been requested by the client.
+     * @param uid       - the uid of the created resource. This will be used to create the Location URI when a
+     *                  representation has not been requested by the client.
      */
     public void successfulPost(String parentUri, String uid) {
         // For web browsers, continue with the same logic from AMEE 1.X.

@@ -24,7 +24,7 @@ import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
-import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.definition.DefinitionService;
 import com.amee.service.environment.EnvironmentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,7 +54,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
+    private DefinitionService definitionService;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -65,11 +65,10 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
     private ItemValueDefinition newItemValueDefinition;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
-        setAvailable(isValid());
     }
 
     @Override
@@ -84,7 +83,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        List<ValueDefinition> valueDefinitions = definitionServiceDAO.getValueDefinitions(definitionBrowser.getEnvironment());
+        List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(definitionBrowser.getEnvironment());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
         values.put("environment", definitionBrowser.getEnvironment());
@@ -150,7 +149,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
         if (definitionBrowser.getItemValueDefinitionActions().isAllowCreate()) {
             Form form = getForm();
             ValueDefinition valueDefinition =
-                    definitionServiceDAO.getValueDefinition(definitionBrowser.getEnvironment(), form.getFirstValue("valueDefinitionUid"));
+                    definitionService.getValueDefinition(definitionBrowser.getEnvironment(), form.getFirstValue("valueDefinitionUid"));
             if ((form.getFirstValue("name") != null) && (valueDefinition != null)) {
                 newItemValueDefinition = new ItemValueDefinition(definitionBrowser.getItemDefinition());
                 newItemValueDefinition.setValueDefinition(valueDefinition);
@@ -164,7 +163,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
                 newItemValueDefinition.setUnit(form.getFirstValue("unit"));
                 newItemValueDefinition.setPerUnit(form.getFirstValue("perUnit"));
                 if (form.getFirstValue("aliasedTo") != null) {
-                    newItemValueDefinition.setAliasedTo(definitionServiceDAO.getItemValueDefinition(form.getFirstValue("aliasedTo")));
+                    newItemValueDefinition.setAliasedTo(definitionService.getItemValueDefinitionByUid(form.getFirstValue("aliasedTo")));
                 }
                 // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
                 List<APIVersion> apiVersions = environmentService.getAPIVersions();

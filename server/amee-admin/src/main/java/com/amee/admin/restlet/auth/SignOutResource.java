@@ -31,12 +31,11 @@ public class SignOutResource extends BaseResource implements Serializable {
     private User user;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         // sign out the current User and sign in the guest auth instead
         AuthUtils.discardAuthCookie(response);
         user = authService.doGuestSignIn();
-        setAvailable(isValid());
     }
 
     @Override

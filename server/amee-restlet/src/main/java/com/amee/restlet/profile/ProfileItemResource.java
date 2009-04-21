@@ -68,17 +68,21 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     private IProfileItemResourceBuilder builder;
 
     @Override
-    public void init(Context context, Request request, Response response) {
-        super.init(context, request, response);
+    public void initialise(Context context, Request request, Response response) {
+        super.initialise(context, request, response);
         setDataCategory(request.getAttributes().get("categoryUid").toString());
         setProfileItem(request.getAttributes().get("itemUid").toString());
         setBuilderStrategy();
-        setAvailable(isValid());
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (getProfileItem() != null);
+        return super.isValid() &&
+                (getProfileItem() != null) &&
+                (getDataCategory() != null) &&
+                getProfileItem().getProfile().equals(getProfile()) &&
+                getProfileItem().getDataCategory().equals(getDataCategory()) &&
+                getProfileItem().getEnvironment().equals(environment);
     }
 
     @Override
