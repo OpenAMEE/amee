@@ -13,7 +13,7 @@ wrapper.java.additional.18=-Dcom.sun.management.jmxremote.ssl=false
 set.DB_USERNAME=amee
 set.DB_PSWD=amee
 set.DB_HOST=localhost
-set.DB_NAME=amee
+set.DB_NAME=amee_stage
 
 # Host names
 set.HOST_NAME=local.stage.co2.dgen.net
