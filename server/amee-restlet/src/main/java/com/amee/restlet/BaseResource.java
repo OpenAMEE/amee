@@ -2,13 +2,13 @@ package com.amee.restlet;
 
 import com.amee.domain.Pager;
 import com.amee.domain.PagerSetType;
+import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.SortOrder;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.APIFault;
 import com.amee.restlet.utils.HeaderUtils;
 import com.amee.restlet.utils.MediaTypeUtils;
 import com.amee.service.ThreadBeanHolder;
-import com.amee.service.environment.EnvironmentService;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateHashModel;
@@ -219,7 +219,8 @@ public abstract class BaseResource extends Resource {
     }
 
     public int getItemsPerPage() {
-        int itemsPerPage = EnvironmentService.getEnvironment().getItemsPerPage();
+        Environment environment = (Environment) getRequest().getAttributes().get("environment");
+        int itemsPerPage = environment.getItemsPerPage();
         String itemsPerPageStr = getRequest().getResourceRef().getQueryAsForm().getFirstValue("itemsPerPage");
         if (itemsPerPageStr == null) {
             itemsPerPageStr = HeaderUtils.getHeaderFirstValue("ItemsPerPage", getRequest());

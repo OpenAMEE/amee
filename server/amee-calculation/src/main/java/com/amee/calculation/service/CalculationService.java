@@ -158,6 +158,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
     private void initAlgoFinders(ProfileItem profileItem, Map<String, Object> values) {
 
         DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
+        dataFinder.setEnvironment(profileItem.getEnvironment());
         dataFinder.setStartDate(profileItem.getStartDate());
         dataFinder.setEndDate(profileItem.getEndDate());
 
@@ -182,6 +183,8 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         }
 
         DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
+        dataFinder.setEnvironment(dataItem.getEnvironment());
+
         ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
         profileFinder.setDataFinder(dataFinder);
 

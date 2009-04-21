@@ -19,6 +19,7 @@
  */
 package com.amee.restlet.data;
 
+import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.restlet.RewriteFilter;
@@ -52,7 +53,8 @@ public class DataFilter extends RewriteFilter {
             // handle suffixes
             String suffix = handleSuffix(segments);
             // look for path match
-            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
+            Environment environment = (Environment) request.getAttributes().get("environment");
+            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
             PathItem pathItem = pathItemGroup.findBySegments(segments, false);
             if (pathItem != null) {
                 // found matching path, rewrite

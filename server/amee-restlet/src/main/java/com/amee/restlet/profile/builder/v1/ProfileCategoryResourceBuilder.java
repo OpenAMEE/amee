@@ -277,7 +277,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     }
 
     private Sheet getSheet(ProfileCategoryResource resource, DataCategory dataCategory) {
-        return profileService.getSheet(dataCategory, new ProfileSheetBuilder(resource, profileService));
+        return profileService.getSheet(new ProfileSheetBuilder(resource, profileService, dataCategory));
     }
 
     private Sheet getSheet(ProfileCategoryResource resource) {

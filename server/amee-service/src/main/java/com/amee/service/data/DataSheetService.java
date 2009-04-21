@@ -22,7 +22,6 @@ package com.amee.service.data;
 import com.amee.domain.cache.CacheHelper;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.sheet.Sheet;
-import com.amee.service.ThreadBeanHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,7 @@ import java.io.Serializable;
 public class DataSheetService implements Serializable {
 
     @Autowired
-    private DataSheetFactory dataSheetFactory;
+    private DataService dataService;
 
     private CacheHelper cacheHelper = CacheHelper.getInstance();
 
@@ -41,15 +40,11 @@ public class DataSheetService implements Serializable {
     }
 
     public Sheet getSheet(DataBrowser browser) {
-        ThreadBeanHolder.set("dataBrowserForFactory", browser);
+        DataSheetFactory dataSheetFactory = new DataSheetFactory(dataService, browser);
         return (Sheet) cacheHelper.getCacheable(dataSheetFactory);
     }
 
     public void removeSheet(DataCategory dataCategory) {
         cacheHelper.remove("DataSheets", "DataSheet_" + dataCategory.getUid());
-    }
-
-    public DataSheetFactory getDataSheetFactory() {
-        return dataSheetFactory;
     }
 }

@@ -494,7 +494,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     }
 
     private String getFullPath(ProfileItem item) {
-        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
+        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(item.getEnvironment());
         return "/profiles/" + item.getProfile().getUid() + pathItemGroup.findByUId(item.getDataCategory().getUid()) + "/" + item.getUid();
     }
 }

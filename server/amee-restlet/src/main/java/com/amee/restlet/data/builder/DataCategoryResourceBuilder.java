@@ -9,7 +9,6 @@ import com.amee.domain.sheet.Sheet;
 import com.amee.restlet.data.DataCategoryResource;
 import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionService;
-import com.amee.service.environment.EnvironmentService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -180,7 +179,7 @@ public class DataCategoryResourceBuilder {
         values.put("browser", resource.getDataBrowser());
         values.put("dataCategory", dataCategory);
         values.put("itemDefinition", dataCategory.getItemDefinition());
-        values.put("itemDefinitions", definitionService.getItemDefinitions(EnvironmentService.getEnvironment()));
+        values.put("itemDefinitions", definitionService.getItemDefinitions(resource.getEnvironment()));
         values.put("node", dataCategory);
         if (sheet != null) {
             Pager pager = resource.getPager(resource.getItemsPerPage());

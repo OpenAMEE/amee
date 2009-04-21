@@ -20,7 +20,6 @@
 package com.amee.service.profile;
 
 import com.amee.domain.Pager;
-import com.amee.domain.UidGen;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
@@ -33,7 +32,6 @@ import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.service.auth.AuthService;
-import com.amee.service.environment.EnvironmentService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -197,27 +195,6 @@ class ProfileServiceDAO implements Serializable {
 
     // Profiles
 
-    /**
-     * Fetches a Profile based on the supplied path. If the path is a valid UID format then the
-     * Profile with this UID is returned. If a profile with the UID is not found or the path is
-     * not a valid UID format then a Profile with the matching path is searched for and returned.
-     *
-     * @param path to search for. Can be either a UID or a path alias.
-     * @return the matching Profile
-     */
-    public Profile getProfile(String path) {
-        Profile profile = null;
-        if (!StringUtils.isBlank(path)) {
-            if (UidGen.isValid(path)) {
-                profile = getProfileByUid(path);
-            }
-            if (profile == null) {
-                profile = getProfileByPath(path);
-            }
-        }
-        return profile;
-    }
-
     @SuppressWarnings(value = "unchecked")
     public Profile getProfileByUid(String uid) {
         Profile profile = null;
@@ -239,11 +216,9 @@ class ProfileServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public Profile getProfileByPath(String path) {
+    public Profile getProfileByPath(Environment environment, String path) {
         Profile profile = null;
-        List<Profile> profiles;
-        Environment environment = EnvironmentService.getEnvironment();
-        profiles = entityManager.createQuery(
+        List<Profile> profiles = entityManager.createQuery(
                 "FROM Profile p " +
                         "WHERE p.path = :path " +
                         "AND p.environment.id = :environmentId")
@@ -262,8 +237,7 @@ class ProfileServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public List<Profile> getProfiles(Pager pager) {
-        Environment environment = EnvironmentService.getEnvironment();
+    public List<Profile> getProfiles(Environment environment, Pager pager) {
         User user = AuthService.getUser();
         Group group = AuthService.getGroup();
         // first count all profiles

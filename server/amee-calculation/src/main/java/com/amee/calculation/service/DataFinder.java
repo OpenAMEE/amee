@@ -23,13 +23,13 @@ import com.amee.core.ObjectType;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.data.DataService;
 import com.amee.service.data.DrillDownService;
-import com.amee.service.environment.EnvironmentService;
 import com.amee.service.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,6 +55,7 @@ public class DataFinder implements Serializable {
     @Autowired
     private DrillDownService drillDownService;
 
+    private Environment environment;
     private Date startDate;
     private Date endDate;
 
@@ -85,7 +86,7 @@ public class DataFinder implements Serializable {
             choices = drillDownService.getValueChoices(dataCategory, Choice.parseChoices(drillDown), getStartDate(), getEndDate());
             if (choices.getName().equals("uid") && (choices.getChoices().size() > 0)) {
                 dataItem = dataService.getDataItemByUid(
-                        EnvironmentService.getEnvironment(),
+                        environment,
                         choices.getChoices().get(0).getValue());
             }
         }
@@ -96,7 +97,7 @@ public class DataFinder implements Serializable {
         DataCategory dataCategory = null;
         PathItemGroup pig;
         PathItem pi;
-        pig = pathItemService.getPathItemGroup();
+        pig = pathItemService.getPathItemGroup(environment);
         if (pig != null) {
             pi = pig.findByPath(path, false);
             if ((pi != null) && pi.getObjectType().equals(ObjectType.DC)) {
@@ -104,6 +105,10 @@ public class DataFinder implements Serializable {
             }
         }
         return dataCategory;
+    }
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 
     public Date getEndDate() {

@@ -2,15 +2,19 @@ package com.amee.service.profile;
 
 import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
+import com.amee.domain.UidGen;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Sheet;
+import com.amee.service.BaseService;
 import com.amee.service.transaction.TransactionController;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +44,7 @@ import java.util.*;
  * Website http://www.amee.cc
  */
 @Service
-public class ProfileService {
+public class ProfileService extends BaseService {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -55,12 +59,40 @@ public class ProfileService {
 
     // Profiles
 
-    public Profile getProfile(String path) {
-        return dao.getProfile(path);
+    /**
+     * Fetches a Profile based on the supplied path. If the path is a valid UID format then the
+     * Profile with this UID is returned. If a profile with the UID is not found or the path is
+     * not a valid UID format then a Profile with the matching path is searched for and returned.
+     *
+     * @param environment that requested Profile belongs to
+     * @param path to search for. Can be either a UID or a path alias.
+     * @return the matching Profile
+     */
+    public Profile getProfile(Environment environment, String path) {
+        Profile profile = null;
+        if (!StringUtils.isBlank(path)) {
+            if (UidGen.isValid(path)) {
+                profile = getProfileByUid(environment, path);
+            }
+            if (profile == null) {
+                profile = getProfileByPath(environment, path);
+            }
+        }
+        return profile;
     }
 
-    public List<Profile> getProfiles(Pager pager) {
-        return dao.getProfiles(pager);
+    public Profile getProfileByUid(Environment environment, String uid) {
+        Profile profile = dao.getProfileByUid(uid);
+        checkEnvironmentObject(environment, profile);
+        return profile;
+    }
+
+    public Profile getProfileByPath(Environment environment, String path) {
+        return dao.getProfileByPath(environment, path);
+    }
+
+    public List<Profile> getProfiles(Environment environment, Pager pager) {
+        return dao.getProfiles(environment, pager);
     }
 
     public void persist(Profile p) {
@@ -116,7 +148,6 @@ public class ProfileService {
      * @param profileItem to check
      * @return the supplied ProfileItem or null
      */
-    @SuppressWarnings(value = "unchecked")
     public ProfileItem checkProfileItem(ProfileItem profileItem) {
 
         if (profileItem == null) {
@@ -186,9 +217,5 @@ public class ProfileService {
 
     public Sheet getSheet(CacheableFactory sheetFactory) {
         return profileSheetService.getSheet(sheetFactory);
-    }
-
-    public Sheet getSheet(DataCategory dataCategory, CacheableFactory sheetFactory) {
-        return profileSheetService.getSheet(dataCategory, sheetFactory);
     }
 }

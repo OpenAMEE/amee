@@ -19,6 +19,7 @@
  */
 package com.amee.restlet.profile;
 
+import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
@@ -62,13 +63,14 @@ public class ProfileFilter extends RewriteFilter {
                 // handle suffixes
                 String suffix = handleSuffix(segments);
                 // look for Profile matching path
-                Profile profile = profileService.getProfile(segment);
+                Environment environment = (Environment) request.getAttributes().get("environment");
+                Profile profile = profileService.getProfile(environment, segment);
                 if (profile != null) {
                     // we found a Profile. Make available to request scope.
                     request.getAttributes().put("profile", profile);
                     ThreadBeanHolder.set("permission", profile.getPermission());
                     // look for path match
-                    PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
+                    PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
                     PathItem pathItem = pathItemGroup.findBySegments(segments, true);
                     if (pathItem != null) {
                         // rewrite paths
