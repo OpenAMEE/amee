@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project relativePaths="true" version="4">
+  <component name="AntConfiguration">
+    <defaultAnt bundledAnt="true" />
+  </component>
   <component name="BuildJarProjectSettings">
     <option name="BUILD_JARS_ON_MAKE" value="false" />
   </component>
@@ -29,15 +32,15 @@
   </component>
   <component name="CopyrightManager" default="AMEE">
     <copyright>
-      <option name="notice" value="This file is part of AMEE.&#10;&#10;Copyright (c) 2007, 2008, 2009 AMEE UK LIMITED (help@amee.com).&#10;&#10;AMEE is free software; you can redistribute it and/or modify&#10;it under the terms of the GNU General Public License as published by&#10;the Free Software Foundation; either version 3 of the License, or&#10;(at your option) any later version.&#10;&#10;AMEE is free software and is distributed in the hope that it will be useful,&#10;but WITHOUT ANY WARRANTY; without even the implied warranty of&#10;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10;GNU General Public License for more details.&#10;&#10;You should have received a copy of the GNU General Public License&#10;along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.&#10;&#10;Created by http://www.dgen.net.&#10;Website http://www.amee.cc" />
-      <option name="keyword" value="This file is part of" />
-      <option name="myName" value="AMEE" />
-      <option name="myLocal" value="true" />
-    </copyright>
-    <copyright>
       <option name="notice" value="This file is part of AMEE.&#10;&#10;Copyright (c) 2007, 2008, 2009 AMEE UK LIMITED (help@amee.com).&#10;Copyright (c) 2006, 2007, 2008, 2009 Jellymold Ltd.&#10;&#10;AMEE is free software; you can redistribute it and/or modify&#10;it under the terms of the GNU General Public License as published by&#10;the Free Software Foundation; either version 3 of the License, or&#10;(at your option) any later version.&#10;&#10;AMEE is free software and is distributed in the hope that it will be useful,&#10;but WITHOUT ANY WARRANTY; without even the implied warranty of&#10;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10;GNU General Public License for more details.&#10;&#10;You should have received a copy of the GNU General Public License&#10;along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.&#10;&#10;Created by http://www.dgen.net.&#10;Website http://www.amee.cc" />
       <option name="keyword" value="This file is part of" />
       <option name="myName" value="Jellymold" />
+      <option name="myLocal" value="true" />
+    </copyright>
+    <copyright>
+      <option name="notice" value="This file is part of AMEE.&#10;&#10;Copyright (c) 2007, 2008, 2009 AMEE UK LIMITED (help@amee.com).&#10;&#10;AMEE is free software; you can redistribute it and/or modify&#10;it under the terms of the GNU General Public License as published by&#10;the Free Software Foundation; either version 3 of the License, or&#10;(at your option) any later version.&#10;&#10;AMEE is free software and is distributed in the hope that it will be useful,&#10;but WITHOUT ANY WARRANTY; without even the implied warranty of&#10;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10;GNU General Public License for more details.&#10;&#10;You should have received a copy of the GNU General Public License&#10;along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.&#10;&#10;Created by http://www.dgen.net.&#10;Website http://www.amee.cc" />
+      <option name="keyword" value="This file is part of" />
+      <option name="myName" value="AMEE" />
       <option name="myLocal" value="true" />
     </copyright>
     <module2copyright>
@@ -198,7 +201,7 @@
   </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectKey">
-    <option name="state" value="project:///Development/AMEE/amee.rel/amee/idea/amee-server/amee-server.ipr" />
+    <option name="state" value="project:///Development/AMEE/amee/idea/amee-server/amee-server.ipr" />
   </component>
   <component name="ProjectModuleManager">
     <modules>
@@ -882,17 +885,6 @@
         <root url="jar://$PROJECT_DIR$/../../../../repository/org/apache/abdera/abdera-extensions-main/0.4.0-incubating/abdera-extensions-main-0.4.0-incubating-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: xml-apis:xml-apis:1.0.b2">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../../../repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/../../../../repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$PROJECT_DIR$/../../../../repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.restlet:org.restlet.ext.fileupload:1.1.3">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/../../../../repository/org/restlet/org.restlet.ext.fileupload/1.1.3/org.restlet.ext.fileupload-1.1.3.jar!/" />
@@ -902,6 +894,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/../../../../repository/org/restlet/org.restlet.ext.fileupload/1.1.3/org.restlet.ext.fileupload-1.1.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: xml-apis:xml-apis:1.0.b2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.slf4j:slf4j-api:1.5.0">
