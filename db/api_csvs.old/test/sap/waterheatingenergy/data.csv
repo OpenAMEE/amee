@@ -1,3 +1,0 @@
-type,hotwaterenergycontent,distributionloss,WaterLossknownmanufacturersdeclaredlossfactor,waterlosstemperaturefactor,waterstorageenergyloss,waterlossdeclaredcylinderlossfactornotknownvolume,waterlossdeclaredcylinderlossfactornotknownvolumehotwater,waterlossdeclaredcylinderlossfactornotknowntemperature,waterlossdeclaredcylinderlossfactornotknowntemperatureenergylost,dedicatedcylindersolarstorage,waterloss,primarycircuitlosses,combilosses,solardhwinput,hotwateroutput,waterheatingheatgains,error,units,source
-dummy,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,valid,0,0
-waterheatingenergy,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,valid,0,0

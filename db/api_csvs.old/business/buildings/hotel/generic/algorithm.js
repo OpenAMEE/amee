@@ -1,1 +1,0 @@
-CO2perPerson*stayDuration*numberOfPeople;

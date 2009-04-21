@@ -1,1 +1,0 @@
-volumePerTime * kgCO2PerLitre;

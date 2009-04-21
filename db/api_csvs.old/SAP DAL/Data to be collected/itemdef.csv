@@ -1,7 +1,0 @@
-name,Data to be collected,,,
-algFile,perMonth.js,,,
-name,path,type,isDataItemValue,isDrillDown
-Data,data,TEXT,TRUE,FALSE
-Comment,comment,TEXT,TRUE,FALSE
-Source,source,TEXT,TRUE,FALSE
-Type,type,TEXT,TRUE,TRUE

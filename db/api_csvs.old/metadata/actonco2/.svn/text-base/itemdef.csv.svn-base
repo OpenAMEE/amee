@@ -1,7 +1,0 @@
-name,ActOnCO2 Metadata
-algFile,perMonth.js
-name,path,type,isDataItemValue,isDrillDown
-Real time display,realTimeDisplay,TEXT,false,false
-Home ownership,homeOwnership,TEXT,false,false
-Top floor flat,topFloorFlat,TEXT,false,false
-Type,type,TEXT,true,true

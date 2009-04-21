@@ -1,4 +1,0 @@
-type,kgCO2PerLitre,kWhPerLitre,units,source,algorithm,default
-cold,0.000747,0.001315,kgCO2/litre,http://www.water.org.uk/home/policy/reports/sustainability/sustindicators06-07/sustainability.pdf,tba,tba
-cold supply only,0.000271,0.000559,kgCO2/litre,http://www.water.org.uk/home/policy/reports/sustainability/sustindicators06-07/sustainability.pdf,tba,tba
-cold sewerage only,0.000476,0.000756,kgCO2/litre,http://www.water.org.uk/home/policy/reports/sustainability/sustindicators06-07/sustainability.pdf,tba,tba

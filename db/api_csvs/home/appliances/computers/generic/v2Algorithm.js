@@ -17,15 +17,15 @@ if(device=='standby'){//standby is special!
 	for (i = 0; i < profileItems.size(); i++) {
 		item = profileItems.get(i);
 		itemValues = item.getItemValuesMap();
-                try {//handle where name is undefined
-                  name=item.getName();
+                try {//handle where label is undefined
+                  label=item.getDataItem().getLabel();
                 }
                 catch(err){
-                  name='';
+                  label='';
                 }
-                if(name!="standby") {
+                if(label.indexOf("standby")) {
                   try {//in case amount per month undef
-  standbyCO2+=parseFloat(item.getAmountPerMonth());
+  standbyCO2+=parseFloat(item.getAmount());
                   }
                   catch(err){}//do nothing
                 }

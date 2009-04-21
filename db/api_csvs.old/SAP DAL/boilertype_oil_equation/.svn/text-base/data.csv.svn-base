@@ -1,4 +1,0 @@
-type,equationNumber,equation,units,source
-D1.3 : Regular,201,E = 0.5(Efull + Epart),calculation,SAP 2005
-D1.7 : Instantaneous combination,202,E = 0.5(Efull + Epart) – 2.8,calculation,SAP 2005
-D1.10 : Storage combination,203,E = 0.5(Efull + Epart ) – 2.8 + (0.209 × b × L × Vcs),calculation,SAP 2005

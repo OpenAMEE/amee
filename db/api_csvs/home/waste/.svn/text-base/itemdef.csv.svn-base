@@ -4,7 +4,7 @@ name,path,type,isDataItemValue,isDrillDown
 kg per month,kgPerMonth,DECIMAL,false,false
 Saving Type,savingType,TEXT,false,false
 kg per person per year,kgPerPersonPerYear,DECIMAL,true,false
-kgCO2 per kg,kgCO2PerKg,DECIMAL,true,false
+kgCO2 Landfill Saved per kg,kgCO2LandfillSavedPerKg,DECIMAL,true,false
 kgCO2 Recycling Saved per kg,kgCO2RecyclingSavedPerKg,DECIMAL,true,false
 kgCO2 Thermal Saved per kg,kgCO2ThermalSavedPerKg,DECIMAL,true,false
 kgCO2 Embodied Fossil Energy Saved per kg,kgCO2EmbodiedFossilEnergySavedPerKg,DECIMAL,true,false

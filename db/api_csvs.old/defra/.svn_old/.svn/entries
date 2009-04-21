@@ -1,79 +1,0 @@
-8
-
-dir
-2924
-http://svn.amee.com/internal/api_csvs/defra/.svn_old
-http://svn.amee.com
-
-
-
-2009-02-16T14:49:05.246830Z
-2650
-andrew
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-b293a2d2-da53-4cb3-b1bf-c591e3edcd7a
-
-tmp
-dir
-
-props
-dir
-
-all-wcprops
-file
-
-
-
-
-2009-03-05T15:19:17.000000Z
-e01e6b9031a39d35a6c0d27353897479
-2009-02-16T14:49:05.246830Z
-2650
-andrew
-has-props
-
-prop-base
-dir
-
-format
-file
-
-
-
-
-2009-03-05T15:19:17.000000Z
-c30f7472766d25af1dc80b3ffc9a58c7
-2009-02-16T14:49:05.246830Z
-2650
-andrew
-has-props
-
-entries
-file
-
-
-
-
-2009-03-05T15:19:17.000000Z
-d330cb4d758312f1d9e90628ccd31a24
-2009-02-16T14:49:05.246830Z
-2650
-andrew
-has-props
-
-text-base
-dir
-

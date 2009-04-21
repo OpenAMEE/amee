@@ -1,14 +1,14 @@
 8
 
 dir
-2973
+2992
 http://svn.amee.com/internal/api_csvs/transport/ship/generic
 http://svn.amee.com
 
 
 
-2009-03-30T11:46:51.514004Z
-2936
+2009-04-16T18:14:30.312694Z
+2977
 andrew
 
 
@@ -32,13 +32,49 @@ file
 
 
 
-2009-04-16T12:25:12.000000Z
+2009-04-20T11:03:00.000000Z
 f4971111d0720c06325f69e94d6e18af
 2009-03-30T11:46:51.514004Z
 2936
 andrew
 has-props
 
+itemdef.csv
+file
+
+
+
+
+2009-04-20T11:03:00.000000Z
+b5257648a544fecadf83c999be6a4fa5
+2009-04-16T18:14:30.312694Z
+2977
+andrew
+
+perMonth.js
+file
+
+
+
+
+2009-04-20T11:03:00.000000Z
+ce90336a8faff351ace0bbd709446cb1
+2009-04-16T18:14:30.312694Z
+2977
+andrew
+
 freight
 dir
+
+v2Algorithm.js
+file
+
+
+
+
+2009-04-20T11:03:00.000000Z
+62eebea841e135d5336c010e38169bb3
+2009-04-16T18:14:30.312694Z
+2977
+andrew
 

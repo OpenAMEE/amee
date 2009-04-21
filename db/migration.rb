@@ -27,9 +27,9 @@
 #
 require 'java'
 require '../server/amee-domain/target/amee-domain-2.1.jar'
-require '../../amee.deploy/lib/mysql-connector-java-5.1.6.jar'
-require '../../amee.deploy/lib/commons-logging-1.1.jar'
-require '../../amee.deploy/lib/jscience-4.3.1.jar'
+require '/Development/repository/mysql/mysql-connector-java/5.1.6/mysql-connector-java-5.1.6.jar'
+require '/Development/repository/commons-logging/commons-logging/1.1/commons-logging-1.1.jar'
+require '/Development/repository/org/jscience/jscience/4.3.1/jscience-4.3.1.jar'
 
 require 'getoptlong'
 require 'rdoc/usage'
@@ -397,10 +397,10 @@ class String
 end
 
 # Run the migrations
-run_sql("ddl.sql")
-migrate_ivd
-run_sql("dml.sql")
-migrate_pi
-migrate_amount
-migrate_algo
+#run_sql("ddl.sql")
+#migrate_ivd
+#run_sql("dml.sql")
+#migrate_pi
+#migrate_amount
+#migrate_algo
 run_sql("innodb.sql")

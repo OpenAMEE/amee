@@ -1,6 +1,0 @@
-name,Living Area Fraction,,,
-algFile,perMonth.js,,,
-name,path,type,isDataItemValue,isDrillDown
-Living Area Fraction,livingAreaFraction,DECIMAL,TRUE,FALSE
-Source,source,TEXT,TRUE,FALSE
-Type,type,TEXT,TRUE,TRUE
