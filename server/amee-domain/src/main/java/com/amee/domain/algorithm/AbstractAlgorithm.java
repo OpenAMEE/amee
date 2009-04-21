@@ -1,7 +1,7 @@
 package com.amee.domain.algorithm;
 
 import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;

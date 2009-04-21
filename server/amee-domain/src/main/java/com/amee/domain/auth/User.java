@@ -1,7 +1,7 @@
 package com.amee.domain.auth;
 
 import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.APIVersion;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;

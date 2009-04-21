@@ -2,9 +2,10 @@ package com.amee.restlet.profile.acceptor;
 
 import com.amee.calculation.service.CalculationService;
 import com.amee.domain.AMEEStatistics;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueMap;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.profile.ValidFromDate;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.utils.APIFault;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -77,7 +77,7 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
             updateProfileItem(resource, profileItem, form);
 
             // Update ItemValues if supplied
-            Map<String, ItemValue> itemValues = profileItem.getItemValuesMap();
+            ItemValueMap itemValues = profileItem.getItemValuesMap();
             for (String name : form.getNames()) {
                 ItemValue itemValue = itemValues.get(name);
                 if (itemValue != null) {

@@ -21,12 +21,12 @@ package com.amee.service.data;
 
 import com.amee.domain.APIVersion;
 import com.amee.domain.UidGen;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.sheet.Choices;
 import com.amee.domain.sheet.Sheet;
 import com.amee.service.BaseService;
@@ -146,16 +146,13 @@ public class DataService extends BaseService {
         if (endDate != null) {
             while (i.hasNext()) {
                 dataItem = i.next();
-                // "di.startDate < :endDate AND (di.endDate > :startDate OR di.endDate IS NULL)" :
-                if (!(dataItem.getStartDate().before(endDate) &&
-                        ((dataItem.getEndDate() == null) || dataItem.getEndDate().after(startDate)))) {
+                if (!(dataItem.getStartDate().before(endDate) && ((dataItem.getEndDate() == null) || dataItem.getEndDate().after(startDate)))) {
                     i.remove();
                 }
             }
         } else {
             while (i.hasNext()) {
                 dataItem = i.next();
-                // "(di.endDate > :startDate OR di.endDate IS NULL)");
                 if (!((dataItem.getEndDate() == null) || dataItem.getEndDate().after(startDate))) {
                     i.remove();
                 }

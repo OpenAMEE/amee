@@ -19,7 +19,7 @@
  */
 package com.amee.restlet.profile;
 
-import com.amee.domain.core.CO2AmountUnit;
+import com.amee.core.CO2AmountUnit;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.acceptor.ProfileItemAtomAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileItemFormAcceptor;

@@ -397,10 +397,10 @@ class String
 end
 
 # Run the migrations
-#run_sql("ddl.sql")
-#migrate_ivd
-#run_sql("dml.sql")
-#migrate_pi
-#migrate_amount
-#migrate_algo
+run_sql("ddl.sql")
+migrate_ivd
+run_sql("dml.sql")
+migrate_pi
+migrate_amount
+migrate_algo
 run_sql("innodb.sql")

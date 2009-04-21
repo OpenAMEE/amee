@@ -28,6 +28,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.amee.core.PersistentObject;
+
 @MappedSuperclass
 public abstract class AMEEEntity implements DatedObject, Serializable {
 

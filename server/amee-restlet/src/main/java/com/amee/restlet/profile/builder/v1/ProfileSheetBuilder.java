@@ -1,13 +1,10 @@
 package com.amee.restlet.profile.builder.v1;
 
+import com.amee.core.DecimalPerUnit;
 import com.amee.core.ValueType;
 import com.amee.domain.APIVersion;
 import com.amee.domain.cache.CacheableFactory;
-import com.amee.domain.core.DecimalPerUnit;
-import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.ItemDefinition;
-import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.*;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Cell;
 import com.amee.domain.sheet.Column;
@@ -19,7 +16,6 @@ import com.amee.service.profile.ProfileService;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
 
 public class ProfileSheetBuilder implements CacheableFactory {
 
@@ -54,7 +50,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
 
         List<Column> columns;
         Row row;
-        Map<String, ItemValue> itemValuesMap;
+        ItemValueMap itemValuesMap;
         ItemValue itemValue;
         ItemDefinition itemDefinition;
         Sheet sheet = null;

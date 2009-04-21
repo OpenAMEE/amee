@@ -19,12 +19,9 @@
  */
 package com.amee.restlet.data;
 
-import com.amee.domain.APIUtils;
-import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemDefinition;
-import com.amee.domain.data.ItemValue;
-import com.amee.domain.profile.StartEndDate;
+import com.amee.core.APIUtils;
+import com.amee.domain.StartEndDate;
+import com.amee.domain.data.*;
 import com.amee.restlet.data.builder.DataCategoryResourceBuilder;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataBrowser;
@@ -465,7 +462,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         dataService.persist(dataItem);
 
         // update item values if supplied
-        Map<String, ItemValue> itemValues = dataItem.getItemValuesMap();
+        ItemValueMap itemValues = dataItem.getItemValuesMap();
         for (String name : form.getNames()) {
             ItemValue itemValue = itemValues.get(name);
             if (itemValue != null) {

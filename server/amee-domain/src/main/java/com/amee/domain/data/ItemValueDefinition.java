@@ -19,12 +19,11 @@
  */
 package com.amee.domain.data;
 
-import com.amee.core.ObjectType;
-import com.amee.core.ValueType;
 import com.amee.domain.*;
-import com.amee.domain.core.DecimalCompoundUnit;
-import com.amee.domain.core.DecimalPerUnit;
-import com.amee.domain.core.DecimalUnit;
+import com.amee.core.DecimalCompoundUnit;
+import com.amee.core.*;
+import com.amee.core.DecimalPerUnit;
+import com.amee.core.DecimalUnit;
 import com.amee.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Cache;

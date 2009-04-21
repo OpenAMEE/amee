@@ -21,7 +21,7 @@
  */
 package com.amee.restlet.profile.builder.v1;
 
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v1.ItemValueBuilder;
 import com.amee.restlet.profile.ProfileItemValueResource;

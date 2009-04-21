@@ -1,12 +1,12 @@
 package com.amee.calculation.service;
 
-import com.amee.domain.core.CO2Amount;
-import com.amee.domain.core.Decimal;
+import com.amee.core.CO2Amount;
+import com.amee.core.Decimal;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.StartEndDate;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -70,7 +70,7 @@ public class ProRataProfileService {
 
             Interval intersect = requestInterval;
 
-            // Find the intersection of the event with the requested window.
+            // Find the intersection of the profile item with the requested window.
             if (intersect.getStart().toDate().before(pi.getStartDate())) {
                 intersect = intersect.withStartMillis(pi.getStartDate().getTime());
             }
@@ -115,7 +115,7 @@ public class ProRataProfileService {
 
             } else if (pi.getEndDate() != null) {
                 // The ProfileItem has no perTime ItemValues and is bounded. In this case, the CO2 value is multiplied by
-                // the (intersection/event) ratio.
+                // the (intersection/item duration) ratio.
 
                 ProfileItem pic = pi.getCopy();
                 BigDecimal event = new BigDecimal(getIntervalInMillis(pic.getStartDate(), pic.getEndDate()));

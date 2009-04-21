@@ -1,9 +1,9 @@
 package com.amee.domain.profile;
 
 import com.amee.core.ObjectType;
+import com.amee.core.CO2Amount;
 import com.amee.domain.Builder;
-import com.amee.domain.core.CO2Amount;
-import com.amee.domain.core.Decimal;
+import com.amee.core.Decimal;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.Item;
@@ -136,11 +136,11 @@ public class ProfileItem extends Item {
     }
 
     /**
-     * Get the {@link com.amee.domain.core.CO2Amount CO2Amount} for this ProfileItem.
-     * <p/>
+     * Get the {@link com.amee.core.CO2Amount CO2Amount} for this ProfileItem.
+     *
      * If the ProfileItem does not support CO2 calculations (i.e. metadata) CO2Amount.ZERO is returned.
      *
-     * @return - the {@link com.amee.domain.core.CO2Amount CO2Amount} for this ProfileItem
+     * @return - the {@link com.amee.core.CO2Amount CO2Amount} for this ProfileItem
      */
     public CO2Amount getAmount() {
         // CO2 amounts are lazily calculated once per session.

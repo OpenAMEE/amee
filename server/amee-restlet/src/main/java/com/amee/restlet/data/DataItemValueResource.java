@@ -19,7 +19,7 @@
  */
 package com.amee.restlet.data;
 
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
@@ -58,8 +58,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     }
 
     private void setDataItemValue(String itemValuePath) {
-        if (itemValuePath.isEmpty()) return;
-        if (getDataItem() == null) return;
+        if (itemValuePath.isEmpty() || getDataItem() == null) return;
         this.itemValue = getDataItem().getItemValuesMap().get(itemValuePath);
     }
 

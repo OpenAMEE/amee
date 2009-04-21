@@ -19,9 +19,9 @@
 */
 package com.amee.domain.profile.builder.v1;
 
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.Builder;
-import com.amee.domain.core.DecimalPerUnit;
+import com.amee.core.DecimalPerUnit;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v1.ItemValueBuilder;
 import com.amee.domain.profile.ProfileItem;

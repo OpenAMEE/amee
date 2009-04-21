@@ -1,0 +1,50 @@
+NameVirtualHost *
+<VirtualHost *>
+	#ServerName site.com
+	#ServerAlias www.site.com
+	
+	DocumentRoot /usr/rails/public
+	
+	<Directory "/usr/rails/public">
+		Options FollowSymLinks
+		AllowOverride All
+		Order Allow,Deny
+		Allow from All
+	</Directory>
+	
+	RewriteEngine On
+	
+	#site down for maintenance
+	RewriteCond %{DOCUMENT_ROOT}/system/maintenance.html -f
+	RewriteCond %{SCRIPT_FILENAME} !maintenance.html
+	RewriteRule ^.*$ /system/maintenance.html [L]
+	
+	#static index
+	RewriteRule ^/$ %{DOCUMENT_ROOT}/index.html [QSA]
+	
+	#cached pages
+	RewriteRule ^([^.]+)$ $1.html [QSA]
+	
+	#dynamic content
+	RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} !-f
+	RewriteRule .* http://127.0.0.1:3001%{REQUEST_URI} [L,P,QSA]
+	
+	ProxyRequests Off
+	
+	<Proxy *>
+		Order deny,allow
+		Allow from all
+	</Proxy>
+
+	ProxyPass / http://127.0.0.1:3001/
+	ProxyPassReverse / http://127.0.0.1:3001
+	ProxyPreserveHost on
+
+	ProxyPass /images !
+	ProxyPass /stylesheets !
+	ProxyPass /javascripts !
+
+	Alias /images %{DOCUMENT_ROOT}/images
+	Alias /stylesheets %{DOCUMENT_ROOT}/stylesheets
+	Alias /javascripts %{DOCUMENT_ROOT}/javascripts
+</VirtualHost>

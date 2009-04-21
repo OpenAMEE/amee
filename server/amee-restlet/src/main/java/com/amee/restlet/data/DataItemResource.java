@@ -20,10 +20,11 @@
 package com.amee.restlet.data;
 
 import com.amee.calculation.service.CalculationService;
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.data.ItemValueMap;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.data.DataConstants;
@@ -189,7 +190,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             }
 
             // update ItemValues if supplied
-            Map<String, ItemValue> itemValues = dataItem.getItemValuesMap();
+            ItemValueMap itemValues = dataItem.getItemValuesMap();
             for (String name : form.getNames()) {
                 ItemValue itemValue = itemValues.get(name);
                 if (itemValue != null) {

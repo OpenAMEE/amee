@@ -21,11 +21,11 @@ package com.amee.domain.data;
 
 import com.amee.core.ObjectType;
 import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.APIUtils;
+import com.amee.core.APIUtils;
 import com.amee.domain.APIVersion;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.path.InternalValue;
+import com.amee.domain.InternalValue;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

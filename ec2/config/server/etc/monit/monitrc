@@ -1,0 +1,42 @@
+# Configuration for Monit, a monitoring tool
+# whose role in RubyWorks stack is to ensure that other components
+# are up and running at all times.
+#
+# Original documentation for Monit is here:
+#    http://www.tildeslash.com/monit/doc/manual.php
+
+set daemon 15 # Perform a check every 15 seconds
+set logfile /var/log/monit.log
+
+# set mailserver mail.bar.com
+# set alert admin@bar.com
+# mail-format {
+#    from: system@amee.com
+#    subject: $SERVICE $EVENT at $DATE
+#    message: Monit $ACTION $SERVICE at $DATE on $HOST,
+#
+# }
+
+# This section configures Monit's web frontend on port http://localhost:2812.
+set httpd port 2812 and
+    # only accept connection from localhost. Change to 0.0.0.0 to accept 
+    # remote connections. Make sure to change the password in the 'allow' 
+    # statement if you do.
+    use address 127.0.0.1  
+    # When someone connects to the web frontend, perform basic HTTP i
+    # authentication and accept username/password admin/MonitPa$$w0rd
+    allow admin:MonitPa$$w0rd
+
+include /etc/rails/monit.conf
+
+check process mysql with pidfile "/var/run/mysqld/mysqld.pid"
+  group database
+  start program = "/etc/init.d/mysql start"
+  stop program = "/etc/init.d/mysql stop"
+  if failed host 127.0.0.1 port 3306 protocol mysql then restart
+  if totalmem is greater than 600.0 MB for 2 cycles then alert
+  if 5 restarts within 5 cycles then timeout
+
+check file slow_queries with path "/var/log/mysql/mysql-slow.log"
+  group database
+  if changed timestamp then alert

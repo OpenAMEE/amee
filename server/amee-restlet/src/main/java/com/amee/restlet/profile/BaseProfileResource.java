@@ -4,7 +4,7 @@ import com.amee.domain.Pager;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.StartEndDate;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataService;

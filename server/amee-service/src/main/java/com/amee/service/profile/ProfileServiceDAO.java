@@ -20,6 +20,7 @@
 package com.amee.service.profile;
 
 import com.amee.domain.Pager;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
@@ -30,7 +31,6 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.event.ObservedEvent;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.StartEndDate;
 import com.amee.service.auth.AuthService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;

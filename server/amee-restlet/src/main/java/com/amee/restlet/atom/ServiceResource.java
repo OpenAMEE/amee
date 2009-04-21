@@ -23,7 +23,7 @@ import com.amee.core.ObjectType;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.path.PathItem;
-import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.StartEndDate;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.profile.builder.v2.AtomFeed;
 import com.amee.service.data.OnlyActiveDataService;
@@ -120,7 +120,7 @@ public class ServiceResource extends AMEEResource {
             for (DataItem di : new OnlyActiveDataService(dataService).getDataItems(dc, new StartEndDate())) {
                 Category cat = ATOM_FEED.newCategory(cats);
                 cat.setTerm(di.getUid());
-                cat.setLabel(di.getItemDefinition().getName() + " (" + di.getItemValuesString() + ")");
+                cat.setLabel(di.getItemDefinition().getName() + " (" + di.getLabel() + ")");
             }
             if (recurse) {
                 addCollections(pathItem, ws);

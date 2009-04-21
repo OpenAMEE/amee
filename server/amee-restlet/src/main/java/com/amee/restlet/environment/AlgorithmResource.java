@@ -23,7 +23,7 @@ import com.amee.calculation.service.CalculationService;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.StartEndDate;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.sheet.Choice;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;

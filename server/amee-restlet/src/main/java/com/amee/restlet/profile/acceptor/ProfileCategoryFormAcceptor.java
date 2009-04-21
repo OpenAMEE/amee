@@ -1,11 +1,12 @@
 package com.amee.restlet.profile.acceptor;
 
 import com.amee.calculation.service.CalculationService;
-import com.amee.domain.core.CO2AmountUnit;
+import com.amee.core.CO2AmountUnit;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueMap;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.StartEndDate;
 import com.amee.domain.profile.ValidFromDate;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.utils.APIFault;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This file is part of AMEE.
@@ -160,7 +160,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
 
             try {
                 // update item values if supplied
-                Map<String, ItemValue> itemValues = profileItem.getItemValuesMap();
+                ItemValueMap itemValues = profileItem.getItemValuesMap();
                 for (String name : form.getNames()) {
                     ItemValue itemValue = itemValues.get(name);
                     if (itemValue != null) {
