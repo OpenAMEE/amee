@@ -68,6 +68,21 @@
                         <lookup-method name="createResource" bean="itemDefinitionsResource"/>
                     </bean>
                 </entry>
+                <entry key="/{itemDefinitionUid}">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="itemDefinitionResource"/>
+                    </bean>
+                </entry>
+                <entry key="/{itemDefinitionUid}/itemValueDefinitions">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="itemValueDefinitionsResource"/>
+                    </bean>
+                </entry>
+                <entry key="/{itemDefinitionUid}/itemValueDefinitions/{itemValueDefinitionUid}">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="itemValueDefinitionResource"/>
+                    </bean>
+                </entry>
             </map>
         </property>
     </bean>
