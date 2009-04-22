@@ -19,6 +19,7 @@
  */
 package com.amee.restlet.profile;
 
+import com.amee.domain.AMEEStatistics;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.Permission;
@@ -61,6 +62,9 @@ public class ProfilesResource extends AMEEResource implements Serializable {
 
     @Autowired
     private ProfileBrowser profileBrowser;
+
+    @Autowired
+    private AMEEStatistics ameeStatistics;
 
     private User user;
     private Group group;
@@ -153,9 +157,10 @@ public class ProfilesResource extends AMEEResource implements Serializable {
             if ((form.getFirstValue("profile") != null) && (group != null)) {
                 // create Permission for Profile
                 Permission permission = new Permission(group, user);
-                // create new Profile
+                // create new Profile, update statistics
                 newProfile = new Profile(environment, permission);
                 profileService.persist(newProfile);
+                ameeStatistics.createProfile();
             }
             if (newProfile != null) {
                 if (isStandardWebBrowser()) {

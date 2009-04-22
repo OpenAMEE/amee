@@ -171,6 +171,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                                 itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
                             }
                         }
+                        ameeStatistics.updateProfileItemValue();
                     }
                 }
                 // do calculations

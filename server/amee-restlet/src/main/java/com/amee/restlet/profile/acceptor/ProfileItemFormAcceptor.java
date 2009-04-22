@@ -94,6 +94,7 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
                             itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
                         }
                     }
+                    ameeStatistics.updateProfileItemValue();
                 }
             }
             log.debug("storeRepresentation() - ProfileItem updated");

@@ -26,11 +26,21 @@ import org.springframework.stereotype.Service;
 @Service("ameeStatistics")
 public class AMEEStatistics {
 
+    // Profiles
+    private long profileCreateCount;
+    private ThreadLocal<Long> threadProfileCreateCount = new ThreadLocal<Long>();
+
     // Profile Items
     private long profileItemCreateCount;
     private ThreadLocal<Long> threadProfileItemCreateCount = new ThreadLocal<Long>();
     private long profileItemUpdateCount;
     private ThreadLocal<Long> threadProfileItemUpdateCount = new ThreadLocal<Long>();
+
+    // Profile Item Values
+    private long profileItemValueCreateCount;
+    private ThreadLocal<Long> threadProfileItemValueCreateCount = new ThreadLocal<Long>();
+    private long profileItemValueUpdateCount;
+    private ThreadLocal<Long> threadProfileItemValueUpdateCount = new ThreadLocal<Long>();
 
     // Errors
     private long errorCount;
@@ -42,19 +52,40 @@ public class AMEEStatistics {
      * once prior calling any of the update methods, such as createProfileItem.
      */
     public void resetThread() {
+        // Profiles
+        threadProfileCreateCount.set(0L);
+        // Profile Items
         threadProfileItemCreateCount.set(0L);
         threadProfileItemUpdateCount.set(0L);
+        // Profile Item Values
+        threadProfileItemValueCreateCount.set(0L);
+        threadProfileItemValueUpdateCount.set(0L);
     }
 
     public void commitThread() {
         // only commit if values are present
-        if (threadProfileItemCreateCount.get() != null) {
+        if (threadProfileCreateCount.get() != null) {
+            // Profiles
+            profileCreateCount += threadProfileCreateCount.get();
             // Profile Items
             profileItemCreateCount += threadProfileItemCreateCount.get();
             profileItemUpdateCount += threadProfileItemUpdateCount.get();
+            // Profile Item Values
+            profileItemValueCreateCount += threadProfileItemValueCreateCount.get();
+            profileItemValueUpdateCount += threadProfileItemValueUpdateCount.get();
             // reset for subsequent requests
             resetThread();
         }
+    }
+
+    // Profiles
+
+    public void createProfile() {
+        threadProfileCreateCount.set(threadProfileCreateCount.get() + 1);
+    }
+
+    public long getProfileCreateCount() {
+        return profileCreateCount;
     }
 
     // Profile Items
@@ -73,6 +104,24 @@ public class AMEEStatistics {
 
     public long getProfileItemUpdateCount() {
         return profileItemUpdateCount;
+    }
+
+    // Profile Item Values
+
+    public void createProfileItemValue() {
+        threadProfileItemValueCreateCount.set(threadProfileItemValueCreateCount.get() + 1);
+    }
+
+    public long getProfileItemValueCreateCount() {
+        return profileItemValueCreateCount;
+    }
+
+    public void updateProfileItemValue() {
+        threadProfileItemValueUpdateCount.set(threadProfileItemValueUpdateCount.get() + 1);
+    }
+
+    public long getProfileItemValueUpdateCount() {
+        return profileItemValueUpdateCount;
     }
 
     // Errors

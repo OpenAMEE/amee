@@ -1,9 +1,6 @@
 package com.amee.service.profile;
 
-import com.amee.domain.APIVersion;
-import com.amee.domain.Pager;
-import com.amee.domain.StartEndDate;
-import com.amee.domain.UidGen;
+import com.amee.domain.*;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
@@ -56,6 +53,9 @@ public class ProfileService extends BaseService {
 
     @Autowired
     private ProfileSheetService profileSheetService;
+
+    @Autowired
+    private AMEEStatistics ameeStatistics;
 
     // Profiles
 
@@ -188,6 +188,7 @@ public class ProfileService extends BaseService {
                 }
                 // create missing ItemValue
                 new ItemValue(ivd, profileItem, defaultValue);
+                ameeStatistics.createProfileItemValue();
             }
         }
 
