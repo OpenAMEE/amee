@@ -154,7 +154,7 @@
             </elementProp>
             <stringProp name="SoapSampler.URL_DATA">http://${__property(jmeter.host)}/profiles/${ProfileUID}</stringProp>
             <stringProp name="HTTPSamper.xml_data"></stringProp>
-            <stringProp name="SoapSampler.xml_data_file">/Development/AMEE/amee/jmeter/batch/batch-profile-create.home.xml</stringProp>
+            <stringProp name="SoapSampler.xml_data_file">${__property(jmeter.work.dir)}/batch-profile-create.home.xml</stringProp>
             <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
             <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
@@ -166,7 +166,7 @@
             </elementProp>
             <stringProp name="SoapSampler.URL_DATA">http://${__property(jmeter.host)}/profiles/${ProfileUID}</stringProp>
             <stringProp name="HTTPSamper.xml_data"></stringProp>
-            <stringProp name="SoapSampler.xml_data_file">/Development/AMEE/amee/jmeter/batch/batch-profile-create.transport.xml</stringProp>
+            <stringProp name="SoapSampler.xml_data_file">${__property(jmeter.work.dir)}/batch-profile-create.transport.xml</stringProp>
             <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
             <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
@@ -178,7 +178,7 @@
             </elementProp>
             <stringProp name="SoapSampler.URL_DATA">http://${__property(jmeter.host)}/profiles/${ProfileUID}</stringProp>
             <stringProp name="HTTPSamper.xml_data"></stringProp>
-            <stringProp name="SoapSampler.xml_data_file">/Development/AMEE/amee/jmeter/batch/batch-profile-create.appliances.xml</stringProp>
+            <stringProp name="SoapSampler.xml_data_file">${__property(jmeter.work.dir)}/batch-profile-create.appliances.xml</stringProp>
             <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
             <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">false</boolProp>

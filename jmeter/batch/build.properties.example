@@ -1,3 +1,4 @@
+jmeter.work.dir=/Development/AMEE/amee/jmeter/batch
 jmeter.install.dir=/Development/jakarta-jmeter-2.3.2
 jmeter.testplan=batch.jmx
 jmeter.threads=1

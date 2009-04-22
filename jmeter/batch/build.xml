@@ -6,6 +6,7 @@
 		<tstamp>
 			<format property="build.id" pattern="dMMhhmmss" locale="en"/>
 		</tstamp>
+		<property name="jmeter.work.dir" value=""/>
 		<property name="jmeter.install.dir" value=""/>
 		<property name="jmeter.testplan" value=""/>
 		<property name="jmeter.result.dir" value="results"/>
@@ -22,7 +23,7 @@
 			<pathelement location="${xalan.jar}"/>
 			<pathelement location="${serializer.jar}"/>
 		</path>
-		<taskdef name="jmeter" classpath="${jmeter.install.dir}/extras/ant-jmeter.jar" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask"/>
+		<taskdef name="jmeter" classpath="${jmeter.install.dir}/extras/ant-jmeter-1.0.9.jar" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask"/>
 	</target>
 	<target name="run" depends="init">
 		<jmeter jmeterhome="${jmeter.install.dir}" testplan="${jmeter.testplan}" resultlog="${jmeter.result.file}">
@@ -33,6 +34,7 @@
 			<property name="jmeter.loops" value="${jmeter.loops}"/>
 			<property name="jmeter.rampup" value="${jmeter.rampup}"/>
 			<property name="jmeter.host" value="${jmeter.host}"/>
+			<property name="jmeter.work.dir" value="${jmeter.work.dir}"/>
 		</jmeter>
 	</target>
 	<target name="report" depends="init">
