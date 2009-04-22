@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jmeter" default="all" basedir=".">
+	<target name="all" depends="run,report"/>
+	<target name="init">
+		<property file="build.properties"/>
+		<tstamp>
+			<format property="build.id" pattern="dMMhhmmss" locale="en"/>
+		</tstamp>
+		<property name="jmeter.install.dir" value=""/>
+		<property name="jmeter.testplan" value=""/>
+		<property name="jmeter.result.dir" value="results"/>
+		<property name="jmeter.threads" value="1"/>
+		<property name="jmeter.loops" value="1"/>
+		<property name="jmeter.rampup" value="1"/>
+		<property name="jmeter.host" value="local.stage.co2.dgen.net"/>
+		<property name="jmeter.result.file" value="${jmeter.result.dir}/results-${build.id}.xml"/>
+		<property name="jmeter.report.file" value="${jmeter.result.dir}/report-${build.id}.html"/>
+		<property name="lib.dir" value="${jmeter.install.dir}/lib"/>
+		<property name="xalan.jar" value="${lib.dir}/xalan_2_7_1.jar"/>
+		<property name="serializer.jar" value="${lib.dir}/serializer-2_9_1.jar"/>
+		<path id="xslt.classpath">
+			<pathelement location="${xalan.jar}"/>
+			<pathelement location="${serializer.jar}"/>
+		</path>
+		<taskdef name="jmeter" classpath="${jmeter.install.dir}/extras/ant-jmeter.jar" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask"/>
+	</target>
+	<target name="run" depends="init">
+		<jmeter jmeterhome="${jmeter.install.dir}" testplan="${jmeter.testplan}" resultlog="${jmeter.result.file}">
+			<property name="jmeter.save.saveservice.output_format" value="xml"/>
+			<property name="jmeter.save.saveservice.assertion_results" value="all"/>
+			<property name="jmeter.save.saveservice.bytes" value="true"/>
+			<property name="jmeter.threads" value="${jmeter.threads}"/>
+			<property name="jmeter.loops" value="${jmeter.loops}"/>
+			<property name="jmeter.rampup" value="${jmeter.rampup}"/>
+			<property name="jmeter.host" value="${jmeter.host}"/>
+		</jmeter>
+	</target>
+	<target name="report" depends="init">
+		<xslt classpathref="xslt.classpath" force="true" in="${jmeter.result.file}" out="${jmeter.report.file}" style="${jmeter.install.dir}/extras/jmeter-results-report_21.xsl"/>
+	</target>
+</project>

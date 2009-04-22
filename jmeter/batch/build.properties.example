@@ -1,0 +1,6 @@
+jmeter.install.dir=/Development/jakarta-jmeter-2.3.2
+jmeter.testplan=batch.jmx
+jmeter.threads=1
+jmeter.loops=1
+jmeter.rampup=1
+jmeter.host=local.stage.co2.dgen.net

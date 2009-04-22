@@ -438,7 +438,7 @@
     <!-- SiteService -->
     <cache name="query.siteService"
            maxElementsInMemory="200"
-           eternal="true"
+           eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
