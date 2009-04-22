@@ -2,5 +2,5 @@
 #set :branch, "development"
 
 # The hosts where are are deploying 
-role :app, "dev.amee.com"
-role :db,  "dev.amee.com", :primary => true
+role :app, "flood.amee.com"
+role :db,  "flood.amee.com", :primary => true
