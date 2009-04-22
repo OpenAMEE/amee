@@ -29,7 +29,7 @@ set :use_sudo, false
 set :user, "deploy"
 
 # Source code and build locations
-set :src_dir, "/Development/AMEE/amee.rel/amee"
+set :src_dir, "/Development/AMEE/amee"
 set :package_dir, "/Development/AMEE/amee.deploy"
 
 # Override Capistrano tasks

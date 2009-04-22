@@ -7,6 +7,7 @@ import com.amee.restlet.BaseResource;
 import com.amee.restlet.auth.AuthUtils;
 import com.amee.service.auth.AuthService;
 import com.amee.service.environment.SiteService;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.data.*;
@@ -95,7 +96,7 @@ public class SignInResource extends BaseResource implements Serializable {
         Form form = getForm();
         User sampleUser;
         String authToken;
-        if (form.getNames().contains("username")) {
+        if ( !StringUtils.isBlank(form.getFirstValue("username")) && !StringUtils.isBlank(form.getFirstValue("password")) ) {
             // deal with sign in
             String nextUrl = AuthUtils.getNextUrl(getRequest(), getForm());
             sampleUser = new User();
@@ -125,7 +126,13 @@ public class SignInResource extends BaseResource implements Serializable {
                 success("/auth/signIn?next=" + nextUrl);
             }
         } else {
-            badRequest();
+            if (isStandardWebBrowser()) {
+                // For standard browsers, return to signin page.
+                super.handleGet();
+            } else {
+                // Otherwise, send back a 400 status.
+                badRequest();
+            }
         }
     }
 }
