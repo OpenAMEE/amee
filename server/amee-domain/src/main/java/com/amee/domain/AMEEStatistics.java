@@ -21,25 +21,46 @@
 */
 package com.amee.domain;
 
-import org.apache.commons.dbcp.BasicDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("ameeStatistics")
 public class AMEEStatistics {
 
-    @Autowired
-    private BasicDataSource dataSource;
-
     // Profile Items
     private long profileItemCreateCount;
+    private ThreadLocal<Long> threadProfileItemCreateCount = new ThreadLocal<Long>();
     private long profileItemUpdateCount;
+    private ThreadLocal<Long> threadProfileItemUpdateCount = new ThreadLocal<Long>();
 
     // Errors
     private long errorCount;
 
+    // Thread state
+
+    /**
+     * Reset the state of counters for this thread. Values are set to zero. This must be called at least
+     * once prior calling any of the update methods, such as createProfileItem.
+     */
+    public void resetThread() {
+        threadProfileItemCreateCount.set(0L);
+        threadProfileItemUpdateCount.set(0L);
+    }
+
+    public void commitThread() {
+        // only commit if values are present
+        if (threadProfileItemCreateCount.get() != null) {
+            // Profile Items
+            profileItemCreateCount += threadProfileItemCreateCount.get();
+            profileItemUpdateCount += threadProfileItemUpdateCount.get();
+            // reset for subsequent requests
+            resetThread();
+        }
+    }
+
+    // Profile Items
+
     public void createProfileItem() {
-        profileItemCreateCount++;
+        threadProfileItemCreateCount.set(threadProfileItemCreateCount.get() + 1);
     }
 
     public long getProfileItemCreateCount() {
@@ -47,7 +68,7 @@ public class AMEEStatistics {
     }
 
     public void updateProfileItem() {
-        profileItemUpdateCount++;
+        threadProfileItemUpdateCount.set(threadProfileItemUpdateCount.get() + 1);
     }
 
     public long getProfileItemUpdateCount() {
@@ -62,31 +83,5 @@ public class AMEEStatistics {
 
     public long getErrorCount() {
         return errorCount;
-    }
-
-    // Connection Pool
-
-    public int getDSInitialSize() {
-        return dataSource.getInitialSize();
-    }
-
-    public int getDSMaxIdle() {
-        return dataSource.getMaxIdle();
-    }
-
-    public int getDSMinIdle() {
-        return dataSource.getMinIdle();
-    }
-
-    public int getDSNumIdle() {
-        return dataSource.getNumIdle();
-    }
-
-    public int getDSMaxActive() {
-        return dataSource.getMaxActive();
-    }
-
-    public int getDSNumActive() {
-        return dataSource.getNumActive();
     }
 }

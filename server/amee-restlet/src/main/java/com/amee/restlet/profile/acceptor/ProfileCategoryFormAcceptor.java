@@ -2,6 +2,7 @@ package com.amee.restlet.profile.acceptor;
 
 import com.amee.calculation.service.CalculationService;
 import com.amee.core.CO2AmountUnit;
+import com.amee.domain.AMEEStatistics;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
@@ -55,12 +56,16 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
     @Autowired
     private CalculationService calculationService;
 
+    @Autowired
+    private AMEEStatistics ameeStatistics;
+
     public List<ProfileItem> accept(ProfileCategoryResource resource, Form form) {
 
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
         DataItem dataItem;
         ProfileItem profileItem = null;
         String uid;
+
         if (resource.getRequest().getMethod().equals(Method.POST)) {
             // new ProfileItem
             uid = form.getFirstValue("dataItemUid");
@@ -73,7 +78,6 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                 } else {
                     log.warn("accept() - Data Item not found");
                     resource.notFound();
-                    profileItem = null;
                 }
             } else {
                 log.warn("accept() - dataItemUid not supplied");
@@ -90,12 +94,10 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                 } else {
                     log.warn("accept() - Profile Item not found");
                     resource.notFound();
-                    profileItem = null;
                 }
             } else {
                 log.warn("accept() - profileItemUid not supplied");
                 resource.badRequest(APIFault.MISSING_PARAMETERS);
-                profileItem = null;
             }
         }
 
@@ -121,7 +123,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             }
         } else {
 
-           // Clients can set units for the calculated CO2Amount in API > 1.0
+            // Clients can set units for the calculated CO2Amount in API > 1.0
             String unit = form.getFirstValue("returnUnit");
             String perUnit = form.getFirstValue("returnPerUnit");
             resource.getProfileBrowser().setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
@@ -149,16 +151,12 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
         // determine name for new ProfileItem
         profileItem.setName(form.getFirstValue("name"));
 
-        // see if ProfileItem already exists
+        // see if equivalent ProfileItem already exists
         if (profileService.isUnique(profileItem)) {
-
-            // save newProfileItem and do calculations
-            profileService.persist(profileItem);
-
-            // clear caches
-            profileService.clearCaches(resource.getProfile());
-
             try {
+                // save ProfileItem
+                boolean isNewProfileItem = (profileItem.getId() == null);
+                profileService.persist(profileItem);
                 // update item values if supplied
                 ItemValueMap itemValues = profileItem.getItemValuesMap();
                 for (String name : form.getNames()) {
@@ -175,9 +173,16 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                         }
                     }
                 }
-
+                // do calculations
                 calculationService.calculate(profileItem);
-
+                // update statistics
+                if (isNewProfileItem) {
+                    ameeStatistics.createProfileItem();
+                } else {
+                    ameeStatistics.updateProfileItem();
+                }
+                // clear caches
+                profileService.clearCaches(resource.getProfile());
             } catch (IllegalArgumentException ex) {
                 log.warn("accept() - Bad parameter received", ex);
                 profileService.remove(profileItem);
@@ -187,7 +192,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
         } else {
             log.warn("accept() - Profile Item already exists");
             resource.badRequest(APIFault.DUPLICATE_ITEM);
-            return null;
+            profileItem = null;
         }
         return profileItem;
     }

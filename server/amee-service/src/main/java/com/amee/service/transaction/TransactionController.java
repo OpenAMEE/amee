@@ -1,5 +1,6 @@
 package com.amee.service.transaction;
 
+import com.amee.domain.AMEEStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.jpa.EntityManagerFactoryAccessor;
@@ -23,6 +24,9 @@ public class TransactionController extends EntityManagerFactoryAccessor {
 
     @Autowired
     private PlatformTransactionManager transactionManager;
+
+    @Autowired
+    private AMEEStatistics ameeStatistics;
 
     private boolean manageTransactions;
     private TransactionAttribute transactionAttribute = new DefaultTransactionAttribute();
@@ -56,8 +60,11 @@ public class TransactionController extends EntityManagerFactoryAccessor {
      */
     public void beforeHandle(boolean withTransaction) {
         logger.debug("beforeHandle() - >>> BEFORE HANDLE {withTransaction=" + withTransaction + "}");
+        // Reset thread bound statistics.
+        ameeStatistics.resetThread();
         // Ensure any EntityManager associated with this thread is closed before handling this new request.
         ensureEntityManagerIsClosed();
+        // Begin transaction if required.
         begin(withTransaction);
     }
 
@@ -111,10 +118,16 @@ public class TransactionController extends EntityManagerFactoryAccessor {
         if (manageTransactions && (transactionStatus.get() != null)) {
             if (!transactionStatus.get().isCompleted()) {
                 if (transactionRollback.get() != null) {
+                    // Roll back transaction.
                     transactionManager.rollback(transactionStatus.get());
+                    // Reset thread bound statistics.
+                    ameeStatistics.resetThread();
                     logger.warn("commitOrRollbackTransaction() - <<< TRANSACTION ROLLED BACK");
                 } else {
+                    // Commit the transaction.
                     transactionManager.commit(transactionStatus.get());
+                    // Commit thread bound statistics.
+                    ameeStatistics.commitThread();
                     logger.debug("commitOrRollbackTransaction() - <<< TRANSACTION COMMITTED");
                 }
             } else {

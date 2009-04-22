@@ -59,10 +59,13 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
         ProfileItem profileItem;
 
+        // Obtain the ProfileItem we'll attempt to update.
         profileItem = resource.getProfileItem();
 
-        // Ensure updated ProfileItem does not break rules for ProfileItems
+        // Work on a temporary copy of the ProfileItem.
         ProfileItem profileItemCopy = profileItem.getCopy();
+
+        // Ensure updated ProfileItem does not break rules for ProfileItems.
         updateProfileItem(resource, profileItemCopy, form);
 
         // Ensure endDate is not before startDate
@@ -71,6 +74,7 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
             return profileItems;
         }
 
+        // ProfileItem must be unique with the Profile.
         if (profileService.isUnique(profileItemCopy)) {
 
             // Update persistent ProfileItem
@@ -94,19 +98,15 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
             }
             log.debug("storeRepresentation() - ProfileItem updated");
 
-            // All done, need to recalculate, clear caches and update statistics count
+            // All done. Recalculate, store, update statistics count and clear caches.
             calculationService.calculate(profileItem);
+            profileItems.add(profileItem);
+            ameeStatistics.updateProfileItem();
             profileService.clearCaches(resource.getProfile());
-            ameeStatistics.createProfileItem();
 
         } else {
             log.warn("storeRepresentation() - ProfileItem NOT updated");
             resource.badRequest(APIFault.DUPLICATE_ITEM);
-            return profileItems;
-        }
-
-        if (profileItem != null) {
-            profileItems.add(profileItem);
         }
 
         return profileItems;
@@ -160,8 +160,5 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
                 profileItem.setEndDate(endDate);
             }
         }
-
-        // update statistics count
-        ameeStatistics.updateProfileItem();
     }
 }
