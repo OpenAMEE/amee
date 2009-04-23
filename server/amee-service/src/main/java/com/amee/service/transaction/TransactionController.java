@@ -120,14 +120,16 @@ public class TransactionController extends EntityManagerFactoryAccessor {
                 if (transactionRollback.get() != null) {
                     // Roll back transaction.
                     transactionManager.rollback(transactionStatus.get());
-                    // Reset thread bound statistics.
+                    // Update statistics.
                     ameeStatistics.resetThread();
+                    ameeStatistics.transactionRollback();
                     logger.warn("commitOrRollbackTransaction() - <<< TRANSACTION ROLLED BACK");
                 } else {
                     // Commit the transaction.
                     transactionManager.commit(transactionStatus.get());
-                    // Commit thread bound statistics.
+                    // Update statistics.
                     ameeStatistics.commitThread();
+                    ameeStatistics.transactionCommit();
                     logger.debug("commitOrRollbackTransaction() - <<< TRANSACTION COMMITTED");
                 }
             } else {

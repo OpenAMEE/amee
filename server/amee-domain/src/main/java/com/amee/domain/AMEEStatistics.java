@@ -33,14 +33,18 @@ public class AMEEStatistics {
     // Profile Items
     private long profileItemCreateCount;
     private ThreadLocal<Long> threadProfileItemCreateCount = new ThreadLocal<Long>();
-    private long profileItemUpdateCount;
-    private ThreadLocal<Long> threadProfileItemUpdateCount = new ThreadLocal<Long>();
+    private long profileItemModifyCount;
+    private ThreadLocal<Long> threadProfileItemModifyCount = new ThreadLocal<Long>();
 
     // Profile Item Values
     private long profileItemValueCreateCount;
     private ThreadLocal<Long> threadProfileItemValueCreateCount = new ThreadLocal<Long>();
-    private long profileItemValueUpdateCount;
-    private ThreadLocal<Long> threadProfileItemValueUpdateCount = new ThreadLocal<Long>();
+    private long profileItemValueModifyCount;
+    private ThreadLocal<Long> threadProfileItemValueModifyCount = new ThreadLocal<Long>();
+
+    // Transactions
+    private long transactionCommitCount;
+    private long transactionRollbackCount;
 
     // Errors
     private long errorCount;
@@ -56,10 +60,10 @@ public class AMEEStatistics {
         threadProfileCreateCount.set(0L);
         // Profile Items
         threadProfileItemCreateCount.set(0L);
-        threadProfileItemUpdateCount.set(0L);
+        threadProfileItemModifyCount.set(0L);
         // Profile Item Values
         threadProfileItemValueCreateCount.set(0L);
-        threadProfileItemValueUpdateCount.set(0L);
+        threadProfileItemValueModifyCount.set(0L);
     }
 
     public void commitThread() {
@@ -69,10 +73,10 @@ public class AMEEStatistics {
             profileCreateCount += threadProfileCreateCount.get();
             // Profile Items
             profileItemCreateCount += threadProfileItemCreateCount.get();
-            profileItemUpdateCount += threadProfileItemUpdateCount.get();
+            profileItemModifyCount += threadProfileItemModifyCount.get();
             // Profile Item Values
             profileItemValueCreateCount += threadProfileItemValueCreateCount.get();
-            profileItemValueUpdateCount += threadProfileItemValueUpdateCount.get();
+            profileItemValueModifyCount += threadProfileItemValueModifyCount.get();
             // reset for subsequent requests
             resetThread();
         }
@@ -99,11 +103,11 @@ public class AMEEStatistics {
     }
 
     public void updateProfileItem() {
-        threadProfileItemUpdateCount.set(threadProfileItemUpdateCount.get() + 1);
+        threadProfileItemModifyCount.set(threadProfileItemModifyCount.get() + 1);
     }
 
-    public long getProfileItemUpdateCount() {
-        return profileItemUpdateCount;
+    public long getProfileItemModifyCount() {
+        return profileItemModifyCount;
     }
 
     // Profile Item Values
@@ -117,11 +121,11 @@ public class AMEEStatistics {
     }
 
     public void updateProfileItemValue() {
-        threadProfileItemValueUpdateCount.set(threadProfileItemValueUpdateCount.get() + 1);
+        threadProfileItemValueModifyCount.set(threadProfileItemValueModifyCount.get() + 1);
     }
 
-    public long getProfileItemValueUpdateCount() {
-        return profileItemValueUpdateCount;
+    public long getProfileItemValueModifyCount() {
+        return profileItemValueModifyCount;
     }
 
     // Errors
@@ -132,5 +136,23 @@ public class AMEEStatistics {
 
     public long getErrorCount() {
         return errorCount;
+    }
+
+    // Transactions
+
+    public void transactionCommit() {
+        transactionCommitCount++;
+    }
+
+    public long getTransactionCommitCount() {
+        return transactionCommitCount;
+    }
+
+    public void transactionRollback() {
+        transactionRollbackCount++;
+    }
+
+    public long getTransactionRollbackCount() {
+        return transactionRollbackCount;
     }
 }
