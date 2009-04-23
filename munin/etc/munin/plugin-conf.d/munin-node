@@ -1,0 +1,7 @@
+[jstat_*]
+user amee
+env.pidfilepath /var/www/apps/amee/shared/pids/amee.pid.java
+env.javahome /usr/lib/jvm/java-6-sun
+
+[jmx_*]
+env.jmxurl service:jmx:rmi:///jndi/rmi://localhost:9988/jmxrmi
