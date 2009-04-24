@@ -13,6 +13,10 @@
 		<property name="jmeter.threads" value="1"/>
 		<property name="jmeter.loops" value="1"/>
 		<property name="jmeter.rampup" value="1"/>
+		<property name="jmeter.timer.deviation" value="100"/>
+		<property name="jmeter.timer.offset" value="300"/>
+		<property name="jmeter.batch.size" value="small"/>
+		<property name="jmeter.batch.width" value="thin"/>
 		<property name="jmeter.host" value="local.stage.co2.dgen.net"/>
 		<property name="jmeter.result.file" value="${jmeter.result.dir}/results-${build.id}.xml"/>
 		<property name="jmeter.report.file" value="${jmeter.result.dir}/report-${build.id}.html"/>
@@ -33,6 +37,10 @@
 			<property name="jmeter.threads" value="${jmeter.threads}"/>
 			<property name="jmeter.loops" value="${jmeter.loops}"/>
 			<property name="jmeter.rampup" value="${jmeter.rampup}"/>
+			<property name="jmeter.timer.deviation" value="${jmeter.timer.deviation}"/>
+			<property name="jmeter.timer.offset" value="${jmeter.timer.offset}"/>
+			<property name="jmeter.batch.size" value="${jmeter.batch.size}"/>
+			<property name="jmeter.batch.width" value="${jmeter.batch.width}"/>
 			<property name="jmeter.host" value="${jmeter.host}"/>
 			<property name="jmeter.work.dir" value="${jmeter.work.dir}"/>
 		</jmeter>
