@@ -1,7 +1,11 @@
 jmeter.work.dir=/Development/AMEE/amee/jmeter/batch
 jmeter.install.dir=/Development/jakarta-jmeter-2.3.2
+jmeter.host=local.stage.co2.dgen.net
 jmeter.testplan=batch.jmx
 jmeter.threads=1
 jmeter.loops=1
 jmeter.rampup=1
-jmeter.host=local.stage.co2.dgen.net
+jmeter.timer.deviation=100
+jmeter.timer.offset=300
+jmeter.batch.size=small
+jmeter.batch.width=thin
