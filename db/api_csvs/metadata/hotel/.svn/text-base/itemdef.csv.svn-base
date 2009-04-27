@@ -1,5 +1,5 @@
 name,Hotel Metadata,,,,,,,
-algFile,perMonth.js,,,,,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
 Type,type,TEXT,TRUE,TRUE,,,,
 Refrigerant volume,refrigerantVolume,DECIMAL,FALSE,FALSE,,,,

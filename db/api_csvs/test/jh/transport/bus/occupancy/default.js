@@ -1,1 +1,0 @@
-accountedPassengers*massCO2perFuelVolume*distance/(occupancy*distancePerFuelVolume)

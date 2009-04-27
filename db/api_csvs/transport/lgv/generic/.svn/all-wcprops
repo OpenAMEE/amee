@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/!svn/ver/2852/internal/api_csvs/transport/lgv/generic
+/!svn/ver/3062/internal/api_csvs/transport/lgv/generic
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/3062/internal/api_csvs/transport/lgv/generic/default.js
 END
 data.csv
 K 25
@@ -13,19 +19,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/!svn/ver/2649/internal/api_csvs/transport/lgv/generic/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 66
-/!svn/ver/2649/internal/api_csvs/transport/lgv/generic/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 69
-/!svn/ver/2649/internal/api_csvs/transport/lgv/generic/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/transport/lgv/generic/itemdef.csv
 END
 README.txt
 K 25

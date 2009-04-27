@@ -1,5 +1,5 @@
 name,Mean Internal Temperature,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 LivingAreaMeanInternalTemperature,livingareameaninternaltemperature,DECIMAL,FALSE,FALSE
 TemperatureAdjustment,temperatureadjustment,DECIMAL,FALSE,FALSE

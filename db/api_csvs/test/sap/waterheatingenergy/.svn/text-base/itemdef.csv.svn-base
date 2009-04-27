@@ -1,5 +1,5 @@
 name,Water Heating Energy,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 HotWaterEnergyContent,hotwaterenergycontent,DECIMAL,FALSE,FALSE
 DistributionLoss,distributionloss,DECIMAL,FALSE,FALSE

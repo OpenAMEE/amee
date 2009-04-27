@@ -1,1 +1,0 @@
-mass*distance*massCO2perDistanceMassFreight

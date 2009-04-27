@@ -1,5 +1,5 @@
 name,Heat Loss Parameter,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 ElementsTotalArea,elementstotalarea,DECIMAL,FALSE,FALSE
 FabricHeatLoss,fabricheatloss,DECIMAL,FALSE,FALSE

@@ -1,1 +1,0 @@
-kWhPerMonth*kgCO2PerkWh;

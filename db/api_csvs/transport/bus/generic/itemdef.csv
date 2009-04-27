@@ -1,5 +1,5 @@
 name,Bus Generic
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Country,country,TEXT,false,false
 Distance Km Per Month,distanceKmPerMonth,DECIMAL,false,false

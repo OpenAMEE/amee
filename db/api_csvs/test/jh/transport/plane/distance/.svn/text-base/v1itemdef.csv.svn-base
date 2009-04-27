@@ -1,7 +1,0 @@
-Name,planeDistance
-algFile,algorithm.js
-name,path,type,isDataItemValue,isDrillDown
-Take off and landing,takeOffAndLanding,DECIMAL,false,false
-Cruising,cruising,DECIMAL,false,false
-Distance,distance,DECIMAL,false,false
-Passengers,passengers,DECIMAL,false,false

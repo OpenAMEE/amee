@@ -1,15 +1,15 @@
 8
 
 dir
-2992
+3066
 http://svn.amee.com/internal/api_csvs/home/energy/uk/reductions
 http://svn.amee.com
 
 
 
-2009-03-04T21:57:55.688833Z
-2773
-david
+2009-04-27T11:33:38.571031Z
+3062
+james.hetherington
 
 
 svn:special svn:externals svn:needs-lock
@@ -25,6 +25,19 @@ svn:special svn:externals svn:needs-lock
 
 
 b293a2d2-da53-4cb3-b1bf-c591e3edcd7a
+
+default.js
+file
+
+
+
+
+2009-04-27T17:57:39.000000Z
+2c31e2dd284213d3326a573f92397120
+2009-04-27T11:33:38.571031Z
+3062
+james.hetherington
+has-props
 
 data.csv
 file
@@ -45,34 +58,10 @@ file
 
 
 
-2009-04-20T11:03:00.000000Z
-efb90a3a9b4412c1457546fcf5347f7e
-2009-01-28T16:33:33.732682Z
-2445
-andrew
-
-perMonth.js
-file
-
-
-
-
-2009-04-20T11:03:00.000000Z
-a7150d4aeb4d0d889621bfd6bf72c670
-2009-01-28T16:33:33.732682Z
-2445
-andrew
-
-v2Algorithm.js
-file
-
-
-
-
-2009-04-20T11:03:00.000000Z
-2c31e2dd284213d3326a573f92397120
-2009-02-04T14:03:00.027226Z
-2523
+2009-04-27T17:57:39.000000Z
+64d6bb8946e37941b3fc054bec52a3ae
+2009-04-27T11:33:38.571031Z
+3062
 james.hetherington
 
 perMonth.js.migrate

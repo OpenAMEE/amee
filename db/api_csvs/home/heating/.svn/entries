@@ -1,15 +1,15 @@
 8
 
 dir
-2992
+3066
 http://svn.amee.com/internal/api_csvs/home/heating
 http://svn.amee.com
 
 
 
-2009-04-15T14:03:31.347622Z
-2973
-andrew
+2009-04-27T11:33:38.571031Z
+3062
+james.hetherington
 
 
 svn:special svn:externals svn:needs-lock
@@ -42,6 +42,19 @@ file
 aleks
 has-props
 
+default.js
+file
+
+
+
+
+2009-04-27T17:57:39.000000Z
+bdec50ccf82e7b97ed9b19b34b6537ef
+2009-04-27T11:33:38.571031Z
+3062
+james.hetherington
+has-props
+
 data.csv
 file
 
@@ -67,34 +80,10 @@ file
 
 
 
-2009-04-20T11:03:00.000000Z
-1568574826c9a5f6dc4968bab955b045
-2009-03-08T22:37:49.882580Z
-2795
-andrew
-
-perMonth.js
-file
-
-
-
-
-2009-04-20T11:03:00.000000Z
-b4e6250f19eb843b20696a4ebcd2c441
-2009-03-08T22:37:49.882580Z
-2795
-andrew
-
-v2Algorithm.js
-file
-
-
-
-
-2009-04-20T11:03:00.000000Z
-bdec50ccf82e7b97ed9b19b34b6537ef
-2009-02-11T15:06:12.125777Z
-2568
+2009-04-27T17:57:39.000000Z
+829c5cdba591ea1ca03532867e71ceac
+2009-04-27T11:33:38.571031Z
+3062
 james.hetherington
 
 spaceheat_consump2001.pdf

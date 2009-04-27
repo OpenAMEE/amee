@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 54
-/!svn/ver/2330/internal/api_csvs/test/sap/chssaprating
+/!svn/ver/3062/internal/api_csvs/test/sap/chssaprating
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/3062/internal/api_csvs/test/sap/chssaprating/default.js
 END
 data.csv
 K 25
@@ -13,11 +19,5 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/!svn/ver/2330/internal/api_csvs/test/sap/chssaprating/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 66
-/!svn/ver/2330/internal/api_csvs/test/sap/chssaprating/perMonth.js
+/!svn/ver/3062/internal/api_csvs/test/sap/chssaprating/itemdef.csv
 END

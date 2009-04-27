@@ -1,14 +1,14 @@
 8
 
 dir
-2992
+3066
 http://svn.amee.com/internal/api_csvs/test/jh/ameem/teleport
 http://svn.amee.com
 
 
 
-2009-03-30T12:02:02.058716Z
-2938
+2009-04-27T11:33:38.571031Z
+3062
 james.hetherington
 has-props
 
@@ -60,18 +60,6 @@ file
 7f8a14c86fe75e4c55c2460ba265e741
 2009-03-30T12:02:02.058716Z
 2938
-james.hetherington
-
-perMonth.js
-file
-
-
-
-
-2009-04-20T11:02:55.000000Z
-b866a1d1548dd87a4c898bce04a9fbc3
-2009-03-05T16:25:47.006860Z
-2784
 james.hetherington
 
 v1itemdef.csv

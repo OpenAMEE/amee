@@ -1,5 +1,5 @@
 name,Internal Gains,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 LightAppliancesMetabolic,lightappliancesmetabolic,DECIMAL,FALSE,FALSE
 LowEnergyLightingReduction,lowenergylightingreduction,DECIMAL,FALSE,FALSE

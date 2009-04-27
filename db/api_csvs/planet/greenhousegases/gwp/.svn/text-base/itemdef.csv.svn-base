@@ -1,8 +1,8 @@
-name,Global Warming Potentials,,,,,,
-algFile,perMonth.js,,,,,,
-name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default choices
-Gas,gas,TEXT,TRUE,TRUE,,,
-Name,name,TEXT,TRUE,FALSE,,,
-Global Warming Potential,GWP,DECIMAL,TRUE,FALSE,,,
-Emission Rate,emissionRate,DECIMAL,FALSE,FALSE,kg,year,
-Source,source,TEXT,TRUE,FALSE,,,
+name,Global Warming Potentials
+algFile,default.js
+name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
+Emission Rate,emissionRate,DECIMAL,false,false,kg,year,,
+Gas,gas,TEXT,true,true,,,,
+Global Warming Potential,GWP,DECIMAL,true,false,,,,
+Name,name,TEXT,true,false,,,,
+Source,source,TEXT,true,false,,,,

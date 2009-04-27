@@ -1,5 +1,5 @@
 name,ActOnCO2 Action,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Type,type,TEXT,TRUE,TRUE
 Section,section,TEXT,TRUE,FALSE

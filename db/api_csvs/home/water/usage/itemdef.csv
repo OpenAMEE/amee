@@ -1,5 +1,5 @@
 name,Water Usage
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 litres per use,litresPerUse,DECIMAL,true,false
 litres per minute,litresPerMinute,DECIMAL,true,false

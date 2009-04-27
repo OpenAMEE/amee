@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 55
-/!svn/ver/2938/internal/api_csvs/test/jh/ameem/teleport
+/!svn/ver/3062/internal/api_csvs/test/jh/ameem/teleport
 END
 default.js
 K 25
@@ -20,12 +20,6 @@ K 25
 svn:wc:ra_dav:version-url
 V 67
 /!svn/ver/2938/internal/api_csvs/test/jh/ameem/teleport/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 67
-/!svn/ver/2784/internal/api_csvs/test/jh/ameem/teleport/perMonth.js
 END
 v1itemdef.csv
 K 25

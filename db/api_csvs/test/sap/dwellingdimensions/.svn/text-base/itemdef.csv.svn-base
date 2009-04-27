@@ -1,5 +1,5 @@
 name,Dwelling Dimensions,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Area,area,DECIMAL,FALSE,FALSE
 Height,height,DECIMAL,FALSE,FALSE

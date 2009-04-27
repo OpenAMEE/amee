@@ -1,13 +1,19 @@
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/!svn/ver/2793/internal/api_csvs/test/andrew/actonco2actions
+/!svn/ver/3062/internal/api_csvs/test/andrew/actonco2actions
 END
 example_links_utf8.txt
 K 25
 svn:wc:ra_dav:version-url
 V 83
 /!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/example_links_utf8.txt
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/3062/internal/api_csvs/test/andrew/actonco2actions/default.js
 END
 data.csv
 K 25
@@ -55,13 +61,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 72
-/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 72
-/!svn/ver/2626/internal/api_csvs/test/andrew/actonco2actions/perMonth.js
+/!svn/ver/3062/internal/api_csvs/test/andrew/actonco2actions/itemdef.csv
 END
 README.txt
 K 25

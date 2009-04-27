@@ -1,5 +1,5 @@
 name,Energy Quantity
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown,default,choices
 Green tariff,greenTariff,TEXT,false,false
 Includes Heating,includesHeating,TEXT,false,false,false,true=true,false=false

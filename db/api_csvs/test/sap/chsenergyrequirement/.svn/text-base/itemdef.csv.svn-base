@@ -1,5 +1,5 @@
 name,CHS Energy Requirement,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 OverallEfficiency,overallefficiency,DECIMAL,FALSE,FALSE
 CHPUnitHeatFraction,chpunitheatfraction,DECIMAL,FALSE,FALSE

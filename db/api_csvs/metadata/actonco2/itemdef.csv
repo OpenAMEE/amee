@@ -1,5 +1,5 @@
 name,ActOnCO2 Metadata
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Real time display,realTimeDisplay,TEXT,false,false
 Home ownership,homeOwnership,TEXT,false,false

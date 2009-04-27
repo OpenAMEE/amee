@@ -1,5 +1,5 @@
 name,Car Specific US,,,,
-algFile,perMonth.js,,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown,default
 class,class,TEXT,TRUE,FALSE,
 manufacturer,manufacturer,TEXT,TRUE,TRUE,

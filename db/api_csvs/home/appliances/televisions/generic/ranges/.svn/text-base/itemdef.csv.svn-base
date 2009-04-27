@@ -1,5 +1,5 @@
 name,Televisions Generic Ranges,,,,,,,
-algFile,perMonth.js,,,,,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
 Comment,comment,TEXT,FALSE,FALSE,,,,
 Hours Per Month,hoursPerMonth,DECIMAL,FALSE,FALSE,,month,,

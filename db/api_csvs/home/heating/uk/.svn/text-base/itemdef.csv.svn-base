@@ -1,5 +1,5 @@
 name,Heating UK,,,,,,,,,,,,,
-algFile,perMonth.js,,,,,,,,,,,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices,,,,,,
 Age,age,TEXT,FALSE,FALSE,,,1930-1995,pre 1930,1930-1995,post 1995,,,,
 Home type,homeType,TEXT,TRUE,TRUE,,,,,,,,,,

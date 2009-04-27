@@ -1,5 +1,5 @@
 name,Sap Rating,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 EnergyCostDeflator,EnergyCostDeflator,DECIMAL,FALSE,FALSE
 EnergyCostFactor,EnergyCostFactor,DECIMAL,FALSE,FALSE

@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 43
-/!svn/ver/2983/internal/api_csvs/home/waste
+/!svn/ver/3062/internal/api_csvs/home/waste
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/3062/internal/api_csvs/home/waste/default.js
 END
 data.csv
 K 25
@@ -13,19 +19,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 55
-/!svn/ver/2983/internal/api_csvs/home/waste/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 55
-/!svn/ver/2445/internal/api_csvs/home/waste/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 58
-/!svn/ver/2631/internal/api_csvs/home/waste/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/home/waste/itemdef.csv
 END
 perMonth.js.migrate
 K 25

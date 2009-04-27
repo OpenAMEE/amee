@@ -1,5 +1,5 @@
 name,Transport metadata
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Air con usage,airConUsage,TEXT,false,false
 Car share,carShare,TEXT,false,false

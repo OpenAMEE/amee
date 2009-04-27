@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/!svn/ver/2689/internal/api_csvs/transport/car/specific/us
+/!svn/ver/3062/internal/api_csvs/transport/car/specific/us
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/3062/internal/api_csvs/transport/car/specific/us/default.js
 END
 data.csv
 K 25
@@ -13,19 +19,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 70
-/!svn/ver/2376/internal/api_csvs/transport/car/specific/us/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 70
-/!svn/ver/2376/internal/api_csvs/transport/car/specific/us/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 73
-/!svn/ver/2689/internal/api_csvs/transport/car/specific/us/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/transport/car/specific/us/itemdef.csv
 END
 perMonth.js.migrate
 K 25

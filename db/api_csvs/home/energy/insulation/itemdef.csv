@@ -1,5 +1,5 @@
 name,Insulation
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Description,description,TEXT,false,false
 Source,source,TEXT,true,false

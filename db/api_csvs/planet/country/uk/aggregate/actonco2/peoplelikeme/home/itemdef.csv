@@ -1,5 +1,5 @@
 name,People Like Me Home
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Age,age,TEXT,true,true
 Number of bedrooms,numberOfBedrooms,TEXT,true,true

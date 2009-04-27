@@ -1,5 +1,5 @@
 name,Cooking
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Number Of People,numberOfPeople,INTEGER,true,true
 Fuel,fuel,TEXT,true,true

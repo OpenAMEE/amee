@@ -1,5 +1,5 @@
 name,Taxi Generic Per Passenger,,,,,,,
-algFile,perMonth.js,,,,,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
 Country,country,TEXT,false,false,,,,
 Distance Km Per Month,distanceKmPerMonth,DECIMAL,false,false,,,,
