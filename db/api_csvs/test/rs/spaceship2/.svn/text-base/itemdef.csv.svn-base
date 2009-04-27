@@ -1,0 +1,8 @@
+name,Spaceship
+algFile,default.js
+name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
+kgCO2 Per Passenger Journey,kgCO2PerPassengerJourney,DECIMAL,true,false,,,,
+Number of Passengers,numberOfPassengers,DECIMAL,false,false,,,,
+Size,size,TEXT,true,true,,,,
+Source,source,TEXT,true,false,,,,
+Type,type,TEXT,true,true,,,,

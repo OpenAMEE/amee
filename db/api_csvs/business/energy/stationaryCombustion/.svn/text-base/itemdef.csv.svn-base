@@ -1,0 +1,16 @@
+name,stationaryCombustion
+algFile,default.js
+name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
+Context,context,TEXT,true,true,,,,
+Density,density,DECIMAL,true,false,kg,m^3,,
+EF LHV NRG CH4,EFLHVNRGCH4,DECIMAL,true,false,kg,TJ,,
+EF LHV NRG CO2,EFLHVNRGCO2,DECIMAL,true,false,,,,
+EF LHV NRG N2O,EFLHVNRGN2O,DECIMAL,true,false,,,,
+Energy used,NRG,DECIMAL,false,false,TJ,,,
+Fuel,fuel,TEXT,true,true,,,,
+HHV Conversion,HHVConversion,DECIMAL,true,false,,,,
+LHV,LHV,DECIMAL,true,false,TJ,Gg,,
+Mass used,mass,DECIMAL,false,false,Gg,,,
+Source,source,TEXT,true,false,,,,
+Use HHV,useHHV,TEXT,false,false,,,false,true,false
+Volume used,volume,DECIMAL,false,false,Mm^3,,,

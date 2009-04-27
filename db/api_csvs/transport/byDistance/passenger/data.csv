@@ -1,0 +1,51 @@
+vehicle,typeAndContext,massCO2perPassengerDistance,units,source
+car,US 1997 average,0.14477777777778,DUMMY,GHGP - see wiki
+other 2 axle vehicle,US 1997 average,0.18094444444444,DUMMY,GHGP - see wiki
+car,EU 1997 average,0.12066666666667,DUMMY,GHGP - see wiki
+car,US 1990 average,0.15411111111111,DUMMY,GHGP - see wiki
+other 2 axle vehicle,US 1990 average,0.19333333333333,DUMMY,GHGP - see wiki
+car,EU 1990 average,0.12838888888889,DUMMY,GHGP - see wiki
+car,small hybrid,0.055611111111111,DUMMY,GHGP - see wiki
+car,small - highway,0.097277777777778,DUMMY,GHGP - see wiki
+car,small - city,0.11972222222222,DUMMY,GHGP - see wiki
+car,small - DEFRA 2005,0.16,DUMMY,GHGP - see wiki
+car,medium - highway,0.10377777777778,DUMMY,GHGP - see wiki
+car,medium - city,0.1415,DUMMY,GHGP - see wiki
+car,medium - DEFRA 2005,0.19,DUMMY,GHGP - see wiki
+car,large - highway,0.1245,DUMMY,GHGP - see wiki
+car,large - city,0.17294444444444,DUMMY,GHGP - see wiki
+car,large - DEFRA 2005,0.22,DUMMY,GHGP - see wiki
+car,station wagon (estate) - highway,0.11527777777778,DUMMY,GHGP - see wiki
+car,station wagon (estate) - city,0.15561111111111,DUMMY,GHGP - see wiki
+van,mini - highway,0.12972222222222,DUMMY,GHGP - see wiki
+van,mini - city,0.17294444444444,DUMMY,GHGP - see wiki
+van,large - highway,0.17294444444444,DUMMY,GHGP - see wiki
+van,large - city,0.22233333333333,DUMMY,GHGP - see wiki
+truck,medium - pickup - highway,0.1415,DUMMY,GHGP - see wiki
+truck,medium - pickup - city,0.18311111111111,DUMMY,GHGP - see wiki
+truck,large - pickup - highway,0.17294444444444,DUMMY,GHGP - see wiki
+truck,large - pickup - city,0.2075,DUMMY,GHGP - see wiki
+car,LPG,0.14777777777778,DUMMY,GHGP - see wiki
+car,diesel - EPA,0.12944444444444,DUMMY,GHGP - see wiki
+car,diesel - small (DEFRA),0.16,DUMMY,GHGP - see wiki
+car,diesel - large (DEFRA),0.19,DUMMY,GHGP - see wiki
+truck,light - gas/petrol,0.22222222222222,DUMMY,GHGP - see wiki
+truck,heavy - gas/petrol,0.56666666666667,DUMMY,GHGP - see wiki
+truck,light - diesel,0.18333333333333,DUMMY,GHGP - see wiki
+truck,heavy - diesel,0.56111111111111,DUMMY,GHGP - see wiki
+motorcycle,light,0.051888888888889,DUMMY,GHGP - see wiki
+motorcycle,heavy,0.12166666666667,DUMMY,GHGP - see wiki
+bus,diesel - long distance,0.0485,DUMMY,GHGP - see wiki
+bus,diesel - urban,0.1862,DUMMY,GHGP - see wiki
+bus,CNG - urban,0.14,DUMMY,GHGP - see wiki
+train,diesel,0.1068,DUMMY,GHGP - see wiki
+train,electric,0.2136,DUMMY,GHGP - see wiki
+train,coal,0.1391,DUMMY,GHGP - see wiki
+train,UK,0.06,DUMMY,GHGP - see wiki
+train,Amtrak,0.1186,DUMMY,GHGP - see wiki
+train,US Transit,0.0997,DUMMY,GHGP - see wiki
+train,US Commuter,0.1025,DUMMY,GHGP - see wiki
+train,Canada (VIA Rail),0.1033,DUMMY,GHGP - see wiki
+plane,short haul,0.18,DUMMY,GHGP - see wiki
+plane,medium haul,0.126,DUMMY,GHGP - see wiki
+plane,long haul,0.11,DUMMY,GHGP - see wiki

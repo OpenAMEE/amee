@@ -1,0 +1,9 @@
+name,GHGElectricity
+algFile,default.js
+name,path,type,isDataItemValue,isDrillDown
+Country,country,TEXT,true,true
+Mass CO2 per Energy,massCO2PerEnergy,DECIMAL,true,false
+Energy per Time,energyPerTime,DECIMAL,false,false
+Total area, totalArea,DECIMAL,false,false
+Responsible area,responsibleArea,DECIMAL,false,false
+Source,source,TEXT,true,false

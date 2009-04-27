@@ -1,0 +1,15 @@
+name,HFC-23 emissions from HCFC-22 production; for use when plant-level data on fluorine and carbon balance efficiencies are available, but HCFC-22 gas stream methodology is not possible
+algFile,default.js
+name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
+Type,type,TEXT,true,true,,,,
+Amount of HCFC-22 Produced,quantityHCFC22,DECIMAL,false,false,kg,year,,
+Carbon Balance Efficiency (%),carbonBalEff,DECIMAL,false,false,,,,
+Carbon Content Factor,carbonContFact,DECIMAL,false,false,,,,
+Default Carbon Content Factor,defCarbonContFact,DECIMAL,true,false,,,,
+Fluorine Balance Efficiency (%),fluorine,BalEff,DECIMAL,false,false,,,,
+Fluorine Content Factor,fluorineContFact,DECIMAL,false,false,,,,
+Default Fluorine Content Factor,defFluorineContFact,DECIMAL,true,false,,,,
+Loss of HCFC-22 Production Efficiency due to HFC-23 Production,lossHCFC22,DECIMAL,false,false,,,,
+Default Loss of HCFC-22 Production Efficiency due to HFC-23 Production,defLossHCFC22,DECIMAL,true,false,,,,
+Amount of Time HFC-23 is Released to Atmosphere Untreated,timeHFC23,DECIMAL,false,false,,,,
+Source,source,TEXT,true,false,,,,

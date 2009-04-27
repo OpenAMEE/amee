@@ -1,0 +1,7 @@
+type,size,kgCO2PerPassengerJourney,units,source
+space,one way,2.0,kgCO2/pass.journey,becca
+space,return,3.0,kgCO2/pass.journey,becca
+moon,one way,4.0,kgC02/pass.journey,becca
+moon,return,5.0,kgCO2/pass.journey,becca
+mars,one way,6.0,kgCO2/pass.journey,becca
+mars,return,7.0,kgCO2/pass.journey,becca
