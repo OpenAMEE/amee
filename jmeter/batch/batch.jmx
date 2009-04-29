@@ -153,80 +153,20 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Small And Thin" enabled="true">
-            <stringProp name="IfController.condition">(&quot;${__property(jmeter.batch.size)}&quot; == &quot;small&quot;) &amp;&amp; (&quot;${__property(jmeter.batch.width)}&quot; == &quot;thin&quot;) </stringProp>
-            <stringProp name="IfController.evaluateAll">false</stringProp>
-          </IfController>
-          <hashTree>
-            <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="Create Profile Items" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="SoapSampler.URL_DATA">http://${__property(jmeter.host)}/profiles/${ProfileUID}</stringProp>
-              <stringProp name="HTTPSamper.xml_data"></stringProp>
-              <stringProp name="SoapSampler.xml_data_file">${__property(jmeter.work.dir)}/small-and-thin.xml</stringProp>
-              <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
-              <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
-              <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
-            </SoapSampler>
-            <hashTree/>
-          </hashTree>
-          <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Small And Fat" enabled="true">
-            <stringProp name="IfController.condition">(&quot;${__property(jmeter.batch.size)}&quot; == &quot;small&quot;) &amp;&amp; (&quot;${__property(jmeter.batch.width)}&quot; == &quot;fat&quot;) </stringProp>
-            <stringProp name="IfController.evaluateAll">false</stringProp>
-          </IfController>
-          <hashTree>
-            <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="Create Profile Items" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="SoapSampler.URL_DATA">http://${__property(jmeter.host)}/profiles/${ProfileUID}</stringProp>
-              <stringProp name="HTTPSamper.xml_data"></stringProp>
-              <stringProp name="SoapSampler.xml_data_file">${__property(jmeter.work.dir)}/small-and-fat.xml</stringProp>
-              <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
-              <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
-              <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
-            </SoapSampler>
-            <hashTree/>
-          </hashTree>
-          <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Medium And Thin" enabled="true">
-            <stringProp name="IfController.condition">(&quot;${__property(jmeter.batch.size)}&quot; == &quot;medium&quot;) &amp;&amp; (&quot;${__property(jmeter.batch.width)}&quot; == &quot;thin&quot;) </stringProp>
-            <stringProp name="IfController.evaluateAll">false</stringProp>
-          </IfController>
-          <hashTree>
-            <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="Create Profile Items" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="SoapSampler.URL_DATA">http://${__property(jmeter.host)}/profiles/${ProfileUID}</stringProp>
-              <stringProp name="HTTPSamper.xml_data"></stringProp>
-              <stringProp name="SoapSampler.xml_data_file">${__property(jmeter.work.dir)}/medium-and-thin.xml</stringProp>
-              <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
-              <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
-              <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
-            </SoapSampler>
-            <hashTree/>
-          </hashTree>
-          <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Medium And Fat" enabled="true">
-            <stringProp name="IfController.condition">(&quot;${__property(jmeter.batch.size)}&quot; == &quot;medium&quot;) &amp;&amp; (&quot;${__property(jmeter.batch.width)}&quot; == &quot;fat&quot;) </stringProp>
-            <stringProp name="IfController.evaluateAll">false</stringProp>
-          </IfController>
-          <hashTree>
-            <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="Create Profile Items" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="SoapSampler.URL_DATA">http://${__property(jmeter.host)}/profiles/${ProfileUID}</stringProp>
-              <stringProp name="HTTPSamper.xml_data"></stringProp>
-              <stringProp name="SoapSampler.xml_data_file">${__property(jmeter.work.dir)}/medium-and-fat.xml</stringProp>
-              <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
-              <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
-              <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
-            </SoapSampler>
-            <hashTree/>
-          </hashTree>
+          <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="Create Profile Items" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="SoapSampler.URL_DATA">http://${__property(jmeter.host)}/profiles/${ProfileUID}</stringProp>
+            <stringProp name="HTTPSamper.xml_data"></stringProp>
+            <stringProp name="SoapSampler.xml_data_file">${__property(jmeter.work.dir)}/${__property(jmeter.batch.size)}-and-${__property(jmeter.batch.width)}.xml</stringProp>
+            <stringProp name="SoapSampler.SOAP_ACTION"></stringProp>
+            <stringProp name="SoapSampler.SEND_SOAP_ACTION">true</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">false</boolProp>
+          </SoapSampler>
+          <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
