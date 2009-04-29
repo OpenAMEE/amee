@@ -37,6 +37,7 @@ public class DataConstants {
     public final static String VIEW_ITEM_VALUE_DEFINITIONS = "itemValueDefinitions.ftl";
     public final static String VIEW_ITEM_VALUE_DEFINITION = "itemValueDefinition.ftl";
     public final static String VIEW_DATA_ITEM = "dataItem.ftl";
+    public final static String VIEW_DATA_ITEM_LOOKUP = "dataItemLookup.ftl";
     public final static String VIEW_CARBON_VALUE = "itemValue.ftl";
     public final static String VIEW_CARBON_TREE_NODE = "carbonDataNode.ftl";
     public final static String VIEW_ENVIRONMENT_SITES = "environmentSites.ftl";

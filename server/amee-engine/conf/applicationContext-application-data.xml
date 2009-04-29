@@ -77,6 +77,11 @@
                         <lookup-method name="createResource" bean="dataItemValueResource"/>
                     </bean>
                 </entry>
+                <entry key="/dataItemLookup">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="dataItemLookupResource"/>
+                    </bean>
+                </entry>
                 <entry key="/actions">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="dataActionsResource"/>

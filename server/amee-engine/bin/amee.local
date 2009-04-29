@@ -31,7 +31,7 @@ export RUN_AS_USER=root
 
 # Copy libs
 rm $LIB_HOME/*
-find $DEV_HOME -name *.jar -exec cp {} $LIB_HOME \;
+find $DEV_HOME/amee -name *.jar -exec cp {} $LIB_HOME \;
 
 # Run AMEE
 source $CURRENT_HOME/bin/amee

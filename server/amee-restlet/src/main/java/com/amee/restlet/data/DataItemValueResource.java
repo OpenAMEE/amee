@@ -53,7 +53,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        setDataItem(request.getAttributes().get("itemPath").toString());
+        setDataItemByPathOrUid(request.getAttributes().get("itemPath").toString());
         setDataItemValue(request.getAttributes().get("valuePath").toString());
     }
 

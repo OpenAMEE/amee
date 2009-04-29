@@ -77,7 +77,8 @@ public class DataFilter extends RewriteFilter {
     }
 
     protected boolean matchesReservedPrefixes(String segment) {
-        return segment.equalsIgnoreCase("actions");
+        return segment.equalsIgnoreCase("actions") ||
+                segment.equalsIgnoreCase("dataItemLookup");
     }
 
     protected String handleSuffix(List<String> segments) {

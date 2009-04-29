@@ -19,9 +19,9 @@
  */
 package com.amee.domain.path;
 
+import com.amee.core.APIUtils;
 import com.amee.core.ObjectType;
 import com.amee.domain.APIObject;
-import com.amee.core.APIUtils;
 import com.amee.domain.UidGen;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -121,6 +121,10 @@ public class PathItem implements APIObject, Serializable, Comparable {
         children.add(child);
         child.setParent(this);
         getPathItemGroup().add(child);
+    }
+
+    public PathItem findLastPathItem(String path, boolean forProfile) {
+        return findLastPathItem(new ArrayList<String>(Arrays.asList(path.split("/"))), forProfile);
     }
 
     // Used by PathItemGroup.

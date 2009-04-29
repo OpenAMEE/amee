@@ -1,4 +1,4 @@
-<#include 'dataCommon.ftl'>
+<#include '/dataCommon.ftl'>
 <#include '/includes/before_content.ftl'>
 <#include '/includes/furniture.ftl'>
 
