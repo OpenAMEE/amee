@@ -1,5 +1,5 @@
 name,IHS Energy Requirement,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 SpaceHeatingFractionSecondarySystem,spaceheatingfractionsecondarysystem,DECIMAL,FALSE,FALSE
 SpaceHeatingEfficiencyMainHeatingSystem,spaceheatingefficiencymainheatingsystem,DECIMAL,FALSE,FALSE

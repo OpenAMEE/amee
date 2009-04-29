@@ -1,5 +1,5 @@
 name,Electricity
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown,default,choices
 Country,country,TEXT,true,true
 kgCO2 Per KWh,kgCO2PerKWh,DECIMAL,true,false

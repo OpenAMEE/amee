@@ -1,5 +1,5 @@
 name,Solar Gains Totals,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 TotalSolarGains,totalsolargains,DECIMAL,FALSE,FALSE
 TotalGains,totalgains,DECIMAL,FALSE,FALSE

@@ -1,1 +1,0 @@
-litresPerMonth * kgCO2PerLitre;

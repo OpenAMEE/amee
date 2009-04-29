@@ -1,5 +1,5 @@
 name,Renewable
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Description,description,TEXT,false,false
 kWh generated per month,kWhGeneratedPerMonth,DECIMAL,false,false

@@ -1,5 +1,5 @@
 name,Plane Generic
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown,default,choices
 Distance Km Per Year,distanceKmPerYear,DECIMAL,false,false
 IATA code 1,IATACode1,TEXT,false,false

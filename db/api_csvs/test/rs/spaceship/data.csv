@@ -1,0 +1,9 @@
+type,size,kgCO2PerPassengerJourney,units,source
+space,one way,5430.0000,kgCO2/pass.journey,Becca
+space,return,9025.0000,kgCO2/pass.journey,Becca
+moon,one way,19911.0000,kgC02/pass.journey,Becca
+moon,return,33822.0000,kgCO2/pass.journey,Becca
+mars,one way,49020.0000,kgCO2/pass.journey,Becca
+mars,return,81662.0000,kgCO2/pass.journey,Becca
+
+

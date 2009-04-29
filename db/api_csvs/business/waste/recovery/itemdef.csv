@@ -1,0 +1,10 @@
+name,wasteRecovery
+algFile,default.js
+name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
+Collected,collected,DECIMAL,false,false,m^3,,,
+Collection Efficiency,collectionEfficiency,DECIMAL,false,false,,,0.75,
+Fraction collected burned,fractionCollectedBurned,DECIMAL,false,false,,,1.0,
+Fraction uncollected oxidising,fractionUncollectedOxidising,DECIMAL,false,false,,,0.1,
+Methane content,methaneContent,DECIMAL,false,false,,,0.5,
+Source,source,TEXT,true,false,,,,
+Type,type,TEXT,true,true,,,,

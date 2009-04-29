@@ -1,5 +1,5 @@
 name,Kitchen Generic
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Age,age,TEXT,true,true
 Comment,comment,TEXT,false,false

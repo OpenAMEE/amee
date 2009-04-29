@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/3027/internal/api_csvs/test/rs/spaceship2
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/3027/internal/api_csvs/test/rs/spaceship2/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/3027/internal/api_csvs/test/rs/spaceship2/itemdef.csv
+END
+alg.js
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/3019/internal/api_csvs/test/rs/spaceship2/alg.js
+END

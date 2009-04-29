@@ -1,17 +1,17 @@
 K 25
 svn:wc:ra_dav:version-url
 V 41
-/!svn/ver/2936/internal/api_csvs/metadata
+/!svn/ver/3062/internal/api_csvs/metadata
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/3062/internal/api_csvs/metadata/default.js
 END
 itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 53
-/!svn/ver/2925/internal/api_csvs/metadata/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 53
-/!svn/ver/2925/internal/api_csvs/metadata/perMonth.js
+/!svn/ver/3062/internal/api_csvs/metadata/itemdef.csv
 END

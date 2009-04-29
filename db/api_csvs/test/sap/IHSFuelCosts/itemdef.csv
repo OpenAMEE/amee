@@ -1,5 +1,5 @@
 name,IHSFuelCosts,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Cost,cost,DECIMAL,FALSE,FALSE
 Price,price,DECIMAL,FALSE,FALSE

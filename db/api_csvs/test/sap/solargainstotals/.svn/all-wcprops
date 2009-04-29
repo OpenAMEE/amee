@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/!svn/ver/2330/internal/api_csvs/test/sap/solargainstotals
+/!svn/ver/3062/internal/api_csvs/test/sap/solargainstotals
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/3062/internal/api_csvs/test/sap/solargainstotals/default.js
 END
 data.csv
 K 25
@@ -13,11 +19,5 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 70
-/!svn/ver/2330/internal/api_csvs/test/sap/solargainstotals/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 70
-/!svn/ver/2330/internal/api_csvs/test/sap/solargainstotals/perMonth.js
+/!svn/ver/3062/internal/api_csvs/test/sap/solargainstotals/itemdef.csv
 END

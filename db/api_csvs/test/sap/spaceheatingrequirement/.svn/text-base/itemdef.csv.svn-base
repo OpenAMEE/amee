@@ -1,5 +1,5 @@
 name,Space Heating Requirement,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 SpaceHeatingRequirement,spaceheatingrequirement,DECIMAL,FALSE,FALSE
 Source,source,TEXT,FALSE,FALSE

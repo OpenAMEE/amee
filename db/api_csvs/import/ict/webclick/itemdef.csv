@@ -1,5 +1,5 @@
 name,Web Click
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 kWhPerClick,kWhPerClick,DECIMAL,true,false
 numberOfClicks,numberOfClicks,DECIMAL,false,false

@@ -1,5 +1,5 @@
 name,Degree Days,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 GainsTemperatureRise,gainstemperaturerise,DECIMAL,FALSE,FALSE
 BaseTemperature,basetemperature,DECIMAL,FALSE,FALSE

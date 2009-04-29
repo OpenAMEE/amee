@@ -1,5 +1,5 @@
 name,Major airports
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Country,country,TEXT,true,true
 Full name,fullName,TEXT,true,false

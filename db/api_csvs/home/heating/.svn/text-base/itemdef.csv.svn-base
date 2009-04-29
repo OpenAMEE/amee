@@ -1,5 +1,5 @@
 name,Heating
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Home Age,homeAge,TEXT,true,true
 Home Dwelling Type,homeDwellingType,TEXT,true,true

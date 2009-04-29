@@ -1,13 +1,19 @@
 K 25
 svn:wc:ra_dav:version-url
 V 45
-/!svn/ver/2973/internal/api_csvs/home/heating
+/!svn/ver/3062/internal/api_csvs/home/heating
 END
 data-old.csv
 K 25
 svn:wc:ra_dav:version-url
 V 58
 /!svn/ver/2201/internal/api_csvs/home/heating/data-old.csv
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/3062/internal/api_csvs/home/heating/default.js
 END
 data.csv
 K 25
@@ -19,19 +25,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 57
-/!svn/ver/2795/internal/api_csvs/home/heating/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 57
-/!svn/ver/2795/internal/api_csvs/home/heating/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 60
-/!svn/ver/2568/internal/api_csvs/home/heating/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/home/heating/itemdef.csv
 END
 spaceheat_consump2001.pdf
 K 25

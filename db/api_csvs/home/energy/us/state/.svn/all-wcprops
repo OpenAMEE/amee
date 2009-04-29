@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 53
-/!svn/ver/2523/internal/api_csvs/home/energy/us/state
+/!svn/ver/3062/internal/api_csvs/home/energy/us/state
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/3062/internal/api_csvs/home/energy/us/state/default.js
 END
 data.csv
 K 25
@@ -13,17 +19,5 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 65
-/!svn/ver/2424/internal/api_csvs/home/energy/us/state/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 65
-/!svn/ver/2424/internal/api_csvs/home/energy/us/state/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 68
-/!svn/ver/2523/internal/api_csvs/home/energy/us/state/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/home/energy/us/state/itemdef.csv
 END

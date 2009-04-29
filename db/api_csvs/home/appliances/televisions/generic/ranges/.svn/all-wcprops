@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 75
-/!svn/ver/2983/internal/api_csvs/home/appliances/televisions/generic/ranges
+/!svn/ver/3062/internal/api_csvs/home/appliances/televisions/generic/ranges
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/3056/internal/api_csvs/home/appliances/televisions/generic/ranges/default.js
 END
 data.csv
 K 25
@@ -13,17 +19,5 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 87
-/!svn/ver/2971/internal/api_csvs/home/appliances/televisions/generic/ranges/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 87
-/!svn/ver/2971/internal/api_csvs/home/appliances/televisions/generic/ranges/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 90
-/!svn/ver/2983/internal/api_csvs/home/appliances/televisions/generic/ranges/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/home/appliances/televisions/generic/ranges/itemdef.csv
 END

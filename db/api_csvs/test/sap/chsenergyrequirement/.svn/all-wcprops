@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/!svn/ver/2330/internal/api_csvs/test/sap/chsenergyrequirement
+/!svn/ver/3062/internal/api_csvs/test/sap/chsenergyrequirement
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/3062/internal/api_csvs/test/sap/chsenergyrequirement/default.js
 END
 data.csv
 K 25
@@ -13,11 +19,5 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 74
-/!svn/ver/2330/internal/api_csvs/test/sap/chsenergyrequirement/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 74
-/!svn/ver/2330/internal/api_csvs/test/sap/chsenergyrequirement/perMonth.js
+/!svn/ver/3062/internal/api_csvs/test/sap/chsenergyrequirement/itemdef.csv
 END

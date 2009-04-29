@@ -1,5 +1,5 @@
 name,Heating UK types
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Fuel,fuel,TEXT,true,true
 Source,source,TEXT,true,false

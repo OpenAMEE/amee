@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 64
-/!svn/ver/2793/internal/api_csvs/home/appliances/kitchen/generic
+/!svn/ver/3062/internal/api_csvs/home/appliances/kitchen/generic
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/3062/internal/api_csvs/home/appliances/kitchen/generic/default.js
 END
 algorithm_manual.txt
 K 25
@@ -13,25 +19,13 @@ data.csv
 K 25
 svn:wc:ra_dav:version-url
 V 73
-/!svn/ver/2793/internal/api_csvs/home/appliances/kitchen/generic/data.csv
+/!svn/ver/3043/internal/api_csvs/home/appliances/kitchen/generic/data.csv
 END
 itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 76
-/!svn/ver/2376/internal/api_csvs/home/appliances/kitchen/generic/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 76
-/!svn/ver/2541/internal/api_csvs/home/appliances/kitchen/generic/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 79
-/!svn/ver/2568/internal/api_csvs/home/appliances/kitchen/generic/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/home/appliances/kitchen/generic/itemdef.csv
 END
 perMonth.js.migrate
 K 25

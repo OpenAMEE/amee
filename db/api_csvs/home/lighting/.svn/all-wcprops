@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 46
-/!svn/ver/2568/internal/api_csvs/home/lighting
+/!svn/ver/3062/internal/api_csvs/home/lighting
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/3062/internal/api_csvs/home/lighting/default.js
 END
 data.csv
 K 25
@@ -13,19 +19,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/!svn/ver/2266/internal/api_csvs/home/lighting/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 58
-/!svn/ver/2266/internal/api_csvs/home/lighting/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 61
-/!svn/ver/2523/internal/api_csvs/home/lighting/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/home/lighting/itemdef.csv
 END
 perMonth.js.migrate
 K 25

@@ -1,5 +1,5 @@
 name,Solar Gains Component,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 AccessFactor,accessfactor,DECIMAL,FALSE,FALSE
 Area,area,DECIMAL,FALSE,FALSE

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/3044/internal/api_csvs/transport/bus/generic/occupancy
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/3044/internal/api_csvs/transport/bus/generic/occupancy/default.js
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/3044/internal/api_csvs/transport/bus/generic/occupancy/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/3044/internal/api_csvs/transport/bus/generic/occupancy/itemdef.csv
+END
+item_spec.rb
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/3044/internal/api_csvs/transport/bus/generic/occupancy/item_spec.rb
+END
+v1itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/!svn/ver/3044/internal/api_csvs/transport/bus/generic/occupancy/v1itemdef.csv
+END

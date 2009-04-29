@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/!svn/ver/2568/internal/api_csvs/home/appliances/cooking/hob
+/!svn/ver/3062/internal/api_csvs/home/appliances/cooking/hob
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/3062/internal/api_csvs/home/appliances/cooking/hob/default.js
 END
 data.csv
 K 25
@@ -13,19 +19,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 72
-/!svn/ver/2284/internal/api_csvs/home/appliances/cooking/hob/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 72
-/!svn/ver/2541/internal/api_csvs/home/appliances/cooking/hob/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 75
-/!svn/ver/2568/internal/api_csvs/home/appliances/cooking/hob/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/home/appliances/cooking/hob/itemdef.csv
 END
 perMonth.js.migrate
 K 25

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/3005/internal/api_csvs/transport/byDistance/freight
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/3004/internal/api_csvs/transport/byDistance/freight/default.js
+END
+algorithm.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/3004/internal/api_csvs/transport/byDistance/freight/algorithm.js
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/3004/internal/api_csvs/transport/byDistance/freight/data.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/3005/internal/api_csvs/transport/byDistance/freight/itemdef.csv
+END
+item_spec.rb
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/3004/internal/api_csvs/transport/byDistance/freight/item_spec.rb
+END
+v1itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/3004/internal/api_csvs/transport/byDistance/freight/v1itemdef.csv
+END

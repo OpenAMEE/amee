@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/!svn/ver/2989/internal/api_csvs/home/appliances/computers/generic
+/!svn/ver/3062/internal/api_csvs/home/appliances/computers/generic
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/3062/internal/api_csvs/home/appliances/computers/generic/default.js
 END
 alg.txt
 K 25
@@ -19,19 +25,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 78
-/!svn/ver/2376/internal/api_csvs/home/appliances/computers/generic/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 78
-/!svn/ver/2936/internal/api_csvs/home/appliances/computers/generic/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 81
-/!svn/ver/2989/internal/api_csvs/home/appliances/computers/generic/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/home/appliances/computers/generic/itemdef.csv
 END
 perMonth.js.migrate
 K 25

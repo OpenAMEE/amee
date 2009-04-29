@@ -1,5 +1,5 @@
 name,Oven,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Type,type,TEXT,TRUE,TRUE
 Number of people,numberOfPeople,DECIMAL,FALSE,FALSE

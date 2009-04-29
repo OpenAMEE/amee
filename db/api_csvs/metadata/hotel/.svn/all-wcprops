@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 47
-/!svn/ver/2936/internal/api_csvs/metadata/hotel
+/!svn/ver/3062/internal/api_csvs/metadata/hotel
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/3062/internal/api_csvs/metadata/hotel/default.js
 END
 data.csv
 K 25
@@ -13,11 +19,5 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 59
-/!svn/ver/2936/internal/api_csvs/metadata/hotel/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 59
-/!svn/ver/2852/internal/api_csvs/metadata/hotel/perMonth.js
+/!svn/ver/3062/internal/api_csvs/metadata/hotel/itemdef.csv
 END

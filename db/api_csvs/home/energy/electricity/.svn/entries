@@ -1,15 +1,15 @@
 8
 
 dir
-2992
+3066
 http://svn.amee.com/internal/api_csvs/home/energy/electricity
 http://svn.amee.com
 
 
 
-2009-04-17T01:42:05.233013Z
-2983
-andrew
+2009-04-27T11:33:38.571031Z
+3062
+james.hetherington
 
 
 svn:special svn:externals svn:needs-lock
@@ -25,6 +25,19 @@ svn:special svn:externals svn:needs-lock
 
 
 b293a2d2-da53-4cb3-b1bf-c591e3edcd7a
+
+default.js
+file
+
+
+
+
+2009-04-27T17:57:39.000000Z
+eadbf3a2548c582a79d7678aec480ffe
+2009-04-27T11:33:38.571031Z
+3062
+james.hetherington
+has-props
 
 data.csv
 file
@@ -45,33 +58,9 @@ file
 
 
 
-2009-04-20T11:03:00.000000Z
-5b7c1abd460dd84e709872e6b2b6f8ba
-2009-04-17T01:42:05.233013Z
-2983
-andrew
-
-perMonth.js
-file
-
-
-
-
-2009-04-20T11:03:00.000000Z
-dd9c78d2a74a11482a28fc7b3d1b9a40
-2009-03-08T22:37:49.882580Z
-2795
-andrew
-
-v2Algorithm.js
-file
-
-
-
-
-2009-04-20T11:03:00.000000Z
-eadbf3a2548c582a79d7678aec480ffe
-2009-02-04T14:03:00.027226Z
-2523
+2009-04-27T17:57:39.000000Z
+31d4f48cfcbde160c7f0cd651e139284
+2009-04-27T11:33:38.571031Z
+3062
 james.hetherington
 

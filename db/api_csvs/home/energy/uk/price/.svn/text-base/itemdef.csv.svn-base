@@ -1,5 +1,5 @@
 name,Energy UK Price
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Currency GBP Per Month,currencyGBPPerMonth,DECIMAL,false,false
 Green tariff,greenTariff,TEXT,false,false

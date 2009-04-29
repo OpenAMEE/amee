@@ -1,17 +1,17 @@
 K 25
 svn:wc:ra_dav:version-url
 V 55
-/!svn/ver/2925/internal/api_csvs/transport/taxi/generic
+/!svn/ver/3062/internal/api_csvs/transport/taxi/generic
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/3062/internal/api_csvs/transport/taxi/generic/default.js
 END
 data.csv
 K 25
 svn:wc:ra_dav:version-url
 V 64
 /!svn/ver/2201/internal/api_csvs/transport/taxi/generic/data.csv
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 70
-/!svn/ver/2523/internal/api_csvs/transport/taxi/generic/v2Algorithm.js
 END

@@ -1,0 +1,12 @@
+name,Adipic Acid N2O emissions
+algFile,default.js
+name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
+Abatement Technology,tech,TEXT,true,true,,,,
+Quantity of Adipic Acid,adipicQuantity,DECIMAL,false,false,kg,year,,
+Emissions Factor,emFact,DECIMAL,false,false,kg,kg,,
+Abatement System Utilization Factor,abateFact,DECIMAL,false,false,,,,
+Destruction Factor,destrFact,DECIMAL,false,false,,,,
+Default Abatement Factor,defAbateFact,DECIMAL,true,false,,,,
+Default Destruction Factor,defDestrFact,DECIMAL,true,false,,,,
+Default Emissions Factor,defEmFact,DECIMAL,true,false,,,,
+Source,source,TEXT,true,false,,,,

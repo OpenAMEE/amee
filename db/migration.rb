@@ -351,7 +351,7 @@ def migrate_algo
       if rs.next()
         id = rs.getInt("ID") 
         query = insert.sub(/\{UID\}/, JM::UidGen.getUid())
-        js = File.new(path + "/v2Algorithm.js","r")
+        js = File.new(path + "/default.js","r")
 
         lines = js.readlines() 
         lines.each do |l| 

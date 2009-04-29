@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/!svn/ver/2953/internal/api_csvs/home/heating/uk/renewable
+/!svn/ver/3062/internal/api_csvs/home/heating/uk/renewable
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/3062/internal/api_csvs/home/heating/uk/renewable/default.js
 END
 data.csv
 K 25
@@ -13,11 +19,5 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 70
-/!svn/ver/2953/internal/api_csvs/home/heating/uk/renewable/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 70
-/!svn/ver/2953/internal/api_csvs/home/heating/uk/renewable/perMonth.js
+/!svn/ver/3062/internal/api_csvs/home/heating/uk/renewable/itemdef.csv
 END

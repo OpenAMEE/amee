@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 71
-/!svn/ver/2523/internal/api_csvs/transport/plane/generic/airports/codes
+/!svn/ver/3062/internal/api_csvs/transport/plane/generic/airports/codes
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/!svn/ver/3062/internal/api_csvs/transport/plane/generic/airports/codes/default.js
 END
 data.csv
 K 25
@@ -13,17 +19,5 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 83
-/!svn/ver/2265/internal/api_csvs/transport/plane/generic/airports/codes/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 83
-/!svn/ver/2265/internal/api_csvs/transport/plane/generic/airports/codes/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 86
-/!svn/ver/2523/internal/api_csvs/transport/plane/generic/airports/codes/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/transport/plane/generic/airports/codes/itemdef.csv
 END

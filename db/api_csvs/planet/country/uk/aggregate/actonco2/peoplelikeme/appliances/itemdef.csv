@@ -1,5 +1,5 @@
 name,People Like Me Appliances
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Number of people,numberOfPeople,TEXT,true,true
 CO2,CO2,DECIMAL,true,false

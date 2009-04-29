@@ -1,5 +1,5 @@
 name,Water
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 kgCO2 per litre,kgCO2PerLitre,DECIMAL,true,false
 kWh per litre,kWhPerLitre,DECIMAL,true,false

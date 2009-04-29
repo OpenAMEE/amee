@@ -1,5 +1,5 @@
 name,Car Generic Electric
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
 Country,country,TEXT,false,false,,,,
 Distance,distance,DECIMAL,false,false,km,year,,

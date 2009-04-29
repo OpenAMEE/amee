@@ -1,7 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 70
-/!svn/ver/2989/internal/api_csvs/home/appliances/entertainment/generic
+/!svn/ver/3062/internal/api_csvs/home/appliances/entertainment/generic
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/!svn/ver/3062/internal/api_csvs/home/appliances/entertainment/generic/default.js
 END
 alg.txt
 K 25
@@ -25,19 +31,7 @@ itemdef.csv
 K 25
 svn:wc:ra_dav:version-url
 V 82
-/!svn/ver/2376/internal/api_csvs/home/appliances/entertainment/generic/itemdef.csv
-END
-perMonth.js
-K 25
-svn:wc:ra_dav:version-url
-V 82
-/!svn/ver/2936/internal/api_csvs/home/appliances/entertainment/generic/perMonth.js
-END
-v2Algorithm.js
-K 25
-svn:wc:ra_dav:version-url
-V 85
-/!svn/ver/2989/internal/api_csvs/home/appliances/entertainment/generic/v2Algorithm.js
+/!svn/ver/3062/internal/api_csvs/home/appliances/entertainment/generic/itemdef.csv
 END
 perMonth.js.migrate
 K 25

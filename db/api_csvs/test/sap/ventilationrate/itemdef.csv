@@ -1,5 +1,5 @@
 name,Ventilation Rate,,,
-algFile,perMonth.js,,,
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 ChimneyNumber,chimneynumber,DECIMAL,FALSE,FALSE
 ChimneyVentilationRate,chimneyventilationrate,DECIMAL,FALSE,FALSE

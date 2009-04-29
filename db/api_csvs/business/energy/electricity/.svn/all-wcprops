@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/3060/internal/api_csvs/business/energy/electricity
+END
+default.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/3060/internal/api_csvs/business/energy/electricity/default.js
+END
+Worksheet.xls
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/2998/internal/api_csvs/business/energy/electricity/Worksheet.xls
+END
+data.csv
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/2998/internal/api_csvs/business/energy/electricity/data.csv
+END
+dataGenerate.gk
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/2998/internal/api_csvs/business/energy/electricity/dataGenerate.gk
+END
+Worksheet.csv
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/2998/internal/api_csvs/business/energy/electricity/Worksheet.csv
+END
+dataMerged.csv
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/2998/internal/api_csvs/business/energy/electricity/dataMerged.csv
+END
+itemdef.csv
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/3060/internal/api_csvs/business/energy/electricity/itemdef.csv
+END
+ghgData.csv
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/2998/internal/api_csvs/business/energy/electricity/ghgData.csv
+END
+dataClean.gk
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/2998/internal/api_csvs/business/energy/electricity/dataClean.gk
+END
+dataScript
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/2998/internal/api_csvs/business/energy/electricity/dataScript
+END

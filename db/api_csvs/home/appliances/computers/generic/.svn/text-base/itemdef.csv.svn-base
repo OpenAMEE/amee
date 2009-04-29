@@ -1,5 +1,5 @@
 name,Computers Generic
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Device,device,TEXT,true,true
 KWh Per Year,kWhPerYear,DECIMAL,true,false

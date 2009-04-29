@@ -1,5 +1,5 @@
 name,Car Generic
-algFile,perMonth.js
+algFile,default.js
 name,path,type,isDataItemValue,isDrillDown
 Aircon full,airconFull,BOOLEAN,false,false
 Aircon typical,airconTypical,BOOLEAN,false,false
