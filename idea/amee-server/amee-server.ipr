@@ -262,6 +262,7 @@
       <module fileurl="file://$PROJECT_DIR$/../amee-service.iml" filepath="$PROJECT_DIR$/../amee-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/../db.iml" filepath="$PROJECT_DIR$/../db.iml" />
       <module fileurl="file://$PROJECT_DIR$/../htdocs.iml" filepath="$PROJECT_DIR$/../htdocs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jmeter.iml" filepath="$PROJECT_DIR$/../jmeter.iml" />
       <module fileurl="file://$PROJECT_DIR$/../server.iml" filepath="$PROJECT_DIR$/../server.iml" />
     </modules>
   </component>
