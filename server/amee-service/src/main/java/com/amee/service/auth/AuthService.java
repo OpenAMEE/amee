@@ -1,5 +1,6 @@
 package com.amee.service.auth;
 
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.GroupUser;
 import com.amee.domain.auth.Permission;
@@ -113,7 +114,7 @@ public class AuthService implements Serializable {
                     // swallow
                 }
             } else {
-                    // ignore max auth duration check
+                // ignore max auth duration check
                 maxAuthDurationCheckPassed = true;
             }
             if (!maxAuthDurationCheckPassed) {
@@ -323,9 +324,11 @@ public class AuthService implements Serializable {
                 "SELECT DISTINCT u " +
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
-                        "AND u.uid = :userUid")
+                        "AND u.uid = :userUid " +
+                        "AND u.status = :status")
                 .setParameter("environmentId", site.getEnvironment().getId())
                 .setParameter("userUid", uid)
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.authService")
                 .getResultList();
@@ -344,9 +347,11 @@ public class AuthService implements Serializable {
                 "SELECT DISTINCT u " +
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
-                        "AND u.username = :username")
+                        "AND u.username = :username " +
+                        "AND u.status = :status")
                 .setParameter("environmentId", site.getEnvironment().getId())
                 .setParameter("username", username)
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.authService")
                 .getResultList();
@@ -364,8 +369,10 @@ public class AuthService implements Serializable {
                 "SELECT DISTINCT gu " +
                         "FROM GroupUser gu " +
                         "LEFT JOIN FETCH gu.user u " +
-                        "WHERE u.id = :userId")
+                        "WHERE u.id = :userId " +
+                        "AND u.status = :status")
                 .setParameter("userId", user.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.authService")
                 .getResultList();
