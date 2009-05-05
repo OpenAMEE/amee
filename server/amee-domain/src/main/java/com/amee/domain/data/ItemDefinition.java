@@ -19,13 +19,13 @@
  */
 package com.amee.domain.data;
 
+import com.amee.core.APIUtils;
 import com.amee.core.ObjectType;
 import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.core.APIUtils;
 import com.amee.domain.APIVersion;
+import com.amee.domain.InternalValue;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.InternalValue;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -82,19 +82,11 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     }
 
     public void add(Algorithm algorithm) {
-        getAlgorithms().add(algorithm);
-    }
-
-    public void remove(Algorithm algorithm) {
-        getAlgorithms().remove(algorithm);
+        algorithms.add(algorithm);
     }
 
     public void add(ItemValueDefinition itemValueDefinition) {
-        getItemValueDefinitions().add(itemValueDefinition);
-    }
-
-    public void remove(ItemValueDefinition itemValueDefinition) {
-        getItemValueDefinitions().remove(itemValueDefinition);
+        itemValueDefinitions.add(itemValueDefinition);
     }
 
     @Transient
@@ -188,19 +180,31 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     }
 
     public Set<Algorithm> getAlgorithms() {
-        return algorithms;
+        return getActiveAlgorithms();
     }
 
-    public void setAlgorithms(Set<Algorithm> algorithms) {
-        this.algorithms = algorithms;
+    public Set<Algorithm> getActiveAlgorithms() {
+        Set<Algorithm> activeAlgorithms = new HashSet<Algorithm>();
+        for (Algorithm algorithm : algorithms) {
+            if (algorithm.isActive()) {
+                activeAlgorithms.add(algorithm);
+            }
+        }
+        return activeAlgorithms;
     }
 
     public Set<ItemValueDefinition> getItemValueDefinitions() {
-        return itemValueDefinitions;
+        return getActiveItemValueDefinitions();
     }
 
-    public void setItemValueDefinitions(Set<ItemValueDefinition> itemValueDefinitions) {
-        this.itemValueDefinitions = itemValueDefinitions;
+    public Set<ItemValueDefinition> getActiveItemValueDefinitions() {
+        Set<ItemValueDefinition> activeAlgorithms = new HashSet<ItemValueDefinition>();
+        for (ItemValueDefinition itemValueDefinition : itemValueDefinitions) {
+            if (itemValueDefinition.isActive()) {
+                activeAlgorithms.add(itemValueDefinition);
+            }
+        }
+        return activeAlgorithms;
     }
 
     @Transient
@@ -226,9 +230,9 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
 
     public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values, APIVersion version) {
         for (ItemValueDefinition ivd : getItemValueDefinitions()) {
-            if (ivd.isUsableValue() && ivd.isValidInAPIVersion(version))
+            if (ivd.isUsableValue() && ivd.isValidInAPIVersion(version)) {
                 values.put(ivd, new InternalValue(ivd));
+            }
         }
     }
-
 }

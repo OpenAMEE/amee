@@ -1,7 +1,7 @@
 package com.amee.domain.auth;
 
-import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.core.APIUtils;
+import com.amee.domain.AMEEEnvironmentEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
@@ -36,8 +36,7 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
     @JoinTable(
             name = "GROUP_USER_ROLE",
             joinColumns = {@JoinColumn(name = "GROUP_USER_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "ROLE_ID")}
-    )
+            inverseJoinColumns = {@JoinColumn(name = "ROLE_ID")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OrderBy("name")
     private Set<Role> roles = new HashSet<Role>();
@@ -53,7 +52,7 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public void add(Role role) {
-        getRoles().add(role);
+        roles.add(role);
     }
 
     public String toString() {
@@ -67,12 +66,10 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
         return getUid().compareTo(groupUser.getUid());
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -91,17 +88,14 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
         return obj;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return APIUtils.getIdentityJSONObject(this);
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("GroupUser");
         element.setAttribute("uid", getUid());
@@ -120,17 +114,14 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
         return element;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }
 
-    @Transient
     public void populate(org.dom4j.Element element) {
         setUid(element.attributeValue("uid"));
     }
 
-    @Transient
     public boolean hasRole(String role) {
         if (getRoles() == null) return false;
         for (Role r : getRoles()) {
@@ -141,7 +132,6 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
         return false;
     }
 
-    @Transient
     public boolean hasRoles(String roles) {
         boolean result = false;
         if (roles != null) {
@@ -160,7 +150,6 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
         return result;
     }
 
-    @Transient
     public boolean hasAction(String action) {
         if (getRoles() == null) return false;
         for (Role r : getRoles()) {
@@ -171,7 +160,6 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
         return false;
     }
 
-    @Transient
     public boolean hasActions(String actions) {
         boolean result = false;
         if (actions != null) {
@@ -188,11 +176,6 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
             }
         }
         return result;
-    }
-
-    @Transient
-    public void addRole(Role role) {
-        getRoles().add(role);
     }
 
     public Group getGroup() {
@@ -216,13 +199,16 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public Set<Role> getRoles() {
-        return roles;
+        return getActiveRoles();
     }
 
-    public void setRoles(Set<Role> roles) {
-        if (roles == null) {
-            roles = new HashSet<Role>();
+    public Set<Role> getActiveRoles() {
+        Set<Role> activeRoles = new HashSet<Role>();
+        for (Role role : roles) {
+            if (role.isActive()) {
+                activeRoles.add(role);
+            }
         }
-        this.roles = roles;
+        return activeRoles;
     }
 }

@@ -69,11 +69,7 @@ public class Site extends AMEEEnvironmentEntity implements Comparable {
 
     public void add(SiteApp siteApp) {
         siteApp.setSite(this);
-        getSiteApps().add(siteApp);
-    }
-
-    public void remove(SiteApp siteApp) {
-        getSiteApps().remove(siteApp);
+        siteApps.add(siteApp);
     }
 
     public String toString() {
@@ -250,13 +246,16 @@ public class Site extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public Set<SiteApp> getSiteApps() {
-        return siteApps;
+        return getActiveSiteApps();
     }
 
-    public void setSiteApps(Set<SiteApp> siteApps) {
-        if (siteApps == null) {
-            siteApps = new HashSet<SiteApp>();
+    public Set<SiteApp> getActiveSiteApps() {
+        Set<SiteApp> activeSiteApps = new HashSet<SiteApp>();
+        for (SiteApp siteApp : siteApps) {
+            if (siteApp.isActive()) {
+                activeSiteApps.add(siteApp);
+            }
         }
-        this.siteApps = siteApps;
+        return activeSiteApps;
     }
 }

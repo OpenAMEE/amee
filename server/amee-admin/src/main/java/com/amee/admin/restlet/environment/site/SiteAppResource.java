@@ -3,7 +3,6 @@ package com.amee.admin.restlet.environment.site;
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
 import com.amee.admin.service.app.AppService;
 import com.amee.domain.site.App;
-import com.amee.domain.site.Site;
 import com.amee.domain.site.SiteApp;
 import com.amee.restlet.BaseResource;
 import com.amee.service.environment.EnvironmentConstants;
@@ -129,10 +128,7 @@ public class SiteAppResource extends BaseResource {
     @Override
     public void removeRepresentations() {
         if (environmentBrowser.getSiteAppActions().isAllowDelete()) {
-            Site site = environmentBrowser.getSite();
-            SiteApp siteApp = environmentBrowser.getSiteApp();
-            site.remove(siteApp);
-            siteService.remove(siteApp);
+            siteService.remove(environmentBrowser.getSiteApp());
             success();
         } else {
             notAuthorized();

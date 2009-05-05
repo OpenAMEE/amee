@@ -20,10 +20,10 @@
 package com.amee.restlet.environment;
 
 import com.amee.calculation.service.CalculationService;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.sheet.Choice;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
@@ -244,9 +244,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     public void removeRepresentations() {
         log.debug("removeRepresentations()");
         if (definitionBrowser.getAlgorithmActions().isAllowDelete()) {
-            Algorithm algorithm = definitionBrowser.getAlgorithm();
-            definitionBrowser.getItemDefinition().remove(algorithm);
-            definitionService.remove(algorithm);
+            definitionService.remove(definitionBrowser.getAlgorithm());
             success();
         } else {
             notAuthorized();

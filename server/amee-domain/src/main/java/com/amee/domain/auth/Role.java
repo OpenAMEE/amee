@@ -1,7 +1,7 @@
 package com.amee.domain.auth;
 
-import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.core.APIUtils;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -46,8 +46,7 @@ public class Role extends AMEEEnvironmentEntity implements Comparable {
     @JoinTable(
             name = "ROLE_ACTION",
             joinColumns = {@JoinColumn(name = "ROLE_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "ACTION_ID")}
-    )
+            inverseJoinColumns = {@JoinColumn(name = "ACTION_ID")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OrderBy("name")
     private Set<Action> actions = new HashSet<Action>();
@@ -61,11 +60,11 @@ public class Role extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public void add(Action action) {
-        getActions().add(action);
+        actions.add(action);
     }
 
     public void remove(Action action) {
-        getActions().remove(action);
+        actions.remove(action);
     }
 
     public String toString() {
@@ -182,13 +181,16 @@ public class Role extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public Set<Action> getActions() {
-        return actions;
+        return getActiveActions();
     }
 
-    public void setActions(Set<Action> actions) {
-        if (actions == null) {
-            actions = new HashSet<Action>();
+    public Set<Action> getActiveActions() {
+        Set<Action> activeActions = new HashSet<Action>();
+        for (Action action : actions) {
+            if (action.isActive()) {
+                activeActions.add(action);
+            }
         }
-        this.actions = actions;
+        return activeActions;
     }
 }

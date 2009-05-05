@@ -158,7 +158,7 @@ public class UsersResource extends BaseResource implements Serializable {
                             for (GroupUser groupUser : siteService.getGroupUsers(cloneUser)) {
                                 newGroupUser = new GroupUser(groupUser.getGroup(), newUser);
                                 for (Role role : groupUser.getRoles()) {
-                                    newGroupUser.addRole(role);
+                                    newGroupUser.add(role);
                                 }
                                 siteService.save(newGroupUser);
                             }

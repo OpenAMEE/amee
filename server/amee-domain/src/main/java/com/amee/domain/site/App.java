@@ -63,11 +63,7 @@ public class App extends AMEEEntity implements Comparable {
 
     public void add(Action action) {
         action.setApp(this);
-        getActions().add(action);
-    }
-
-    public void remove(Action action) {
-        getActions().remove(action);
+        actions.add(action);
     }
 
     public String toString() {
@@ -176,13 +172,16 @@ public class App extends AMEEEntity implements Comparable {
     }
 
     public Set<Action> getActions() {
-        return actions;
+        return getActiveActions();
     }
 
-    public void setActions(Set<Action> actions) {
-        if (actions == null) {
-            actions = new HashSet<Action>();
+    public Set<Action> getActiveActions() {
+        Set<Action> activeActions = new HashSet<Action>();
+        for (Action action : actions) {
+            if (action.isActive()) {
+                activeActions.add(action);
+            }
         }
-        this.actions = actions;
+        return activeActions;
     }
 }

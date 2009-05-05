@@ -119,7 +119,6 @@ public class ActionResource extends BaseResource {
     @Override
     public void removeRepresentations() {
         if (appBrowser.getAppActions().isAllowModify()) {
-            appBrowser.getApp().remove(appBrowser.getAction());
             appService.remove(appBrowser.getAction());
             success();
         } else {

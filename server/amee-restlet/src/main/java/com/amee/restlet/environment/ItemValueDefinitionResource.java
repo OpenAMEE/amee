@@ -182,9 +182,7 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     public void removeRepresentations() {
         log.debug("removeRepresentations()");
         if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
-            ItemValueDefinition itemValueDefinition = definitionBrowser.getItemValueDefinition();
-            definitionBrowser.getItemDefinition().remove(itemValueDefinition);
-            definitionService.remove(itemValueDefinition);
+            definitionService.remove(definitionBrowser.getItemValueDefinition());
             success();
         } else {
             notAuthorized();

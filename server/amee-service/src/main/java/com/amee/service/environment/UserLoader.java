@@ -1,10 +1,10 @@
 package com.amee.service.environment;
 
-import com.csvreader.CsvReader;
 import com.amee.domain.auth.GroupUser;
 import com.amee.domain.auth.Role;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
+import com.csvreader.CsvReader;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,7 +52,7 @@ public class UserLoader implements Serializable {
                             for (GroupUser groupUser : siteService.getGroupUsers(cloneUser)) {
                                 newGroupUser = new GroupUser(groupUser.getGroup(), user);
                                 for (Role role : groupUser.getRoles()) {
-                                    newGroupUser.addRole(role);
+                                    newGroupUser.add(role);
                                 }
                                 siteService.save(newGroupUser);
                             }
