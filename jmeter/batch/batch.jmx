@@ -45,7 +45,7 @@
         <hashTree/>
         <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
           <stringProp name="ConstantTimer.delay">${__property(jmeter.timer.offset)}</stringProp>
-          <stringProp name="RandomTimer.range">${__property(${__property(jmeter.host)})}</stringProp>
+          <stringProp name="RandomTimer.range">${__property(${__property(jmeter.deviation)})}</stringProp>
         </GaussianRandomTimer>
         <hashTree/>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Start" enabled="true"/>
