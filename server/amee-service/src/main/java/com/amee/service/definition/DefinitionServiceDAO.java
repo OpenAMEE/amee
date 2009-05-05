@@ -19,6 +19,7 @@
  */
 package com.amee.service.definition;
 
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.Pager;
 import com.amee.domain.ValueDefinition;
 import com.amee.domain.algorithm.AbstractAlgorithm;
@@ -58,10 +59,6 @@ public class DefinitionServiceDAO implements Serializable {
     @Autowired(required = true)
     private ObserveEventService observeEventService;
 
-    public DefinitionServiceDAO() {
-        super();
-    }
-
     // Handle events
 
     @ServiceActivator(inputChannel = "beforeEnvironmentDelete")
@@ -79,6 +76,7 @@ public class DefinitionServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(Algorithm.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<Algorithm> algorithms = criteria.list();
@@ -96,8 +94,10 @@ public class DefinitionServiceDAO implements Serializable {
         List<AlgorithmContext> algorithmContexts =
                 entityManager.createQuery(
                         "FROM AlgorithmContext ac " +
-                                "WHERE ac.environment.id = :environmentId")
+                                "WHERE ac.environment.id = :environmentId " +
+                                "AND ac.status = :status")
                         .setParameter("environmentId", environment.getId())
+                        .setParameter("status", AMEEStatus.ACTIVE)
                         .setHint("org.hibernate.cacheable", true)
                         .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                         .getResultList();
@@ -116,6 +116,7 @@ public class DefinitionServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(AlgorithmContext.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<AlgorithmContext> algorithmContexts = criteria.list();
@@ -129,12 +130,13 @@ public class DefinitionServiceDAO implements Serializable {
         return algorithmContext;
     }
 
-    public void remove(AbstractAlgorithm algorithm) {
-        entityManager.remove(algorithm);
-    }
-
     public void save(AbstractAlgorithm algorithm) {
         entityManager.persist(algorithm);
+    }
+
+    public void remove(AbstractAlgorithm algorithm) {
+        observeEventService.raiseEvent("beforeAlgorithmDelete", algorithm);
+        algorithm.setStatus(AMEEStatus.TRASH);
     }
 
     // ItemDefinition
@@ -148,6 +150,7 @@ public class DefinitionServiceDAO implements Serializable {
             Criteria criteria = session.createCriteria(ItemDefinition.class);
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
             criteria.setFetchMode("itemValueDefinitions", FetchMode.JOIN);
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
@@ -168,8 +171,10 @@ public class DefinitionServiceDAO implements Serializable {
                         "FROM ItemDefinition id " +
                         "LEFT JOIN FETCH id.itemValueDefinitions ivd " +
                         "WHERE id.environment.id = :environmentId " +
+                        "AND id.status = :status " +
                         "ORDER BY id.name")
                 .setParameter("environmentId", environment.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -181,8 +186,10 @@ public class DefinitionServiceDAO implements Serializable {
         long count = (Long) entityManager.createQuery(
                 "SELECT count(id) " +
                         "FROM ItemDefinition id " +
-                        "WHERE id.environment.id = :environmentId")
+                        "WHERE id.environment.id = :environmentId " +
+                        "AND id.status = :status")
                 .setParameter("environmentId", environment.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -194,8 +201,10 @@ public class DefinitionServiceDAO implements Serializable {
                 "SELECT id " +
                         "FROM ItemDefinition id " +
                         "WHERE id.environment.id = :environmentId " +
+                        "AND id.status = :status " +
                         "ORDER BY id.name")
                 .setParameter("environmentId", environment.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -212,7 +221,7 @@ public class DefinitionServiceDAO implements Serializable {
 
     public void remove(ItemDefinition itemDefinition) {
         observeEventService.raiseEvent("beforeItemDefinitionDelete", itemDefinition);
-        entityManager.remove(itemDefinition);
+        itemDefinition.setStatus(AMEEStatus.TRASH);
     }
 
     // ItemValueDefinitions
@@ -224,6 +233,7 @@ public class DefinitionServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(ItemValueDefinition.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<ItemValueDefinition> itemValueDefinitions = criteria.list();
@@ -239,7 +249,7 @@ public class DefinitionServiceDAO implements Serializable {
 
     public void remove(ItemValueDefinition itemValueDefinition) {
         observeEventService.raiseEvent("beforeItemValueDefinitionDelete", itemValueDefinition);
-        entityManager.remove(itemValueDefinition);
+        itemValueDefinition.setStatus(AMEEStatus.TRASH);
     }
 
     // ValueDefinitions
@@ -248,8 +258,10 @@ public class DefinitionServiceDAO implements Serializable {
         return entityManager.createQuery(
                 "FROM ValueDefinition vd " +
                         "WHERE vd.environment.id = :environmentId " +
+                        "AND vd.status = :status " +
                         "ORDER BY vd.name")
                 .setParameter("environmentId", environment.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -260,8 +272,10 @@ public class DefinitionServiceDAO implements Serializable {
         long count = (Long) entityManager.createQuery(
                 "SELECT count(vd) " +
                         "FROM ValueDefinition vd " +
-                        "WHERE vd.environment.id = :environmentId")
+                        "WHERE vd.environment.id = :environmentId " +
+                        "AND vd.status = :status")
                 .setParameter("environmentId", environment.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -273,8 +287,10 @@ public class DefinitionServiceDAO implements Serializable {
                 "SELECT vd " +
                         "FROM ValueDefinition vd " +
                         "WHERE vd.environment.id = :environmentId " +
+                        "AND vd.status = :status " +
                         "ORDER BY id.name")
                 .setParameter("environmentId", environment.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -292,6 +308,7 @@ public class DefinitionServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(ValueDefinition.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<ValueDefinition> valueDefinitions = criteria.list();
@@ -315,13 +332,15 @@ public class DefinitionServiceDAO implements Serializable {
         List<ItemValueDefinition> itemValueDefinitions = entityManager.createQuery(
                 "SELECT DISTINCT ivd " +
                         "FROM ItemValueDefinition ivd " +
-                        "WHERE ivd.valueDefinition.id = :valueDefinitionId")
+                        "WHERE ivd.valueDefinition.id = :valueDefinitionId " +
+                        "AND vd.status = :status")
                 .setParameter("valueDefinitionId", valueDefinition.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .getResultList();
         for (ItemValueDefinition itemValueDefinition : itemValueDefinitions) {
             remove(itemValueDefinition);
         }
         // remove ValueDefinition
-        entityManager.remove(valueDefinition);
+        valueDefinition.setStatus(AMEEStatus.TRASH);
     }
 }

@@ -41,10 +41,6 @@ public class DefinitionService extends BaseService {
     @Autowired
     private DefinitionServiceDAO dao;
 
-    public DefinitionService() {
-        super();
-    }
-
     // Algorithms
 
     public Algorithm getAlgorithmByUid(String uid) {

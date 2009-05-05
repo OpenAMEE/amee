@@ -415,16 +415,6 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- GroupService -->
-    <cache name="query.groupService"
-           maxElementsInMemory="200"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-    </cache>
-
     <!-- AuthService -->
     <cache name="query.authService"
            maxElementsInMemory="200"
