@@ -64,10 +64,6 @@ class DataServiceDAO implements Serializable {
     @Autowired(required = true)
     private ObserveEventService observeEventService;
 
-    public DataServiceDAO() {
-        super();
-    }
-
     // Handle events
 
     @SuppressWarnings(value = "unchecked")

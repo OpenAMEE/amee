@@ -1,5 +1,6 @@
 package com.amee.service.environment;
 
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
 import com.amee.domain.environment.Environment;
@@ -34,13 +35,10 @@ public class EnvironmentService implements Serializable {
     @Autowired(required = true)
     private ObserveEventService observeEventService;
 
-    public EnvironmentService() {
-        super();
-    }
-
     @ServiceActivator(inputChannel = "beforeSiteDelete")
     public void beforeSiteDelete(ObservedEvent oe) {
         log.debug("beforeSiteDelete" + oe.getPayload());
+        // TODO: Do what?
     }
 
     // Environments
@@ -52,6 +50,7 @@ public class EnvironmentService implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(Environment.class);
             criteria.add(Restrictions.naturalId().set("uid", uid));
+            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<Environment> environments = criteria.list();
@@ -66,9 +65,10 @@ public class EnvironmentService implements Serializable {
     }
 
     public List<Environment> getEnvironments() {
-        log.debug("getEnvironments()");
         List<Environment> environments = entityManager.createQuery(
-                "FROM Environment e ")
+                "FROM Environment e " +
+                        "WHERE e.status = :status")
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -79,7 +79,9 @@ public class EnvironmentService implements Serializable {
         // first count all environments
         long count = (Long) entityManager.createQuery(
                 "SELECT count(e) " +
-                        "FROM Environment e")
+                        "FROM Environment e " +
+                        "WHERE e.status = :status")
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -90,7 +92,9 @@ public class EnvironmentService implements Serializable {
         List<Environment> environments = entityManager.createQuery(
                 "SELECT e " +
                         "FROM Environment e " +
+                        "WHERE e.status = :status " +
                         "ORDER BY e.name")
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -108,7 +112,7 @@ public class EnvironmentService implements Serializable {
 
     public void remove(Environment environment) {
         observeEventService.raiseEvent("beforeEnvironmentDelete", environment);
-        entityManager.remove(environment);
+        environment.setStatus(AMEEStatus.TRASH);
     }
 
     public static Environment getEnvironment() {
@@ -119,8 +123,10 @@ public class EnvironmentService implements Serializable {
 
     public List<APIVersion> getAPIVersions() {
         List<APIVersion> apiVersions = entityManager.createQuery(
-                "FROM APIVersion apiv " +
-                        "ORDER BY apiv.version")
+                "FROM APIVersion av " +
+                        "WHERE av.status = :status " +
+                        "ORDER BY av.version")
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -129,9 +135,11 @@ public class EnvironmentService implements Serializable {
 
     public APIVersion getAPIVersion(String version) {
         return (APIVersion) entityManager.createQuery(
-                "FROM APIVersion apiv " +
-                        "WHERE apiv.version = :version")
+                "FROM APIVersion av " +
+                        "WHERE av.version = :version " +
+                        "AND av.status = :status")
                 .setParameter("version", version)
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
