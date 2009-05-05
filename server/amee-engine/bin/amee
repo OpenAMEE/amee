@@ -1,5 +1,8 @@
 #! /bin/sh
 
+#chkconfig: 2345 80 05
+#description: AMEE Platform Service
+
 #
 # Copyright (c) 1999, 2006 Tanuki Software Inc.
 #

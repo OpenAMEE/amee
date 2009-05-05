@@ -3,8 +3,8 @@
 
 . curl.conf
 
-data="dataItemUid=9B1BDFE5E16D&distance=1000"
-amee_url="profiles/${amee_profile}/transport/car/generic"
+data="dataItemUid=5275ECC6B97F"
+amee_url="profiles/${amee_profile}/home/appliances/computers/generic"
 
 type="xml"
 
