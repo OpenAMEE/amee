@@ -21,6 +21,7 @@
  */
 package com.amee.service.data;
 
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValueDefinition;
@@ -208,7 +209,8 @@ class DrillDownDAO implements Serializable {
         sql = new StringBuilder();
         sql.append("SELECT UID ");
         sql.append("FROM ITEM ");
-        sql.append("WHERE ID IN (:dataItemIds)");
+        sql.append("WHERE ID IN (:dataItemIds) ");
+        sql.append("AND STATUS = :status");
 
         // create query
         Session session = (Session) entityManager.getDelegate();
@@ -216,6 +218,7 @@ class DrillDownDAO implements Serializable {
         query.addScalar("UID", Hibernate.STRING);
 
         // set parameters
+        query.setInteger("status", AMEEStatus.ACTIVE.ordinal());
         query.setParameterList("dataItemIds", dataItemIds, Hibernate.LONG);
 
         // execute SQL
@@ -252,8 +255,9 @@ class DrillDownDAO implements Serializable {
         sql.append("SELECT UID, START_DATE, END_DATE ");
         sql.append("FROM ITEM ");
         sql.append("WHERE TYPE = 'DI' ");
+        sql.append("AND STATUS = :status ");
         sql.append("AND DATA_CATEGORY_ID = :dataCategoryId ");
-        sql.append("AND ITEM_DEFINITION_ID = :itemDefinitionId ");
+        sql.append("AND ITEM_DEFINITION_ID = :itemDefinitionId");
 
         // create query
         Session session = (Session) entityManager.getDelegate();
@@ -263,6 +267,7 @@ class DrillDownDAO implements Serializable {
         query.addScalar("END_DATE", Hibernate.TIMESTAMP);
 
         // set parameters
+        query.setInteger("status", AMEEStatus.ACTIVE.ordinal());
         query.setLong("dataCategoryId", dataCategoryId);
         query.setLong("itemDefinitionId", itemDefinitionId);
 
@@ -344,6 +349,7 @@ class DrillDownDAO implements Serializable {
         sql.append("SELECT DISTINCT iv.VALUE VALUE ");
         sql.append("FROM ITEM_VALUE iv, ITEM i ");
         sql.append("WHERE iv.ITEM_ID = i.ID ");
+        sql.append("AND i.STATUS = :status ");
         sql.append("AND i.TYPE = 'DI' ");
         sql.append("AND i.DATA_CATEGORY_ID = :dataCategoryId ");
         sql.append("AND i.ITEM_DEFINITION_ID = :itemDefinitionId ");
@@ -356,6 +362,7 @@ class DrillDownDAO implements Serializable {
         query.addScalar("VALUE", Hibernate.STRING);
 
         // set parameters
+        query.setInteger("status", AMEEStatus.ACTIVE.ordinal());
         query.setLong("dataCategoryId", dataCategoryId);
         query.setLong("itemDefinitionId", itemDefinitionId);
         query.setLong("itemValueDefinitionId", itemValueDefinitionId);
@@ -437,6 +444,7 @@ class DrillDownDAO implements Serializable {
         sql.append("SELECT i.ID ID, i.START_DATE START_DATE, i.END_DATE END_DATE ");
         sql.append("FROM ITEM i, ITEM_VALUE iv ");
         sql.append("WHERE i.ID = iv.ITEM_ID ");
+        sql.append("AND i.STATUS = :status ");
         sql.append("AND i.TYPE = 'DI' ");
         sql.append("AND i.DATA_CATEGORY_ID = :dataCategoryId ");
         sql.append("AND i.ITEM_DEFINITION_ID = :itemDefinitionId ");
@@ -451,6 +459,7 @@ class DrillDownDAO implements Serializable {
         query.addScalar("END_DATE", Hibernate.TIMESTAMP);
 
         // set parameters
+        query.setInteger("status", AMEEStatus.ACTIVE.ordinal());
         query.setLong("dataCategoryId", dataCategoryId);
         query.setLong("itemDefinitionId", itemDefinitionId);
         query.setLong("itemValueDefinitionId", itemValueDefinitionId);

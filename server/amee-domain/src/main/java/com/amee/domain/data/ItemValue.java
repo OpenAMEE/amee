@@ -253,11 +253,11 @@ public class ItemValue extends AMEEEntity implements Pathable {
     public DecimalPerUnit getPerUnit() {
         if (perUnit != null) {
             if (perUnit.equals("none")) {
-                 return DecimalPerUnit.valueOf(getItem().getDuration());
-             } else {
-                 return DecimalPerUnit.valueOf(perUnit);
-             }
-         } else {                                                             
+                return DecimalPerUnit.valueOf(getItem().getDuration());
+            } else {
+                return DecimalPerUnit.valueOf(perUnit);
+            }
+        } else {
             return itemValueDefinition.getPerUnit();
         }
     }

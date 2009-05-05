@@ -44,9 +44,9 @@
 
     <!-- ############### Restlet ################# -->
 
-    <category name="org.restlet">
+    <!--category name="org.restlet">
         <priority value="DEBUG"/>
-    </category>
+    </category-->
 
     <!-- ############### AMEE ################### -->
 

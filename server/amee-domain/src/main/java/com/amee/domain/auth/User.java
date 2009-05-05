@@ -1,7 +1,7 @@
 package com.amee.domain.auth;
 
-import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.core.APIUtils;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;
@@ -45,9 +45,6 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
     public final static int PASSWORD_CLEAR_SIZE = 40;
     public final static int NAME_SIZE = 100;
     public final static int EMAIL_SIZE = 255;
-
-    @Column(name = "STATUS")
-    private UserStatus status = UserStatus.ACTIVE;
 
     @Column(name = "USER_TYPE")
     private UserType type = UserType.STANDARD;
@@ -186,29 +183,6 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         setEmail(element.elementText("Email"));
         setStatus(element.elementText("Status"));
         setType(element.elementText("Type"));
-    }
-
-    public UserStatus getStatus() {
-        return status;
-    }
-
-    @Transient
-    public int getStatusCode() {
-        return status.ordinal();
-    }
-
-    public void setStatus(UserStatus status) {
-        this.status = status;
-    }
-
-    public void setStatus(String name) {
-        if (name != null) {
-            try {
-                setStatus(UserStatus.valueOf(name));
-            } catch (IllegalArgumentException e) {
-                // swallow
-            }
-        }
     }
 
     public UserType getType() {

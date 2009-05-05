@@ -19,6 +19,7 @@
  */
 package com.amee.service.data;
 
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.APIVersion;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.data.*;
@@ -73,12 +74,14 @@ class DataServiceDAO implements Serializable {
     @ServiceActivator(inputChannel = "beforeEnvironmentDelete")
     public void beforeEnvironmentDelete(ObservedEvent oe) {
         log.debug("beforeEnvironmentDelete");
-        // delete root DataCategories
+        // trash root DataCategories
         Environment environment = (Environment) oe.getPayload();
         List<DataCategory> dataCategories = entityManager.createQuery(
-                "FROM DataCategory dc " +
-                        "WHERE dc.environment.id = :environmentId " +
-                        "AND dc.dataCategory IS NULL")
+                "UPDATE DataCategory " +
+                        "SET status = :status " +
+                        "WHERE environment.id = :environmentId " +
+                        "AND dataCategory IS NULL")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("environmentId", environment.getId())
                 .getResultList();
         for (DataCategory dataCategory : dataCategories) {
@@ -94,15 +97,19 @@ class DataServiceDAO implements Serializable {
         observeEventService.raiseEvent("beforeDataItemsDelete", itemDefinition);
         // remove ItemValues for DataItems
         entityManager.createQuery(
-                "DELETE FROM ItemValue iv " +
-                        "WHERE iv.item IN " +
+                "UPDATE ItemValue " +
+                        "SET status = :status " +
+                        "WHERE item IN " +
                         "(SELECT di FROM DataItem di WHERE di.itemDefinition.id = :itemDefinitionId)")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
-        // remove DataItems
+        // trash DataItems
         entityManager.createQuery(
-                "DELETE FROM DataItem di " +
-                        "WHERE di.itemDefinition.id = :itemDefinitionId")
+                "UPDATE DataItem " +
+                        "SET status = :status " +
+                        "WHERE itemDefinition.id = :itemDefinitionId")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
     }
@@ -114,8 +121,10 @@ class DataServiceDAO implements Serializable {
         // remove ItemValues (from DataItems and ProfileItems)
         ItemValueDefinition itemValueDefinition = (ItemValueDefinition) oe.getPayload();
         entityManager.createQuery(
-                "DELETE FROM ItemValue iv " +
-                        "WHERE iv.itemValueDefinition.id = :itemValueDefinitionId")
+                "UPDATE ItemValue " +
+                        "SET status = :status " +
+                        "WHERE itemValueDefinition.id = :itemValueDefinitionId")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("itemValueDefinitionId", itemValueDefinition.getId())
                 .executeUpdate();
     }
@@ -129,6 +138,7 @@ class DataServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(DataCategory.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<DataCategory> dataCategories = criteria.list();
@@ -146,8 +156,10 @@ class DataServiceDAO implements Serializable {
     public List<DataCategory> getDataCategories(Environment environment) {
         return (List<DataCategory>) entityManager.createQuery(
                 "FROM DataCategory " +
-                        "WHERE environment.id = :environmentId")
+                        "WHERE environment.id = :environmentId " +
+                        "AND status = :status")
                 .setParameter("environmentId", environment.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -161,35 +173,40 @@ class DataServiceDAO implements Serializable {
     public void remove(DataCategory dataCategory) {
         log.debug("remove: " + dataCategory.getName());
         observeEventService.raiseEvent("beforeDataCategoryDelete", dataCategory);
-        // remove ItemValues for DataItems
+        // trash ItemValues for DataItems
         Session session = (Session) entityManager.getDelegate();
         SQLQuery query = session.createSQLQuery(
                 new StringBuilder()
-                        .append("DELETE iv ")
-                        .append("FROM ITEM_VALUE iv, ITEM i ")
+                        .append("UPDATE ITEM_VALUE iv, ITEM i ")
+                        .append("SET iv.STATUS = :status ")
                         .append("WHERE iv.ITEM_ID = i.ID ")
                         .append("AND i.TYPE = 'DI' ")
                         .append("AND i.DATA_CATEGORY_ID = :dataCategoryId").toString());
+        query.setInteger("status", AMEEStatus.ACTIVE.ordinal());
         query.setLong("dataCategoryId", dataCategory.getId());
         query.addSynchronizedEntityClass(ItemValue.class);
         query.executeUpdate();
-        // remove DataItems
+        // trash DataItems
         entityManager.createQuery(
-                "DELETE FROM DataItem di " +
-                        "WHERE di.dataCategory.id = :dataCategoryId")
+                "UPDATE DataItem " +
+                        "SET status = :status " +
+                        "WHERE dataCategory.id = :dataCategoryId")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .executeUpdate();
-        // remove child DataCategories
+        // trash child DataCategories
         List<DataCategory> dataCategories = entityManager.createQuery(
                 "FROM DataCategory di " +
-                        "WHERE di.dataCategory.id = :dataCategoryId")
+                        "WHERE di.dataCategory.id = :dataCategoryId " +
+                        "AND di.status = :status")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .getResultList();
         for (DataCategory child : dataCategories) {
             remove(child);
         }
-        // remove this DataCategory
-        entityManager.remove(dataCategory);
+        // trash this DataCategory
+        dataCategory.setStatus(AMEEStatus.TRASH);
     }
 
     // ItemValues
@@ -201,6 +218,7 @@ class DataServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(ItemValue.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<ItemValue> itemValues = criteria.list();
@@ -231,6 +249,7 @@ class DataServiceDAO implements Serializable {
             Criteria criteria = session.createCriteria(DataItem.class);
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
             criteria.setFetchMode("itemValues", FetchMode.JOIN);
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
@@ -254,9 +273,11 @@ class DataServiceDAO implements Serializable {
                             "FROM DataItem di " +
                             "LEFT JOIN FETCH di.itemValues " +
                             "WHERE di.path = :path " +
-                            "AND di.environment.id = :environmentId")
+                            "AND di.environment.id = :environmentId " +
+                            "AND di.status = :status")
                     .setParameter("path", path)
                     .setParameter("environmentId", environment.getId())
+                    .setParameter("status", AMEEStatus.ACTIVE)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -277,9 +298,11 @@ class DataServiceDAO implements Serializable {
                         "FROM DataItem di " +
                         "LEFT JOIN FETCH di.itemValues " +
                         "WHERE di.itemDefinition.id = :itemDefinitionId " +
-                        "AND di.dataCategory.id = :dataCategoryId")
+                        "AND di.dataCategory.id = :dataCategoryId " +
+                        "AND di.status = :status")
                 .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
                 .setParameter("dataCategoryId", dataCategory.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -292,16 +315,19 @@ class DataServiceDAO implements Serializable {
                 "FROM DataItem di " +
                 "LEFT JOIN FETCH di.itemValues " +
                 "WHERE di.itemDefinition.id = :itemDefinitionId " +
-                "AND di.dataCategory.id = :dataCategoryId AND " +
-                ((endDate != null) ? "di.startDate < :endDate AND (di.endDate > :startDate OR di.endDate IS NULL)" : "(di.endDate > :startDate OR di.endDate IS NULL)");
+                "AND di.dataCategory.id = :dataCategoryId " +
+                "AND " + ((endDate != null) ? "di.startDate < :endDate AND (di.endDate > :startDate OR di.endDate IS NULL) " : "(di.endDate > :startDate OR di.endDate IS NULL) " +
+                "AND di.status = :status");
 
         if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
             Query query = entityManager.createQuery(q);
             query.setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId());
             query.setParameter("dataCategoryId", dataCategory.getId());
             query.setParameter("startDate", startDate.toDate());
-            if (endDate != null)
+            if (endDate != null) {
                 query.setParameter("endDate", endDate.toDate());
+            }
+            query.setParameter("status", AMEEStatus.ACTIVE);
             query.setHint("org.hibernate.cacheable", true);
             query.setHint("org.hibernate.cacheRegion", CACHE_REGION);
             return query.getResultList();
@@ -316,7 +342,7 @@ class DataServiceDAO implements Serializable {
 
     public void remove(DataItem dataItem) {
         observeEventService.raiseEvent("beforeDataItemDelete", dataItem);
-        entityManager.remove(dataItem);
+        dataItem.setStatus(AMEEStatus.TRASH);
     }
 
     // Choices

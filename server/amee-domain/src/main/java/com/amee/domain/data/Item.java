@@ -19,8 +19,8 @@
  */
 package com.amee.domain.data;
 
-import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.core.APIUtils;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.InternalValue;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.path.Pathable;
@@ -80,12 +80,10 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         setItemDefinition(itemDefinition);
     }
 
-    @Transient
     public void addItemValue(ItemValue itemValue) {
         itemValues.add(itemValue);
     }
 
-    @Transient
     public ItemValueMap getItemValuesMap() {
         ItemValueMap itemValuesMap = new ItemValueMap();
         for (ItemValue itemValue : getItemValues()) {
@@ -94,7 +92,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         return itemValuesMap;
     }
 
-    @Transient
     public Set<ItemValueDefinition> getItemValueDefinitions() {
         Set<ItemValueDefinition> itemValueDefinitions = new HashSet<ItemValueDefinition>();
         for (ItemValue itemValue : getItemValues()) {
@@ -103,37 +100,30 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         return itemValueDefinitions;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return APIUtils.getIdentityJSONObject(this);
     }
 
-    @Transient
     public abstract JSONObject getJSONObject(boolean detailed) throws JSONException;
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }
 
-    @Transient
     public ItemDefinition getItemDefinition() {
         return itemDefinition;
     }
 
-    @Transient
     public void setItemDefinition(ItemDefinition itemDefinition) {
         if (itemDefinition != null) {
             this.itemDefinition = itemDefinition;
         }
     }
 
-    @Transient
     public DataCategory getDataCategory() {
         return dataCategory;
     }
 
-    @Transient
     public void setDataCategory(DataCategory dataCategory) {
         if (dataCategory != null) {
             this.dataCategory = dataCategory;
@@ -143,20 +133,17 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     /**
      * Get an unmodifiable List of {@link ItemValue} owned by this Item. For an historical sequence of {@link ItemValue}, only the
      * latest in that sequence is returned.
-     *  
+     *
      * @return - the List of {@link ItemValue}
      */
-    @Transient
     public List<ItemValue> getItemValues() {
-        return Collections.unmodifiableList(getActiveItemValues());
+        return Collections.unmodifiableList(getCurrentItemValues());
     }
 
-    @Transient
     public String getName() {
         return name;
     }
 
-    @Transient
     public void setName(String name) {
         if (name == null) {
             name = "";
@@ -170,9 +157,9 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      *
      * @param values - the visitor collection of {@link com.amee.domain.InternalValue} to which to add this Item's values.
      */
-    @Transient
+    @SuppressWarnings("unchecked")
     public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values) {
-        ItemValueMap itemValueMap = getItemValuesMap(); 
+        ItemValueMap itemValueMap = getItemValuesMap();
         for (Object path : itemValueMap.keySet()) {
             Set<ItemValue> itemValues = itemValueMap.getAll((String) path);
             if (itemValues.size() == 1) {
@@ -182,7 +169,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
                 }
             } else if (itemValues.size() > 1) {
                 ItemValueDefinition ivd = itemValueMap.get((String) path).getItemValueDefinition();
-                @SuppressWarnings("unchecked")
                 // Add all ItemValues with usable values
                 Set<ItemValue> usableSet = (Set<ItemValue>) CollectionUtils.select(itemValues, new UsableValuePredicate());
                 values.put(ivd, new InternalValue(usableSet));
@@ -190,17 +176,14 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
-    @Transient
     public StartEndDate getStartDate() {
         return new StartEndDate(startDate);
     }
 
-    @Transient
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    @Transient
     public StartEndDate getEndDate() {
         if (endDate != null) {
             return new StartEndDate(endDate);
@@ -209,12 +192,10 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
-    @Transient
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
-    @Transient
     public Duration getDuration() {
         if (endDate != null) {
             return new Duration(startDate.getTime(), endDate.getTime());
@@ -223,7 +204,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
-    @Transient
     public String getDisplayPath() {
         if (getPath().length() > 0) {
             return getPath();
@@ -232,7 +212,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
-    @Transient
     public String getDisplayName() {
         if (getName().length() > 0) {
             return getName();
@@ -240,30 +219,40 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
             return getDisplayPath();
         }
     }
-    
+
     public boolean supportsCalculation() {
         return !getItemDefinition().getAlgorithms().isEmpty();
-	}
-	
-    // Filter-out any ItemValue instances within an historical sequence of ItemValiues that are not the final entry in
+    }
+
+    // Filter-out any ItemValue instances within an historical sequence of ItemValues that are not the final entry in
     // the given datetime range.
-    @Transient
     @SuppressWarnings("unchecked")
-    private List<ItemValue> getActiveItemValues() {
-        return (List) CollectionUtils.select(itemValues, new Predicate() {
+    private List<ItemValue> getCurrentItemValues() {
+        final List<ItemValue> activeItemValues = getActiveItemValues();
+        return (List) CollectionUtils.select(activeItemValues, new Predicate() {
             public boolean evaluate(Object o) {
                 ItemValue iv = (ItemValue) o;
                 StartEndDate startDate = iv.getStartDate();
                 String path = iv.getItemValueDefinition().getPath();
-                for (ItemValue itemValue : itemValues) {
+                for (ItemValue itemValue : activeItemValues) {
                     if (startDate.before(itemValue.getStartDate()) &&
-                        itemValue.getItemValueDefinition().getPath().equals(path)) {
+                            itemValue.getItemValueDefinition().getPath().equals(path)) {
                         return false;
                     }
                 }
                 return true;
             }
         });
+    }
+
+    private List<ItemValue> getActiveItemValues() {
+        List<ItemValue> activeItemValues = new ArrayList<ItemValue>();
+        for (ItemValue iv : itemValues) {
+            if (iv.isActive()) {
+                activeItemValues.add(iv);
+            }
+        }
+        return activeItemValues;
     }
 }
 

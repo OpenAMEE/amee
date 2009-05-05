@@ -19,6 +19,7 @@
  */
 package com.amee.service.profile;
 
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.Pager;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.auth.Group;
@@ -56,7 +57,6 @@ import java.util.*;
  * Most removes are either cascaded from collections or
  * handled explicity here. 'beforeItemValueDefinitionDelete' is handled in DataService.
  * <p/>
- * TODO: How would deletes perform when there are lots of Profiles?
  * TODO: Clear caches after entity removal.
  * TODO: Any other cache operations to put here?
  * TODO: Remove site and group injection and make method calls explicit.
@@ -82,19 +82,21 @@ class ProfileServiceDAO implements Serializable {
     public void beforeDataItemDelete(ObservedEvent oe) {
         DataItem dataItem = (DataItem) oe.getPayload();
         log.debug("beforeDataItemDelete");
-        // remove ItemValues for ProfileItems
-        // TODO: This HQL/SQL is slow.
-        // TODO: Take inspiration from com.amee.service.data.DataServiceDAO#remove.
+        // trash ItemValues for ProfileItems
         entityManager.createQuery(
-                "DELETE FROM ItemValue iv " +
+                "UPDATE ItemValue iv " +
+                        "SET status = :status " +
                         "WHERE iv.item IN " +
                         "(SELECT pi FROM ProfileItem pi WHERE pi.dataItem.id = :dataItemId)")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("dataItemId", dataItem.getId())
                 .executeUpdate();
-        // remove ProfileItems
+        // trash ProfileItems
         entityManager.createQuery(
-                "DELETE FROM ProfileItem pi " +
-                        "WHERE pi.dataItem.id = :dataItemId")
+                "UPDATE ProfileItem " +
+                        "SET status = :status " +
+                        "WHERE dataItem.id = :dataItemId")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("dataItemId", dataItem.getId())
                 .executeUpdate();
     }
@@ -104,17 +106,21 @@ class ProfileServiceDAO implements Serializable {
     public void beforeDataItemsDelete(ObservedEvent oe) {
         ItemDefinition itemDefinition = (ItemDefinition) oe.getPayload();
         log.debug("beforeDataItemsDelete");
-        // remove ItemValues for ProfileItems
+        // trash ItemValues for ProfileItems
         entityManager.createQuery(
-                "DELETE FROM ItemValue iv " +
-                        "WHERE iv.item IN " +
+                "UPDATE ItemValue " +
+                        "SET status = :status " +
+                        "WHERE item IN " +
                         "(SELECT pi FROM ProfileItem pi WHERE pi.itemDefinition.id = :itemDefinitionId)")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
-        // remove ProfileItems
+        // trash ProfileItems
         entityManager.createQuery(
-                "DELETE FROM ProfileItem pi " +
-                        "WHERE pi.itemDefinition.id = :itemDefinitionId")
+                "UPDATE ProfileItem " +
+                        "SET status = :status " +
+                        "WHERE itemDefinition.id = :itemDefinitionId")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
     }
@@ -124,19 +130,21 @@ class ProfileServiceDAO implements Serializable {
     public void beforeDataCategoryDelete(ObservedEvent oe) {
         DataCategory dataCategory = (DataCategory) oe.getPayload();
         log.debug("beforeDataCategoryDelete");
-        // remove ItemValues for ProfileItems
-        // TODO: This HQL/SQL is slow.
-        // TODO: Take inspiration from com.amee.service.data.DataServiceDAO#remove.
+        // trash ItemValues for ProfileItems
         entityManager.createQuery(
-                "DELETE FROM ItemValue iv " +
-                        "WHERE iv.item IN " +
+                "UPDATE ItemValue " +
+                        "SET status = :status " +
+                        "WHERE item IN " +
                         "(SELECT pi FROM ProfileItem pi WHERE pi.dataCategory.id = :dataCategoryId)")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .executeUpdate();
-        // remove ProfileItems
+        // trash ProfileItems
         entityManager.createQuery(
-                "DELETE FROM ProfileItem pi " +
-                        "WHERE pi.dataCategory.id = :dataCategoryId")
+                "UPDATE ProfileItem " +
+                        "SET status = :status " +
+                        "WHERE dataCategory.id = :dataCategoryId")
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .executeUpdate();
     }
@@ -168,9 +176,11 @@ class ProfileServiceDAO implements Serializable {
                 "SELECT p " +
                         "FROM Profile p " +
                         "WHERE p.environment.id = :environmentId " +
-                        "AND p.permission.group.id = :groupId")
+                        "AND p.permission.group.id = :groupId " +
+                        "AND p.status = :status")
                 .setParameter("environmentId", group.getEnvironment().getId())
                 .setParameter("groupId", group.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .getResultList();
         for (Profile profile : profiles) {
             remove(profile);
@@ -185,8 +195,10 @@ class ProfileServiceDAO implements Serializable {
         List<Profile> profiles = entityManager.createQuery(
                 "SELECT p " +
                         "FROM Profile p " +
-                        "WHERE p.environment.id = :environmentId")
+                        "WHERE p.environment.id = :environmentId " +
+                        "AND p.status = :status")
                 .setParameter("environmentId", environment.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .getResultList();
         for (Profile profile : profiles) {
             remove(profile);
@@ -202,6 +214,7 @@ class ProfileServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(Profile.class);
             criteria.add(Restrictions.naturalId().set("uid", uid));
+            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<Profile> profiles = criteria.list();
@@ -221,9 +234,11 @@ class ProfileServiceDAO implements Serializable {
         List<Profile> profiles = entityManager.createQuery(
                 "FROM Profile p " +
                         "WHERE p.path = :path " +
-                        "AND p.environment.id = :environmentId")
+                        "AND p.environment.id = :environmentId " +
+                        "AND p.status = :status")
                 .setParameter("path", path)
                 .setParameter("environmentId", environment.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -247,12 +262,14 @@ class ProfileServiceDAO implements Serializable {
                         "WHERE p.environment.id = :environmentId " +
                         "AND ((p.permission.otherAllowView = :otherAllowView) " +
                         "     OR (p.permission.group.id = :groupId AND p.permission.groupAllowView = :groupAllowView) " +
-                        "     OR (p.permission.user.id = :userId))")
+                        "     OR (p.permission.user.id = :userId)) " +
+                        "AND p.status = :status")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("groupId", group.getId())
                 .setParameter("userId", user.getId())
                 .setParameter("otherAllowView", true)
                 .setParameter("groupAllowView", true)
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -267,12 +284,14 @@ class ProfileServiceDAO implements Serializable {
                         "AND ((p.permission.otherAllowView = :otherAllowView) " +
                         "     OR (p.permission.group.id = :groupId AND p.permission.groupAllowView = :groupAllowView) " +
                         "     OR (p.permission.user.id = :userId)) " +
+                        "AND p.status = :status " +
                         "ORDER BY p.created DESC")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("groupId", group.getId())
                 .setParameter("userId", user.getId())
                 .setParameter("otherAllowView", true)
                 .setParameter("groupAllowView", true)
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -289,11 +308,7 @@ class ProfileServiceDAO implements Serializable {
     }
 
     /**
-     * Removes a Profile along with associated ProfileItems and ItemValues.
-     * <p/>
-     * Native SQL is used to remove ItemValues as HQL cannot use joins in DELETEs. Care is
-     * taken to tell Hibernate to only invalidate the ItemValue cache (via the
-     * SQLQuery.addSynchronizedEntityClass method call).
+     * Removes (trashes) a Profile along with associated ProfileItems.
      *
      * @param profile to remove
      */
@@ -303,24 +318,26 @@ class ProfileServiceDAO implements Serializable {
         Session session = (Session) entityManager.getDelegate();
         SQLQuery query = session.createSQLQuery(
                 new StringBuilder()
-                        .append("DELETE iv ")
-                        .append("FROM ITEM_VALUE iv, ITEM i ")
+                        .append("UPDATE ITEM_VALUE iv, ITEM i ")
+                        .append("SET iv.STATUS = :status ")
                         .append("WHERE iv.ITEM_ID = i.ID ")
                         .append("AND i.TYPE = 'PI' ")
                         .append("AND i.PROFILE_ID = :profileId").toString());
+        query.setInteger("status", AMEEStatus.ACTIVE.ordinal());
         query.setLong("profileId", profile.getId());
         query.addSynchronizedEntityClass(ItemValue.class);
         query.executeUpdate();
-        // delete all ProfileItems within this Profile
+        // trash all ProfileItems within this Profile
         entityManager.createQuery(
                 new StringBuilder()
-                        .append("DELETE ")
-                        .append("FROM ProfileItem pi ")
-                        .append("WHERE pi.profile.id = :profileId").toString())
+                        .append("UPDATE ProfileItem ")
+                        .append("SET status = :status ")
+                        .append("WHERE profile.id = :profileId").toString())
+                .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("profileId", profile.getId())
                 .executeUpdate();
-        // delete Profile
-        entityManager.remove(profile);
+        // trash Profile
+        profile.setStatus(AMEEStatus.TRASH);
     }
 
     // ProfileItems
@@ -334,6 +351,7 @@ class ProfileServiceDAO implements Serializable {
             Criteria criteria = session.createCriteria(ProfileItem.class);
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
+            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<ProfileItem> profileItems = criteria.list();
@@ -353,8 +371,10 @@ class ProfileServiceDAO implements Serializable {
                 "SELECT DISTINCT pi " +
                         "FROM ProfileItem pi " +
                         "LEFT JOIN FETCH pi.itemValues " +
-                        "WHERE pi.profile.id = :profileId")
+                        "WHERE pi.profile.id = :profileId " +
+                        "AND pi.status = :status")
                 .setParameter("profileId", profile.getId())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -378,17 +398,18 @@ class ProfileServiceDAO implements Serializable {
                             "WHERE pi.itemDefinition.id = :itemDefinitionId " +
                             "AND pi.dataCategory.id = :dataCategoryId " +
                             "AND pi.profile.id = :profileId " +
-                            "AND pi.startDate < :profileDate")
+                            "AND pi.startDate < :profileDate " +
+                            "AND pi.status = :status")
                     .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
                     .setParameter("dataCategoryId", dataCategory.getId())
                     .setParameter("profileId", profile.getId())
                     .setParameter("profileDate", profileDate)
+                    .setParameter("status", AMEEStatus.ACTIVE)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
 
-
-            // only include most recent ProfileItem per ProfileItem name per DataItem                                                                                               
+            // only include most recent ProfileItem per ProfileItem name per DataItem
             Iterator<ProfileItem> iterator = profileItems.iterator();
             while (iterator.hasNext()) {
                 ProfileItem outerProfileItem = iterator.next();
@@ -414,6 +435,7 @@ class ProfileServiceDAO implements Serializable {
         if ((dataCategory == null) || (dataCategory.getItemDefinition() == null))
             return null;
 
+        // Create HQL.
         StringBuilder queryBuilder = new StringBuilder("SELECT DISTINCT pi FROM ProfileItem pi ");
         queryBuilder.append("LEFT JOIN FETCH pi.itemValues ");
         queryBuilder.append("WHERE pi.itemDefinition.id = :itemDefinitionId ");
@@ -424,18 +446,18 @@ class ProfileServiceDAO implements Serializable {
         } else {
             queryBuilder.append("pi.startDate < :endDate AND (pi.endDate > :startDate OR pi.endDate IS NULL)");
         }
+        queryBuilder.append("AND pi.status = :status");
 
-        // now get all the Profile Items
+        // Create Query.
         Query query = entityManager.createQuery(queryBuilder.toString());
-
         query.setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId());
         query.setParameter("dataCategoryId", dataCategory.getId());
         query.setParameter("profileId", profile.getId());
         query.setParameter("startDate", startDate.toDate());
-
-        if (endDate != null)
+        if (endDate != null) {
             query.setParameter("endDate", endDate.toDate());
-
+        }
+        query.setParameter("status", AMEEStatus.ACTIVE);
         query.setHint("org.hibernate.cacheable", true);
         query.setHint("org.hibernate.cacheRegion", CACHE_REGION);
 
@@ -453,13 +475,15 @@ class ProfileServiceDAO implements Serializable {
                         "AND pi.dataCategory.id = :dataCategoryId " +
                         "AND pi.dataItem.id = :dataItemId " +
                         "AND pi.startDate = :startDate " +
-                        "AND pi.name = :name")
+                        "AND pi.name = :name " +
+                        "AND pi.status = :status")
                 .setParameter("profileId", profileItem.getProfile().getId())
                 .setParameter("uid", profileItem.getUid())
                 .setParameter("dataCategoryId", profileItem.getDataCategory().getId())
                 .setParameter("dataItemId", profileItem.getDataItem().getId())
                 .setParameter("startDate", profileItem.getStartDate())
                 .setParameter("name", profileItem.getName())
+                .setParameter("status", AMEEStatus.ACTIVE)
                 .getResultList();
         if (profileItems.size() > 0) {
             log.debug("equivilentProfileItemExists() - found ProfileItem(s)");
@@ -475,7 +499,7 @@ class ProfileServiceDAO implements Serializable {
     }
 
     public void remove(ProfileItem pi) {
-        entityManager.remove(pi);
+        pi.setStatus(AMEEStatus.TRASH);
     }
 
     // Profile DataCategories
@@ -496,7 +520,8 @@ class ProfileServiceDAO implements Serializable {
         sql.append("SELECT DISTINCT DATA_CATEGORY_ID ID ");
         sql.append("FROM ITEM ");
         sql.append("WHERE TYPE = 'PI' ");
-        sql.append("AND PROFILE_ID = :profileId");
+        sql.append("AND PROFILE_ID = :profileId ");
+        sql.append("AND STATUS = :status");
 
         // create query
         Session session = (Session) entityManager.getDelegate();
@@ -505,6 +530,7 @@ class ProfileServiceDAO implements Serializable {
 
         // set parameters
         query.setLong("profileId", profile.getId());
+        query.setInteger("status", AMEEStatus.ACTIVE.ordinal());
 
         // execute SQL
         return (List<Long>) query.list();

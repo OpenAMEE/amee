@@ -28,8 +28,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.amee.core.PersistentObject;
-
 @MappedSuperclass
 public abstract class AMEEEntity implements DatedObject, Serializable {
 
@@ -43,6 +41,9 @@ public abstract class AMEEEntity implements DatedObject, Serializable {
     @NaturalId
     @Column(name = "UID", unique = true, nullable = false, length = UID_SIZE)
     private String uid = "";
+
+    @Column(name = "STATUS")
+    private AMEEStatus status = AMEEStatus.ACTIVE;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED", nullable = false)
@@ -99,6 +100,36 @@ public abstract class AMEEEntity implements DatedObject, Serializable {
             uid = "";
         }
         this.uid = uid;
+    }
+
+    public AMEEStatus getStatus() {
+        return status;
+    }
+
+    public int getStatusCode() {
+        return status.ordinal();
+    }
+
+    public boolean isActive() {
+        return status.equals(AMEEStatus.ACTIVE);
+    }
+
+    public boolean isTrash() {
+        return status.equals(AMEEStatus.TRASH);
+    }
+
+    public void setStatus(AMEEStatus status) {
+        this.status = status;
+    }
+
+    public void setStatus(String name) {
+        if (name != null) {
+            try {
+                setStatus(AMEEStatus.valueOf(name));
+            } catch (IllegalArgumentException e) {
+                // swallow
+            }
+        }
     }
 
     public Date getCreated() {
