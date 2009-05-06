@@ -78,12 +78,10 @@ public class Role extends AMEEEnvironmentEntity implements Comparable {
         return getName().compareToIgnoreCase(role.getName());
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -102,19 +100,16 @@ public class Role extends AMEEEnvironmentEntity implements Comparable {
         return obj;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         JSONObject obj = APIUtils.getIdentityJSONObject(this);
         obj.put("name", getName());
         return obj;
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("Role");
         element.setAttribute("uid", getUid());
@@ -133,21 +128,18 @@ public class Role extends AMEEEnvironmentEntity implements Comparable {
         return element;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         Element element = APIUtils.getIdentityElement(document, this);
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         return element;
     }
 
-    @Transient
     public void populate(org.dom4j.Element element) {
         setUid(element.attributeValue("uid"));
         setName(element.elementText("Name"));
         setDescription(element.elementText("Description"));
     }
 
-    @Transient
     public boolean hasAction(String action) {
         if (getActions() == null) return false;
         for (Action a : getActions()) {

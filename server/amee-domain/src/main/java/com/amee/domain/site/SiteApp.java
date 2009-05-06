@@ -55,12 +55,10 @@ public class SiteApp extends AMEEEnvironmentEntity {
         return getUid().compareToIgnoreCase(siteApp.getUid());
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -75,17 +73,14 @@ public class SiteApp extends AMEEEnvironmentEntity {
         return obj;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return APIUtils.getIdentityJSONObject(this);
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("SiteApp");
         element.setAttribute("uid", getUid());
@@ -100,12 +95,10 @@ public class SiteApp extends AMEEEnvironmentEntity {
         return element;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }
 
-    @Transient
     public void populate(org.dom4j.Element element) {
         setUid(element.attributeValue("uid"));
         setSkinPath(element.elementText("SkinPath"));

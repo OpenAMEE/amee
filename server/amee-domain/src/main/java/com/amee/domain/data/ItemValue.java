@@ -95,12 +95,10 @@ public class ItemValue extends AMEEEntity implements Pathable {
         return "ItemValue_" + getUid();
     }
 
-    @Transient
     public void setBuilder(Builder builder) {
         this.builder = builder;
     }
 
-    @Transient
     public String getUsableValue() {
         if (!isUsableValue())
             return null;
@@ -112,17 +110,14 @@ public class ItemValue extends AMEEEntity implements Pathable {
         return !StringUtils.isBlank(getValue());
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         return builder.getJSONObject(detailed);
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -130,73 +125,59 @@ public class ItemValue extends AMEEEntity implements Pathable {
         return obj;
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         return builder.getElement(document, detailed);
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
 
     }
 
-    @Transient
     public Environment getEnvironment() {
         return getItem().getEnvironment();
     }
 
-    @Transient
     public String getName() {
         return getItemValueDefinition().getName();
     }
 
-    @Transient
     public String getDisplayName() {
         return getItemValueDefinition().getName();
     }
 
-    @Transient
     public String getPath() {
         return getItemValueDefinition().getPath();
     }
 
-    @Transient
     public String getDisplayPath() {
         return getPath();
     }
 
-    @Transient
     public ItemValueDefinition getItemValueDefinition() {
         return itemValueDefinition;
     }
 
-    @Transient
     public void setItemValueDefinition(ItemValueDefinition itemValueDefinition) {
         this.itemValueDefinition = itemValueDefinition;
     }
 
-    @Transient
     public Item getItem() {
         return item;
     }
 
-    @Transient
     public void setItem(Item item) {
         this.item = item;
     }
 
-    @Transient
     public String getValue() {
         return value;
     }
 
-    @Transient
     public void setValue(String value) {
         if (value == null) {
             value = "";
@@ -207,17 +188,14 @@ public class ItemValue extends AMEEEntity implements Pathable {
         this.value = value;
     }
 
-    @Transient
     public StartEndDate getStartDate() {
         return new StartEndDate(startDate);
     }
 
-    @Transient
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    @Transient
     public StartEndDate getEndDate() {
         if (endDate != null) {
             return new StartEndDate(endDate);
@@ -226,22 +204,18 @@ public class ItemValue extends AMEEEntity implements Pathable {
         }
     }
 
-    @Transient
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
-    @Transient
     public ObjectType getObjectType() {
         return ObjectType.IV;
     }
 
-    @Transient
     public DecimalUnit getUnit() {
         return (unit != null) ? DecimalUnit.valueOf(unit) : itemValueDefinition.getUnit();
     }
 
-    @Transient
     public void setUnit(String unit) throws IllegalArgumentException {
         if (!itemValueDefinition.isValidUnit(unit)) {
             throw new IllegalArgumentException();
@@ -249,7 +223,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
         this.unit = unit;
     }
 
-    @Transient
     public DecimalPerUnit getPerUnit() {
         if (perUnit != null) {
             if (perUnit.equals("none")) {
@@ -262,7 +235,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
         }
     }
 
-    @Transient
     public void setPerUnit(String perUnit) throws IllegalArgumentException {
         if (!itemValueDefinition.isValidPerUnit(perUnit)) {
             throw new IllegalArgumentException();
@@ -270,7 +242,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
         this.perUnit = perUnit;
     }
 
-    @Transient
     public DecimalCompoundUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
@@ -293,7 +264,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
                 !new BigDecimal(getValue()).equals(BigDecimal.ZERO);
     }
 
-    @Transient
     public ItemValue getCopy() {
         ItemValue clone = new ItemValue();
         clone.setUid(getUid());

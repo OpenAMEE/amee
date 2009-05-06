@@ -1,7 +1,7 @@
 package com.amee.domain.auth;
 
-import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.core.APIUtils;
+import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -14,7 +14,6 @@ import org.w3c.dom.Element;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * A Group embodies a community of Users. Users belong to Groups via GroupUser and can be assigned multiple Roles
@@ -61,12 +60,10 @@ public class Group extends AMEEEnvironmentEntity implements Comparable {
         return getName().compareToIgnoreCase(group.getName());
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -80,19 +77,16 @@ public class Group extends AMEEEnvironmentEntity implements Comparable {
         return obj;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         JSONObject obj = APIUtils.getIdentityJSONObject(this);
         obj.put("name", getName());
         return obj;
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("Group");
         element.setAttribute("uid", getUid());
@@ -106,21 +100,18 @@ public class Group extends AMEEEnvironmentEntity implements Comparable {
         return element;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         Element element = APIUtils.getIdentityElement(document, this);
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         return element;
     }
 
-    @Transient
     public void populate(org.dom4j.Element element) {
         setUid(element.attributeValue("uid"));
         setName(element.elementText("Name"));
         setDescription(element.elementText("Description"));
     }
 
-    @Transient
     public String getAddress() {
         return "/" + getName();
     }

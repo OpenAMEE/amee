@@ -89,17 +89,14 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
         itemValueDefinitions.add(itemValueDefinition);
     }
 
-    @Transient
     public boolean hasDrillDownAvailable() {
         return getDrillDown().length() > 0;
     }
 
-    @Transient
     public List<Choice> getDrillDownChoices() {
         return Choice.parseChoices(getDrillDown());
     }
 
-    @Transient
     public ItemValueDefinition getItemValueDefinition(String path) {
         for (ItemValueDefinition itemValueDefinition : getItemValueDefinitions()) {
             if (itemValueDefinition.getPath().equalsIgnoreCase(path)) {
@@ -109,12 +106,10 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
         return null;
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -128,17 +123,14 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
         return obj;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return APIUtils.getIdentityJSONObject(this);
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ItemDefinition");
         element.setAttribute("uid", getUid());
@@ -152,7 +144,6 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
         return element;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }
@@ -207,7 +198,6 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
         return activeAlgorithms;
     }
 
-    @Transient
     public ObjectType getObjectType() {
         return ObjectType.ID;
     }

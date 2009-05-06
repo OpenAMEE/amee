@@ -1,7 +1,7 @@
 package com.amee.domain.algorithm;
 
-import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.core.APIUtils;
+import com.amee.domain.AMEEEnvironmentEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -33,12 +33,10 @@ public abstract class AbstractAlgorithm extends AMEEEnvironmentEntity {
         super();
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -56,14 +54,12 @@ public abstract class AbstractAlgorithm extends AMEEEnvironmentEntity {
         return APIUtils.getIdentityJSONObject(this);
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
     public abstract String getElementName();
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement(getElementName());
         element.setAttribute("uid", getUid());

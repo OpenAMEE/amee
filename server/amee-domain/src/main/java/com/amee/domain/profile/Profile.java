@@ -64,12 +64,10 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         return "Profile_" + getUid();
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -84,17 +82,14 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         return obj;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return APIUtils.getIdentityJSONObject(this);
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("Profile");
         element.setAttribute("uid", getUid());
@@ -109,7 +104,6 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         return element;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }
@@ -146,7 +140,6 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         this.path = path;
     }
 
-    @Transient
     public ObjectType getObjectType() {
         return ObjectType.PR;
     }

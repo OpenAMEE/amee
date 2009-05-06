@@ -19,8 +19,8 @@
  */
 package com.amee.domain.algorithm;
 
-import com.amee.core.ObjectType;
 import com.amee.core.APIUtils;
+import com.amee.core.ObjectType;
 import com.amee.domain.data.ItemDefinition;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +53,6 @@ public class Algorithm extends AbstractAlgorithm {
         itemDefinition.add(this);
     }
 
-    @Transient
     @Override
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = super.getJSONObject(detailed);
@@ -63,17 +62,15 @@ public class Algorithm extends AbstractAlgorithm {
         return obj;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }
 
-    @Transient
+    @Override
     public String getElementName() {
         return "Algorithm";
     }
 
-    @Transient
     @Override
     public Element getElement(Document document, boolean detailed) {
         Element element = super.getElement(document, detailed);
@@ -118,7 +115,6 @@ public class Algorithm extends AbstractAlgorithm {
         return outContent.toString();
     }
 
-    @Transient
     public ObjectType getObjectType() {
         return ObjectType.AL;
     }

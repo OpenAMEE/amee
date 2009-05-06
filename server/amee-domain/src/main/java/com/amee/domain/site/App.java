@@ -77,12 +77,10 @@ public class App extends AMEEEntity implements Comparable {
         return getName().compareToIgnoreCase(app.getName());
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -96,17 +94,14 @@ public class App extends AMEEEntity implements Comparable {
         return obj;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return APIUtils.getIdentityJSONObject(this);
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("App");
         element.setAttribute("uid", getUid());
@@ -120,14 +115,12 @@ public class App extends AMEEEntity implements Comparable {
         return element;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         Element element = APIUtils.getIdentityElement(document, this);
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         return element;
     }
 
-    @Transient
     public void populate(org.dom4j.Element element) {
         setUid(element.attributeValue("uid"));
         setName(element.elementText("Name"));

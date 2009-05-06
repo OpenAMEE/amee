@@ -19,11 +19,11 @@
  */
 package com.amee.domain.data;
 
-import com.amee.domain.*;
-import com.amee.core.DecimalCompoundUnit;
 import com.amee.core.*;
-import com.amee.core.DecimalPerUnit;
-import com.amee.core.DecimalUnit;
+import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.APIVersion;
+import com.amee.domain.Builder;
+import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Cache;
@@ -129,47 +129,38 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         return "ItemValueDefinition_" + getUid();
     }
 
-    @Transient
     public boolean isUsableValue() {
         return getValue() != null && !getValue().isEmpty();
     }
 
-    @Transient
     public boolean isChoicesAvailable() {
         return getChoices().length() > 0;
     }
 
-    @Transient
     public List<Choice> getChoiceList() {
         return Choice.parseChoices(getChoices());
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         return getBuilder().getJSONObject(detailed);
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return APIUtils.getIdentityJSONObject(this);
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         return getBuilder().getElement(document, detailed);
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }
@@ -261,7 +252,6 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         this.allowedRoles = allowedRoles;
     }
 
-    @Transient
     public ObjectType getObjectType() {
         return ObjectType.IVD;
     }

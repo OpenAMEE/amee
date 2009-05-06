@@ -12,7 +12,6 @@ import org.w3c.dom.Element;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "ENVIRONMENT")
@@ -62,12 +61,10 @@ public class Environment extends AMEEEntity implements Comparable {
         return getUid().compareTo(environment.getUid());
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -84,17 +81,14 @@ public class Environment extends AMEEEntity implements Comparable {
         return obj;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return APIUtils.getIdentityJSONObject(this);
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("Environment");
         element.setAttribute("uid", getUid());
@@ -111,12 +105,10 @@ public class Environment extends AMEEEntity implements Comparable {
         return element;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }
 
-    @Transient
     public void populate(org.dom4j.Element element) {
         setUid(element.attributeValue("uid"));
         setName(element.elementText("Name"));

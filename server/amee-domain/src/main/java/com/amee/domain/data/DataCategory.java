@@ -193,7 +193,6 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         this.path = path;
     }
 
-    @Transient
     public ObjectType getObjectType() {
         return ObjectType.DC;
     }

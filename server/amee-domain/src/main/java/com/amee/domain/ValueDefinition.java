@@ -19,8 +19,8 @@
  */
 package com.amee.domain;
 
-import com.amee.core.ValueType;
 import com.amee.core.APIUtils;
+import com.amee.core.ValueType;
 import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -32,7 +32,6 @@ import org.w3c.dom.Element;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "VALUE_DEFINITION")
@@ -63,12 +62,10 @@ public class ValueDefinition extends AMEEEnvironmentEntity {
         return "ValueDefinition_" + getUid();
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -83,17 +80,14 @@ public class ValueDefinition extends AMEEEnvironmentEntity {
         return obj;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return APIUtils.getIdentityJSONObject(this);
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ValueDefinition");
         element.setAttribute("uid", getUid());
@@ -108,7 +102,6 @@ public class ValueDefinition extends AMEEEnvironmentEntity {
         return element;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }

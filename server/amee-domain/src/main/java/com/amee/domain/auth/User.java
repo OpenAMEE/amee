@@ -95,12 +95,10 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         return getUsername().compareToIgnoreCase(user.getUsername());
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         return getJSONObject(true);
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -119,24 +117,20 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         return obj;
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         JSONObject obj = APIUtils.getIdentityJSONObject(this);
         obj.put("username", getUsername());
         return obj;
     }
 
-    @Transient
     public Element getElement(Document document) {
         return getElement(document, true);
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         return getElement(document, "User", detailed);
     }
 
-    @Transient
     public Element getElement(Document document, String name, boolean detailed) {
         Element groups;
         Element element = document.createElement(name);
@@ -160,21 +154,18 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         return element;
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         Element element = APIUtils.getIdentityElement(document, this);
         element.appendChild(APIUtils.getElement(document, "Username", getUsername()));
         return element;
     }
 
-    @Transient
     public Element getIdentityElement(Document document, String name) {
         Element element = APIUtils.getIdentityElement(document, name, this);
         element.appendChild(APIUtils.getElement(document, "Username", getUsername()));
         return element;
     }
 
-    @Transient
     public void populate(org.dom4j.Element element) {
         setUid(element.attributeValue("uid"));
         setUsername(element.elementText("Username"));
@@ -189,27 +180,22 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         return type;
     }
 
-    @Transient
     public boolean isGuestUser() {
         return type.equals(UserType.GUEST);
     }
 
-    @Transient
     public boolean isAnonymousUser() {
         return type.equals(UserType.ANONYMOUS);
     }
 
-    @Transient
     public boolean isStandardUser() {
         return type.equals(UserType.STANDARD);
     }
 
-    @Transient
     public boolean isSuperUser() {
         return type.equals(UserType.SUPER);
     }
 
-    @Transient
     public int getTypeCode() {
         return type.ordinal();
     }
@@ -265,7 +251,6 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         return password;
     }
 
-    @Transient
     public void setPasswordInClear(String password) {
         try {
             setPassword(Crypto.getAsMD5AndBase64(password));

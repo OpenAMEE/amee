@@ -1,9 +1,9 @@
 package com.amee.domain.auth;
 
-import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.core.APIUtils;
-import com.amee.domain.APIVersion;
 import com.amee.core.PersistentObject;
+import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.APIVersion;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -94,7 +94,6 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         return result;
     }
 
-    @Transient
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -113,17 +112,14 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         return obj;
     }
 
-    @Transient
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         return getJSONObject();
     }
 
-    @Transient
     public JSONObject getIdentityJSONObject() throws JSONException {
         return APIUtils.getIdentityJSONObject(this);
     }
 
-    @Transient
     public Element getElement(Document document) {
         Element element = document.createElement("Permission");
         element.setAttribute("uid", getUid());
@@ -138,12 +134,10 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         return element;
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         return getElement(document);
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }

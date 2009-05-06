@@ -1,14 +1,13 @@
 package com.amee.domain.algorithm;
 
-import com.amee.core.ObjectType;
 import com.amee.core.APIUtils;
+import com.amee.core.ObjectType;
 import com.amee.domain.environment.Environment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Transient;
 
 /**
  * This class defines a global algorithm context that can be inhereted by algorithms
@@ -31,12 +30,11 @@ public class AlgorithmContext extends AbstractAlgorithm {
         setContent(content);
     }
 
-    @Transient
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }
 
-    @Transient
+    @Override
     public String getElementName() {
         return "AlgorithmContext";
     }
@@ -45,7 +43,6 @@ public class AlgorithmContext extends AbstractAlgorithm {
         return "AlgorithmContext_" + getUid();
     }
 
-    @Transient
     public ObjectType getObjectType() {
         return ObjectType.ALC;
     }
