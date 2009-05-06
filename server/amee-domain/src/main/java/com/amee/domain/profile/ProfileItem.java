@@ -1,9 +1,9 @@
 package com.amee.domain.profile;
 
-import com.amee.core.ObjectType;
 import com.amee.core.CO2Amount;
-import com.amee.domain.Builder;
 import com.amee.core.Decimal;
+import com.amee.core.ObjectType;
+import com.amee.domain.Builder;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.Item;
@@ -94,7 +94,6 @@ public class ProfileItem extends Item {
         return "ProfileItem_" + getUid();
     }
 
-    @Transient
     public ProfileItem getCopy() {
         ProfileItem profileItem = new ProfileItem(getProfile(), getDataCategory(), getDataItem());
         profileItem.setStartDate(getStartDate());
@@ -108,7 +107,7 @@ public class ProfileItem extends Item {
         return profileItem;
     }
 
-    @Transient
+    @Override
     public String getPath() {
         return getUid();
     }
@@ -171,8 +170,7 @@ public class ProfileItem extends Item {
     }
 
     @Override
-    @Transient
-    public JSONObject getJSONObject(boolean b) throws JSONException {
+     public JSONObject getJSONObject(boolean b) throws JSONException {
         return builder.getJSONObject(b);
     }
 
@@ -180,7 +178,7 @@ public class ProfileItem extends Item {
         return builder.getElement(document, b);
     }
 
-    @Transient
+    @Override
     public ObjectType getObjectType() {
         return ObjectType.PI;
     }

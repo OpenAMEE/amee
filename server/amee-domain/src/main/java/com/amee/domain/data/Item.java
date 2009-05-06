@@ -70,6 +70,15 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     @Index(name = "END_DATE_IND")
     protected Date endDate;
 
+    @Transient
+    private ItemValueMap itemValuesMap;
+
+    @Transient
+    private List<ItemValue> activeItemValues;
+
+    @Transient
+    private List<ItemValue> currentItemValues;
+
     public Item() {
         super();
     }
@@ -82,14 +91,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
     public void addItemValue(ItemValue itemValue) {
         itemValues.add(itemValue);
-    }
-
-    public ItemValueMap getItemValuesMap() {
-        ItemValueMap itemValuesMap = new ItemValueMap();
-        for (ItemValue itemValue : getItemValues()) {
-            itemValuesMap.put(itemValue.getDisplayPath(), itemValue);
-        }
-        return itemValuesMap;
+        resetItemValueCollections();
     }
 
     public Set<ItemValueDefinition> getItemValueDefinitions() {
@@ -140,15 +142,40 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         return Collections.unmodifiableList(getCurrentItemValues());
     }
 
-    public String getName() {
-        return name;
+    // Filter-out any ItemValue instances within an historical sequence of ItemValues that are not the final entry in
+    // the given datetime range.
+    @SuppressWarnings("unchecked")
+    private List<ItemValue> getCurrentItemValues() {
+        if (currentItemValues == null) {
+            final List<ItemValue> activeItemValues = getActiveItemValues();
+            currentItemValues = (List) CollectionUtils.select(activeItemValues, new Predicate() {
+                public boolean evaluate(Object o) {
+                    ItemValue iv = (ItemValue) o;
+                    StartEndDate startDate = iv.getStartDate();
+                    String path = iv.getItemValueDefinition().getPath();
+                    for (ItemValue itemValue : activeItemValues) {
+                        if (startDate.before(itemValue.getStartDate()) &&
+                                itemValue.getItemValueDefinition().getPath().equals(path)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            });
+        }
+        return Collections.unmodifiableList(currentItemValues);
     }
 
-    public void setName(String name) {
-        if (name == null) {
-            name = "";
+    private List<ItemValue> getActiveItemValues() {
+        if (activeItemValues == null) {
+            activeItemValues = new ArrayList<ItemValue>();
+            for (ItemValue iv : itemValues) {
+                if (iv.isActive()) {
+                    activeItemValues.add(iv);
+                }
+            }
         }
-        this.name = name;
+        return Collections.unmodifiableList(activeItemValues);
     }
 
     /**
@@ -174,6 +201,33 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
                 values.put(ivd, new InternalValue(usableSet));
             }
         }
+    }
+
+    public ItemValueMap getItemValuesMap() {
+        if (itemValuesMap == null) {
+            itemValuesMap = new ItemValueMap();
+            for (ItemValue itemValue : getItemValues()) {
+                itemValuesMap.put(itemValue.getDisplayPath(), itemValue);
+            }
+        }
+        return itemValuesMap;
+    }
+
+    private void resetItemValueCollections() {
+        itemValuesMap = null;
+        activeItemValues = null;
+        currentItemValues = null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if (name == null) {
+            name = "";
+        }
+        this.name = name;
     }
 
     public StartEndDate getStartDate() {
@@ -222,37 +276,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
     public boolean supportsCalculation() {
         return !getItemDefinition().getAlgorithms().isEmpty();
-    }
-
-    // Filter-out any ItemValue instances within an historical sequence of ItemValues that are not the final entry in
-    // the given datetime range.
-    @SuppressWarnings("unchecked")
-    private List<ItemValue> getCurrentItemValues() {
-        final List<ItemValue> activeItemValues = getActiveItemValues();
-        return (List) CollectionUtils.select(activeItemValues, new Predicate() {
-            public boolean evaluate(Object o) {
-                ItemValue iv = (ItemValue) o;
-                StartEndDate startDate = iv.getStartDate();
-                String path = iv.getItemValueDefinition().getPath();
-                for (ItemValue itemValue : activeItemValues) {
-                    if (startDate.before(itemValue.getStartDate()) &&
-                            itemValue.getItemValueDefinition().getPath().equals(path)) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        });
-    }
-
-    private List<ItemValue> getActiveItemValues() {
-        List<ItemValue> activeItemValues = new ArrayList<ItemValue>();
-        for (ItemValue iv : itemValues) {
-            if (iv.isActive()) {
-                activeItemValues.add(iv);
-            }
-        }
-        return activeItemValues;
     }
 }
 

@@ -33,7 +33,6 @@ import org.w3c.dom.Element;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Transient;
 
 @Entity
 @DiscriminatorValue("DI")
@@ -57,7 +56,6 @@ public class DataItem extends Item {
         return "DataItem_" + getUid();
     }
 
-    @Transient
     public String getLabel() {
         String label = "";
         ItemValue itemValue;
@@ -80,7 +78,6 @@ public class DataItem extends Item {
         return label;
     }
 
-    @Transient
     private void buildElement(Document document, Element element, boolean detailed) {
         element.setAttribute("uid", getUid());
         element.appendChild(APIUtils.getElement(document, "Name", getDisplayName()));
@@ -99,7 +96,6 @@ public class DataItem extends Item {
         }
     }
 
-    @Transient
     private void buildElement(JSONObject obj, boolean detailed) throws JSONException {
         obj.put("uid", getUid());
         obj.put("name", getDisplayName());
@@ -118,7 +114,6 @@ public class DataItem extends Item {
         }
     }
 
-    @Transient
     @Override
     public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
@@ -130,7 +125,6 @@ public class DataItem extends Item {
         return obj;
     }
 
-    @Transient
     public Element getElement(Document document, boolean detailed) {
         Element dataItemElement = document.createElement("DataItem");
         buildElement(document, dataItemElement, detailed);
@@ -141,6 +135,7 @@ public class DataItem extends Item {
         return dataItemElement;
     }
 
+    @Override
     public String getPath() {
         return path;
     }
@@ -152,7 +147,7 @@ public class DataItem extends Item {
         this.path = path;
     }
 
-    @Transient
+    @Override
     public ObjectType getObjectType() {
         return ObjectType.DI;
     }
