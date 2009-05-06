@@ -110,12 +110,12 @@ public abstract class AMEEEntity implements DatedObject, Serializable {
         return status.ordinal();
     }
 
-    public boolean isActive() {
-        return status.equals(AMEEStatus.ACTIVE);
-    }
-
     public boolean isTrash() {
         return status.equals(AMEEStatus.TRASH);
+    }
+
+    public boolean isActive() {
+        return status.equals(AMEEStatus.ACTIVE);
     }
 
     public void setStatus(AMEEStatus status) {
