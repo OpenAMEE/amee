@@ -24,10 +24,8 @@ import com.amee.service.ThreadBeanHolder;
 import org.apache.log4j.MDC;
 import org.restlet.Application;
 import org.restlet.Filter;
-import org.restlet.data.Parameter;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.util.Series;
 
 public class LogFilter extends Filter {
 
@@ -43,10 +41,7 @@ public class LogFilter extends Filter {
     @SuppressWarnings(value = "unchecked")
     protected int doHandle(Request request, Response response) {
         try {
-            // Use the orignating IP address if available in the X-Cluster-Client-Ip header, otherwise use the client address
-            Series<Parameter> headers = (Series) request.getAttributes().get("org.restlet.http.headers");
-            String ipAddress = headers.getFirstValue("X-Cluster-Client-Ip", true, request.getClientInfo().getAddress());
-            MDC.put("ipAddress", ipAddress);
+            MDC.put("ipAddress", request.getClientInfo().getAddress());
             User user = (User) ThreadBeanHolder.get("user");
             if (user != null) {
                 MDC.put("userUid", user.getUid());

@@ -9,6 +9,7 @@
     <bean id="profilesApplication" class="org.restlet.Application">
         <property name="root" ref="profilesRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
+        <property name="tunnelService.extensionsTunnel" value="true"/>
         <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="Profile Administration"/>
     </bean>

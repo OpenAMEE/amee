@@ -9,6 +9,7 @@
     <bean id="adminApplication" class="org.restlet.Application">
         <property name="root" ref="adminRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
+        <property name="tunnelService.extensionsTunnel" value="true"/>
         <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="AMEE Administration"/>
     </bean>

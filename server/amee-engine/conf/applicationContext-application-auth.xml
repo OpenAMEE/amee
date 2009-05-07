@@ -9,6 +9,7 @@
     <bean id="authApplication" class="org.restlet.Application">
         <property name="root" ref="authRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
+        <property name="tunnelService.extensionsTunnel" value="true"/>
         <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="Auth"/>
     </bean>
