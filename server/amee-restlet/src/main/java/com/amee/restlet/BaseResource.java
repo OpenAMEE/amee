@@ -46,6 +46,7 @@ public abstract class BaseResource extends Resource {
     }
 
     public void initialise(Context context, Request request, Response response) {
+        log.debug("initialise() " + request.getResourceRef().toString());
         List<Variant> varients = super.getVariants();
         if (isStandardWebBrowser()) {
             varients.add(new Variant(MediaType.TEXT_HTML));

@@ -288,7 +288,7 @@ public class DefinitionServiceDAO implements Serializable {
                         "FROM ValueDefinition vd " +
                         "WHERE vd.environment.id = :environmentId " +
                         "AND vd.status = :status " +
-                        "ORDER BY id.name")
+                        "ORDER BY vd.name")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("status", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
@@ -333,7 +333,7 @@ public class DefinitionServiceDAO implements Serializable {
                 "SELECT DISTINCT ivd " +
                         "FROM ItemValueDefinition ivd " +
                         "WHERE ivd.valueDefinition.id = :valueDefinitionId " +
-                        "AND vd.status = :status")
+                        "AND ivd.status = :status")
                 .setParameter("valueDefinitionId", valueDefinition.getId())
                 .setParameter("status", AMEEStatus.ACTIVE)
                 .getResultList();

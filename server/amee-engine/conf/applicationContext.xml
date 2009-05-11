@@ -104,4 +104,7 @@
     <springIntegration:channel id="beforeItemValueDefinitionDelete"/>
     <springIntegration:channel id="beforeValueDefinitionDelete"/>
 
+    <springIntegration:channel id="beforeProfileDelete"/>
+    <springIntegration:channel id="beforeProfileItemDelete"/>
+
 </beans>

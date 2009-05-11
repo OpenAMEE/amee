@@ -95,8 +95,8 @@ class DataServiceDAO implements Serializable {
         entityManager.createQuery(
                 "UPDATE ItemValue " +
                         "SET status = :status " +
-                        "WHERE item IN " +
-                        "(SELECT di FROM DataItem di WHERE di.itemDefinition.id = :itemDefinitionId)")
+                        "WHERE item.id IN " +
+                        "(SELECT di.id FROM DataItem di WHERE di.itemDefinition.id = :itemDefinitionId)")
                 .setParameter("status", AMEEStatus.TRASH)
                 .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
