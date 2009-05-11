@@ -24,10 +24,9 @@ import com.amee.domain.APIVersion;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.data.*;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.event.ObserveEventService;
-import com.amee.domain.event.ObservedEvent;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
+import com.amee.service.profile.ProfileServiceDAO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,7 +36,6 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -47,12 +45,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * TODO: Clear caches after entity removal.
- * TODO: Any other cache operations to put here?
- */
 @Service
-class DataServiceDAO implements Serializable {
+public class DataServiceDAO implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -61,23 +55,44 @@ class DataServiceDAO implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired(required = true)
-    private ObserveEventService observeEventService;
+    @Autowired
+    private ProfileServiceDAO profileServiceDao;
 
     // Handle events
 
+    public void beforeDataCategoryDelete(DataCategory dataCategory) {
+        log.debug("beforeDataCategoryDelete");
+        profileServiceDao.beforeDataCategoryDelete(dataCategory);
+    }
+
+    public void beforeDataItemDelete(DataItem dataItem) {
+        log.debug("beforeDataItemDelete");
+        // trash ItemValues for ProfileItems
+        profileServiceDao.beforeDataItemDelete(dataItem);
+        // trash ItemValues for DataItem
+        entityManager.createQuery(
+                "UPDATE ItemValue iv " +
+                        "SET status = :trash " +
+                        "WHERE iv.item.id = :profileItemId " +
+                        "AND iv.status = :active")
+                .setParameter("trash", AMEEStatus.TRASH)
+                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("profileItemId", dataItem.getId())
+                .executeUpdate();
+    }
+
     @SuppressWarnings(value = "unchecked")
-    @ServiceActivator(inputChannel = "beforeEnvironmentDelete")
-    public void beforeEnvironmentDelete(ObservedEvent oe) {
+    public void beforeEnvironmentDelete(Environment environment) {
         log.debug("beforeEnvironmentDelete");
         // trash root DataCategories
-        Environment environment = (Environment) oe.getPayload();
         List<DataCategory> dataCategories = entityManager.createQuery(
                 "UPDATE DataCategory " +
-                        "SET status = :status " +
+                        "SET status = :trash " +
                         "WHERE environment.id = :environmentId " +
-                        "AND dataCategory IS NULL")
-                .setParameter("status", AMEEStatus.TRASH)
+                        "AND dataCategory IS NULL " +
+                        "AND status = :active")
+                .setParameter("trash", AMEEStatus.TRASH)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setParameter("environmentId", environment.getId())
                 .getResultList();
         for (DataCategory dataCategory : dataCategories) {
@@ -86,41 +101,42 @@ class DataServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    @ServiceActivator(inputChannel = "beforeItemDefinitionDelete")
-    public void beforeItemDefinitionDelete(ObservedEvent oe) {
-        ItemDefinition itemDefinition = (ItemDefinition) oe.getPayload();
+    public void beforeItemDefinitionDelete(ItemDefinition itemDefinition) {
         log.debug("beforeItemDefinitionDelete");
-        observeEventService.raiseEvent("beforeDataItemsDelete", itemDefinition);
-        // remove ItemValues for DataItems
+        // remove ItemValues for Items (DataItems & ProfileItems)
         entityManager.createQuery(
                 "UPDATE ItemValue " +
-                        "SET status = :status " +
+                        "SET status = :trash " +
                         "WHERE item.id IN " +
-                        "(SELECT di.id FROM DataItem di WHERE di.itemDefinition.id = :itemDefinitionId)")
-                .setParameter("status", AMEEStatus.TRASH)
+                        "(SELECT i.id FROM Item i WHERE i.itemDefinition.id = :itemDefinitionId) " +
+                        "AND status = :active")
+                .setParameter("trash", AMEEStatus.TRASH)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
-        // trash DataItems
+        // trash Items (DataItems & ProfileItems)
         entityManager.createQuery(
-                "UPDATE DataItem " +
-                        "SET status = :status " +
-                        "WHERE itemDefinition.id = :itemDefinitionId")
-                .setParameter("status", AMEEStatus.TRASH)
+                "UPDATE Item " +
+                        "SET status = :trash " +
+                        "WHERE itemDefinition.id = :itemDefinitionId " +
+                        "AND status = :active")
+                .setParameter("trash", AMEEStatus.TRASH)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
     }
 
     @SuppressWarnings(value = "unchecked")
-    @ServiceActivator(inputChannel = "beforeItemValueDefinitionDelete")
-    public void beforeItemValueDefinitionDelete(ObservedEvent oe) {
+    public void beforeItemValueDefinitionDelete(ItemValueDefinition itemValueDefinition) {
         log.debug("beforeItemValueDefinitionDelete");
         // remove ItemValues (from DataItems and ProfileItems)
-        ItemValueDefinition itemValueDefinition = (ItemValueDefinition) oe.getPayload();
         entityManager.createQuery(
                 "UPDATE ItemValue " +
-                        "SET status = :status " +
-                        "WHERE itemValueDefinition.id = :itemValueDefinitionId")
-                .setParameter("status", AMEEStatus.TRASH)
+                        "SET status = :trash " +
+                        "WHERE itemValueDefinition.id = :itemValueDefinitionId " +
+                        "AND status = :active")
+                .setParameter("trash", AMEEStatus.TRASH)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setParameter("itemValueDefinitionId", itemValueDefinition.getId())
                 .executeUpdate();
     }
@@ -153,9 +169,9 @@ class DataServiceDAO implements Serializable {
         return (List<DataCategory>) entityManager.createQuery(
                 "FROM DataCategory " +
                         "WHERE environment.id = :environmentId " +
-                        "AND status = :status")
+                        "AND status = :active")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -168,34 +184,36 @@ class DataServiceDAO implements Serializable {
     @SuppressWarnings(value = "unchecked")
     public void remove(DataCategory dataCategory) {
         log.debug("remove: " + dataCategory.getName());
-        observeEventService.raiseEvent("beforeDataCategoryDelete", dataCategory);
+        beforeDataCategoryDelete(dataCategory);
         // trash ItemValues for DataItems
         Session session = (Session) entityManager.getDelegate();
         SQLQuery query = session.createSQLQuery(
                 new StringBuilder()
                         .append("UPDATE ITEM_VALUE iv, ITEM i ")
-                        .append("SET iv.STATUS = :status ")
+                        .append("SET iv.STATUS = :active ")
                         .append("WHERE iv.ITEM_ID = i.ID ")
                         .append("AND i.TYPE = 'DI' ")
                         .append("AND i.DATA_CATEGORY_ID = :dataCategoryId").toString());
-        query.setInteger("status", AMEEStatus.ACTIVE.ordinal());
+        query.setInteger("active", AMEEStatus.ACTIVE.ordinal());
         query.setLong("dataCategoryId", dataCategory.getId());
         query.addSynchronizedEntityClass(ItemValue.class);
         query.executeUpdate();
         // trash DataItems
         entityManager.createQuery(
                 "UPDATE DataItem " +
-                        "SET status = :status " +
-                        "WHERE dataCategory.id = :dataCategoryId")
-                .setParameter("status", AMEEStatus.TRASH)
+                        "SET status = :trash " +
+                        "WHERE dataCategory.id = :dataCategoryId " +
+                        "AND status = :active")
+                .setParameter("trash", AMEEStatus.TRASH)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .executeUpdate();
         // trash child DataCategories
         List<DataCategory> dataCategories = entityManager.createQuery(
                 "FROM DataCategory di " +
                         "WHERE di.dataCategory.id = :dataCategoryId " +
-                        "AND di.status = :status")
-                .setParameter("status", AMEEStatus.TRASH)
+                        "AND di.status = :active")
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .getResultList();
         for (DataCategory child : dataCategories) {
@@ -270,10 +288,10 @@ class DataServiceDAO implements Serializable {
                             "LEFT JOIN FETCH di.itemValues " +
                             "WHERE di.path = :path " +
                             "AND di.environment.id = :environmentId " +
-                            "AND di.status = :status")
+                            "AND di.status = :active")
                     .setParameter("path", path)
                     .setParameter("environmentId", environment.getId())
-                    .setParameter("status", AMEEStatus.ACTIVE)
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -295,10 +313,10 @@ class DataServiceDAO implements Serializable {
                         "LEFT JOIN FETCH di.itemValues " +
                         "WHERE di.itemDefinition.id = :itemDefinitionId " +
                         "AND di.dataCategory.id = :dataCategoryId " +
-                        "AND di.status = :status")
+                        "AND di.status = :active")
                 .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
                 .setParameter("dataCategoryId", dataCategory.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -313,7 +331,7 @@ class DataServiceDAO implements Serializable {
                 "WHERE di.itemDefinition.id = :itemDefinitionId " +
                 "AND di.dataCategory.id = :dataCategoryId " +
                 "AND " + ((endDate != null) ? "di.startDate < :endDate AND (di.endDate > :startDate OR di.endDate IS NULL) " : "(di.endDate > :startDate OR di.endDate IS NULL) " +
-                "AND di.status = :status");
+                "AND di.status = :active");
 
         if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
             Query query = entityManager.createQuery(q);
@@ -323,7 +341,7 @@ class DataServiceDAO implements Serializable {
             if (endDate != null) {
                 query.setParameter("endDate", endDate.toDate());
             }
-            query.setParameter("status", AMEEStatus.ACTIVE);
+            query.setParameter("active", AMEEStatus.ACTIVE);
             query.setHint("org.hibernate.cacheable", true);
             query.setHint("org.hibernate.cacheRegion", CACHE_REGION);
             return query.getResultList();
@@ -337,7 +355,7 @@ class DataServiceDAO implements Serializable {
     }
 
     public void remove(DataItem dataItem) {
-        observeEventService.raiseEvent("beforeDataItemDelete", dataItem);
+        beforeDataItemDelete(dataItem);
         dataItem.setStatus(AMEEStatus.TRASH);
     }
 

@@ -4,7 +4,6 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:springIntegration="http://www.springframework.org/schema/integration"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
                            http://www.springframework.org/schema/context
@@ -12,9 +11,7 @@
                            http://www.springframework.org/schema/aop
                            http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
                            http://www.springframework.org/schema/tx
-                           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
-                           http://www.springframework.org/schema/integration
-                           http://www.springframework.org/schema/integration/spring-integration-1.0.xsd">
+                           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
     <!-- Placeholder property configuration -->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
@@ -84,27 +81,5 @@
         <property name="jpaDialect" ref="jpaDialect"/>
     </bean>
     <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
-
-    <!-- Event/messaging beans -->
-    <springIntegration:annotation-config/>
-
-    <springIntegration:gateway id="ObserveEventGateway"
-                               service-interface="com.amee.domain.event.ObserveEventGateway"/>
-
-    <springIntegration:channel id="observe"/>
-    <springIntegration:channel id="beforeSiteDelete"/>
-    <springIntegration:channel id="beforeEnvironmentDelete"/>
-    <springIntegration:channel id="beforeGroupDelete"/>
-    <springIntegration:channel id="beforeUserDelete"/>
-
-    <springIntegration:channel id="beforeDataItemsDelete"/>
-    <springIntegration:channel id="beforeDataCategoryDelete"/>
-    <springIntegration:channel id="beforeDataItemDelete"/>
-    <springIntegration:channel id="beforeItemDefinitionDelete"/>
-    <springIntegration:channel id="beforeItemValueDefinitionDelete"/>
-    <springIntegration:channel id="beforeValueDefinitionDelete"/>
-
-    <springIntegration:channel id="beforeProfileDelete"/>
-    <springIntegration:channel id="beforeProfileItemDelete"/>
 
 </beans>

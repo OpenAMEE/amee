@@ -94,8 +94,7 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
     @JoinTable(
             name = "ITEM_VALUE_DEFINITION_API_VERSION",
             joinColumns = {@JoinColumn(name = "ITEM_VALUE_DEFINITION_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "API_VERSION_ID")}
-    )
+            inverseJoinColumns = {@JoinColumn(name = "API_VERSION_ID")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<APIVersion> apiVersions = new HashSet<APIVersion>();
 

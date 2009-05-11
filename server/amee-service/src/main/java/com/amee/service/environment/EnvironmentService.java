@@ -4,9 +4,11 @@ import com.amee.domain.AMEEStatus;
 import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.event.ObserveEventService;
-import com.amee.domain.event.ObservedEvent;
+import com.amee.domain.site.Site;
 import com.amee.service.ThreadBeanHolder;
+import com.amee.service.data.DataServiceDAO;
+import com.amee.service.definition.DefinitionServiceDAO;
+import com.amee.service.profile.ProfileServiceDAO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,7 +16,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -32,13 +33,27 @@ public class EnvironmentService implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired(required = true)
-    private ObserveEventService observeEventService;
+    @Autowired
+    private ProfileServiceDAO profileServiceDao;
 
-    @ServiceActivator(inputChannel = "beforeSiteDelete")
-    public void beforeSiteDelete(ObservedEvent oe) {
-        log.debug("beforeSiteDelete" + oe.getPayload());
-        // TODO: Do what?
+    @Autowired
+    private DataServiceDAO dataServiceDao;
+
+    @Autowired
+    private DefinitionServiceDAO definitionServiceDAO;
+
+    // Events
+
+    public void beforeEnvironmentDelete(Environment environment) {
+        log.debug("beforeEnvironmentDelete");
+        profileServiceDao.beforeEnvironmentDelete(environment);
+        dataServiceDao.beforeEnvironmentDelete(environment);
+        definitionServiceDAO.beforeEnvironmentDelete(environment);
+    }
+
+    public void beforeSiteDelete(Site site) {
+        log.debug("beforeSiteDelete");
+        // TODO
     }
 
     // Environments
@@ -67,8 +82,8 @@ public class EnvironmentService implements Serializable {
     public List<Environment> getEnvironments() {
         List<Environment> environments = entityManager.createQuery(
                 "FROM Environment e " +
-                        "WHERE e.status = :status")
-                .setParameter("status", AMEEStatus.ACTIVE)
+                        "WHERE e.status = :active")
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -80,8 +95,8 @@ public class EnvironmentService implements Serializable {
         long count = (Long) entityManager.createQuery(
                 "SELECT count(e) " +
                         "FROM Environment e " +
-                        "WHERE e.status = :status")
-                .setParameter("status", AMEEStatus.ACTIVE)
+                        "WHERE e.status = :active")
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -92,9 +107,9 @@ public class EnvironmentService implements Serializable {
         List<Environment> environments = entityManager.createQuery(
                 "SELECT e " +
                         "FROM Environment e " +
-                        "WHERE e.status = :status " +
+                        "WHERE e.status = :active " +
                         "ORDER BY e.name")
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -111,7 +126,7 @@ public class EnvironmentService implements Serializable {
     }
 
     public void remove(Environment environment) {
-        observeEventService.raiseEvent("beforeEnvironmentDelete", environment);
+        beforeEnvironmentDelete(environment);
         environment.setStatus(AMEEStatus.TRASH);
     }
 
@@ -124,9 +139,9 @@ public class EnvironmentService implements Serializable {
     public List<APIVersion> getAPIVersions() {
         List<APIVersion> apiVersions = entityManager.createQuery(
                 "FROM APIVersion av " +
-                        "WHERE av.status = :status " +
+                        "WHERE av.status = :active " +
                         "ORDER BY av.version")
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -137,9 +152,9 @@ public class EnvironmentService implements Serializable {
         return (APIVersion) entityManager.createQuery(
                 "FROM APIVersion av " +
                         "WHERE av.version = :version " +
-                        "AND av.status = :status")
+                        "AND av.status = :active")
                 .setParameter("version", version)
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();

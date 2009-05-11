@@ -8,11 +8,13 @@ import com.amee.domain.auth.GroupUser;
 import com.amee.domain.auth.Role;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.event.ObserveEventService;
 import com.amee.domain.site.App;
 import com.amee.domain.site.Site;
 import com.amee.domain.site.SiteApp;
 import com.amee.service.ThreadBeanHolder;
+import com.amee.service.profile.ProfileServiceDAO;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +27,55 @@ import java.util.List;
 @Service
 public class SiteService implements Serializable {
 
+    private final Log log = LogFactory.getLog(getClass());
+
     private static final String CACHE_REGION = "query.siteService";
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired(required = true)
-    private ObserveEventService observeEventService;
+    @Autowired
+    private EnvironmentService environmentService;
+
+    @Autowired
+    private ProfileServiceDAO profileServiceDao;
+
+    // Events
+
+    // TODO: Other entities to cascade dependencies from?
+
+    public void beforeUserDelete(User user) {
+        log.debug("beforeUserDelete");
+        profileServiceDao.beforeUserDelete(user);
+        // TODO: More cascade dependencies?
+    }
+
+    public void beforeSiteDelete(Site site) {
+        log.debug("beforeSiteDelete");
+        environmentService.beforeSiteDelete(site);
+        // TODO: More cascade dependencies?
+    }
+
+    public void beforeSiteAppDelete(SiteApp siteApp) {
+        log.debug("beforeSiteAppDelete");
+        // TODO: More cascade dependencies?
+    }
+
+    public void beforeGroupDelete(Group group) {
+        log.debug("beforeGroupDelete");
+        profileServiceDao.beforeGroupDelete(group);
+        // TODO: More cascade dependencies?
+    }
+
+    public void beforeRoleDelete(Role role) {
+        log.debug("beforeRoleDelete");
+        // TODO: More cascade dependencies?
+    }
+
+    public void beforeGroupUserDelete(GroupUser groupUser) {
+        log.debug("beforeGroupUserDelete");
+        // TODO: More cascade dependencies?
+    }
 
     // Sites
 
@@ -41,10 +85,10 @@ public class SiteService implements Serializable {
                 "SELECT s FROM Site s " +
                         "WHERE s.uid = :uid " +
                         "AND s.environment.id = :environmentId " +
-                        "AND s.status = :status")
+                        "AND s.status = :active")
                 .setParameter("uid", uid)
                 .setParameter("environmentId", environment.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -59,9 +103,9 @@ public class SiteService implements Serializable {
         List<Site> sites = entityManager.createQuery(
                 "SELECT s FROM Site s " +
                         "WHERE s.name = :name " +
-                        "AND s.status = :status")
+                        "AND s.status = :active")
                 .setParameter("name", name.trim())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -79,9 +123,9 @@ public class SiteService implements Serializable {
                     "SELECT count(s) " +
                             "FROM Site s " +
                             "WHERE s.environment.id = :environmentId " +
-                            "AND s.status = :status")
+                            "AND s.status = :active")
                     .setParameter("environmentId", environment.getId())
-                    .setParameter("status", AMEEStatus.ACTIVE)
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getSingleResult();
@@ -94,10 +138,10 @@ public class SiteService implements Serializable {
                 "SELECT s " +
                         "FROM Site s " +
                         "WHERE s.environment.id = :environmentId " +
-                        "AND s.status = :status " +
+                        "AND s.status = :active " +
                         "ORDER BY " + orderBy)
                 .setParameter("environmentId", environment.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION);
         if (pager != null) {
@@ -118,9 +162,9 @@ public class SiteService implements Serializable {
         List<Site> sites = entityManager.createQuery(
                 "SELECT s " +
                         "FROM Site s " +
-                        "WHERE s.status = :status " +
+                        "WHERE s.status = :active " +
                         "ORDER BY " + orderBy)
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -132,7 +176,7 @@ public class SiteService implements Serializable {
     }
 
     public void remove(Site site) {
-        observeEventService.raiseEvent("beforeSiteDelete", site);
+        beforeSiteDelete(site);
         site.setStatus(AMEEStatus.TRASH);
     }
 
@@ -148,10 +192,10 @@ public class SiteService implements Serializable {
                 "SELECT sa FROM SiteApp sa, App a " +
                         "WHERE sa.site.id = :siteId " +
                         "AND sa.app.id = a.id " +
-                        "AND sa.status = :status " +
+                        "AND sa.status = :active " +
                         "AND a.name = :appName")
                 .setParameter("siteId", site.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setParameter("appName", appName)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
@@ -168,10 +212,10 @@ public class SiteService implements Serializable {
                 "SELECT sa FROM SiteApp sa " +
                         "WHERE sa.site.id = :siteId " +
                         "AND sa.uid = :siteAppUid " +
-                        "AND sa.status = :status")
+                        "AND sa.status = :active")
                 .setParameter("siteId", site.getId())
                 .setParameter("siteAppUid", siteAppUid)
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -188,9 +232,9 @@ public class SiteService implements Serializable {
                     "SELECT count(sa) " +
                             "FROM SiteApp sa " +
                             "WHERE sa.site.id = :siteId " +
-                            "AND sa.status = :status")
+                            "AND sa.status = :active")
                     .setParameter("siteId", site.getId())
-                    .setParameter("status", AMEEStatus.ACTIVE)
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getSingleResult();
@@ -203,9 +247,9 @@ public class SiteService implements Serializable {
                 "SELECT sa " +
                         "FROM SiteApp sa " +
                         "WHERE sa.site.id = :siteId " +
-                        "AND sa.status = :status")
+                        "AND sa.status = :active")
                 .setParameter("siteId", site.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION);
         if (pager != null) {
@@ -222,7 +266,7 @@ public class SiteService implements Serializable {
     }
 
     public void remove(SiteApp siteApp) {
-        observeEventService.raiseEvent("beforeSiteAppDelete", siteApp);
+        beforeSiteAppDelete(siteApp);
         siteApp.setStatus(AMEEStatus.TRASH);
     }
 
@@ -234,10 +278,10 @@ public class SiteService implements Serializable {
                 "SELECT g FROM Group g " +
                         "WHERE g.environment.id = :environmentId " +
                         "AND g.uid = :uid " +
-                        "AND g.status = :status")
+                        "AND g.status = :active")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("uid", uid)
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -253,10 +297,10 @@ public class SiteService implements Serializable {
                 "SELECT g FROM Group g " +
                         "WHERE g.environment.id = :environmentId " +
                         "AND g.name = :name " +
-                        "AND g.status = :status")
+                        "AND g.status = :active")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("name", name.trim())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -288,10 +332,10 @@ public class SiteService implements Serializable {
                 "SELECT g " +
                         "FROM Group g " +
                         "WHERE g.environment.id = :environmentId " +
-                        "AND g.status = :status " +
+                        "AND g.status = :active " +
                         "ORDER BY g.name")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -309,9 +353,9 @@ public class SiteService implements Serializable {
                 "SELECT count(g) " +
                         "FROM Group g " +
                         "WHERE g.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND g.status = :status ")
+                        "AND g.status = :active ")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION);
         if (!"".equals(pagerSetClause)) {
@@ -326,10 +370,10 @@ public class SiteService implements Serializable {
                 "SELECT g " +
                         "FROM Group g " +
                         "WHERE g.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND g.status = :status " +
+                        "AND g.status = :active " +
                         "ORDER BY g.name")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -349,7 +393,7 @@ public class SiteService implements Serializable {
     }
 
     public void remove(Group group) {
-        observeEventService.raiseEvent("beforeGroupDelete", group);
+        beforeGroupDelete(group);
         group.setStatus(AMEEStatus.TRASH);
     }
 
@@ -362,10 +406,10 @@ public class SiteService implements Serializable {
                     "SELECT gu FROM GroupUser gu " +
                             "WHERE gu.environment.id = :environmentId " +
                             "AND gu.uid = :uid " +
-                            "AND gu.status = :status")
+                            "AND gu.status = :active")
                     .setParameter("environmentId", environment.getId())
                     .setParameter("uid", uid)
-                    .setParameter("status", AMEEStatus.ACTIVE)
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -384,11 +428,11 @@ public class SiteService implements Serializable {
                             "WHERE gu.environment.id = :environmentId " +
                             "AND gu.group.id = :groupId " +
                             "AND gu.user.id = :userId " +
-                            "AND gu.status = :status")
+                            "AND gu.status = :active")
                     .setParameter("environmentId", group.getEnvironment().getId())
                     .setParameter("groupId", group.getId())
                     .setParameter("userId", user.getId())
-                    .setParameter("status", AMEEStatus.ACTIVE)
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -405,9 +449,9 @@ public class SiteService implements Serializable {
                 "SELECT count(gu) " +
                         "FROM GroupUser gu " +
                         "WHERE gu.group.id = :groupId " +
-                        "AND gu.status = :status")
+                        "AND gu.status = :active")
                 .setParameter("groupId", group.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -420,10 +464,10 @@ public class SiteService implements Serializable {
                         "FROM GroupUser gu " +
                         "LEFT JOIN FETCH gu.user u " +
                         "WHERE gu.group.id = :groupId " +
-                        "AND gu.status = :status " +
+                        "AND gu.status = :active " +
                         "ORDER BY u.username")
                 .setParameter("groupId", group.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -441,9 +485,9 @@ public class SiteService implements Serializable {
                 "SELECT count(gu) " +
                         "FROM GroupUser gu " +
                         "WHERE gu.user.id = :userId " +
-                        "AND gu.status = :status")
+                        "AND gu.status = :active")
                 .setParameter("userId", user.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -456,10 +500,10 @@ public class SiteService implements Serializable {
                         "FROM GroupUser gu " +
                         "LEFT JOIN FETCH gu.group g " +
                         "WHERE gu.user.id = :userId " +
-                        "AND gu.status = :status " +
+                        "AND gu.status = :active " +
                         "ORDER BY g.name")
                 .setParameter("userId", user.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -477,10 +521,10 @@ public class SiteService implements Serializable {
                         "FROM GroupUser gu " +
                         "LEFT JOIN FETCH gu.group g " +
                         "WHERE gu.user.id = :userId " +
-                        "AND gu.status = :status " +
+                        "AND gu.status = :active " +
                         "ORDER BY g.name")
                 .setParameter("userId", user.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -493,9 +537,9 @@ public class SiteService implements Serializable {
                 "SELECT gu " +
                         "FROM GroupUser gu " +
                         "WHERE gu.environment.id = :environmentId " +
-                        "AND gu.status = :status")
+                        "AND gu.status = :active")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -507,7 +551,7 @@ public class SiteService implements Serializable {
     }
 
     public void remove(GroupUser groupUser) {
-        observeEventService.raiseEvent("beforeGroupUserDelete", groupUser);
+        beforeGroupUserDelete(groupUser);
         groupUser.setStatus(AMEEStatus.TRASH);
     }
 
@@ -519,10 +563,10 @@ public class SiteService implements Serializable {
                 "SELECT r FROM Role r " +
                         "WHERE r.environment.id = :environmentId " +
                         "AND r.uid = :uid " +
-                        "AND r.status = :status")
+                        "AND r.status = :active")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("uid", uid)
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -538,10 +582,10 @@ public class SiteService implements Serializable {
                 "SELECT r FROM Role r " +
                         "WHERE r.environment.id = :environmentId " +
                         "AND r.name = :name " +
-                        "AND r.status = :status")
+                        "AND r.status = :active")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("name", name.trim())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -561,9 +605,9 @@ public class SiteService implements Serializable {
                 "SELECT count(r) " +
                         "FROM Role r " +
                         "WHERE r.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND r.status = :status")
+                        "AND r.status = :active")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION);
         if (!"".equals(pagerSetClause)) {
@@ -578,10 +622,10 @@ public class SiteService implements Serializable {
                 "SELECT r " +
                         "FROM Role r " +
                         "WHERE r.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND r.status = :status " +
+                        "AND r.status = :active " +
                         "ORDER BY r.name")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -602,10 +646,10 @@ public class SiteService implements Serializable {
                     "SELECT r " +
                             "FROM Role r " +
                             "WHERE r.environment.id = :environmentId " +
-                            "AND r.status = :status " +
+                            "AND r.status = :active " +
                             "ORDER BY r.name")
                     .setParameter("environmentId", environment.getId())
-                    .setParameter("status", AMEEStatus.ACTIVE)
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -620,7 +664,7 @@ public class SiteService implements Serializable {
     }
 
     public void remove(Role role) {
-        observeEventService.raiseEvent("beforeRoleDelete", role);
+        beforeRoleDelete(role);
         role.setStatus(AMEEStatus.TRASH);
     }
 
@@ -633,10 +677,10 @@ public class SiteService implements Serializable {
                     "SELECT u FROM User u " +
                             "WHERE u.environment.id = :environmentId " +
                             "AND u.uid = :userUid " +
-                            "AND u.status = :status")
+                            "AND u.status = :active")
                     .setParameter("environmentId", environment.getId())
                     .setParameter("userUid", uid)
-                    .setParameter("status", AMEEStatus.ACTIVE)
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -653,10 +697,10 @@ public class SiteService implements Serializable {
                 "SELECT u FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
                         "AND u.username = :username " +
-                        "AND u.status = :status")
+                        "AND u.status = :active")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("username", username.trim())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -672,9 +716,9 @@ public class SiteService implements Serializable {
                 "SELECT count(u) " +
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
-                        "AND u.status = :status")
+                        "AND u.status = :active")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -686,10 +730,10 @@ public class SiteService implements Serializable {
                 "SELECT u " +
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
-                        "AND u.status = :status " +
+                        "AND u.status = :active " +
                         "ORDER BY u.username")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("status", AMEEStatus.ACTIVE)
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -707,10 +751,10 @@ public class SiteService implements Serializable {
                     "SELECT u " +
                             "FROM User u " +
                             "WHERE u.environment.id = :environmentId " +
-                            "AND u.status = :status " +
+                            "AND u.status = :active " +
                             "ORDER BY u.username")
                     .setParameter("environmentId", environment.getId())
-                    .setParameter("status", AMEEStatus.ACTIVE)
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -725,7 +769,7 @@ public class SiteService implements Serializable {
     }
 
     public void remove(User user) {
-        observeEventService.raiseEvent("beforeUserDelete", user);
+        beforeUserDelete(user);
         user.setStatus(AMEEStatus.TRASH);
     }
 
@@ -735,8 +779,8 @@ public class SiteService implements Serializable {
         List<App> apps = entityManager.createQuery(
                 "FROM App a " +
                         "ORDER BY a.name " +
-                        "AND a.status = :status ")
-                .setParameter("status", AMEEStatus.ACTIVE)
+                        "AND a.status = :active ")
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
