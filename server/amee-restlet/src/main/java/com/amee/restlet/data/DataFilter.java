@@ -48,8 +48,9 @@ public class DataFilter extends RewriteFilter {
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
         removeEmptySegmentAtEnd(segments);
-        segments.remove(0); // remove '/data'
-        if (!skipRewrite(segments)) {
+        if (!skipRewrite(segments) && segments.get(0).equals("data")) {
+             // remove '/data'
+            segments.remove(0);
             // handle suffixes
             String suffix = handleSuffix(segments);
             // look for path match
@@ -72,15 +73,13 @@ public class DataFilter extends RewriteFilter {
         return CONTINUE;
     }
 
-    protected boolean skipRewrite(List<String> segments) {
-        return (segments.size() > 0) && matchesReservedPrefixes(segments.get(0));
-    }
-
+    @Override
     protected boolean matchesReservedPrefixes(String segment) {
         return segment.equalsIgnoreCase("actions") ||
                 segment.equalsIgnoreCase("dataItemLookup");
     }
 
+    @Override
     protected String handleSuffix(List<String> segments) {
         if (segments.size() > 0) {
             String segment = segments.get(segments.size() - 1);

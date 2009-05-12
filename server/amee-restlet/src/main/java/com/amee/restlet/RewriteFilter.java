@@ -71,5 +71,13 @@ public abstract class RewriteFilter extends Filter {
         }
     }
 
+    protected boolean skipRewrite(List<String> segments) {
+        return (segments.size() > 1) && matchesReservedPrefixes(segments.get(1));
+    }
+
     protected abstract int rewrite(Request request, Response response);
+
+    protected abstract boolean matchesReservedPrefixes(String segment);
+
+    protected abstract String handleSuffix(List<String> segments);
 }

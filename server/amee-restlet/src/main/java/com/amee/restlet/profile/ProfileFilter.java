@@ -56,15 +56,18 @@ public class ProfileFilter extends RewriteFilter {
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
         removeEmptySegmentAtEnd(segments);
-        segments.remove(0); // remove '/profiles'
-        if (segments.size() > 0) {
-            String segment = segments.remove(0);
-            if (!matchesReservedPrefixes(segment)) {
+        if (!skipRewrite(segments) && segments.get(0).equals("profiles")) {
+            // remove '/profiles'
+            segments.remove(0);
+            // only continue rewrite if we're looking for a Profile UID
+            if (segments.size() > 0) {
+                // extract Profile UID
+                String profileUid = segments.remove(0);
                 // handle suffixes
                 String suffix = handleSuffix(segments);
                 // look for Profile matching path
                 Environment environment = (Environment) request.getAttributes().get("environment");
-                Profile profile = profileService.getProfile(environment, segment);
+                Profile profile = profileService.getProfile(environment, profileUid);
                 if (profile != null) {
                     // we found a Profile. Make available to request scope.
                     request.getAttributes().put("profile", profile);
@@ -95,10 +98,12 @@ public class ProfileFilter extends RewriteFilter {
         return CONTINUE;
     }
 
+    @Override
     protected boolean matchesReservedPrefixes(String segment) {
         return segment.equalsIgnoreCase("actions");
     }
 
+    @Override
     protected String handleSuffix(List<String> segments) {
         if (segments.size() > 0) {
             String segment = segments.get(segments.size() - 1);
