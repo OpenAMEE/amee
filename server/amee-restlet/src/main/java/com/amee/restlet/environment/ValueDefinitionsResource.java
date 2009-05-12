@@ -154,8 +154,8 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
     }
 
     @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation()");
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation()");
         if (definitionBrowser.getValueDefinitionActions().isAllowCreate()) {
             Form form = getForm();
             if ((form.getFirstValue("name") != null) && (form.getFirstValue("valueType") != null)) {

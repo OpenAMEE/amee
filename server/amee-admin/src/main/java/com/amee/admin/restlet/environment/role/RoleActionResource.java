@@ -75,18 +75,21 @@ public class RoleActionResource extends BaseResource {
         }
     }
 
+    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
     @Override
     public boolean allowDelete() {
-        return true;
+        return false;
     }
 
+    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
     @Override
     public void removeRepresentations() {
-        if (environmentBrowser.getRoleActions().isAllowModify()) {
-            environmentBrowser.getRole().remove(environmentBrowser.getAction());
-            success();
-        } else {
-            notAuthorized();
-        }
+        throw new UnsupportedOperationException();
+//        if (environmentBrowser.getRoleActions().isAllowModify()) {
+//            environmentBrowser.getRole().remove(environmentBrowser.getAction());
+//            success();
+//        } else {
+//            notAuthorized();
+//        }
     }
 }

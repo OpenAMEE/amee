@@ -1,5 +1,6 @@
 package com.amee.domain;
 
+import com.amee.core.APIUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -10,8 +11,6 @@ import org.w3c.dom.Element;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import com.amee.core.APIUtils;
 
 /**
  * This file is part of AMEE.
@@ -44,10 +43,11 @@ public class APIVersion extends AMEEEntity {
     private String version;
 
     public APIVersion() {
+        super();
     }
 
     public APIVersion(String version) {
-        super();
+        this();
         this.version = version;
     }
 

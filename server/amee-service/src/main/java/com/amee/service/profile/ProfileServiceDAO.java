@@ -322,6 +322,7 @@ public class ProfileServiceDAO implements Serializable {
     public void remove(Profile profile) {
         beforeProfileDelete(profile);
         profile.setStatus(AMEEStatus.TRASH);
+        profile.getPermission().setStatus(AMEEStatus.TRASH);
     }
 
     // ProfileItems

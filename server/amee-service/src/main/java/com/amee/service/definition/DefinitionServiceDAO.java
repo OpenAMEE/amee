@@ -36,8 +36,8 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -72,7 +72,6 @@ public class DefinitionServiceDAO implements Serializable {
     public void beforeItemValueDefinitionDelete(ItemValueDefinition itemValueDefinition) {
         log.debug("beforeItemValueDefinitionDelete");
         dataServiceDao.beforeItemValueDefinitionDelete(itemValueDefinition);
-        // TODO: More cascade dependencies?
     }
 
     @SuppressWarnings(value = "unchecked")

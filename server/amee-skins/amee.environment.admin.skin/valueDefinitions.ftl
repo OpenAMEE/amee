@@ -43,7 +43,7 @@ function deleteValueDefinition(valueDefinitionUid) {
   <h2>Create Value Definition</h2>
   <p>
     <form action='/environments/${environment.uid}/valueDefinitions' method='POST' enctype='application/x-www-form-urlencoded'>
-    Name: <input name='name' type='text' size='30'/><br/><br/>
+    Name: <input name='name' type='text' size='30'/><br/>
     Value Type: <select name='valueType'>
       <#list valueTypes?keys as key>
         <option value='${key}'>${valueTypes[key]}</option>

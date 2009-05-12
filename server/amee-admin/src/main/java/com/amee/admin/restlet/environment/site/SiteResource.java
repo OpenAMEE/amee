@@ -137,19 +137,22 @@ public class SiteResource extends BaseResource {
         }
     }
 
+    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
     @Override
     public boolean allowDelete() {
-        return true;
+        return false;
     }
 
+    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
     // TODO: Prevent deletion of the current site?!
     @Override
     public void removeRepresentations() {
-        if (environmentBrowser.getSiteActions().isAllowDelete()) {
-            siteService.remove(environmentBrowser.getSite());
-            success();
-        } else {
-            notAuthorized();
-        }
+        throw new UnsupportedOperationException();
+//        if (environmentBrowser.getSiteActions().isAllowDelete()) {
+//            siteService.remove(environmentBrowser.getSite());
+//            success();
+//        } else {
+//            notAuthorized();
+//        }
     }
 }

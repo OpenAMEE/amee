@@ -110,19 +110,22 @@ public class ActionResource extends BaseResource {
         }
     }
 
+    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
     @Override
     public boolean allowDelete() {
-        return true;
+        return false;
     }
 
+    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
     // TODO: do not allow delete affecting logged-in auth...
     @Override
     public void removeRepresentations() {
-        if (appBrowser.getAppActions().isAllowModify()) {
-            appService.remove(appBrowser.getAction());
-            success();
-        } else {
-            notAuthorized();
-        }
+        throw new UnsupportedOperationException();
+//        if (appBrowser.getAppActions().isAllowModify()) {
+//            appService.remove(appBrowser.getAction());
+//            success();
+//        } else {
+//            notAuthorized();
+//        }
     }
 }
