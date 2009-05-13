@@ -1,4 +1,4 @@
-<#include 'profileCommon.ftl'>
+<#include '/profileCommon.ftl'>
 <#include '/includes/furniture.ftl'>
 <#include '/includes/before_content.ftl'>
 

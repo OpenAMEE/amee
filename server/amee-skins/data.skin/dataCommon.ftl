@@ -4,3 +4,4 @@
 <#else>
     <#assign basePath = "/data">
 </#if>
+<#assign pageTitle = "AMEE - Data - " + basePath>

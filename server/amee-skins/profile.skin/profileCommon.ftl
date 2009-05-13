@@ -4,3 +4,4 @@
 <#else>
     <#assign basePath = "/profiles">
 </#if>
+<#assign pageTitle = "AMEE - Profiles - " + basePath>

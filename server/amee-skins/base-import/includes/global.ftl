@@ -1,1 +1,3 @@
-<#assign pageTitle = "Jelly Mold">
+<#if !pageTitle??>
+  <#assign pageTitle = "AMEE">
+</#if>

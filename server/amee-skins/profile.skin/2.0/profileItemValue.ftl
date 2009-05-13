@@ -1,4 +1,4 @@
-<#include 'profileCommon.ftl'>
+<#include '/profileCommon.ftl'>
 <#include '/includes/before_content.ftl'>
 
 <script src="/scripts/amee/api_service.js" type="text/javascript"></script>

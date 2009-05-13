@@ -1,7 +1,7 @@
 <#-- TODO: date formatting -->
 <#-- TODO: check form fields match model -->
 
-<#include 'profileCommon.ftl'>
+<#include '/profileCommon.ftl'>
 <#include '/includes/furniture.ftl'>
 <#include '/includes/before_content.ftl'>
 
