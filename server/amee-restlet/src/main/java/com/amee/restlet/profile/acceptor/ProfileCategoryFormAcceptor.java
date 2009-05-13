@@ -77,6 +77,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                     profileItem = acceptProfileItem(resource, form, profileItem);
                 } else {
                     log.warn("accept() - Data Item not found");
+                    // TODO: return more useful error message
                     resource.notFound();
                 }
             } else {
@@ -93,6 +94,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                     profileItem = acceptProfileItem(resource, form, profileItem);
                 } else {
                     log.warn("accept() - Profile Item not found");
+                    // TODO: return more useful error message
                     resource.notFound();
                 }
             } else {
@@ -101,8 +103,9 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             }
         }
 
-        if (profileItem != null)
+        if (profileItem != null) {
             profileItems.add(profileItem);
+        }
 
         return profileItems;
     }

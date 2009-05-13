@@ -2,6 +2,7 @@ package com.amee.restlet.profile.acceptor;
 
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileCategoryResource;
+import com.amee.restlet.utils.APIFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,7 +47,7 @@ public class ProfileCategoryJSONAcceptor implements IProfileCategoryRepresentati
     private static int MAX_PROFILE_BATCH_SIZE = 50;
 
     @Autowired
-    ProfileCategoryFormAcceptor formAcceptor;
+    private ProfileCategoryFormAcceptor formAcceptor;
 
     public ProfileCategoryJSONAcceptor() {
         String maxProfileBatchSize = System.getProperty("amee.MAX_PROFILE_BATCH_SIZE");
@@ -71,13 +72,13 @@ public class ProfileCategoryJSONAcceptor implements IProfileCategoryRepresentati
                     }
 
                     // If the POST inputstream contains more than one entity it is considered a batch request.
-                    if (profileItemsJSON.length() > 1 && resource.isPost())
+                    if (profileItemsJSON.length() > 1 && resource.isPost()) {
                         resource.setIsBatchPost(true);
+                    }
 
                     for (int i = 0; i < profileItemsJSON.length(); i++) {
                         JSONObject profileItemJSON = profileItemsJSON.getJSONObject(i);
                         Form form = new Form();
-
 
                         for (Iterator iterator = profileItemJSON.keys(); iterator.hasNext();) {
                             String key = (String) iterator.next();
@@ -92,7 +93,7 @@ public class ProfileCategoryJSONAcceptor implements IProfileCategoryRepresentati
                             profileItems.addAll(items);
                         } else {
                             log.warn("Profile Item not added/modified");
-                            return profileItems;
+                            break;
                         }
                     }
                 }
@@ -103,6 +104,9 @@ public class ProfileCategoryJSONAcceptor implements IProfileCategoryRepresentati
             }
         } else {
             log.warn("JSON not available");
+        }
+        if (profileItems.isEmpty()) {
+            resource.badRequest(APIFault.EMPTY_LIST);
         }
         return profileItems;
     }

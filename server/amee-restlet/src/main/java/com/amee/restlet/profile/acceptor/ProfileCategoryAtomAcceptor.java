@@ -3,6 +3,7 @@ package com.amee.restlet.profile.acceptor;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.v2.AtomFeed;
+import com.amee.restlet.utils.APIFault;
 import org.apache.abdera.model.Category;
 import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Element;
@@ -73,11 +74,8 @@ public class ProfileCategoryAtomAcceptor implements IProfileCategoryRepresentati
                         profileItems.addAll(items);
                     } else {
                         log.warn("accept() - Profile Item not added");
-                        return profileItems;
                     }
-
                 }
-
             } catch (IOException e) {
                 log.warn("accept() - Caught IOException: " + e.getMessage(), e);
                 resource.error();
@@ -85,6 +83,9 @@ public class ProfileCategoryAtomAcceptor implements IProfileCategoryRepresentati
         } else {
             log.warn("accept() - entity not available");
             resource.error();
+        }
+        if (profileItems.isEmpty()) {
+            resource.badRequest(APIFault.EMPTY_LIST);
         }
         return profileItems;
     }

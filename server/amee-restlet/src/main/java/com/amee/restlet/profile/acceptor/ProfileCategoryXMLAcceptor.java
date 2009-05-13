@@ -3,6 +3,7 @@ package com.amee.restlet.profile.acceptor;
 import com.amee.core.APIUtils;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileCategoryResource;
+import com.amee.restlet.utils.APIFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,15 +45,15 @@ public class ProfileCategoryXMLAcceptor implements IProfileCategoryRepresentatio
     // The default maximum size for batch ProfileItem POSTs.
     private static int MAX_PROFILE_BATCH_SIZE = 50;
 
+    @Autowired
+    private ProfileCategoryFormAcceptor formAcceptor;
+
     public ProfileCategoryXMLAcceptor() {
         String maxProfileBatchSize = System.getProperty("amee.MAX_PROFILE_BATCH_SIZE");
         if (StringUtils.isNumeric(maxProfileBatchSize)) {
-            MAX_PROFILE_BATCH_SIZE = Integer.parseInt(maxProfileBatchSize);   
+            MAX_PROFILE_BATCH_SIZE = Integer.parseInt(maxProfileBatchSize);
         }
     }
-
-    @Autowired
-    ProfileCategoryFormAcceptor formAcceptor;
 
     public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
@@ -74,8 +75,9 @@ public class ProfileCategoryXMLAcceptor implements IProfileCategoryRepresentatio
                         }
 
                         // If the POST inputstream contains more than one entity it is considered a batch request.
-                        if (elements.size() > 1 && resource.isPost())
+                        if (elements.size() > 1 && resource.isPost()) {
                             resource.setIsBatchPost(true);
+                        }
 
                         for (Object o1 : elements) {
                             Element profileItemElem = (Element) o1;
@@ -94,7 +96,7 @@ public class ProfileCategoryXMLAcceptor implements IProfileCategoryRepresentatio
                                 profileItems.addAll(items);
                             } else {
                                 log.warn("Profile Item not added");
-                                return profileItems;
+                                break;
                             }
                         }
                     }
@@ -108,6 +110,9 @@ public class ProfileCategoryXMLAcceptor implements IProfileCategoryRepresentatio
             }
         } else {
             log.warn("XML not available");
+        }
+        if (profileItems.isEmpty()) {
+            resource.badRequest(APIFault.EMPTY_LIST);
         }
         return profileItems;
     }

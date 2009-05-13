@@ -29,19 +29,20 @@ public enum APIFault {
     INVALID_DATE_RANGE,
     INVALID_PRORATA_REQUEST,
     DUPLICATE_ITEM,
-    INVALID_UNIT;
+    INVALID_UNIT,
+    EMPTY_LIST;
 
     private String[] strings = {
-        "",
-        "A request was received with one or more invalid parameters.",
-        "A request was received with one or more parameters not supported by the version of the API.",
-        "A request was received with one or more missing parameters.",
-        "A request was received with one or more datetime parameters having an invalid format.",
-        "A request was received with an invalid date range.",
-        "A prorata request was received without a recognised bounded date range.",
-        "A POST or PUT request was received which would have resulted in a duplicate resource being created.",
-        "A request was received with an invalid unit."
-    };
+            "",
+            "A request was received with one or more invalid parameters.",
+            "A request was received with one or more parameters not supported by the version of the API.",
+            "A request was received with one or more missing parameters.",
+            "A request was received with one or more datetime parameters having an invalid format.",
+            "A request was received with an invalid date range.",
+            "A prorata request was received without a recognised bounded date range.",
+            "A POST or PUT request was received which would have resulted in a duplicate resource being created.",
+            "A request was received with an invalid unit.",
+            "An empty list was received or produced."};
 
     public String getString() {
         return strings[this.ordinal()];
@@ -54,5 +55,4 @@ public enum APIFault {
     public String toString() {
         return getString();
     }
-
 }
