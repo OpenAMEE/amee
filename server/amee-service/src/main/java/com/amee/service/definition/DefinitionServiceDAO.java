@@ -95,6 +95,15 @@ public class DefinitionServiceDAO implements Serializable {
     public void beforeItemDefinitionDelete(ItemDefinition itemDefinition) {
         log.debug("beforeItemDefinitionDelete");
         dataServiceDao.beforeItemDefinitionDelete(itemDefinition);
+        // clear ItemDefinition from matching DataCategories
+        entityManager.createQuery(
+                "UPDATE DataCategory " +
+                        "SET itemDefinition = null " +
+                        "WHERE itemDefinition.id = :itemDefinitionId " +
+                        "AND status = :active")
+                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("itemDefinitionId", itemDefinition.getId())
+                .executeUpdate();
         // trash ItemValueDefinitions for ItemDefinition
         entityManager.createQuery(
                 "UPDATE ItemValueDefinition " +
