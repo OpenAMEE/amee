@@ -35,10 +35,18 @@ public abstract class BaseDataResource extends AMEEResource {
         super.initialise(context, request, response);
         this.dataBrowser = (DataBrowser) beanFactory.getBean("dataBrowser");
     }
-    
+
     public String getFullPath() {
         if (pathItem != null) {
             return "/data" + pathItem.getFullPath();
+        } else {
+            return "/data";
+        }
+    }
+
+    public String getParentPath() {
+        if ((pathItem != null) && (pathItem.getParent() != null)) {
+            return "/data" + pathItem.getParent().getFullPath();
         } else {
             return "/data";
         }

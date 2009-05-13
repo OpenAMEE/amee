@@ -200,7 +200,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
             // clear caches
             dataService.clearCaches(dataItem.getDataCategory());
-            successfulPut(getFullPath());
+            successfulPut(getParentPath() + "/" + dataItem.getResolvedPath());
         } else {
             notAuthorized();
         }

@@ -135,6 +135,14 @@ public class DataItem extends Item {
         return dataItemElement;
     }
 
+    public String getResolvedPath() {
+        if (getPath().isEmpty()) {
+            return getUid();
+        } else {
+            return getPath();
+        }
+    }
+
     @Override
     public String getPath() {
         return path;
