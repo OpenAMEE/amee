@@ -99,7 +99,6 @@ public class AlgorithmContextsResource extends BaseResource implements Serializa
     @Override
     public void handleGet() {
         log.debug("handleGet");
-        //TODO: check allowed actions
         if (definitionBrowser.getAlgorithmActions().isAllowList()) {
             super.handleGet();
         } else {

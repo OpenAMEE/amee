@@ -114,14 +114,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     public void handleGet() {
         log.debug("handleGet");
         if (dataBrowser.getDataItemActions().isAllowView()) {
-            DataItem dataItem = getDataItem();
-            ItemValue itemValue = getItemValue();
-            if (itemValue.getItem().equals(dataItem)) {
-                super.handleGet();
-            } else {
-                log.warn("itemValue not found");
-                notFound();
-            }
+            super.handleGet();
         } else {
             notAuthorized();
         }
