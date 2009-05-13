@@ -98,7 +98,8 @@ public class DefinitionServiceDAO implements Serializable {
         // clear ItemDefinition from matching DataCategories
         entityManager.createQuery(
                 "UPDATE DataCategory " +
-                        "SET itemDefinition = null " +
+                        "SET itemDefinition = null, " +
+                        "modified = current_timestamp() " +
                         "WHERE itemDefinition.id = :itemDefinitionId " +
                         "AND status = :active")
                 .setParameter("active", AMEEStatus.ACTIVE)
@@ -107,7 +108,8 @@ public class DefinitionServiceDAO implements Serializable {
         // trash ItemValueDefinitions for ItemDefinition
         entityManager.createQuery(
                 "UPDATE ItemValueDefinition " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE itemDefinition.id = :itemDefinitionId " +
                         "AND status = :active")
                 .setParameter("trash", AMEEStatus.TRASH)
@@ -117,7 +119,8 @@ public class DefinitionServiceDAO implements Serializable {
         // trash Algorithms for ItemDefinition
         entityManager.createQuery(
                 "UPDATE Algorithm " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE itemDefinition.id = :itemDefinitionId " +
                         "AND status = :active")
                 .setParameter("trash", AMEEStatus.TRASH)

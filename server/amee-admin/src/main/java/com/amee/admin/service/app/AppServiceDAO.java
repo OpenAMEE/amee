@@ -1,5 +1,6 @@
 package com.amee.admin.service.app;
 
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.Action;
 import com.amee.domain.site.App;
@@ -23,13 +24,16 @@ class AppServiceDAO implements Serializable {
 
     // Apps
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public App getAppByUid(String uid) {
         App app = null;
         if (uid != null) {
             List<App> apps = entityManager.createQuery(
-                    "SELECT a FROM App a " +
-                            "WHERE a.uid = :uid")
+                    "SELECT a " +
+                            "FROM App a " +
+                            "WHERE a.uid = :uid " +
+                            "AND a.status = :active")
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setParameter("uid", uid)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", "query.appService")
@@ -41,13 +45,16 @@ class AppServiceDAO implements Serializable {
         return app;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public App getAppByName(String name) {
         App app = null;
         if (name != null) {
             List<App> apps = entityManager.createQuery(
-                    "SELECT a FROM App a " +
-                            "WHERE a.name = :name")
+                    "SELECT a " +
+                            "FROM App a " +
+                            "WHERE a.name = :name " +
+                            "AND a.status = :active")
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setParameter("name", name.trim())
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", "query.appService")
@@ -59,12 +66,14 @@ class AppServiceDAO implements Serializable {
         return app;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<App> getApps(Pager pager) {
         // first count all apps
         long count = (Long) entityManager.createQuery(
                 "SELECT count(a) " +
-                        "FROM App a")
+                        "FROM App a " +
+                        "WHERE a.status = :active")
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.appService")
                 .getSingleResult();
@@ -75,7 +84,9 @@ class AppServiceDAO implements Serializable {
         List<App> apps = entityManager.createQuery(
                 "SELECT a " +
                         "FROM App a " +
+                        "WHERE a.status = :active " +
                         "ORDER BY a.name")
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.appService")
                 .setMaxResults(pager.getItemsPerPage())
@@ -87,12 +98,14 @@ class AppServiceDAO implements Serializable {
         return apps;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<App> getApps() {
         return (List<App>) entityManager.createQuery(
                 "SELECT a " +
-                "FROM App a " +
+                        "FROM App a " +
+                        "WHERE a.status = :active " +
                         "ORDER BY a.name")
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.appService")
                 .getResultList();
@@ -108,13 +121,16 @@ class AppServiceDAO implements Serializable {
 
     // Actions
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public Action getActionByUid(App app, String uid) {
         Action action = null;
         List<Action> actions = entityManager.createQuery(
-                "SELECT a FROM Action a " +
+                "SELECT a " +
+                        "FROM Action a " +
                         "WHERE a.app.id = :appId " +
-                        "AND a.uid = :uid")
+                        "AND a.uid = :uid " +
+                        "AND a.status = :active")
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setParameter("appId", app.getId())
                 .setParameter("uid", uid)
                 .setHint("org.hibernate.cacheable", true)
@@ -126,13 +142,16 @@ class AppServiceDAO implements Serializable {
         return action;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public Action getActionByUid(String uid) {
         Action action = null;
         if (uid != null) {
             List<Action> actions = entityManager.createQuery(
-                    "SELECT a FROM Action a " +
-                            "WHERE a.uid = :uid")
+                    "SELECT a " +
+                            "FROM Action a " +
+                            "WHERE a.uid = :uid " +
+                            "AND a.status = :active")
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setParameter("uid", uid)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", "query.appService")
@@ -144,13 +163,15 @@ class AppServiceDAO implements Serializable {
         return action;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public Action getActionByKey(String key) {
         Action action = null;
         if (key != null) {
             List<Action> actions = entityManager.createQuery(
                     "SELECT a FROM Action a " +
-                            "WHERE a.key = :key")
+                            "WHERE a.key = :key " +
+                            "AND a.status = :active")
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setParameter("key", key)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", "query.appService")
@@ -166,14 +187,16 @@ class AppServiceDAO implements Serializable {
         return getActions(app, null);
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<Action> getActions(App app, Pager pager) {
         if (pager != null) {
             // count all objects
             long count = (Long) entityManager.createQuery(
                     "SELECT count(a) " +
                             "FROM Action a " +
-                            "WHERE a.app.id = :appId")
+                            "WHERE a.app.id = :appId " +
+                            "AND a.status = :active")
+                    .setParameter("active", AMEEStatus.ACTIVE)
                     .setParameter("appId", app.getId())
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", "query.appService")
@@ -187,7 +210,9 @@ class AppServiceDAO implements Serializable {
                 "SELECT a " +
                         "FROM Action a " +
                         "WHERE a.app.id = :appId " +
+                        "AND a.status = :active " +
                         "ORDER BY a.key")
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setParameter("appId", app.getId())
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.appService");
@@ -204,12 +229,14 @@ class AppServiceDAO implements Serializable {
         return actions;
     }
 
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     public List<Action> getActions(Pager pager) {
         // first count all objects
         long count = (Long) entityManager.createQuery(
                 "SELECT count(a) " +
-                        "FROM Action a")
+                        "FROM Action a " +
+                        "WHERE a.status = active")
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.appService")
                 .getSingleResult();
@@ -220,7 +247,9 @@ class AppServiceDAO implements Serializable {
         List<Action> actions = entityManager.createQuery(
                 "SELECT a " +
                         "FROM Action a " +
+                        "WHERE a.status = :active " +
                         "ORDER BY a.app.name, a.name")
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.appService")
                 .setMaxResults(pager.getItemsPerPage())

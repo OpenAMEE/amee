@@ -72,7 +72,8 @@ public class ProfileServiceDAO implements Serializable {
         SQLQuery query = session.createSQLQuery(
                 new StringBuilder()
                         .append("UPDATE ITEM_VALUE iv, ITEM i ")
-                        .append("SET iv.STATUS = :trash ")
+                        .append("SET iv.STATUS = :trash, ")
+                        .append("iv.MODIFIED = current_timestamp() ")
                         .append("WHERE iv.ITEM_ID = i.ID ")
                         .append("AND i.TYPE = 'PI' ")
                         .append("AND i.PROFILE_ID = :profileId ")
@@ -86,7 +87,8 @@ public class ProfileServiceDAO implements Serializable {
         entityManager.createQuery(
                 new StringBuilder()
                         .append("UPDATE ProfileItem ")
-                        .append("SET status = :trash ")
+                        .append("SET status = :trash, ")
+                        .append("modified = current_timestamp() ")
                         .append("WHERE profile.id = :profileId ")
                         .append("AND status = :active").toString())
                 .setParameter("trash", AMEEStatus.TRASH)
@@ -101,7 +103,8 @@ public class ProfileServiceDAO implements Serializable {
         // trash ItemValues for ProfileItem
         entityManager.createQuery(
                 "UPDATE ItemValue iv " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE iv.item.id = :profileItemId " +
                         "AND status = :active")
                 .setParameter("trash", AMEEStatus.TRASH)
@@ -116,7 +119,8 @@ public class ProfileServiceDAO implements Serializable {
         // trash ItemValues for ProfileItems
         entityManager.createQuery(
                 "UPDATE ItemValue iv " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE iv.item.id IN " +
                         "(SELECT pi.id FROM ProfileItem pi WHERE pi.dataItem.id = :dataItemId) " +
                         "AND status = :active")
@@ -127,7 +131,8 @@ public class ProfileServiceDAO implements Serializable {
         // trash ProfileItems
         entityManager.createQuery(
                 "UPDATE ProfileItem " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE dataItem.id = :dataItemId " +
                         "AND status = :active")
                 .setParameter("trash", AMEEStatus.TRASH)
@@ -142,7 +147,8 @@ public class ProfileServiceDAO implements Serializable {
         // trash ItemValues for ProfileItems
         entityManager.createQuery(
                 "UPDATE ItemValue " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE item.id IN " +
                         "(SELECT pi.id FROM ProfileItem pi WHERE pi.dataCategory.id = :dataCategoryId) " +
                         "AND status = :active")
@@ -153,7 +159,8 @@ public class ProfileServiceDAO implements Serializable {
         // trash ProfileItems
         entityManager.createQuery(
                 "UPDATE ProfileItem " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE dataCategory.id = :dataCategoryId " +
                         "AND status = :active")
                 .setParameter("trash", AMEEStatus.TRASH)
@@ -169,9 +176,11 @@ public class ProfileServiceDAO implements Serializable {
                 "SELECT p " +
                         "FROM Profile p " +
                         "WHERE p.environment.id = :environmentId " +
-                        "AND p.permission.user.id = :userId")
+                        "AND p.permission.user.id = :userId " +
+                        "AND p.status = :active")
                 .setParameter("environmentId", user.getEnvironment().getId())
                 .setParameter("userId", user.getId())
+                .setParameter("active", AMEEStatus.ACTIVE)
                 .getResultList();
         for (Profile profile : profiles) {
             remove(profile);

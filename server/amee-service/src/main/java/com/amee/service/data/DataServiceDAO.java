@@ -72,7 +72,8 @@ public class DataServiceDAO implements Serializable {
         // trash ItemValues for DataItem
         entityManager.createQuery(
                 "UPDATE ItemValue iv " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE iv.item.id = :profileItemId " +
                         "AND iv.status = :active")
                 .setParameter("trash", AMEEStatus.TRASH)
@@ -87,7 +88,8 @@ public class DataServiceDAO implements Serializable {
         // trash root DataCategories
         List<DataCategory> dataCategories = entityManager.createQuery(
                 "UPDATE DataCategory " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE environment.id = :environmentId " +
                         "AND dataCategory IS NULL " +
                         "AND status = :active")
@@ -106,7 +108,8 @@ public class DataServiceDAO implements Serializable {
         // remove ItemValues for Items (DataItems & ProfileItems)
         entityManager.createQuery(
                 "UPDATE ItemValue " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE item.id IN " +
                         "(SELECT i.id FROM Item i WHERE i.itemDefinition.id = :itemDefinitionId) " +
                         "AND status = :active")
@@ -117,7 +120,8 @@ public class DataServiceDAO implements Serializable {
         // trash Items (DataItems & ProfileItems)
         entityManager.createQuery(
                 "UPDATE Item " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE itemDefinition.id = :itemDefinitionId " +
                         "AND status = :active")
                 .setParameter("trash", AMEEStatus.TRASH)
@@ -132,7 +136,8 @@ public class DataServiceDAO implements Serializable {
         // remove ItemValues (from DataItems and ProfileItems)
         entityManager.createQuery(
                 "UPDATE ItemValue " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE itemValueDefinition.id = :itemValueDefinitionId " +
                         "AND status = :active")
                 .setParameter("trash", AMEEStatus.TRASH)
@@ -190,7 +195,8 @@ public class DataServiceDAO implements Serializable {
         SQLQuery query = session.createSQLQuery(
                 new StringBuilder()
                         .append("UPDATE ITEM_VALUE iv, ITEM i ")
-                        .append("SET iv.STATUS = :active ")
+                        .append("SET iv.STATUS = :active, ")
+                        .append("iv.MODIFIED = current_timestamp() ")
                         .append("WHERE iv.ITEM_ID = i.ID ")
                         .append("AND i.TYPE = 'DI' ")
                         .append("AND i.DATA_CATEGORY_ID = :dataCategoryId").toString());
@@ -201,7 +207,8 @@ public class DataServiceDAO implements Serializable {
         // trash DataItems
         entityManager.createQuery(
                 "UPDATE DataItem " +
-                        "SET status = :trash " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
                         "WHERE dataCategory.id = :dataCategoryId " +
                         "AND status = :active")
                 .setParameter("trash", AMEEStatus.TRASH)
