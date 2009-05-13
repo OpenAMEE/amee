@@ -2,9 +2,9 @@ package com.amee.restlet.profile.builder.v2;
 
 import com.amee.calculation.service.ProRataProfileService;
 import com.amee.core.APIUtils;
-import com.amee.domain.Pager;
 import com.amee.core.CO2AmountUnit;
 import com.amee.core.Decimal;
+import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
@@ -74,7 +74,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             JSONArray jsonProfileItems = new JSONArray();
             for (ProfileItem item : getProfileItems(resource, resource.getPager())) {
                 JSONObject itemJSON = new JSONObject();
-                obj.put("uri", getFullPath(item));
+                itemJSON.put("uri", getFullPath(item));
                 jsonProfileItems.put(itemJSON);
             }
             obj.put("profileItems", jsonProfileItems);
