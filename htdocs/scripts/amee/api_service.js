@@ -155,7 +155,8 @@ var ApiService = Class.create({
         // init internal
         this.apiVersion = params.apiVersion || '1.0';
         this.response = null;
-        this.pager = null;
+        this.pagerTop = null;
+        this.pagerBtm = null;
     },
     getDateFormat: function() {
         if (this.apiVersion == "1.0") {
@@ -274,12 +275,15 @@ var ApiService = Class.create({
         if (!pagerJSON) {
             pagerJSON = json.pager;
         }
-        this.pager = new Pager({json : pagerJSON, apiService : this, pagerElementName : this.pagerTopElementName});
+
         if (this.pagerTopElement) {
-            this.pagerTopElement.replace(this.getPagerElements());
+            this.pagerTop = new Pager({json : pagerJSON, apiService : this, pagerElementName : this.pagerTopElementName});
+            this.pagerTopElement.replace(this.pagerTop.getElements());
         }
+
         if (this.pagerTopElement) {
-            this.pagerBtmElement.replace(this.getPagerElements());
+            this.pagerBtm = new Pager({json : pagerJSON, apiService : this, pagerElementName : this.pagerBtmElementName});
+            this.pagerBtmElement.replace(this.pagerBtm.getElements());
         }
     },
     renderDataCategoryApiResponse: function() {
@@ -341,9 +345,6 @@ var ApiService = Class.create({
                 this.dataContentElement.replace(pElement);
             }
         }
-    },
-    getPagerElements: function() {
-        return this.pager.getElements();
     },
     getTableHeadingElement: function(json) {
         // implementation required
