@@ -831,7 +831,7 @@ var ItemDefinition = Class.create({
 var ItemDefinitionsResource = Class.create({
     initialize: function() {
         this.itemDefinitions = [];
-        this.path = '/admin/itemDefinitions';
+        this.path = '/definitions/itemDefinitions';
     },
     start: function() {
         this.load();
