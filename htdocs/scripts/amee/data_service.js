@@ -62,6 +62,9 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
     // Initialization
     initialize: function($super, params) {
         $super(params);
+        this.dataCategoriesHeading = params.dataCategoriesHeading || 'Data Categories';
+        this.dataCategoriesHeadingElementName = params.dataCategoriesHeadingElementName || 'apiDataCategoriesHeading';
+        this.dataCategoriesContentElementName = params.dataCategoriesContentElementName || 'apiDataCategoriesContent';
         this.updateCategory = params.updateCategory || false;
         this.createCategory = params.createCategory || false;
     },
@@ -74,12 +77,13 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         }
 
         if (json.children.dataCategories.length > 0) {
-            // update elements
-            this.headingCategoryElement = $(this.headingElementName);
-            this.headingContentElement = $(this.headingElementName);
 
+            // update elements
+            this.dataCategoriesHeadingElement = $(this.dataCategoriesHeadingElementName);
+            this.dataCategoriesContentElement = $(this.dataCategoriesContentElementName);
+            
             // set section heading
-            this.headingCategoryElement.innerHTML = this.headingCategory;
+            this.dataCategoriesHeadingElement.innerHTML = this.dataCategoriesHeading;
 
             // create table headings
             var tableBody = new Element('tbody').insert(this.getHeadingCategoryElement());
@@ -91,8 +95,8 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             }
 
             // replace table
-            var tableElement = new Element('table', {id : this.contentElementName}).insert(tableBody);
-            this.headingContentElement.replace(tableElement);
+            var tableElement = new Element('table', {id : this.dataCategoriesContentElementName}).insert(tableBody);
+            this.dataCategoriesContentElement.replace(tableElement);
         }
 
         if (this.createCategory) {
@@ -111,7 +115,8 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         var createCatElement = new Element('div', {id : id});
 
         if ((dataCategoryActions.isAllowCreate() || dataItemActions.isAllowCreate()) &&
-                ITEM_DEFINITIONS.available) {
+            ITEM_DEFINITIONS.available) {
+
             createCatElement.insert(new Element('h2').update('Create Data Category / Data Item'));
 
             var dataCategory = json.dataCategory;
@@ -161,6 +166,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         var updateCatElement = new Element('div', {id : id});
 
         if (dataCategoryActions.isAllowModify() && ITEM_DEFINITIONS.available) {
+
             updateCatElement.insert(new Element('h2').update('Update Data Category'));
 
             var dataCategory = json.dataCategory;
@@ -198,7 +204,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
         }
         return updateCatElement;
     },
-    getHeadingElement: function(json) {
+    getTableHeadingElement: function(json) {
         return new Element('tr')
                 .insert(this.getHeadingData('Item'))
                 .insert(this.getHeadingData('Actions'));
@@ -265,19 +271,16 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
 
         if (dataCategoryActions.isAllowDelete()) {
             var dUrl = "'" + uid + "','" + window.location.pathname + "/" + path + "'";
-
-            actions.insert(new Element('a',
-            {
-                onClick : dMethod + '(' + dUrl + ') ; return false;',
-                href : 'javascript:' + dMethod + '(' + dUrl + ');'
-            })
-                    .insert(new Element('img',
-            {
-                src : '/images/icons/page_delete.png',
-                title : 'Delete',
-                alt : 'Delete',
-                border : 0
-            })));
+            actions.insert(
+                    new Element('a', {
+                        onClick: dMethod + '(' + dUrl + ') ; return false;',
+                        href: 'javascript:' + dMethod + '(' + dUrl + ');'})
+                            .insert(
+                            new Element('img', {
+                                src: '/images/icons/page_delete.png',
+                                title: 'Delete',
+                                alt: 'Delete',
+                                border: 0})));
         }
         return actions;
     },
@@ -296,7 +299,6 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             };
             this.apiServiceCall(null, params);
         }
-
     },
     createDataCategorySuccess: function() {
         // update elements and status
@@ -417,7 +419,7 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
 
         this.dataContentElement.replace(pElement);
     },
-    getHeadingElement: function(json) {
+    getTableHeadingElement: function(json) {
         return new Element('tr')
                 .insert(this.getHeadingData('Name'))
                 .insert(this.getHeadingData('Value Definition'))

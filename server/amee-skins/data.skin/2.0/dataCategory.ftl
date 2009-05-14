@@ -24,6 +24,7 @@
 
     // create resource objects
     var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
+    var DEFINITION_ACTIONS = new ActionsResource({path: '/definitions/actions'});
     var ITEM_DEFINITIONS = new ItemDefinitionsResource();
     var dataCategoryApiService = new DataCategoryApiService({
         heading : "Data Items",
@@ -34,6 +35,9 @@
         dataHeadingCategory : 'Data Category Details',
         dataHeadingCategoryElementName : 'apiDataCategoryHeading',
         dataContentElementName : "apiDataCategoryContent",
+        dataCategoriesHeading : 'Data Categories',
+        dataCategoriesHeadingElementName : 'apiDataCategoriesHeading',
+        dataCategoriesContentElementName : "apiDataCategoriesContent",
         apiVersion : '2.0',
         updateCategory: true,
         createCategory: true});
@@ -41,6 +45,7 @@
     // use resource loader to load resources and notify on loaded
     var resourceLoader = new ResourceLoader();
     resourceLoader.addResource(DATA_ACTIONS);
+    resourceLoader.addResource(DEFINITION_ACTIONS);
     resourceLoader.addResource(ITEM_DEFINITIONS);
     resourceLoader.observe('loaded', function() {
         dataCategoryApiService.start();
@@ -60,10 +65,15 @@
 
 <h2 id="apiDataCategoryHeading"></h2>
 <p id="apiDataCategoryContent"></p>
+
+<h2 id="apiDataCategoriesHeading"></h2>
+<p id="apiDataCategoriesContent"></p>
+
 <h2 id="apiHeading"></h2>
 <div id="apiTopPager"></div>
 <table id="apiContent"></table>
 <div id="apiBottomPager"></div>
+
 <div id="apiUpdateDataCategory"></div>
 <div id="apiUpdateSubmitStatus"></div><br/>
 <div id="apiCreateDataCategory"></div>

@@ -258,7 +258,7 @@ var ApiService = Class.create({
         this.headingElement.innerHTML = this.heading;
 
         // create table headings
-        var tableBody = new Element('tbody').insert(this.getHeadingElement(json));
+        var tableBody = new Element('tbody').insert(this.getTableHeadingElement(json));
 
         // create table details
         var detailRows = this.getDetailRows(json);
@@ -274,13 +274,11 @@ var ApiService = Class.create({
         if (!pagerJSON) {
             pagerJSON = json.pager;
         }
+        this.pager = new Pager({json : pagerJSON, apiService : this, pagerElementName : this.pagerTopElementName});
         if (this.pagerTopElement) {
-            this.pager = new Pager({json : pagerJSON, apiService : this, pagerElementName : this.pagerTopElementName});
             this.pagerTopElement.replace(this.getPagerElements());
         }
-
         if (this.pagerTopElement) {
-            this.pager = new Pager({json : pagerJSON, apiService : this, pagerElementName : this.pagerBtmElementName});
             this.pagerBtmElement.replace(this.getPagerElements());
         }
     },
@@ -347,7 +345,7 @@ var ApiService = Class.create({
     getPagerElements: function() {
         return this.pager.getElements();
     },
-    getHeadingElement: function(json) {
+    getTableHeadingElement: function(json) {
         // implementation required
         return "";
     },

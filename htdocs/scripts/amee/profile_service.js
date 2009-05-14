@@ -83,7 +83,7 @@ var ProfileItemsApiService = Class.create(BaseProfileApiService, ({
         // replace total amount
         this.totalAmountElement.replace(totalElement);
     },
-    getHeadingElement: function(json) {
+    getTableHeadingElement: function(json) {
         return new Element('tr')
                 .insert(this.getHeadingData('item'))
                 .insert(this.getHeadingData(this.getUnit(json)))
@@ -229,7 +229,7 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
 
             // render form table info
             var tableBody = new Element('tbody');
-            tableBody.insert(this.getHeadingElement());
+            tableBody.insert(this.getTableHeadingElement());
             tableBody.insert(this.getFormInfoElement('Name', 'name', profileItem.name, 30));
             tableBody.insert(this.getFormInfoElement('Start Date', 'startDate', profileItem.startDate, 20));
             tableBody.insert(this.getFormInfoElement('End Date', 'endDate', profileItem.endDate, 20));
@@ -342,7 +342,7 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
         spanElement.insert(new Element('br'));
         return spanElement;
     },
-    getHeadingElement: function(json) {
+    getTableHeadingElement: function(json) {
         return new Element('tr')
                 .insert(this.getHeadingData('Name'))
                 .insert(this.getHeadingData('Value'));
@@ -388,7 +388,7 @@ var ProfilesApiService = Class.create(BaseProfileApiService, ({
     renderDataCategoryApiResponse: function() {
         // override but do nothing
     },
-    getHeadingElement: function(json) {
+    getTableHeadingElement: function(json) {
         return new Element('tr')
                 .insert(this.getHeadingData('Path'))
             // .insert(this.getHeadingData('Group'))

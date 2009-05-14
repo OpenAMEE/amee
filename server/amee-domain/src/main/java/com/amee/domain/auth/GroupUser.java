@@ -56,6 +56,10 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
         roles.add(role);
     }
 
+    public void remove(Role role) {
+        roles.remove(role);
+    }
+
     public String toString() {
         return "GroupUser_" + getUid();
     }
