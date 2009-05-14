@@ -137,7 +137,7 @@ public class UserGroupRolesResource extends BaseResource {
                 GroupUser groupUser = environmentBrowser.getGroupUser();
                 Role role = siteService.getRoleByUid(environmentBrowser.getEnvironment(), roleUid);
                 if (role != null) {
-                    groupUser.getRoles().add(role);
+                    groupUser.add(role);
                     updatedGroupUser = groupUser;
                 }
             }

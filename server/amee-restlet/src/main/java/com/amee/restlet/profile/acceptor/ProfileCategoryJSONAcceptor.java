@@ -2,6 +2,7 @@ package com.amee.restlet.profile.acceptor;
 
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileCategoryResource;
+import com.amee.restlet.utils.APIException;
 import com.amee.restlet.utils.APIFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -56,8 +57,11 @@ public class ProfileCategoryJSONAcceptor implements IProfileCategoryRepresentati
         }
     }
 
-    public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) {
+    @Override
+    public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) throws APIException {
+
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
+        
         if (entity.isAvailable()) {
             try {
                 JSONObject rootJSON = new JSONObject(entity.getText());
@@ -67,8 +71,7 @@ public class ProfileCategoryJSONAcceptor implements IProfileCategoryRepresentati
                     // AMEE 2.0 has a maximum allowed size for batch POSTs and POSTs. If this request execeeds that limit
                     // do not process the request and return a 400 status
                     if ((profileItemsJSON.length() > MAX_PROFILE_BATCH_SIZE) && (resource.getAPIVersion().isNotVersionOne())) {
-                        resource.badRequest();
-                        return profileItems;
+                        throw new APIException(APIFault.MAX_BATCH_SIZE_EXCEEDED);
                     }
 
                     // If the POST inputstream contains more than one entity it is considered a batch request.
@@ -76,10 +79,12 @@ public class ProfileCategoryJSONAcceptor implements IProfileCategoryRepresentati
                         resource.setIsBatchPost(true);
                     }
 
+                    // Iterate over JSON ProfileItem submissions.
                     for (int i = 0; i < profileItemsJSON.length(); i++) {
+
+                        // Convert JSON submission into a Restlet Form.
                         JSONObject profileItemJSON = profileItemsJSON.getJSONObject(i);
                         Form form = new Form();
-
                         for (Iterator iterator = profileItemJSON.keys(); iterator.hasNext();) {
                             String key = (String) iterator.next();
                             form.add(key, profileItemJSON.getString(key));
@@ -88,26 +93,33 @@ public class ProfileCategoryJSONAcceptor implements IProfileCategoryRepresentati
                         // Representations to be returned for batch requests can be specified as a query parameter.
                         form.add("representation", resource.getForm().getFirstValue("representation"));
 
-                        List<ProfileItem> items = formAcceptor.accept(resource, form);
-                        if (!items.isEmpty()) {
-                            profileItems.addAll(items);
-                        } else {
-                            log.warn("Profile Item not added/modified");
-                            break;
-                        }
+                        // Use FormAcceptor to do the work.
+                        profileItems.addAll(formAcceptor.accept(resource, form));
                     }
+
+                } else {
+                    log.warn("profileItems node not found");
+                    throw new APIException(APIFault.INVALID_CONTENT);
                 }
+
             } catch (JSONException e) {
                 log.warn("Caught JSONException: " + e.getMessage(), e);
+                throw new APIException(APIFault.INVALID_CONTENT);
             } catch (IOException e) {
                 log.warn("Caught JSONException: " + e.getMessage(), e);
+                throw new APIException(APIFault.INVALID_CONTENT);
             }
+
         } else {
             log.warn("JSON not available");
+            throw new APIException(APIFault.INVALID_CONTENT);
         }
+
+        // Must have at least one ProfileItem.
         if (profileItems.isEmpty()) {
-            resource.badRequest(APIFault.EMPTY_LIST);
+            throw new APIException(APIFault.EMPTY_LIST);
         }
+
         return profileItems;
     }
 }

@@ -1,10 +1,10 @@
 package com.amee.restlet.profile;
 
 import com.amee.domain.Pager;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.StartEndDate;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataService;
@@ -56,6 +56,8 @@ public abstract class BaseProfileResource extends AMEEResource {
                 getProfile().getEnvironment().equals(environment);
     }
 
+
+    @Override
     public Pager getPager() {
         return getPager(getItemsPerPage());
     }
@@ -112,39 +114,43 @@ public abstract class BaseProfileResource extends AMEEResource {
         }
     }
 
-    //TODO - Move to filter - validation is not general to all Profile Resources
     public boolean validateParameters() {
+        APIFault apiFault = getValidationAPIFault();
+        if (apiFault.equals(APIFault.NONE)) {
+            return true;
+        } else {
+            badRequest(apiFault);
+            return false;
+        }
+    }
+
+    //TODO - Move to filter - validation is not general to all Profile Resources
+    public APIFault getValidationAPIFault() {
         if (getAPIVersion().isVersionOne()) {
             if (containsCalendarParams()) {
-                badRequest(APIFault.INVALID_API_PARAMETERS);
-                return false;
+                return APIFault.INVALID_API_PARAMETERS;
             }
         } else {
             if (!validISODateTimeFormats()) {
-                badRequest(APIFault.INVALID_DATE_FORMAT);
-                return false;
+                return APIFault.INVALID_DATE_FORMAT;
             }
             if (isGET()) {
                 if (containsProfileDate()) {
-                    badRequest(APIFault.INVALID_API_PARAMETERS);
-                    return false;
+                    return APIFault.INVALID_API_PARAMETERS;
                 }
                 if (proRateModeHasNoEndDate()) {
-                    badRequest(APIFault.INVALID_PRORATA_REQUEST);
-                    return false;
+                    return APIFault.INVALID_PRORATA_REQUEST;
                 }
             } else {
                 if (containsValidFromOrEnd()) {
-                    badRequest(APIFault.INVALID_API_PARAMETERS);
-                    return false;
+                    return APIFault.INVALID_API_PARAMETERS;
                 }
                 if (containsPerUnitNoneAndNoDuraton()) {
-                    badRequest(APIFault.INVALID_API_PARAMETERS);
-                    return false;
+                    return APIFault.INVALID_API_PARAMETERS;
                 }
             }
         }
-        return true;
+        return APIFault.NONE;
     }
 
     private boolean validISODateTimeFormats() {
@@ -193,5 +199,4 @@ public abstract class BaseProfileResource extends AMEEResource {
         //TODO
         return false;
     }
-
 }

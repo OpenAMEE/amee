@@ -1,35 +1,52 @@
-package com.amee.restlet.profile.acceptor;
-
-import com.amee.domain.profile.ProfileItem;
-import com.amee.restlet.profile.ProfileCategoryResource;
-import com.amee.restlet.utils.APIException;
-import org.restlet.data.Form;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-/**
+/*
  * This file is part of AMEE.
- * <p/>
+ *
+ * Copyright (c) 2007, 2008, 2009 AMEE UK LIMITED (help@amee.com).
+ *
  * AMEE is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * AMEE is free software and is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * <p/>
+ *
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-@Service
-public interface IProfileCategoryFormAcceptor {
+package com.amee.restlet.utils;
 
-    List<ProfileItem> accept(ProfileCategoryResource resource, Form form) throws APIException;
+public class APIException extends Exception {
 
+    private APIFault apiFault;
+
+    public APIException() {
+        super();
+    }
+
+    public APIException(String message) {
+        super(message);
+    }
+
+    public APIException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public APIException(Throwable cause) {
+        super(cause);
+    }
+
+    public APIException(APIFault apiFault) {
+        super();
+        this.apiFault = apiFault;
+    }
+
+    public APIFault getApiFault() {
+        return apiFault;
+    }
 }

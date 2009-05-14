@@ -11,6 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -209,6 +210,6 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
                 activeRoles.add(role);
             }
         }
-        return activeRoles;
+        return Collections.unmodifiableSet(activeRoles);
     }
 }

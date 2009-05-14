@@ -27,6 +27,7 @@ import com.amee.restlet.profile.acceptor.ProfileCategoryJSONAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileCategoryXMLAcceptor;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileCategoryResourceBuilderFactory;
+import com.amee.restlet.utils.APIException;
 import com.amee.service.profile.ProfileConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -164,8 +165,9 @@ public class ProfileCategoryResource extends BaseProfileResource {
     protected void acceptOrStore(Representation entity) {
         log.debug("acceptOrStore()");
         if (isAcceptOrStoreAuthorized()) {
-            profileItems = doAcceptOrStore(entity);
-            if (!isError()) {
+            try {
+                // get list of updated or created ProfileItems
+                profileItems = doAcceptOrStore(entity);
                 // clear caches
                 profileService.clearCaches(getProfile());
                 if (isPost()) {
@@ -173,6 +175,8 @@ public class ProfileCategoryResource extends BaseProfileResource {
                 } else {
                     successfulPut(getFullPath());
                 }
+            } catch (APIException e) {
+                badRequest(e.getApiFault());
             }
         } else {
             notAuthorized();
@@ -184,8 +188,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
                 (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()));
     }
 
-    public List<ProfileItem> doAcceptOrStore(Representation entity) {
-
+    public List<ProfileItem> doAcceptOrStore(Representation entity) throws APIException {
         // Accept the representation according to the MediaType
         MediaType type = entity.getMediaType();
         if (MediaType.APPLICATION_JSON.includes(type)) {

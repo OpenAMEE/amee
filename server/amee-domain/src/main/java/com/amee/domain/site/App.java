@@ -11,6 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -175,6 +176,6 @@ public class App extends AMEEEntity implements Comparable {
                 activeActions.add(action);
             }
         }
-        return activeActions;
+        return Collections.unmodifiableSet(activeActions);
     }
 }

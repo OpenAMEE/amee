@@ -3,6 +3,7 @@ package com.amee.restlet.profile.acceptor;
 import com.amee.core.APIUtils;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileCategoryResource;
+import com.amee.restlet.utils.APIException;
 import com.amee.restlet.utils.APIFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -55,23 +56,28 @@ public class ProfileCategoryXMLAcceptor implements IProfileCategoryRepresentatio
         }
     }
 
-    public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) {
+    @Override
+    public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) throws APIException {
+
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
+
         if (entity.isAvailable()) {
             try {
+                // Get root/ProfileCategory element.
                 Element rootElem = APIUtils.getRootElement(entity.getStream());
                 if (rootElem.getName().equalsIgnoreCase("ProfileCategory")) {
-                    Element profileItemsElem = rootElem.element("ProfileItems");
 
+                    // Get ProfileItems element.
+                    Element profileItemsElem = rootElem.element("ProfileItems");
                     if (profileItemsElem != null) {
 
+                        // Get ProfileItem element.
                         List elements = profileItemsElem.elements("ProfileItem");
 
                         // AMEE 2.0 has a maximum allowed size for batch POSTs and PUTs. If this request execeeds that limit
                         // do not process the request and return a 400 status
                         if ((elements.size() > MAX_PROFILE_BATCH_SIZE) && (resource.getAPIVersion().isNotVersionOne())) {
-                            resource.badRequest();
-                            return profileItems;
+                            throw new APIException(APIFault.MAX_BATCH_SIZE_EXCEEDED);
                         }
 
                         // If the POST inputstream contains more than one entity it is considered a batch request.
@@ -79,10 +85,12 @@ public class ProfileCategoryXMLAcceptor implements IProfileCategoryRepresentatio
                             resource.setIsBatchPost(true);
                         }
 
+                        // Iterate over XML ProfileItem submissions.
                         for (Object o1 : elements) {
+
+                            // Convert XMl submission into a Restlet Form.
                             Element profileItemElem = (Element) o1;
                             Form form = new Form();
-
                             for (Object o2 : profileItemElem.elements()) {
                                 Element profileItemValueElem = (Element) o2;
                                 form.add(profileItemValueElem.getName(), profileItemValueElem.getText());
@@ -91,29 +99,38 @@ public class ProfileCategoryXMLAcceptor implements IProfileCategoryRepresentatio
                             // Representations to be returned for batch requests can be specified as a query parameter.
                             form.add("representation", resource.getForm().getFirstValue("representation"));
 
-                            List<ProfileItem> items = formAcceptor.accept(resource, form);
-                            if (!items.isEmpty()) {
-                                profileItems.addAll(items);
-                            } else {
-                                log.warn("Profile Item not added");
-                                break;
-                            }
+                            // Use FormAcceptor to do the work.
+                            profileItems.addAll(formAcceptor.accept(resource, form));
                         }
+
+                    } else {
+                        log.warn("ProfileItems element not found");
+                        throw new APIException(APIFault.INVALID_CONTENT);
                     }
+
                 } else {
-                    log.warn("Profile Category not found");
+                    log.warn("ProfileCategory element not found");
+                    throw new APIException(APIFault.INVALID_CONTENT);
                 }
+
             } catch (DocumentException e) {
                 log.warn("Caught DocumentException: " + e.getMessage(), e);
+                throw new APIException(APIFault.INVALID_CONTENT);
             } catch (IOException e) {
                 log.warn("Caught IOException: " + e.getMessage(), e);
+                throw new APIException(APIFault.INVALID_CONTENT);
             }
+
         } else {
             log.warn("XML not available");
+            throw new APIException(APIFault.INVALID_CONTENT);
         }
+
+        // Must have at least one ProfileItem.
         if (profileItems.isEmpty()) {
-            resource.badRequest(APIFault.EMPTY_LIST);
+            throw new APIException(APIFault.EMPTY_LIST);
         }
+
         return profileItems;
     }
 }

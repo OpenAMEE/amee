@@ -3,6 +3,7 @@ package com.amee.restlet.profile.acceptor;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.v2.AtomFeed;
+import com.amee.restlet.utils.APIException;
 import com.amee.restlet.utils.APIFault;
 import org.apache.abdera.model.Category;
 import org.apache.abdera.model.Document;
@@ -48,9 +49,12 @@ public class ProfileCategoryAtomAcceptor implements IProfileCategoryRepresentati
     @Autowired
     ProfileCategoryFormAcceptor formAcceptor;
 
-    //TODO - Add Batch processing of entries
-    public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) {
+    // TODO - Add Batch processing of entries
+    @Override
+    public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) throws APIException {
+
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
+
         if (entity.isAvailable()) {
             try {
 
@@ -60,6 +64,7 @@ public class ProfileCategoryAtomAcceptor implements IProfileCategoryRepresentati
                 List<Category> categories = entry.getCategories();
                 if (!categories.isEmpty()) {
 
+                    // Convert Atom submission into a Restlet Form.
                     Form form = new Form();
                     addDataItem(form, categories);
                     addParameter(form, entry, AtomFeed.Q_NAME_START_DATE);
@@ -68,25 +73,25 @@ public class ProfileCategoryAtomAcceptor implements IProfileCategoryRepresentati
                     addParameter(form, entry, AtomFeed.Q_NAME_NAME);
                     addItemValues(form, entry);
 
-                    List<ProfileItem> items = formAcceptor.accept(resource, form);
-
-                    if (!items.isEmpty()) {
-                        profileItems.addAll(items);
-                    } else {
-                        log.warn("accept() - Profile Item not added");
-                    }
+                    // Use FormAcceptor to do the work.
+                    profileItems.addAll(formAcceptor.accept(resource, form));
                 }
+
             } catch (IOException e) {
                 log.warn("accept() - Caught IOException: " + e.getMessage(), e);
-                resource.error();
+                throw new APIException(APIFault.INVALID_CONTENT);
             }
+
         } else {
             log.warn("accept() - entity not available");
-            resource.error();
+            throw new APIException(APIFault.INVALID_CONTENT);
         }
+
+        // Must have at least one ProfileItem.
         if (profileItems.isEmpty()) {
-            resource.badRequest(APIFault.EMPTY_LIST);
+            throw new APIException(APIFault.EMPTY_LIST);
         }
+
         return profileItems;
     }
 
@@ -106,14 +111,14 @@ public class ProfileCategoryAtomAcceptor implements IProfileCategoryRepresentati
             Element name = element.getFirstChild(AtomFeed.Q_NAME_NAME);
             Element value = element.getFirstChild(AtomFeed.Q_NAME_VALUE);
             if (name != null && value != null) {
-                form.add(new Parameter(name.getText(),value.getText()));
+                form.add(new Parameter(name.getText(), value.getText()));
                 Element unit = element.getFirstChild(AtomFeed.Q_NAME_UNIT);
                 if (unit != null) {
-                    form.add(new Parameter(name + "Unit",unit.getText()));
+                    form.add(new Parameter(name + "Unit", unit.getText()));
                 }
                 Element perUnit = element.getFirstChild(AtomFeed.Q_NAME_PER_UNIT);
                 if (perUnit != null) {
-                    form.add(new Parameter(name + "PerUnit",perUnit.getText()));
+                    form.add(new Parameter(name + "PerUnit", perUnit.getText()));
                 }
             }
         }

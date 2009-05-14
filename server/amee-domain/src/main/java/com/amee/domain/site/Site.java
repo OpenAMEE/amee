@@ -11,6 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -249,6 +250,6 @@ public class Site extends AMEEEnvironmentEntity implements Comparable {
                 activeSiteApps.add(siteApp);
             }
         }
-        return activeSiteApps;
+        return Collections.unmodifiableSet(activeSiteApps);
     }
 }

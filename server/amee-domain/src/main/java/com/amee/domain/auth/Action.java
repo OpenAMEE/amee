@@ -52,7 +52,7 @@ public class Action extends AMEEEntity implements Comparable {
     public Action(App app) {
         this();
         setApp(app);
-        app.getActions().add(this);
+        app.add(this);
     }
 
     public Action(App app, String name, String key) {

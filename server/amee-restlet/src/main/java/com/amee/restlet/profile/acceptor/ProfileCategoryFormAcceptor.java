@@ -10,6 +10,7 @@ import com.amee.domain.data.ItemValueMap;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.ValidFromDate;
 import com.amee.restlet.profile.ProfileCategoryResource;
+import com.amee.restlet.utils.APIException;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataService;
 import com.amee.service.profile.ProfileService;
@@ -59,7 +60,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
     @Autowired
     private AMEEStatistics ameeStatistics;
 
-    public List<ProfileItem> accept(ProfileCategoryResource resource, Form form) {
+    public List<ProfileItem> accept(ProfileCategoryResource resource, Form form) throws APIException {
 
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
         DataItem dataItem;
@@ -77,12 +78,11 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                     profileItem = acceptProfileItem(resource, form, profileItem);
                 } else {
                     log.warn("accept() - Data Item not found");
-                    // TODO: return more useful error message
-                    resource.notFound();
+                    throw new APIException(APIFault.ENTITY_NOT_FOUND);
                 }
             } else {
                 log.warn("accept() - dataItemUid not supplied");
-                resource.badRequest(APIFault.MISSING_PARAMETERS);
+                throw new APIException(APIFault.MISSING_PARAMETERS);
             }
         } else if (resource.getRequest().getMethod().equals(Method.PUT)) {
             // update ProfileItem
@@ -94,31 +94,29 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                     profileItem = acceptProfileItem(resource, form, profileItem);
                 } else {
                     log.warn("accept() - Profile Item not found");
-                    // TODO: return more useful error message
-                    resource.notFound();
+                    throw new APIException(APIFault.ENTITY_NOT_FOUND);
                 }
             } else {
                 log.warn("accept() - profileItemUid not supplied");
-                resource.badRequest(APIFault.MISSING_PARAMETERS);
+                throw new APIException(APIFault.MISSING_PARAMETERS);
             }
         }
 
-        if (profileItem != null) {
-            profileItems.add(profileItem);
-        }
-
+        profileItems.add(profileItem);
         return profileItems;
     }
 
-    private ProfileItem acceptProfileItem(ProfileCategoryResource resource, Form form, ProfileItem profileItem) {
+    private ProfileItem acceptProfileItem(ProfileCategoryResource resource, Form form, ProfileItem profileItem) throws APIException {
 
-        if (!resource.validateParameters()) {
-            return null;
+        // Validate request.
+        APIFault apiFault = resource.getValidationAPIFault();
+        if (!apiFault.equals(APIFault.NONE)) {
+            throw new APIException(apiFault);
         }
 
         // TODO - Each APIVersion should have it's own Acceptor
         if (resource.getAPIVersion().isVersionOne()) {
-
+            // Set the startDate and end marker.
             profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
             boolean end = Boolean.valueOf(form.getFirstValue("end"));
             if (end) {
@@ -131,10 +129,11 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             String perUnit = form.getFirstValue("returnPerUnit");
             resource.getProfileBrowser().setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
 
-            // Clients can explicitly specify the return representation in API > 1.0. The default behaviour for POSTS and PUTS
-            // is not to return a representation
+            // Clients can explicitly specify the return representation in API > 1.0. The default behaviour
+            // for POSTS and PUTS is not to return a representation.
             resource.setRepresentationRequested(form.getFirstValue("representation", "none"));
 
+            // Set the startDate, endDate and duration.
             profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
             if (form.getNames().contains("endDate") && form.getFirstValue("endDate") != null) {
                 profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
@@ -145,9 +144,9 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                 }
             }
 
-            if (profileItem.getEndDate() != null && profileItem.getEndDate().before(profileItem.getStartDate())) {
-                resource.badRequest(APIFault.INVALID_DATE_RANGE);
-                return null;
+            // If there is an endDate it must not be before the startDate.
+            if ((profileItem.getEndDate() != null) && profileItem.getEndDate().before(profileItem.getStartDate())) {
+                throw new APIException(APIFault.INVALID_DATE_RANGE);
             }
         }
 
@@ -189,14 +188,11 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                 profileService.clearCaches(resource.getProfile());
             } catch (IllegalArgumentException ex) {
                 log.warn("accept() - Bad parameter received", ex);
-                profileService.remove(profileItem);
-                resource.badRequest(APIFault.INVALID_PARAMETERS);
-                profileItem = null;
+                throw new APIException(APIFault.INVALID_PARAMETERS);
             }
         } else {
             log.warn("accept() - Profile Item already exists");
-            resource.badRequest(APIFault.DUPLICATE_ITEM);
-            profileItem = null;
+            throw new APIException(APIFault.DUPLICATE_ITEM);
         }
         return profileItem;
     }

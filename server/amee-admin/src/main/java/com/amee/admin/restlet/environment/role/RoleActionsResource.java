@@ -8,7 +8,6 @@ import com.amee.domain.auth.Role;
 import com.amee.domain.site.App;
 import com.amee.restlet.BaseResource;
 import com.amee.service.environment.EnvironmentConstants;
-import com.amee.service.environment.EnvironmentService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +57,7 @@ public class RoleActionsResource extends BaseResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         Role role = environmentBrowser.getRole();
-        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+        Pager pager = getPager(getItemsPerPage());
         Map<String, Action> actionMap = new HashMap<String, Action>();
         Set<Object> pagerSet = new HashSet<Object>();
         for (Action action : role.getActions()) {

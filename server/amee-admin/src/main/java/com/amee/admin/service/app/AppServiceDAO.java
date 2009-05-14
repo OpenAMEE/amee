@@ -18,10 +18,6 @@ class AppServiceDAO implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public AppServiceDAO() {
-        super();
-    }
-
     // Apps
 
     @SuppressWarnings(value = "unchecked")
@@ -235,7 +231,7 @@ class AppServiceDAO implements Serializable {
         long count = (Long) entityManager.createQuery(
                 "SELECT count(a) " +
                         "FROM Action a " +
-                        "WHERE a.status = active")
+                        "WHERE a.status = :active")
                 .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.appService")

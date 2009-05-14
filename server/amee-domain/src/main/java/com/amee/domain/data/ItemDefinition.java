@@ -35,10 +35,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "ITEM_DEFINITION")
@@ -181,7 +178,7 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
                 activeAlgorithms.add(algorithm);
             }
         }
-        return activeAlgorithms;
+        return Collections.unmodifiableSet(activeAlgorithms);
     }
 
     public Set<ItemValueDefinition> getItemValueDefinitions() {
@@ -189,13 +186,13 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     }
 
     public Set<ItemValueDefinition> getActiveItemValueDefinitions() {
-        Set<ItemValueDefinition> activeAlgorithms = new HashSet<ItemValueDefinition>();
+        Set<ItemValueDefinition> activeItemValueDefinitions = new HashSet<ItemValueDefinition>();
         for (ItemValueDefinition itemValueDefinition : itemValueDefinitions) {
             if (itemValueDefinition.isActive()) {
-                activeAlgorithms.add(itemValueDefinition);
+                activeItemValueDefinitions.add(itemValueDefinition);
             }
         }
-        return activeAlgorithms;
+        return Collections.unmodifiableSet(activeItemValueDefinitions);
     }
 
     public ObjectType getObjectType() {
