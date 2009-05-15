@@ -9,7 +9,6 @@ import java.util.List;
 public class MediaTypeUtils {
 
     public static boolean isStandardWebBrowser(Request request) {
-        // TODO: does this cover all web browsers?
         return MediaTypeUtils.doesClientAccept(MediaType.TEXT_HTML, request) ||
                 MediaTypeUtils.doesClientAccept(MediaType.ALL, request);
     }
