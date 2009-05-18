@@ -22,6 +22,7 @@ package com.amee.domain.algorithm;
 import com.amee.core.APIUtils;
 import com.amee.core.ObjectType;
 import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.environment.Environment;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -45,10 +46,12 @@ public class Algorithm extends AbstractAlgorithm {
         super();
     }
 
+    public Algorithm(Environment environment) {
+        super(environment);
+    }
+
     public Algorithm(ItemDefinition itemDefinition, String content) {
-        this();
-        setEnvironment(itemDefinition.getEnvironment());
-        setContent(content);
+        super(itemDefinition.getEnvironment(), content);
         setItemDefinition(itemDefinition);
         itemDefinition.add(this);
     }
@@ -104,7 +107,6 @@ public class Algorithm extends AbstractAlgorithm {
      * Get the Algorithm content with any associated AlgorithmContext content.
      *
      * @return a string constructed from the Algorithm content and context
-     *
      */
     public String getFullContent() {
         StringBuffer outContent = new StringBuffer(super.getContent());

@@ -21,13 +21,11 @@ public class AlgorithmContext extends AbstractAlgorithm {
     }
 
     public AlgorithmContext(Environment environment) {
-        this();
-        setEnvironment(environment);
+        super(environment);
     }
 
     public AlgorithmContext(Environment environment, String content) {
-        this(environment);
-        setContent(content);
+        super(environment, content);
     }
 
     public Element getIdentityElement(Document document) {

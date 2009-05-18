@@ -23,6 +23,7 @@ import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.restlet.BaseResource;
 import com.amee.service.data.DataConstants;
+import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -48,6 +49,9 @@ import java.util.Map;
 public class AlgorithmsResource extends BaseResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private DefinitionService definitionService;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -140,6 +144,7 @@ public class AlgorithmsResource extends BaseResource implements Serializable {
                 String content = form.getFirstValue("content");
                 newAlgorithm = new Algorithm(itemDefinition, content);
                 newAlgorithm.setName(form.getFirstValue("name"));
+                definitionService.save(newAlgorithm);
             }
             if (newAlgorithm != null) {
                 if (isStandardWebBrowser()) {

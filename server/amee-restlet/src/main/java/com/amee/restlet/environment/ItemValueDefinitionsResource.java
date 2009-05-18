@@ -173,7 +173,7 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
                         newItemValueDefinition.addAPIVersion(apiVersion);
                     }
                 }
-
+                definitionService.save(newItemValueDefinition);
             }
             if (newItemValueDefinition != null) {
                 if (isStandardWebBrowser()) {

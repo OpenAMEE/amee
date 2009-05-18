@@ -2,6 +2,7 @@ package com.amee.domain.algorithm;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -31,6 +32,15 @@ public abstract class AbstractAlgorithm extends AMEEEnvironmentEntity {
 
     public AbstractAlgorithm() {
         super();
+    }
+
+    public AbstractAlgorithm(Environment environment) {
+        super(environment);
+    }
+
+    public AbstractAlgorithm(Environment environment, String content) {
+        super(environment);
+        setContent(content);
     }
 
     public JSONObject getJSONObject() throws JSONException {

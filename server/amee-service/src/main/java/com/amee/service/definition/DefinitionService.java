@@ -47,14 +47,6 @@ public class DefinitionService extends BaseService {
         return dao.getAlgorithmByUid(uid);
     }
 
-    public void remove(AbstractAlgorithm algorithm) {
-        dao.remove(algorithm);
-    }
-
-    public void save(AbstractAlgorithm algorithm) {
-        dao.save(algorithm);
-    }
-
     public List<AlgorithmContext> getAlgorithmContexts(Environment environment) {
         return dao.getAlgorithmContexts(environment);
     }
@@ -63,6 +55,14 @@ public class DefinitionService extends BaseService {
         AlgorithmContext algorithmContext = dao.getAlgorithmContextByUid(uid);
         checkEnvironmentObject(environment, algorithmContext);
         return algorithmContext;
+    }
+
+    public void save(AbstractAlgorithm algorithm) {
+        dao.save(algorithm);
+    }
+
+    public void remove(AbstractAlgorithm algorithm) {
+        dao.remove(algorithm);
     }
 
     // ItemDefinition
@@ -102,6 +102,10 @@ public class DefinitionService extends BaseService {
 
     public ItemValueDefinition getItemValueDefinitionByUid(String uid) {
         return dao.getItemValueDefinitionByUid(uid);
+    }
+
+    public void save(ItemValueDefinition itemValueDefinition) {
+        dao.save(itemValueDefinition);
     }
 
     public void remove(ItemValueDefinition itemValueDefinition) {

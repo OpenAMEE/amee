@@ -311,6 +311,10 @@ public class DefinitionServiceDAO implements Serializable {
         return itemValueDefinition;
     }
 
+    public void save(ItemValueDefinition itemValueDefinition) {
+        entityManager.persist(itemValueDefinition);
+    }
+
     public void remove(ItemValueDefinition itemValueDefinition) {
         beforeItemValueDefinitionDelete(itemValueDefinition);
         itemValueDefinition.setStatus(AMEEStatus.TRASH);
