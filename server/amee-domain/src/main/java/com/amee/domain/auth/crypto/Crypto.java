@@ -77,10 +77,10 @@ public class Crypto {
             System.out.println("encrypt() caught BadPaddingException: " + e.getMessage());
             throw new CryptoException("BadPaddingException", e);
         } catch (NoSuchPaddingException e) {
-            System.out.println("initialise() caught NoSuchPaddingException: " + e.getMessage());
+            System.out.println("encrypt() caught NoSuchPaddingException: " + e.getMessage());
             throw new CryptoException("NoSuchPaddingException", e);
         } catch (NoSuchAlgorithmException e) {
-            System.out.println("initialise() caught NoSuchAlgorithmException: " + e.getMessage());
+            System.out.println("encrypt() caught NoSuchAlgorithmException: " + e.getMessage());
             throw new CryptoException("NoSuchAlgorithmException", e);
         }
     }
@@ -111,10 +111,10 @@ public class Crypto {
             System.out.println("decrypt() caught BadPaddingException: " + e.getMessage());
             throw new CryptoException("BadPaddingException", e);
         } catch (NoSuchPaddingException e) {
-            System.out.println("initialise() caught NoSuchPaddingException: " + e.getMessage());
+            System.out.println("decrypt() caught NoSuchPaddingException: " + e.getMessage());
             throw new CryptoException("NoSuchPaddingException ", e);
         } catch (NoSuchAlgorithmException e) {
-            System.out.println("initialise() caught NoSuchAlgorithmException: " + e.getMessage());
+            System.out.println("decrypt() caught NoSuchAlgorithmException: " + e.getMessage());
             throw new CryptoException("NoSuchAlgorithmException ", e);
         }
     }
@@ -211,7 +211,7 @@ public class Crypto {
                 throw new RuntimeException("Salt from '" + file.getAbsolutePath() + "' is not 8 bytes.");
             }
         } catch (IOException e) {
-            System.out.println("readKeyFromFile() caught IOException: " + e.getMessage());
+            System.out.println("readSaltFromFile() caught IOException: " + e.getMessage());
             throw new CryptoException("IOException", e);
         }
 
@@ -223,7 +223,7 @@ public class Crypto {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("DESede");
             return keyGenerator.generateKey();
         } catch (NoSuchAlgorithmException e) {
-            System.out.println("readKeyFromFile() caught NoSuchAlgorithmException: " + e.getMessage());
+            System.out.println("getNewKey() caught NoSuchAlgorithmException: " + e.getMessage());
             throw new CryptoException("NoSuchAlgorithmException", e);
         }
     }
