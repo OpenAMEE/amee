@@ -42,6 +42,10 @@ public class AMEEStatistics {
     private long profileItemValueModifyCount;
     private ThreadLocal<Long> threadProfileItemValueModifyCount = new ThreadLocal<Long>();
 
+    // Calculations
+    public long calculationDuration; // seconds
+    public ThreadLocal<Long> threadCalculationDuration = new ThreadLocal<Long>(); // nanoseconds
+
     // Transactions
     private long transactionCommitCount;
     private long transactionRollbackCount;
@@ -64,6 +68,8 @@ public class AMEEStatistics {
         // Profile Item Values
         threadProfileItemValueCreateCount.set(0L);
         threadProfileItemValueModifyCount.set(0L);
+        // Calculations
+        threadCalculationDuration.set(0L);
     }
 
     public void commitThread() {
@@ -136,6 +142,27 @@ public class AMEEStatistics {
 
     public long getErrorCount() {
         return errorCount;
+    }
+
+    // Calculations
+
+    public long getCalculationDuration() {
+        return calculationDuration;
+    }
+
+    public void addToCalculationDuration(long duration) {
+        if (duration > 0) {
+            calculationDuration += (duration / 1000000000);
+        }
+    }
+
+    public long getThreadCalculationDuration() {
+        return threadCalculationDuration.get();
+    }
+
+    public void addToThreadCalculationDuration(long duration) {
+        threadCalculationDuration.set(threadCalculationDuration.get() + duration);
+        addToCalculationDuration(duration);
     }
 
     // Transactions

@@ -86,6 +86,7 @@ public class TransactionController extends EntityManagerFactoryAccessor {
      */
     public void afterCommit() {
         logger.debug("afterCommit() - <<< AFTER COMMIT");
+        logger.debug("afterCommit() - {calculationDuration=" + ameeStatistics.getThreadCalculationDuration() + "}");
         end();
     }
 

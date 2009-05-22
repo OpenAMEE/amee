@@ -42,7 +42,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Encapsulates all persistence operations for Profiles and Profile Items.
@@ -377,67 +380,68 @@ public class ProfileServiceDAO implements Serializable {
 
     @SuppressWarnings(value = "unchecked")
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, Date profileDate) {
-        if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
 
-            // need to roll the date forward
-            Calendar profileDateCal = Calendar.getInstance();
-            profileDateCal.setTime(profileDate);
-            profileDateCal.add(Calendar.MONTH, 1);
-            profileDate = profileDateCal.getTime();
-
-            // now get all the Profile Items
-            List<ProfileItem> profileItems = entityManager.createQuery(
-                    "SELECT DISTINCT pi " +
-                            "FROM ProfileItem pi " +
-                            "LEFT JOIN FETCH pi.itemValues " +
-                            "WHERE pi.itemDefinition.id = :itemDefinitionId " +
-                            "AND pi.dataCategory.id = :dataCategoryId " +
-                            "AND pi.profile.id = :profileId " +
-                            "AND pi.startDate < :profileDate " +
-                            "AND pi.status = :active")
-                    .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
-                    .setParameter("dataCategoryId", dataCategory.getId())
-                    .setParameter("profileId", profile.getId())
-                    .setParameter("profileDate", profileDate)
-                    .setParameter("active", AMEEStatus.ACTIVE)
-                    .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                    .getResultList();
-
-            // only include most recent ProfileItem per ProfileItem name per DataItem
-            Iterator<ProfileItem> iterator = profileItems.iterator();
-            while (iterator.hasNext()) {
-                ProfileItem outerProfileItem = iterator.next();
-                for (ProfileItem innerProfileItem : profileItems) {
-                    if (outerProfileItem.getDataItem().equals(innerProfileItem.getDataItem()) &&
-                            outerProfileItem.getName().equalsIgnoreCase(innerProfileItem.getName()) &&
-                            outerProfileItem.getStartDate().before(innerProfileItem.getStartDate())) {
-                        iterator.remove();
-                        break;
-                    }
-                }
-            }
-
-            return profileItems;
-        } else {
+        if ((dataCategory == null) || (dataCategory.getItemDefinition() == null)) {
             return null;
         }
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProfileItems() start");
+        }
+
+        // need to roll the date forward
+        Calendar profileDateCal = Calendar.getInstance();
+        profileDateCal.setTime(profileDate);
+        profileDateCal.add(Calendar.MONTH, 1);
+        profileDate = profileDateCal.getTime();
+
+        // now get all the Profile Items
+        List<ProfileItem> profileItems = entityManager.createQuery(
+                "SELECT DISTINCT pi " +
+                        "FROM ProfileItem pi " +
+                        "LEFT JOIN FETCH pi.itemValues " +
+                        "WHERE pi.itemDefinition.id = :itemDefinitionId " +
+                        "AND pi.dataCategory.id = :dataCategoryId " +
+                        "AND pi.profile.id = :profileId " +
+                        "AND pi.startDate < :profileDate " +
+                        "AND pi.status = :active")
+                .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
+                .setParameter("dataCategoryId", dataCategory.getId())
+                .setParameter("profileId", profile.getId())
+                .setParameter("profileDate", profileDate)
+                .setParameter("active", AMEEStatus.ACTIVE)
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
+                .getResultList();
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProfileItems() done (" + profileItems.size() + ")");
+        }
+
+        return profileItems;
     }
 
     @SuppressWarnings(value = "unchecked")
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
 
-        if ((dataCategory == null) || (dataCategory.getItemDefinition() == null))
+        if ((dataCategory == null) || (dataCategory.getItemDefinition() == null)) {
             return null;
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProfileItems() start");
+        }
 
         // Create HQL.
-        StringBuilder queryBuilder = new StringBuilder("SELECT DISTINCT pi FROM ProfileItem pi ");
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("SELECT DISTINCT pi ");
+        queryBuilder.append("FROM ProfileItem pi ");
         queryBuilder.append("LEFT JOIN FETCH pi.itemValues ");
         queryBuilder.append("WHERE pi.itemDefinition.id = :itemDefinitionId ");
         queryBuilder.append("AND pi.dataCategory.id = :dataCategoryId ");
         queryBuilder.append("AND pi.profile.id = :profileId AND ");
         if (endDate == null) {
-            queryBuilder.append("(pi.endDate > :startDate OR pi.endDate IS NULL)");
+            queryBuilder.append("(pi.endDate IS NULL OR pi.endDate > :startDate)");
         } else {
             queryBuilder.append("pi.startDate < :endDate AND (pi.endDate > :startDate OR pi.endDate IS NULL)");
         }
@@ -456,7 +460,14 @@ public class ProfileServiceDAO implements Serializable {
         query.setHint("org.hibernate.cacheable", true);
         query.setHint("org.hibernate.cacheRegion", CACHE_REGION);
 
-        return query.getResultList();
+        // Execute query.
+        List<ProfileItem> profileItems = query.getResultList();
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProfileItems() done (" + profileItems.size() + ")");
+        }
+
+        return profileItems;
     }
 
     @SuppressWarnings(value = "unchecked")

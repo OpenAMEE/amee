@@ -19,10 +19,10 @@
  */
 package com.amee.calculation.service;
 
+import com.amee.domain.AMEEStatistics;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.AMEEStatistics;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,7 +63,9 @@ public class ProfileFinder implements Serializable {
                 value = iv.getValue();
             }
         }
-        log.debug("getProfileItemValue() - path: " + path + ", name: " + name + ", value: " + value);
+        if (log.isTraceEnabled()) {
+            log.trace("getProfileItemValue() - path: " + path + ", name: " + name + ", value: " + value);
+        }
         return value;
     }
 

@@ -20,7 +20,6 @@
 package com.amee.restlet.data;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.service.data.DataConstants;
@@ -130,22 +129,14 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         log.debug("storeRepresentation()");
         if (dataBrowser.getDataItemActions().isAllowModify()) {
             Form form = getForm();
-            DataItem dataItem = getDataItem();
-            ItemValue itemValue = getItemValue();
-            // validation
-            if (itemValue.getItem().equals(dataItem)) {
-                // are we updating this ItemValue?
-                if (form.getFirstValue("value") != null) {
-                    // update ItemValue
-                    itemValue.setValue(form.getFirstValue("value"));
-                    // clear caches
-                    dataService.clearCaches(dataItem.getDataCategory());
-                }
-                successfulPut(getFullPath());
-            } else {
-                log.warn("itemValue not found");
-                notFound();
+            // are we updating this ItemValue?
+            if (form.getFirstValue("value") != null) {
+                // update ItemValue
+                getItemValue().setValue(form.getFirstValue("value"));
+                // clear caches
+                dataService.clearCaches(getDataItem().getDataCategory());
             }
+            successfulPut(getFullPath());
         } else {
             notAuthorized();
         }

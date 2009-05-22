@@ -149,61 +149,67 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
     @Override
     public void storeRepresentation(Representation entity) {
+
         log.debug("storeRepresentation()");
-        if (dataBrowser.getDataItemActions().isAllowModify()) {
-            Form form = getForm();
-            DataItem dataItem = getDataItem();
-            Set<String> names = form.getNames();
 
-            // are we updating this DataItem?
-            if (names.contains("name")) {
-                dataItem.setName(form.getFirstValue("name"));
-            }
-
-            if (names.contains("path")) {
-                dataItem.setPath(form.getFirstValue("path"));
-            }
-
-            // update 'startDate' value
-            if (names.contains("startDate")) {
-                dataItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
-            }
-
-            // update 'endDate' value
-            if (names.contains("endDate")) {
-                if (StringUtils.isNotBlank(form.getFirstValue("endDate"))) {
-                    dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
-                } else {
-                    dataItem.setEndDate(null);
-                }
-            } else {
-                if (form.getNames().contains("duration")) {
-                    StartEndDate endDate = dataItem.getStartDate().plus(form.getFirstValue("duration"));
-                    dataItem.setEndDate(endDate);
-                }
-            }
-
-            if (dataItem.getEndDate() != null &&
-                    dataItem.getEndDate().before(dataItem.getStartDate())) {
-                badRequest();
-                return;
-            }
-
-            // update ItemValues if supplied
-            ItemValueMap itemValues = dataItem.getItemValuesMap();
-            for (String name : form.getNames()) {
-                ItemValue itemValue = itemValues.get(name);
-                if (itemValue != null) {
-                    itemValue.setValue(form.getFirstValue(name));
-                }
-            }
-
-            // clear caches
-            dataService.clearCaches(dataItem.getDataCategory());
-            successfulPut(getParentPath() + "/" + dataItem.getResolvedPath());
-        } else {
+        if (!dataBrowser.getDataItemActions().isAllowModify()) {
             notAuthorized();
+            return;
         }
+
+        Form form = getForm();
+        DataItem dataItem = getDataItem();
+        Set<String> names = form.getNames();
+
+        // update 'name' value
+        if (names.contains("name")) {
+            dataItem.setName(form.getFirstValue("name"));
+        }
+
+        // update 'path' value
+        if (names.contains("path")) {
+            dataItem.setPath(form.getFirstValue("path"));
+        }
+
+        // update 'startDate' value
+        if (names.contains("startDate")) {
+            dataItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
+        }
+
+        // update 'endDate' value
+        if (names.contains("endDate")) {
+            if (StringUtils.isNotBlank(form.getFirstValue("endDate"))) {
+                dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+            } else {
+                dataItem.setEndDate(null);
+            }
+        } else {
+            if (form.getNames().contains("duration")) {
+                StartEndDate endDate = dataItem.getStartDate().plus(form.getFirstValue("duration"));
+                dataItem.setEndDate(endDate);
+            }
+        }
+
+        // if endDate is set it must be after startDate
+        if (dataItem.getEndDate() != null &&
+                dataItem.getEndDate().before(dataItem.getStartDate())) {
+            badRequest();
+            return;
+        }
+
+        // update ItemValues if supplied
+        ItemValueMap itemValues = dataItem.getItemValuesMap();
+        for (String name : form.getNames()) {
+            ItemValue itemValue = itemValues.get(name);
+            if (itemValue != null) {
+                itemValue.setValue(form.getFirstValue(name));
+            }
+        }
+
+        // clear caches
+        dataService.clearCaches(dataItem.getDataCategory());
+        
+        successfulPut(getParentPath() + "/" + dataItem.getResolvedPath());
     }
 
     @Override

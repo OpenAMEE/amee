@@ -19,6 +19,8 @@ import com.amee.service.profile.SelectByProfileService;
 import org.apache.abdera.ext.history.FeedPagingHelper;
 import org.apache.abdera.ext.opensearch.OpenSearchExtensionFactory;
 import org.apache.abdera.model.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +53,8 @@ import java.util.*;
  */
 @Service("v2ProfileCategoryResourceBuilder")
 public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceBuilder {
+
+    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private ProRataProfileService proRataProfileService;
@@ -226,7 +230,6 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
     private List<ProfileItem> getProfileItems(ProfileCategoryResource resource, Pager pager) {
         List<ProfileItem> profileItems;
-
         if (resource.isGet()) {
             // get profile items
             profileItems = getProfileItems(resource);
@@ -238,8 +241,10 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     }
 
     private List<ProfileItem> getProfileItems(ProfileCategoryResource resource) {
-        if (resource.getDataCategory().getItemDefinition() == null)
+
+        if (resource.getDataCategory().getItemDefinition() == null) {
             return new ArrayList<ProfileItem>();
+        }
 
         ProfileBrowser browser = resource.getProfileBrowser();
 
@@ -306,6 +311,8 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     // Generate the Atom feed in response to a GET request to a ProfileCategory.
     // The request may contains query (search) parameters which may constrain and modify the returned ProfileItems.
     private org.apache.abdera.model.Element getAtomElementForGet(ProfileCategoryResource resource) {
+
+        log.debug("getAtomElementForGet()");
 
         AtomFeed atomFeed = AtomFeed.getInstance();
 

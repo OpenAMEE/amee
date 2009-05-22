@@ -10,6 +10,8 @@ wrapper.java.additional.17=-Dcom.sun.management.jmxremote.authenticate=false
 wrapper.java.additional.18=-Dcom.sun.management.jmxremote.ssl=false
 
 # Database settings
+# set.DB_DRIVER=net.sf.log4jdbc.DriverSpy
+# set.DB_URL_PREFIX=jdbc:log4jdbc
 set.DB_USERNAME=amee
 set.DB_PSWD=amee
 set.DB_HOST=localhost

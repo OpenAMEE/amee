@@ -54,7 +54,9 @@ public class CacheHelper implements Serializable {
         String key = factory.getKey();
         BlockingCache cache = getBlockingCache(cacheName);
         if (cache != null) {
-            log.debug("getCacheable() - cache: " + cacheName + " key: " + key);
+            if (log.isTraceEnabled()) {
+                log.trace("getCacheable() - cache: " + cacheName + " key: " + key);
+            }
             String originalThreadName = Thread.currentThread().getName();
             try {
                 Element element = cache.get(key);

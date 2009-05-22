@@ -136,13 +136,13 @@ public class ProfileItem extends Item {
 
     /**
      * Get the {@link com.amee.core.CO2Amount CO2Amount} for this ProfileItem.
-     *
+     * <p/>
      * If the ProfileItem does not support CO2 calculations (i.e. metadata) CO2Amount.ZERO is returned.
      *
      * @return - the {@link com.amee.core.CO2Amount CO2Amount} for this ProfileItem
      */
     public CO2Amount getAmount() {
-        // CO2 amounts are lazily calculated once per session.
+        // CO2 amounts are lazily determined once per session.
         if (amount == null) {
             log.debug("getAmount() - lazily calculating amount");
             calculationService.calculate(this);
@@ -170,7 +170,7 @@ public class ProfileItem extends Item {
     }
 
     @Override
-     public JSONObject getJSONObject(boolean b) throws JSONException {
+    public JSONObject getJSONObject(boolean b) throws JSONException {
         return builder.getJSONObject(b);
     }
 

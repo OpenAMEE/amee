@@ -1,10 +1,15 @@
 package com.amee.calculation.service;
 
+import com.amee.domain.AMEEStatistics;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.data.ItemDefinition;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.script.*;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,11 +35,25 @@ import java.util.Map;
 @Service
 public class AlgorithmService {
 
-    // The ScriptEngine for the Javscript context.
-    private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("js");
+    private final Log log = LogFactory.getLog(getClass());
 
-    // Default Algortithm name to use in calculations
-    private static final String DEFAULT = "default";
+    // The ScriptEngine for the Javscript context.
+    private final ScriptEngine engine = new ScriptEngineManager().getEngineByName("js");
+
+    // Thread bound CompiledScript cache
+    private final ThreadLocal<Map<String, CompiledScript>> scripts =
+            new ThreadLocal<Map<String, CompiledScript>>() {
+                @Override
+                protected Map<String, CompiledScript> initialValue() {
+                    return new HashMap<String, CompiledScript>();
+                }
+            };
+
+    // Default Algorithm name to use in calculations
+    private final static String DEFAULT = "default";
+
+    @Autowired
+    private AMEEStatistics ameeStatistics;
 
     /**
      * Get the default algorithm for an ItemDefinition.
@@ -54,25 +73,37 @@ public class AlgorithmService {
      * @return the value returned by the Algorithm as a String
      */
     public String evaluate(Algorithm algorithm, Map<String, Object> values) {
+        final long startTime = System.nanoTime();
         try {
             Bindings bindings = createBindings();
             bindings.putAll(values);
-            return compile(algorithm.getContent()).eval(bindings).toString();
+            bindings.put("logger", log);
+            return getCompiledScript(algorithm).eval(bindings).toString();
         } catch (ScriptException ex) {
             throw new RuntimeException(ex);
+        } finally {
+            ameeStatistics.addToThreadCalculationDuration(System.nanoTime() - startTime);
         }
     }
 
-    // Return the compiled Algorithm content.
-    private CompiledScript compile(String content) {
-        try {
-            return ((Compilable) AlgorithmService.engine).compile(content);
-        } catch (ScriptException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static Bindings createBindings() {
+    private Bindings createBindings() {
         return engine.createBindings();
+    }
+
+    private CompiledScript getCompiledScript(Algorithm algorithm) {
+        CompiledScript compiledScript = scripts.get().get(algorithm.getUid());
+        if (compiledScript == null) {
+            try {
+                compiledScript = ((Compilable) engine).compile(algorithm.getContent());
+            } catch (ScriptException e) {
+                throw new RuntimeException(e);
+            }
+            setCompiledScript(algorithm, compiledScript);
+        }
+        return compiledScript;
+    }
+
+    private void setCompiledScript(Algorithm algorithm, CompiledScript compiledScript) {
+        scripts.get().put(algorithm.getUid(), compiledScript);
     }
 }

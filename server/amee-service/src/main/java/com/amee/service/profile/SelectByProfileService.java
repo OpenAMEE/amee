@@ -1,11 +1,13 @@
 package com.amee.service.profile;
 
+import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.StartEndDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,8 @@ import java.util.List;
 @Service
 public class SelectByProfileService {
 
+    private final Log log = LogFactory.getLog(getClass());
+
     @Autowired
     ProfileService profileService;
 
@@ -42,6 +46,10 @@ public class SelectByProfileService {
             StartEndDate startDate,
             StartEndDate endDate,
             String selectBy) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProfileItems() start");
+        }
 
         List<ProfileItem> profileItems = profileService.getProfileItems(
                 profile, dataCategory, startDate, endDate);
@@ -53,8 +61,11 @@ public class SelectByProfileService {
             profileItems = selectByEnd(endDate, profileItems);
         }
 
-        return profileItems;
+        if (log.isDebugEnabled()) {
+            log.debug("getProfileItems() done (" + profileItems.size() + ")");
+        }
 
+        return profileItems;
     }
 
     private List<ProfileItem> selectByEnd(final StartEndDate endDate, List<ProfileItem> profileItems) {

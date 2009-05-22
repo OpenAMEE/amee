@@ -2,11 +2,11 @@ package com.amee.calculation.service;
 
 import com.amee.core.CO2Amount;
 import com.amee.core.Decimal;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.StartEndDate;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,6 +59,10 @@ public class ProRataProfileService {
 
     @SuppressWarnings(value = "unchecked")
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProfileItems() start");
+        }
 
         List<ProfileItem> requestedItems = new ArrayList<ProfileItem>();
         Interval requestInterval = getInterval(startDate, endDate);
@@ -139,6 +143,10 @@ public class ProRataProfileService {
                 requestedItems.add(pi);
             }
 
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProfileItems() done (" + requestedItems.size() + ")");
         }
 
         return requestedItems;

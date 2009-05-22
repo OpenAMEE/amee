@@ -56,6 +56,9 @@ public class ProfileService extends BaseService {
     private ProfileSheetService profileSheetService;
 
     @Autowired
+    private OnlyActiveProfileService onlyActiveProfileService;
+
+    @Autowired
     private AMEEStatistics ameeStatistics;
 
     // Profiles
@@ -66,7 +69,7 @@ public class ProfileService extends BaseService {
      * not a valid UID format then a Profile with the matching path is searched for and returned.
      *
      * @param environment that requested Profile belongs to
-     * @param path to search for. Can be either a UID or a path alias.
+     * @param path        to search for. Can be either a UID or a path alias.
      * @return the matching Profile
      */
     public Profile getProfile(Environment environment, String path) {
@@ -120,7 +123,7 @@ public class ProfileService extends BaseService {
     }
 
     public List<ProfileItem> getProfileItems(Profile p, DataCategory dc, Date date) {
-        return checkProfileItems(dao.getProfileItems(p, dc, date));
+        return checkProfileItems(onlyActiveProfileService.getProfileItems(dao.getProfileItems(p, dc, date), null));
     }
 
     public List<ProfileItem> getProfileItems(
@@ -132,8 +135,17 @@ public class ProfileService extends BaseService {
     }
 
     public List<ProfileItem> checkProfileItems(List<ProfileItem> profileItems) {
+        if (log.isDebugEnabled()) {
+            log.debug("checkProfileItems() start");
+        }
+        if (profileItems == null) {
+            return null;
+        }
         for (ProfileItem profileItem : profileItems) {
             checkProfileItem(profileItem);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("checkProfileItems() done (" + profileItems.size() + ")");
         }
         return profileItems;
     }

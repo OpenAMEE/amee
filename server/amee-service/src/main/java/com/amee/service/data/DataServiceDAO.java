@@ -160,7 +160,9 @@ public class DataServiceDAO implements Serializable {
             criteria.setCacheRegion(CACHE_REGION);
             List<DataCategory> dataCategories = criteria.list();
             if (dataCategories.size() == 1) {
-                log.debug("getDataCategoryByUid() found: " + uid);
+                if (log.isTraceEnabled()) {
+                    log.trace("getDataCategoryByUid() found: " + uid);
+                }
                 dataCategory = dataCategories.get(0);
             } else {
                 log.debug("getDataCategoryByUid() NOT found: " + uid);
@@ -244,7 +246,9 @@ public class DataServiceDAO implements Serializable {
             criteria.setCacheRegion(CACHE_REGION);
             List<ItemValue> itemValues = criteria.list();
             if (itemValues.size() == 1) {
-                log.debug("getItemValueByUid() found: " + uid);
+                if (log.isTraceEnabled()) {
+                    log.trace("getItemValueByUid() found: " + uid);
+                }
                 itemValue = itemValues.get(0);
             } else {
                 log.debug("getItemValueByUid() NOT found: " + uid);
@@ -276,7 +280,9 @@ public class DataServiceDAO implements Serializable {
             criteria.setCacheRegion(CACHE_REGION);
             List<DataItem> dataItems = criteria.list();
             if (dataItems.size() == 1) {
-                log.debug("getDataItemByUid() found: " + uid);
+                if (log.isTraceEnabled()) {
+                    log.trace("getDataItemByUid() found: " + uid);
+                }
                 dataItem = dataItems.get(0);
             } else {
                 log.debug("getDataItemByUid() NOT found: " + uid);
@@ -303,7 +309,9 @@ public class DataServiceDAO implements Serializable {
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
             if (dataItems.size() == 1) {
-                log.debug("getDataItemByPath() found: " + path);
+                if (log.isTraceEnabled()) {
+                    log.trace("getDataItemByPath() found: " + path);
+                }
                 dataItem = dataItems.get(0);
             } else {
                 log.debug("getDataItemByPath() NOT found: " + path);

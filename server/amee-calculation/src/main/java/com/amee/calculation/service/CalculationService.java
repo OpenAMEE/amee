@@ -19,11 +19,11 @@
  */
 package com.amee.calculation.service;
 
+import com.amee.core.CO2Amount;
+import com.amee.core.Decimal;
 import com.amee.domain.APIVersion;
 import com.amee.domain.InternalValue;
 import com.amee.domain.algorithm.Algorithm;
-import com.amee.core.CO2Amount;
-import com.amee.core.Decimal;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValueDefinition;
@@ -121,10 +121,12 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      */
     public BigDecimal calculate(Algorithm algorithm, Map<String, Object> values) {
         CO2Amount amount;
-        log.debug("calculate()");
-        log.debug("calculate() - algorithm uid: " + algorithm.getUid());
-        log.debug("calculate() - input values: " + values);
-        log.debug("calculate() - starting calculation");
+        if (log.isTraceEnabled()) {
+            log.trace("calculate()");
+            log.trace("calculate() - algorithm uid: " + algorithm.getUid());
+            log.trace("calculate() - input values: " + values);
+            log.trace("calculate() - starting calculation");
+        }
         // TODO: Remove Exception catch once we have resolved algo handling on undef values.
         try {
             amount = new CO2Amount(algorithmService.evaluate(algorithm, values));
@@ -132,8 +134,10 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
             log.warn("calculate() - caught Exception: " + e.getMessage(), e);
             amount = new CO2Amount(Decimal.BIG_DECIMAL_ZERO);
         }
-        log.debug("calculate() - finished calculation");
-        log.debug("calculate() - CO2 Amount: " + amount);
+        if (log.isTraceEnabled()) {
+            log.trace("calculate() - finished calculation");
+            log.trace("calculate() - CO2 Amount: " + amount);
+        }
         return amount.getValue();
     }
 

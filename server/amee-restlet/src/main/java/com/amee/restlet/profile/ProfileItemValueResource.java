@@ -134,7 +134,6 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
         if (profileBrowser.getProfileItemValueActions().isAllowModify()) {
-
             if (MediaType.APPLICATION_ATOM_XML.includes(entity.getMediaType())) {
                 atomAcceptor.accept(this, entity);
             } else {
