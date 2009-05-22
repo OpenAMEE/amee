@@ -9,14 +9,13 @@
 #amee_url="/profiles/${amee_profile}/transport/car/generic/?v=2.0&startDate=20081124T1507&endDate=20081209T1507"
 #amee_url="profiles/${amee_profile}/home/appliances/computers/generic?profileDate=201004"
 
-amee_url="/profiles/${amee_profile}/home/energy/electricity"
+amee_url="profiles/${amee_profile}/home/energy/quantity?itemsPerPage=100"
 
-type="xml"
+type="atom+xml"
 
 curl http://${amee_host}/${amee_url} \
   -H "Accept:application/${type}" \
 	-b .cookies \
-	-u admin:r41n80w \
 	-v \
   -o get-data-category-response.xml
 
