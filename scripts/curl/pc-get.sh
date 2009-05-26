@@ -17,7 +17,4 @@ curl http://${amee_host}/${amee_url} \
   -H "Accept:application/${type}" \
 	-b .cookies \
 	-v \
-  -o get-data-category-response.xml
-
-  mate get-data-category-response.xml 
-  
+  -o get-data-category-response.xml  

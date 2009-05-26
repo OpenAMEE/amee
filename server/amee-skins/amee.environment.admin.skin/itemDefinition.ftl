@@ -20,6 +20,9 @@
   <p>
   <form action='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
     Name: <input name='name' value='${itemDefinition.name}' type='text' size='30'/><br/>
+    Skip Recalculation (Profile Items):
+      Yes <input type="radio" name="skipRecalculation" value="true"<#if itemDefinition.skipRecalculation> checked</#if>/>
+      No <input type="radio" name="skipRecalculation" value="false"<#if !itemDefinition.skipRecalculation> checked</#if>/><br/>
     Drill Down: <input name='drillDown' value='${itemDefinition.drillDown}' type='text' size='50'/><br/><br/>
     <input type='submit' value='Update'/>
   </form>

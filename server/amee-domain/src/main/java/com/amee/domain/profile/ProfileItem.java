@@ -144,8 +144,14 @@ public class ProfileItem extends Item {
     public CO2Amount getAmount() {
         // CO2 amounts are lazily determined once per session.
         if (amount == null) {
-            log.debug("getAmount() - lazily calculating amount");
-            calculationService.calculate(this);
+            // decide whether to use the persistent amount or recalculate 
+            if ((persistentAmount != null) && getItemDefinition().isSkipRecalculation()) {
+                log.debug("getAmount() - using persistent amount");
+                amount = persistentAmount;
+            } else {
+                log.debug("getAmount() - lazily calculating amount");
+                calculationService.calculate(this);
+            }
         }
         return new CO2Amount(amount);
     }
