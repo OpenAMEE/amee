@@ -157,9 +157,10 @@ public class AlgorithmResource extends BaseResource implements Serializable {
 
         // apply calculation
         try {
-            algorithmTestWrapper.setAmount(calculator.calculate(
-                    algorithmTestWrapper.getMockAlgorithm(),
-                    algorithmTestWrapper.getValuesMap()));
+            algorithmTestWrapper.setAmount(
+                    calculator.calculate(
+                            algorithmTestWrapper.getMockAlgorithm(),
+                            algorithmTestWrapper.getValuesMap()).getValue());
             // TODO: see if we can re-implement this
 //        } catch (RhinoException e) {
 //            StringBuffer testAlgorithmError = new StringBuffer();

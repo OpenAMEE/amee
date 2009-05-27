@@ -179,7 +179,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     /**
-     * Add the collection of {@link ItemValue} belonging to this Item to the passed vistor collection of
+     * Add the collection of {@link ItemValue} belonging to this Item to the passed visitor collection of
      * {@link com.amee.domain.InternalValue}.
      *
      * @param values - the visitor collection of {@link com.amee.domain.InternalValue} to which to add this Item's values.

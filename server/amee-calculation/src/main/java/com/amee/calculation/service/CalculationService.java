@@ -26,6 +26,7 @@ import com.amee.domain.InternalValue;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.profile.CO2CalculationService;
 import com.amee.domain.profile.ProfileItem;
@@ -40,7 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,7 +65,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      */
     public void calculate(ProfileItem profileItem) {
 
-        BigDecimal amount = Decimal.BIG_DECIMAL_ZERO;
+        CO2Amount amount = CO2Amount.ZERO;
 
         // End marker ProfileItems can only have zero amounts.
         if (!profileItem.isEnd()) {
@@ -84,7 +84,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         // Always set the ProfileItem amount.
         // The ProfileItem will only be re-saved if the amount has changed.
         // If the ProfileItem has changed start a transaction.
-        if (profileItem.setAmount(new CO2Amount(amount))) {
+        if (profileItem.setAmount(amount)) {
             transactionController.begin(true);
         }
     }
@@ -99,12 +99,12 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      * @param version          - the APIVersion. This is used to determine the correct ItemValueDefinitions to load into the calculation
      * @return the calculated CO2 amount
      */
-    public BigDecimal calculate(DataItem dataItem, Choices userValueChoices, APIVersion version) {
-        BigDecimal amount = Decimal.BIG_DECIMAL_ZERO;
+    public CO2Amount calculate(DataItem dataItem, Choices userValueChoices, APIVersion version) {
+        CO2Amount amount = CO2Amount.ZERO;
         Algorithm algorithm = algorithmService.getAlgorithm(dataItem.getItemDefinition());
         if (algorithm != null) {
             Map<String, Object> values = getValues(dataItem, userValueChoices, version);
-            amount = calculate(algorithmService.getAlgorithm(dataItem.getItemDefinition()), values);
+            amount = calculate(algorithm, values);
         }
         return amount;
     }
@@ -119,7 +119,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      * @param values
      * @return the algorithm result as a BigDecimal
      */
-    public BigDecimal calculate(Algorithm algorithm, Map<String, Object> values) {
+    public CO2Amount calculate(Algorithm algorithm, Map<String, Object> values) {
         CO2Amount amount;
         if (log.isTraceEnabled()) {
             log.trace("calculate()");
@@ -138,7 +138,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
             log.trace("calculate() - finished calculation");
             log.trace("calculate() - CO2 Amount: " + amount);
         }
-        return amount.getValue();
+        return amount;
     }
 
     // Collect all relevant algorithm input values for a ProfileItem calculation.
@@ -176,6 +176,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
 
     // Collect all relevant algorithm input values for a DataItem + auth Choices calculation.
     private Map<String, Object> getValues(DataItem dataItem, Choices userValueChoices, APIVersion version) {
+
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
         dataItem.getItemDefinition().appendInternalValues(values, version);
         dataItem.appendInternalValues(values);
@@ -207,8 +208,22 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
                 if (itemValueDefinition.isFromProfile() &&
                         userValueChoices.containsKey(itemValueDefinition.getPath()) &&
                         itemValueDefinition.isValidInAPIVersion(version)) {
-                    userChoices.put(itemValueDefinition,
-                            new InternalValue(userValueChoices.get(itemValueDefinition.getPath()).getValue()));
+                    // Create transient ItemValue.
+                    ItemValue itemValue = new ItemValue();
+                    itemValue.setItemValueDefinition(itemValueDefinition);
+                    itemValue.setValue(userValueChoices.get(itemValueDefinition.getPath()).getValue());
+                    if (version.isNotVersionOne()) {
+                        if (itemValue.hasUnit() && userValueChoices.containsKey(itemValueDefinition.getPath() + "Unit")) {
+                            itemValue.setUnit(userValueChoices.get(itemValueDefinition.getPath() + "Unit").getValue());
+                        }
+                        if (itemValue.hasPerUnit() && userValueChoices.containsKey(itemValueDefinition.getPath() + "PerUnit")) {
+                            itemValue.setPerUnit(userValueChoices.get(itemValueDefinition.getPath() + "PerUnit").getValue());
+                        }
+                    }
+                    // Only add ItemValue value if it is usable.
+                    if (itemValue.isUsableValue()) {
+                        userChoices.put(itemValueDefinition, new InternalValue(itemValue));
+                    }
                 }
             }
             values.putAll(userChoices);
