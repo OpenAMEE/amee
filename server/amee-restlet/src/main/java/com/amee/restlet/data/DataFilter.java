@@ -24,6 +24,7 @@ import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.restlet.RewriteFilter;
 import com.amee.service.path.PathItemService;
+import org.apache.commons.lang.StringUtils;
 import org.restlet.Application;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
@@ -53,20 +54,34 @@ public class DataFilter extends RewriteFilter {
             segments.remove(0);
             // handle suffixes
             String suffix = handleSuffix(segments);
-            // look for path match
+
             Environment environment = (Environment) request.getAttributes().get("environment");
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
-            PathItem pathItem = pathItemGroup.findBySegments(segments, false);
-            if (pathItem != null) {
-                // found matching path, rewrite
-                String path = pathItem.getInternalPath() + suffix;
+
+            // check for flat or heirachical path
+            if (StringUtils.equals(segments.get(0), "categories")) {
+                PathItem pathItem;
+                if (segments.size() == 1) {
+                    pathItem = pathItemGroup.getRootPathItem();
+                } else {
+                    pathItem = pathItemGroup.findByUId(segments.get(1));
+                }
                 request.getAttributes().put("pathItem", pathItem);
                 request.getAttributes().put("previousResourceRef", reference.toString());
-                reference.setPath("/data" + path);
             } else {
-                // nothing to be found, 404
-                response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-                return STOP;
+                // look for path match
+                PathItem pathItem = pathItemGroup.findBySegments(segments, false);
+                if (pathItem != null) {
+                    // found matching path, rewrite
+                    String path = pathItem.getInternalPath() + suffix;
+                    request.getAttributes().put("pathItem", pathItem);
+                    request.getAttributes().put("previousResourceRef", reference.toString());
+                    reference.setPath("/data" + path);
+                } else {
+                    // nothing to be found, 404
+                    response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                    return STOP;
+                }
             }
         }
         log.debug("rewrite() - end data path rewrite");

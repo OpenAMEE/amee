@@ -131,7 +131,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         try {
             amount = new CO2Amount(algorithmService.evaluate(algorithm, values));
         } catch (Exception e) {
-            log.warn("calculate() - caught Exception: " + e.getMessage(), e);
+            log.warn("calculate() - caught Exception: " + e.getMessage());
             amount = new CO2Amount(Decimal.BIG_DECIMAL_ZERO);
         }
         if (log.isTraceEnabled()) {

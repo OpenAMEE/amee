@@ -80,7 +80,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
     public ItemValue() {
         super();
     }
-
+    
     public ItemValue(ItemValueDefinition itemValueDefinition, Item item, String value) {
         this();
         setItemValueDefinition(itemValueDefinition);

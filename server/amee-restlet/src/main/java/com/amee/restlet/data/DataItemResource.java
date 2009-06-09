@@ -29,6 +29,8 @@ import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,13 +71,25 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     private Form query;
     private List<Choice> parameters = new ArrayList<Choice>();
 
+    // Select request parameter determining how a history of DataItemValues should be returned.
+    // An empty value signifies only the latest value in the history should be returned.
+    private String select;
+
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         query = request.getResourceRef().getQueryAsForm();
         setDataCategory(request.getAttributes().get("categoryUid").toString());
         setDataItemByPathOrUid(request.getAttributes().get("itemPath").toString());
-        for (String key : query.getNames()) {
+
+        Set<String> names = query.getNames();
+        if (names.contains("select")) {
+            select = query.getFirstValue("select");
+            names.remove("select");
+        }
+
+        // Pull out any values submitted for Data API calculations.
+        for (String key : names) {
             parameters.add(new Choice(key, query.getValues(key)));
         }
     }
@@ -171,6 +185,80 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Override
     public boolean allowPut() {
         return true;
+    }
+
+    @Override
+    public boolean allowPost() {
+        return true;
+    }
+
+    @Override
+    public void acceptRepresentation(Representation entity) {
+        log.debug("acceptRepresentation()");
+
+        //TODO - DIVActions?
+        if (!dataBrowser.getDataItemActions().isAllowCreate()) {
+            notAuthorized();
+            return;
+        }
+
+        // Pull out request parameters.
+        String value = getForm().getFirstValue("value");
+        StartEndDate startDate = new StartEndDate(getForm().getFirstValue("startDate"));
+        final String valueDefinitionUid = getForm().getFirstValue("valueDefinitionUid");
+        String unit = getForm().getFirstValue("unit");
+        String perUnit = getForm().getFirstValue("perUnit");
+
+        // Validations
+
+        // The submitted ItemValueDefinition must be in the owning ItemDefinition
+        ItemValue matchedItemValue = (ItemValue) CollectionUtils.find(getDataItem().getItemValues(), new Predicate() {
+            @Override
+            public boolean evaluate(Object o) {
+                ItemValue iv = (ItemValue) o;
+                return StringUtils.equals(iv.getItemValueDefinition().getUid(),valueDefinitionUid);
+            }
+        });
+
+        if (matchedItemValue == null) {
+            log.error("acceptRepresentation() - badRequest: trying to create a DIV with an IVD not belonging to the DI ID.");
+            badRequest();
+            return;
+        }
+
+        // The submitted startDate must be (i) after or equal to the startDate and (ii) before the endDate of the owning DataItem.
+        if (startDate.before(getDataItem().getStartDate()) ||
+                (getDataItem().getEndDate() != null && startDate.after(getDataItem().getEndDate()))) {
+            log.error("acceptRepresentation() - badRequest: trying to create a DIV starting after the endDate of the owning DI.");
+            badRequest();
+            return;
+        }
+
+        // The new DataItemValue must be unique on itemValueDefinitionUid + startDate.
+        String check1 = valueDefinitionUid + startDate.getTime();
+        for (ItemValue iv : getDataItem().getItemValues()) {
+            String check2 = iv.getItemValueDefinition().getUid() + iv.getStartDate().getTime();
+            if (check1.equals(check2)) {
+                log.error("acceptRepresentation() - badRequest: trying to create a DIV with the same IVD and StartDate as an existing DIV.");
+                badRequest();
+                return;
+            }
+        }
+
+        //Create the new ItemValue entity.
+        ItemValue newDataItemValue = new ItemValue(matchedItemValue.getItemValueDefinition(), getDataItem(), value);
+        newDataItemValue.setStartDate(startDate);
+        if (StringUtils.isNotBlank(unit))
+            newDataItemValue.setUnit(unit);
+        if (StringUtils.isNotBlank(perUnit))
+            newDataItemValue.setPerUnit(perUnit);
+
+        // TODO - do we need to clear caches on DIV creation?
+        // Clear caches
+        dataService.clearCaches(getDataItem().getDataCategory());
+
+        // Return successful creation of new DataItemValue.
+        successfulPost(getParentPath(), newDataItemValue.getUid());
     }
 
     @Override
