@@ -57,6 +57,10 @@
         </pluginManagement>
         <plugins>
             <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.5</version>
+			</plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -148,17 +152,7 @@
             <version>4.5</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
-    <!-- Site & Reporting. -->
-    <reporting>
-        <plugins>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <scm>
         <connection>scm:git:ssh://github.com:sambogoat/amee.git</connection>
