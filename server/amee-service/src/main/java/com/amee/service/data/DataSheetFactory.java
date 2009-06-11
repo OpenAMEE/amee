@@ -80,11 +80,10 @@ public class DataSheetFactory implements CacheableFactory {
             StartEndDate startDate = dataBrowser.getQueryStartDate();
             StartEndDate endDate = dataBrowser.getQueryEndDate();
             for (DataItem dataItem : new OnlyActiveDataService(dataService).getDataItems(dataBrowser.getDataCategory(), startDate, endDate)) {
-                itemValuesMap = dataItem.getItemValuesMap();
                 row = new Row(sheet, dataItem.getUid());
                 row.setLabel("DataItem");
                 for (Column column : columns) {
-                    itemValue = itemValuesMap.get(column.getName());
+                    itemValue = dataItem.matchItemValue(column.getName());
                     if (itemValue != null) {
                         new Cell(column, row, itemValue.getValue(), itemValue.getUid(), itemValue.getItemValueDefinition().getValueDefinition().getValueType());
                     } else if ("label".equalsIgnoreCase(column.getName())) {

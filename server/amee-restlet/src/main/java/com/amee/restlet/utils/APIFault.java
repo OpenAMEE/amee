@@ -33,7 +33,8 @@ public enum APIFault {
     INVALID_UNIT,
     EMPTY_LIST,
     ENTITY_NOT_FOUND,
-    MAX_BATCH_SIZE_EXCEEDED;
+    MAX_BATCH_SIZE_EXCEEDED,
+    DELETE_MUST_LEAVE_AT_LEAST_ONE_ITEM_VALUE;
 
     private String[] strings = {
             "",
@@ -48,7 +49,8 @@ public enum APIFault {
             "A request was received with an invalid unit.",
             "An empty list was received or produced.",
             "An entity was not found for the given identifier.",
-            "Max batch size was exceeded."};
+            "Max batch size was exceeded.",
+            "The DELETE operation must leave at least one ITEM_VALUE per ITEM_VALUE_DEFINTION."};
 
     public String getString() {
         return strings[this.ordinal()];

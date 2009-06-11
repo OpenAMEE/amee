@@ -133,8 +133,8 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     /**
-     * Get an unmodifiable List of {@link ItemValue} owned by this Item. For an historical sequence of {@link ItemValue}, only the
-     * latest in that sequence is returned.
+     * Get an unmodifiable List of {@link ItemValue}s owned by this Item.
+     * For an historical sequence of {@link ItemValue}s, only the latest active entry in that sequence is returned.
      *
      * @return - the List of {@link ItemValue}
      */
@@ -142,31 +142,23 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         return Collections.unmodifiableList(getCurrentItemValues());
     }
 
-    // Filter-out any ItemValue instances within an historical sequence of ItemValues that are not the final entry in
-    // the given datetime range.
+
+    // Get only ItemValues that are the latest entires within an historical sequence.
     @SuppressWarnings("unchecked")
     private List<ItemValue> getCurrentItemValues() {
         if (currentItemValues == null) {
-            final List<ItemValue> activeItemValues = getActiveItemValues();
-            currentItemValues = (List) CollectionUtils.select(activeItemValues, new Predicate() {
-                public boolean evaluate(Object o) {
-                    ItemValue iv = (ItemValue) o;
-                    StartEndDate startDate = iv.getStartDate();
-                    String path = iv.getItemValueDefinition().getPath();
-                    for (ItemValue itemValue : activeItemValues) {
-                        if (startDate.before(itemValue.getStartDate()) &&
-                                itemValue.getItemValueDefinition().getPath().equals(path)) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-            });
+            currentItemValues = (List) CollectionUtils.select(getActiveItemValues(),
+                    new CurrentItemValuePredicate(getActiveItemValues()));
         }
         return Collections.unmodifiableList(currentItemValues);
     }
 
-    private List<ItemValue> getActiveItemValues() {
+    /**
+     * Get an unmodifiable List of all active {@link ItemValue}s owned by this Item.
+     *
+     * @return - the List of {@link ItemValue}
+     */
+    public List<ItemValue> getActiveItemValues() {
         if (activeItemValues == null) {
             activeItemValues = new ArrayList<ItemValue>();
             for (ItemValue iv : itemValues) {
@@ -176,6 +168,22 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
             }
         }
         return Collections.unmodifiableList(activeItemValues);
+    }
+
+    /**
+     * Return an {@link ItemValueMap} of {@link ItemValue}s belonging to this Item.
+     * The key is the value returned by {@link com.amee.domain.data.ItemValue#getDisplayPath()}.
+     *
+     * @return {@link ItemValueMap}
+     */
+    public ItemValueMap getItemValuesMap() {
+        if (itemValuesMap == null) {
+            itemValuesMap = new ItemValueMap();
+            for (ItemValue itemValue : itemValues) {
+                itemValuesMap.put(itemValue.getDisplayPath(), itemValue);
+            }
+        }
+        return itemValuesMap;
     }
 
     /**
@@ -203,14 +211,36 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
-    public ItemValueMap getItemValuesMap() {
-        if (itemValuesMap == null) {
-            itemValuesMap = new ItemValueMap();
-            for (ItemValue itemValue : getItemValues()) {
-                itemValuesMap.put(itemValue.getDisplayPath(), itemValue);
-            }
+    /**
+     * Attempt to match an {@link ItemValue} belonging to this Item using some identifier.
+     *
+     * @param identifier - a value to be compared to the path and then the uid of the {@link ItemValue}s belonging
+     * to this Item.
+     * @return the matched {@link ItemValue} or NULL if no match is found.
+     */
+    public ItemValue matchItemValue(String identifier) {
+        ItemValue iv = getItemValuesMap().get(identifier);
+        if (iv == null) {
+            iv = getByUid(identifier);
         }
-        return itemValuesMap;
+        return iv;
+    }
+
+    /**
+     * Get an {@link ItemValue} by UID
+     *
+     * @param uid
+     * @return the {@link ItemValue} if found or NULL
+     */
+    private ItemValue getByUid(final String uid) {
+        return(ItemValue) CollectionUtils.find(getActiveItemValues(), new Predicate() {
+            @Override
+            public boolean evaluate(Object o) {
+                ItemValue iv = (ItemValue) o;
+                return iv.getUid().equals(uid);
+
+            }
+        });
     }
 
     private void resetItemValueCollections() {
@@ -287,5 +317,31 @@ class UsableValuePredicate implements Predicate {
     @Override
     public boolean evaluate(Object o) {
         return ((ItemValue) o).isUsableValue();
+    }
+}
+
+/**
+ * Predicate for obtaining the latest ItemValue in an historical sequence.
+ */
+class CurrentItemValuePredicate implements Predicate {
+
+    private List<ItemValue> itemValues;
+
+    public CurrentItemValuePredicate(List<ItemValue> itemValues) {
+        this.itemValues = itemValues;
+    }
+
+    @Override
+    public boolean evaluate(Object o) {
+        ItemValue iv = (ItemValue) o;
+        StartEndDate startDate = iv.getStartDate();
+        String path = iv.getItemValueDefinition().getPath();
+        for (ItemValue itemValue : itemValues) {
+            if (startDate.before(itemValue.getStartDate()) &&
+                    itemValue.getItemValueDefinition().getPath().equals(path)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

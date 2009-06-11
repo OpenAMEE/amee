@@ -21,8 +21,12 @@ package com.amee.restlet.data;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
+import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -58,7 +62,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
 
     private void setDataItemValue(String itemValuePath) {
         if (itemValuePath.isEmpty() || getDataItem() == null) return;
-        this.itemValue = getDataItem().getItemValuesMap().get(itemValuePath);
+        this.itemValue = getDataItem().matchItemValue(itemValuePath);
     }
 
     private ItemValue getItemValue() {
@@ -125,6 +129,11 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     }
 
     @Override
+    public boolean allowDelete() {
+        return true;
+    }
+
+    @Override
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
         if (dataBrowser.getDataItemActions().isAllowModify()) {
@@ -137,6 +146,36 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
                 dataService.clearCaches(getDataItem().getDataCategory());
             }
             successfulPut(getFullPath());
+        } else {
+            notAuthorized();
+        }
+    }
+
+    @Override
+    public void removeRepresentations() {
+        log.debug("removeRepresentations()");
+
+        if (dataBrowser.getDataItemActions().isAllowDelete()) {
+
+            // Only allow delete if there would be at least one DataItemValue for this ItemValueDefinition remaining.
+            ItemValue itemValue = getItemValue();
+            final ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
+            int valuesInHistory = CollectionUtils.countMatches(getDataItem().getActiveItemValues(), new Predicate() {
+                @Override
+                public boolean evaluate(Object o) {
+                    ItemValue iv = (ItemValue) o;
+                    return iv.getItemValueDefinition().equals(itemValueDefinition);
+                }
+            });
+
+
+            if (valuesInHistory > 1) {
+                dataService.clearCaches(getDataItem().getDataCategory());
+                dataService.remove(itemValue);
+                successfulDelete(pathItem.getParent().getFullPath());
+            } else {
+                badRequest(APIFault.DELETE_MUST_LEAVE_AT_LEAST_ONE_ITEM_VALUE);
+            }
         } else {
             notAuthorized();
         }

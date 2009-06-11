@@ -462,9 +462,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         dataService.persist(dataItem);
 
         // update item values if supplied
-        ItemValueMap itemValues = dataItem.getItemValuesMap();
         for (String name : form.getNames()) {
-            ItemValue itemValue = itemValues.get(name);
+            ItemValue itemValue = dataItem.matchItemValue(name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
             }

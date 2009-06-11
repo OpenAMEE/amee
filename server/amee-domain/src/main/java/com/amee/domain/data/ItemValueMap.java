@@ -81,7 +81,6 @@ public class ItemValueMap extends HashMap {
     public void put(String path, ItemValue itemValue) {
         if (!containsKey(path)) {
             super.put(path, new TreeSet<ItemValue>(new Comparator<ItemValue>() {
-
                 @Override
                 public int compare(ItemValue iv1, ItemValue iv2) {
                     return iv1.getStartDate().compareTo(iv2.getStartDate());

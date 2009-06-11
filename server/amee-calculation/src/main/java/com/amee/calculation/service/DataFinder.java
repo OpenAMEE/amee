@@ -68,7 +68,7 @@ public class DataFinder implements Serializable {
         ItemValue itemValue;
         DataItem dataItem = getDataItem(path, drillDown);
         if (dataItem != null) {
-            itemValue = dataItem.getItemValuesMap().get(name);
+            itemValue = dataItem.matchItemValue(name);
             if (itemValue != null) {
                 value = itemValue.getValue();
             }

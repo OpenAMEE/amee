@@ -24,7 +24,6 @@ import com.amee.core.*;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.ItemValueMap;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.data.DataConstants;
@@ -206,8 +205,10 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         String value = getForm().getFirstValue("value");
         StartEndDate startDate = new StartEndDate(getForm().getFirstValue("startDate"));
         final String valueDefinitionUid = getForm().getFirstValue("valueDefinitionUid");
-        String unit = getForm().getFirstValue("unit");
-        String perUnit = getForm().getFirstValue("perUnit");
+
+        // Unit and PerUnit values are not currently supported for DataItemValues, only ProfileItemValues - 08/06/09 steve@amee.com
+        //String unit = getForm().getFirstValue("unit");
+        //String perUnit = getForm().getFirstValue("perUnit");
 
         // Validations
 
@@ -248,10 +249,12 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         //Create the new ItemValue entity.
         ItemValue newDataItemValue = new ItemValue(matchedItemValue.getItemValueDefinition(), getDataItem(), value);
         newDataItemValue.setStartDate(startDate);
-        if (StringUtils.isNotBlank(unit))
-            newDataItemValue.setUnit(unit);
-        if (StringUtils.isNotBlank(perUnit))
-            newDataItemValue.setPerUnit(perUnit);
+
+        // Unit and PerUnit values are not currently supported for DataItemValues, only ProfileItemValues - 08/06/09 steve@amee.com
+        //if (StringUtils.isNotBlank(unit))
+        //    newDataItemValue.setUnit(unit);
+        //if (StringUtils.isNotBlank(perUnit))
+        //    newDataItemValue.setPerUnit(perUnit);
 
         // TODO - do we need to clear caches on DIV creation?
         // Clear caches
@@ -312,9 +315,8 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         }
 
         // update ItemValues if supplied
-        ItemValueMap itemValues = dataItem.getItemValuesMap();
         for (String name : form.getNames()) {
-            ItemValue itemValue = itemValues.get(name);
+            ItemValue itemValue = dataItem.matchItemValue(name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
             }

@@ -5,7 +5,6 @@ import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.data.ItemValueMap;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
@@ -193,8 +192,7 @@ public class ProfileService extends BaseService {
                 String defaultValue = ivd.getValue();
                 // next give DataItem a chance to set the default value, if appropriate
                 if (ivd.isFromData()) {
-                    ItemValueMap dataItemValues = profileItem.getDataItem().getItemValuesMap();
-                    ItemValue dataItemValue = dataItemValues.get(ivd.getPath());
+                    ItemValue dataItemValue = profileItem.getDataItem().matchItemValue(ivd.getPath());
                     if ((dataItemValue != null) && (dataItemValue.getValue().length() > 0)) {
                         defaultValue = dataItemValue.getValue();
                     }
