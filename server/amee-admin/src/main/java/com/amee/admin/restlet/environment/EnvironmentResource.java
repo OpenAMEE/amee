@@ -3,7 +3,6 @@ package com.amee.admin.restlet.environment;
 import com.amee.domain.environment.Environment;
 import com.amee.restlet.BaseResource;
 import com.amee.service.environment.EnvironmentConstants;
-import com.amee.service.environment.EnvironmentService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -22,9 +21,6 @@ import java.util.Map;
 @Component
 @Scope("prototype")
 public class EnvironmentResource extends BaseResource {
-
-    @Autowired
-    private EnvironmentService environmentService;
 
     @Autowired
     private EnvironmentBrowser environmentBrowser;

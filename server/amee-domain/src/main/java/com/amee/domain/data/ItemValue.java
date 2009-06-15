@@ -270,6 +270,8 @@ public class ItemValue extends AMEEEntity implements Pathable {
         clone.setValue(getValue());
         clone.setItemValueDefinition(getItemValueDefinition());
         clone.setItem(getItem());
+        clone.setStartDate(getStartDate());
+        clone.setEndDate(getEndDate());
         if (hasUnit())
             clone.setUnit(getUnit().toString());
         if (hasPerUnit())

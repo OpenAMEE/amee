@@ -29,7 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 /**
@@ -83,7 +83,7 @@ public class InternalValue {
      *
      * @param values - the Set of {@link ItemValue} representing an historical sequence of values.
      */
-    public InternalValue(Set<ItemValue> values) {
+    public InternalValue(List<ItemValue> values) {
         Iterator<ItemValue> itr = values.iterator();
         ItemValue itemValue = itr.next();
         if (itemValue.getItemValueDefinition().isDecimal()) {

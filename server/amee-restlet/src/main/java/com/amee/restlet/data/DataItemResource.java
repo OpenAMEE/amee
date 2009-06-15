@@ -70,10 +70,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     private Form query;
     private List<Choice> parameters = new ArrayList<Choice>();
 
-    // Select request parameter determining how a history of DataItemValues should be returned.
-    // An empty value signifies only the latest value in the history should be returned.
-    private String select;
-
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
@@ -82,9 +78,12 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         setDataItemByPathOrUid(request.getAttributes().get("itemPath").toString());
 
         Set<String> names = query.getNames();
-        if (names.contains("select")) {
-            select = query.getFirstValue("select");
-            names.remove("select");
+
+        // The resource may receive a startDate parameter that sets the current date in an historical sequence of
+        // ItemValues.
+        if (StringUtils.isNotBlank(query.getFirstValue("startDate"))) {
+            getDataItem().setCurrentDate(new StartEndDate(query.getFirstValue("startDate")));
+            names.remove("startDate");
         }
 
         // Pull out any values submitted for Data API calculations.
@@ -228,8 +227,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         }
 
         // The submitted startDate must be (i) after or equal to the startDate and (ii) before the endDate of the owning DataItem.
-        if (startDate.before(getDataItem().getStartDate()) ||
-                (getDataItem().getEndDate() != null && startDate.after(getDataItem().getEndDate()))) {
+        if (!getDataItem().isWithinLifeTime(startDate)) {
             log.error("acceptRepresentation() - badRequest: trying to create a DIV starting after the endDate of the owning DI.");
             badRequest();
             return;

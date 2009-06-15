@@ -20,6 +20,7 @@
 package com.amee.restlet.data;
 
 import com.amee.core.APIUtils;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
@@ -27,6 +28,7 @@ import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -42,6 +44,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Map;
 
 //TODO - Move to builder model
@@ -57,12 +60,26 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         setDataItemByPathOrUid(request.getAttributes().get("itemPath").toString());
-        setDataItemValue(request.getAttributes().get("valuePath").toString());
+        setDataItemValue(request);
     }
 
-    private void setDataItemValue(String itemValuePath) {
-        if (itemValuePath.isEmpty() || getDataItem() == null) return;
-        this.itemValue = getDataItem().matchItemValue(itemValuePath);
+    private void setDataItemValue(Request request) {
+
+        String itemValuePath = request.getAttributes().get("valuePath").toString();
+
+        if (itemValuePath.isEmpty() || getDataItem() == null) {
+            return;
+        }
+
+        // The resource may receive a startDate parameter that sets the current date in an historical sequence of
+        // ItemValues.
+        Date startDate = new Date();
+        Form query = request.getResourceRef().getQueryAsForm();
+        if (StringUtils.isNotBlank(query.getFirstValue("startDate"))) {
+            startDate = new StartEndDate(query.getFirstValue("startDate"));
+        }
+
+        this.itemValue = getDataItem().matchItemValue(itemValuePath, startDate);
     }
 
     private ItemValue getItemValue() {
@@ -136,15 +153,28 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
+
         if (dataBrowser.getDataItemActions().isAllowModify()) {
+            
             Form form = getForm();
-            // are we updating this ItemValue?
-            if (form.getFirstValue("value") != null) {
-                // update ItemValue
+            if (StringUtils.isNotBlank(form.getFirstValue("value"))) {
                 getItemValue().setValue(form.getFirstValue("value"));
-                // clear caches
-                dataService.clearCaches(getDataItem().getDataCategory());
             }
+
+            if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
+                Date startDate = new StartEndDate(form.getFirstValue("startDate"));
+
+                // The submitted startDate must be (i) after or equal to the startDate and (ii) before the endDate of the owning DataItem.
+                if (!getDataItem().isWithinLifeTime(startDate)) {
+                    log.error("acceptRepresentation() - badRequest: trying to create a DIV starting after the endDate of the owning DI.");
+                    badRequest();
+                    return;
+                }
+
+                getItemValue().setStartDate(startDate);
+            }
+
+            dataService.clearCaches(getDataItem().getDataCategory());
             successfulPut(getFullPath());
         } else {
             notAuthorized();

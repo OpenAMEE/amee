@@ -44,9 +44,23 @@ public class ItemValueMap extends HashMap {
         ItemValue itemValue = null;
         TreeSet<ItemValue> series = (TreeSet<ItemValue>) super.get(path);
         if (series != null) {
-            itemValue = series.last();    
+            itemValue = series.first();
         }
         return itemValue;
+    }
+
+    /**
+     * Get the list of active {@link ItemValue}s at the passed start Date.
+     *
+     * @param startDate - the active {@link ItemValue} will be that starting immediately prior-to or on this date.
+     * @return the list of active {@link ItemValue}s at the passed start Date.
+     */
+    public List<ItemValue> get(Date startDate) {
+        List<ItemValue> itemValues = new ArrayList<ItemValue>();
+        for(Object path : super.keySet()) {
+            itemValues.add(get((String)path, startDate));
+        }
+        return itemValues;
     }
 
     /**
@@ -67,6 +81,7 @@ public class ItemValueMap extends HashMap {
      * Get the active {@link ItemValue} at the passed start Date.
      *
      * @param path - the {@link ItemValue} path.
+     * @param startDate - the active {@link ItemValue} will be that starting immediately prior-to or on this date.
      * @return the active {@link ItemValue} at the passed start Date.
      */
     public ItemValue get(String path, Date startDate) {
@@ -83,7 +98,7 @@ public class ItemValueMap extends HashMap {
             super.put(path, new TreeSet<ItemValue>(new Comparator<ItemValue>() {
                 @Override
                 public int compare(ItemValue iv1, ItemValue iv2) {
-                    return iv1.getStartDate().compareTo(iv2.getStartDate());
+                    return iv2.getStartDate().compareTo(iv1.getStartDate());
                 }
 
             }));
@@ -93,12 +108,13 @@ public class ItemValueMap extends HashMap {
         itemValues.add(itemValue);
     }
 
+    // Find the active ItemValue at startDate.
+    // The active ItemValue is the one occuring at or immediately before startDate.
     private ItemValue find(Set<ItemValue> itemValues, Date startDate) {
         ItemValue selected = null;
         for (ItemValue itemValue : itemValues) {
             if (!itemValue.getStartDate().after(startDate)) {
                 selected = itemValue;
-            } else {
                 break;
             }
         }

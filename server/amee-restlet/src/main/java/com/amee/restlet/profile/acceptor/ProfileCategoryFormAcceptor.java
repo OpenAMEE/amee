@@ -160,7 +160,8 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                 profileService.persist(profileItem);
                 // update item values if supplied
                 for (String name : form.getNames()) {
-                    ItemValue itemValue = profileItem.matchItemValue(name);
+                    // Find all matching active ItemValues at the item startDate 
+                    ItemValue itemValue = profileItem.matchItemValue(name, profileItem.getStartDate());
                     if (itemValue != null) {
                         itemValue.setValue(form.getFirstValue(name));
                         if (resource.getAPIVersion().isNotVersionOne()) {

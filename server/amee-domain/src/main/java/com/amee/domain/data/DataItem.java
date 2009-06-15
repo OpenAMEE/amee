@@ -62,7 +62,7 @@ public class DataItem extends Item {
         ItemDefinition itemDefinition = getItemDefinition();
         ItemValueMap itemValuesMap = getItemValuesMap();
         for (Choice choice : itemDefinition.getDrillDownChoices()) {
-            itemValue = itemValuesMap.get(choice.getName());
+            itemValue = itemValuesMap.get(choice.getName(), getCurrentDate());
             if ((itemValue != null) &&
                     (itemValue.getValue().length() > 0) &&
                     !itemValue.getValue().equals("-")) {
@@ -82,7 +82,7 @@ public class DataItem extends Item {
         element.setAttribute("uid", getUid());
         element.appendChild(APIUtils.getElement(document, "Name", getDisplayName()));
         Element itemValuesElem = document.createElement("ItemValues");
-        for (ItemValue itemValue : getItemValues()) {
+        for (ItemValue itemValue : getItemValues(getCurrentDate())) {
             itemValue.setBuilder(new ItemValueBuilder(itemValue));
             itemValuesElem.appendChild(itemValue.getElement(document, false));
         }
@@ -100,7 +100,7 @@ public class DataItem extends Item {
         obj.put("uid", getUid());
         obj.put("name", getDisplayName());
         JSONArray itemValues = new JSONArray();
-        for (ItemValue itemValue : getItemValues()) {
+        for (ItemValue itemValue : getItemValues(getCurrentDate())) {
             itemValue.setBuilder(new ItemValueBuilder(itemValue));
             itemValues.put(itemValue.getJSONObject(false));
         }

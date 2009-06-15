@@ -1191,6 +1191,39 @@
         <root url="jar://$PROJECT_DIR$/../../../../repository/log4jdbc/log4jdbc/4-1.2alpha2/log4jdbc-4-1.2alpha2-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Maven: quartz:quartz:1.5.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/quartz/quartz/1.5.2/quartz-1.5.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/quartz/quartz/1.5.2/quartz-1.5.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/quartz/quartz/1.5.2/quartz-1.5.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.mail:mail:1.4">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/mail/mail/1.4/mail-1.4.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/mail/mail/1.4/mail-1.4-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/mail/mail/1.4/mail-1.4-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.activation:activation:1.1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/activation/activation/1.1/activation-1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/activation/activation/1.1/activation-1.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/activation/activation/1.1/activation-1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
   </component>
 </project>
 
