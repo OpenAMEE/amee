@@ -141,13 +141,9 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     }
 
     @Override
-    public boolean allowPut() {
-        return true;
-    }
-
-    @Override
-    public boolean allowDelete() {
-        return true;
+    public boolean allowPost() {
+        // POSTs to Data ItemValues are never allowed.
+        return false;
     }
 
     @Override

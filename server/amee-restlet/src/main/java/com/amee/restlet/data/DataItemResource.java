@@ -181,16 +181,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     }
 
     @Override
-    public boolean allowPut() {
-        return true;
-    }
-
-    @Override
-    public boolean allowPost() {
-        return true;
-    }
-
-    @Override
     public void acceptRepresentation(Representation entity) {
         log.debug("acceptRepresentation()");
 
@@ -235,7 +225,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
         // The new DataItemValue must be unique on itemValueDefinitionUid + startDate.
         String check1 = valueDefinitionUid + startDate.getTime();
-        for (ItemValue iv : getDataItem().getItemValues()) {
+        for (ItemValue iv : getDataItem().getActiveItemValues()) {
             String check2 = iv.getItemValueDefinition().getUid() + iv.getStartDate().getTime();
             if (check1.equals(check2)) {
                 log.error("acceptRepresentation() - badRequest: trying to create a DIV with the same IVD and StartDate as an existing DIV.");
@@ -254,7 +244,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         //if (StringUtils.isNotBlank(perUnit))
         //    newDataItemValue.setPerUnit(perUnit);
 
-        // TODO - do we need to clear caches on DIV creation?
         // Clear caches
         dataService.clearCaches(getDataItem().getDataCategory());
 
@@ -324,11 +313,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         dataService.clearCaches(dataItem.getDataCategory());
 
         successfulPut(getParentPath() + "/" + dataItem.getResolvedPath());
-    }
-
-    @Override
-    public boolean allowDelete() {
-        return true;
     }
 
     @Override

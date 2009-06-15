@@ -141,13 +141,9 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     @Override
-    public boolean allowPost() {
-        return true;
-    }
-
-    @Override
-    public boolean allowPut() {
-        return true;
+    public boolean allowDelete() {
+        // Only allow delete for Profiles (i.e: a request to /profiles/{profileUid}).
+        return super.allowDelete() && (pathItem.getPath().length() == 0);
     }
 
     @Override
@@ -200,12 +196,6 @@ public class ProfileCategoryResource extends BaseProfileResource {
         } else {
             return formAcceptor.accept(this, getForm());
         }
-    }
-
-    @Override
-    public boolean allowDelete() {
-        // only allow delete for profile (a request to /profiles/{profileUid})
-        return (pathItem.getPath().length() == 0);
     }
 
     @Override

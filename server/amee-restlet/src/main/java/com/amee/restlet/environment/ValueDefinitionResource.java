@@ -109,11 +109,6 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
     }
 
     @Override
-    public boolean allowPut() {
-        return true;
-    }
-
-    @Override
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
         if (definitionBrowser.getValueDefinitionActions().isAllowModify()) {
@@ -135,10 +130,6 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
         }
     }
 
-    @Override
-    public boolean allowDelete() {
-        return true;
-    }
 
     @Override
     public void removeRepresentations() {

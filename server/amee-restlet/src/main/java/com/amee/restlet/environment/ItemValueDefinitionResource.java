@@ -114,11 +114,6 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     }
 
     @Override
-    public boolean allowPut() {
-        return true;
-    }
-
-    @Override
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
         if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
@@ -171,11 +166,6 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
         } else {
             notAuthorized();
         }
-    }
-
-    @Override
-    public boolean allowDelete() {
-        return true;
     }
 
     @Override

@@ -109,11 +109,6 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
     }
 
     @Override
-    public boolean allowPut() {
-        return true;
-    }
-
-    @Override
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
         if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
@@ -133,11 +128,6 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
         } else {
             notAuthorized();
         }
-    }
-
-    @Override
-    public boolean allowDelete() {
-        return true;
     }
 
     @Override

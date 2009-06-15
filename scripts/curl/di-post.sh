@@ -3,7 +3,7 @@
 
 . curl.conf
 
-data="valueDefinitionUid=23EB7F546969&value=100.0&startDate=2009-08-09T11:28:00%2B0000"
+data="valueDefinitionUid=23EB7F546969&value=100.0&startDate=2009-08-09T11:29:00%2B0000"
 amee_url="/data/business/buildings/hotel/generic/980051122E8C"
 
 type="xml"

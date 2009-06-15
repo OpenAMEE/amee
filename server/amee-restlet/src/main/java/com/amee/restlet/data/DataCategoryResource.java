@@ -122,16 +122,6 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     @Override
-    public boolean allowPost() {
-        return true;
-    }
-
-    @Override
-    public boolean allowPut() {
-        return true;
-    }
-
-    @Override
     public void acceptRepresentation(Representation entity) {
         log.debug("acceptRepresentation()");
         acceptOrStore(entity);
@@ -497,11 +487,6 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         } else {
             notAuthorized();
         }
-    }
-
-    @Override
-    public boolean allowDelete() {
-        return true;
     }
 
     @Override

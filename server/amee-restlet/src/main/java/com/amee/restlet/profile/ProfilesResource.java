@@ -144,11 +144,6 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     }
 
     @Override
-    public boolean allowPost() {
-        return true;
-    }
-
-    @Override
     public void acceptRepresentation(Representation entity) {
         log.debug("acceptRepresentation()");
         if (profileBrowser.getProfileActions().isAllowCreate()) {

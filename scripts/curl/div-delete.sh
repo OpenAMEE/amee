@@ -3,7 +3,7 @@
 
 . curl.conf
 
-amee_url="/data/business/buildings/hotel/generic/980051122E8C/7334745945A0"
+amee_url="/data/business/buildings/hotel/generic/980051122E8C/67E1D5F86C0E"
 
 type="xml"
 

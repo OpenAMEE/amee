@@ -204,11 +204,6 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public boolean allowPut() {
-        return true;
-    }
-
-    @Override
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
         if (definitionBrowser.getAlgorithmActions().isAllowModify()) {
@@ -234,11 +229,6 @@ public class AlgorithmResource extends BaseResource implements Serializable {
         } else {
             notAuthorized();
         }
-    }
-
-    @Override
-    public boolean allowDelete() {
-        return true;
     }
 
     @Override

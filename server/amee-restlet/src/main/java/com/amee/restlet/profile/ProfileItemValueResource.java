@@ -126,11 +126,6 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     }
 
     @Override
-    public boolean allowPut() {
-        return true;
-    }
-
-    @Override
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
         if (profileBrowser.getProfileItemValueActions().isAllowModify()) {
