@@ -53,10 +53,10 @@ public class ItemValueMap extends HashMap {
      * Get the list of active {@link ItemValue}s at the passed start Date.
      *
      * @param startDate - the active {@link ItemValue} will be that starting immediately prior-to or on this date.
-     * @return the list of active {@link ItemValue}s at the passed start Date.
+     * @return the set of active {@link ItemValue}s at the passed start Date.
      */
-    public List<ItemValue> get(Date startDate) {
-        List<ItemValue> itemValues = new ArrayList<ItemValue>();
+    public List<ItemValue> getAll(Date startDate) {
+        List<ItemValue> itemValues = new ArrayList();
         for(Object path : super.keySet()) {
             itemValues.add(get((String)path, startDate));
         }
@@ -67,12 +67,12 @@ public class ItemValueMap extends HashMap {
      * Get all instances of {@link ItemValue} with the passed path.
      *
      * @param path - the {@link ItemValue} path.
-     * @return the Set of {@link ItemValue}. Will be empty is there exists no {@link ItemValue}s with this path.
+     * @return the List of {@link ItemValue}. Will be empty is there exists no {@link ItemValue}s with this path.
      */
-    public Set<ItemValue> getAll(String path) {
-        Set<ItemValue> itemValues = (TreeSet<ItemValue>) super.get(path);
+    public List<ItemValue> getAll(String path) {
+        List<ItemValue> itemValues = new ArrayList((TreeSet<ItemValue>) super.get(path));
         if (itemValues == null) {
-            itemValues = Collections.emptySet();
+            itemValues = Collections.emptyList();
         }
         return itemValues;
     }
@@ -106,6 +106,17 @@ public class ItemValueMap extends HashMap {
 
         Set<ItemValue> itemValues = (Set<ItemValue>) super.get(path);
         itemValues.add(itemValue);
+    }
+
+    /**
+     * Return the number of entries stored for a given {@ItemValueDefinition} path.
+     *
+     * @param path - the {@ItemValueDefinition} path.
+     *
+     * @return the number of entries stored.
+     */
+    public int size(String path) {
+        return getAll(path).size();
     }
 
     // Find the active ItemValue at startDate.

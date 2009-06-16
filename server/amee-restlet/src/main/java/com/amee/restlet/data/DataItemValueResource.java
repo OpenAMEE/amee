@@ -27,10 +27,10 @@ import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -45,6 +45,7 @@ import org.w3c.dom.Element;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 //TODO - Move to builder model
@@ -54,7 +55,14 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
 
     private final Log log = LogFactory.getLog(getClass());
 
+    // Will be null is a sequence of ItemValues is being requested.
     private ItemValue itemValue;
+
+    // Will be null is a single ItemValue is being requested.
+    private List<ItemValue> itemValues;
+
+    // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
+    private String select;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -71,28 +79,47 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             return;
         }
 
+        Form query = request.getResourceRef().getQueryAsForm();
+
+        // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
+        if (StringUtils.isNotBlank(query.getFirstValue("get"))) {
+            this.select = query.getFirstValue("get");
+        }
+
         // The resource may receive a startDate parameter that sets the current date in an historical sequence of
         // ItemValues.
         Date startDate = new Date();
-        Form query = request.getResourceRef().getQueryAsForm();
         if (StringUtils.isNotBlank(query.getFirstValue("startDate"))) {
             startDate = new StartEndDate(query.getFirstValue("startDate"));
         }
 
-        this.itemValue = getDataItem().matchItemValue(itemValuePath, startDate);
-    }
-
-    private ItemValue getItemValue() {
-        return itemValue;
+        // Retrieve all itemValues in a historical sequence if mandated in the request (get=all), otherwise retrieve
+        // the closest match
+        if (StringUtils.equals(select,"all")) {
+            this.itemValues = getDataItem().getItemValues(itemValuePath);
+        } else {
+            this.itemValue = getDataItem().matchItemValue(itemValuePath, startDate);
+        }
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() &&
-                (getDataItem() != null) &&
-                (getItemValue() != null) &&
-                getItemValue().getItem().equals(getDataItem()) &&
-                getItemValue().getEnvironment().equals(environment);
+        return super.isValid() && getDataItem() != null &&
+                (isItemValueValid() || isItemValuesValid());
+    }
+
+    private boolean isItemValueValid() {
+        return this.itemValue != null &&
+                this.itemValue.getItem().equals(getDataItem()) &&
+                this.itemValue.getEnvironment().equals(environment);
+    }
+
+
+    private boolean isItemValuesValid() {
+        if (itemValues == null)
+            return false;
+        ItemValue test = (ItemValue) CollectionUtils.get(itemValues,0);
+        return test.getItem().equals(getDataItem()) && test.getEnvironment().equals(environment);
     }
 
     @Override
@@ -101,20 +128,30 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     }
 
     @Override
+    // Note, itemValues (historical sequences) are not supported in V1 API and templates are only used in v1 API.
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
         values.put("dataItem", getDataItem());
-        values.put("itemValue", getItemValue());
-        values.put("node", getItemValue());
+        values.put("itemValue", this.itemValue);
+        values.put("node", this.itemValue);
         return values;
     }
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
-        getItemValue().setBuilder(new ItemValueBuilder(getItemValue()));
-        obj.put("itemValue", getItemValue().getJSONObject());
+        if (itemValue != null) {
+            this.itemValue.setBuilder(new ItemValueBuilder(this.itemValue));
+            obj.put("itemValue", this.itemValue.getJSONObject());
+        } else {
+            JSONArray values = new JSONArray();
+            for(ItemValue iv : itemValues) {
+                iv.setBuilder(new ItemValueBuilder(iv));
+                values.put(iv.getJSONObject(false));
+            }
+            obj.put("itemValues",values);
+        }
         obj.put("dataItem", getDataItem().getIdentityJSONObject());
         obj.put("path", pathItem.getFullPath());
         return obj;
@@ -123,8 +160,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public Element getElement(Document document) {
         Element element = document.createElement("DataItemValueResource");
-        getItemValue().setBuilder(new ItemValueBuilder(getItemValue()));
-        element.appendChild(getItemValue().getElement(document));
+        this.itemValue.setBuilder(new ItemValueBuilder(this.itemValue));
+        element.appendChild(this.itemValue.getElement(document));
         element.appendChild(getDataItem().getIdentityElement(document));
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
         return element;
@@ -154,7 +191,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             
             Form form = getForm();
             if (StringUtils.isNotBlank(form.getFirstValue("value"))) {
-                getItemValue().setValue(form.getFirstValue("value"));
+                this.itemValue.setValue(form.getFirstValue("value"));
             }
 
             if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
@@ -167,7 +204,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
                     return;
                 }
 
-                getItemValue().setStartDate(startDate);
+                this.itemValue.setStartDate(startDate);
             }
 
             dataService.clearCaches(getDataItem().getDataCategory());
@@ -184,18 +221,12 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         if (dataBrowser.getDataItemActions().isAllowDelete()) {
 
             // Only allow delete if there would be at least one DataItemValue for this ItemValueDefinition remaining.
-            ItemValue itemValue = getItemValue();
+            ItemValue itemValue = this.itemValue;
             final ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
-            int valuesInHistory = CollectionUtils.countMatches(getDataItem().getActiveItemValues(), new Predicate() {
-                @Override
-                public boolean evaluate(Object o) {
-                    ItemValue iv = (ItemValue) o;
-                    return iv.getItemValueDefinition().equals(itemValueDefinition);
-                }
-            });
 
+            int remaining = getDataItem().getItemValuesMap().size(itemValueDefinition.getPath());
 
-            if (valuesInHistory > 1) {
+            if (remaining > 1) {
                 dataService.clearCaches(getDataItem().getDataCategory());
                 dataService.remove(itemValue);
                 successfulDelete(pathItem.getParent().getFullPath());

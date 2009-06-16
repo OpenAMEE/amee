@@ -75,7 +75,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     private ItemValueMap itemValuesMap;
 
     @Transient
-    private List<ItemValue> activeItemValues;
+    private Set<ItemValue> activeItemValues;
 
     @Transient
     private Date currentDate;
@@ -151,24 +151,34 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      * @return - the List of {@link ItemValue}
      */
     public List<ItemValue> getItemValues(Date startDate) {
-        return Collections.unmodifiableList(getItemValuesMap().get(startDate));
+        return Collections.unmodifiableList(getItemValuesMap().getAll(startDate));
     }
 
     /**
-     * Get an unmodifiable List of all active {@link ItemValue}s owned by this Item.
+     * Get an unmodifiable List of {@link ItemValue}s owned by this Item of a particular kind of {@ItemValueDefinition}
      *
+     * @param itemValuePath - the {@ItemValueDefinition} path
      * @return - the List of {@link ItemValue}
      */
-    public List<ItemValue> getActiveItemValues() {
+    public List<ItemValue> getItemValues(String itemValuePath) {
+        return Collections.unmodifiableList(getItemValuesMap().getAll(itemValuePath));
+    }
+
+    /**
+     * Get an unmodifiable List of all active (not deleted) {@link ItemValue}s owned by this Item.
+     *
+     * @return - the Set of {@link ItemValue}
+     */
+    public Set<ItemValue> getActiveItemValues() {
         if (activeItemValues == null) {
-            activeItemValues = new ArrayList<ItemValue>();
+            activeItemValues = new HashSet<ItemValue>();
             for (ItemValue iv : itemValues) {
                 if (iv.isActive()) {
                     activeItemValues.add(iv);
                 }
             }
         }
-        return Collections.unmodifiableList(activeItemValues);
+        return Collections.unmodifiableSet(activeItemValues);
     }
 
     /**
@@ -185,31 +195,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
             }
         }
         return itemValuesMap;
-    }
-
-    /**
-     * Add the collection of {@link ItemValue} belonging to this Item to the passed visitor collection of
-     * {@link com.amee.domain.InternalValue}.
-     *
-     * @param values - the visitor collection of {@link com.amee.domain.InternalValue} to which to add this Item's values.
-     */
-    @SuppressWarnings("unchecked")
-    public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values) {
-        ItemValueMap itemValueMap = getItemValuesMap();
-        for (Object path : itemValueMap.keySet()) {
-            Set<ItemValue> itemValues = itemValueMap.getAll((String) path);
-            if (itemValues.size() == 1) {
-                ItemValue iv = itemValueMap.get((String) path);
-                if (iv.isUsableValue()) {
-                    values.put(iv.getItemValueDefinition(), new InternalValue(iv));
-                }
-            } else if (itemValues.size() > 1) {
-                ItemValueDefinition ivd = itemValueMap.get((String) path).getItemValueDefinition();
-                // Add all ItemValues with usable values
-                List<ItemValue> usableSet = (List<ItemValue>) CollectionUtils.select(itemValues, new UsableValuePredicate());
-                values.put(ivd, new InternalValue(usableSet));
-            }
-        }
     }
 
     /**
@@ -254,6 +239,31 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
             }
         });
+    }
+
+    /**
+     * Add the collection of {@link ItemValue} belonging to this Item to the passed visitor collection of
+     * {@link com.amee.domain.InternalValue}.
+     *
+     * @param values - the visitor collection of {@link com.amee.domain.InternalValue} to which to add this Item's values.
+     */
+    @SuppressWarnings("unchecked")
+    public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values) {
+        ItemValueMap itemValueMap = getItemValuesMap();
+        for (Object path : itemValueMap.keySet()) {
+            List<ItemValue> itemValues = itemValueMap.getAll((String) path);
+            if (itemValues.size() == 1) {
+                ItemValue iv = itemValueMap.get((String) path);
+                if (iv.isUsableValue()) {
+                    values.put(iv.getItemValueDefinition(), new InternalValue(iv));
+                }
+            } else if (itemValues.size() > 1) {
+                ItemValueDefinition ivd = itemValueMap.get((String) path).getItemValueDefinition();
+                // Add all ItemValues with usable values
+                List<ItemValue> usableSet = (List<ItemValue>) CollectionUtils.select(itemValues, new UsableValuePredicate());
+                values.put(ivd, new InternalValue(usableSet));
+            }
+        }
     }
 
     private void resetItemValueCollections() {
