@@ -82,8 +82,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         Form query = request.getResourceRef().getQueryAsForm();
 
         // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
-        if (StringUtils.isNotBlank(query.getFirstValue("get"))) {
-            this.select = query.getFirstValue("get");
+        if (StringUtils.isNotBlank(query.getFirstValue("select"))) {
+            this.select = query.getFirstValue("select");
         }
 
         // The resource may receive a startDate parameter that sets the current date in an historical sequence of
@@ -142,7 +142,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (itemValue != null) {
-            this.itemValue.setBuilder(new ItemValueBuilder(this.itemValue));
+            itemValue.setBuilder(new ItemValueBuilder(this.itemValue));
             obj.put("itemValue", this.itemValue.getJSONObject());
         } else {
             JSONArray values = new JSONArray();
@@ -160,8 +160,17 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public Element getElement(Document document) {
         Element element = document.createElement("DataItemValueResource");
-        this.itemValue.setBuilder(new ItemValueBuilder(this.itemValue));
-        element.appendChild(this.itemValue.getElement(document));
+        if (itemValue != null) {
+            itemValue.setBuilder(new ItemValueBuilder(this.itemValue));
+            element.appendChild(this.itemValue.getElement(document));
+        } else {
+            Element values = document.createElement("ItemValues");
+            for(ItemValue iv : itemValues) {
+                iv.setBuilder(new ItemValueBuilder(iv));
+                values.appendChild(iv.getElement(document, false));
+            }
+            element.appendChild(values);
+        }
         element.appendChild(getDataItem().getIdentityElement(document));
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
         return element;

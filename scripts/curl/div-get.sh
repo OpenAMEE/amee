@@ -7,7 +7,7 @@
 #amee_url="/data/business/buildings/hotel/generic/980051122E8C/E10F929766F7"
 amee_url="/data/business/buildings/hotel/generic/980051122E8C/CO2perPerson?select=all"
 
-type="json"
+type="xml"
 
 curl -H "Accept:application/${type}" \
 	-b .cookies \
