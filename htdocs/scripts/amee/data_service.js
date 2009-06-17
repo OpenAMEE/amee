@@ -4,7 +4,6 @@ var BaseDataApiService = Class.create(ApiService, ({
         $super(params);
         this.updateFormName = 'apiUpdateForm';
         this.createFormName = 'apiCreateForm';
-
         this.updateFormStatusName = 'apiUpdateSubmitStatus';
         this.createFormStatusName = 'apiCreateSubmitStatus';
     },
@@ -348,6 +347,21 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         this.dataContentElementName = params.dataContentElementName || "apiDataItemContent";
         this.updateItem = params.updateItem || false;
     },
+    start: function() {
+        var params = {};
+        params['select'] = 'all';
+        this.load(params);
+    },
+    load: function(params) {
+        this.response = null;
+        params = params || "";
+        params['method'] = 'get';
+        new Ajax.Request(window.location.href + '?' + Object.toQueryString(params), {
+            method: 'post',
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.loadSuccess.bind(this),
+            onFailure: this.loadFailure.bind(this)});
+    },
     renderApiResponse: function($super) {
 
         var json = this.response.responseJSON;
@@ -433,24 +447,30 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         var rows = [];
         if (json.dataItem.itemValues) {
             var itemValues = json.dataItem.itemValues;
+            var k = 0;
             for (var i = 0; i < itemValues.length; i++) {
-                var itemValue = itemValues[i];
+                var itemValuesArray = itemValues[i];
+                for(var name in itemValuesArray) {
+                    var itemValueSeries = itemValuesArray[name];
+                    for (var j = 0; j < itemValueSeries.length; j++) {
+                        var itemValue = itemValueSeries[j];             
+                        var detailRow = new Element('tr', {id : 'Elem_' + itemValue.uid})
+                                .insert(new Element('td').insert(itemValue.itemValueDefinition.name))
+                                .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.name))
+                                .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.valueType))
+                                .insert(new Element('td').insert(itemValue.value))
+                                .insert(new Element('td').insert(itemValue.startDate));
 
-                var detailRow = new Element('tr', {id : 'Elem_' + itemValue.uid})
-                        .insert(new Element('td').insert(itemValue.itemValueDefinition.name))
-                        .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.name))
-                        .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.valueType))
-                        .insert(new Element('td').insert(itemValue.value))
-                        .insert(new Element('td').insert(itemValue.startDate));
-
-                // create actions
-                detailRow.insert(this.getActionsTableData({
-                    actions: dataItemActions,
-                    method: '',
-                    path: itemValue.displayPath}));
-
-                // update array
-                rows[i] = detailRow;
+                        // create actions
+                        detailRow.insert(this.getActionsTableData({
+                            actions: dataItemActions,
+                            method: '',
+                            uid: itemValue.uid}));
+                        // update array
+                        rows[k] = detailRow;
+                        k++;
+                    }
+                }
             }
         }
         return rows;
@@ -560,6 +580,9 @@ var DataItemValueApiService = Class.create(DataItemApiService, ({
     initialize: function($super, params) {
         $super(params);
     },
+    start: function() {
+        this.load({});
+    },
     renderApiResponse: function($super) {
 
         var json = this.response.responseJSON;
@@ -651,7 +674,9 @@ var DataItemValueApiService = Class.create(DataItemApiService, ({
                 formElement.insert('Value: ');
                 formElement.insert(selectElement);
             } else {
+                var dateFormat = " (" + this.getDateFormat() + ")";
                 this.addFormInfoElement('Value: ', formElement, 'value', itemValue.value, 30, 'margin-left:12px');
+                this.addFormInfoElement('Start Date:', formElement, 'startDate', itemValue.startDate, 30, 'margin-left:12px', dateFormat);
                 if (itemValue.unit) {
                     this.addFormInfoElement('Unit: ', formElement, 'unit', itemValue.unit, 30, 'margin-left:21px');
                 }

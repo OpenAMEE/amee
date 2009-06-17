@@ -78,13 +78,14 @@ public class DataItem extends Item {
         return label;
     }
 
-    private void buildElement(Document document, Element element, boolean detailed) {
+    private void buildElement(Document document, Element element, boolean detailed, boolean showHistory) {
         element.setAttribute("uid", getUid());
         element.appendChild(APIUtils.getElement(document, "Name", getDisplayName()));
         Element itemValuesElem = document.createElement("ItemValues");
-        for (ItemValue itemValue : getItemValues(getCurrentDate())) {
-            itemValue.setBuilder(new ItemValueBuilder(itemValue));
-            itemValuesElem.appendChild(itemValue.getElement(document, false));
+        if (showHistory) {
+            buildElementItemValuesWithHistory(document, itemValuesElem);
+        } else {
+            buildElementItemValues(document, itemValuesElem);
         }
         element.appendChild(itemValuesElem);
         if (detailed) {
@@ -94,15 +95,37 @@ public class DataItem extends Item {
             element.appendChild(getItemDefinition().getIdentityElement(document));
             element.appendChild(getDataCategory().getIdentityElement(document));
         }
+    }                           
+
+    private void buildElementItemValues(Document document, Element itemValuesElem) {
+        for (ItemValue itemValue : getItemValues(getCurrentDate())) {
+            itemValue.setBuilder(new ItemValueBuilder(itemValue));
+            itemValuesElem.appendChild(itemValue.getElement(document, false));
+        }
     }
 
-    private void buildElement(JSONObject obj, boolean detailed) throws JSONException {
+    private void buildElementItemValuesWithHistory(Document document, Element itemValuesElem) {
+        for (Object o1 : getItemValuesMap().keySet()) {
+            String path = (String) o1;
+            Element itemValueSeries = document.createElement("ItemValueSeries");
+            itemValueSeries.setAttribute("path",path);
+            for (Object o2 : getItemValuesMap().getAll(path)) {
+                ItemValue itemValue = (ItemValue) o2;
+                itemValue.setBuilder(new ItemValueBuilder(itemValue));
+                itemValueSeries.appendChild(itemValue.getElement(document, false));
+            }
+            itemValuesElem.appendChild(itemValueSeries);
+        }
+    }
+
+    private void buildJSON(JSONObject obj, boolean detailed, boolean showHistory) throws JSONException {
         obj.put("uid", getUid());
         obj.put("name", getDisplayName());
         JSONArray itemValues = new JSONArray();
-        for (ItemValue itemValue : getItemValues(getCurrentDate())) {
-            itemValue.setBuilder(new ItemValueBuilder(itemValue));
-            itemValues.put(itemValue.getJSONObject(false));
+        if (showHistory) {
+            buildJSONItemValuesWithHistory(itemValues);
+        } else {
+            buildJSONItemValues(itemValues);
         }
         obj.put("itemValues", itemValues);
         if (detailed) {
@@ -114,10 +137,39 @@ public class DataItem extends Item {
         }
     }
 
-    @Override
-    public JSONObject getJSONObject(boolean detailed) throws JSONException {
+    private void buildJSONItemValues(JSONArray itemValues) throws JSONException {
+        for (ItemValue itemValue : getItemValues(getCurrentDate())) {
+            itemValue.setBuilder(new ItemValueBuilder(itemValue));
+            itemValues.put(itemValue.getJSONObject(false));
+        }
+    }
+
+    private void buildJSONItemValuesWithHistory(JSONArray itemValues) throws JSONException {
+        for (Object o1 : getItemValuesMap().keySet()) {
+            String path = (String) o1;
+            JSONObject values = new JSONObject();
+            JSONArray valueSet = new JSONArray();
+            for (Object o2 : getItemValuesMap().getAll(path)) {
+                ItemValue itemValue = (ItemValue) o2;
+                itemValue.setBuilder(new ItemValueBuilder(itemValue));
+                valueSet.put(itemValue.getJSONObject(false));
+            }
+            values.put(path, valueSet);
+            itemValues.put(values);
+        }
+    }
+
+    /**
+     * Get the JSON representation of this DataItem.
+     *
+     * @param detailed - true if a detailed representation is required.
+     * @param showHistory - true if the representation should include any historical sequences of {@link ItemValue)s.
+     * @return the JSON representation.
+     * @throws JSONException
+     */
+    public JSONObject getJSONObject(boolean detailed, boolean showHistory) throws JSONException {
         JSONObject obj = new JSONObject();
-        buildElement(obj, detailed);
+        buildJSON(obj, detailed, showHistory);
         obj.put("path", getPath());
         obj.put("label", getLabel());
         obj.put("startDate", getStartDate().toString());
@@ -125,14 +177,30 @@ public class DataItem extends Item {
         return obj;
     }
 
-    public Element getElement(Document document, boolean detailed) {
+    @Override
+    public JSONObject getJSONObject(boolean detailed) throws JSONException {
+        return getJSONObject(detailed, false);
+    }
+
+    /**
+     * Get the DOM representation of this DataItem.
+     *
+     * @param detailed - true if a detailed representation is required.
+     * @param showHistory - true if the representation should include any historical sequences of {@link ItemValue)s.
+     * @return the DOM representation.
+     */
+    public Element getElement(Document document, boolean detailed, boolean showHistory) {
         Element dataItemElement = document.createElement("DataItem");
-        buildElement(document, dataItemElement, detailed);
+        buildElement(document, dataItemElement, detailed, showHistory);
         dataItemElement.appendChild(APIUtils.getElement(document, "Path", getDisplayPath()));
         dataItemElement.appendChild(APIUtils.getElement(document, "Label", getLabel()));
         dataItemElement.appendChild(APIUtils.getElement(document, "StartDate", getStartDate().toString()));
         dataItemElement.appendChild(APIUtils.getElement(document, "EndDate", (getEndDate() != null) ? getEndDate().toString() : ""));
         return dataItemElement;
+    }
+
+    public Element getElement(Document document, boolean detailed) {
+        return getElement(document, detailed, false);
     }
 
     public String getResolvedPath() {

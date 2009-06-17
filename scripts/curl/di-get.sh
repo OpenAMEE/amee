@@ -2,7 +2,8 @@
 . auth.sh
 
 . curl.conf
-amee_url="/data/business/buildings/hotel/generic/980051122E8C?startDate=2020-06-09T11:29:59%2B0000"
+amee_url="/data/business/buildings/hotel/generic/980051122E8C?select=all"
+#amee_url="/data/business/buildings/hotel/generic/980051122E8C?startDate=2020-06-09T11:29:59%2B0000"
 
 type="xml"
 

@@ -70,6 +70,9 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     private Form query;
     private List<Choice> parameters = new ArrayList<Choice>();
 
+    // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
+    private String select = "";
+
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
@@ -84,6 +87,12 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         if (StringUtils.isNotBlank(query.getFirstValue("startDate"))) {
             getDataItem().setCurrentDate(new StartEndDate(query.getFirstValue("startDate")));
             names.remove("startDate");
+        }
+
+        // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
+        if (StringUtils.isNotBlank(query.getFirstValue("select"))) {
+            this.select = query.getFirstValue("select");
+            names.remove("select");
         }
 
         // Pull out any values submitted for Data API calculations.
@@ -130,7 +139,9 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new DecimalUnit(SI.KILOGRAM), new DecimalPerUnit(NonSI.MONTH));
         JSONObject obj = new JSONObject();
-        obj.put("dataItem", dataItem.getJSONObject(true));
+        // Is the request to show all ItemValues in the historical sequence.
+        boolean showHistory = select.equals("all");
+        obj.put("dataItem", dataItem.getJSONObject(true,showHistory));
         obj.put("path", pathItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
         obj.put("amountPerMonth", amount.convert(kgPerMonth).getValue());
@@ -154,7 +165,8 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new DecimalUnit(SI.KILOGRAM), new DecimalPerUnit(NonSI.MONTH));
         Element element = document.createElement("DataItemResource");
-        element.appendChild(dataItem.getElement(document, true));
+        boolean showHistory = select.equals("all");
+        element.appendChild(dataItem.getElement(document, true, showHistory));
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
         element.appendChild(userValueChoices.getElement(document));
         element.appendChild(APIUtils.getElement(document, "AmountPerMonth", amount.convert(kgPerMonth).toString()));
