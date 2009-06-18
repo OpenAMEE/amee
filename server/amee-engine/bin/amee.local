@@ -1,7 +1,14 @@
 #! /bin/sh
 
 # Local environment vars
-DEV_HOME=/Development/AMEE
+if [ $2 = "" ]
+then
+    DEV_HOME=/Development/AMEE
+else
+	DEV_HOME=$2
+fi
+
+echo "Using DEV_HOME=${DEV_HOME}"
 
 # AMEE environment vars
 export AMEE_HOME=/var/www/apps/amee
