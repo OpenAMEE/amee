@@ -4,7 +4,7 @@
 . curl.conf
 
 amee_url="/data/business/buildings/hotel/generic/980051122E8C/E10F929766F7"
-data="startDate=2020-06-09T11:30:00%2B0000"
+data="startDate=2020-06-09T10:30:00%2B0000"
 
 type="xml"
 
