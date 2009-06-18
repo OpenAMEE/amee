@@ -1,9 +1,9 @@
 #! /bin/sh
 
 # Local environment vars
-if [ $2 = "" ]
+if [ X$2 == "X" ]
 then
-    DEV_HOME=/Development/AMEE
+    DEV_HOME="/Development/AMEE"
 else
 	DEV_HOME=$2
 fi
