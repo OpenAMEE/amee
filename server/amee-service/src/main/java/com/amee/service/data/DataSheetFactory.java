@@ -83,7 +83,7 @@ public class DataSheetFactory implements CacheableFactory {
                 row = new Row(sheet, dataItem.getUid());
                 row.setLabel("DataItem");
                 for (Column column : columns) {
-                    itemValue = dataItem.matchItemValue(column.getName());
+                    itemValue = dataItem.matchItemValue(column.getName(),startDate);
                     if (itemValue != null) {
                         new Cell(column, row, itemValue.getValue(), itemValue.getUid(), itemValue.getItemValueDefinition().getValueDefinition().getValueType());
                     } else if ("label".equalsIgnoreCase(column.getName())) {
@@ -118,7 +118,11 @@ public class DataSheetFactory implements CacheableFactory {
     }
 
     public String getKey() {
-        return "DataSheet_" + dataBrowser.getDataCategory().getUid();
+        return "DataSheet_" + dataBrowser.getDataCategory().getUid() +
+                "_" +
+                dataBrowser.getQueryStartDate() +
+                "_" +
+                ((dataBrowser.getQueryEndDate() != null) ? dataBrowser.getQueryEndDate() : "");
     }
 
     public String getCacheName() {
