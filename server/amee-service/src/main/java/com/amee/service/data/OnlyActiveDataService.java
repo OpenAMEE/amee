@@ -79,8 +79,8 @@ public class OnlyActiveDataService extends DataService {
         return labelsToDataItems;
     }
 
-    // Filter-out any DataItem instances within an historical sequence of DataItems
-    // that are not the final entry in the given datetime range.
+    // Filter-out DataItem instances within an historical sequence of DataItems
+    // that are not the imeeditely preceeding entry before the query startDate.
     @SuppressWarnings("unchecked")
     private List<DataItem> getActiveItems(final Set<DataItem> dataItems, final StartEndDate startDate) {
         return (List) CollectionUtils.select(dataItems, new Predicate() {
