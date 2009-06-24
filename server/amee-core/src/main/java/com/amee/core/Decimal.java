@@ -75,6 +75,10 @@ public class Decimal {
         }
     }
 
+    public Decimal(Float decimal) {
+        scale(decimal.toString());
+    }
+
     public Decimal(Long decimal) {
         scale(decimal.toString());
     }
@@ -192,7 +196,7 @@ public class Decimal {
         return new Decimal(getValue().divide(decimal.getValue(), CONTEXT));
     }
 
-    public Decimal mulitply(Decimal decimal) {
+    public Decimal multiply(Decimal decimal) {
         return new Decimal(getValue().multiply(decimal.getValue(), CONTEXT));
     }
 

@@ -25,10 +25,20 @@ import org.joda.time.DateTime;
 
 public class DataPoint implements Comparable<DataPoint> {
 
-    public static final DataPoint NULL = new DataPoint(new DateTime(0),Decimal.ZERO); 
+    private static final DateTime EPOCH = new DateTime(0);
+
+    public static final DataPoint NULL = new DataPoint(EPOCH,Decimal.ZERO);
 
     public DateTime dateTime;
     public Decimal decimal;
+
+    public DataPoint(float f) {
+        this(new Decimal(f));
+    }
+
+    public DataPoint(Decimal decimal) {
+        this(EPOCH, decimal);
+    }
 
     public DataPoint(DateTime dateTime, Decimal decimal) {
         this.dateTime = dateTime;
@@ -47,16 +57,32 @@ public class DataPoint implements Comparable<DataPoint> {
         return new DataPoint(dateTime, decimal.add(point.getValue()));
     }
 
+    public DataPoint add(float f) {
+        return new DataPoint(dateTime, decimal.add(new Decimal(f)));
+    }
+
     public DataPoint substract(DataPoint point) {
         return new DataPoint(dateTime, decimal.subtract(point.getValue()));
+    }
+
+    public DataPoint substract(float f) {
+        return new DataPoint(dateTime, decimal.subtract(new Decimal(f)));
     }
 
     public DataPoint divide(DataPoint point) {
         return new DataPoint(dateTime, decimal.divide(point.getValue()));
     }
 
+    public DataPoint divide(float f) {
+        return new DataPoint(dateTime, decimal.divide(new Decimal(f)));
+    }
+
     public DataPoint multiply(DataPoint point) {
-        return new DataPoint(dateTime, decimal.mulitply(point.getValue()));
+        return new DataPoint(dateTime, decimal.multiply(point.getValue()));
+    }
+
+    public DataPoint multiply(float f) {
+        return new DataPoint(dateTime, decimal.multiply(new Decimal(f)));
     }
 
     @Override

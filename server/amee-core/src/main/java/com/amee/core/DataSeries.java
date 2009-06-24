@@ -103,6 +103,14 @@ public class DataSeries {
         return add(series);
     }
 
+    public DataSeries add(float f) {
+        List<DataPoint> combinedDataPoints = new ArrayList<DataPoint>();
+        for (DataPoint dp : dataPoints) {
+            combinedDataPoints.add(dp.add(f));
+        }
+        return new DataSeries(combinedDataPoints); 
+    }
+
     @SuppressWarnings("unchecked")
     public DataSeries subtract(DataSeries series) {
         return combine(series, new SubtractOperation());
@@ -114,6 +122,14 @@ public class DataSeries {
         return subtract(series);
     }
 
+    public DataSeries subtract(float f) {
+        List<DataPoint> combinedDataPoints = new ArrayList<DataPoint>();
+        for (DataPoint dp : dataPoints) {
+            combinedDataPoints.add(dp.substract(f));
+        }
+        return new DataSeries(combinedDataPoints);
+    }
+    
     public DataSeries divide(DataSeries series) {
         return combine(series, new DivideOperation());
     }
@@ -122,6 +138,14 @@ public class DataSeries {
         DataSeries series = new DataSeries();
         series.addDataPoint(dataPoint);
         return divide(series);
+    }
+
+    public DataSeries divide(float f) {
+        List<DataPoint> combinedDataPoints = new ArrayList<DataPoint>();
+        for (DataPoint dp : dataPoints) {
+            combinedDataPoints.add(dp.divide(f));
+        }
+        return new DataSeries(combinedDataPoints);
     }
 
     public DataSeries multiply(DataSeries series) {
@@ -134,6 +158,14 @@ public class DataSeries {
         return multiply(series);
     }
 
+    public DataSeries multiply(float f) {
+        List<DataPoint> combinedDataPoints = new ArrayList<DataPoint>();
+        for (DataPoint dp : dataPoints) {
+            combinedDataPoints.add(dp.multiply(f));
+        }
+        return new DataSeries(combinedDataPoints);
+    }
+
     public Decimal integrate() {
         Decimal integral = Decimal.ZERO;
         Collections.sort(dataPoints);
@@ -141,7 +173,7 @@ public class DataSeries {
             DataPoint current = dataPoints.get(i);
             DataPoint next = dataPoints.get(i+1);
             Decimal segmentInMillis = new Decimal(next.getDateTime().getMillis() - current.getDateTime().getMillis());
-            Decimal weightedAverage = current.getValue().mulitply(segmentInMillis.divide(queryInMillis));
+            Decimal weightedAverage = current.getValue().multiply(segmentInMillis.divide(queryInMillis));
             integral = integral.add(weightedAverage);
         }
         return integral;
@@ -175,6 +207,7 @@ public class DataSeries {
 
     public void addDataPoint(DataPoint dataPoint) {
         dataPoints.add(dataPoint);
+        //TODO - A having added a new DP to a DS
     }
 
 }
