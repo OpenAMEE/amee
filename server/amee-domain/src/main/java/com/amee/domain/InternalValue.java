@@ -79,9 +79,9 @@ public class InternalValue {
     }
 
     /**
-     * Instantiate an InternalValue representation of the supplied value.
+     * Instantiate an InternalValue representation of the supplied collection of values.
      *
-     * @param values - the Set of {@link ItemValue} representing an historical sequence of values.
+     * @param values - the List of {@link ItemValue}s representing a sequence of values.
      */
     public InternalValue(List<ItemValue> values) {
         Iterator<ItemValue> itr = values.iterator();
