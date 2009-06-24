@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Resources xmlns="http://schemas.amee.cc/2.0">
+	<DataCategoryResource>
+		<Path>/business/buildings/hotel/generic</Path>
+		<DataCategory created="2009-05-19 16:23:47.0" modified="2009-05-19 16:23:47.0" uid="3A0F856CFF43">
+			<Name>Generic</Name>
+			<Path>generic</Path>
+			<Environment uid="5F5887BCF726"/>
+			<DataCategory uid="81F574296A95">
+				<Name>Hotel</Name>
+				<Path>hotel</Path>
+			</DataCategory>
+			<ItemDefinition uid="125BAAD1DA2E"/>
+		</DataCategory>
+		<Children>
+			<DataCategories/>
+			<DataItems>
+				<DataItem created="2009-05-19 16:23:58.0" modified="2009-05-19 16:23:58.0" uid="980051122E8C">
+					<startDate>2009-05-19T16:23:00+01:00</startDate>
+					<source>WBCSD 2006/ CIBSE 2004</source>
+					<path>980051122E8C</path>
+					<label>international</label>
+					<type>international</type>
+					<endDate/>
+					<CO2perPerson>36.64</CO2perPerson>
+				</DataItem>
+				<DataItem created="2009-05-19 16:23:58.0" modified="2009-05-19 16:23:58.0" uid="66139E3B1015">
+					<startDate>2009-05-19T16:23:00+01:00</startDate>
+					<source>Defra 2007/ CIBSE 2004</source>
+					<path>66139E3B1015</path>
+					<label>uk</label>
+					<type>uk</type>
+					<endDate/>
+					<CO2perPerson>29.83</CO2perPerson>
+				</DataItem>
+			</DataItems>
+			<Pager>
+				<Start>0</Start>
+				<From>1</From>
+				<To>2</To>
+				<Items>2</Items>
+				<CurrentPage>1</CurrentPage>
+				<RequestedPage>1</RequestedPage>
+				<NextPage>-1</NextPage>
+				<PreviousPage>-1</PreviousPage>
+				<LastPage>1</LastPage>
+				<ItemsPerPage>10</ItemsPerPage>
+				<ItemsFound>2</ItemsFound>
+			</Pager>
+		</Children>
+	</DataCategoryResource>
+</Resources>
