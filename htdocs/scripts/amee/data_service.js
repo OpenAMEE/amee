@@ -346,6 +346,7 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         this.dataHeadingItemElementName = params.dataHeadingItemElementName || 'apiDataItemHeading';
         this.dataContentElementName = params.dataContentElementName || "apiDataItemContent";
         this.updateItem = params.updateItem || false;
+        this.createItemValue = params.createItemValue || false;
     },
     start: function() {
         var params = {};
@@ -375,6 +376,11 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         if (this.updateItem && json.dataItem) {
             $('apiUpdateDataItem').replace(this.getUpdateItemElement('apiUpdateDataItem', json.dataItem));
         }
+        if (this.createItemValue && json.dataItem) {
+            $('apiCreateDataItemValue').replace(this.getCreateItemValueElement('apiCreateDataItemValue', json.dataItem));
+        }
+
+
     },
     renderDataItemApiResponse: function(dataItem) {
         // update elements
@@ -474,6 +480,69 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
             }
         }
         return rows;
+    },
+    getCreateItemValueElement: function(id, dataItem) {
+
+        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
+
+        var createItemValueElement = new Element('div', {id : id});
+
+        if (dataItemActions.isAllowCreate() && ITEM_VALUE_DEFINITIONS.available) {
+
+            createItemValueElement.insert(new Element('h2').update('Create Data Item Value'));
+
+            var formElement = new Element('form', {action : "#", id : this.createFormName});
+            var selectElement = new Element('select', {name : 'valueDefinitionUid'});
+            var pElement = new Element('p');
+
+            this.addFormInfoElement('startDate: ', formElement, 'startDate', '', 30, 'margin-left:46px');
+            this.addFormInfoElement('value: ', formElement, 'value', '', 30, 'margin-left:54px');
+
+            // item definitions
+            selectElement.insert(new Element('option', {value : ''}).update(''));
+            formElement.insert('Item Value Definition: ');
+            var itemValueDefinitions = ITEM_VALUE_DEFINITIONS.getItemValueDefinitions();
+            for (var i = 0; i < itemValueDefinitions.length; i++) {
+                var itemValueDefinition = itemValueDefinitions[i];
+                selectElement.insert(new Element('option', {value : itemValueDefinition.uid}).update(itemValueDefinition.name));
+            }
+            formElement.insert(selectElement).insert(new Element('br')).insert(new Element('br'));
+
+            // sumbit and event
+            var btnSubmit = new Element('input', {type : 'button', value : 'Create'});
+            formElement.insert(btnSubmit);
+            Event.observe(btnSubmit, "click", this.createDataItemValue.bind(this));
+
+            pElement.insert(formElement);
+            createItemValueElement.insert(pElement);
+        }
+
+        return createItemValueElement;
+    },
+    createDataItemValue: function() {
+        var elementList = [$(this.createFormName + "-startDate"), $(this.createFormName + "-value")];
+
+
+        $(this.createFormStatusName).innerHTML = '';
+        this.resetStyles(elementList);
+
+        if (this.validateElementList(elementList)) {
+            this.resetStyles(elementList)
+            var params = {
+                parameters: $(this.createFormName).serialize(),
+                onSuccess: this.createDataItemValueSuccess.bind(this),
+                onFailure: this.createDataItemValueFail.bind(this)
+            };
+            this.apiServiceCall(null, params);
+        }
+    },
+    createDataItemValueSuccess: function() {
+        // update elements and status
+        $(this.createFormStatusName).replace(new Element('div', {id : this.createFormStatusName}).insert(new Element('b').update('CREATED!')));
+        window.location.href = window.location.href;
+    },
+    createDataItemValueFail: function() {
+        $(this.createFormStatusName).replace(new Element('div', {id : this.createFormStatusName}).insert(new Element('b').update('ERROR!')));
     },
     getUpdateItemElement: function(id, dataItem) {
 
@@ -893,3 +962,49 @@ var ItemDefinitionsResource = Class.create({
     }
 });
 Object.Event.extend(ItemDefinitionsResource);
+
+// ItemValueDefinition
+var ItemValueDefinition = Class.create({
+    initialize: function(itemValueDefinition) {
+        Object.extend(this, itemValueDefinition);
+    }
+});
+
+// ItemValueDefinitions Resource
+var ItemValueDefinitionsResource = Class.create({
+    initialize: function(itemDefinitionUid) {
+        this.itemValueDefinitions = [];
+        this.path = '/definitions/itemDefinitions/'+ itemDefinitionUid + '/itemValueDefinitions';
+    },
+    start: function() {
+        this.load();
+    },
+    load: function() {
+        this.itemDefinitions = [];
+        var params = new Hash();
+        params.set('method', 'get');
+        new Ajax.Request(this.path + '?' + Object.toQueryString(params), {
+            method: 'post',
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.loadSuccess.bind(this),
+            onFailure: this.loadFailure.bind(this)});
+    },
+    loadSuccess: function(response) {
+        var resource = response.responseJSON;
+        resource.itemValueDefinitions.each(function(itemValueDefinition) {
+            this.itemValueDefinitions.push(new ItemValueDefinition(itemValueDefinition));
+        }.bind(this));
+        this.loaded = true;
+        this.available = true;
+        this.notify('loaded', this);
+    },
+    loadFailure: function() {
+        this.loaded = true;
+        this.available = false;
+        this.notify('loaded', this);
+    },
+    getItemValueDefinitions: function() {
+        return this.itemValueDefinitions;
+    }
+});
+Object.Event.extend(ItemValueDefinitionsResource);
