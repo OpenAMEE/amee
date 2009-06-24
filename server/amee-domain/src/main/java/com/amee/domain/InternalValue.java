@@ -89,7 +89,8 @@ public class InternalValue {
         if (itemValue.getItemValueDefinition().isDecimal()) {
             DataSeries ds = new DataSeries();
             do {
-                ds.addDataPoint(new DataPoint(itemValue.getStartDate().toDateTime(), asInternalDecimal(itemValue)));
+                ds.addDataPoint(new DataPoint(itemValue.getStartDate().toDateTime(), 
+                        asInternalDecimal(itemValue)));
                 itemValue = itr.next();
             } while (itr.hasNext());
             this.value = ds;

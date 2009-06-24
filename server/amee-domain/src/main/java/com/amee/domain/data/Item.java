@@ -253,12 +253,12 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         for (Object path : itemValueMap.keySet()) {
             List<ItemValue> itemValues = itemValueMap.getAll((String) path);
             if (itemValues.size() == 1) {
-                ItemValue iv = itemValueMap.get((String) path);
+                ItemValue iv = itemValues.get(0);
                 if (iv.isUsableValue()) {
                     values.put(iv.getItemValueDefinition(), new InternalValue(iv));
                 }
             } else if (itemValues.size() > 1) {
-                ItemValueDefinition ivd = itemValueMap.get((String) path).getItemValueDefinition();
+                ItemValueDefinition ivd = itemValues.get(0).getItemValueDefinition();
                 // Add all ItemValues with usable values
                 List<ItemValue> usableSet = (List<ItemValue>) CollectionUtils.select(itemValues, new UsableValuePredicate());
                 values.put(ivd, new InternalValue(usableSet));
