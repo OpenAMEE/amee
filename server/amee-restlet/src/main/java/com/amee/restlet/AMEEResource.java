@@ -287,14 +287,6 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         }
     }
 
-    /**
-     * Produce the appropriate response for a successful POST.
-     *
-     * @param uri - the URI of the parent resource
-     */
-    public void successfulPost(String uri) {
-        successfulPost(uri, getRequest().getResourceRef().getBaseRef().toString());
-    }
 
     /**
      * Produce the appropriate response for a successful POST.
