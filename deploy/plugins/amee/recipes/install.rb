@@ -99,7 +99,10 @@ namespace :install do
     
     # Write out the tag to file for packaging with the deployment repo.
     system("echo #{@tag_name} > VERSION.txt")
-    
+    `git add VERSION.txt`
+    `git commit -a -m 'Install from capistrano on #{Time.now}'`
+    `git push`
+        
     # Tag the deployment repository
     `git tag -f -a "#{@tag_name}" -m "#{@tag_name}"`
     `git push --tag`
