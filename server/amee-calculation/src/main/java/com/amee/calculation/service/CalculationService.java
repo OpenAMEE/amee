@@ -121,11 +121,11 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      */
     public CO2Amount calculate(Algorithm algorithm, Map<String, Object> values) {
         CO2Amount amount;
-        if (log.isTraceEnabled()) {
-            log.trace("calculate()");
-            log.trace("calculate() - algorithm uid: " + algorithm.getUid());
-            log.trace("calculate() - input values: " + values);
-            log.trace("calculate() - starting calculation");
+        if (log.isDebugEnabled()) {
+            log.debug("calculate()");
+            log.debug("calculate() - algorithm uid: " + algorithm.getUid());
+            log.debug("calculate() - input values: " + values);
+            log.debug("calculate() - starting calculation");
         }
         // TODO: Remove Exception catch once we have resolved algo handling on undef values.
         try {
@@ -134,9 +134,9 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
             log.warn("calculate() - caught Exception: " + e.getMessage());
             amount = new CO2Amount(Decimal.BIG_DECIMAL_ZERO);
         }
-        if (log.isTraceEnabled()) {
-            log.trace("calculate() - finished calculation");
-            log.trace("calculate() - CO2 Amount: " + amount);
+        if (log.isDebugEnabled()) {
+            log.debug("calculate() - finished calculation");
+            log.debug("calculate() - CO2 Amount: " + amount);
         }
         return amount;
     }

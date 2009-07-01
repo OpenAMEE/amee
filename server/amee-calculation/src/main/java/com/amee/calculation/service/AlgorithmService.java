@@ -3,13 +3,13 @@ package com.amee.calculation.service;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.data.ItemDefinition;
+import com.amee.service.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.script.*;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -40,15 +40,6 @@ public class AlgorithmService {
     // The ScriptEngine for the Javscript context.
     private final ScriptEngine engine = new ScriptEngineManager().getEngineByName("js");
 
-    // Thread bound CompiledScript cache
-    private final ThreadLocal<Map<String, CompiledScript>> scripts =
-            new ThreadLocal<Map<String, CompiledScript>>() {
-                @Override
-                protected Map<String, CompiledScript> initialValue() {
-                    return new HashMap<String, CompiledScript>();
-                }
-            };
-
     // Default Algorithm name to use in calculations
     private final static String DEFAULT = "default";
 
@@ -64,6 +55,7 @@ public class AlgorithmService {
     public Algorithm getAlgorithm(ItemDefinition itemDefinition) {
         return itemDefinition.getAlgorithm(DEFAULT);
     }
+
 
     /**
      * Evaluate an Algorithm.
@@ -91,19 +83,17 @@ public class AlgorithmService {
     }
 
     private CompiledScript getCompiledScript(Algorithm algorithm) {
-        CompiledScript compiledScript = scripts.get().get(algorithm.getUid());
+        CompiledScript compiledScript = (CompiledScript) ThreadBeanHolder.get("algorithm" + algorithm.getUid());
         if (compiledScript == null) {
             try {
                 compiledScript = ((Compilable) engine).compile(algorithm.getContent());
             } catch (ScriptException e) {
                 throw new RuntimeException(e);
             }
-            setCompiledScript(algorithm, compiledScript);
+            ThreadBeanHolder.set("algorithm-"+algorithm.getUid(), compiledScript);
         }
+        log.debug("getCompiledScript() - " + compiledScript.toString());
         return compiledScript;
     }
 
-    private void setCompiledScript(Algorithm algorithm, CompiledScript compiledScript) {
-        scripts.get().put(algorithm.getUid(), compiledScript);
-    }
 }
