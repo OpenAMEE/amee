@@ -333,9 +333,6 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         Date lastModified = epoch;
 
         List<ProfileItem> profileItems = getProfileItems(resource);
-        //Iterate over in reverse order (i.e. most recent first). Abdera Feed sorting methods do not seem to have
-        // any meaningful effect (SM - 18/02/2009)
-        Collections.reverse(profileItems);
 
         atomFeed.addName(feed, resource.getDataCategory().getName());
         BigDecimal totalAmount = getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit());
