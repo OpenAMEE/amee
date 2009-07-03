@@ -68,13 +68,13 @@ public class DataFinder implements Serializable {
         ItemValue itemValue;
         DataItem dataItem = getDataItem(path, drillDown);
         if (dataItem != null) {
-            itemValue = dataItem.matchItemValue(name);
+            itemValue = dataItem.matchItemValue(name, startDate);
             if (itemValue != null) {
                 value = itemValue.getValue();
             }
         }
-        if (log.isTraceEnabled()) {
-            log.trace("getDataItemValue() - path: " + path + ", drillDown: " + drillDown + ", name: " + name + ", value: " + value);
+        if (log.isDebugEnabled()) {
+            log.debug("getDataItemValue() - path: " + path + ", drillDown: " + drillDown + ", name: " + name + ", value: " + value);
         }
         return value;
     }
@@ -84,7 +84,7 @@ public class DataFinder implements Serializable {
         Choices choices;
         DataCategory dataCategory = getDataCategory(path);
         if (dataCategory != null) {
-            choices = drillDownService.getValueChoices(dataCategory, Choice.parseChoices(drillDown), getStartDate(), getEndDate());
+            choices = drillDownService.getValueChoices(dataCategory, Choice.parseChoices(drillDown), startDate, endDate);
             if (choices.getName().equals("uid") && (choices.getChoices().size() > 0)) {
                 dataItem = dataService.getDataItemByUid(
                         environment,
@@ -112,17 +112,10 @@ public class DataFinder implements Serializable {
         this.environment = environment;
     }
 
-    public Date getEndDate() {
-        return endDate;
-    }
-
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
