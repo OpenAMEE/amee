@@ -56,7 +56,7 @@ public class DataFinder implements Serializable {
     private DrillDownService drillDownService;
 
     private Environment environment;
-    private Date startDate;
+    private Date startDate = new Date();
     private Date endDate;
 
     public DataFinder() {
