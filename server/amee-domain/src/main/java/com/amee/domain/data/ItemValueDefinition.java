@@ -240,6 +240,15 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         this.fromData = fromData;
     }
 
+    /**
+     * Check if this ItemValueDefinition is included in the list of DrillDowns for it's ItemDefinition.
+     *
+     * @return true if it is in the DrillDown, otherwise false
+     */
+    public boolean isDrillDown() {
+        return this.itemDefinition.isDrillDownValue(getName());
+    }
+
     public String getAllowedRoles() {
         return allowedRoles;
     }

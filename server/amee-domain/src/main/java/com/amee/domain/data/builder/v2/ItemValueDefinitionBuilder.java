@@ -45,6 +45,7 @@ public class ItemValueDefinitionBuilder implements Builder {
         obj.put("valueDefinition", itemValueDefinition.getValueDefinition().getJSONObject());
         obj.put("fromProfile", itemValueDefinition.isFromProfile());
         obj.put("fromData", itemValueDefinition.isFromData());
+        obj.put("drillDown", itemValueDefinition.isDrillDown());
 
         if (itemValueDefinition.hasUnits()) {
             obj.put("unit", itemValueDefinition.getUnit());
@@ -94,6 +95,7 @@ public class ItemValueDefinitionBuilder implements Builder {
 
         element.appendChild(APIUtils.getElement(document, "FromProfile", Boolean.toString(itemValueDefinition.isFromProfile())));
         element.appendChild(APIUtils.getElement(document, "FromData", Boolean.toString(itemValueDefinition.isFromData())));
+        element.appendChild((APIUtils.getElement(document, "DrillDown", Boolean.toString(itemValueDefinition.isDrillDown()))));
         if (detailed) {
             element.setAttribute("created", itemValueDefinition.getCreated().toString());
             element.setAttribute("modified", itemValueDefinition.getModified().toString());

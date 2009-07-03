@@ -97,6 +97,21 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
         return Choice.parseChoices(getDrillDown());
     }
 
+    /**
+     * Check if an {@link ItemValueDefinition::name} is included in the list of DrillDowns for this ItemDefinition.
+     *
+     * @param name - the {@link ItemValueDefinition} name
+     * @return true if the name is in the DrillDown, otherwise false
+     */
+    public boolean isDrillDownValue(String name) {
+        for(Choice choice : getDrillDownChoices()) {
+            if (choice.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ItemValueDefinition getItemValueDefinition(String path) {
         for (ItemValueDefinition itemValueDefinition : getItemValueDefinitions()) {
             if (itemValueDefinition.getPath().equalsIgnoreCase(path)) {
