@@ -79,6 +79,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             for (ProfileItem item : getProfileItems(resource, resource.getPager())) {
                 JSONObject itemJSON = new JSONObject();
                 itemJSON.put("uri", getFullPath(item));
+                itemJSON.put("uid", item.getUid());
                 jsonProfileItems.put(itemJSON);
             }
             obj.put("profileItems", jsonProfileItems);
@@ -153,6 +154,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             for (ProfileItem item : getProfileItems(resource, resource.getPager())) {
                 Element itemElement = document.createElement("ProfileItem");
                 itemElement.setAttribute("uri", getFullPath(item));
+                itemElement.setAttribute("uid", item.getUid());
                 element.appendChild(itemElement);
             }
 

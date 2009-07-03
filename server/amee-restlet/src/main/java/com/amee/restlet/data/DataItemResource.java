@@ -196,7 +196,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     public void acceptRepresentation(Representation entity) {
         log.debug("acceptRepresentation()");
 
-        //TODO - DIVActions?
         if (!dataBrowser.getDataItemActions().isAllowCreate()) {
             notAuthorized();
             return;
@@ -224,6 +223,14 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
         if (matchedItemValue == null) {
             log.error("acceptRepresentation() - badRequest: trying to create a DIV with an IVD not belonging to the DI ID.");
+            badRequest();
+            return;
+        }
+
+        // Cannot create new ItemValues for ItemValueDefinitions which are used in the DrillDown for the owning
+        // ItemDefinition
+        if (getDataItem().getItemDefinition().isDrillDownValue(matchedItemValue.getName())) {
+            log.error("acceptRepresentation() - badRequest: trying to create a DIV that is a DrillDown value.");
             badRequest();
             return;
         }
