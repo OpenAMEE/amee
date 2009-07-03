@@ -504,7 +504,7 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
             var itemValueDefinitions = ITEM_VALUE_DEFINITIONS.getItemValueDefinitions();
             for (var i = 0; i < itemValueDefinitions.length; i++) {
                 var itemValueDefinition = itemValueDefinitions[i];
-                if (itemValueDefinition.fromData) {
+                if (itemValueDefinition.fromData && !itemValueDefinition.drillDown) {
                     selectElement.insert(new Element('option', {value : itemValueDefinition.uid}).update(itemValueDefinition.name));
                 }
             }
