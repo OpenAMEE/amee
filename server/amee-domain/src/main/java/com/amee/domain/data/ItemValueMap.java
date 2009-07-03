@@ -30,7 +30,6 @@ import java.util.*;
  * consist of a single entry for single-valued {@link ItemValue} histories.
  *
  */
-//TODO - Generify
 @SuppressWarnings("unchecked")
 public class ItemValueMap extends HashMap {
 

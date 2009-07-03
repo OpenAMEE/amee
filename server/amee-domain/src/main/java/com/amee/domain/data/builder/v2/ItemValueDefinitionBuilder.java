@@ -43,6 +43,8 @@ public class ItemValueDefinitionBuilder implements Builder {
         obj.put("path", itemValueDefinition.getPath());
         obj.put("name", itemValueDefinition.getName());
         obj.put("valueDefinition", itemValueDefinition.getValueDefinition().getJSONObject());
+        obj.put("fromProfile", itemValueDefinition.isFromProfile());
+        obj.put("fromData", itemValueDefinition.isFromData());
 
         if (itemValueDefinition.hasUnits()) {
             obj.put("unit", itemValueDefinition.getUnit());
@@ -61,8 +63,6 @@ public class ItemValueDefinitionBuilder implements Builder {
             obj.put("modified", itemValueDefinition.getModified());
             obj.put("value", itemValueDefinition.getValue());
             obj.put("choices", itemValueDefinition.getChoices());
-            obj.put("fromProfile", itemValueDefinition.isFromProfile());
-            obj.put("fromData", itemValueDefinition.isFromData());
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
             obj.put("environment", itemValueDefinition.getEnvironment().getIdentityJSONObject());
             obj.put("itemDefinition", itemValueDefinition.getItemDefinition().getIdentityJSONObject());
