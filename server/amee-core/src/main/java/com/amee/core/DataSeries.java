@@ -30,79 +30,87 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A class representing a series of {@link DataPoint} values.
+ */
 public class DataSeries {
 
     private List<DataPoint> dataPoints = new ArrayList<DataPoint>();
-    private DateTime queryStart;
-    private DateTime queryEnd;
-    private Decimal queryInMillis;
 
+    /**
+     * Construct an empty series.
+     */
     public DataSeries() {
         this(new ArrayList<DataPoint>());
     }
 
-    //TODO - Checks  - Null / Empty
+    /**
+     * Construct a series from the list of {@link DataPoint} values.
+     *
+     * @param dataPoints - the list of {@link DataPoint} values
+     */
     public DataSeries(List<DataPoint> dataPoints) {
         this.dataPoints = new ArrayList<DataPoint>(dataPoints);
-        if (!dataPoints.isEmpty()) {
-            this.queryStart = dataPoints.get(0).getDateTime();
-            this.queryEnd = dataPoints.get(dataPoints.size() -1).getDateTime();
-            setQueryInMillis();
+    }
+
+    private Decimal getQueryInMillis() {
+        if (dataPoints.isEmpty()) {
+            return Decimal.ZERO;
         }
+
+        DateTime queryStart = dataPoints.get(0).getDateTime();
+        DateTime queryEnd = dataPoints.get(dataPoints.size() -1).getDateTime();
+        return new Decimal(queryEnd.getMillis() - queryStart.getMillis());
     }
 
-    public void setQueryStart(DateTime queryStart) {
-        if (queryStart == null)
-            return;
-
-        if (queryStart.isAfter(this.queryStart)) {
-            this.queryStart = queryStart;
-            setQueryInMillis();
-        }
-    }
-
-    public void setQueryEnd(DateTime queryEnd) {
-        if (queryEnd == null)
-            return;
-
-        if (queryEnd.isBefore(this.queryEnd)) {
-            this.queryEnd = queryEnd;
-            setQueryInMillis();
-        }
-    }
-
-    private void setQueryInMillis() {
-        this.queryInMillis = new Decimal(queryEnd.getMillis() - queryStart.getMillis());
-    }
-
+    // Combine this DataSeries with another DataSeries using the given Operation.
     @SuppressWarnings("unchecked")
     private DataSeries combine(DataSeries series, Operation operation) {
 
+        // Create a union of all DateTime points in the two DataSeries and sort the resultant collection (DESC).
         List<DateTime> dateTimePoints = (List) CollectionUtils.union(getDateTimePoints(), series.getDateTimePoints());
         Collections.sort(dateTimePoints);
 
         List<DataPoint> combinedSeries = new ArrayList<DataPoint>();
+        // For each DateTime point, find the nearest corresponding DataPoint in each series and apply the desired
+        // Operation.
         for(DateTime dateTimePoint : dateTimePoints) {
             DataPoint lhs = getDataPoint(dateTimePoint);
             DataPoint rhs = series.getDataPoint(dateTimePoint);
             operation.setOperands(lhs, rhs);
             combinedSeries.add(operation.operate());
         }
-
         return new DataSeries(combinedSeries);
-
     }
 
+    /**
+     * Add a DataSeries to this DataSeries.
+     *
+     * @param series - the DataSeries to add
+     * @return a new DataSeries representing the addition of the two DataSeries
+     */
     public DataSeries add(DataSeries series) {
         return combine(series, new AddOperation());
     }
 
+    /**
+     * Add a DataPoint to this DataSeries.
+     *
+     * @param dataPoint - the DataPoint to add
+     * @return a new DataSeries representing the addition of the DataSeries and the DataPoint
+     */
     public DataSeries add(DataPoint dataPoint) {
         DataSeries series = new DataSeries();
         series.addDataPoint(dataPoint);
         return add(series);
     }
 
+    /**
+     * Add a float value to this DataSeries.
+     *
+     * @param f - the float value to add
+     * @return a new DataSeries representing the addition of the float value and the DataSeries
+     */
     public DataSeries add(float f) {
         List<DataPoint> combinedDataPoints = new ArrayList<DataPoint>();
         for (DataPoint dp : dataPoints) {
@@ -111,17 +119,35 @@ public class DataSeries {
         return new DataSeries(combinedDataPoints); 
     }
 
-    @SuppressWarnings("unchecked")
+
+    /**
+     * Subtract a DataSeries from this DataSeries.
+     *
+     * @param series - the DataSeries to subtract
+     * @return a new DataSeries representing the subtraction of the DataSeries from this DataSeries
+     */
     public DataSeries subtract(DataSeries series) {
         return combine(series, new SubtractOperation());
     }
 
+    /**
+     * Subtract a DataPoint from this DataSeries.
+     *
+     * @param dataPoint - the DataPoint to subtract
+     * @return a new DataSeries representing the subtraction of the DataPoint from this DataSeries
+     */
     public DataSeries subtract(DataPoint dataPoint) {
         DataSeries series = new DataSeries();
         series.addDataPoint(dataPoint);
         return subtract(series);
     }
 
+    /**
+     * Subtract a float value from this DataSeries.
+     *
+     * @param f - the float value to subtract
+     * @return a new DataSeries representing the subtraction of the float value from this DataSeries
+     */
     public DataSeries subtract(float f) {
         List<DataPoint> combinedDataPoints = new ArrayList<DataPoint>();
         for (DataPoint dp : dataPoints) {
@@ -130,16 +156,34 @@ public class DataSeries {
         return new DataSeries(combinedDataPoints);
     }
     
+    /**
+     * Divide this DataSeries by another DataSeries.
+     *
+     * @param series - the DataSeries value by which to divide this DataSeries
+     * @return a new DataSeries representing the division of this DataSeries by the DataSeries
+     */
     public DataSeries divide(DataSeries series) {
         return combine(series, new DivideOperation());
     }
 
+    /**
+     * Divide this DataSeries by a DataPoint.
+     *
+     * @param dataPoint - the DataPoint value by which to divide this DataSeries
+     * @return a new DataSeries representing the division of this DataSeries by the DataPoint
+     */
     public DataSeries divide(DataPoint dataPoint) {
         DataSeries series = new DataSeries();
         series.addDataPoint(dataPoint);
         return divide(series);
     }
 
+    /**
+     * Divide this DataSeries by a float value.
+     *
+     * @param f - the float value by which to divide this DataSeries
+     * @return a new DataSeries representing the division of this DataSeries by the float value
+     */
     public DataSeries divide(float f) {
         List<DataPoint> combinedDataPoints = new ArrayList<DataPoint>();
         for (DataPoint dp : dataPoints) {
@@ -148,16 +192,34 @@ public class DataSeries {
         return new DataSeries(combinedDataPoints);
     }
 
+    /**
+      * Multiply this DataSeries by another DataSeries.
+      *
+      * @param series - the DataSeries to multiply this DataSeries
+      * @return a new DataSeries representing the multiplication of the two DataSeries
+      */
     public DataSeries multiply(DataSeries series) {
         return combine(series, new MultiplyOperation());
     }
 
+    /**
+      * Multiply this DataSeries by a DataPoint.
+      *
+      * @param dataPoint - the DataPoint value to multiply this DataPoint
+      * @return a new DataSeries representing the multiplication of the DataSeries and the DataPoint
+      */
     public DataSeries multiply(DataPoint dataPoint) {
         DataSeries series = new DataSeries();
         series.addDataPoint(dataPoint);
         return multiply(series);
     }
 
+    /**
+      * Multiply this DataSeries by a float value.
+      *
+      * @param f - the float value to multiply this DataSeries
+      * @return a new DataSeries representing the multiplication of the DataSeries and the float value
+      */
     public DataSeries multiply(float f) {
         List<DataPoint> combinedDataPoints = new ArrayList<DataPoint>();
         for (DataPoint dp : dataPoints) {
@@ -166,6 +228,12 @@ public class DataSeries {
         return new DataSeries(combinedDataPoints);
     }
 
+    /**
+     * Get the single-valued average of the DataPoints within the DataSeries that occur during the
+     * specified query time-period.
+     *
+     * @return - the average as a {@link Decimal} value
+     */
     public Decimal integrate() {
         Decimal integral = Decimal.ZERO;
         Collections.sort(dataPoints);
@@ -173,7 +241,7 @@ public class DataSeries {
             DataPoint current = dataPoints.get(i);
             DataPoint next = dataPoints.get(i+1);
             Decimal segmentInMillis = new Decimal(next.getDateTime().getMillis() - current.getDateTime().getMillis());
-            Decimal weightedAverage = current.getValue().multiply(segmentInMillis.divide(queryInMillis));
+            Decimal weightedAverage = current.getValue().multiply(segmentInMillis.divide(getQueryInMillis()));
             integral = integral.add(weightedAverage);
         }
         return integral;
@@ -181,6 +249,11 @@ public class DataSeries {
 
 
     @SuppressWarnings("unchecked")
+    /**
+     * Get the Collection of {@link org.joda.time.DateTime} points in the DataSeries.
+     *
+     * @return the Collection of {@link org.joda.time.DateTime} points in the DataSeries
+     */
     public Collection<DateTime> getDateTimePoints() {
         return (Collection<DateTime>) CollectionUtils.collect(dataPoints, new Transformer() {
             @Override
@@ -191,11 +264,16 @@ public class DataSeries {
         });
     }
 
-    //TODO - Optimise the reverse
-    public DataPoint getDataPoint(DateTime selector) {
+    /**
+     * Get the active {@link DataPoint} at a specific point in time.
+     *
+     * @param dateTime - the point in time for which to return the {@link DataPoint}
+     * @return the {@link DataPoint} at dateTime
+     */
+    public DataPoint getDataPoint(DateTime dateTime) {
         DataPoint selected = DataPoint.NULL;
         for (DataPoint dataPoint : dataPoints) {
-            if (!dataPoint.getDateTime().isAfter(selector)) {
+            if (!dataPoint.getDateTime().isAfter(dateTime)) {
                 selected = dataPoint;
             } else {
                 break;
@@ -205,13 +283,21 @@ public class DataSeries {
     }
 
 
+    /**
+     * Add a {@link DataPoint} to this series.
+     *
+     * @param dataPoint - the {@link DataPoint} to add to this series.
+     */
     public void addDataPoint(DataPoint dataPoint) {
         dataPoints.add(dataPoint);
-        //TODO - A having added a new DP to a DS
     }
 
 }
 
+/**
+ * Represents an abstract mathematical operation
+ * one would want to perform on a pair of {@link DataPoint} values.
+ */
 abstract class Operation {
 
     protected DataPoint lhs;
