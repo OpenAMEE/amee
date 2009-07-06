@@ -28,7 +28,6 @@ import com.amee.domain.data.ItemValueDefinition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
@@ -84,15 +83,12 @@ public class InternalValue {
      * @param values - the List of {@link ItemValue}s representing a sequence of values.
      */
     public InternalValue(List<ItemValue> values) {
-        Iterator<ItemValue> itr = values.iterator();
-        ItemValue itemValue = itr.next();
-        if (itemValue.getItemValueDefinition().isDecimal()) {
+        if (values.get(0).getItemValueDefinition().isDecimal()) {
             DataSeries ds = new DataSeries();
-            do {
+            for(ItemValue itemValue : values) {
                 ds.addDataPoint(new DataPoint(itemValue.getStartDate().toDateTime(), 
                         asInternalDecimal(itemValue)));
-                itemValue = itr.next();
-            } while (itr.hasNext());
+            }
             this.value = ds;
         } else {
             this.value = values;

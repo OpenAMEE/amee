@@ -242,27 +242,38 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     /**
-     * Add the collection of {@link ItemValue} belonging to this Item to the passed visitor collection of
-     * {@link com.amee.domain.InternalValue}.
+     * Add the Item's {@link ItemValue} collection to the passed {@link com.amee.domain.InternalValue} collection.
      *
-     * @param values - the visitor collection of {@link com.amee.domain.InternalValue} to which to add this Item's values.
+     * @param values - the {@link com.amee.domain.InternalValue} collection
      */
     @SuppressWarnings("unchecked")
     public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values) {
         ItemValueMap itemValueMap = getItemValuesMap();
         for (Object path : itemValueMap.keySet()) {
+            // Get all ItemValues with this ItemValueDefinition path.
             List<ItemValue> itemValues = itemValueMap.getAll((String) path);
-            if (itemValues.size() == 1) {
-                ItemValue iv = itemValues.get(0);
-                if (iv.isUsableValue()) {
-                    values.put(iv.getItemValueDefinition(), new InternalValue(iv));
-                }
+            if (itemValues.size() == 1 && !itemValues.get(0).getItemValueDefinition().isForceTimeSeries() ) {
+                addSingleValuedItemValue(values, itemValues);
             } else if (itemValues.size() > 1) {
-                ItemValueDefinition ivd = itemValues.get(0).getItemValueDefinition();
-                // Add all ItemValues with usable values
-                List<ItemValue> usableSet = (List<ItemValue>) CollectionUtils.select(itemValues, new UsableValuePredicate());
-                values.put(ivd, new InternalValue(usableSet));
+                addTimeSeriesItemValue(values, itemValues);
+
             }
+        }
+    }
+
+    // Add an ItemValue timeseries to the InternalValue collection.
+    private void addTimeSeriesItemValue(Map<ItemValueDefinition, InternalValue> values, List<ItemValue> itemValues) {
+        ItemValueDefinition ivd = itemValues.get(0).getItemValueDefinition();
+        // Add all ItemValues with usable values
+        List<ItemValue> usableSet = (List<ItemValue>) CollectionUtils.select(itemValues, new UsableValuePredicate());
+        values.put(ivd, new InternalValue(usableSet));
+    }
+
+    // Add a single-valued ItemValue to the InternalValue collection.
+    private void addSingleValuedItemValue(Map<ItemValueDefinition, InternalValue> values, List<ItemValue> itemValues) {
+        ItemValue iv = itemValues.get(0);
+        if (iv.isUsableValue()) {
+            values.put(iv.getItemValueDefinition(), new InternalValue(iv));
         }
     }
 
