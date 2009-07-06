@@ -150,6 +150,9 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
             if (names.contains("aliasedTo")) {
                 itemValueDefinition.setAliasedTo(definitionService.getItemValueDefinitionByUid(form.getFirstValue("aliasedTo")));
             }
+            if (names.contains("forceTimeSeries")) {
+                itemValueDefinition.setForceTimeSeries(Boolean.valueOf(form.getFirstValue("forceTimeSeries")));
+            }
 
             // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
             // Remove any versions that have not been sumbitted.
