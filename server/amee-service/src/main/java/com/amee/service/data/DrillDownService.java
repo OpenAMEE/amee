@@ -55,6 +55,7 @@ public class DrillDownService implements Serializable {
 
         // must have a startDate
         // default to start of month
+        //TODO - Review with Dig - should this default to getStartOfMonthDate or now?
         startDate = (startDate != null ? startDate : StartEndDate.getStartOfMonthDate());
 
         // we can do a drill down if an itemDefinition is attached to current dataCategory

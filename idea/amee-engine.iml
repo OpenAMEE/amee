@@ -28,6 +28,7 @@
           <file>file://$MODULE_DIR$/../server/amee-engine/conf/applicationContext-application-actions.xml</file>
           <file>file://$MODULE_DIR$/../server/amee-engine/conf/applicationContext-application-definitions.xml</file>
           <file>file://$MODULE_DIR$/../server/amee-engine/conf/applicationContext-jmx.xml</file>
+          <file>file://$MODULE_DIR$/../server/amee-engine/conf/applicationContext-jobs.xml</file>
         </fileset>
       </configuration>
     </facet>
@@ -130,6 +131,9 @@
     <orderEntry type="library" exported="" name="Maven: com.noelios.restlet:com.noelios.restlet.ext.jetty:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty-sslengine:6.1.11" level="project" />
     <orderEntry type="library" exported="" name="Maven: log4jdbc:log4jdbc:4-1.2alpha2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: quartz:quartz:1.5.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: javax.mail:mail:1.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: javax.activation:activation:1.1" level="project" />
   </component>
 </module>
 

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Resources xmlns="http://schemas.amee.cc/2.0">
+	<DataItemResource>
+		<DataItem created="2009-05-19 16:23:58.0" modified="2009-05-19 16:23:58.0" uid="980051122E8C">
+			<Name>980051122E8C</Name>
+			<ItemValues>
+				<ItemValue uid="DE7FD6AC0C1C">
+					<Path>source</Path>
+					<Name>Source</Name>
+					<Value>WBCSD 2006/ CIBSE 2004</Value>
+					<Unit/>
+					<PerUnit/>
+					<StartDate>2009-05-19T16:23:00+01:00</StartDate>
+					<ItemValueDefinition uid="DE3E806B7DD4">
+						<Path>source</Path>
+						<Name>Source</Name>
+						<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="CCEB59CACE1B">
+							<Name>text</Name>
+							<ValueType>TEXT</ValueType>
+							<Description/>
+							<Environment uid="5F5887BCF726"/>
+						</ValueDefinition>
+						<FromProfile>false</FromProfile>
+						<FromData>true</FromData>
+					</ItemValueDefinition>
+				</ItemValue>
+				<ItemValue uid="211B9BC822E7">
+					<Path>CO2perPerson</Path>
+					<Name>CO2perPerson</Name>
+					<Value>100.0</Value>
+					<Unit/>
+					<PerUnit/>
+					<StartDate>2009-08-09T12:28:00+01:00</StartDate>
+					<ItemValueDefinition uid="23EB7F546969">
+						<Path>CO2perPerson</Path>
+						<Name>CO2perPerson</Name>
+						<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="45433E48B39F">
+							<Name>amount</Name>
+							<ValueType>DECIMAL</ValueType>
+							<Description/>
+							<Environment uid="5F5887BCF726"/>
+						</ValueDefinition>
+						<FromProfile>false</FromProfile>
+						<FromData>true</FromData>
+					</ItemValueDefinition>
+				</ItemValue>
+				<ItemValue uid="7021592BAE92">
+					<Path>type</Path>
+					<Name>Type</Name>
+					<Value>international</Value>
+					<Unit/>
+					<PerUnit/>
+					<StartDate>2009-05-19T16:23:00+01:00</StartDate>
+					<ItemValueDefinition uid="9F8CA89C4A34">
+						<Path>type</Path>
+						<Name>Type</Name>
+						<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="CCEB59CACE1B">
+							<Name>text</Name>
+							<ValueType>TEXT</ValueType>
+							<Description/>
+							<Environment uid="5F5887BCF726"/>
+						</ValueDefinition>
+						<FromProfile>false</FromProfile>
+						<FromData>true</FromData>
+					</ItemValueDefinition>
+				</ItemValue>
+			</ItemValues>
+			<Environment uid="5F5887BCF726"/>
+			<ItemDefinition uid="125BAAD1DA2E"/>
+			<DataCategory uid="3A0F856CFF43">
+				<Name>Generic</Name>
+				<Path>generic</Path>
+			</DataCategory>
+			<Path>980051122E8C</Path>
+			<Label>international</Label>
+			<StartDate>2009-05-19T16:23:00+01:00</StartDate>
+			<EndDate/>
+		</DataItem>
+		<Path>/business/buildings/hotel/generic/980051122E8C</Path>
+		<Choices>
+			<Name>userValueChoices</Name>
+			<Choices>
+				<Choice>
+					<Name>numberOfPeople</Name>
+					<Value/>
+				</Choice>
+				<Choice>
+					<Name>stayDuration</Name>
+					<Value/>
+				</Choice>
+				<Choice>
+					<Name>startDate</Name>
+					<Value>2009-08-09T11:28:00+0000</Value>
+				</Choice>
+			</Choices>
+		</Choices>
+		<AmountPerMonth>0.000000</AmountPerMonth>
+		<Amount unit="kg/year">0.000000</Amount>
+	</DataItemResource>
+</Resources>

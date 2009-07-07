@@ -126,11 +126,6 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     }
 
     @Override
-    public boolean allowPut() {
-        return true;
-    }
-
-    @Override
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
         if (profileBrowser.getProfileItemValueActions().isAllowModify()) {
@@ -156,7 +151,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     private void setProfileItemValue(String itemValuePath) {
         if (itemValuePath.isEmpty()) return;
         if (getProfileItem() == null) return;
-        this.itemValue = getProfileItem().getItemValuesMap().get(itemValuePath);
+        this.itemValue = getProfileItem().matchItemValue(itemValuePath);
     }
 
     private void setBuilderStrategy() {

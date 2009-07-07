@@ -29,7 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 /**
@@ -79,17 +79,18 @@ public class InternalValue {
     }
 
     /**
-     * Instantiate an InternalValue representation of the supplied value.
+     * Instantiate an InternalValue representation of the supplied collection of values.
      *
-     * @param values - the Set of {@link ItemValue} representing an historical sequence of values.
+     * @param values - the List of {@link ItemValue}s representing a sequence of values.
      */
-    public InternalValue(Set<ItemValue> values) {
+    public InternalValue(List<ItemValue> values) {
         Iterator<ItemValue> itr = values.iterator();
         ItemValue itemValue = itr.next();
         if (itemValue.getItemValueDefinition().isDecimal()) {
             DataSeries ds = new DataSeries();
             do {
-                ds.addDataPoint(new DataPoint(itemValue.getStartDate().toDateTime(), asInternalDecimal(itemValue)));
+                ds.addDataPoint(new DataPoint(itemValue.getStartDate().toDateTime(), 
+                        asInternalDecimal(itemValue)));
                 itemValue = itr.next();
             } while (itr.hasNext());
             this.value = ds;

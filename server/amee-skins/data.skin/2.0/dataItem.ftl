@@ -9,6 +9,8 @@
 
     // create resource objects
     var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
+    var ITEM_VALUE_DEFINITIONS = new ItemValueDefinitionsResource('${dataItem.itemDefinition.uid}');
+
     var dataItemApiService = new DataItemApiService({
         heading : "Item Values",
         headingElementName : "apiHeading",
@@ -17,11 +19,13 @@
         dataHeadingItemElementName : 'apiDataItemHeading',
         dataContentElementName : "apiDataItemContent",
         apiVersion : '2.0',
-        updateItem: true});
+        updateItem: true,
+        createItemValue: true});
 
     // use resource loader to load resources and notify on loaded
     var resourceLoader = new ResourceLoader();
     resourceLoader.addResource(DATA_ACTIONS);
+    resourceLoader.addResource(ITEM_VALUE_DEFINITIONS);
     resourceLoader.observe('loaded', function() {
         dataItemApiService.start();
     });
@@ -44,5 +48,7 @@
 <table id="apiContent"></table>
 <div id="apiUpdateDataItem"></div>
 <div id="apiUpdateSubmitStatus"></div><br/>
+<div id="apiCreateDataItemValue"></div>
+<div id="apiCreateSubmitStatus"></div>
 
 <#include '/includes/after_content.ftl'>

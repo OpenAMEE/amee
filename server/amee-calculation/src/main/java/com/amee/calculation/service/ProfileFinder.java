@@ -58,7 +58,7 @@ public class ProfileFinder implements Serializable {
         ItemValue iv;
         ProfileItem pi = getProfileItem(path);
         if (pi != null) {
-            iv = pi.getItemValuesMap().get(name);
+            iv = pi.matchItemValue(name);
             if (iv != null) {
                 value = iv.getValue();
             }
@@ -73,7 +73,7 @@ public class ProfileFinder implements Serializable {
         ItemValue iv;
         ProfileItem pi = getProfileItem(path);
         if (pi != null) {
-            iv = pi.getItemValuesMap().get(name);
+            iv = pi.matchItemValue(name);
             if (iv != null) {
                 iv.setValue(value);
                 ameeStatistics.updateProfileItemValue();
@@ -84,7 +84,7 @@ public class ProfileFinder implements Serializable {
     public void setProfileItemValue(String name, String value) {
         ItemValue iv;
         if (profileItem != null) {
-            iv = profileItem.getItemValuesMap().get(name);
+            iv = profileItem.matchItemValue(name);
             if (iv != null) {
                 iv.setValue(value);
                 ameeStatistics.updateProfileItemValue();

@@ -80,11 +80,10 @@ public class DataSheetFactory implements CacheableFactory {
             StartEndDate startDate = dataBrowser.getQueryStartDate();
             StartEndDate endDate = dataBrowser.getQueryEndDate();
             for (DataItem dataItem : new OnlyActiveDataService(dataService).getDataItems(dataBrowser.getDataCategory(), startDate, endDate)) {
-                itemValuesMap = dataItem.getItemValuesMap();
                 row = new Row(sheet, dataItem.getUid());
                 row.setLabel("DataItem");
                 for (Column column : columns) {
-                    itemValue = itemValuesMap.get(column.getName());
+                    itemValue = dataItem.matchItemValue(column.getName(),startDate);
                     if (itemValue != null) {
                         new Cell(column, row, itemValue.getValue(), itemValue.getUid(), itemValue.getItemValueDefinition().getValueDefinition().getValueType());
                     } else if ("label".equalsIgnoreCase(column.getName())) {
@@ -119,7 +118,11 @@ public class DataSheetFactory implements CacheableFactory {
     }
 
     public String getKey() {
-        return "DataSheet_" + dataBrowser.getDataCategory().getUid();
+        return "DataSheet_" + dataBrowser.getDataCategory().getUid() +
+                "_" +
+                dataBrowser.getQueryStartDate() +
+                "_" +
+                ((dataBrowser.getQueryEndDate() != null) ? dataBrowser.getQueryEndDate() : "");
     }
 
     public String getCacheName() {

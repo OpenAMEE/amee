@@ -128,11 +128,6 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         }
     }
 
-    @Override
-    public boolean allowPut() {
-        return true;
-    }
-
     private void setBuilderStrategy() {
         builder = builderFactory.createProfileItemResourceBuilder(this);
     }
@@ -168,11 +163,6 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         } else {
             return formAcceptor.accept(this, getForm());
         }
-    }
-
-    @Override
-    public boolean allowDelete() {
-        return true;
     }
 
     @Override

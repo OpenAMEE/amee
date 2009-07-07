@@ -1,0 +1,92 @@
+
+{
+    "apiVersion":"2.0",
+    "dataCategory":
+    {
+        "uid":"3A0F856CFF43",
+        "dataCategory":
+        {	
+            "uid":"81F574296A95",
+            "name":"Hotel",
+            "path":"hotel"
+        },
+        "environment":
+        {
+            "uid":"5F5887BCF726",
+            "itemsPerFeed":10,
+            "description":"",
+            "name":"AMEE",
+            "owner":"",
+            "path":"",
+            "itemsPerPage":10
+        },
+        "created":"2009-05-19 16:23:47.0",
+        "name":"Generic",
+        "path":"generic",
+        "itemDefinition":
+        {
+            "uid":"125BAAD1DA2E",
+            "environment":
+            {
+                "uid":"5F5887BCF726"
+            },
+            "created":"2009-05-19 16:22:30.0",
+            "name":"Hotel Stay",
+            "drillDown":"type",
+            "modified":"2009-05-19 16:22:30.0"
+        },
+        "modified":"2009-05-19 16:23:47.0"
+    },
+    "path":"/business/buildings/hotel/generic",
+    "children":
+    {
+        "pager":
+        {
+            "to":2,
+            "lastPage":1,
+            "nextPage":-1,
+            "items":2,
+            "start":0,
+            "itemsFound":2,
+            "requestedPage":1,
+            "currentPage":1,
+            "from":1,
+            "itemsPerPage":10,
+            "previousPage":-1
+        },
+        "dataItems":
+        {
+            "label":"DataItems",
+            "rows":
+            [
+                {
+                    "uid":"980051122E8C",
+                    "startDate":"2009-05-19T16:23:00+01:00",
+                    "source":"WBCSD 2006/ CIBSE 2004",
+                    "created":"2009-05-19 16:23:58.0",
+                    "path":"980051122E8C",
+                    "CO2perPerson":"150.0",
+                    "endDate":"",
+                    "label":"international",
+                    "type":"international",
+                    "modified":"2009-05-19 16:23:58.0"
+                },
+                {
+                    "uid":"66139E3B1015",
+                    "startDate":"2009-05-19T16:23:00+01:00",
+                    "source":"Defra 2007/ CIBSE 2004",
+                    "created":"2009-05-19 16:23:58.0",
+                    "path":"66139E3B1015",
+                    "CO2perPerson":"29.83",
+                    "endDate":"",
+                    "label":"uk",
+                    "type":"uk",
+                    "modified":"2009-05-19 16:23:58.0"
+                }
+            ]
+        },
+        "dataCategories":
+        [
+        ]
+    }
+}

@@ -43,16 +43,17 @@ public abstract class BaseResource extends Resource {
         super.init(context, request, response);
         initialise(context, request, response);
         setAvailable(isValid());
+        setModifiable(isValid());
     }
 
     public void initialise(Context context, Request request, Response response) {
         log.debug("initialise() " + request.getResourceRef().toString());
-        List<Variant> varients = super.getVariants();
+        List<Variant> variants = super.getVariants();
         if (isStandardWebBrowser()) {
-            varients.add(new Variant(MediaType.TEXT_HTML));
+            variants.add(new Variant(MediaType.TEXT_HTML));
         } else {
-            varients.add(new Variant(MediaType.APPLICATION_XML));
-            varients.add(new Variant(MediaType.APPLICATION_JSON));
+            variants.add(new Variant(MediaType.APPLICATION_XML));
+            variants.add(new Variant(MediaType.APPLICATION_JSON));
         }
     }
 

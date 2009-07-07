@@ -4,7 +4,6 @@ import com.amee.calculation.service.CalculationService;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.ItemValueMap;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.ValidFromDate;
 import com.amee.restlet.profile.ProfileItemResource;
@@ -81,9 +80,8 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
             updateProfileItem(resource, profileItem, form);
 
             // Update ItemValues if supplied
-            ItemValueMap itemValues = profileItem.getItemValuesMap();
             for (String name : form.getNames()) {
-                ItemValue itemValue = itemValues.get(name);
+                ItemValue itemValue = profileItem.matchItemValue(name);
                 if (itemValue != null) {
                     itemValue.setValue(form.getFirstValue(name));
                     if (resource.getAPIVersion().isNotVersionOne()) {

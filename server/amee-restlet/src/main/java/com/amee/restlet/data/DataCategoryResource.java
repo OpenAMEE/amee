@@ -21,7 +21,11 @@ package com.amee.restlet.data;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.StartEndDate;
-import com.amee.domain.data.*;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.data.ItemValue;
+import com.amee.domain.path.PathItem;
 import com.amee.restlet.data.builder.DataCategoryResourceBuilder;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataBrowser;
@@ -122,16 +126,6 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     @Override
-    public boolean allowPost() {
-        return true;
-    }
-
-    @Override
-    public boolean allowPut() {
-        return true;
-    }
-
-    @Override
     public void acceptRepresentation(Representation entity) {
         log.debug("acceptRepresentation()");
         acceptOrStore(entity);
@@ -168,7 +162,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             dataService.clearCaches(thisDataCategory);
             if (isPost()) {
                  if (getDataItems().isEmpty()) {
-                     successfulPost(getFullPath());
+                     successfulPost(getFullPath(), dataCategory.getPath());
                  } else {
                      successfulPost(getFullPath(), getDataItems().get(0).getUid());
                  }
@@ -346,6 +340,9 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
                 if (!validDataCategory(dataCategory)) {
                     badRequest();
+                } else if (!isUnique(dataCategory)) {
+                    badRequest(APIFault.DUPLICATE_ITEM);
+                    return null;
                 } else {
                     dataCategory = acceptDataCategory(form, dataCategory);
                 }
@@ -375,11 +372,24 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         return dataCategory;
     }
 
+
     private boolean validDataCategory(DataCategory dataCategory) {
         if (StringUtils.isBlank(dataCategory.getName()) || StringUtils.isBlank(dataCategory.getPath())) {
             return false;
         }
         return true;
+    }
+
+    // A unique DataCategory is one with a unique path within it's set of sibling DataCategories.
+    private boolean isUnique(DataCategory dataCategory) {
+        boolean unique = true;
+        for (PathItem sibling : getPathItem().getChildrenByType("DC")) {
+            if (sibling.getPath().equals(dataCategory.getPath())) {
+                unique = false;
+                break;
+            }
+        }
+        return unique;
     }
 
     private DataCategory populateDataCategory(Form form, DataCategory dataCategory) {
@@ -462,9 +472,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         dataService.persist(dataItem);
 
         // update item values if supplied
-        ItemValueMap itemValues = dataItem.getItemValuesMap();
         for (String name : form.getNames()) {
-            ItemValue itemValue = itemValues.get(name);
+            ItemValue itemValue = dataItem.matchItemValue(name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
             }
@@ -498,11 +507,6 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         } else {
             notAuthorized();
         }
-    }
-
-    @Override
-    public boolean allowDelete() {
-        return true;
     }
 
     @Override

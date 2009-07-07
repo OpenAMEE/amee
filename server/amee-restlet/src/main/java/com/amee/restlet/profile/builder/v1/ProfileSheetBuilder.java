@@ -89,11 +89,10 @@ public class ProfileSheetBuilder implements CacheableFactory {
             // create rows and cells
             columns = sheet.getColumns();
             for (ProfileItem profileItem : profileItems) {
-                itemValuesMap = profileItem.getItemValuesMap();
                 row = new Row(sheet, profileItem.getUid());
                 row.setLabel("ProfileItem");
                 for (Column column : columns) {
-                    itemValue = itemValuesMap.get(column.getName());
+                    itemValue = profileItem.matchItemValue(column.getName());
                     if (itemValue != null) {
                         new Cell(column, row, itemValue.getValue(), itemValue.getUid(), itemValue.getItemValueDefinition().getValueDefinition().getValueType());
                     } else if ("name".equalsIgnoreCase(column.getName())) {

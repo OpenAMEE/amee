@@ -370,7 +370,8 @@ public class ProfileServiceDAO implements Serializable {
                         "FROM ProfileItem pi " +
                         "LEFT JOIN FETCH pi.itemValues " +
                         "WHERE pi.profile.id = :profileId " +
-                        "AND pi.status = :active")
+                        "AND pi.status = :active " +
+                        "ORDER BY pi.startDate DESC")
                 .setParameter("profileId", profile.getId())
                 .setParameter("active", AMEEStatus.ACTIVE)
                 .setHint("org.hibernate.cacheable", true)
@@ -441,11 +442,12 @@ public class ProfileServiceDAO implements Serializable {
         queryBuilder.append("AND pi.dataCategory.id = :dataCategoryId ");
         queryBuilder.append("AND pi.profile.id = :profileId AND ");
         if (endDate == null) {
-            queryBuilder.append("(pi.endDate IS NULL OR pi.endDate > :startDate)");
+            queryBuilder.append("(pi.endDate IS NULL OR pi.endDate > :startDate) ");
         } else {
-            queryBuilder.append("pi.startDate < :endDate AND (pi.endDate > :startDate OR pi.endDate IS NULL)");
+            queryBuilder.append("pi.startDate < :endDate AND (pi.endDate > :startDate OR pi.endDate IS NULL) ");
         }
-        queryBuilder.append("AND pi.status = :active");
+        queryBuilder.append("AND pi.status = :active ");
+        queryBuilder.append("ORDER BY pi.startDate DESC");
 
         // Create Query.
         Query query = entityManager.createQuery(queryBuilder.toString());

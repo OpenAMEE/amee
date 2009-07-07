@@ -30,7 +30,6 @@ import java.util.*;
  * consist of a single entry for single-valued {@link ItemValue} histories.
  *
  */
-//TODO - Generify
 @SuppressWarnings("unchecked")
 public class ItemValueMap extends HashMap {
 
@@ -44,21 +43,35 @@ public class ItemValueMap extends HashMap {
         ItemValue itemValue = null;
         TreeSet<ItemValue> series = (TreeSet<ItemValue>) super.get(path);
         if (series != null) {
-            itemValue = series.last();    
+            itemValue = series.first();
         }
         return itemValue;
+    }
+
+    /**
+     * Get the list of active {@link ItemValue}s at the passed start Date.
+     *
+     * @param startDate - the active {@link ItemValue} will be that starting immediately prior-to or on this date.
+     * @return the set of active {@link ItemValue}s at the passed start Date.
+     */
+    public List<ItemValue> getAll(Date startDate) {
+        List<ItemValue> itemValues = new ArrayList();
+        for(Object path : super.keySet()) {
+            itemValues.add(get((String)path, startDate));
+        }
+        return itemValues;
     }
 
     /**
      * Get all instances of {@link ItemValue} with the passed path.
      *
      * @param path - the {@link ItemValue} path.
-     * @return the Set of {@link ItemValue}. Will be empty is there exists no {@link ItemValue}s with this path.
+     * @return the List of {@link ItemValue}. Will be empty is there exists no {@link ItemValue}s with this path.
      */
-    public Set<ItemValue> getAll(String path) {
-        Set<ItemValue> itemValues = (TreeSet<ItemValue>) super.get(path);
+    public List<ItemValue> getAll(String path) {
+        List<ItemValue> itemValues = new ArrayList((TreeSet<ItemValue>) super.get(path));
         if (itemValues == null) {
-            itemValues = Collections.emptySet();
+            itemValues = Collections.emptyList();
         }
         return itemValues;
     }
@@ -67,6 +80,7 @@ public class ItemValueMap extends HashMap {
      * Get the active {@link ItemValue} at the passed start Date.
      *
      * @param path - the {@link ItemValue} path.
+     * @param startDate - the active {@link ItemValue} will be that starting immediately prior-to or on this date.
      * @return the active {@link ItemValue} at the passed start Date.
      */
     public ItemValue get(String path, Date startDate) {
@@ -81,10 +95,9 @@ public class ItemValueMap extends HashMap {
     public void put(String path, ItemValue itemValue) {
         if (!containsKey(path)) {
             super.put(path, new TreeSet<ItemValue>(new Comparator<ItemValue>() {
-
                 @Override
                 public int compare(ItemValue iv1, ItemValue iv2) {
-                    return iv1.getStartDate().compareTo(iv2.getStartDate());
+                    return iv2.getStartDate().compareTo(iv1.getStartDate());
                 }
 
             }));
@@ -94,12 +107,24 @@ public class ItemValueMap extends HashMap {
         itemValues.add(itemValue);
     }
 
+    /**
+     * Return the number of entries stored for a given {@ItemValueDefinition} path.
+     *
+     * @param path - the {@ItemValueDefinition} path.
+     *
+     * @return the number of entries stored.
+     */
+    public int size(String path) {
+        return getAll(path).size();
+    }
+
+    // Find the active ItemValue at startDate.
+    // The active ItemValue is the one occuring at or immediately before startDate.
     private ItemValue find(Set<ItemValue> itemValues, Date startDate) {
         ItemValue selected = null;
         for (ItemValue itemValue : itemValues) {
             if (!itemValue.getStartDate().after(startDate)) {
                 selected = itemValue;
-            } else {
                 break;
             }
         }

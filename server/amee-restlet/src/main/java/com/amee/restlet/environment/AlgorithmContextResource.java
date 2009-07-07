@@ -106,10 +106,6 @@ public class AlgorithmContextResource extends BaseResource implements Serializab
         }
     }
 
-    @Override
-    public boolean allowPut() {
-        return true;
-    }
 
     @Override
     public void storeRepresentation(Representation entity) {
@@ -128,11 +124,6 @@ public class AlgorithmContextResource extends BaseResource implements Serializab
         } else {
             notAuthorized();
         }
-    }
-
-    @Override
-    public boolean allowDelete() {
-        return true;
     }
 
     @Override

@@ -1,7 +1,7 @@
 <#include '/dataCommon.ftl'>
 <#include '/includes/before_content.ftl'>
 
-<script src="/scripts/amee/api_service.js" type="text/javascript"></script>
+<script src="/scripts/amee/api_service.js" type="text/javascript"></script>         
 <script src="/scripts/amee/data_service.js" type="text/javascript"></script>
 
 <script type='text/javascript'>

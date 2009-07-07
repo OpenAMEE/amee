@@ -233,7 +233,10 @@ public class DataService extends BaseService {
     public ItemValue getItemValueByUID(String uid) {
         return dao.getItemValueByUid(uid);
     }
-    
+
+    public void remove(ItemValue dataItemValue) {
+        dao.remove(dataItemValue);    
+    }
     // Sheets & Choices
 
     public Sheet getSheet(DataBrowser browser) {

@@ -1,17 +1,4 @@
-package com.amee.core;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.measure.DecimalMeasure;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-
 /**
- * An AMEE abstraction of a decimal value.
- *
- * Provides for basic string-to-decimal validation, unit conversion and scale and precision definitions.
  *
  * This file is part of AMEE.
  * <p/>
@@ -29,7 +16,22 @@ import java.math.RoundingMode;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * <p/>
  * Created by http://www.dgen.net.
- * Website http://www.amee.cc
+ * Website http://www.am    ee.cc
+ */
+package com.amee.core;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.measure.DecimalMeasure;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+
+/**
+ * An AMEE abstraction of a decimal value.
+ *
+ * Provides for basic string-to-decimal validation, unit conversion and scale and precision definitions.
  */
 public class Decimal {
 
@@ -73,6 +75,10 @@ public class Decimal {
         } else {
             scale(decimal);
         }
+    }
+
+    public Decimal(Float decimal) {
+        scale(decimal.toString());
     }
 
     public Decimal(Long decimal) {
@@ -192,7 +198,7 @@ public class Decimal {
         return new Decimal(getValue().divide(decimal.getValue(), CONTEXT));
     }
 
-    public Decimal mulitply(Decimal decimal) {
+    public Decimal multiply(Decimal decimal) {
         return new Decimal(getValue().multiply(decimal.getValue(), CONTEXT));
     }
 

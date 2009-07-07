@@ -45,6 +45,6 @@ public class DataSheetService implements Serializable {
     }
 
     public void removeSheet(DataCategory dataCategory) {
-        cacheHelper.remove("DataSheets", "DataSheet_" + dataCategory.getUid());
+        cacheHelper.clearCache("DataSheets", "DataSheet_" + dataCategory.getUid());
     }
 }

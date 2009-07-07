@@ -59,7 +59,7 @@ public class DataFilter extends RewriteFilter {
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
 
             // check for flat or heirachical path
-            if (StringUtils.equals(segments.get(0), "categories")) {
+            if (!segments.isEmpty() && StringUtils.equals(segments.get(0), "categories")) {
                 PathItem pathItem;
                 if (segments.size() == 1) {
                     pathItem = pathItemGroup.getRootPathItem();

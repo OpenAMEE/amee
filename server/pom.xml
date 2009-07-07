@@ -15,7 +15,7 @@
     <!-- Note: Keep restlet, jetty and servlet-api versions in sync. -->
     <!-- Note: Check Restlet release notes and jetty dependencies. -->
     <properties>
-        <amee.version>2.1</amee.version>
+        <amee.version>2.2-SNAPSHOT</amee.version>
         <restlet.version>1.1.4</restlet.version>
         <jetty.version>6.1.15</jetty.version>
         <jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>
@@ -59,6 +59,10 @@
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.5</version>
+		        <configuration>
+		          <reportOutputDirectory>/var/www/qa</reportOutputDirectory>
+		          <destDir>apidocs</destDir>
+		        </configuration>
 			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Resources xmlns="http://schemas.amee.cc/2.0">
+	<DataItemValueResource>
+		<ItemValues>
+			<ItemValue uid="E10F929766F7">
+				<Path>CO2perPerson</Path>
+				<Name>CO2perPerson</Name>
+				<Value>100.0</Value>
+				<Unit/>
+				<PerUnit/>
+				<StartDate>2020-06-09T12:30:00+01:00</StartDate>
+				<ItemValueDefinition uid="23EB7F546969">
+					<Path>CO2perPerson</Path>
+					<Name>CO2perPerson</Name>
+					<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="45433E48B39F">
+						<Name>amount</Name>
+						<ValueType>DECIMAL</ValueType>
+						<Description/>
+						<Environment uid="5F5887BCF726"/>
+					</ValueDefinition>
+					<FromProfile>false</FromProfile>
+					<FromData>true</FromData>
+				</ItemValueDefinition>
+			</ItemValue>
+			<ItemValue uid="592B7CBFB950">
+				<Path>CO2perPerson</Path>
+				<Name>CO2perPerson</Name>
+				<Value>100.0</Value>
+				<Unit/>
+				<PerUnit/>
+				<StartDate>2010-06-09T12:28:00+01:00</StartDate>
+				<ItemValueDefinition uid="23EB7F546969">
+					<Path>CO2perPerson</Path>
+					<Name>CO2perPerson</Name>
+					<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="45433E48B39F">
+						<Name>amount</Name>
+						<ValueType>DECIMAL</ValueType>
+						<Description/>
+						<Environment uid="5F5887BCF726"/>
+					</ValueDefinition>
+					<FromProfile>false</FromProfile>
+					<FromData>true</FromData>
+				</ItemValueDefinition>
+			</ItemValue>
+			<ItemValue uid="D1B6DA14FD7A">
+				<Path>CO2perPerson</Path>
+				<Name>CO2perPerson</Name>
+				<Value>100.0</Value>
+				<Unit/>
+				<PerUnit/>
+				<StartDate>2009-08-09T12:28:00+01:00</StartDate>
+				<ItemValueDefinition uid="23EB7F546969">
+					<Path>CO2perPerson</Path>
+					<Name>CO2perPerson</Name>
+					<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="45433E48B39F">
+						<Name>amount</Name>
+						<ValueType>DECIMAL</ValueType>
+						<Description/>
+						<Environment uid="5F5887BCF726"/>
+					</ValueDefinition>
+					<FromProfile>false</FromProfile>
+					<FromData>true</FromData>
+				</ItemValueDefinition>
+			</ItemValue>
+			<ItemValue uid="518CB2FB51B9">
+				<Path>CO2perPerson</Path>
+				<Name>CO2perPerson</Name>
+				<Value>36.64</Value>
+				<Unit/>
+				<PerUnit/>
+				<StartDate>2009-05-19T16:23:00+01:00</StartDate>
+				<ItemValueDefinition uid="23EB7F546969">
+					<Path>CO2perPerson</Path>
+					<Name>CO2perPerson</Name>
+					<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="45433E48B39F">
+						<Name>amount</Name>
+						<ValueType>DECIMAL</ValueType>
+						<Description/>
+						<Environment uid="5F5887BCF726"/>
+					</ValueDefinition>
+					<FromProfile>false</FromProfile>
+					<FromData>true</FromData>
+				</ItemValueDefinition>
+			</ItemValue>
+		</ItemValues>
+		<DataItem uid="980051122E8C"/>
+		<Path>/business/buildings/hotel/generic/980051122E8C/CO2perPerson</Path>
+	</DataItemValueResource>
+</Resources>

@@ -374,6 +374,10 @@ public class DataServiceDAO implements Serializable {
         dataItem.setStatus(AMEEStatus.TRASH);
     }
 
+    public void remove(ItemValue dataItemValue) {
+        dataItemValue.setStatus(AMEEStatus.TRASH);
+    }
+
     // Choices
 
     @SuppressWarnings(value = "unchecked")
@@ -385,8 +389,7 @@ public class DataServiceDAO implements Serializable {
                 String defaultValue = ivd.getValue();
                 // next give DataItem a chance to set the default value, if appropriate
                 if (ivd.isFromData()) {
-                    ItemValueMap dataItemValues = dataItem.getItemValuesMap();
-                    ItemValue dataItemValue = dataItemValues.get(ivd.getPath());
+                    ItemValue dataItemValue = dataItem.matchItemValue(ivd.getPath());
                     if ((dataItemValue != null) && (dataItemValue.getValue().length() > 0)) {
                         defaultValue = dataItemValue.getValue();
                     }
