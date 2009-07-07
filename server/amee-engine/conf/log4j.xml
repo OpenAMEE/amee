@@ -14,7 +14,7 @@
     <appender name="EMAIL"  class="org.apache.log4j.net.SMTPAppender">
         <param name="BufferSize" value="512" />
         <param name="SMTPHost" value="localhost" />
-        <param name="From" value="AMEE Service" />
+        <param name="From" value="service@amee.com" />
         <param name="To" value="steve@amee.com" />
         <param name="Subject" value="AMEE Service Message" />
         <layout class="org.apache.log4j.PatternLayout">

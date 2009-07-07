@@ -106,8 +106,8 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
     @JoinColumn(name = "ALIASED_TO_ID")
     private List<ItemValueDefinition> aliases = new ArrayList<ItemValueDefinition>();
 
-    @Column(name = "FORCE_TIMESERIES")
-    private boolean isForceTimeSeries;
+    //@Column(name = "FORCE_TIMESERIES")
+    //private boolean isForceTimeSeries;
 
     @Transient
     private Builder builder;
@@ -378,7 +378,6 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
      * Returns whether or not this ItemValueDefinition should always be treated as a timeseries value.
      *
      * @return true if this ItemValueDefinition should always be treated as a timeseries value
-     */
     public boolean isForceTimeSeries() {
         return isForceTimeSeries;
     }
@@ -386,4 +385,5 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
     public void setForceTimeSeries(boolean isForceTimeSeries) {
         this.isForceTimeSeries = isForceTimeSeries;
     }
+    */
 }
