@@ -324,11 +324,10 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     }
 
     /**
-     * 
      * @return true if the request specifies that a representation should be returned following a POST or PUT request
      */
     public boolean isRepresentationRequested() {
-       return isFullRepresentationRequested();
+        return isFullRepresentationRequested();
     }
 
     public void setRepresentationRequested(String representationRequested) {
@@ -336,11 +335,10 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     }
 
     /**
-     *
      * @return true if the request specifies that the full representation should be returned following a POST or PUT request
      */
     public boolean isFullRepresentationRequested() {
-        return StringUtils.equals(representationRequested,REPRESENTATION_FULL);
+        return StringUtils.equals(representationRequested, REPRESENTATION_FULL);
     }
 
     public boolean isBatchPost() {
