@@ -11,13 +11,12 @@
 
     <!--                          -->
     <!-- Declare the SMTPAppender -->
-    <!--
     <appender name="EMAIL"  class="org.apache.log4j.net.SMTPAppender">
         <param name="BufferSize" value="512" />
         <param name="SMTPHost" value="localhost" />
-        <param name="From" value="amee" />
+        <param name="From" value="AMEE Service" />
         <param name="To" value="steve@amee.com" />
-        <param name="Subject" value="AMEE Server Application message" />
+        <param name="Subject" value="AMEE Service Message" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
               value="[%d{ISO8601}]%n%n%-5p%n%n%c%n%n%m%n%n" />
@@ -27,7 +26,6 @@
             <param name="LevelMax" value="FATAL"/>
         </filter>
     </appender>
-    -->
 
     <!--<appender name="FILE" class="org.apache.log4j.FileAppender">-->
     <!--<param name="file" value="/var/www/apps/amee/shared/log/amee.log"/>-->
