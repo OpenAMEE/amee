@@ -81,22 +81,28 @@
                     </execution>
                 </executions>
             </plugin>
+				<plugin>
+				    <groupId>org.apache.jmeter</groupId>
+				    <artifactId>maven-jmeter-plugin</artifactId>
+				    <version>1.0</version>
+				    <executions>
+				        <execution>
+				            <id>jmeter-tests</id>
+				            <phase>verify</phase>
+				            <goals>
+				                <goal>jmeter</goal>
+				            </goals>
+				       </execution>
+				    </executions>
+				    <configuration>
+				        <reportDir>${project.build.directory}/jmeter-reports</reportDir>
+				        <jmeterUserProperties>
+				            <!-- for user properites -->
+				        </jmeterUserProperties>
+				    </configuration>
+				</plugin>
         </plugins>
     </build>
-
-    <!-- Maven Repositories. -->
-    <repositories>
-        <repository>
-            <id>maven-restlet</id>
-            <name>Public online Restlet repository</name>
-            <url>http://maven.restlet.org</url>
-        </repository>
-        <repository>
-            <id>apache-incubating</id>
-            <name>Apache Incubating Repository</name>
-            <url>http://people.apache.org/repo/m2-incubating-repository/</url>
-        </repository>
-    </repositories>
 
     <!-- Project Dependencies. -->
     <dependencies>
