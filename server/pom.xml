@@ -81,6 +81,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--  Removing until i get this working - 08/07/09 SM
 				<plugin>
 				    <groupId>org.apache.jmeter</groupId>
 				    <artifactId>maven-jmeter-plugin</artifactId>
@@ -97,10 +98,10 @@
 				    <configuration>
 				        <reportDir>${project.build.directory}/jmeter-reports</reportDir>
 				        <jmeterUserProperties>
-				            <!-- for user properites -->
 				        </jmeterUserProperties>
 				    </configuration>
 				</plugin>
+        -->
         </plugins>
     </build>
 
