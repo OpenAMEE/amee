@@ -41,7 +41,10 @@
             <option value='${ivd.uid}' <#if itemValueDefinition.aliasedTo?? && itemValueDefinition.aliasedTo.uid == ivd.uid>selected</#if>>${ivd.name}</option>
         </#if>
     </#list>
+
   </select>
+  <br/>
+  Treat as timeseries: <select name='forceTimeSeries'><option value='false'<#if !itemValueDefinition.forceTimeSeries> selected</#if>>No</option><option value='true'<#if itemValueDefinition.forceTimeSeries> selected</#if>>Yes</option></select><br/>
   <br/><br/>
   <input type='submit' value='Update'/>
   </form>

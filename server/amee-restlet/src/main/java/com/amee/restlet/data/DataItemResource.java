@@ -267,7 +267,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         dataService.clearCaches(getDataItem().getDataCategory());
 
         // Return successful creation of new DataItemValue.
-        successfulPost(getParentPath(), newDataItemValue.getUid());
+        successfulPost(getFullPath(), newDataItemValue.getUid());
     }
 
     @Override

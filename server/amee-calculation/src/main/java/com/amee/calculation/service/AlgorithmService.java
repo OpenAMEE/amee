@@ -92,7 +92,6 @@ public class AlgorithmService {
             }
             ThreadBeanHolder.set("algorithm-"+algorithm.getUid(), compiledScript);
         }
-        log.debug("getCompiledScript() - " + compiledScript.toString());
         return compiledScript;
     }
 

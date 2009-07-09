@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Resources xmlns="http://schemas.amee.cc/2.0">
+<Resources>
 	<DataItemResource>
-		<DataItem created="2009-05-19 16:23:58.0" modified="2009-05-19 16:23:58.0" uid="980051122E8C">
-			<Name>980051122E8C</Name>
+		<DataItem created="2007-07-27 10:47:59.0" modified="2007-07-27 10:47:59.0" uid="B32624F8CD5F">
+			<Name>B32624F8CD5F</Name>
 			<ItemValues>
-				<ItemValue uid="DE7FD6AC0C1C">
+				<ItemValue uid="EE33A24D00E8">
 					<Path>source</Path>
 					<Name>Source</Name>
-					<Value>WBCSD 2006/ CIBSE 2004</Value>
+					<Value>MTP/defra/amee 2008</Value>
 					<Unit/>
 					<PerUnit/>
-					<StartDate>2009-05-19T16:23:00+01:00</StartDate>
-					<ItemValueDefinition uid="DE3E806B7DD4">
+					<StartDate>2007-07-27T10:47:59+01:00</StartDate>
+					<ItemValueDefinition uid="6DD977D2919B">
 						<Path>source</Path>
 						<Name>Source</Name>
 						<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="CCEB59CACE1B">
@@ -24,18 +24,18 @@
 						<FromData>true</FromData>
 					</ItemValueDefinition>
 				</ItemValue>
-				<ItemValue uid="592B7CBFB950">
-					<Path>CO2perPerson</Path>
-					<Name>CO2perPerson</Name>
-					<Value>100.0</Value>
+				<ItemValue uid="9CB7601AB887">
+					<Path>kWhPerYear</Path>
+					<Name>KWh Per Year</Name>
+					<Value>425.9</Value>
 					<Unit/>
 					<PerUnit/>
-					<StartDate>2010-06-09T12:28:00+01:00</StartDate>
-					<ItemValueDefinition uid="23EB7F546969">
-						<Path>CO2perPerson</Path>
-						<Name>CO2perPerson</Name>
-						<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="45433E48B39F">
-							<Name>amount</Name>
+					<StartDate>2007-07-27T10:47:59+01:00</StartDate>
+					<ItemValueDefinition uid="7B8149D9ADE7">
+						<Path>kWhPerYear</Path>
+						<Name>KWh Per Year</Name>
+						<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="013466CB8A7D">
+							<Name>kWhPerYear</Name>
 							<ValueType>DECIMAL</ValueType>
 							<Description/>
 							<Environment uid="5F5887BCF726"/>
@@ -44,16 +44,36 @@
 						<FromData>true</FromData>
 					</ItemValueDefinition>
 				</ItemValue>
-				<ItemValue uid="7021592BAE92">
-					<Path>type</Path>
-					<Name>Type</Name>
-					<Value>international</Value>
+				<ItemValue uid="3B4964634A55">
+					<Path>device</Path>
+					<Name>Device</Name>
+					<Value>Personal Computers</Value>
 					<Unit/>
 					<PerUnit/>
-					<StartDate>2009-05-19T16:23:00+01:00</StartDate>
-					<ItemValueDefinition uid="9F8CA89C4A34">
-						<Path>type</Path>
-						<Name>Type</Name>
+					<StartDate>2007-07-27T10:47:59+01:00</StartDate>
+					<ItemValueDefinition uid="57D0DCB8D6EE">
+						<Path>device</Path>
+						<Name>Device</Name>
+						<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="CCEB59CACE1B">
+							<Name>text</Name>
+							<ValueType>TEXT</ValueType>
+							<Description/>
+							<Environment uid="5F5887BCF726"/>
+						</ValueDefinition>
+						<FromProfile>false</FromProfile>
+						<FromData>true</FromData>
+					</ItemValueDefinition>
+				</ItemValue>
+				<ItemValue uid="1232BA73CF17">
+					<Path>rating</Path>
+					<Name>Rating</Name>
+					<Value>Desktop</Value>
+					<Unit/>
+					<PerUnit/>
+					<StartDate>2007-07-27T10:47:59+01:00</StartDate>
+					<ItemValueDefinition uid="1F5434645C68">
+						<Path>rating</Path>
+						<Name>Rating</Name>
 						<ValueDefinition created="2007-07-27 09:30:44.0" modified="2007-07-27 09:30:44.0" uid="CCEB59CACE1B">
 							<Name>text</Name>
 							<ValueType>TEXT</ValueType>
@@ -66,31 +86,30 @@
 				</ItemValue>
 			</ItemValues>
 			<Environment uid="5F5887BCF726"/>
-			<ItemDefinition uid="125BAAD1DA2E"/>
-			<DataCategory uid="3A0F856CFF43">
+			<ItemDefinition uid="11D3548466F2"/>
+			<DataCategory uid="F27BF795BB04">
 				<Name>Generic</Name>
 				<Path>generic</Path>
 			</DataCategory>
-			<Path>980051122E8C</Path>
-			<Label>international</Label>
-			<StartDate>2009-05-19T16:23:00+01:00</StartDate>
+			<Path>B32624F8CD5F</Path>
+			<Label>Personal Computers, Desktop</Label>
+			<StartDate>2007-07-27T10:47:59+01:00</StartDate>
 			<EndDate/>
 		</DataItem>
-		<Path>/business/buildings/hotel/generic/980051122E8C</Path>
+		<Path>/home/appliances/computers/generic/B32624F8CD5F</Path>
 		<Choices>
 			<Name>userValueChoices</Name>
 			<Choices>
 				<Choice>
-					<Name>numberOfPeople</Name>
+					<Name>onStandby</Name>
 					<Value/>
 				</Choice>
 				<Choice>
-					<Name>stayDuration</Name>
-					<Value/>
+					<Name>numberOwned</Name>
+					<Value>1</Value>
 				</Choice>
 			</Choices>
 		</Choices>
 		<AmountPerMonth>0.000000</AmountPerMonth>
-		<Amount unit="kg/year">0.000000</Amount>
 	</DataItemResource>
 </Resources>
