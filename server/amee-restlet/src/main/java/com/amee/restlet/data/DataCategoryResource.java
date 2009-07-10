@@ -161,10 +161,10 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             // clear caches
             dataService.clearCaches(thisDataCategory);
             if (isPost()) {
-                 if (getDataItems().isEmpty()) {
-                     successfulPost(getFullPath(), dataCategory.getPath());
+                 if (dataItems.isEmpty()) {
+                     successfulPost(getFullPath(), dataItem.getUid());
                  } else {
-                     successfulPost(getFullPath(), getDataItems().get(0).getUid());
+                     successfulPost(getFullPath(), dataItems.get(0).getUid());
                  }
              } else {
                  successfulPut(getFullPath());

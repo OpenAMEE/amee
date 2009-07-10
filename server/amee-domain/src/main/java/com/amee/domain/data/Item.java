@@ -357,19 +357,25 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     /**
-     * Set the applicable date when dealing with historical sequences.
+     * Set the applicable date for {@link ItemValue} look-ups.
      *
-     * @param currentDate
+     * @param currentDate - the contemporary date for {@link ItemValue} look-ups
      */
     public void setCurrentDate(Date currentDate) {
         this.currentDate = currentDate;
     }
 
+    /**
+     * Get the applicable date for {@link ItemValue} look-ups.
+     *
+     * @return - the applicable date. If no date has been explicitly specified, then either
+     * now or the Item startDate is returned, whichever is the later.
+     */
     protected Date getCurrentDate() {
         if (currentDate != null) {
             return currentDate;
         } else {
-            return new Date();
+            return (getStartDate().before(new Date())) ? new Date() : getStartDate();
         }
     }
 

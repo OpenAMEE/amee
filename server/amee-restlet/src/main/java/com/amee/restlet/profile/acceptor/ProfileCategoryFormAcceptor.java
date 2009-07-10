@@ -113,6 +113,8 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             throw new APIException(apiFault);
         }
 
+        boolean isNewProfileItem = (profileItem.getId() == null);
+
         // TODO - Each APIVersion should have it's own Acceptor
         if (resource.getAPIVersion().isVersionOne()) {
             // Set the startDate and end marker.
@@ -156,7 +158,6 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
         if (profileService.isUnique(profileItem)) {
             try {
                 // save ProfileItem
-                boolean isNewProfileItem = (profileItem.getId() == null);
                 profileService.persist(profileItem);
                 // update item values if supplied
                 for (String name : form.getNames()) {

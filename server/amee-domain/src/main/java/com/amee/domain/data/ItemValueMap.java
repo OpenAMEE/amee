@@ -69,11 +69,7 @@ public class ItemValueMap extends HashMap {
      * @return the List of {@link ItemValue}. Will be empty is there exists no {@link ItemValue}s with this path.
      */
     public List<ItemValue> getAll(String path) {
-        List<ItemValue> itemValues = new ArrayList((TreeSet<ItemValue>) super.get(path));
-        if (itemValues == null) {
-            itemValues = Collections.emptyList();
-        }
-        return itemValues;
+        return new ArrayList((TreeSet<ItemValue>) super.get(path));
     }
 
     /**

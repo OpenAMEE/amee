@@ -86,7 +86,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         // ItemValues.
         if (StringUtils.isNotBlank(query.getFirstValue("startDate"))) {
             getDataItem().setCurrentDate(new StartEndDate(query.getFirstValue("startDate")));
-            names.remove("startDate");
         }
 
         // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
@@ -295,7 +294,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         }
 
         // update 'startDate' value
-        if (names.contains("startDate")) {
+        if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
             dataItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
         }
 
@@ -307,7 +306,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
                 dataItem.setEndDate(null);
             }
         } else {
-            if (form.getNames().contains("duration")) {
+            if (StringUtils.isNotBlank(form.getFirstValue("duration"))) {
                 StartEndDate endDate = dataItem.getStartDate().plus(form.getFirstValue("duration"));
                 dataItem.setEndDate(endDate);
             }

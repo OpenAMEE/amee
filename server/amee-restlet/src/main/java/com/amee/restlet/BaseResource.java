@@ -324,7 +324,7 @@ public abstract class BaseResource extends Resource {
     }
 
     private void status(Status status, APIFault fault) {
-        log.debug("status() - status code " + status + " message: " + ((fault != null) ? fault.toString() : "<EMPTY>"));
+        log.info("status() - status code " + status + " message: " + ((fault != null) ? fault.toString() : "<EMPTY>"));
         if (fault != null) {
             getResponse().setStatus(status, fault.toString());
         } else {
