@@ -5,7 +5,7 @@
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%d] [%-5p] [%t] [%X{ipAddress}] [%X{userUid}] [%c{6}] %m%n"/>
+            <param name="ConversionPattern" value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c{6}] %m%n"/>
         </layout>
     </appender>
 
@@ -14,12 +14,11 @@
     <appender name="EMAIL"  class="org.apache.log4j.net.SMTPAppender">
         <param name="BufferSize" value="512" />
         <param name="SMTPHost" value="localhost" />
-        <param name="From" value="service@amee.com" />
+        <param name="From" value="${host.name}" />
         <param name="To" value="steve@amee.com" />
         <param name="Subject" value="AMEE Service Message" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern"
-              value="[%d{ISO8601}]%n%n%-5p%n%n%c%n%n%m%n%n" />
+            <param name="ConversionPattern" value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c{6}] %m%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="ERROR "/>

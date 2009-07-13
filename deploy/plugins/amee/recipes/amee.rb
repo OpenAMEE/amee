@@ -6,6 +6,11 @@ namespace :amee do
     end
   end
   
+  desc "Ls current install"
+  task :check_current, roles => :app do
+    stream "ls -ld #{current_release}/.."
+  end
+  
   desc "Tail AMEE logfile"
   task :tail_log, roles => :app do
     stream "tail -f #{current_release}/log/wrapper.log"

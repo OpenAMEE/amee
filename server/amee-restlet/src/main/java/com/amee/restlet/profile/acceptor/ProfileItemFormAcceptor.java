@@ -126,17 +126,17 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
         }
 
         // Update 'startDate' value
-        if (names.contains("startDate")) {
+        if (!StringUtils.isBlank(form.getFirstValue("startDate"))) {
             profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
         }
 
-        // Update 'startDate' value
-        if (names.contains("validFrom")) {
+        // Update 'validFrom' value
+        if (!StringUtils.isBlank(form.getFirstValue("validFrom"))) {
             profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
         }
 
         // Update 'end' value
-        if (names.contains("end")) {
+        if (!StringUtils.isBlank(form.getFirstValue("end"))) {
             boolean end = Boolean.valueOf(form.getFirstValue("end"));
             if (end) {
                 profileItem.setEndDate(profileItem.getStartDate());
@@ -154,7 +154,7 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
             }
         } else {
             // Update 'duration' value
-            if (form.getNames().contains("duration")) {
+            if (StringUtils.isNotBlank(form.getFirstValue("duration"))) {
                 StartEndDate endDate = profileItem.getStartDate().plus(form.getFirstValue("duration"));
                 profileItem.setEndDate(endDate);
             }
