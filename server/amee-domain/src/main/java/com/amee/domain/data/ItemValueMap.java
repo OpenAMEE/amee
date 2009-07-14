@@ -104,9 +104,9 @@ public class ItemValueMap extends HashMap {
     }
 
     /**
-     * Return the number of entries stored for a given {@ItemValueDefinition} path.
+     * Return the number of entries stored for a given {@link ItemValueDefinition} path.
      *
-     * @param path - the {@ItemValueDefinition} path.
+     * @param path - the {@link ItemValueDefinition} path.
      *
      * @return the number of entries stored.
      */
