@@ -9,12 +9,12 @@
 #amee_url="/profiles/${amee_profile}/transport/car/generic/?v=2.0&startDate=20081124T1507&endDate=20081209T1507"
 #amee_url="profiles/${amee_profile}/home/appliances/computers/generic?profileDate=201004"
 
-amee_url="profiles/${amee_profile}/home/energy/quantity?itemsPerPage=100"
+#amee_url="profiles/${amee_profile}/transport/car/generic?itemsPerPage=10&startDate=2009-07-10T00:00:00%2B0100"
+amee_url="profiles/${amee_profile}/transport/car/generic?itemsPerPage=10&profileDate=200810"
 
-type="atom+xml"
+type="xml"
 
 curl http://${amee_host}/${amee_url} \
   -H "Accept:application/${type}" \
 	-b .cookies \
-	-v \
-  -o get-data-category-response.xml  
+	-v
