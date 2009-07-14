@@ -30,6 +30,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
 import org.joda.time.Duration;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -78,7 +79,10 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     private Set<ItemValue> activeItemValues;
 
     @Transient
-    private Date currentDate;
+    private Date effectiveStartDate;
+
+    @Transient
+    private Date effectiveEndDate;
 
     public Item() {
         super();
@@ -140,7 +144,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      * @return - the List of {@link ItemValue}
      */
     public List<ItemValue> getItemValues() {
-        return getItemValues(getCurrentDate());
+        return getItemValues(getEffectiveStartDate());
     }
 
     /**
@@ -221,7 +225,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      * @return the matched {@link ItemValue} or NULL if no match is found.
      */
     public ItemValue matchItemValue(String identifier) {
-        return matchItemValue(identifier, getCurrentDate());
+        return matchItemValue(identifier, getEffectiveStartDate());
     }
 
     /**
@@ -262,6 +266,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     // Add an ItemValue timeseries to the InternalValue collection.
+    @SuppressWarnings("unchecked")
     private void addTimeSeriesItemValue(Map<ItemValueDefinition, InternalValue> values, List<ItemValue> itemValues) {
         ItemValueDefinition ivd = itemValues.get(0).getItemValueDefinition();
         // Add all ItemValues with usable values
@@ -357,25 +362,53 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     /**
-     * Set the applicable date for {@link ItemValue} look-ups.
+     * Set the effective start date for {@link ItemValue} look-ups.
      *
-     * @param currentDate - the contemporary date for {@link ItemValue} look-ups
+     * @param effectiveStartDate - the effective start date for {@link ItemValue} look-ups
      */
-    public void setCurrentDate(Date currentDate) {
-        this.currentDate = currentDate;
+    public void setEffectiveStartDate(Date effectiveStartDate) {
+        if (effectiveStartDate == null)
+            return;
+        this.effectiveStartDate = effectiveStartDate;
     }
 
     /**
-     * Get the applicable date for {@link ItemValue} look-ups.
+     * Get the effective start date for {@link ItemValue} look-ups.
      *
-     * @return - the applicable date. If no date has been explicitly specified, then either
+     * @return - the effective start date. If no date has been explicitly specified, then either
      * now or the Item startDate is returned, whichever is the later.
      */
-    protected Date getCurrentDate() {
-        if (currentDate != null) {
-            return currentDate;
+    protected Date getEffectiveStartDate() {
+        if (effectiveStartDate != null) {
+            return effectiveStartDate;
         } else {
             return (getStartDate().before(new Date())) ? new Date() : getStartDate();
+        }
+    }
+
+
+    /**
+     * Set the effective end date for {@link ItemValue} look-ups.
+     *
+     * @param effectiveEndDate - the effective end date for {@link ItemValue} look-ups
+     */
+    public void setEffectiveEndDate(Date effectiveEndDate) {
+        if (effectiveEndDate == null)
+            return;
+        this.effectiveEndDate = effectiveEndDate;
+    }
+
+    /**
+     * Get the effective end date for {@link ItemValue} look-ups.
+     *
+     * @return - the effective end date. If no date has been explicitly specified, then Date(Long.MAX_VALUE)
+     * is returned
+     */
+    protected Date getEffectiveEndDate() {
+        if (effectiveEndDate != null) {
+            return effectiveEndDate;
+        } else {
+            return new Date(Long.MAX_VALUE);
         }
     }
 

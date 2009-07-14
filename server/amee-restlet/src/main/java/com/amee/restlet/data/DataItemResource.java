@@ -85,7 +85,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         // The resource may receive a startDate parameter that sets the current date in an historical sequence of
         // ItemValues.
         if (StringUtils.isNotBlank(query.getFirstValue("startDate"))) {
-            getDataItem().setCurrentDate(new StartEndDate(query.getFirstValue("startDate")));
+            getDataItem().setEffectiveStartDate(new StartEndDate(query.getFirstValue("startDate")));
         }
 
         // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
