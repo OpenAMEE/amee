@@ -101,7 +101,8 @@ public class ProfileFinder implements Serializable {
         }
     }
 
-    public List<ProfileItem> getProfileItems() {
+    // TODO: Remove this. Not used.
+    private List<ProfileItem> getProfileItems() {
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
         if (profileItem != null) {
             profileItems = profileService.getProfileItems(
