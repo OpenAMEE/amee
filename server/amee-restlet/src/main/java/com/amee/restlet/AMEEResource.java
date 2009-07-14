@@ -287,6 +287,12 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
         }
     }
 
+    /**
+     * Produce the appropriate response for a successful batch POST
+     */
+    public void successfulBatchPost() {
+        super.handleGet();
+    }
 
     /**
      * Produce the appropriate response for a successful POST.
@@ -305,7 +311,7 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
             //  (i) API V1.X (backwards compatibility)
             //  (ii) if the client has specifically requested a representation
             //  (iii) if the request is a batch POST
-            if (getAPIVersion().isVersionOne() || isRepresentationRequested() || isBatchPost()) {
+            if (getAPIVersion().isVersionOne() || isRepresentationRequested()) {
                 super.handleGet();
             } else {
                 // For single POSTs in API versions >V1.X set the Location and 201 Created header.
