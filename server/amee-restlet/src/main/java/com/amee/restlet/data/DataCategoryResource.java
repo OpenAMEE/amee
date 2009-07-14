@@ -67,9 +67,10 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     @Autowired
     private DefinitionService definitionService;
 
-    private List<DataCategory> dataCategories;
-    private DataItem dataItem;
-    private List<DataItem> dataItems;
+    private List<DataCategory> newDataCategories;
+    private DataItem newDataItem;
+    private DataCategory newDataCategory;
+    private List<DataItem> newDataItems;
 
     @Autowired
     private DataCategoryResourceBuilder builder;
@@ -141,8 +142,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         log.debug("acceptOrStore()");
         DataCategory thisDataCategory = getDataCategory();
 
-        dataItems = new ArrayList<DataItem>();
-        dataCategories = new ArrayList<DataCategory>();
+        newDataItems = new ArrayList<DataItem>();
+        newDataCategories = new ArrayList<DataCategory>();
 
         MediaType mediaType = entity.getMediaType();
         if (MediaType.APPLICATION_XML.includes(mediaType)) {
@@ -157,14 +158,16 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             }
         }
 
-        if ((dataCategory != null) || (dataItem != null) || !dataCategories.isEmpty() || !dataItems.isEmpty()) {
+        if ((newDataCategory != null) || (newDataItem != null) || !newDataCategories.isEmpty() || !newDataItems.isEmpty()) {
             // clear caches
             dataService.clearCaches(thisDataCategory);
             if (isPost()) {
-                 if (dataItems.isEmpty()) {
-                     successfulPost(getFullPath(), dataItem.getUid());
+                 if (isBatchPost()) {
+                     successfulBatchPost();
+                 } else if (newDataCategory != null) {
+                     successfulPost(getFullPath(), newDataCategory.getPath());
                  } else {
-                     successfulPost(getFullPath(), dataItems.get(0).getUid());
+                     successfulPost(getFullPath(), newDataItem.getUid());
                  }
              } else {
                  successfulPut(getFullPath());
@@ -197,7 +200,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                     }
                     dataCategory = acceptFormForDataCategory(form);
                     if (dataCategory != null) {
-                        dataCategories.add(dataCategory);
+                        newDataCategories.add(dataCategory);
                     } else {
                         log.warn("acceptJSON() - Data Category not added/modified");
                         return;
@@ -215,7 +218,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                     }
                     dataItem = acceptFormForDataItem(form);
                     if (dataItem != null) {
-                        dataItems.add(dataItem);
+                        newDataItems.add(dataItem);
                     } else {
                         log.warn("acceptJSON() - Data Item not added/modified");
                         return;
@@ -254,7 +257,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                         }
                         dataCategory = acceptFormForDataCategory(form);
                         if (dataCategory != null) {
-                            dataCategories.add(dataCategory);
+                            newDataCategories.add(dataCategory);
                         } else {
                             log.warn("acceptXML() - Data Category not added");
                             return;
@@ -273,7 +276,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                         }
                         dataItem = acceptFormForDataItem(form);
                         if (dataItem != null) {
-                            dataItems.add(dataItem);
+                            newDataItems.add(dataItem);
                         } else {
                             log.warn("acceptXML() - Data Item not added");
                             return;
@@ -296,13 +299,13 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         if (type != null) {
             if (type.equalsIgnoreCase("DC")) {
                 if (dataBrowser.getDataCategoryActions().isAllowCreate()) {
-                    dataCategory = acceptFormForDataCategory(form);
+                    newDataCategory = acceptFormForDataCategory(form);
                 } else {
                     notAuthorized();
                 }
             } else if (type.equalsIgnoreCase("DI")) {
                 if (dataBrowser.getDataItemActions().isAllowCreate()) {
-                    dataItem = acceptFormForDataItem(form);
+                    newDataItem = acceptFormForDataItem(form);
                 } else {
                     notAuthorized();
                 }
@@ -534,14 +537,14 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     public List<DataCategory> getDataCategories() {
-        return dataCategories;
+        return newDataCategories;
     }
 
     public DataItem getDataItem() {
-        return dataItem;
+        return newDataItem;
     }
 
     public List<DataItem> getDataItems() {
-        return dataItems;
+        return newDataItems;
     }
 }
