@@ -1,5 +1,7 @@
 package com.amee.restlet.auth;
 
+import com.amee.domain.auth.User;
+import com.amee.restlet.RequestContext;
 import com.amee.service.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,13 +26,17 @@ public class AuthFilter extends BaseAuthFilter {
         log.debug("doHandle()");
 
         // Authentication has already been performed upstream so just continue without any further processing
-        if (ThreadBeanHolder.get("user") != null)
+        if (ThreadBeanHolder.get("user") != null) {
             return super.doHandle(request, response);
-        
+        }
+
         int result;
         String authToken = authenticated(request);
         if (authToken != null) {
             // a auth has been found and authenticated (even if this is just the guest auth)
+            RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+            ctx.setUser((User) ThreadBeanHolder.get("user"));
+            ctx.setRequest(request);
             result = accept(request, response, authToken);
 
         } else {
