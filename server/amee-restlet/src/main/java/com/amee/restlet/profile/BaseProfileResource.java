@@ -4,7 +4,9 @@ import com.amee.domain.Pager;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.profile.Profile;
+import com.amee.domain.profile.ProfileDate;
 import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.profile.ValidFromDate;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataService;
@@ -130,6 +132,9 @@ public abstract class BaseProfileResource extends AMEEResource {
             if (containsCalendarParams()) {
                 return APIFault.INVALID_API_PARAMETERS;
             }
+            if (!validMonthDateTimeFormat()) {
+                return APIFault.INVALID_DATE_FORMAT;
+            }
         } else {
             if (!validISODateTimeFormats()) {
                 return APIFault.INVALID_DATE_FORMAT;
@@ -151,6 +156,19 @@ public abstract class BaseProfileResource extends AMEEResource {
             }
         }
         return APIFault.NONE;
+    }
+
+    private boolean validMonthDateTimeFormat() {
+        String profileDate = getForm().getFirstValue("profileDate");
+        if (profileDate != null && !ProfileDate.validate(profileDate)) {
+            return false;
+        }
+
+        String validFromDate = getForm().getFirstValue("validFrom");
+        if (validFromDate != null && !ValidFromDate.validate(validFromDate)) {
+            return false;
+        }
+        return true;
     }
 
     private boolean validISODateTimeFormats() {

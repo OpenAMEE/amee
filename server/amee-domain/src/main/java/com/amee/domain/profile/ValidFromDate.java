@@ -29,16 +29,16 @@ public class ValidFromDate extends GCDate {
 
     private static DateTimeFormatter FMT = DateTimeFormat.forPattern("yyyyMMdd");
 
-    public ValidFromDate(String profileDate) {
-        super(profileDate);
+    public ValidFromDate(String validFrom) {
+        super(validFrom);
     }
 
     protected long parseStr(String dateStr) {
         try {
             DateTime date = FMT.parseDateTime(dateStr);
             return date.dayOfMonth().withMinimumValue().toDateMidnight().getMillis();
-        } catch (Exception ex) {
-            return defaultDate();
+        } catch (IllegalArgumentException e) {
+            throw e;
         }
     }
 
@@ -54,4 +54,13 @@ public class ValidFromDate extends GCDate {
     protected void setDefaultDateStr() {
         this.dateStr = FMT.print(this.getTime());
     }
+
+    public static boolean validate(String dateStr) {
+        try {
+            FMT.parseDateTime(dateStr);
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
+        return true;
+    }    
 }
