@@ -39,8 +39,8 @@ public class ProfileDate extends GCDate {
     protected long parseStr(String dateStr) {
         try {
             return MONTH_DATE.parseDateTime(dateStr).getMillis();
-        } catch (IllegalArgumentException e) {
-            throw e;
+        } catch (Exception e) {
+            return defaultDate();
         }
     }
 

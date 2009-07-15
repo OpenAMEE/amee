@@ -37,8 +37,8 @@ public class ValidFromDate extends GCDate {
         try {
             DateTime date = FMT.parseDateTime(dateStr);
             return date.dayOfMonth().withMinimumValue().toDateMidnight().getMillis();
-        } catch (IllegalArgumentException e) {
-            throw e;
+        } catch (Exception e) {
+            return defaultDate();
         }
     }
 
