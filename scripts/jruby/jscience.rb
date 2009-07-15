@@ -1,5 +1,5 @@
 include Java
-require '../../lib/jscience/jscience.jar'
+require '/Development/repository/org/jscience/jscience/4.3.1/jscience-4.3.1.jar'
 
 Unit = javax.measure.unit.Unit
 Amount = org.jscience.physics.amount.Amount
