@@ -73,9 +73,10 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
 
     private void setDataItemValue(Request request) {
 
-        String itemValuePath = request.getAttributes().get("valuePath").toString();
+        // This could be a path or a uid
+        String itemValueIdentifier = request.getAttributes().get("valuePath").toString();
 
-        if (itemValuePath.isEmpty() || getDataItem() == null) {
+        if (itemValueIdentifier.isEmpty() || getDataItem() == null) {
             return;
         }
 
@@ -96,9 +97,9 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         // Retrieve all itemValues in a historical sequence if mandated in the request (get=all), otherwise retrieve
         // the closest match
         if (StringUtils.equals(select,"all")) {
-            this.itemValues = getDataItem().getItemValues(itemValuePath);
+            this.itemValues = getDataItem().getAllItemValues(itemValueIdentifier);
         } else {
-            this.itemValue = getDataItem().matchItemValue(itemValuePath, startDate);
+            this.itemValue = getDataItem().getItemValue(itemValueIdentifier, startDate);
         }
     }
 
@@ -233,8 +234,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             ItemValue itemValue = this.itemValue;
             final ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
 
-            int remaining = getDataItem().getItemValuesMap().size(itemValueDefinition.getPath());
-
+            int remaining = getDataItem().getAllItemValues(itemValueDefinition.getPath()).size();
             if (remaining > 1) {
                 dataService.clearCaches(getDataItem().getDataCategory());
                 dataService.remove(itemValue);

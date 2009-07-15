@@ -475,7 +475,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
         // update item values if supplied
         for (String name : form.getNames()) {
-            ItemValue itemValue = dataItem.matchItemValue(name);
+            ItemValue itemValue = dataItem.getItemValue(name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
             }

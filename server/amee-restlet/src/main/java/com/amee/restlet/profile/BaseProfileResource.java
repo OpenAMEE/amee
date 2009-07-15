@@ -81,7 +81,8 @@ public abstract class BaseProfileResource extends AMEEResource {
     }
 
     protected void setProfileItem(String profileItemUid) {
-        if (profileItemUid.isEmpty()) return;
+        if (profileItemUid.isEmpty())
+            return;
         this.profileItem = profileService.getProfileItem(profileItemUid);
     }
 

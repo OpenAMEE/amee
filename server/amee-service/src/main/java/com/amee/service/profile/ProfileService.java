@@ -193,7 +193,7 @@ public class ProfileService extends BaseService {
                 // next give DataItem a chance to set the default value, if appropriate
                 if (ivd.isFromData()) {
                     ItemValue dataItemValue =
-                            profileItem.getDataItem().matchItemValue(ivd.getPath(), profileItem.getStartDate());
+                            profileItem.getDataItem().getItemValue(ivd.getPath(), profileItem.getStartDate());
                     if ((dataItemValue != null) && (dataItemValue.getValue().length() > 0)) {
                         defaultValue = dataItemValue.getValue();
                     }

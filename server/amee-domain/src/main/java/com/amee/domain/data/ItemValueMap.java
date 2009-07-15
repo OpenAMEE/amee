@@ -103,17 +103,6 @@ public class ItemValueMap extends HashMap {
         itemValues.add(itemValue);
     }
 
-    /**
-     * Return the number of entries stored for a given {@link ItemValueDefinition} path.
-     *
-     * @param path - the {@link ItemValueDefinition} path.
-     *
-     * @return the number of entries stored.
-     */
-    public int size(String path) {
-        return getAll(path).size();
-    }
-
     // Find the active ItemValue at startDate.
     // The active ItemValue is the one occuring at or immediately before startDate.
     private ItemValue find(Set<ItemValue> itemValues, Date startDate) {

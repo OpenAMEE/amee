@@ -389,7 +389,7 @@ public class DataServiceDAO implements Serializable {
                 String defaultValue = ivd.getValue();
                 // next give DataItem a chance to set the default value, if appropriate
                 if (ivd.isFromData()) {
-                    ItemValue dataItemValue = dataItem.matchItemValue(ivd.getPath());
+                    ItemValue dataItemValue = dataItem.getItemValue(ivd.getPath());
                     if ((dataItemValue != null) && (dataItemValue.getValue().length() > 0)) {
                         defaultValue = dataItemValue.getValue();
                     }

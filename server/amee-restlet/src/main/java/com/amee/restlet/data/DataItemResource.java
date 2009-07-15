@@ -24,12 +24,11 @@ import com.amee.core.*;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -212,15 +211,14 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         // Validations
 
         // The submitted ItemValueDefinition must be in the owning ItemDefinition
-        ItemValue matchedItemValue = (ItemValue) CollectionUtils.find(getDataItem().getItemValues(), new Predicate() {
-            @Override
-            public boolean evaluate(Object o) {
-                ItemValue iv = (ItemValue) o;
-                return StringUtils.equals(iv.getItemValueDefinition().getUid(),valueDefinitionUid);
+        ItemValueDefinition matchedItemValueDefinition = null;
+        for (ItemValueDefinition ivd : getDataItem().getItemDefinition().getItemValueDefinitions()) {
+            if (ivd.isFromData() && ivd.getUid().equals(valueDefinitionUid)) {
+                matchedItemValueDefinition = ivd;
             }
-        });
+        }
 
-        if (matchedItemValue == null) {
+        if (matchedItemValueDefinition == null) {
             log.error("acceptRepresentation() - badRequest: trying to create a DIV with an IVD not belonging to the DI ID.");
             badRequest();
             return;
@@ -228,7 +226,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
         // Cannot create new ItemValues for ItemValueDefinitions which are used in the DrillDown for the owning
         // ItemDefinition
-        if (getDataItem().getItemDefinition().isDrillDownValue(matchedItemValue.getName())) {
+        if (getDataItem().getItemDefinition().isDrillDownValue(matchedItemValueDefinition.getName())) {
             log.error("acceptRepresentation() - badRequest: trying to create a DIV that is a DrillDown value.");
             badRequest();
             return;
@@ -242,18 +240,14 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         }
 
         // The new DataItemValue must be unique on itemValueDefinitionUid + startDate.
-        String check1 = valueDefinitionUid + startDate.getTime();
-        for (ItemValue iv : getDataItem().getActiveItemValues()) {
-            String check2 = iv.getItemValueDefinition().getUid() + iv.getStartDate().getTime();
-            if (check1.equals(check2)) {
-                log.error("acceptRepresentation() - badRequest: trying to create a DIV with the same IVD and StartDate as an existing DIV.");
-                badRequest();
-                return;
-            }
+        if (!getDataItem().isUnique(valueDefinitionUid, startDate)) {
+            log.error("acceptRepresentation() - badRequest: trying to create a DIV with the same IVD and StartDate as an existing DIV.");
+            badRequest();
+            return;
         }
 
         //Create the new ItemValue entity.
-        ItemValue newDataItemValue = new ItemValue(matchedItemValue.getItemValueDefinition(), getDataItem(), value);
+        ItemValue newDataItemValue = new ItemValue(matchedItemValueDefinition, getDataItem(), value);
         newDataItemValue.setStartDate(startDate);
 
         // Unit and PerUnit values are not currently supported for DataItemValues, only ProfileItemValues - 08/06/09 steve@amee.com
@@ -321,7 +315,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
         // update ItemValues if supplied
         for (String name : form.getNames()) {
-            ItemValue itemValue = dataItem.matchItemValue(name);
+            ItemValue itemValue = dataItem.getItemValue(name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
             }
