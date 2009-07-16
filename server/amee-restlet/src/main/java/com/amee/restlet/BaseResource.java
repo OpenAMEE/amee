@@ -324,12 +324,15 @@ public abstract class BaseResource extends Resource {
     }
 
     private void status(Status status, APIFault fault) {
-        log.info("status() - status code " + status + " message: " + ((fault != null) ? fault.toString() : "<EMPTY>"));
+        log.warn("status() - status code " + status + " message: " + ((fault != null) ? fault.toString() : ""));
+        RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
         if (fault != null) {
+            ctx.setError(fault.toString());
             getResponse().setStatus(status, fault.toString());
         } else {
             getResponse().setStatus(status);
         }
+        log.warn(ctx.toString());
     }
 
     public Form getForm() {

@@ -71,7 +71,7 @@ public class RequestContext {
             sb.append("profile", profileUid);
         sb.append("path", requestPath);
         sb.append("method", method);
-        sb.append("paramters", requestParameters);
+        sb.append("parameters", requestParameters);
         sb.append("error", error);
         return sb.toString();
     }
