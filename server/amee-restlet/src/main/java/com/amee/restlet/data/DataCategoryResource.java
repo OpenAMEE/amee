@@ -70,6 +70,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     private List<DataCategory> dataCategories;
     private DataItem dataItem;
     private List<DataItem> dataItems;
+    private String type = "";
 
     @Autowired
     private DataCategoryResourceBuilder builder;
@@ -162,11 +163,13 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             dataService.clearCaches(thisDataCategory);
             if (isPost()) {
                  if (isBatchPost()) {
-                     successfulBatchPost();
-                 } else if (dataCategory != null) {
-                     successfulPost(getFullPath(), dataCategory.getPath());
+                    successfulBatchPost();
+                 } else if (type.equalsIgnoreCase("DC")) {
+                    successfulPost(getFullPath(), dataCategory.getPath());
+                 } else if (type.equalsIgnoreCase("DI")) {
+                    successfulPost(getFullPath(), dataItem.getUid());
                  } else {
-                     successfulPost(getFullPath(), dataItem.getUid());
+                    badRequest();
                  }
              } else {
                  successfulPut(getFullPath());
@@ -294,7 +297,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     protected void acceptFormPost(Form form) {
         log.debug("acceptFormPost()");
-        String type = form.getFirstValue("newObjectType");
+        type = form.getFirstValue("newObjectType");
         if (type != null) {
             if (type.equalsIgnoreCase("DC")) {
                 if (dataBrowser.getDataCategoryActions().isAllowCreate()) {
