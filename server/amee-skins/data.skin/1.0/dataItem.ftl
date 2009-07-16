@@ -12,8 +12,6 @@
 <h2>Data Item Details</h2>
 <p><#if dataItem.name != ''>Name: ${dataItem.name}<br/></#if>
     <#if dataItem.path != ''>Path: ${dataItem.path}<br/></#if>
-    Start Date: ${startEndDate(dataItem.startDate)}<br/>
-    End Date: <#if dataItem.endDate??>${startEndDate(dataItem.endDate)}<#else>None</#if><br/>
     Full Path: ${basePath}<br/>
     Label: ${dataItem.label}<br/>
     Item Definition: ${dataItem.itemDefinition.name}<br/>
@@ -53,8 +51,6 @@
     <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
         Name: <input name='name' value='${dataItem.name}' type='text' size='30' style="margin-left:25px"/><br/>
         Path: <input name='path' value='${dataItem.path}' type='text' size='30'style="margin-left:35px" /><br/>
-        StartDate: <input name='startDate' value='${startEndDate(dataItem.startDate)}' type='text' size='20'/> (yyyy-MM-dd'T'HH:mm:ssZ)<br/>
-        EndDate: <input name='endDate' value='<#if dataItem.endDate??>${startEndDate(dataItem.endDate)}</#if>' type='text' size='20' style="margin-left:6px"/> (yyyy-MM-dd'T'HH:mm:ssZ)<br/><br/>
         <input type='submit' value='Update'/>
     </form>
 </p>

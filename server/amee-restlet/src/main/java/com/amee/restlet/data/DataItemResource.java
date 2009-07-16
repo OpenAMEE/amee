@@ -287,6 +287,11 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             dataItem.setPath(form.getFirstValue("path"));
         }
 
+        /**
+
+         Out-commenting DI startDate/endDate functionality. Pending final approval from AC, this will be
+         permanently deleted in due course - SM (15/07/09).
+
         // update 'startDate' value
         if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
             dataItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
@@ -312,6 +317,8 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             badRequest();
             return;
         }
+
+        */
 
         // update ItemValues if supplied
         for (String name : form.getNames()) {

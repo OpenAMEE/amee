@@ -20,7 +20,6 @@
 package com.amee.restlet.data;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
@@ -36,6 +35,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,10 +51,7 @@ import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component("dataCategoryResource")
 @Scope("prototype")
@@ -61,6 +59,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     private final Log log = LogFactory.getLog(getClass());
 
+    private static final Date EPOCH = new DateTime(0, DateTimeZone.UTC).toDate();
+    
     @Autowired
     private DataService dataService;
 
@@ -456,6 +456,11 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
 
         // determine startdate for new DataItem
+        /*
+
+        Out-commenting DI startDate/endDate functionality. Pending final approval from AC, this will be 
+        permanently deleted in due course - SM (15/07/09).
+
         StartEndDate startDate = new StartEndDate(form.getFirstValue("startDate"));
         dataItem.setStartDate(startDate);
 
@@ -473,6 +478,10 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             badRequest(APIFault.INVALID_DATE_RANGE);
             return null;
         }
+        */
+
+        // Default the DataItem startDate to the EPOCH
+        dataItem.setStartDate(EPOCH);
 
         dataService.persist(dataItem);
 
