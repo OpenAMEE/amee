@@ -354,10 +354,12 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     /**
      * Set the effective start date for {@link ItemValue} look-ups.
      *
-     * @param effectiveStartDate - the effective start date for {@link ItemValue} look-ups
+     *
+     * @param effectiveStartDate - the effective start date for {@link ItemValue} look-ups. If NULL or
+     * before {@link com.amee.domain.data.Item#getStartDate()} this value is ignored.
      */
     public void setEffectiveStartDate(Date effectiveStartDate) {
-        if (effectiveStartDate == null)
+        if (effectiveStartDate == null || effectiveStartDate.before(getStartDate()))
             return;
         this.effectiveStartDate = effectiveStartDate;
     }
@@ -380,10 +382,12 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     /**
      * Set the effective end date for {@link ItemValue} look-ups.
      *
-     * @param effectiveEndDate - the effective end date for {@link ItemValue} look-ups
+     * @param effectiveEndDate - the effective end date for {@link ItemValue} look-ups. If NULL or
+     * after {@link com.amee.domain.data.Item#getEndDate()} (if set) this value is ignored.
      */
     public void setEffectiveEndDate(Date effectiveEndDate) {
-        if (effectiveEndDate == null)
+        if (effectiveEndDate == null ||
+                (getEndDate() != null && effectiveEndDate.after(getEndDate())))
             return;
         this.effectiveEndDate = effectiveEndDate;
     }
