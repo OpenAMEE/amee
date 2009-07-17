@@ -25,10 +25,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * A class representing a series of {@link DataPoint} values.
@@ -36,6 +33,10 @@ import java.util.List;
 public class DataSeries {
 
     private List<DataPoint> dataPoints = new ArrayList<DataPoint>();
+
+    /// These dates will be used to define a query window on the series.
+    private DateTime seriesStartDate;
+    private DateTime seriesEndDate;
 
     /**
      * Construct an empty series.
@@ -53,13 +54,15 @@ public class DataSeries {
         this.dataPoints = new ArrayList<DataPoint>(dataPoints);
     }
 
-    private Decimal getSeriesTimeInMillis() {
+    protected Decimal getSeriesTimeInMillis() {
         if (dataPoints.isEmpty()) {
             return Decimal.ZERO;
         }
 
-        DateTime seriesStart = dataPoints.get(0).getDateTime();
-        DateTime seriesEnd = dataPoints.get(dataPoints.size() -1).getDateTime();
+        DateTime first = dataPoints.get(0).getDateTime();
+        DateTime last = dataPoints.get(dataPoints.size() -1).getDateTime();
+        DateTime seriesStart = seriesStartDate != null && seriesStartDate.isAfter(first) ? seriesStartDate : first;
+        DateTime seriesEnd = seriesEndDate !=null && last.isAfter(seriesEndDate) ? seriesEndDate : last;
         return new Decimal(seriesEnd.getMillis() - seriesStart.getMillis());
     }
 
@@ -89,8 +92,8 @@ public class DataSeries {
      * @param series - the DataSeries to add
      * @return a new DataSeries representing the addition of the two DataSeries
      */
-    public DataSeries add(DataSeries series) {
-        return combine(series, new AddOperation());
+    public DataSeries plus(DataSeries series) {
+        return combine(series, new PlusOperation());
     }
 
     /**
@@ -99,10 +102,10 @@ public class DataSeries {
      * @param dataPoint - the DataPoint to add
      * @return a new DataSeries representing the addition of the DataSeries and the DataPoint
      */
-    public DataSeries add(DataPoint dataPoint) {
+    public DataSeries plus(DataPoint dataPoint) {
         DataSeries series = new DataSeries();
         series.addDataPoint(dataPoint);
-        return add(series);
+        return plus(series);
     }
 
     /**
@@ -111,10 +114,10 @@ public class DataSeries {
      * @param f - the float value to add
      * @return a new DataSeries representing the addition of the float value and the DataSeries
      */
-    public DataSeries add(float f) {
+    public DataSeries plus(float f) {
         List<DataPoint> combinedDataPoints = new ArrayList<DataPoint>();
         for (DataPoint dp : dataPoints) {
-            combinedDataPoints.add(dp.add(f));
+            combinedDataPoints.add(dp.plus(f));
         }
         return new DataSeries(combinedDataPoints); 
     }
@@ -294,6 +297,28 @@ public class DataSeries {
         dataPoints.add(dataPoint);
     }
 
+    /**
+     * Set the start of the query window.
+     *
+     * @param seriesStartDate - the start of the query window
+     */
+    public void setSeriesStartDate(DateTime seriesStartDate) {
+        if (seriesStartDate == null)
+            return;
+        this.seriesStartDate = seriesStartDate;
+    }
+
+    /**
+     * Set the end of the query window.
+     *
+     * @param seriesEndDate - the end of the query window
+     */
+    public void setSeriesEndDate(DateTime seriesEndDate) {
+        if (seriesEndDate == null)
+            return;
+        this.seriesEndDate = seriesEndDate;
+    }
+
 }
 
 /**
@@ -313,9 +338,9 @@ abstract class Operation {
     abstract DataPoint operate();
 }
 
-class AddOperation extends Operation {
+class PlusOperation extends Operation {
     public DataPoint operate() {
-        return lhs.add(rhs);
+        return lhs.plus(rhs);
     }
 }
 
