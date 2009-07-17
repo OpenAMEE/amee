@@ -246,29 +246,31 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         for (Object path : itemValueMap.keySet()) {
             // Get all ItemValues with this ItemValueDefinition path.
             List<ItemValue> itemValues = getAllItemValues((String) path);
-            if (itemValues.size() == 1 && !itemValues.get(0).getItemValueDefinition().isForceTimeSeries() ) {
-                addSingleValuedItemValue(values, itemValues);
-            } else if (itemValues.size() > 1) {
-                addTimeSeriesItemValue(values, itemValues);
-
+            if (itemValues.size() > 1 || itemValues.get(0).getItemValueDefinition().isForceTimeSeries() ) {
+                appendTimeSeriesItemValue(values, itemValues);
+            } else if (itemValues.size() == 1) {
+                appendSingleValuedItemValue(values, itemValues.get(0));
             }
         }
     }
 
     // Add an ItemValue timeseries to the InternalValue collection.
     @SuppressWarnings("unchecked")
-    private void addTimeSeriesItemValue(Map<ItemValueDefinition, InternalValue> values, List<ItemValue> itemValues) {
+    private void appendTimeSeriesItemValue(Map<ItemValueDefinition, InternalValue> values, List<ItemValue> itemValues) {
         ItemValueDefinition ivd = itemValues.get(0).getItemValueDefinition();
+
         // Add all ItemValues with usable values
         List<ItemValue> usableSet = (List<ItemValue>) CollectionUtils.select(itemValues, new UsableValuePredicate());
-        values.put(ivd, new InternalValue(usableSet));
+
+        if (!usableSet.isEmpty()) {
+            values.put(ivd, new InternalValue(usableSet, getEffectiveStartDate(), getEffectiveEndDate()));
+        }
     }
 
     // Add a single-valued ItemValue to the InternalValue collection.
-    private void addSingleValuedItemValue(Map<ItemValueDefinition, InternalValue> values, List<ItemValue> itemValues) {
-        ItemValue iv = itemValues.get(0);
-        if (iv.isUsableValue()) {
-            values.put(iv.getItemValueDefinition(), new InternalValue(iv));
+    private void appendSingleValuedItemValue(Map<ItemValueDefinition, InternalValue> values, ItemValue itemValue) {
+        if (itemValue.isUsableValue()) {
+            values.put(itemValue.getItemValueDefinition(), new InternalValue(itemValue));
         }
     }
 
@@ -374,7 +376,8 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         if (effectiveStartDate != null) {
             return effectiveStartDate;
         } else {
-            return (getStartDate().before(new Date())) ? new Date() : getStartDate();
+            Date now = new Date();
+            return (getStartDate().before(now) ? now : getStartDate());
         }
     }
 
