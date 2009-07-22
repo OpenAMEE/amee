@@ -27,6 +27,7 @@ import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -105,22 +106,37 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
 
     @Override
     public boolean isValid() {
-        return super.isValid() && getDataItem() != null &&
+        return super.isValid() &&
+                getDataItem() != null &&
                 (isItemValueValid() || isItemValuesValid());
     }
 
     private boolean isItemValueValid() {
         return this.itemValue != null &&
+                !this.itemValue.isTrash() &&
                 this.itemValue.getItem().equals(getDataItem()) &&
                 this.itemValue.getEnvironment().equals(environment);
     }
 
 
+    @SuppressWarnings(value = "unchecked")
     private boolean isItemValuesValid() {
         if (itemValues == null)
             return false;
-        ItemValue test = (ItemValue) CollectionUtils.get(itemValues,0);
-        return test.getItem().equals(getDataItem()) && test.getEnvironment().equals(environment);
+
+        itemValues = (List<ItemValue>) CollectionUtils.select(itemValues, new Predicate() {
+
+            @Override
+            public boolean evaluate(Object o) {
+                ItemValue iv = (ItemValue) o;
+                return !iv.isTrash() &&
+                       iv.getItem().equals(getDataItem()) &&
+                       iv.getEnvironment().equals(environment);
+            }
+        });
+
+        return !itemValues.isEmpty();
+
     }
 
     @Override

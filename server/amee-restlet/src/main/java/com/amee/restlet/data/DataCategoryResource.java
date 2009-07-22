@@ -85,7 +85,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (getDataCategory() != null) &&
+                getDataCategory() != null &&
+                !getDataCategory().isTrash() &&
                 getDataCategory().getEnvironment().equals(environment);
     }
 
@@ -385,13 +386,15 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         return true;
     }
 
-    // A unique DataCategory is one with a unique path within it's set of sibling DataCategories.
+    // A unique DataCategory is one with a unique path within it's set of un-trashed sibling DataCategories.
     private boolean isUnique(DataCategory dataCategory) {
         boolean unique = true;
         for (PathItem sibling : getPathItem().getChildrenByType("DC")) {
             if (sibling.getPath().equals(dataCategory.getPath())) {
-                unique = false;
-                break;
+                if (!dataService.getDataCategoryByUid(sibling.getUid()).isTrash()) {
+                    unique = false;
+                    break;
+                }
             }
         }
         return unique;
@@ -436,7 +439,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 // update DataItem
                 uid = form.getFirstValue("dataItemUid");
                 if (uid != null) {
-                    dataItem = dataService.getDataItemByUid(
+                    dataItem = dataService.getDataItem(
                             environment,
                             uid);
                     if (dataItem != null) {

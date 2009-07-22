@@ -43,7 +43,7 @@ public abstract class AMEEEntity implements DatedObject, Serializable {
     private String uid = "";
 
     @Column(name = "STATUS")
-    private AMEEStatus status = AMEEStatus.ACTIVE;
+    protected AMEEStatus status = AMEEStatus.ACTIVE;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED", nullable = false)

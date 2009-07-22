@@ -20,8 +20,8 @@
 package com.amee.service.data;
 
 import com.amee.domain.APIVersion;
-import com.amee.domain.UidGen;
 import com.amee.domain.StartEndDate;
+import com.amee.domain.UidGen;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
@@ -29,6 +29,7 @@ import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.Choices;
 import com.amee.domain.sheet.Sheet;
+import com.amee.domain.sheet.Choice;
 import com.amee.service.BaseService;
 import com.amee.service.path.PathItemService;
 import com.amee.service.transaction.TransactionController;
@@ -38,10 +39,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Primary service interface to Data Resources.
@@ -69,11 +67,22 @@ public class DataService extends BaseService {
     // DataCategories
 
     public DataCategory getDataCategoryByUid(String uid) {
-        return dao.getDataCategoryByUid(uid);
+        DataCategory dataCategory =  dao.getDataCategoryByUid(uid);
+        if (dataCategory != null && !dataCategory.isTrash()) {
+            return dataCategory;
+        } else {
+            return null;
+        }
     }
 
     public List<DataCategory> getDataCategories(Environment environment) {
-        return dao.getDataCategories(environment);
+        List<DataCategory> activeCategories = new ArrayList<DataCategory>();
+        for(DataCategory dataCategory : dao.getDataCategories(environment)) {
+            if (dataCategory != null && !dataCategory.isTrash()) {
+                activeCategories.add(dataCategory);     
+            }
+        }
+        return activeCategories;
     }
 
     public void persist(DataCategory dataCategory) {
@@ -111,22 +120,30 @@ public class DataService extends BaseService {
         return dataItem;
     }
 
-    public DataItem getDataItemByUid(Environment environment, String uid) {
+    private DataItem getDataItemByUid(Environment environment, String uid) {
         DataItem dataItem = dao.getDataItemByUid(uid);
-        checkEnvironmentObject(environment, dataItem);
-        checkDataItem(dataItem);
-        return dataItem;
+        if (dataItem != null && !dataItem.isTrash()) {
+            checkEnvironmentObject(environment, dataItem);
+            checkDataItem(dataItem);
+            return dataItem;
+        } else {
+            return null;
+        }
     }
 
-    public DataItem getDataItemByPath(Environment environment, String path) {
+    private DataItem getDataItemByPath(Environment environment, String path) {
         DataItem dataItem = dao.getDataItemByPath(environment, path);
-        checkEnvironmentObject(environment, dataItem);
-        checkDataItem(dataItem);
-        return dataItem;
+        if (dataItem != null && !dataItem.isTrash()) {
+            checkEnvironmentObject(environment, dataItem);
+            checkDataItem(dataItem);
+            return dataItem;
+        } else {
+            return null;
+        }
     }
 
     public List<DataItem> getDataItems(DataCategory dataCategory) {
-        return checkDataItem(dao.getDataItems(dataCategory));
+        return checkDataItems(dao.getDataItems(dataCategory));
     }
 
     public List<DataItem> getDataItems(DataCategory dc, StartEndDate startDate) {
@@ -161,14 +178,18 @@ public class DataService extends BaseService {
             }
         }
 
-        return checkDataItem(dataItems);
+        return checkDataItems(dataItems);
     }
 
-    public List<DataItem> checkDataItem(List<DataItem> dataItems) {
+    private List<DataItem> checkDataItems(List<DataItem> dataItems) {
+        List<DataItem> activeDataItems = new ArrayList<DataItem>();
         for (DataItem dataItem : dataItems) {
-            checkDataItem(dataItem);
+            if (!dataItem.isTrash()) {
+                checkDataItem(dataItem);
+                activeDataItems.add(dataItem);
+            }        
         }
-        return dataItems;
+        return activeDataItems;
     }
 
     /**
@@ -226,12 +247,6 @@ public class DataService extends BaseService {
         dao.remove(dataItem);
     }
 
-    // ItemValues
-
-    public ItemValue getItemValueByUID(String uid) {
-        return dao.getItemValueByUid(uid);
-    }
-
     public void remove(ItemValue dataItemValue) {
         dao.remove(dataItemValue);    
     }
@@ -241,7 +256,24 @@ public class DataService extends BaseService {
         return dataSheetService.getSheet(browser);
     }
 
+    @SuppressWarnings(value = "unchecked")
     public Choices getUserValueChoices(DataItem di, APIVersion apiVersion) {
-        return dao.getUserValueChoices(di, apiVersion);
+        List<Choice> userValueChoices = new ArrayList<Choice>();
+        for (ItemValueDefinition ivd : di.getItemDefinition().getItemValueDefinitions()) {
+            if (ivd.isFromProfile() && ivd.isValidInAPIVersion(apiVersion)) {
+                // start default value with value from ItemValueDefinition
+                String defaultValue = ivd.getValue();
+                // next give DataItem a chance to set the default value, if appropriate
+                if (ivd.isFromData()) {
+                    ItemValue dataItemValue = di.getItemValue(ivd.getPath());
+                    if ((dataItemValue != null) && (dataItemValue.getValue().length() > 0)) {
+                        defaultValue = dataItemValue.getValue();
+                    }
+                }
+                // create Choice
+                userValueChoices.add(new Choice(ivd.getPath(), defaultValue));
+            }
+        }
+        return new Choices("userValueChoices", userValueChoices);
     }
 }

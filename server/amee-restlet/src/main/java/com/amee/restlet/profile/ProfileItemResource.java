@@ -78,8 +78,9 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (getProfileItem() != null) &&
-                (getDataCategory() != null) &&
+                getProfileItem() != null &&
+                !getProfileItem().isTrash() &&
+                getDataCategory() != null &&
                 getProfileItem().getProfile().equals(getProfile()) &&
                 getProfileItem().getDataCategory().equals(getDataCategory()) &&
                 getProfileItem().getEnvironment().equals(environment);

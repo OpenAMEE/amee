@@ -3,12 +3,13 @@ package com.amee.service.environment;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
+import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
+import com.amee.domain.profile.Profile;
 import com.amee.domain.site.Site;
 import com.amee.service.ThreadBeanHolder;
-import com.amee.service.data.DataServiceDAO;
-import com.amee.service.definition.DefinitionServiceDAO;
-import com.amee.service.profile.ProfileServiceDAO;
+import com.amee.service.data.DataService;
+import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,26 +35,47 @@ public class EnvironmentService implements Serializable {
     private EntityManager entityManager;
 
     @Autowired
-    private ProfileServiceDAO profileServiceDao;
+    private DataService dataService;
 
     @Autowired
-    private DataServiceDAO dataServiceDao;
-
-    @Autowired
-    private DefinitionServiceDAO definitionServiceDAO;
-
+    private ProfileService profileService;
+    
     // Events
 
+    @SuppressWarnings(value = "unchecked")
     public void beforeEnvironmentDelete(Environment environment) {
         log.debug("beforeEnvironmentDelete");
-        profileServiceDao.beforeEnvironmentDelete(environment);
-        dataServiceDao.beforeEnvironmentDelete(environment);
-        definitionServiceDAO.beforeEnvironmentDelete(environment);
+        List<Profile> profiles = entityManager.createQuery(
+                "SELECT p " +
+                        "FROM Profile p " +
+                        "WHERE p.environment.id = :environmentId " +
+                        "AND p.status = :active")
+                .setParameter("environmentId", environment.getId())
+                .setParameter("active", AMEEStatus.ACTIVE)
+                .getResultList();
+        for (Profile profile : profiles) {
+            profileService.remove(profile);
+        }
+
+        // trash root DataCategories
+        List<DataCategory> dataCategories = entityManager.createQuery(
+                "UPDATE DataCategory " +
+                        "SET status = :trash, " +
+                        "modified = current_timestamp() " +
+                        "WHERE environment.id = :environmentId " +
+                        "AND dataCategory IS NULL " +
+                        "AND status = :active")
+                .setParameter("trash", AMEEStatus.TRASH)
+                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("environmentId", environment.getId())
+                .getResultList();
+        for (DataCategory dataCategory : dataCategories) {
+            dataService.remove(dataCategory);
+        }
     }
 
     public void beforeSiteDelete(Site site) {
         log.debug("beforeSiteDelete");
-        // TODO
     }
 
     // Environments
@@ -79,6 +101,7 @@ public class EnvironmentService implements Serializable {
         return environment;
     }
 
+    @SuppressWarnings(value = "unchecked")
     public List<Environment> getEnvironments() {
         List<Environment> environments = entityManager.createQuery(
                 "FROM Environment e " +
@@ -90,6 +113,7 @@ public class EnvironmentService implements Serializable {
         return environments;
     }
 
+    @SuppressWarnings(value = "unchecked")
     public List<Environment> getEnvironments(Pager pager) {
         // first count all environments
         long count = (Long) entityManager.createQuery(
@@ -136,6 +160,7 @@ public class EnvironmentService implements Serializable {
 
     // API Versions
 
+    @SuppressWarnings(value = "unchecked")
     public List<APIVersion> getAPIVersions() {
         List<APIVersion> apiVersions = entityManager.createQuery(
                 "FROM APIVersion av " +

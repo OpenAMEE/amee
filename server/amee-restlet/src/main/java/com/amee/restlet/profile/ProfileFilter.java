@@ -69,7 +69,7 @@ public class ProfileFilter extends RewriteFilter {
                 // look for Profile matching path
                 Environment environment = (Environment) request.getAttributes().get("environment");
                 Profile profile = profileService.getProfile(environment, profileUid);
-                if (profile != null) {
+                if (profile != null && profile.isActive()) {
                     // we found a Profile. Make available to request scope.
                     request.getAttributes().put("profile", profile);
                     ((RequestContext) ThreadBeanHolder.get("ctx")).setProfile(profile);

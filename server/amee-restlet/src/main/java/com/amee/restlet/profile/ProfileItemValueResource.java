@@ -79,9 +79,10 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (getProfileItemValue() != null) &&
-                (getProfileItem() != null) &&
-                (getDataCategory() != null) &&
+                getProfileItemValue() != null &&
+                !getProfileItemValue().isTrash() &&
+                getProfileItem() != null &&
+                getDataCategory() != null &&
                 getProfileItem().getDataCategory().equals(getDataCategory()) &&
                 getProfileItem().getProfile().equals(getProfile()) &&
                 getProfileItemValue().getItem().equals(getProfileItem()) &&

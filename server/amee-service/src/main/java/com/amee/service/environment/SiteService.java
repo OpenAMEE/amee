@@ -8,11 +8,12 @@ import com.amee.domain.auth.GroupUser;
 import com.amee.domain.auth.Role;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
+import com.amee.domain.profile.Profile;
 import com.amee.domain.site.App;
 import com.amee.domain.site.Site;
 import com.amee.domain.site.SiteApp;
 import com.amee.service.ThreadBeanHolder;
-import com.amee.service.profile.ProfileServiceDAO;
+import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,16 +39,46 @@ public class SiteService implements Serializable {
     private EnvironmentService environmentService;
 
     @Autowired
-    private ProfileServiceDAO profileServiceDao;
+    private ProfileService profileService;
 
     // Events
 
     // TODO: Other entities to cascade dependencies from?
 
+     @SuppressWarnings(value = "unchecked")
     public void beforeUserDelete(User user) {
         log.debug("beforeUserDelete");
-        profileServiceDao.beforeUserDelete(user);
-        // TODO: More cascade dependencies?
+        List<Profile> profiles = entityManager.createQuery(
+                "SELECT p " +
+                        "FROM Profile p " +
+                        "WHERE p.environment.id = :environmentId " +
+                        "AND p.permission.user.id = :userId " +
+                        "AND p.status = :active")
+                .setParameter("environmentId", user.getEnvironment().getId())
+                .setParameter("userId", user.getId())
+                .setParameter("active", AMEEStatus.ACTIVE)
+                .getResultList();
+        for (Profile profile : profiles) {
+            profileService.remove(profile);
+        }
+    }
+
+    @SuppressWarnings(value = "unchecked")
+    public void beforeGroupDelete(Group group) {
+        log.debug("beforeGroupDelete");
+        List<Profile> profiles = entityManager.createQuery(
+                "SELECT p " +
+                        "FROM Profile p " +
+                        "WHERE p.environment.id = :environmentId " +
+                        "AND p.permission.group.id = :groupId " +
+                        "AND p.status = :active")
+                .setParameter("environmentId", group.getEnvironment().getId())
+                .setParameter("groupId", group.getId())
+                .setParameter("active", AMEEStatus.ACTIVE)
+                .getResultList();
+        for (Profile profile : profiles) {
+            profileService.remove(profile);
+        }
     }
 
     public void beforeSiteDelete(Site site) {
@@ -58,12 +89,6 @@ public class SiteService implements Serializable {
 
     public void beforeSiteAppDelete(SiteApp siteApp) {
         log.debug("beforeSiteAppDelete");
-        // TODO: More cascade dependencies?
-    }
-
-    public void beforeGroupDelete(Group group) {
-        log.debug("beforeGroupDelete");
-        profileServiceDao.beforeGroupDelete(group);
         // TODO: More cascade dependencies?
     }
 
@@ -786,4 +811,5 @@ public class SiteService implements Serializable {
                 .getResultList();
         return apps;
     }
+
 }

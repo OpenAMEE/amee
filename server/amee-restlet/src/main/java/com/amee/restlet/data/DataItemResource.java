@@ -102,8 +102,9 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (getDataItem() != null) &&
-                (getDataCategory() != null) &&
+                getDataItem() != null &&
+                !getDataItem().isTrash() &&
+                getDataCategory() != null &&
                 getDataItem().getDataCategory().equals(getDataCategory()) &&
                 getDataItem().getEnvironment().equals(environment);
     }

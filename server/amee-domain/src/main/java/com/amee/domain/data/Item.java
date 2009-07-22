@@ -23,6 +23,7 @@ import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.InternalValue;
 import com.amee.domain.StartEndDate;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -167,7 +168,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         if (activeItemValues == null) {
             activeItemValues = new HashSet<ItemValue>();
             for (ItemValue iv : itemValues) {
-                if (iv.isActive()) {
+                if (!iv.isTrash()) {
                     activeItemValues.add(iv);
                 }
             }
@@ -381,7 +382,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
-
     /**
      * Set the effective end date for {@link ItemValue} look-ups.
      *
@@ -426,7 +426,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
         return true;
     }
-
+  
 }
 
 /**
