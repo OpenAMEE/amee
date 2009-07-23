@@ -114,7 +114,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Override
     public void handleGet() {
-        log.debug("handleGet()");
+        log.debug("handleGet()");                                                
         if (dataBrowser.getDataCategoryActions().isAllowView()) {
             if (getAPIVersion().isNotVersionOne()) {
                 Form form = getRequest().getResourceRef().getQueryAsForm();

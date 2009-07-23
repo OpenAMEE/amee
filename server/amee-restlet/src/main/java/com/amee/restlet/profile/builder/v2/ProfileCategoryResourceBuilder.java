@@ -14,7 +14,9 @@ import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
 import com.amee.service.path.PathItemService;
+import com.amee.service.profile.OnlyActiveProfileService;
 import com.amee.service.profile.ProfileBrowser;
+import com.amee.service.profile.ProfileService;
 import com.amee.service.profile.SelectByProfileService;
 import org.apache.abdera.ext.history.FeedPagingHelper;
 import org.apache.abdera.ext.opensearch.OpenSearchExtensionFactory;
@@ -63,7 +65,10 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     private SelectByProfileService selectByProfileService;
 
     @Autowired
-    private com.amee.service.profile.OnlyActiveProfileService onlyActiveProfileService;
+    private OnlyActiveProfileService onlyActiveProfileService;
+
+    @Autowired
+    private ProfileService profileService;
 
     @Autowired
     PathItemService pathItemService;
@@ -266,7 +271,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
                     browser.getSelectBy());
 
         } else {
-            return onlyActiveProfileService.getProfileItems(
+            return profileService.getProfileItems(
                     resource.getProfile(),
                     resource.getDataCategory(),
                     browser.getQueryStartDate(),

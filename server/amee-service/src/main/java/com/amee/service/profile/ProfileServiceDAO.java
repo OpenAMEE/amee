@@ -95,7 +95,7 @@ public class ProfileServiceDAO implements Serializable {
                 .getResultList();
         if (profiles.size() == 1) {
             log.debug("getProfileByPath() found: " + path);
-            profile = profiles.get(0);
+            profile = profiles.get(0);                                                                                                  
         } else {
             log.debug("getProfileByPath() NOT found: " + path);
         }
@@ -220,7 +220,8 @@ public class ProfileServiceDAO implements Serializable {
                         "AND pi.dataCategory.id = :dataCategoryId " +
                         "AND pi.profile.id = :profileId " +
                         "AND pi.startDate < :profileDate " +
-                        "AND pi.status = :active")
+                        "AND pi.status = :active " + 
+                        "ORDER BY pi.name, pi.dataItem, pi.startDate DESC")
                 .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .setParameter("profileId", profile.getId())
@@ -259,7 +260,7 @@ public class ProfileServiceDAO implements Serializable {
         if (endDate == null) {
             queryBuilder.append("(pi.endDate IS NULL OR pi.endDate > :startDate) ");
         } else {
-            queryBuilder.append("pi.startDate < :endDate AND (pi.endDate > :startDate OR pi.endDate IS NULL) ");
+            queryBuilder.append("(pi.startDate < :endDate) AND (pi.endDate IS NULL OR pi.endDate > :startDate) ");
         }
         queryBuilder.append("AND pi.status = :active ");
         queryBuilder.append("ORDER BY pi.startDate DESC");

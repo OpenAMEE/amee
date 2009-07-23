@@ -20,16 +20,15 @@
 package com.amee.service.data;
 
 import com.amee.domain.APIVersion;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.UidGen;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.environment.Environment;
+import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.domain.sheet.Sheet;
-import com.amee.domain.sheet.Choice;
 import com.amee.service.BaseService;
 import com.amee.service.path.PathItemService;
 import com.amee.service.transaction.TransactionController;
@@ -39,7 +38,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Primary service interface to Data Resources.
@@ -144,41 +146,6 @@ public class DataService extends BaseService {
 
     public List<DataItem> getDataItems(DataCategory dataCategory) {
         return checkDataItems(dao.getDataItems(dataCategory));
-    }
-
-    public List<DataItem> getDataItems(DataCategory dc, StartEndDate startDate) {
-        return getDataItems(dc, startDate, null);
-    }
-
-    public List<DataItem> getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
-
-        DataItem dataItem;
-        List<DataItem> dataItems;
-        Iterator<DataItem> i;
-
-        // code below replicates the query in:
-        // com.amee.data.dao.DataServiceDAO#getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate)
-
-        // TODO: date logic here should share code in com.amee.service.data.DrillDownDAO#isWithinTimeFrame
-        dataItems = dao.getDataItems(dataCategory);
-        i = dataItems.iterator();
-        if (endDate != null) {
-            while (i.hasNext()) {
-                dataItem = i.next();
-                if (!(dataItem.getStartDate().before(endDate) && ((dataItem.getEndDate() == null) || dataItem.getEndDate().after(startDate)))) {
-                    i.remove();
-                }
-            }
-        } else {
-            while (i.hasNext()) {
-                dataItem = i.next();
-                if (!((dataItem.getEndDate() == null) || dataItem.getEndDate().after(startDate))) {
-                    i.remove();
-                }
-            }
-        }
-
-        return checkDataItems(dataItems);
     }
 
     private List<DataItem> checkDataItems(List<DataItem> dataItems) {
