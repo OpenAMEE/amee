@@ -235,7 +235,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
         // The submitted startDate must be (i) after or equal to the startDate and (ii) before the endDate of the owning DataItem.
         if (!getDataItem().isWithinLifeTime(startDate)) {
-            log.error("acceptRepresentation() - badRequest: trying to create a DIV starting after the endDate of the owning DI.");
+            log.error("acceptRepresentation() - badRequest: trying to create a DIV outside the timespan of the owning DI.");
             badRequest();
             return;
         }
