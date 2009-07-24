@@ -20,7 +20,6 @@
 package com.amee.service.data;
 
 import com.amee.domain.AMEEStatus;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
@@ -37,7 +36,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
 
@@ -239,34 +237,6 @@ public class DataServiceDAO implements Serializable {
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
-    }
-
-    @SuppressWarnings(value = "unchecked")
-    protected List<DataItem> getDataItems(DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
-
-        String q = "SELECT DISTINCT di " +
-                "FROM DataItem di " +
-                "LEFT JOIN FETCH di.itemValues " +
-                "WHERE di.itemDefinition.id = :itemDefinitionId " +
-                "AND di.dataCategory.id = :dataCategoryId " +
-                "AND " + ((endDate != null) ? "di.startDate < :endDate AND (di.endDate > :startDate OR di.endDate IS NULL) " : "(di.endDate > :startDate OR di.endDate IS NULL) " +
-                "AND di.status = :active");
-
-        if ((dataCategory != null) && (dataCategory.getItemDefinition() != null)) {
-            Query query = entityManager.createQuery(q);
-            query.setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId());
-            query.setParameter("dataCategoryId", dataCategory.getId());
-            query.setParameter("startDate", startDate.toDate());
-            if (endDate != null) {
-                query.setParameter("endDate", endDate.toDate());
-            }
-            query.setParameter("active", AMEEStatus.ACTIVE);
-            query.setHint("org.hibernate.cacheable", true);
-            query.setHint("org.hibernate.cacheRegion", CACHE_REGION);
-            return query.getResultList();
-        } else {
-            return null;
-        }
     }
 
     protected void persist(DataItem dataItem) {
