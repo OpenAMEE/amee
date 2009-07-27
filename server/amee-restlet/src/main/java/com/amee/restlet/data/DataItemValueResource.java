@@ -63,7 +63,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     private List<ItemValue> itemValues;
 
     // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
-    private String select;
+    private int valuesPerPage = 1;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -84,8 +84,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         Form query = request.getResourceRef().getQueryAsForm();
 
         // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
-        if (StringUtils.isNotBlank(query.getFirstValue("select"))) {
-            this.select = query.getFirstValue("select");
+        if (StringUtils.isNumeric(query.getFirstValue("valuesPerPage"))) {
+            this.valuesPerPage = Integer.parseInt(query.getFirstValue("valuesPerPage"));
         }
 
         // The resource may receive a startDate parameter that sets the current date in an historical sequence of
@@ -95,9 +95,10 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             startDate = new StartEndDate(query.getFirstValue("startDate"));
         }
 
+        //TODO - Implement paging
         // Retrieve all itemValues in a historical sequence if mandated in the request (get=all), otherwise retrieve
         // the closest match
-        if (StringUtils.equals(select,"all")) {
+        if (valuesPerPage > 1) {
             this.itemValues = getDataItem().getAllItemValues(itemValueIdentifier);
         } else {
             this.itemValue = getDataItem().getItemValue(itemValueIdentifier, startDate);
