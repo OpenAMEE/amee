@@ -8,7 +8,6 @@ type="xml"
 curl -d next=/auth -d username=${user} -d password=${pswd} \
 	-H "Accept:application/${type}" \
 	--dump-header .headers \
-	--verbose \
 	-H "Host: ${host_header}" \
 	-c .cookies \
 	http://${amee_host}/${amee_url}
