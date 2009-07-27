@@ -53,10 +53,10 @@ public class SiteService implements Serializable {
                         "FROM Profile p " +
                         "WHERE p.environment.id = :environmentId " +
                         "AND p.permission.user.id = :userId " +
-                        "AND p.status = :active")
+                        "AND p.status != :trash")
                 .setParameter("environmentId", user.getEnvironment().getId())
                 .setParameter("userId", user.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .getResultList();
         for (Profile profile : profiles) {
             profileService.remove(profile);
@@ -71,10 +71,10 @@ public class SiteService implements Serializable {
                         "FROM Profile p " +
                         "WHERE p.environment.id = :environmentId " +
                         "AND p.permission.group.id = :groupId " +
-                        "AND p.status = :active")
+                        "AND p.status != :trash")
                 .setParameter("environmentId", group.getEnvironment().getId())
                 .setParameter("groupId", group.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .getResultList();
         for (Profile profile : profiles) {
             profileService.remove(profile);
@@ -110,10 +110,10 @@ public class SiteService implements Serializable {
                 "SELECT s FROM Site s " +
                         "WHERE s.uid = :uid " +
                         "AND s.environment.id = :environmentId " +
-                        "AND s.status = :active")
+                        "AND s.status != :trash")
                 .setParameter("uid", uid)
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -128,9 +128,9 @@ public class SiteService implements Serializable {
         List<Site> sites = entityManager.createQuery(
                 "SELECT s FROM Site s " +
                         "WHERE s.name = :name " +
-                        "AND s.status = :active")
+                        "AND s.status != :trash")
                 .setParameter("name", name.trim())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -148,9 +148,9 @@ public class SiteService implements Serializable {
                     "SELECT count(s) " +
                             "FROM Site s " +
                             "WHERE s.environment.id = :environmentId " +
-                            "AND s.status = :active")
+                            "AND s.status != :trash")
                     .setParameter("environmentId", environment.getId())
-                    .setParameter("active", AMEEStatus.ACTIVE)
+                    .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getSingleResult();
@@ -163,10 +163,10 @@ public class SiteService implements Serializable {
                 "SELECT s " +
                         "FROM Site s " +
                         "WHERE s.environment.id = :environmentId " +
-                        "AND s.status = :active " +
+                        "AND s.status != :trash " +
                         "ORDER BY " + orderBy)
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION);
         if (pager != null) {
@@ -187,9 +187,9 @@ public class SiteService implements Serializable {
         List<Site> sites = entityManager.createQuery(
                 "SELECT s " +
                         "FROM Site s " +
-                        "WHERE s.status = :active " +
+                        "WHERE s.status != :trash " +
                         "ORDER BY " + orderBy)
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -217,10 +217,10 @@ public class SiteService implements Serializable {
                 "SELECT sa FROM SiteApp sa, App a " +
                         "WHERE sa.site.id = :siteId " +
                         "AND sa.app.id = a.id " +
-                        "AND sa.status = :active " +
+                        "AND sa.status != :trash " +
                         "AND a.name = :appName")
                 .setParameter("siteId", site.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setParameter("appName", appName)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
@@ -237,10 +237,10 @@ public class SiteService implements Serializable {
                 "SELECT sa FROM SiteApp sa " +
                         "WHERE sa.site.id = :siteId " +
                         "AND sa.uid = :siteAppUid " +
-                        "AND sa.status = :active")
+                        "AND sa.status != :trash")
                 .setParameter("siteId", site.getId())
                 .setParameter("siteAppUid", siteAppUid)
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -257,9 +257,9 @@ public class SiteService implements Serializable {
                     "SELECT count(sa) " +
                             "FROM SiteApp sa " +
                             "WHERE sa.site.id = :siteId " +
-                            "AND sa.status = :active")
+                            "AND sa.status != :trash")
                     .setParameter("siteId", site.getId())
-                    .setParameter("active", AMEEStatus.ACTIVE)
+                    .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getSingleResult();
@@ -272,9 +272,9 @@ public class SiteService implements Serializable {
                 "SELECT sa " +
                         "FROM SiteApp sa " +
                         "WHERE sa.site.id = :siteId " +
-                        "AND sa.status = :active")
+                        "AND sa.status != :trash")
                 .setParameter("siteId", site.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION);
         if (pager != null) {
@@ -303,10 +303,10 @@ public class SiteService implements Serializable {
                 "SELECT g FROM Group g " +
                         "WHERE g.environment.id = :environmentId " +
                         "AND g.uid = :uid " +
-                        "AND g.status = :active")
+                        "AND g.status != :trash")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("uid", uid)
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -322,10 +322,10 @@ public class SiteService implements Serializable {
                 "SELECT g FROM Group g " +
                         "WHERE g.environment.id = :environmentId " +
                         "AND g.name = :name " +
-                        "AND g.status = :active")
+                        "AND g.status != :trash")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("name", name.trim())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -357,10 +357,10 @@ public class SiteService implements Serializable {
                 "SELECT g " +
                         "FROM Group g " +
                         "WHERE g.environment.id = :environmentId " +
-                        "AND g.status = :active " +
+                        "AND g.status != :trash " +
                         "ORDER BY g.name")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -378,9 +378,9 @@ public class SiteService implements Serializable {
                 "SELECT count(g) " +
                         "FROM Group g " +
                         "WHERE g.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND g.status = :active ")
+                        "AND g.status != :trash ")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION);
         if (!"".equals(pagerSetClause)) {
@@ -395,10 +395,10 @@ public class SiteService implements Serializable {
                 "SELECT g " +
                         "FROM Group g " +
                         "WHERE g.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND g.status = :active " +
+                        "AND g.status != :trash " +
                         "ORDER BY g.name")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -431,10 +431,10 @@ public class SiteService implements Serializable {
                     "SELECT gu FROM GroupUser gu " +
                             "WHERE gu.environment.id = :environmentId " +
                             "AND gu.uid = :uid " +
-                            "AND gu.status = :active")
+                            "AND gu.status != :trash")
                     .setParameter("environmentId", environment.getId())
                     .setParameter("uid", uid)
-                    .setParameter("active", AMEEStatus.ACTIVE)
+                    .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -453,11 +453,11 @@ public class SiteService implements Serializable {
                             "WHERE gu.environment.id = :environmentId " +
                             "AND gu.group.id = :groupId " +
                             "AND gu.user.id = :userId " +
-                            "AND gu.status = :active")
+                            "AND gu.status != :trash")
                     .setParameter("environmentId", group.getEnvironment().getId())
                     .setParameter("groupId", group.getId())
                     .setParameter("userId", user.getId())
-                    .setParameter("active", AMEEStatus.ACTIVE)
+                    .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -474,9 +474,9 @@ public class SiteService implements Serializable {
                 "SELECT count(gu) " +
                         "FROM GroupUser gu " +
                         "WHERE gu.group.id = :groupId " +
-                        "AND gu.status = :active")
+                        "AND gu.status != :trash")
                 .setParameter("groupId", group.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -489,10 +489,10 @@ public class SiteService implements Serializable {
                         "FROM GroupUser gu " +
                         "LEFT JOIN FETCH gu.user u " +
                         "WHERE gu.group.id = :groupId " +
-                        "AND gu.status = :active " +
+                        "AND gu.status != :trash " +
                         "ORDER BY u.username")
                 .setParameter("groupId", group.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -510,9 +510,9 @@ public class SiteService implements Serializable {
                 "SELECT count(gu) " +
                         "FROM GroupUser gu " +
                         "WHERE gu.user.id = :userId " +
-                        "AND gu.status = :active")
+                        "AND gu.status != :trash")
                 .setParameter("userId", user.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -525,10 +525,10 @@ public class SiteService implements Serializable {
                         "FROM GroupUser gu " +
                         "LEFT JOIN FETCH gu.group g " +
                         "WHERE gu.user.id = :userId " +
-                        "AND gu.status = :active " +
+                        "AND gu.status != :trash " +
                         "ORDER BY g.name")
                 .setParameter("userId", user.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -546,10 +546,10 @@ public class SiteService implements Serializable {
                         "FROM GroupUser gu " +
                         "LEFT JOIN FETCH gu.group g " +
                         "WHERE gu.user.id = :userId " +
-                        "AND gu.status = :active " +
+                        "AND gu.status != :trash " +
                         "ORDER BY g.name")
                 .setParameter("userId", user.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -562,9 +562,9 @@ public class SiteService implements Serializable {
                 "SELECT gu " +
                         "FROM GroupUser gu " +
                         "WHERE gu.environment.id = :environmentId " +
-                        "AND gu.status = :active")
+                        "AND gu.status != :trash")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -588,10 +588,10 @@ public class SiteService implements Serializable {
                 "SELECT r FROM Role r " +
                         "WHERE r.environment.id = :environmentId " +
                         "AND r.uid = :uid " +
-                        "AND r.status = :active")
+                        "AND r.status != :trash")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("uid", uid)
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -607,10 +607,10 @@ public class SiteService implements Serializable {
                 "SELECT r FROM Role r " +
                         "WHERE r.environment.id = :environmentId " +
                         "AND r.name = :name " +
-                        "AND r.status = :active")
+                        "AND r.status != :trash")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("name", name.trim())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -630,9 +630,9 @@ public class SiteService implements Serializable {
                 "SELECT count(r) " +
                         "FROM Role r " +
                         "WHERE r.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND r.status = :active")
+                        "AND r.status != :trash")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION);
         if (!"".equals(pagerSetClause)) {
@@ -647,10 +647,10 @@ public class SiteService implements Serializable {
                 "SELECT r " +
                         "FROM Role r " +
                         "WHERE r.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND r.status = :active " +
+                        "AND r.status != :trash " +
                         "ORDER BY r.name")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -671,10 +671,10 @@ public class SiteService implements Serializable {
                     "SELECT r " +
                             "FROM Role r " +
                             "WHERE r.environment.id = :environmentId " +
-                            "AND r.status = :active " +
+                            "AND r.status != :trash " +
                             "ORDER BY r.name")
                     .setParameter("environmentId", environment.getId())
-                    .setParameter("active", AMEEStatus.ACTIVE)
+                    .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -702,10 +702,10 @@ public class SiteService implements Serializable {
                     "SELECT u FROM User u " +
                             "WHERE u.environment.id = :environmentId " +
                             "AND u.uid = :userUid " +
-                            "AND u.status = :active")
+                            "AND u.status != :trash")
                     .setParameter("environmentId", environment.getId())
                     .setParameter("userUid", uid)
-                    .setParameter("active", AMEEStatus.ACTIVE)
+                    .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -722,10 +722,10 @@ public class SiteService implements Serializable {
                 "SELECT u FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
                         "AND u.username = :username " +
-                        "AND u.status = :active")
+                        "AND u.status != :trash")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("username", username.trim())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -741,9 +741,9 @@ public class SiteService implements Serializable {
                 "SELECT count(u) " +
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
-                        "AND u.status = :active")
+                        "AND u.status != :trash")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -755,10 +755,10 @@ public class SiteService implements Serializable {
                 "SELECT u " +
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
-                        "AND u.status = :active " +
+                        "AND u.status != :trash " +
                         "ORDER BY u.username")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -776,10 +776,10 @@ public class SiteService implements Serializable {
                     "SELECT u " +
                             "FROM User u " +
                             "WHERE u.environment.id = :environmentId " +
-                            "AND u.status = :active " +
+                            "AND u.status != :trash " +
                             "ORDER BY u.username")
                     .setParameter("environmentId", environment.getId())
-                    .setParameter("active", AMEEStatus.ACTIVE)
+                    .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -804,8 +804,8 @@ public class SiteService implements Serializable {
         List<App> apps = entityManager.createQuery(
                 "FROM App a " +
                         "ORDER BY a.name " +
-                        "AND a.status = :active ")
-                .setParameter("active", AMEEStatus.ACTIVE)
+                        "AND a.status != :trash ")
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();

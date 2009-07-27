@@ -65,7 +65,7 @@ public class ProfileServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(Profile.class);
             criteria.add(Restrictions.naturalId().set("uid", uid));
-            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<Profile> profiles = criteria.list();
@@ -86,10 +86,10 @@ public class ProfileServiceDAO implements Serializable {
                 "FROM Profile p " +
                         "WHERE p.path = :path " +
                         "AND p.environment.id = :environmentId " +
-                        "AND p.status = :active")
+                        "AND p.status != :trash")
                 .setParameter("path", path)
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -114,13 +114,13 @@ public class ProfileServiceDAO implements Serializable {
                         "AND ((p.permission.otherAllowView = :otherAllowView) " +
                         "     OR (p.permission.group.id = :groupId AND p.permission.groupAllowView = :groupAllowView) " +
                         "     OR (p.permission.user.id = :userId)) " +
-                        "AND p.status = :active")
+                        "AND p.status != :trash")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("groupId", group.getId())
                 .setParameter("userId", user.getId())
                 .setParameter("otherAllowView", true)
                 .setParameter("groupAllowView", true)
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -135,14 +135,14 @@ public class ProfileServiceDAO implements Serializable {
                         "AND ((p.permission.otherAllowView = :otherAllowView) " +
                         "     OR (p.permission.group.id = :groupId AND p.permission.groupAllowView = :groupAllowView) " +
                         "     OR (p.permission.user.id = :userId)) " +
-                        "AND p.status = :active " +
+                        "AND p.status != :trash " +
                         "ORDER BY p.created DESC")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("groupId", group.getId())
                 .setParameter("userId", user.getId())
                 .setParameter("otherAllowView", true)
                 .setParameter("groupAllowView", true)
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -179,7 +179,7 @@ public class ProfileServiceDAO implements Serializable {
             Criteria criteria = session.createCriteria(ProfileItem.class);
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
-            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
             criteria.setFetchMode("itemValues", FetchMode.JOIN);
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
@@ -220,13 +220,13 @@ public class ProfileServiceDAO implements Serializable {
                         "AND pi.dataCategory.id = :dataCategoryId " +
                         "AND pi.profile.id = :profileId " +
                         "AND pi.startDate < :profileDate " +
-                        "AND pi.status = :active " + 
+                        "AND pi.status != :trash " +
                         "ORDER BY pi.name, pi.dataItem, pi.startDate DESC")
                 .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .setParameter("profileId", profile.getId())
                 .setParameter("profileDate", profileDate)
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -262,7 +262,7 @@ public class ProfileServiceDAO implements Serializable {
         } else {
             queryBuilder.append("(pi.startDate < :endDate) AND (pi.endDate IS NULL OR pi.endDate > :startDate) ");
         }
-        queryBuilder.append("AND pi.status = :active ");
+        queryBuilder.append("AND pi.status != :trash ");
         queryBuilder.append("ORDER BY pi.startDate DESC");
 
         // Create Query.
@@ -274,7 +274,7 @@ public class ProfileServiceDAO implements Serializable {
         if (endDate != null) {
             query.setParameter("endDate", endDate.toDate());
         }
-        query.setParameter("active", AMEEStatus.ACTIVE);
+        query.setParameter("trash", AMEEStatus.TRASH);
         query.setHint("org.hibernate.cacheable", true);
         query.setHint("org.hibernate.cacheRegion", CACHE_REGION);
 
@@ -300,14 +300,14 @@ public class ProfileServiceDAO implements Serializable {
                         "AND pi.dataItem.id = :dataItemId " +
                         "AND pi.startDate = :startDate " +
                         "AND pi.name = :name " +
-                        "AND pi.status = :active")
+                        "AND pi.status != :trash")
                 .setParameter("profileId", profileItem.getProfile().getId())
                 .setParameter("uid", profileItem.getUid())
                 .setParameter("dataCategoryId", profileItem.getDataCategory().getId())
                 .setParameter("dataItemId", profileItem.getDataItem().getId())
                 .setParameter("startDate", profileItem.getStartDate())
                 .setParameter("name", profileItem.getName())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .getResultList();
         if (profileItems.size() > 0) {
             log.debug("equivilentProfileItemExists() - found ProfileItem(s)");
@@ -345,7 +345,7 @@ public class ProfileServiceDAO implements Serializable {
         sql.append("FROM ITEM ");
         sql.append("WHERE TYPE = 'PI' ");
         sql.append("AND PROFILE_ID = :profileId ");
-        sql.append("AND STATUS = :active");
+        sql.append("AND STATUS != :trash");
 
         // create query
         Session session = (Session) entityManager.getDelegate();
@@ -354,7 +354,7 @@ public class ProfileServiceDAO implements Serializable {
 
         // set parameters
         query.setLong("profileId", profile.getId());
-        query.setInteger("active", AMEEStatus.ACTIVE.ordinal());
+        query.setInteger("trash", AMEEStatus.TRASH.ordinal());
 
         // execute SQL
         return (List<Long>) query.list();

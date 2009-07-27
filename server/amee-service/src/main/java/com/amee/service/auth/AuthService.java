@@ -325,10 +325,10 @@ public class AuthService implements Serializable {
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
                         "AND u.uid = :userUid " +
-                        "AND u.status = :active")
+                        "AND u.status != :trash")
                 .setParameter("environmentId", site.getEnvironment().getId())
                 .setParameter("userUid", uid)
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.authService")
                 .getResultList();
@@ -348,10 +348,10 @@ public class AuthService implements Serializable {
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
                         "AND u.username = :username " +
-                        "AND u.status = :active")
+                        "AND u.status != :trash")
                 .setParameter("environmentId", site.getEnvironment().getId())
                 .setParameter("username", username)
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.authService")
                 .getResultList();
@@ -370,9 +370,9 @@ public class AuthService implements Serializable {
                         "FROM GroupUser gu " +
                         "LEFT JOIN FETCH gu.user u " +
                         "WHERE u.id = :userId " +
-                        "AND u.status = :active")
+                        "AND u.status != :trash")
                 .setParameter("userId", user.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.authService")
                 .getResultList();

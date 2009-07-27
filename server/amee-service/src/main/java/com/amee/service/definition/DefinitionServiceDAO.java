@@ -60,7 +60,7 @@ public class DefinitionServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(Algorithm.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
-            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
+            criteria.add(Restrictions.ne("trash", AMEEStatus.TRASH));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<Algorithm> algorithms = criteria.list();
@@ -80,9 +80,9 @@ public class DefinitionServiceDAO implements Serializable {
                 entityManager.createQuery(
                         "FROM AlgorithmContext ac " +
                                 "WHERE ac.environment.id = :environmentId " +
-                                "AND ac.status = :active")
+                                "AND ac.status != :trash")
                         .setParameter("environmentId", environment.getId())
-                        .setParameter("active", AMEEStatus.ACTIVE)
+                        .setParameter("trash", AMEEStatus.TRASH)
                         .setHint("org.hibernate.cacheable", true)
                         .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                         .getResultList();
@@ -101,7 +101,7 @@ public class DefinitionServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(AlgorithmContext.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
-            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<AlgorithmContext> algorithmContexts = criteria.list();
@@ -134,7 +134,7 @@ public class DefinitionServiceDAO implements Serializable {
             Criteria criteria = session.createCriteria(ItemDefinition.class);
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
-            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
             criteria.setFetchMode("itemValueDefinitions", FetchMode.JOIN);
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
@@ -157,10 +157,10 @@ public class DefinitionServiceDAO implements Serializable {
                         "FROM ItemDefinition id " +
                         "LEFT JOIN FETCH id.itemValueDefinitions ivd " +
                         "WHERE id.environment.id = :environmentId " +
-                        "AND id.status = :active " +
+                        "AND id.status != :trash " +
                         "ORDER BY id.name")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -174,9 +174,9 @@ public class DefinitionServiceDAO implements Serializable {
                 "SELECT count(id) " +
                         "FROM ItemDefinition id " +
                         "WHERE id.environment.id = :environmentId " +
-                        "AND id.status = :active")
+                        "AND id.status != :trash")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -188,10 +188,10 @@ public class DefinitionServiceDAO implements Serializable {
                 "SELECT id " +
                         "FROM ItemDefinition id " +
                         "WHERE id.environment.id = :environmentId " +
-                        "AND id.status = :active " +
+                        "AND id.status != :trash " +
                         "ORDER BY id.name")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -221,9 +221,8 @@ public class DefinitionServiceDAO implements Serializable {
                         "SET status = :trash, " +
                         "modified = current_timestamp() " +
                         "WHERE itemDefinition.id = :itemDefinitionId " +
-                        "AND status = :active")
+                        "AND status != :trash")
                 .setParameter("trash", AMEEStatus.TRASH)
-                .setParameter("active", AMEEStatus.ACTIVE)
                 .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
 
@@ -233,9 +232,8 @@ public class DefinitionServiceDAO implements Serializable {
                         "SET status = :trash, " +
                         "modified = current_timestamp() " +
                         "WHERE itemDefinition.id = :itemDefinitionId " +
-                        "AND status = :active")
+                        "AND status != :trash")
                 .setParameter("trash", AMEEStatus.TRASH)
-                .setParameter("active", AMEEStatus.ACTIVE)
                 .setParameter("itemDefinitionId", itemDefinition.getId())
                 .executeUpdate();
     }
@@ -251,7 +249,7 @@ public class DefinitionServiceDAO implements Serializable {
             Criteria criteria = session.createCriteria(ItemValueDefinition.class);
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
-            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<ItemValueDefinition> itemValueDefinitions = criteria.list();
@@ -280,10 +278,10 @@ public class DefinitionServiceDAO implements Serializable {
         return entityManager.createQuery(
                 "FROM ValueDefinition vd " +
                         "WHERE vd.environment.id = :environmentId " +
-                        "AND vd.status = :active " +
+                        "AND vd.status != :trash " +
                         "ORDER BY vd.name")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -296,9 +294,9 @@ public class DefinitionServiceDAO implements Serializable {
                 "SELECT count(vd) " +
                         "FROM ValueDefinition vd " +
                         "WHERE vd.environment.id = :environmentId " +
-                        "AND vd.status = :active")
+                        "AND vd.status != :trash")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getSingleResult();
@@ -310,10 +308,10 @@ public class DefinitionServiceDAO implements Serializable {
                 "SELECT vd " +
                         "FROM ValueDefinition vd " +
                         "WHERE vd.environment.id = :environmentId " +
-                        "AND vd.status = :active " +
+                        "AND vd.status != :trash " +
                         "ORDER BY vd.name")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .setMaxResults(pager.getItemsPerPage())
@@ -331,7 +329,7 @@ public class DefinitionServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(ValueDefinition.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
-            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<ValueDefinition> valueDefinitions = criteria.list();

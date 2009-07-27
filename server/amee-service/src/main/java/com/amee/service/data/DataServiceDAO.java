@@ -58,7 +58,7 @@ public class DataServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(DataCategory.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
-            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<DataCategory> dataCategories = criteria.list();
@@ -79,9 +79,9 @@ public class DataServiceDAO implements Serializable {
         return (List<DataCategory>) entityManager.createQuery(
                 "FROM DataCategory " +
                         "WHERE environment.id = :environmentId " +
-                        "AND status = :active")
+                        "AND status != :trash")
                 .setParameter("environmentId", environment.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
@@ -99,32 +99,22 @@ public class DataServiceDAO implements Serializable {
         SQLQuery query = session.createSQLQuery(
                 new StringBuilder()
                         .append("UPDATE ITEM_VALUE iv, ITEM i ")
-                        .append("SET iv.STATUS = :active, ")
+                        .append("SET iv.STATUS = :trash, ")
                         .append("iv.MODIFIED = current_timestamp() ")
                         .append("WHERE iv.ITEM_ID = i.ID ")
                         .append("AND i.TYPE = 'DI' ")
                         .append("AND i.DATA_CATEGORY_ID = :dataCategoryId").toString());
-        query.setInteger("active", AMEEStatus.ACTIVE.ordinal());
+        query.setInteger("trash", AMEEStatus.TRASH.ordinal());
         query.setLong("dataCategoryId", dataCategory.getId());
         query.addSynchronizedEntityClass(ItemValue.class);
         query.executeUpdate();
-        // trash DataItems
-        entityManager.createQuery(
-                "UPDATE DataItem " +
-                        "SET status = :trash, " +
-                        "modified = current_timestamp() " +
-                        "WHERE dataCategory.id = :dataCategoryId " +
-                        "AND status = :active")
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setParameter("active", AMEEStatus.ACTIVE)
-                .setParameter("dataCategoryId", dataCategory.getId())
-                .executeUpdate();
+
         // trash child DataCategories
         List<DataCategory> dataCategories = entityManager.createQuery(
                 "FROM DataCategory di " +
                         "WHERE di.dataCategory.id = :dataCategoryId " +
-                        "AND di.status = :active")
-                .setParameter("active", AMEEStatus.ACTIVE)
+                        "AND di.status != :trash")
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .getResultList();
         for (DataCategory child : dataCategories) {
@@ -143,7 +133,7 @@ public class DataServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(ItemValue.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
-            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<ItemValue> itemValues = criteria.list();
@@ -176,7 +166,7 @@ public class DataServiceDAO implements Serializable {
             Criteria criteria = session.createCriteria(DataItem.class);
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
-            criteria.add(Restrictions.eq("status", AMEEStatus.ACTIVE));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
             criteria.setFetchMode("itemValues", FetchMode.JOIN);
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
@@ -203,10 +193,10 @@ public class DataServiceDAO implements Serializable {
                             "LEFT JOIN FETCH di.itemValues " +
                             "WHERE di.path = :path " +
                             "AND di.environment.id = :environmentId " +
-                            "AND di.status = :active")
+                            "AND di.status != :trash")
                     .setParameter("path", path)
                     .setParameter("environmentId", environment.getId())
-                    .setParameter("active", AMEEStatus.ACTIVE)
+                    .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                     .getResultList();
@@ -230,10 +220,10 @@ public class DataServiceDAO implements Serializable {
                         "LEFT JOIN FETCH di.itemValues " +
                         "WHERE di.itemDefinition.id = :itemDefinitionId " +
                         "AND di.dataCategory.id = :dataCategoryId " +
-                        "AND di.status = :active")
+                        "AND di.status != :trash")
                 .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
                 .setParameter("dataCategoryId", dataCategory.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
