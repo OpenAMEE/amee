@@ -200,7 +200,7 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     public Set<Algorithm> getActiveAlgorithms() {
         Set<Algorithm> activeAlgorithms = new HashSet<Algorithm>();
         for (Algorithm algorithm : algorithms) {
-            if (algorithm.isActive()) {
+            if (!algorithm.isTrash()) {
                 activeAlgorithms.add(algorithm);
             }
         }
@@ -214,7 +214,7 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     public Set<ItemValueDefinition> getActiveItemValueDefinitions() {
         Set<ItemValueDefinition> activeItemValueDefinitions = new HashSet<ItemValueDefinition>();
         for (ItemValueDefinition itemValueDefinition : itemValueDefinitions) {
-            if (itemValueDefinition.isActive()) {
+            if (!itemValueDefinition.isTrash()) {
                 activeItemValueDefinitions.add(itemValueDefinition);
             }
         }

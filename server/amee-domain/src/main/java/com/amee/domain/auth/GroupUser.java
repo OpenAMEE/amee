@@ -210,7 +210,7 @@ public class GroupUser extends AMEEEnvironmentEntity implements Comparable {
     public Set<Role> getActiveRoles() {
         Set<Role> activeRoles = new HashSet<Role>();
         for (Role role : roles) {
-            if (role.isActive()) {
+            if (!role.isTrash()) {
                 activeRoles.add(role);
             }
         }
