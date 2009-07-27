@@ -350,7 +350,7 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
     },
     start: function() {
         var params = {};
-        params['select'] = 'all';
+        //params['select'] = 'all';
         this.load(params);
     },
     load: function(params) {
@@ -445,11 +445,12 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
             var itemValues = json.dataItem.itemValues;
             var k = 0;
             for (var i = 0; i < itemValues.length; i++) {
-                var itemValuesArray = itemValues[i];
-                for(var name in itemValuesArray) {
-                    var itemValueSeries = itemValuesArray[name];
-                    for (var j = 0; j < itemValueSeries.length; j++) {
-                        var itemValue = itemValueSeries[j];             
+                var itemValue = itemValues[i];
+                //var itemValuesArray = itemValues[i];
+                //for(var name in itemValuesArray) {
+                    //var itemValueSeries = itemValuesArray[name];
+                    //for (var j = 0; j < itemValueSeries.length; j++) {
+                        //var itemValue = itemValueSeries[j];
                         var detailRow = new Element('tr', {id : 'Elem_' + itemValue.uid})
                                 .insert(new Element('td').insert(itemValue.itemValueDefinition.name))
                                 .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.name))
@@ -465,8 +466,8 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
                         // update array
                         rows[k] = detailRow;
                         k++;
-                    }
-                }
+                    //}
+                //}
             }
         }
         return rows;
