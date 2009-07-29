@@ -32,17 +32,17 @@ import java.util.Map;
 
 public enum AMEEStatus implements Serializable {
 
-    TRASH, ACTIVE, HIDDEN;
+    TRASH, ACTIVE, DEPRECATED;
 
     private String[] names = {
             "TRASH",
             "ACTIVE",
-            "HIDDEN"};
+            "DEPRECATED"};
 
     private String[] labels = {
             "Trash",
             "Active",
-            "Hidden"};
+            "Deprecated"};
 
     public String toString() {
         return getName();

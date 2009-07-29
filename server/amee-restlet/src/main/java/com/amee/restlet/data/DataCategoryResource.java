@@ -115,7 +115,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     @Override
     public void handleGet() {
         log.debug("handleGet()");                                                
-        if (dataBrowser.getDataCategoryActions().isAllowView()) {
+        if (dataBrowser.getDataCategoryActions().isAllowView(getDataCategory())) {
             if (getAPIVersion().isNotVersionOne()) {
                 Form form = getRequest().getResourceRef().getQueryAsForm();
                 dataBrowser.setQueryStartDate(form.getFirstValue("startDate"));
@@ -331,7 +331,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         thisDataCategory = getDataCategory();
 
         if (getRequest().getMethod().equals(Method.POST)) {
-            if (dataBrowser.getDataCategoryActions().isAllowCreate()) {
+            if (dataBrowser.getDataCategoryActions().isAllowCreate(thisDataCategory)) {
                 // new DataCategory
                 dataCategory = new DataCategory(thisDataCategory);
                 if (form.getNames().contains("itemDefinitionUid")) {
@@ -356,7 +356,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 notAuthorized();
             }
         } else if (getRequest().getMethod().equals(Method.PUT)) {
-            if (dataBrowser.getDataCategoryActions().isAllowModify()) {
+            if (dataBrowser.getDataCategoryActions().isAllowModify(thisDataCategory)) {
                 // update DataCategory
                 uid = form.getFirstValue("dataCategoryUid");
                 if (uid != null) {

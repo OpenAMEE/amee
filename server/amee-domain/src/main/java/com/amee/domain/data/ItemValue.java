@@ -21,9 +21,9 @@ package com.amee.domain.data;
 
 import com.amee.core.*;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.Builder;
 import com.amee.domain.StartEndDate;
-import com.amee.domain.AMEEStatus;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +39,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 @Entity
 @Table(name = "ITEM_VALUE")
@@ -142,19 +143,31 @@ public class ItemValue extends AMEEEntity implements Pathable {
     public Environment getEnvironment() {
         return getItem().getEnvironment();
     }
+    
+    public String getName(Locale locale) {
+        return getItemValueDefinition().getName(locale);
+    }
 
+    @Override
     public String getName() {
-        return getItemValueDefinition().getName();
+        return getName(Locale.UK);
     }
 
+    @Override
     public String getDisplayName() {
-        return getItemValueDefinition().getName();
+        return getName();
     }
 
+    public String getDisplayName(Locale locale) {
+        return getName(locale);
+    }
+
+    @Override
     public String getPath() {
         return getItemValueDefinition().getPath();
     }
 
+    @Override
     public String getDisplayPath() {
         return getPath();
     }

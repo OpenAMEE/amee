@@ -136,6 +136,33 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
+    public String getName(Locale locale) {
+        return name;
+    }
+
+    @Override
+    public String getName() {
+        return getName(Locale.UK);
+    }
+
+    @Override
+    public String getDisplayPath() {
+        if (getPath().length() > 0) {
+            return getPath();
+        } else {
+            return getUid();
+        }
+    }
+
+    @Override
+    public String getDisplayName() {
+        if (getName().length() > 0) {
+            return getName();
+        } else {
+            return getDisplayPath();
+        }
+    }
+
     /**
      * Get an unmodifiable List of {@link ItemValue}s owned by this Item.
      *
@@ -279,10 +306,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         activeItemValues = null;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         if (name == null) {
             name = "";
@@ -315,22 +338,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
             return new Duration(startDate.getTime(), endDate.getTime());
         } else {
             return null;
-        }
-    }
-
-    public String getDisplayPath() {
-        if (getPath().length() > 0) {
-            return getPath();
-        } else {
-            return getUid();
-        }
-    }
-
-    public String getDisplayName() {
-        if (getName().length() > 0) {
-            return getName();
-        } else {
-            return getDisplayPath();
         }
     }
 
@@ -425,7 +432,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
         return true;
     }
-  
 }
 
 /**

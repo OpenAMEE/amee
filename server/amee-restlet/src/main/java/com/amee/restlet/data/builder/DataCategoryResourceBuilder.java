@@ -9,6 +9,7 @@ import com.amee.domain.sheet.Sheet;
 import com.amee.restlet.data.DataCategoryResource;
 import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionService;
+import com.amee.service.auth.AuthService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +49,9 @@ public class DataCategoryResourceBuilder {
     @Autowired
     private DefinitionService definitionService;
 
+    @Autowired
+    private AuthService authService;
+
     public JSONObject getJSONObject(DataCategoryResource resource) throws JSONException {
 
         // create JSON object
@@ -65,7 +69,13 @@ public class DataCategoryResourceBuilder {
             // addItemValue Data Categories via pathItem to children
             JSONArray dataCategories = new JSONArray();
             for (PathItem pi : resource.getPathItem().getChildrenByType("DC")) {
-                dataCategories.put(pi.getJSONObject());
+                //TODO - Use ResourceActions? Add new action allowViewHidden.
+                // If the child category is hidden only show if the user is a super user
+                DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
+                if (child != null &&
+                        (authService.isSuperUser() || !child.isDeprecated())) {
+                    dataCategories.put(pi.getJSONObject());
+                }
             }
             children.put("dataCategories", dataCategories);
 
@@ -130,10 +140,15 @@ public class DataCategoryResourceBuilder {
             // addItemValue Data Categories
             Element dataCategoriesElement = document.createElement("DataCategories");
             for (PathItem pi : resource.getPathItem().getChildrenByType("DC")) {
-                dataCategoriesElement.appendChild(pi.getElement(document));
+                //TODO - Use ResourceActions? Add new action allowViewHidden.
+                // If the child category is hidden only show if the user is a super user
+                DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
+                if (child != null &&
+                        (authService.isSuperUser() || !child.isDeprecated())) {
+                    dataCategoriesElement.appendChild(pi.getElement(document));
+                }
             }
             childrenElement.appendChild(dataCategoriesElement);
-
             // list child Data Items via sheet
             Sheet sheet = dataService.getSheet(resource.getDataBrowser());
             if (sheet != null) {
@@ -179,6 +194,7 @@ public class DataCategoryResourceBuilder {
         values.put("browser", resource.getDataBrowser());
         values.put("dataCategory", dataCategory);
         values.put("itemDefinition", dataCategory.getItemDefinition());
+        values.put("user", resource.getUser());
         values.put("itemDefinitions", definitionService.getItemDefinitions(resource.getEnvironment()));
         values.put("node", dataCategory);
         if (sheet != null) {

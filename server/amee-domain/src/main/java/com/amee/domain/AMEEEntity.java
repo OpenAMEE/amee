@@ -118,6 +118,10 @@ public abstract class AMEEEntity implements DatedObject, Serializable {
         return status.equals(AMEEStatus.ACTIVE);
     }
 
+    public boolean isDeprecated() {
+        return status.equals((AMEEStatus.DEPRECATED));
+    }
+    
     public void setStatus(AMEEStatus status) {
         this.status = status;
     }

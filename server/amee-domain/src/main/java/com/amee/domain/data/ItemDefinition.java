@@ -64,6 +64,10 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     @OrderBy("name")
     private Set<ItemValueDefinition> itemValueDefinitions = new HashSet<ItemValueDefinition>();
 
+    //@OneToMany(mappedBy = "pathable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    //private List<LocaleName> localeNames = new ArrayList<LocaleName>();
+
     public ItemDefinition() {
         super();
     }

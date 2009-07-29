@@ -33,4 +33,6 @@ public interface Pathable extends PersistentObject {
     public String getDisplayName();
 
     public String getDisplayPath();
+
+    public boolean isDeprecated();
 }

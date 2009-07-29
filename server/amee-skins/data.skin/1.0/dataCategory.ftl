@@ -49,13 +49,15 @@
             <th>Actions</th>
         </tr>
         <#list children as pi>
-            <tr id='Elem_${pi.uid}'>
-                <td>${pi.name}</td>
-                <td>
-                <#if browser.dataCategoryActions.allowView><a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
-                <#if browser.dataCategoryActions.allowDelete><input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
-                </td>
-            </tr>
+            <#if user.superUser || !pi.deprecated>
+                <tr id='Elem_${pi.uid}'>
+                    <td>${pi.name}</td>
+                    <td>
+                    <#if browser.dataCategoryActions.allowView><a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
+                    <#if browser.dataCategoryActions.allowDelete><input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
+                    </td>
+                </tr>
+            </#if>
         </#list>
     </table>
     </p>

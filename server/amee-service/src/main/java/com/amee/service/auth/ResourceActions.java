@@ -1,5 +1,6 @@
 package com.amee.service.auth;
 
+import com.amee.domain.AMEEEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,31 +57,46 @@ public class ResourceActions implements Serializable {
         return obj;
     }
 
-    public boolean isAllowView() {
+    public boolean isAllowView(AMEEEntity entity) {
         if (view == null) {
-            view = authService.isSuperUser() || (
-                    authService.hasActions(resourceViewAction) &&
+            view = authService.isSuperUser() ||
+                    (entity == null || !entity.isDeprecated()) &&
+                    (authService.hasActions(resourceViewAction) &&
                             authService.isAllowView());
         }
         return view;
     }
 
-    public boolean isAllowCreate() {
+    public boolean isAllowView() {
+        return isAllowView(null);
+    }
+
+    public boolean isAllowCreate(AMEEEntity entity) {
         if (create == null) {
             create = authService.isSuperUser() ||
+                    (entity == null || !entity.isDeprecated()) &&
                     (authService.hasActions(resourceCreateAction) &&
                             authService.isAllowModify());
         }
         return create;
     }
 
-    public boolean isAllowModify() {
+    public boolean isAllowCreate() {
+        return isAllowCreate(null);
+    }
+
+    public boolean isAllowModify(AMEEEntity entity) {
         if (modify == null) {
             modify = authService.isSuperUser() ||
+                    (entity == null || !entity.isDeprecated()) &&
                     (authService.hasActions(resourceModifyAction) &&
                             authService.isAllowModify());
         }
         return modify;
+    }
+
+    public boolean isAllowModify() {
+        return isAllowModify(null);
     }
 
     public boolean isAllowDelete() {

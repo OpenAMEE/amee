@@ -46,6 +46,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
     private String name = "";
     private PathItem parent = null;
     private Set<PathItem> children = new TreeSet<PathItem>();
+    private boolean deprecated;
 
     public PathItem() {
         super();
@@ -58,8 +59,10 @@ public class PathItem implements APIObject, Serializable, Comparable {
         setObjectType(pathable.getObjectType());
         setPath(pathable.getDisplayPath());
         setName(pathable.getDisplayName());
+        setIsDeprecated(pathable.isDeprecated());
     }
 
+    @Override
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -76,6 +79,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return new JSONObject().put("uid", getUid());
     }
 
+    @Override
     public Element getElement(Document document) {
         return getElement(document, getObjectType().getLabel());
     }
@@ -92,6 +96,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return getElement(document);
     }
 
+    @Override
     public Element getIdentityElement(Document document) {
         Element element = document.createElement(getObjectType().getLabel());
         element.setAttribute("uid", getUid());
@@ -324,6 +329,14 @@ public class PathItem implements APIObject, Serializable, Comparable {
         this.name = name;
     }
 
+    public void setIsDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;    
+    }
+
     public boolean hasParent() {
         return getParent() != null;
     }
@@ -345,7 +358,4 @@ public class PathItem implements APIObject, Serializable, Comparable {
         return children;
     }
 
-    public void setChildren(Set<PathItem> children) {
-        this.children = children;
-    }
 }

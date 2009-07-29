@@ -221,7 +221,7 @@ public class ProfileServiceDAO implements Serializable {
                         "AND pi.profile.id = :profileId " +
                         "AND pi.startDate < :profileDate " +
                         "AND pi.status != :trash " +
-                        "ORDER BY pi.name, pi.dataItem, pi.startDate DESC")
+                        "ORDER BY pi.name, pi.dataItem.name, pi.startDate DESC")
                 .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .setParameter("profileId", profile.getId())

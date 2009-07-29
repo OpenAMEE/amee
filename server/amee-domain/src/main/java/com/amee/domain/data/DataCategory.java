@@ -36,6 +36,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @Entity
 @Table(name = "DATA_CATEGORY")
@@ -147,13 +150,19 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         return getElement(document, false);
     }
 
+    @Override
     public String getDisplayPath() {
         return getPath();
     }
 
+    @Override
     public String getDisplayName() {
-        if (getName().length() > 0) {
-            return getName();
+        return getDisplayName(Locale.UK);
+    }
+
+    public String getDisplayName(Locale locale) {
+        if (getName(locale).length() > 0) {
+            return getName(locale);
         } else {
             return getDisplayPath();
         }
@@ -177,7 +186,12 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         this.itemDefinition = itemDefinition;
     }
 
+    @Override
     public String getName() {
+        return getName(Locale.UK);
+    }
+
+    public String getName(Locale locale) {
         return name;
     }
 
@@ -188,6 +202,7 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         this.name = name;
     }
 
+    @Override
     public String getPath() {
         return path;
     }
@@ -199,6 +214,7 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         this.path = path;
     }
 
+    @Override
     public ObjectType getObjectType() {
         return ObjectType.DC;
     }

@@ -246,8 +246,11 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     }
 
     public APIVersion getAPIVersion() {
-        User user = (User) ThreadBeanHolder.get("user");
-        return user.getAPIVersion();
+        return getUser().getAPIVersion();
+    }
+
+    public User getUser() {
+        return (User) ThreadBeanHolder.get("user");
     }
 
     /**

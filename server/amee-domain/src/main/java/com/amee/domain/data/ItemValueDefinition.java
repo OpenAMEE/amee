@@ -35,10 +35,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
@@ -58,6 +55,10 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "VALUE_DEFINITION_ID")
     private ValueDefinition valueDefinition;
+
+    //@OneToMany(mappedBy = "pathable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    //private List<LocaleName> localeNames = new ArrayList<LocaleName>();
 
     @Column(name = "UNIT")
     private String unit;
@@ -184,7 +185,11 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
     }
 
     public String getName() {
-        return name;
+        return getName(Locale.UK);
+    }
+
+    public String getName(Locale locale) {
+        return name;    
     }
 
     public void setName(String name) {
