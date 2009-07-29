@@ -68,7 +68,7 @@
     <!-- ############### AMEE ################### -->
 
     <category name="com.amee">
-        <priority value="INFO"/>
+        <priority value="DEBUG"/>
     </category>
 
     <!-- ############### log4jdbc ################### -->
