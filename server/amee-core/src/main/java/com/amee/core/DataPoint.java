@@ -83,7 +83,7 @@ public class DataPoint implements Comparable<DataPoint> {
      * @param point - the DataPoint to add
      * @return a new DataPoint representing the addition of the two DataPoint values
      */
-    public DataPoint add(DataPoint point) {
+    public DataPoint plus(DataPoint point) {
         return new DataPoint(dateTime, decimal.add(point.getValue()));
     }
 
@@ -93,7 +93,7 @@ public class DataPoint implements Comparable<DataPoint> {
      * @param f - the float to add
      * @return a new DataPoint representing the addition of the DataPoint and float values
      */
-    public DataPoint add(float f) {
+    public DataPoint plus(float f) {
         return new DataPoint(dateTime, decimal.add(new Decimal(f)));
     }
 

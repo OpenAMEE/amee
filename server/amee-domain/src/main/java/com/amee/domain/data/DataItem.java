@@ -23,6 +23,7 @@ import com.amee.core.APIUtils;
 import com.amee.core.ObjectType;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.sheet.Choice;
+import com.amee.domain.AMEEStatus;
 import org.hibernate.annotations.Index;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -225,5 +226,10 @@ public class DataItem extends Item {
     @Override
     public ObjectType getObjectType() {
         return ObjectType.DI;
+    }
+
+    @Override
+    public boolean isTrash() {
+        return status.equals(AMEEStatus.TRASH) || getDataCategory().isTrash() || getItemDefinition().isTrash();
     }
 }

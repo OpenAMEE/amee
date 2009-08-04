@@ -27,7 +27,10 @@ import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
@@ -80,19 +83,38 @@ public class InternalValue {
     /**
      * Instantiate an InternalValue representation of the supplied collection of values.
      *
-     * @param values - the List of {@link ItemValue}s representing a sequence of values.
+     * @param values - the List of {@link ItemValue}s representing a sequence of values
+     * @param startDate - the start Date to filter the series
+     * @param endDate - the end Date to filter the series
      */
-    public InternalValue(List<ItemValue> values) {
+    public InternalValue(List<ItemValue> values, Date startDate, Date endDate) {
         if (values.get(0).getItemValueDefinition().isDecimal()) {
             DataSeries ds = new DataSeries();
-            for(ItemValue itemValue : values) {
-                ds.addDataPoint(new DataPoint(itemValue.getStartDate().toDateTime(), 
-                        asInternalDecimal(itemValue)));
+            for(ItemValue itemValue : filterItemValues(values, startDate, endDate)) {
+                ds.addDataPoint(new DataPoint(itemValue.getStartDate().toDateTime(), asInternalDecimal(itemValue)));
             }
+            ds.setSeriesStartDate(new DateTime(startDate));
+            ds.setSeriesEndDate(new DateTime(endDate));
             this.value = ds;
         } else {
             this.value = values;
         }
+    }
+
+    // Filter the ItemValue collection by the effective start and end dates of the owning Item.
+    // ItemValues are excluded if they start prior to startDate and are not the final value in the sequence.
+    // ItemValues are excluded if the start on or after the endDate.
+    private List<ItemValue> filterItemValues(List<ItemValue> values, Date startDate, Date endDate) {
+        List<ItemValue> filteredValues = new ArrayList<ItemValue>();
+        for (ItemValue iv : values) {
+            if (iv.getStartDate().before(endDate)) {
+                filteredValues.add(iv);
+                if (iv.getStartDate().compareTo(startDate) <= 0) {
+                    break;
+                }
+            }
+        }
+        return filteredValues;
     }
 
     /**

@@ -23,6 +23,7 @@ import com.amee.core.*;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.Builder;
 import com.amee.domain.StartEndDate;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.lang.StringUtils;
@@ -277,5 +278,10 @@ public class ItemValue extends AMEEEntity implements Pathable {
         if (hasPerUnit())
             clone.setPerUnit(getPerUnit().toString());
         return clone;
+    }
+    
+    @Override
+    public boolean isTrash() {
+        return status.equals(AMEEStatus.TRASH) || getItem().isTrash() || getItemValueDefinition().isTrash();
     }
 }

@@ -114,17 +114,39 @@ public class ProfileService extends BaseService {
     // ProfileItems
 
     public ProfileItem getProfileItem(String uid) {
-        return checkProfileItem(dao.getProfileItem(uid));
+        ProfileItem pi = checkProfileItem(dao.getProfileItem(uid));
+        // If this ProfileItem is trashed then return null. A ProfileItem may be trash if it itself has been
+        // trashed or an owning entity has been trashed.
+        if (pi != null && !pi.isTrash()) {
+            return pi;
+        } else {
+            return null;
+        }
     }
 
-    public List<ProfileItem> getProfileItems(Profile p) {
-        return dao.getProfileItems(p);
+    /**
+     * Retrieve a list of {@link ProfileItem}s belonging to a {@link Profile} and {@link DataCategory}
+     * occuring on or immediately proceeding the given date context. 
+     *
+     * @param profile - the {@link Profile} to which the {@link ProfileItem}s belong
+     * @param dataCategory - the DataCategory containing the ProfileItems
+     * @param date - the date context
+     * @return the active {@link ProfileItem} collection
+     */
+    public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, Date date) {
+        return checkProfileItems(onlyActiveProfileService.getProfileItems(dao.getProfileItems(profile, dataCategory, date)));
     }
 
-    public List<ProfileItem> getProfileItems(Profile p, DataCategory dc, Date date) {
-        return checkProfileItems(onlyActiveProfileService.getProfileItems(dao.getProfileItems(p, dc, date), null));
-    }
-
+    /**
+     * Retrieve a list of {@link ProfileItem}s belonging to a {@link Profile} and {@link DataCategory}
+     * occuring between a given date context.
+     *
+     * @param profile - the {@link Profile} to which the {@link ProfileItem}s belong
+     * @param dataCategory - the DataCategory containing the ProfileItems
+     * @param startDate - the start of the date context
+     * @param endDate - the end of the date context
+     * @return the active {@link ProfileItem} collection
+     */
     public List<ProfileItem> getProfileItems(
             Profile profile,
             DataCategory dataCategory,
@@ -133,20 +155,26 @@ public class ProfileService extends BaseService {
         return checkProfileItems(dao.getProfileItems(profile, dataCategory, startDate, endDate));
     }
 
-    public List<ProfileItem> checkProfileItems(List<ProfileItem> profileItems) {
+    private List<ProfileItem> checkProfileItems(List<ProfileItem> profileItems) {
         if (log.isDebugEnabled()) {
             log.debug("checkProfileItems() start");
         }
         if (profileItems == null) {
             return null;
         }
+        List<ProfileItem> activeProfileItems = new ArrayList<ProfileItem>();
+
+        // Remove any trashed ProfileItems
         for (ProfileItem profileItem : profileItems) {
-            checkProfileItem(profileItem);
+            if (!profileItem.isTrash()) {
+                checkProfileItem(profileItem);
+                activeProfileItems.add(profileItem);
+            }
         }
         if (log.isDebugEnabled()) {
-            log.debug("checkProfileItems() done (" + profileItems.size() + ")");
+            log.debug("checkProfileItems() done (" + activeProfileItems.size() + ")");
         }
-        return profileItems;
+        return activeProfileItems;
     }
 
     /**
@@ -160,7 +188,7 @@ public class ProfileService extends BaseService {
      * @param profileItem to check
      * @return the supplied ProfileItem or null
      */
-    public ProfileItem checkProfileItem(ProfileItem profileItem) {
+    private ProfileItem checkProfileItem(ProfileItem profileItem) {
 
         if (profileItem == null) {
             return null;

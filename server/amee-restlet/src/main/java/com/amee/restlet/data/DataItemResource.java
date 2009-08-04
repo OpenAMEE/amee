@@ -69,9 +69,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     private Form query;
     private List<Choice> parameters = new ArrayList<Choice>();
 
-    // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
-    private String select = "";
-
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
@@ -87,12 +84,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             getDataItem().setEffectiveStartDate(new StartEndDate(query.getFirstValue("startDate")));
         }
 
-        // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
-        if (StringUtils.isNotBlank(query.getFirstValue("select"))) {
-            this.select = query.getFirstValue("select");
-            names.remove("select");
-        }
-
         // Pull out any values submitted for Data API calculations.
         for (String key : names) {
             parameters.add(new Choice(key, query.getValues(key)));
@@ -102,8 +93,9 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (getDataItem() != null) &&
-                (getDataCategory() != null) &&
+                getDataItem() != null &&
+                !getDataItem().isTrash() &&
+                getDataCategory() != null &&
                 getDataItem().getDataCategory().equals(getDataCategory()) &&
                 getDataItem().getEnvironment().equals(environment);
     }
@@ -137,9 +129,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new DecimalUnit(SI.KILOGRAM), new DecimalPerUnit(NonSI.MONTH));
         JSONObject obj = new JSONObject();
-        // Is the request to show all ItemValues in the historical sequence.
-        boolean showHistory = select.equals("all");
-        obj.put("dataItem", dataItem.getJSONObject(true,showHistory));
+        obj.put("dataItem", dataItem.getJSONObject(true,false));
         obj.put("path", pathItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
         obj.put("amountPerMonth", amount.convert(kgPerMonth).getValue());
@@ -163,8 +153,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new DecimalUnit(SI.KILOGRAM), new DecimalPerUnit(NonSI.MONTH));
         Element element = document.createElement("DataItemResource");
-        boolean showHistory = select.equals("all");
-        element.appendChild(dataItem.getElement(document, true, showHistory));
+        element.appendChild(dataItem.getElement(document, true, false));
         element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
         element.appendChild(userValueChoices.getElement(document));
         element.appendChild(APIUtils.getElement(document, "AmountPerMonth", amount.convert(kgPerMonth).toString()));
@@ -234,7 +223,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
         // The submitted startDate must be (i) after or equal to the startDate and (ii) before the endDate of the owning DataItem.
         if (!getDataItem().isWithinLifeTime(startDate)) {
-            log.error("acceptRepresentation() - badRequest: trying to create a DIV starting after the endDate of the owning DI.");
+            log.error("acceptRepresentation() - badRequest: trying to create a DIV outside the timespan of the owning DI.");
             badRequest();
             return;
         }
@@ -287,6 +276,11 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             dataItem.setPath(form.getFirstValue("path"));
         }
 
+        /**
+
+         Out-commenting DI startDate/endDate functionality. Pending final approval from AC, this will be
+         permanently deleted in due course - SM (15/07/09).
+
         // update 'startDate' value
         if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
             dataItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
@@ -312,6 +306,8 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             badRequest();
             return;
         }
+
+        */
 
         // update ItemValues if supplied
         for (String name : form.getNames()) {

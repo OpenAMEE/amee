@@ -70,7 +70,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             // new ProfileItem
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItemByUid(resource.getEnvironment(), uid);
+                dataItem = dataService.getDataItem(resource.getEnvironment(), uid);
                 if (dataItem != null) {
                     // create new ProfileItem
                     profileItem = new ProfileItem(resource.getProfile(), dataItem);

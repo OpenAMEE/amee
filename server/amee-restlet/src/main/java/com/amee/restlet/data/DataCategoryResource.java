@@ -20,7 +20,6 @@
 package com.amee.restlet.data;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
@@ -36,6 +35,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,10 +51,7 @@ import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component("dataCategoryResource")
 @Scope("prototype")
@@ -61,6 +59,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     private final Log log = LogFactory.getLog(getClass());
 
+    private static final Date EPOCH = new DateTime(0, DateTimeZone.UTC).toDate();
+    
     @Autowired
     private DataService dataService;
 
@@ -70,6 +70,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     private List<DataCategory> dataCategories;
     private DataItem dataItem;
     private List<DataItem> dataItems;
+    private String type = "";
 
     @Autowired
     private DataCategoryResourceBuilder builder;
@@ -84,7 +85,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (getDataCategory() != null) &&
+                getDataCategory() != null &&
+                !getDataCategory().isTrash() &&
                 getDataCategory().getEnvironment().equals(environment);
     }
 
@@ -112,7 +114,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Override
     public void handleGet() {
-        log.debug("handleGet()");
+        log.debug("handleGet()");                                                
         if (dataBrowser.getDataCategoryActions().isAllowView()) {
             if (getAPIVersion().isNotVersionOne()) {
                 Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -162,11 +164,13 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             dataService.clearCaches(thisDataCategory);
             if (isPost()) {
                  if (isBatchPost()) {
-                     successfulBatchPost();
-                 } else if (dataCategory != null) {
-                     successfulPost(getFullPath(), dataCategory.getPath());
+                    successfulBatchPost();
+                 } else if (type.equalsIgnoreCase("DC")) {
+                    successfulPost(getFullPath(), dataCategory.getPath());
+                 } else if (type.equalsIgnoreCase("DI")) {
+                    successfulPost(getFullPath(), dataItem.getUid());
                  } else {
-                     successfulPost(getFullPath(), dataItem.getUid());
+                    badRequest();
                  }
              } else {
                  successfulPut(getFullPath());
@@ -294,7 +298,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     protected void acceptFormPost(Form form) {
         log.debug("acceptFormPost()");
-        String type = form.getFirstValue("newObjectType");
+        type = form.getFirstValue("newObjectType");
         if (type != null) {
             if (type.equalsIgnoreCase("DC")) {
                 if (dataBrowser.getDataCategoryActions().isAllowCreate()) {
@@ -382,13 +386,15 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         return true;
     }
 
-    // A unique DataCategory is one with a unique path within it's set of sibling DataCategories.
+    // A unique DataCategory is one with a unique path within it's set of un-trashed sibling DataCategories.
     private boolean isUnique(DataCategory dataCategory) {
         boolean unique = true;
         for (PathItem sibling : getPathItem().getChildrenByType("DC")) {
             if (sibling.getPath().equals(dataCategory.getPath())) {
-                unique = false;
-                break;
+                if (!dataService.getDataCategoryByUid(sibling.getUid()).isTrash()) {
+                    unique = false;
+                    break;
+                }
             }
         }
         return unique;
@@ -433,7 +439,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 // update DataItem
                 uid = form.getFirstValue("dataItemUid");
                 if (uid != null) {
-                    dataItem = dataService.getDataItemByUid(
+                    dataItem = dataService.getDataItem(
                             environment,
                             uid);
                     if (dataItem != null) {
@@ -453,6 +459,11 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
 
         // determine startdate for new DataItem
+        /*
+
+        Out-commenting DI startDate/endDate functionality. Pending final approval from AC, this will be 
+        permanently deleted in due course - SM (15/07/09).
+
         StartEndDate startDate = new StartEndDate(form.getFirstValue("startDate"));
         dataItem.setStartDate(startDate);
 
@@ -470,6 +481,10 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             badRequest(APIFault.INVALID_DATE_RANGE);
             return null;
         }
+        */
+
+        // Default the DataItem startDate to the EPOCH
+        dataItem.setStartDate(EPOCH);
 
         dataService.persist(dataItem);
 

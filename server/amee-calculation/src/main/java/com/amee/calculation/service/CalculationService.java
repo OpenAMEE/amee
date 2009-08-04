@@ -145,8 +145,14 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
     private Map<String, Object> getValues(ProfileItem profileItem) {
 
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
+        // Add ItemDefinition defaults
         profileItem.getItemDefinition().appendInternalValues(values, profileItem.getProfile().getAPIVersion());
-        profileItem.getDataItem().appendInternalValues(values);
+        // Add DataItem values, filtered by start and end dates of the ProfileItem
+        DataItem dataItem = profileItem.getDataItem();
+        dataItem.setEffectiveStartDate(profileItem.getStartDate());
+        dataItem.setEffectiveEndDate(profileItem.getEndDate());
+        dataItem.appendInternalValues(values);
+        // Add the ProfileItem values
         profileItem.appendInternalValues(values);
 
         Map<String, Object> returnValues = new HashMap<String, Object>();

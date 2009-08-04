@@ -68,7 +68,7 @@ public class DataItemLookupResource extends BaseResource implements Serializable
         super.initialise(context, request, response);
         Environment environment = (Environment) request.getAttributes().get("environment");
         dataItemUid = request.getResourceRef().getQueryAsForm().getFirstValue("dataItemUid", "");
-        dataItem = dataService.getDataItemByUid(environment, dataItemUid);
+        dataItem = dataService.getDataItem(environment, dataItemUid);
         if (dataItem != null) {
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
             PathItem dataCategoryPathItem = pathItemGroup.findByUId(dataItem.getDataCategory().getUid());

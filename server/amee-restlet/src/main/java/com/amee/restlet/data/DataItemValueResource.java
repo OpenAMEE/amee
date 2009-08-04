@@ -27,6 +27,7 @@ import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,7 +63,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     private List<ItemValue> itemValues;
 
     // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
-    private String select;
+    private int valuesPerPage = 1;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -83,8 +84,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         Form query = request.getResourceRef().getQueryAsForm();
 
         // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
-        if (StringUtils.isNotBlank(query.getFirstValue("select"))) {
-            this.select = query.getFirstValue("select");
+        if (StringUtils.isNumeric(query.getFirstValue("valuesPerPage"))) {
+            this.valuesPerPage = Integer.parseInt(query.getFirstValue("valuesPerPage"));
         }
 
         // The resource may receive a startDate parameter that sets the current date in an historical sequence of
@@ -94,9 +95,10 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             startDate = new StartEndDate(query.getFirstValue("startDate"));
         }
 
+        //TODO - Implement paging
         // Retrieve all itemValues in a historical sequence if mandated in the request (get=all), otherwise retrieve
         // the closest match
-        if (StringUtils.equals(select,"all")) {
+        if (valuesPerPage > 1) {
             this.itemValues = getDataItem().getAllItemValues(itemValueIdentifier);
         } else {
             this.itemValue = getDataItem().getItemValue(itemValueIdentifier, startDate);
@@ -105,22 +107,37 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
 
     @Override
     public boolean isValid() {
-        return super.isValid() && getDataItem() != null &&
+        return super.isValid() &&
+                getDataItem() != null &&
                 (isItemValueValid() || isItemValuesValid());
     }
 
     private boolean isItemValueValid() {
         return this.itemValue != null &&
+                !this.itemValue.isTrash() &&
                 this.itemValue.getItem().equals(getDataItem()) &&
                 this.itemValue.getEnvironment().equals(environment);
     }
 
 
+    @SuppressWarnings(value = "unchecked")
     private boolean isItemValuesValid() {
         if (itemValues == null)
             return false;
-        ItemValue test = (ItemValue) CollectionUtils.get(itemValues,0);
-        return test.getItem().equals(getDataItem()) && test.getEnvironment().equals(environment);
+
+        itemValues = (List<ItemValue>) CollectionUtils.select(itemValues, new Predicate() {
+
+            @Override
+            public boolean evaluate(Object o) {
+                ItemValue iv = (ItemValue) o;
+                return !iv.isTrash() &&
+                       iv.getItem().equals(getDataItem()) &&
+                       iv.getEnvironment().equals(environment);
+            }
+        });
+
+        return !itemValues.isEmpty();
+
     }
 
     @Override

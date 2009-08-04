@@ -406,16 +406,6 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         }
 
         pElement.insert(new Element("br"));
-        pElement.appendChild(document.createTextNode("Start Date: " + dataItem.startDate));
-
-        pElement.insert(new Element("br"));
-        if (dataItem.endDate) {
-            pElement.appendChild(document.createTextNode("End Date: " + dataItem.endDate));
-        } else {
-            pElement.appendChild(document.createTextNode("End Date: None"));
-        }
-
-        pElement.insert(new Element("br"));
         pElement.appendChild(document.createTextNode("Full Path: " + window.location.pathname));
 
         pElement.insert(new Element("br"));
@@ -560,14 +550,6 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
 
             this.addFormInfoElement('Name: ', formElement, 'name', dataItem.name, 30, 'margin-left:21px');
             this.addFormInfoElement('Path: ', formElement, 'path', dataItem.path, 30, 'margin-left:29px');
-            this.addFormInfoElement('StartDate: ', formElement, 'startDate', dataItem.startDate, 30, 'margin-left:2px', dateFormat);
-
-            var endDate = "";
-            if (dataItem.endDate) {
-                endDate = dataItem.endDate;
-            }
-
-            this.addFormInfoElement('EndDate: ', formElement, 'endDate', endDate, 30, 'margin-left:6px', dateFormat);
 
             pElement.insert(formElement);
             updateItemElement.insert(pElement);

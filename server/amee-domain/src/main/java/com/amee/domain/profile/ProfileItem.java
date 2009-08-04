@@ -4,6 +4,7 @@ import com.amee.core.CO2Amount;
 import com.amee.core.Decimal;
 import com.amee.core.ObjectType;
 import com.amee.domain.Builder;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.Item;
@@ -208,5 +209,10 @@ public class ProfileItem extends Item {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isTrash() {
+        return status.equals(AMEEStatus.TRASH) || getDataItem().isTrash();
     }
 }

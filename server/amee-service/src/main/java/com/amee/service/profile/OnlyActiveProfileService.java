@@ -1,16 +1,11 @@
 package com.amee.service.profile;
 
-import com.amee.domain.StartEndDate;
-import com.amee.domain.data.DataCategory;
-import com.amee.domain.profile.Profile;
+import com.amee.domain.data.DataItem;
 import com.amee.domain.profile.ProfileItem;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,79 +30,30 @@ import java.util.List;
 @Service
 public class OnlyActiveProfileService {
 
-    private final Log log = LogFactory.getLog(getClass());
-
     @Autowired
     ProfileService profileService;
 
     /**
-     * Retreive only the active {@link com.amee.domain.profile.ProfileItem} instances.
-     * <p/>
-     * Active in this scenario means the latest in any historical sequence within the given datetime range.
-     *
-     * @param profile      - the owning {@link com.amee.domain.profile.Profile}
-     * @param dataCategory - the containing {@link com.amee.domain.data.DataCategory}
-     * @param startDate    - the opening {@link com.amee.domain.StartEndDate} of the datatime range.
-     * @param endDate      - the closing {@link com.amee.domain.StartEndDate} of the datatime range.
-     * @return the List of active {@link com.amee.domain.profile.ProfileItem}
-     */
-    public List<ProfileItem> getProfileItems(
-            final Profile profile,
-            final DataCategory dataCategory,
-            final StartEndDate startDate,
-            final StartEndDate endDate) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProfileItems() start");
-        }
-
-        // get all profile items in range
-        final List<ProfileItem> profileItems = profileService.getProfileItems(
-                profile, dataCategory, startDate, endDate);
-
-        // filter
-        List<ProfileItem> requestedItems = getProfileItems(profileItems, startDate);
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProfileItems() done (" + profileItems.size() + ")");
-        }
-
-        return requestedItems;
-    }
-
-    /**
-     * Filter the supplied ProfileItem list to only include the latest items in the historical
-     * sequence. If a start date is supplied items must start after that date.
+     * Filter the supplied ProfileItem list to only include the latest item in the historical
+     * sequence for each dataItem and name.
      *
      * @param profileItems - list to filter
-     * @param startDate    - the opening {@link com.amee.domain.StartEndDate} of the datatime range. Optional.
      * @return the List of active {@link com.amee.domain.profile.ProfileItem}
      */
     @SuppressWarnings("unchecked")
-    public List<ProfileItem> getProfileItems(final List<ProfileItem> profileItems, final StartEndDate startDate) {
-        if (profileItems == null) {
-            return null;
-        }
-        List l = (List) CollectionUtils.select(profileItems, new Predicate() {
-            public boolean evaluate(Object o) {
-                ProfileItem pi = (ProfileItem) o;
-                for (ProfileItem profileItem : profileItems) {
-                    log.debug("getProfileItems() - comparing " + pi.getDataItem().getUid() + ":" + pi.getName() + ":" + pi.getStartDate() +
-                            " and " +
-                            profileItem.getDataItem().getUid() + "  :" + profileItem.getName() + ":" + profileItem.getStartDate());
-
-                    if (pi.getDataItem().equals(profileItem.getDataItem()) &&
-                            pi.getName().equalsIgnoreCase(profileItem.getName()) &&
-                            pi.getStartDate().before(profileItem.getStartDate()) &&
-                            ((startDate == null) || !profileItem.getStartDate().after(startDate.toDate()))) {
-                        log.debug("getProfileItems() - not including in collection");
-                        return false;
-                    }
-                }
-                log.debug("getProfileItems() - including in collection");
-                return true;
+    public List<ProfileItem> getProfileItems(List<ProfileItem> profileItems) {
+        DataItem di = new DataItem();
+        String name = "";
+        List<ProfileItem> activeProfileItems = new ArrayList<ProfileItem>();
+        // The profileItems collection is in name, dataItem, startDate DESC order for we can
+        // just select the first entry in the collection for each name/dataItem combination.
+        for (ProfileItem pi : profileItems) {
+            if (!name.equals(pi.getName()) || pi.getDataItem() != di) {
+                activeProfileItems.add(pi);
+                di = pi.getDataItem();
+                name = pi.getName();
             }
-        });
-        return l;
+        }
+        return activeProfileItems;
     }
 }

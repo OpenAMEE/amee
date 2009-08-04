@@ -83,7 +83,8 @@ public class ProfileCategoryResource extends BaseProfileResource {
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (getDataCategory() != null) &&
+                getDataCategory() != null &&
+                !getDataCategory().isTrash() &&
                 getDataCategory().getEnvironment().equals(environment);
     }
 

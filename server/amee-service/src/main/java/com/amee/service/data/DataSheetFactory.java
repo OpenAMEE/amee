@@ -78,8 +78,7 @@ public class DataSheetFactory implements CacheableFactory {
             // create rows and cells
             columns = sheet.getColumns();
             StartEndDate startDate = dataBrowser.getQueryStartDate();
-            StartEndDate endDate = dataBrowser.getQueryEndDate();
-            for (DataItem dataItem : new OnlyActiveDataService(dataService).getDataItems(dataBrowser.getDataCategory(), startDate, endDate)) {
+            for (DataItem dataItem : dataService.getDataItems(dataBrowser.getDataCategory())) {
                 row = new Row(sheet, dataItem.getUid());
                 row.setLabel("DataItem");
                 for (Column column : columns) {

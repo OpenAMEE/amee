@@ -22,8 +22,11 @@ package com.amee.domain.data;
 import com.amee.core.APIUtils;
 import com.amee.core.ObjectType;
 import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -38,6 +41,9 @@ import javax.persistence.*;
 @Table(name = "DATA_CATEGORY")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
+
+    @Transient
+    public final Log log = LogFactory.getLog(getClass());
 
     public final static int NAME_SIZE = 255;
     public final static int PATH_SIZE = 255;
@@ -195,5 +201,15 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
 
     public ObjectType getObjectType() {
         return ObjectType.DC;
+    }
+
+    @Override
+    public boolean isTrash() {
+        try {
+            return status.equals(AMEEStatus.TRASH) || (getItemDefinition() != null && getItemDefinition().isTrash());
+        } catch (Exception ex) {
+            log.error("isTrash() - DataCategory " + getId() + ": " + ex.getMessage());
+            return true;
+        }
     }
 }
