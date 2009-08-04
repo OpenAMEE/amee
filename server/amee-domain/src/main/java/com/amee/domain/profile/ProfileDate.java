@@ -1,9 +1,9 @@
 package com.amee.domain.profile;
 
-import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * This file is part of AMEE.
@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
  */
 public class ProfileDate extends GCDate {
 
-    private static final DateFormat MONTH_DATE = new SimpleDateFormat("yyyyMM");
+    private static final DateTimeFormatter MONTH_DATE = DateTimeFormat.forPattern("yyyyMM");
 
     public ProfileDate() {
         super(System.currentTimeMillis());
@@ -38,18 +38,31 @@ public class ProfileDate extends GCDate {
 
     protected long parseStr(String dateStr) {
         try {
-            return MONTH_DATE.parse(dateStr).getTime();
-        } catch (Exception ex) {
+            return MONTH_DATE.parseDateTime(dateStr).getMillis();
+        } catch (Exception e) {
             return defaultDate();
         }
     }
 
     protected long defaultDate() {
-        DateTime dt = new DateTime();
-        return dt.dayOfMonth().withMinimumValue().getMillis();
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        cal.clear();
+        cal.set(year, month, 1);
+        return cal.getTimeInMillis();
+    }
+
+    public static boolean validate(String dateStr) {
+        try {
+            MONTH_DATE.parseDateTime(dateStr);
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
+        return true;
     }
 
     protected void setDefaultDateStr() {
-        this.dateStr = MONTH_DATE.format(this);
+        this.dateStr = MONTH_DATE.print(this.getTime());
     }
 }

@@ -149,9 +149,9 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     }
 
     private void setProfileItemValue(String itemValuePath) {
-        if (itemValuePath.isEmpty()) return;
-        if (getProfileItem() == null) return;
-        this.itemValue = getProfileItem().matchItemValue(itemValuePath);
+        if (itemValuePath.isEmpty() || getProfileItem() == null)
+            return;
+        this.itemValue = getProfileItem().getItemValue(itemValuePath);
     }
 
     private void setBuilderStrategy() {

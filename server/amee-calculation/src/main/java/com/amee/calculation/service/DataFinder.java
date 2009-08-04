@@ -68,7 +68,7 @@ public class DataFinder implements Serializable {
         ItemValue itemValue;
         DataItem dataItem = getDataItem(path, drillDown);
         if (dataItem != null) {
-            itemValue = dataItem.matchItemValue(name, startDate);
+            itemValue = dataItem.getItemValue(name);
             if (itemValue != null) {
                 value = itemValue.getValue();
             }
@@ -89,6 +89,7 @@ public class DataFinder implements Serializable {
                 dataItem = dataService.getDataItemByUid(
                         environment,
                         choices.getChoices().get(0).getValue());
+                dataItem.setEffectiveStartDate(startDate);
             }
         }
         return dataItem;

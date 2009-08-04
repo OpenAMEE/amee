@@ -1,8 +1,6 @@
 package com.amee.domain;
 
 import com.amee.domain.profile.GCDate;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormatter;
@@ -32,8 +30,6 @@ import java.util.Date;
  */
 public class StartEndDate extends GCDate {
 
-    private final Log log = LogFactory.getLog(getClass());
-
     private static final DateTimeFormatter FMT = ISODateTimeFormat.dateTimeNoMillis();
 
     public StartEndDate() {
@@ -53,7 +49,6 @@ public class StartEndDate extends GCDate {
             // Seconds are ignored and are not significant in this version of AMEE.
             return FMT.parseDateTime(dateStr).secondOfMinute().withMinimumValue().getMillis();
         } catch (IllegalArgumentException e) {
-            log.error("parseStr() - Invalid date format: " + dateStr);
             throw e;
         }
     }

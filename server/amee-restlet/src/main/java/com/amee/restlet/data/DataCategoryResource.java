@@ -161,10 +161,12 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             // clear caches
             dataService.clearCaches(thisDataCategory);
             if (isPost()) {
-                 if (dataItems.isEmpty()) {
-                     successfulPost(getFullPath(), dataItem.getUid());
+                 if (isBatchPost()) {
+                     successfulBatchPost();
+                 } else if (dataCategory != null) {
+                     successfulPost(getFullPath(), dataCategory.getPath());
                  } else {
-                     successfulPost(getFullPath(), dataItems.get(0).getUid());
+                     successfulPost(getFullPath(), dataItem.getUid());
                  }
              } else {
                  successfulPut(getFullPath());
@@ -473,7 +475,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
         // update item values if supplied
         for (String name : form.getNames()) {
-            ItemValue itemValue = dataItem.matchItemValue(name);
+            ItemValue itemValue = dataItem.getItemValue(name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
             }

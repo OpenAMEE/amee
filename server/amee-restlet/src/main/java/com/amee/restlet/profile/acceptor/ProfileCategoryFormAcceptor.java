@@ -105,6 +105,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
         return profileItems;
     }
 
+    // Note, this can be called by both POSTs and PUTs
     private ProfileItem acceptProfileItem(ProfileCategoryResource resource, Form form, ProfileItem profileItem) throws APIException {
 
         // Validate request.
@@ -161,8 +162,8 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                 profileService.persist(profileItem);
                 // update item values if supplied
                 for (String name : form.getNames()) {
-                    // Find all matching active ItemValues at the item startDate 
-                    ItemValue itemValue = profileItem.matchItemValue(name, profileItem.getStartDate());
+                    // Find the matching active ItemValue for the prevailing datetime context.
+                    ItemValue itemValue = profileItem.getItemValue(name);
                     if (itemValue != null) {
                         itemValue.setValue(form.getFirstValue(name));
                         if (resource.getAPIVersion().isNotVersionOne()) {

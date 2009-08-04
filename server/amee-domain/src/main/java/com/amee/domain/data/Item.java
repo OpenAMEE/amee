@@ -78,7 +78,10 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     private Set<ItemValue> activeItemValues;
 
     @Transient
-    private Date currentDate;
+    private Date effectiveStartDate;
+
+    @Transient
+    private Date effectiveEndDate;
 
     public Item() {
         super();
@@ -97,7 +100,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
     public Set<ItemValueDefinition> getItemValueDefinitions() {
         Set<ItemValueDefinition> itemValueDefinitions = new HashSet<ItemValueDefinition>();
-        for (ItemValue itemValue : itemValues) {
+        for (ItemValue itemValue : getActiveItemValues()) {
             itemValueDefinitions.add(itemValue.getItemValueDefinition());
         }
         return itemValueDefinitions;
@@ -135,32 +138,23 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
     /**
      * Get an unmodifiable List of {@link ItemValue}s owned by this Item.
-     * For an historical sequence of {@link ItemValue}s, only the active entry on the current date in that sequence is returned.
+     *
+     * For an historical sequence of {@link ItemValue}s, only the active entry for each {@link ItemValueDefinition} 
+     * for the prevailing datetime context is returned.
      *
      * @return - the List of {@link ItemValue}
      */
     public List<ItemValue> getItemValues() {
-        return getItemValues(getCurrentDate());
+        return Collections.unmodifiableList(getItemValuesMap().getAll(getEffectiveStartDate()));
     }
 
     /**
-     * Get an unmodifiable List of {@link ItemValue}s owned by this Item.
-     * For an historical sequence of {@link ItemValue}s, the active entry at the given start date in that sequence is returned.
+     * Get an unmodifiable List of ALL {@link ItemValue}s owned by this Item for a particular {@link ItemValueDefinition}
      *
-     * @param startDate - the start date for active {@link ItemValue}s
+     * @param itemValuePath - the {@link ItemValueDefinition} path
      * @return - the List of {@link ItemValue}
      */
-    public List<ItemValue> getItemValues(Date startDate) {
-        return Collections.unmodifiableList(getItemValuesMap().getAll(startDate));
-    }
-
-    /**
-     * Get an unmodifiable List of {@link ItemValue}s owned by this Item of a particular kind of {@ItemValueDefinition}
-     *
-     * @param itemValuePath - the {@ItemValueDefinition} path
-     * @return - the List of {@link ItemValue}
-     */
-    public List<ItemValue> getItemValues(String itemValuePath) {
+    public List<ItemValue> getAllItemValues(String itemValuePath) {
         return Collections.unmodifiableList(getItemValuesMap().getAll(itemValuePath));
     }
 
@@ -169,7 +163,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      *
      * @return - the Set of {@link ItemValue}
      */
-    public Set<ItemValue> getActiveItemValues() {
+    private Set<ItemValue> getActiveItemValues() {
         if (activeItemValues == null) {
             activeItemValues = new HashSet<ItemValue>();
             for (ItemValue iv : itemValues) {
@@ -198,14 +192,15 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     /**
-     * Attempt to match an {@link ItemValue} belonging to this Item using some identifier.
+     * Attempt to match an {@link ItemValue} belonging to this Item using some identifier. The identifer may be a path
+     * or UID.
      *
      * @param identifier - a value to be compared to the path and then the uid of the {@link ItemValue}s belonging
      * to this Item.
-     * @param startDate
+     * @param startDate - the startDate to use in the {@link ItemValue} lookup
      * @return the matched {@link ItemValue} or NULL if no match is found.
      */
-    public ItemValue matchItemValue(String identifier, Date startDate) {
+    public ItemValue getItemValue(String identifier, Date startDate) {
         ItemValue iv = getItemValuesMap().get(identifier, startDate);
         if (iv == null) {
             iv = getByUid(identifier);
@@ -213,21 +208,21 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         return iv;
     }
 
-    /**
-     * Attempt to match an {@link ItemValue} belonging to this Item using some identifier.
+     /**
+     * Get an {@link ItemValue} belonging to this Item using some identifier and prevailing datetime context.
      *
      * @param identifier - a value to be compared to the path and then the uid of the {@link ItemValue}s belonging
      * to this Item.
      * @return the matched {@link ItemValue} or NULL if no match is found.
      */
-    public ItemValue matchItemValue(String identifier) {
-        return matchItemValue(identifier, getCurrentDate());
+    public ItemValue getItemValue(String identifier) {
+        return getItemValue(identifier, getEffectiveStartDate());
     }
 
     /**
      * Get an {@link ItemValue} by UID
      *
-     * @param uid
+     * @param uid - the {@link ItemValue} UID
      * @return the {@link ItemValue} if found or NULL
      */
     private ItemValue getByUid(final String uid) {
@@ -236,7 +231,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
             public boolean evaluate(Object o) {
                 ItemValue iv = (ItemValue) o;
                 return iv.getUid().equals(uid);
-
             }
         });
     }
@@ -251,7 +245,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         ItemValueMap itemValueMap = getItemValuesMap();
         for (Object path : itemValueMap.keySet()) {
             // Get all ItemValues with this ItemValueDefinition path.
-            List<ItemValue> itemValues = itemValueMap.getAll((String) path);
+            List<ItemValue> itemValues = getAllItemValues((String) path);
             if (itemValues.size() == 1 && !itemValues.get(0).getItemValueDefinition().isForceTimeSeries() ) {
                 addSingleValuedItemValue(values, itemValues);
             } else if (itemValues.size() > 1) {
@@ -262,6 +256,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     // Add an ItemValue timeseries to the InternalValue collection.
+    @SuppressWarnings("unchecked")
     private void addTimeSeriesItemValue(Map<ItemValueDefinition, InternalValue> values, List<ItemValue> itemValues) {
         ItemValueDefinition ivd = itemValues.get(0).getItemValueDefinition();
         // Add all ItemValues with usable values
@@ -357,26 +352,72 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     /**
-     * Set the applicable date for {@link ItemValue} look-ups.
+     * Set the effective start date for {@link ItemValue} look-ups.
      *
-     * @param currentDate - the contemporary date for {@link ItemValue} look-ups
+     * @param effectiveStartDate - the effective start date for {@link ItemValue} look-ups
      */
-    public void setCurrentDate(Date currentDate) {
-        this.currentDate = currentDate;
+    public void setEffectiveStartDate(Date effectiveStartDate) {
+        if (effectiveStartDate == null)
+            return;
+        this.effectiveStartDate = effectiveStartDate;
     }
 
     /**
-     * Get the applicable date for {@link ItemValue} look-ups.
+     * Get the effective start date for {@link ItemValue} look-ups.
      *
-     * @return - the applicable date. If no date has been explicitly specified, then either
+     * @return - the effective start date. If no date has been explicitly specified, then either
      * now or the Item startDate is returned, whichever is the later.
      */
-    protected Date getCurrentDate() {
-        if (currentDate != null) {
-            return currentDate;
+    protected Date getEffectiveStartDate() {
+        if (effectiveStartDate != null) {
+            return effectiveStartDate;
         } else {
             return (getStartDate().before(new Date())) ? new Date() : getStartDate();
         }
+    }
+
+
+    /**
+     * Set the effective end date for {@link ItemValue} look-ups.
+     *
+     * @param effectiveEndDate - the effective end date for {@link ItemValue} look-ups
+     */
+    public void setEffectiveEndDate(Date effectiveEndDate) {
+        if (effectiveEndDate == null)
+            return;
+        this.effectiveEndDate = effectiveEndDate;
+    }
+
+    /**
+     * Get the effective end date for {@link ItemValue} look-ups.
+     *
+     * @return - the effective end date. If no date has been explicitly specified, then Date(Long.MAX_VALUE)
+     * is returned
+     */
+    protected Date getEffectiveEndDate() {
+        if (effectiveEndDate != null) {
+            return effectiveEndDate;
+        } else {
+            return new Date(Long.MAX_VALUE);
+        }
+    }
+
+    /**
+     * Check if there exists amongst the current set of ItemValues, an entry with the given
+     * itemValueDefinition and startDate.
+     * @param itemValueDefinitionUid - a {@link ItemValueDefinition} UID
+     * @param startDate - an {@link ItemValue} startDate
+     * @return - true if the newItemValue is unique, otherwise false
+     */
+    public boolean isUnique(String itemValueDefinitionUid, StartEndDate startDate) {
+        String uniqueId = itemValueDefinitionUid + startDate.getTime();
+        for (ItemValue iv : getActiveItemValues()) {
+            String checkId = iv.getItemValueDefinition().getUid() + iv.getStartDate().getTime();
+            if (uniqueId.equals(checkId)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

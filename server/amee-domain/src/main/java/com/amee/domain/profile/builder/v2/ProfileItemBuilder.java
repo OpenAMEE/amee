@@ -56,7 +56,7 @@ public class ProfileItemBuilder implements Builder {
         obj.put("name", item.getName().isEmpty() ? JSONObject.NULL : item.getName());
         JSONArray itemValues = new JSONArray();
         // Find all matching active ItemValues at the item startDate
-        for (ItemValue itemValue : item.getItemValues(item.getStartDate())) {
+        for (ItemValue itemValue : item.getItemValues()) {
             itemValue.setBuilder(new ItemValueBuilder(itemValue));
             itemValues.put(itemValue.getJSONObject(false));
         }
@@ -76,7 +76,7 @@ public class ProfileItemBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "Name", item.getName()));
         Element itemValuesElem = document.createElement("ItemValues");
         // Find all matching active ItemValues at the item startDate
-        for (ItemValue itemValue : item.getItemValues(item.getStartDate())) {
+        for (ItemValue itemValue : item.getItemValues()) {
             itemValue.setBuilder(new ItemValueBuilder(itemValue));
             itemValuesElem.appendChild(itemValue.getElement(document, false));
         }

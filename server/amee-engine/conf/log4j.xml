@@ -9,7 +9,6 @@
         </layout>
     </appender>
 
-    <!--                          -->
     <!-- Declare the SMTPAppender -->
     <appender name="EMAIL"  class="org.apache.log4j.net.SMTPAppender">
         <param name="BufferSize" value="512" />

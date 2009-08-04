@@ -31,10 +31,10 @@
                                             <bean class="com.amee.restlet.auth.AuthFilter">
                                                 <constructor-arg index="0" ref="profilesApplication"/>
                                                 <property name="next">
-                                                    <bean class="com.amee.restlet.profile.ProfileFilter">
-                                                        <constructor-arg index="0" ref="profilesApplication"/>
+                                                    <bean class="com.amee.restlet.LogFilter">
                                                         <property name="next">
-                                                            <bean class="com.amee.restlet.LogFilter">
+                                                            <bean class="com.amee.restlet.profile.ProfileFilter">
+                                                                <constructor-arg index="0" ref="profilesApplication"/>
                                                                 <property name="next" ref="profilesRouter"/>
                                                             </bean>
                                                         </property>

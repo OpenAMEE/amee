@@ -88,19 +88,26 @@ public class OnlyActiveProfileService {
         if (profileItems == null) {
             return null;
         }
-        return (List) CollectionUtils.select(profileItems, new Predicate() {
+        List l = (List) CollectionUtils.select(profileItems, new Predicate() {
             public boolean evaluate(Object o) {
                 ProfileItem pi = (ProfileItem) o;
                 for (ProfileItem profileItem : profileItems) {
+                    log.debug("getProfileItems() - comparing " + pi.getDataItem().getUid() + ":" + pi.getName() + ":" + pi.getStartDate() +
+                            " and " +
+                            profileItem.getDataItem().getUid() + "  :" + profileItem.getName() + ":" + profileItem.getStartDate());
+
                     if (pi.getDataItem().equals(profileItem.getDataItem()) &&
                             pi.getName().equalsIgnoreCase(profileItem.getName()) &&
                             pi.getStartDate().before(profileItem.getStartDate()) &&
                             ((startDate == null) || !profileItem.getStartDate().after(startDate.toDate()))) {
+                        log.debug("getProfileItems() - not including in collection");
                         return false;
                     }
                 }
+                log.debug("getProfileItems() - including in collection");
                 return true;
             }
         });
+        return l;
     }
 }

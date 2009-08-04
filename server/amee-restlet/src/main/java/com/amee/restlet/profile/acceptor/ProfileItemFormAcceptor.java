@@ -81,7 +81,7 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
 
             // Update ItemValues if supplied
             for (String name : form.getNames()) {
-                ItemValue itemValue = profileItem.matchItemValue(name);
+                ItemValue itemValue = profileItem.getItemValue(name);
                 if (itemValue != null) {
                     itemValue.setValue(form.getFirstValue(name));
                     if (resource.getAPIVersion().isNotVersionOne()) {

@@ -60,9 +60,8 @@ public class DataItem extends Item {
         String label = "";
         ItemValue itemValue;
         ItemDefinition itemDefinition = getItemDefinition();
-        ItemValueMap itemValuesMap = getItemValuesMap();
         for (Choice choice : itemDefinition.getDrillDownChoices()) {
-            itemValue = itemValuesMap.get(choice.getName(), getCurrentDate());
+            itemValue = getItemValue(choice.getName());
             if ((itemValue != null) &&
                     (itemValue.getValue().length() > 0) &&
                     !itemValue.getValue().equals("-")) {
@@ -98,7 +97,7 @@ public class DataItem extends Item {
     }                           
 
     private void buildElementItemValues(Document document, Element itemValuesElem) {
-        for (ItemValue itemValue : getItemValues(getCurrentDate())) {
+        for (ItemValue itemValue : getItemValues()) {
             itemValue.setBuilder(new ItemValueBuilder(itemValue));
             itemValuesElem.appendChild(itemValue.getElement(document, false));
         }
@@ -109,7 +108,7 @@ public class DataItem extends Item {
             String path = (String) o1;
             Element itemValueSeries = document.createElement("ItemValueSeries");
             itemValueSeries.setAttribute("path",path);
-            for (Object o2 : getItemValuesMap().getAll(path)) {
+            for (Object o2 : getAllItemValues(path)) {
                 ItemValue itemValue = (ItemValue) o2;
                 itemValue.setBuilder(new ItemValueBuilder(itemValue));
                 itemValueSeries.appendChild(itemValue.getElement(document, false));
@@ -138,7 +137,7 @@ public class DataItem extends Item {
     }
 
     private void buildJSONItemValues(JSONArray itemValues) throws JSONException {
-        for (ItemValue itemValue : getItemValues(getCurrentDate())) {
+        for (ItemValue itemValue : getItemValues()) {
             itemValue.setBuilder(new ItemValueBuilder(itemValue));
             itemValues.put(itemValue.getJSONObject(false));
         }
@@ -149,7 +148,7 @@ public class DataItem extends Item {
             String path = (String) o1;
             JSONObject values = new JSONObject();
             JSONArray valueSet = new JSONArray();
-            for (Object o2 : getItemValuesMap().getAll(path)) {
+            for (Object o2 : getAllItemValues(path)) {
                 ItemValue itemValue = (ItemValue) o2;
                 itemValue.setBuilder(new ItemValueBuilder(itemValue));
                 valueSet.put(itemValue.getJSONObject(false));

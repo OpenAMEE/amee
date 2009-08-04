@@ -53,14 +53,14 @@ public class DataSeries {
         this.dataPoints = new ArrayList<DataPoint>(dataPoints);
     }
 
-    private Decimal getQueryInMillis() {
+    private Decimal getSeriesTimeInMillis() {
         if (dataPoints.isEmpty()) {
             return Decimal.ZERO;
         }
 
-        DateTime queryStart = dataPoints.get(0).getDateTime();
-        DateTime queryEnd = dataPoints.get(dataPoints.size() -1).getDateTime();
-        return new Decimal(queryEnd.getMillis() - queryStart.getMillis());
+        DateTime seriesStart = dataPoints.get(0).getDateTime();
+        DateTime seriesEnd = dataPoints.get(dataPoints.size() -1).getDateTime();
+        return new Decimal(seriesEnd.getMillis() - seriesStart.getMillis());
     }
 
     // Combine this DataSeries with another DataSeries using the given Operation.
@@ -238,10 +238,12 @@ public class DataSeries {
         Decimal integral = Decimal.ZERO;
         Collections.sort(dataPoints);
         for (int i = 0; i < dataPoints.size()-1; i++) {
+
             DataPoint current = dataPoints.get(i);
             DataPoint next = dataPoints.get(i+1);
+
             Decimal segmentInMillis = new Decimal(next.getDateTime().getMillis() - current.getDateTime().getMillis());
-            Decimal weightedAverage = current.getValue().multiply(segmentInMillis.divide(getQueryInMillis()));
+            Decimal weightedAverage = current.getValue().multiply(segmentInMillis.divide(getSeriesTimeInMillis()));
             integral = integral.add(weightedAverage);
         }
         return integral;

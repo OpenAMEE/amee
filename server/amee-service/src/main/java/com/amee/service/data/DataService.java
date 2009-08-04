@@ -114,13 +114,15 @@ public class DataService extends BaseService {
     public DataItem getDataItemByUid(Environment environment, String uid) {
         DataItem dataItem = dao.getDataItemByUid(uid);
         checkEnvironmentObject(environment, dataItem);
-        return checkDataItem(dataItem);
+        checkDataItem(dataItem);
+        return dataItem;
     }
 
     public DataItem getDataItemByPath(Environment environment, String path) {
         DataItem dataItem = dao.getDataItemByPath(environment, path);
         checkEnvironmentObject(environment, dataItem);
-        return checkDataItem(dataItem);
+        checkDataItem(dataItem);
+        return dataItem;
     }
 
     public List<DataItem> getDataItems(DataCategory dataCategory) {
@@ -177,15 +179,13 @@ public class DataService extends BaseService {
      * <p/>
      * Any updates to the {@link com.amee.domain.data.DataItem} will be persisted to the database.
      *
-     * @param dataItem
+     * @param dataItem - the DataItem to check
      */
     @SuppressWarnings(value = "unchecked")
-    public DataItem checkDataItem(DataItem dataItem) {
-
+    public void checkDataItem(DataItem dataItem) {
         if (dataItem == null) {
-            return null;
+            return;
         }
-
         Set<ItemValueDefinition> existingItemValueDefinitions = dataItem.getItemValueDefinitions();
         Set<ItemValueDefinition> missingItemValueDefinitions = new HashSet<ItemValueDefinition>();
 
@@ -215,8 +215,6 @@ public class DataService extends BaseService {
             pathItemService.removePathItemGroup(dataItem.getEnvironment());
             dataSheetService.removeSheet(dataItem.getDataCategory());
         }
-
-        return dataItem;
     }
 
     public void persist(DataItem dataItem) {

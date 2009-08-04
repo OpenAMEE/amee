@@ -30,10 +30,10 @@
                                             <bean class="com.amee.restlet.auth.AuthFilter">
                                                 <constructor-arg index="0" ref="dataApplication"/>
                                                 <property name="next">
-                                                    <bean class="com.amee.restlet.data.DataFilter">
-                                                        <constructor-arg index="0" ref="dataApplication"/>
+                                                    <bean class="com.amee.restlet.LogFilter">
                                                         <property name="next">
-                                                            <bean class="com.amee.restlet.LogFilter">
+                                                            <bean class="com.amee.restlet.data.DataFilter">
+                                                                <constructor-arg index="0" ref="dataApplication"/>
                                                                 <property name="next" ref="dataRouter"/>
                                                             </bean>
                                                         </property>
