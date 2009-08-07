@@ -3,7 +3,7 @@ package com.amee.calculation.service;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.data.ItemDefinition;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

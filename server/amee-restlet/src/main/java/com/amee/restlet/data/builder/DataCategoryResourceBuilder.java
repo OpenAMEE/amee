@@ -5,11 +5,12 @@ import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.path.PathItem;
+import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.sheet.Sheet;
 import com.amee.restlet.data.DataCategoryResource;
 import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionService;
-import com.amee.service.auth.AuthService;
+import com.amee.service.path.PathItemService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +51,7 @@ public class DataCategoryResourceBuilder {
     private DefinitionService definitionService;
 
     @Autowired
-    private AuthService authService;
+    private PathItemService pathItemService;
 
     public JSONObject getJSONObject(DataCategoryResource resource) throws JSONException {
 
@@ -68,14 +69,24 @@ public class DataCategoryResourceBuilder {
 
             // addItemValue Data Categories via pathItem to children
             JSONArray dataCategories = new JSONArray();
-            for (PathItem pi : resource.getPathItem().getChildrenByType("DC")) {
-                //TODO - Use ResourceActions? Add new action allowViewHidden.
-                // If the child category is hidden only show if the user is a super user
+
+            // If the DC is a symlink, use the target PathItem
+            PathItem pathItem = resource.getPathItem();
+            if (resource.getDataCategory().getAliasedCategory() != null) {
+                PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getEnvironment());
+                pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
+            }
+
+            for (PathItem pi : pathItem.getChildrenByType("DC")) {
+
                 DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
-                if (child != null &&
-                        (authService.isSuperUser() || !child.isDeprecated())) {
-                    dataCategories.put(pi.getJSONObject());
-                }
+
+                if (child == null || (child.isDeprecated() &&
+                        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated()))
+                    continue;
+
+                dataCategories.put(pi.getJSONObject());
+
             }
             children.put("dataCategories", dataCategories);
 
@@ -104,6 +115,11 @@ public class DataCategoryResourceBuilder {
                 JSONArray dataCategories = new JSONArray();
                 obj.put("dataCategories", dataCategories);
                 for (DataCategory dc : resource.getDataCategories()) {
+
+                    if (dc.isDeprecated() &&
+                            !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated())
+                        continue;
+
                     dataCategories.put(dc.getJSONObject(false));
                 }
             }
@@ -139,14 +155,23 @@ public class DataCategoryResourceBuilder {
 
             // addItemValue Data Categories
             Element dataCategoriesElement = document.createElement("DataCategories");
-            for (PathItem pi : resource.getPathItem().getChildrenByType("DC")) {
-                //TODO - Use ResourceActions? Add new action allowViewHidden.
-                // If the child category is hidden only show if the user is a super user
+
+            // If the DC is a symlink, use the target PathItem
+            PathItem pathItem = resource.getPathItem();
+            if (resource.getDataCategory().getAliasedCategory() != null) {
+                PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getEnvironment());
+                pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
+            }
+
+            for (PathItem pi : pathItem.getChildrenByType("DC")) {
+
                 DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
-                if (child != null &&
-                        (authService.isSuperUser() || !child.isDeprecated())) {
-                    dataCategoriesElement.appendChild(pi.getElement(document));
-                }
+
+                if (child == null || (child.isDeprecated() &&
+                        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated()))
+                    continue;
+
+                dataCategoriesElement.appendChild(pi.getElement(document));
             }
             childrenElement.appendChild(dataCategoriesElement);
             // list child Data Items via sheet
@@ -168,6 +193,11 @@ public class DataCategoryResourceBuilder {
                 Element dataItemsElement = document.createElement("DataCategories");
                 element.appendChild(dataItemsElement);
                 for (DataCategory dc : resource.getDataCategories()) {
+
+                    if (dc.isDeprecated() &&
+                            !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated())
+                        continue;
+
                     dataItemsElement.appendChild(dc.getElement(document, false));
                 }
             }
@@ -203,6 +233,15 @@ public class DataCategoryResourceBuilder {
             pager.setCurrentPage(resource.getPage());
             values.put("sheet", sheet);
             values.put("pager", pager);
+        }
+
+        // If the DC is a symlink, use the target PathItem
+        PathItem pathItem = resource.getPathItem();
+        values.put("fullPath", "/data" + pathItem.getFullPath());
+        if (resource.getDataCategory().getAliasedCategory() != null) {
+            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getEnvironment());
+            pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
+            values.put("pathItem",pathItem);
         }
         return values;
     }

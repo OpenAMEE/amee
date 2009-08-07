@@ -12,7 +12,7 @@ import com.amee.domain.profile.Profile;
 import com.amee.domain.site.App;
 import com.amee.domain.site.Site;
 import com.amee.domain.site.SiteApp;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

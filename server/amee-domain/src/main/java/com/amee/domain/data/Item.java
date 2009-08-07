@@ -136,13 +136,9 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
-    public String getName(Locale locale) {
-        return name;
-    }
-
     @Override
     public String getName() {
-        return getName(Locale.UK);
+        return name;
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.amee.engine;
 
 import com.amee.core.APIUtils;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEStatistics;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.MediaTypeUtils;
-import com.amee.service.ThreadBeanHolder;
 import com.amee.service.auth.AuthService;
 import freemarker.template.Configuration;
 import org.apache.commons.lang.StringUtils;

@@ -4,7 +4,7 @@ import com.amee.domain.site.App;
 import com.amee.domain.site.Site;
 import com.amee.domain.site.SiteApp;
 import com.amee.restlet.utils.HeaderUtils;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.service.environment.SiteService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

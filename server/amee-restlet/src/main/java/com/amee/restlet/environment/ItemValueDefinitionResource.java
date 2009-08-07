@@ -21,7 +21,10 @@ package com.amee.restlet.environment;
 
 import com.amee.domain.APIVersion;
 import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.ItemValueDefinitionLocaleName;
+import com.amee.domain.data.LocaleName;
 import com.amee.restlet.BaseResource;
+import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import com.amee.service.environment.EnvironmentService;
@@ -119,6 +122,24 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
         if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
             ItemValueDefinition itemValueDefinition = definitionBrowser.getItemValueDefinition();
             Form form = getForm();
+
+            // Parse any submitted locale names
+            for (String name : form.getNames()) {
+                if (name.startsWith("name_")) {
+                    String localeNameStr = form.getFirstValue(name);
+                    String locale = name.substring(name.indexOf("_") + 1);
+                    if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                        ItemValueDefinitionLocaleName localeName =
+                            new ItemValueDefinitionLocaleName(itemValueDefinition, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
+                        itemValueDefinition.putLocaleName(localeName);
+                        form.removeFirst(name);
+                    } else {
+                        badRequest(APIFault.INVALID_PARAMETERS);
+                        return;
+                    }
+                }
+            }
+
             Set<String> names = form.getNames();
             if (names.contains("name")) {
                 itemValueDefinition.setName(form.getFirstValue("name"));

@@ -174,8 +174,19 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             var selectElement = new Element('select', {name : 'itemDefinitionUid'});
             var pElement = new Element('p');
 
-            this.addFormInfoElement('Name: ', formElement, 'name', dataCategory.name, 30, 'margin-left:46px');
-            this.addFormInfoElement('Path: ', formElement, 'path', dataCategory.path, 30, 'margin-left:54px');
+            this.addFormInfoElement('Name: ', formElement, 'name', dataCategory.name, 30, 'margin-left:88px');
+            this.addFormInfoElement('Path: ', formElement, 'path', dataCategory.path, 30, 'margin-left:96px');
+
+            formElement.insert('Deprecated: ').insert("Yes:");
+            var radioElementYes = new Element('input', {type : "radio", name : 'deprecated', value: "true"});
+            formElement.insert(radioElementYes).insert("No:");
+            var radioElementNo = new Element('input', {type : "radio", name : 'deprecated', value: "false"});
+            formElement.insert(radioElementNo).insert("<br>");
+            if (dataCategory.deprecated) {
+                radioElementYes.checked = true;
+            } else {
+                radioElementNo.checked = true;
+            }
 
             // item definitions
             selectElement.insert(new Element('option', {value : ''}).update('(No Item Definition)'));

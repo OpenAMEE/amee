@@ -5,7 +5,7 @@ import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import com.amee.domain.cache.CacheableFactory;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

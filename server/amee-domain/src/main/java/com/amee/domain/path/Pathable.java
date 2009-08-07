@@ -19,12 +19,10 @@
 */
 package com.amee.domain.path;
 
-import com.amee.core.ObjectType;
 import com.amee.core.PersistentObject;
+import com.amee.core.ObjectType;
 
 public interface Pathable extends PersistentObject {
-
-    public ObjectType getObjectType();
 
     public String getPath();
 
@@ -35,4 +33,7 @@ public interface Pathable extends PersistentObject {
     public String getDisplayPath();
 
     public boolean isDeprecated();
+
+    public ObjectType getObjectType();
 }
+

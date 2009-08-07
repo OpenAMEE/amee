@@ -40,6 +40,7 @@ import java.util.*;
 @Entity
 @Table(name = "ITEM_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@DiscriminatorValue("ID")
 public class ItemDefinition extends AMEEEnvironmentEntity {
 
     public final static int NAME_SIZE = 255;
@@ -63,10 +64,6 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OrderBy("name")
     private Set<ItemValueDefinition> itemValueDefinitions = new HashSet<ItemValueDefinition>();
-
-    //@OneToMany(mappedBy = "pathable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    //private List<LocaleName> localeNames = new ArrayList<LocaleName>();
 
     public ItemDefinition() {
         super();
@@ -168,7 +165,12 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     }
 
     public String getName() {
-        return name;
+        String localeName = getLocaleName();
+        if (localeName != null) {
+            return localeName;
+        } else {
+            return name;
+        }
     }
 
     public void setName(String name) {

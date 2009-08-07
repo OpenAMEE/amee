@@ -1,6 +1,6 @@
 package com.amee.engine.restlet;
 
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.service.transaction.TransactionController;
 import com.noelios.restlet.http.HttpRequest;
 import com.noelios.restlet.http.HttpResponse;

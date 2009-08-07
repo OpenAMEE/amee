@@ -1,8 +1,8 @@
 package com.amee.restlet.auth;
 
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.auth.User;
 import com.amee.restlet.RequestContext;
-import com.amee.service.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;

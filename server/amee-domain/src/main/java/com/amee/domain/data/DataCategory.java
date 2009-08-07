@@ -21,8 +21,10 @@ package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
 import com.amee.core.ObjectType;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.logging.Log;
@@ -38,7 +40,6 @@ import org.w3c.dom.Element;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Entity
 @Table(name = "DATA_CATEGORY")
@@ -65,6 +66,14 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     @Column(name = "PATH", length = PATH_SIZE, nullable = true)
     @Index(name = "PATH_IND")
     private String path = "";
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ALIASED_TO_ID")
+    private DataCategory aliasedTo;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ALIASED_TO_ID")
+    private List<DataCategory> aliases = new ArrayList<DataCategory>();
 
     public DataCategory() {
         super();
@@ -109,6 +118,7 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         obj.put("uid", getUid());
         obj.put("path", getPath());
         obj.put("name", getName());
+        obj.put("deprecated", isDeprecated());
         if (detailed) {
             obj.put("created", getCreated().toString());
             obj.put("modified", getModified().toString());
@@ -128,22 +138,23 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     }
 
     public Element getElement(Document document, boolean detailed) {
-        Element profileElement = document.createElement("DataCategory");
-        profileElement.setAttribute("uid", getUid());
-        profileElement.appendChild(APIUtils.getElement(document, "Name", getName()));
-        profileElement.appendChild(APIUtils.getElement(document, "Path", getPath()));
+        Element element = document.createElement("DataCategory");
+        element.setAttribute("uid", getUid());
+        element.appendChild(APIUtils.getElement(document, "Name", getName()));
+        element.appendChild(APIUtils.getElement(document, "Path", getPath()));
+        element.appendChild(APIUtils.getElement(document, "Deprecated", ""+isDeprecated()));
         if (detailed) {
-            profileElement.setAttribute("created", getCreated().toString());
-            profileElement.setAttribute("modified", getModified().toString());
-            profileElement.appendChild(getEnvironment().getIdentityElement(document));
+            element.setAttribute("created", getCreated().toString());
+            element.setAttribute("modified", getModified().toString());
+            element.appendChild(getEnvironment().getIdentityElement(document));
             if (getDataCategory() != null) {
-                profileElement.appendChild(getDataCategory().getIdentityElement(document));
+                element.appendChild(getDataCategory().getIdentityElement(document));
             }
             if (getItemDefinition() != null) {
-                profileElement.appendChild(getItemDefinition().getIdentityElement(document));
+                element.appendChild(getItemDefinition().getIdentityElement(document));
             }
         }
-        return profileElement;
+        return element;
     }
 
     public Element getIdentityElement(Document document) {
@@ -157,12 +168,8 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
 
     @Override
     public String getDisplayName() {
-        return getDisplayName(Locale.UK);
-    }
-
-    public String getDisplayName(Locale locale) {
-        if (getName(locale).length() > 0) {
-            return getName(locale);
+        if (getName().length() > 0) {
+            return getName();
         } else {
             return getDisplayPath();
         }
@@ -188,11 +195,12 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
 
     @Override
     public String getName() {
-        return getName(Locale.UK);
-    }
-
-    public String getName(Locale locale) {
-        return name;
+        String localeName = getLocaleName();
+        if (localeName != null) {
+            return localeName;
+        } else {
+            return name;
+        }
     }
 
     public void setName(String name) {
@@ -228,4 +236,25 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
             return true;
         }
     }
+
+    public DataCategory getAliasedCategory() {
+        return aliasedTo;
+    }
+
+    public void setAliasedTo(DataCategory aliasedTo) {
+        this.aliasedTo = aliasedTo;
+    }
+
+    public List<DataCategory> getAliases() {
+        return aliases;    
+    }
+
+    @Override
+    public void setStatus(AMEEStatus status) {
+        this.status = status;
+        for(DataCategory alias : aliases) {
+            alias.setStatus(status);
+        }
+    }
+
 }

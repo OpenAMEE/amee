@@ -6,7 +6,7 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.restlet.profile.builder.v2.AtomFeed;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.profile.ProfileService;
@@ -218,6 +218,9 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     protected void setDataCategory(String dataCategoryUid) {
         if (dataCategoryUid.isEmpty()) return;
         this.dataCategory = dataService.getDataCategoryByUid(dataCategoryUid);
+        //if (this.dataCategory != null && this.dataCategory.getAliasedCategory() != null) {
+        //    this.dataCategory = dataCategory.getAliasedCategory();
+        //}
     }
 
     public DataCategory getDataCategory() {

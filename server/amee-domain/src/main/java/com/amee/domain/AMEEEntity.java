@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+@Entity
 @MappedSuperclass
 public abstract class AMEEEntity implements DatedObject, Serializable {
 
@@ -152,3 +153,4 @@ public abstract class AMEEEntity implements DatedObject, Serializable {
         this.modified = modified;
     }
 }
+

@@ -25,8 +25,6 @@ import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.AMEEStatus;
 import org.hibernate.annotations.Index;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -21,7 +21,10 @@ package com.amee.restlet.environment;
 
 import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.data.ItemDefinitionLocaleName;
+import com.amee.domain.data.LocaleName;
 import com.amee.restlet.BaseResource;
+import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
@@ -114,6 +117,24 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
         if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
             ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
             Form form = getForm();
+
+            // Parse any submitted locale names
+            for (String name : form.getNames()) {
+                if (name.startsWith("name_")) {
+                    String localeNameStr = form.getFirstValue(name);
+                    String locale = name.substring(name.indexOf("_") + 1);
+                    if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                        LocaleName localeName =
+                                new ItemDefinitionLocaleName(itemDefinition, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
+                        itemDefinition.putLocaleName(localeName);
+                        form.removeFirst(name);
+                    } else {
+                        badRequest(APIFault.INVALID_PARAMETERS);
+                        return;
+                    }
+                }
+            }
+
             Set<String> names = form.getNames();
             if (names.contains("name")) {
                 itemDefinition.setName(form.getFirstValue("name"));

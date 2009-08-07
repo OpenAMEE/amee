@@ -21,31 +21,52 @@
  */                                  
 package com.amee.domain.data;
 
+import com.amee.core.ObjectType;
+import com.amee.domain.AMEEEnvironmentEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
-//@Entity
-//@Table(name = "LOCALE_NAME")
-//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class LocaleName {
+@Entity
+@Inheritance
+@Table(name = "LOCALE_NAME")
+@DiscriminatorColumn(name = "ENTITY_TYPE")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public class LocaleName extends AMEEEnvironmentEntity {
 
-    //@Column(name="LOCALE")
+    public static final Locale DEFAULT_LOCALE = Locale.UK;
+
+    @Column(name = "LOCALE", nullable = false)
     private String locale;
 
-    //@Column(name="PATHABLE_ID")
-    private String pathable;
-
-    //@Column(name="NAME")
+    @Column(name = "NAME", nullable = false)
     private String name;
 
-    public LocaleName() {}
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ENTITY_ID", nullable = false)
+    private AMEEEnvironmentEntity entity;
+    public static Map<String, Locale> AVAILABLE_LOCALES = new TreeMap<String, Locale>();
+
+    public LocaleName() {
+        super();
+    }
+
+    public LocaleName(AMEEEnvironmentEntity entity, Locale locale, String name) {
+        super(entity.getEnvironment());
+        this.entity = entity;
+        this.locale = locale.toString();
+        this.name = name;
+    }
 
     public String getName() {
         return name;
     }
 
+    public String getLocale() {
+        return locale;
+    }
 }

@@ -1,6 +1,5 @@
 package com.amee.service.auth;
 
-import com.amee.domain.AMEEEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import java.io.Serializable;
 public class ResourceActions implements Serializable {
 
     public final static String ACTION_VIEW = ".view";
+    public final static String ACTION_VIEW_DEPRECATED = ".view-deprecated";
     public final static String ACTION_CREATE = ".create";
     public final static String ACTION_MODIFY = ".modify";
     public final static String ACTION_DELETE = ".delete";
@@ -19,12 +19,14 @@ public class ResourceActions implements Serializable {
     private AuthService authService;
 
     private Boolean view = null;
+    private Boolean viewDeprecated = null;
     private Boolean create = null;
     private Boolean modify = null;
     private Boolean delete = null;
     private Boolean list = null;
 
     private String resourceViewAction;
+    private String resourceViewDeprecatedAction;
     private String resourceCreateAction;
     private String resourceModifyAction;
     private String resourceDeleteAction;
@@ -41,6 +43,7 @@ public class ResourceActions implements Serializable {
 
     public void setResource(String resource) {
         this.resourceViewAction = resource + ACTION_VIEW;
+        this.resourceViewDeprecatedAction = resource + ACTION_VIEW_DEPRECATED;
         this.resourceCreateAction = resource + ACTION_CREATE;
         this.resourceModifyAction = resource + ACTION_MODIFY;
         this.resourceDeleteAction = resource + ACTION_DELETE;
@@ -51,52 +54,47 @@ public class ResourceActions implements Serializable {
         JSONObject obj = new JSONObject();
         obj.put("allowList", isAllowList());
         obj.put("allowView", isAllowView());
+        obj.put("allowViewDeprecated", isAllowViewDeprecated());
         obj.put("allowCreate", isAllowCreate());
         obj.put("allowModify", isAllowModify());
         obj.put("allowDelete", isAllowDelete());
         return obj;
     }
 
-    public boolean isAllowView(AMEEEntity entity) {
+    public boolean isAllowViewDeprecated() {
+        if (viewDeprecated == null) {
+            viewDeprecated = authService.isSuperUser() ||
+                    //authService.hasActions(resourceViewDeprecatedAction);
+                    authService.hasActions(resourceCreateAction);
+        }
+        return viewDeprecated;
+    }
+
+    public boolean isAllowView() {
         if (view == null) {
             view = authService.isSuperUser() ||
-                    (entity == null || !entity.isDeprecated()) &&
                     (authService.hasActions(resourceViewAction) &&
                             authService.isAllowView());
         }
         return view;
     }
 
-    public boolean isAllowView() {
-        return isAllowView(null);
-    }
-
-    public boolean isAllowCreate(AMEEEntity entity) {
+    public boolean isAllowCreate() {
         if (create == null) {
             create = authService.isSuperUser() ||
-                    (entity == null || !entity.isDeprecated()) &&
                     (authService.hasActions(resourceCreateAction) &&
                             authService.isAllowModify());
         }
         return create;
     }
 
-    public boolean isAllowCreate() {
-        return isAllowCreate(null);
-    }
-
-    public boolean isAllowModify(AMEEEntity entity) {
+    public boolean isAllowModify() {
         if (modify == null) {
             modify = authService.isSuperUser() ||
-                    (entity == null || !entity.isDeprecated()) &&
                     (authService.hasActions(resourceModifyAction) &&
                             authService.isAllowModify());
         }
         return modify;
-    }
-
-    public boolean isAllowModify() {
-        return isAllowModify(null);
     }
 
     public boolean isAllowDelete() {

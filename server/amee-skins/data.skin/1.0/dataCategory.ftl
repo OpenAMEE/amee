@@ -5,7 +5,7 @@
 <script src="/scripts/amee/data_service.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-    
+
     function deleteDataCategory(dataCategoryUid, dataCategoryPath) {
         resourceUrl = dataCategoryPath + '?method=delete';
         resourceElem = $('Elem_' + dataCategoryUid);
@@ -32,7 +32,7 @@
 <h2>Data Category Details</h2>
 <p>Name: ${dataCategory.name}<br/>
    <#if dataCategory.path != ''>Path: ${dataCategory.path}<br/></#if>
-   Full Path: ${basePath}<br/>
+   Full Path: ${fullPath}<br/>
    <#if dataCategory.itemDefinition??>Item Definition: ${dataCategory.itemDefinition.name}<br/></#if>
    Environment: ${dataCategory.environment.name}<br/>
    UID: ${dataCategory.uid}<br/>
@@ -93,7 +93,7 @@
 <#if browser.dataCategoryActions.allowModify>
     <h2>Update Data Category</h2>
     <p>
-    <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+    <form action='?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
         Name: <input name='name' value='${dataCategory.name}' type='text' size='30'/><br/>
         Path: <input name='path' value='${dataCategory.path}' type='text' size='30'/><br/>
         Item Definition: <select name='itemDefinitionUid'>
@@ -101,13 +101,16 @@
         <#list itemDefinitions as id>
             <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
         </#list>
-        </select><br/><br/>
+        </select><br/>
+        Deprecated:
+        Yes <input type="radio" name="deprecated" value="true"<#if dataCategory.deprecated> checked</#if>/>
+        No <input type="radio" name="deprecated" value="false"<#if !dataCategory.deprecated> checked</#if>/><br/>
         <input type='submit' value='Update'/>
     </form>
     </p>
 </#if>
 
-<#if browser.dataCategoryActions.allowCreate || browser.dataItemActions.allowCreate>
+<#if (browser.dataCategoryActions.allowCreate || browser.dataItemActions.allowCreate) && !dataCategory.aliasedCategory??>
     <h2>Create</h2>
     <p>
     <form action='${basePath}' method='POST' enctype='application/x-www-form-urlencoded'>

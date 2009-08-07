@@ -138,4 +138,5 @@ public class ValueDefinition extends AMEEEnvironmentEntity {
         }
         this.valueType = valueType;
     }
+
 }

@@ -39,6 +39,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
+@DiscriminatorValue("IVD")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemValueDefinition extends AMEEEnvironmentEntity {
 
@@ -55,10 +56,6 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "VALUE_DEFINITION_ID")
     private ValueDefinition valueDefinition;
-
-    //@OneToMany(mappedBy = "pathable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    //private List<LocaleName> localeNames = new ArrayList<LocaleName>();
 
     @Column(name = "UNIT")
     private String unit;
@@ -185,11 +182,12 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
     }
 
     public String getName() {
-        return getName(Locale.UK);
-    }
-
-    public String getName(Locale locale) {
-        return name;    
+        String localeName = getLocaleName();
+        if (localeName != null) {
+            return localeName;
+        } else {
+            return name;
+        }
     }
 
     public void setName(String name) {
@@ -391,4 +389,5 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
     public void setForceTimeSeries(boolean isForceTimeSeries) {
         this.isForceTimeSeries = isForceTimeSeries;
     }
+
 }

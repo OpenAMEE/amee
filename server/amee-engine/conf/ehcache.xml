@@ -112,6 +112,15 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
+    <cache name="com.amee.domain.data.DataCategory.localeNames"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
     <!-- Item -->
     <cache name="com.amee.domain.data.Item"
            maxElementsInMemory="12500"
@@ -156,6 +165,15 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
+    <cache name="com.amee.domain.data.ItemDefinition.localeNames"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
     <!-- ItemValue -->
     <cache name="com.amee.domain.data.ItemValue"
            maxElementsInMemory="57500"
@@ -177,6 +195,15 @@
     </cache>
     <cache name="com.amee.domain.data.ItemValueDefinition.apiVersions"
            maxElementsInMemory="1000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
+    <cache name="com.amee.domain.data.ItemValueDefinition.localeNames"
+           maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"

@@ -9,4 +9,5 @@ public interface PersistentObject {
     public String getUid();
 
     public void setUid(String uid);
+
 }

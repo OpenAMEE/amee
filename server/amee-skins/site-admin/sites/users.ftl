@@ -73,6 +73,13 @@ API Version: <select name='apiVersion'> <br/>
       <option value='${apiVersion.version}'>${apiVersion.version}</option>
   </#list>
 </select><br/>
+Locale: <select name='locale'> <br/>
+    <option value='en_GB'>en_GB</option>
+     <#list availableLocales as locale>
+         <option value='${locale}'>${locale}</option>
+     </#list>
+   </select>
+<br/>    
 <input type='submit' value="Create User"/><br/>
 </form>
 </p>

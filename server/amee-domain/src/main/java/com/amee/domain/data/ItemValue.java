@@ -37,9 +37,7 @@ import org.w3c.dom.Element;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 @Entity
 @Table(name = "ITEM_VALUE")
@@ -144,22 +142,13 @@ public class ItemValue extends AMEEEntity implements Pathable {
         return getItem().getEnvironment();
     }
     
-    public String getName(Locale locale) {
-        return getItemValueDefinition().getName(locale);
-    }
-
-    @Override
     public String getName() {
-        return getName(Locale.UK);
+        return getItemValueDefinition().getName();
     }
 
     @Override
     public String getDisplayName() {
         return getName();
-    }
-
-    public String getDisplayName(Locale locale) {
-        return getName(locale);
     }
 
     @Override
@@ -222,6 +211,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
         this.endDate = endDate;
     }
 
+    @Override
     public ObjectType getObjectType() {
         return ObjectType.IV;
     }
@@ -297,4 +287,5 @@ public class ItemValue extends AMEEEntity implements Pathable {
     public boolean isTrash() {
         return status.equals(AMEEStatus.TRASH) || getItem().isTrash() || getItemValueDefinition().isTrash();
     }
+
 }

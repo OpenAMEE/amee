@@ -195,6 +195,31 @@ public class ProfileServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
+    protected int getProfileItemCount(Profile profile, DataCategory dataCategory) {
+
+        if ((dataCategory == null) || (dataCategory.getItemDefinition() == null)) {
+            return -1;
+        }
+
+        log.debug("getProfileItemCount() start");
+
+        int count = entityManager.createQuery(
+                "SELECT COUNT(pi.id) " +
+                        "FROM ProfileItem pi " +
+                        "WHERE pi.dataCategory.id = :dataCategoryId " +
+                        "AND pi.profile.id = :profileId")
+                .setParameter("dataCategoryId", dataCategory.getId())
+                .setParameter("profileId", profile.getId())
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
+                .getResultList().size();
+
+        log.debug("getProfileItemCount() count: " + count);
+        return count;
+    }
+
+
+    @SuppressWarnings(value = "unchecked")
     protected List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, Date profileDate) {
 
         if ((dataCategory == null) || (dataCategory.getItemDefinition() == null)) {
@@ -216,13 +241,11 @@ public class ProfileServiceDAO implements Serializable {
                 "SELECT DISTINCT pi " +
                         "FROM ProfileItem pi " +
                         "LEFT JOIN FETCH pi.itemValues " +
-                        "WHERE pi.itemDefinition.id = :itemDefinitionId " +
-                        "AND pi.dataCategory.id = :dataCategoryId " +
+                        "WHERE pi.dataCategory.id = :dataCategoryId " +
                         "AND pi.profile.id = :profileId " +
                         "AND pi.startDate < :profileDate " +
                         "AND pi.status != :trash " +
                         "ORDER BY pi.name, pi.dataItem.name, pi.startDate DESC")
-                .setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId())
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .setParameter("profileId", profile.getId())
                 .setParameter("profileDate", profileDate)
@@ -254,8 +277,7 @@ public class ProfileServiceDAO implements Serializable {
         queryBuilder.append("SELECT DISTINCT pi ");
         queryBuilder.append("FROM ProfileItem pi ");
         queryBuilder.append("LEFT JOIN FETCH pi.itemValues ");
-        queryBuilder.append("WHERE pi.itemDefinition.id = :itemDefinitionId ");
-        queryBuilder.append("AND pi.dataCategory.id = :dataCategoryId ");
+        queryBuilder.append("WHERE pi.dataCategory.id = :dataCategoryId ");
         queryBuilder.append("AND pi.profile.id = :profileId AND ");
         if (endDate == null) {
             queryBuilder.append("(pi.endDate IS NULL OR pi.endDate > :startDate) ");
@@ -267,7 +289,6 @@ public class ProfileServiceDAO implements Serializable {
 
         // Create Query.
         Query query = entityManager.createQuery(queryBuilder.toString());
-        query.setParameter("itemDefinitionId", dataCategory.getItemDefinition().getId());
         query.setParameter("dataCategoryId", dataCategory.getId());
         query.setParameter("profileId", profile.getId());
         query.setParameter("startDate", startDate.toDate());

@@ -41,7 +41,14 @@ Modified: ${user.modified?datetime}<br/>
     <option value='NEW' <#if user.status == 'NEW'>selected='selected'</#if>>NEW</option>
     <option value='ACTIVE' <#if user.status == 'ACTIVE'>selected='selected'</#if>>ACTIVE</option>
     <option value='CLOSED' <#if user.status == 'BLOCK'>selected='selected'</#if>>BLOCK</option>
-  </select><br/><br/>
+  </select><br/>
+  Locale: <select name='locale'> <br/>
+        <option value='en_GB'>en_GB</option>
+        <#list availableLocales as locale>
+           <option value='${locale}' <#if user.locale?? && locale == user.locale>selected='selected'</#if>>${locale}</option>
+       </#list>
+     </select>
+    <br/>
   <input type='submit' value="Update User"/><br/>
   </form>
   </p>
