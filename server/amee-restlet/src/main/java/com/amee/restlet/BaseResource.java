@@ -359,6 +359,8 @@ public abstract class BaseResource extends Resource {
             } else {
                 form = getRequest().getResourceRef().getQueryAsForm();
             }
+            RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+            ctx.setForm(form);
         }
         return form;
     }
