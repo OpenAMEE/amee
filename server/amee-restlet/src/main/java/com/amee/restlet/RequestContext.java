@@ -25,6 +25,7 @@ import com.amee.domain.auth.User;
 import com.amee.domain.profile.Profile;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.restlet.data.Form;
 import org.restlet.data.Request;
 
 /**
@@ -41,6 +42,7 @@ public class RequestContext {
     private String method;
     private String requestParameters;
     private String error;
+    private String form;
 
     public void setUser(User user) {
         if (user == null)
@@ -63,6 +65,10 @@ public class RequestContext {
         this.error = error;    
     }
 
+    public void setForm(Form form) {
+        this.form = form.toString();
+    }
+
     public String toString() {
         ToStringBuilder sb = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
         sb.append("username", username);
@@ -72,6 +78,7 @@ public class RequestContext {
         sb.append("path", requestPath);
         sb.append("method", method);
         sb.append("parameters", requestParameters);
+        sb.append("form", form);
         sb.append("error", error);
         return sb.toString();
     }
