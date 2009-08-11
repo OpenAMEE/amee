@@ -118,6 +118,9 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         if (!dataBrowser.getDataCategoryActions().isAllowView()) {
             notAuthorized();
             return;
+        } else if (getDataCategory() == null) {
+            notFound();
+            return;
         } else if (getDataCategory().isDeprecated() && !dataBrowser.getDataCategoryActions().isAllowViewDeprecated()) {
             deprecated();
             return;
@@ -186,6 +189,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     protected void acceptJSON(Representation entity) {
         log.debug("acceptJSON()");
+        setIsBatchPost(true);
         DataCategory dataCategory;
         DataItem dataItem;
         Form form;
@@ -241,6 +245,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     protected void acceptXML(Representation entity) {
         log.debug("acceptXML()");
+        setIsBatchPost(true);
         DataCategory dataCategory;
         DataItem dataItem;
         Form form;
