@@ -38,7 +38,7 @@ namespace :install do
     @pwd = Dir.pwd
     Dir.chdir(package_dir)
     `git checkout master`
-    `git pull`
+    `git fetch`
     
     # Remove the previous install artifacts
     FileUtils.rm_r Dir.glob("#{package_dir}/*")
