@@ -86,7 +86,7 @@ namespace :install do
   task :deploy_to_git do
     `git add .`
     `git commit -a -m 'Install from capistrano on #{Time.now}'`
-    `git push`
+    `git push -v`
   end
   
   desc "Tag the src and deployment repositories"
@@ -101,16 +101,16 @@ namespace :install do
     system("echo #{@tag_name} > VERSION.txt")
     `git add VERSION.txt`
     `git commit -a -m 'Install from capistrano on #{Time.now}'`
-    `git push`
+    `git push -v`
         
     # Tag the deployment repository
     `git tag -f -a "#{@tag_name}" -m "#{@tag_name}"`
-    `git push --tag`
+    `git push --tag -v`
     Dir.chdir(@pwd)
     
     # Tag the src repository
     `git tag -f -a "#{@tag_name}" -m "#{@tag_name}"`
-    `git push --tag`
+    `git push --tag -v`
   end
   
 end
