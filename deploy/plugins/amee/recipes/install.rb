@@ -34,7 +34,7 @@ namespace :install do
   end
   
   task :prepare do
-    # Switch the the correct branch
+    # Switch the the correct branch and update from origin
     @pwd = Dir.pwd
     Dir.chdir(package_dir)
     `git checkout master`
