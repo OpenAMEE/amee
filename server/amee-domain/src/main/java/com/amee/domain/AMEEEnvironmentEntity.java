@@ -21,10 +21,8 @@
  */
 package com.amee.domain;
 
-import com.amee.core.ObjectType;
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.auth.User;
-import com.amee.domain.data.DataCategoryLocaleName;
 import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.environment.EnvironmentObject;
