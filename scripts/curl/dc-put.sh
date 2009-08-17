@@ -2,8 +2,8 @@
 . auth.sh
 
 . curl.conf
-amee_url="/data/business/buildings/hotel/generic?method=put"
-data="name_fr=france"
+amee_url="/data/transport/car/generic?method=put"
+data="name_fr=generique"
 type="json"
 
 curl -H "Accept:application/${type}" \

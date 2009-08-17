@@ -3,8 +3,8 @@
 
 . curl.conf
 
-data="name_fr=french_value"
-amee_url="environments/5F5887BCF726/itemDefinitions/125BAAD1DA2E/itemValueDefinitions/DE3E806B7DD4?method=put"
+data="name_fr=taille"
+amee_url="environments/5F5887BCF726/itemDefinitions/123C4A18B5D6/itemValueDefinitions/C6AA71697CCF?method=put"
 
 type="xml"
 
