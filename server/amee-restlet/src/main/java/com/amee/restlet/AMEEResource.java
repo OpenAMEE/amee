@@ -6,7 +6,7 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.restlet.profile.builder.v2.AtomFeed;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.profile.ProfileService;
@@ -246,8 +246,11 @@ public class AMEEResource extends BaseResource implements BeanFactoryAware {
     }
 
     public APIVersion getAPIVersion() {
-        User user = (User) ThreadBeanHolder.get("user");
-        return user.getAPIVersion();
+        return getUser().getAPIVersion();
+    }
+
+    public User getUser() {
+        return (User) ThreadBeanHolder.get("user");
     }
 
     /**

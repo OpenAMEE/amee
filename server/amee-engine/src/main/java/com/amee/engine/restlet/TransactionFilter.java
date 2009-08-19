@@ -1,7 +1,7 @@
 package com.amee.engine.restlet;
 
 import com.amee.restlet.RequestContext;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.service.transaction.TransactionController;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

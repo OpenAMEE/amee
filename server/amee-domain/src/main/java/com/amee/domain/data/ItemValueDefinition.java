@@ -35,13 +35,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
+@DiscriminatorValue("IVD")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemValueDefinition extends AMEEEnvironmentEntity {
 
@@ -184,7 +182,12 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
     }
 
     public String getName() {
-        return name;
+        String localeName = getLocaleName();
+        if (localeName != null) {
+            return localeName;
+        } else {
+            return name;
+        }
     }
 
     public void setName(String name) {
@@ -386,4 +389,5 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
     public void setForceTimeSeries(boolean isForceTimeSeries) {
         this.isForceTimeSeries = isForceTimeSeries;
     }
+
 }

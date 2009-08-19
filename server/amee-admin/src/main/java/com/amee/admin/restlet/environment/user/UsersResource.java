@@ -2,11 +2,13 @@ package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
 import com.amee.domain.Pager;
+import com.amee.domain.data.LocaleName;
 import com.amee.domain.auth.GroupUser;
 import com.amee.domain.auth.Role;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.UserType;
 import com.amee.restlet.BaseResource;
+import com.amee.restlet.utils.APIFault;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.environment.SiteService;
@@ -68,6 +70,7 @@ public class UsersResource extends BaseResource implements Serializable {
         values.put("users", users);
         values.put("pager", pager);
         values.put("apiVersions", environmentBrowser.getApiVersions());
+        values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
         return values;
     }
 
@@ -148,6 +151,12 @@ public class UsersResource extends BaseResource implements Serializable {
                     } else {
                         newUser.setType(UserType.STANDARD);
                     }
+                    if (form.getNames().contains("locale")) {
+                        String locale = form.getFirstValue("locale");
+                        if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                            newUser.setLocale(locale);
+                        }
+                    }
                     newUser.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
                     if (newUser.getAPIVersion() != null) {
                         siteService.save(newUser);
@@ -165,9 +174,11 @@ public class UsersResource extends BaseResource implements Serializable {
                         }
                     } else {
                         log.error("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
+                        badRequest(APIFault.INVALID_PARAMETERS);
                         newUser = null;
                     }
                 } else {
+                    badRequest(APIFault.DUPLICATE_ITEM);
                     newUser = null;
                 }
             }
@@ -178,8 +189,6 @@ public class UsersResource extends BaseResource implements Serializable {
                     // return a response for API calls
                     super.handleGet();
                 }
-            } else {
-                badRequest();
             }
         } else {
             notAuthorized();

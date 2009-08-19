@@ -49,13 +49,19 @@ public class DataSheetFactory implements CacheableFactory {
 
         List<Column> columns;
         Row row;
-        ItemValueMap itemValuesMap;
         ItemValue itemValue;
         Sheet sheet = null;
         ItemDefinition itemDefinition;
+        DataCategory dataCategory;
+
+        if (dataBrowser.getDataCategory().getAliasedCategory() != null) {
+            dataCategory = dataBrowser.getDataCategory().getAliasedCategory();
+        } else {
+            dataCategory = dataBrowser.getDataCategory();
+        }
 
         // must have an ItemDefinition
-        itemDefinition = dataBrowser.getDataCategory().getItemDefinition();
+        itemDefinition = dataCategory.getItemDefinition();
         if (itemDefinition != null) {
 
             // create sheet and columns     
@@ -78,7 +84,7 @@ public class DataSheetFactory implements CacheableFactory {
             // create rows and cells
             columns = sheet.getColumns();
             StartEndDate startDate = dataBrowser.getQueryStartDate();
-            for (DataItem dataItem : dataService.getDataItems(dataBrowser.getDataCategory())) {
+            for (DataItem dataItem : dataService.getDataItems(dataCategory)) {
                 row = new Row(sheet, dataItem.getUid());
                 row.setLabel("DataItem");
                 for (Column column : columns) {

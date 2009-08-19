@@ -20,7 +20,7 @@
 package com.amee.restlet;
 
 import com.amee.domain.auth.User;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import org.apache.log4j.MDC;
 import org.restlet.Application;
 import org.restlet.Filter;

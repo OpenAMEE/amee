@@ -25,7 +25,7 @@ import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.RewriteFilter;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.service.path.PathItemService;
 import com.amee.service.profile.ProfileService;
 import org.restlet.Application;
@@ -69,7 +69,7 @@ public class ProfileFilter extends RewriteFilter {
                 // look for Profile matching path
                 Environment environment = (Environment) request.getAttributes().get("environment");
                 Profile profile = profileService.getProfile(environment, profileUid);
-                if (profile != null && profile.isActive()) {
+                if (profile != null && !profile.isTrash()) {
                     // we found a Profile. Make available to request scope.
                     request.getAttributes().put("profile", profile);
                     ((RequestContext) ThreadBeanHolder.get("ctx")).setProfile(profile);

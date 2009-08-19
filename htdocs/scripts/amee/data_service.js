@@ -174,8 +174,19 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             var selectElement = new Element('select', {name : 'itemDefinitionUid'});
             var pElement = new Element('p');
 
-            this.addFormInfoElement('Name: ', formElement, 'name', dataCategory.name, 30, 'margin-left:46px');
-            this.addFormInfoElement('Path: ', formElement, 'path', dataCategory.path, 30, 'margin-left:54px');
+            this.addFormInfoElement('Name: ', formElement, 'name', dataCategory.name, 30, 'margin-left:88px');
+            this.addFormInfoElement('Path: ', formElement, 'path', dataCategory.path, 30, 'margin-left:96px');
+
+            formElement.insert('Deprecated: ').insert("Yes:");
+            var radioElementYes = new Element('input', {type : "radio", name : 'deprecated', value: "true"});
+            formElement.insert(radioElementYes).insert("No:");
+            var radioElementNo = new Element('input', {type : "radio", name : 'deprecated', value: "false"});
+            formElement.insert(radioElementNo).insert("<br>");
+            if (dataCategory.deprecated) {
+                radioElementYes.checked = true;
+            } else {
+                radioElementNo.checked = true;
+            }
 
             // item definitions
             selectElement.insert(new Element('option', {value : ''}).update('(No Item Definition)'));
@@ -350,7 +361,7 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
     },
     start: function() {
         var params = {};
-        params['select'] = 'all';
+        //params['select'] = 'all';
         this.load(params);
     },
     load: function(params) {
@@ -445,11 +456,12 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
             var itemValues = json.dataItem.itemValues;
             var k = 0;
             for (var i = 0; i < itemValues.length; i++) {
-                var itemValuesArray = itemValues[i];
-                for(var name in itemValuesArray) {
-                    var itemValueSeries = itemValuesArray[name];
-                    for (var j = 0; j < itemValueSeries.length; j++) {
-                        var itemValue = itemValueSeries[j];             
+                var itemValue = itemValues[i];
+                //var itemValuesArray = itemValues[i];
+                //for(var name in itemValuesArray) {
+                    //var itemValueSeries = itemValuesArray[name];
+                    //for (var j = 0; j < itemValueSeries.length; j++) {
+                        //var itemValue = itemValueSeries[j];
                         var detailRow = new Element('tr', {id : 'Elem_' + itemValue.uid})
                                 .insert(new Element('td').insert(itemValue.itemValueDefinition.name))
                                 .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.name))
@@ -465,8 +477,8 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
                         // update array
                         rows[k] = detailRow;
                         k++;
-                    }
-                }
+                    //}
+                //}
             }
         }
         return rows;

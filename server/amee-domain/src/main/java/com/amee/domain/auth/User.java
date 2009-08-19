@@ -5,6 +5,7 @@ import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;
+import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -67,6 +68,9 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
     @JoinColumn(name = "API_VERSION_ID")
     private APIVersion apiVersion;
 
+    @Column(name = "LOCALE")
+    private String locale = LocaleName.DEFAULT_LOCALE.toString();
+
     @Transient
     private List<String> groupNames = new ArrayList<String>();
 
@@ -106,6 +110,7 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         obj.put("type", getType().getName());
         obj.put("groupNames", new JSONArray(getGroupNames()));
         obj.put("apiVersion", getAPIVersion());
+        obj.put("locale", getLocale());
         if (detailed) {
             obj.put("username", getUsername());
             obj.put("name", getName());
@@ -143,6 +148,7 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         }
         element.appendChild(groups);
         element.appendChild(APIUtils.getElement(document, "ApiVersion", getAPIVersion().toString()));
+        element.appendChild(APIUtils.getElement(document, "Locale", getLocale()));
         if (detailed) {
             element.appendChild(APIUtils.getElement(document, "Name", getName()));
             element.appendChild(APIUtils.getElement(document, "Username", getUsername()));
@@ -290,5 +296,13 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         if (apiVersion != null) {
             this.apiVersion = apiVersion;
         }
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public String getLocale() {
+        return locale;
     }
 }

@@ -8,7 +8,7 @@ import com.amee.domain.auth.User;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;
 import com.amee.domain.site.Site;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Scope;
@@ -325,10 +325,10 @@ public class AuthService implements Serializable {
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
                         "AND u.uid = :userUid " +
-                        "AND u.status = :active")
+                        "AND u.status != :trash")
                 .setParameter("environmentId", site.getEnvironment().getId())
                 .setParameter("userUid", uid)
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.authService")
                 .getResultList();
@@ -348,10 +348,10 @@ public class AuthService implements Serializable {
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
                         "AND u.username = :username " +
-                        "AND u.status = :active")
+                        "AND u.status != :trash")
                 .setParameter("environmentId", site.getEnvironment().getId())
                 .setParameter("username", username)
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.authService")
                 .getResultList();
@@ -370,9 +370,9 @@ public class AuthService implements Serializable {
                         "FROM GroupUser gu " +
                         "LEFT JOIN FETCH gu.user u " +
                         "WHERE u.id = :userId " +
-                        "AND u.status = :active")
+                        "AND u.status != :trash")
                 .setParameter("userId", user.getId())
-                .setParameter("active", AMEEStatus.ACTIVE)
+                .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", "query.authService")
                 .getResultList();

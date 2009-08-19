@@ -172,7 +172,7 @@ public class App extends AMEEEntity implements Comparable {
     public Set<Action> getActiveActions() {
         Set<Action> activeActions = new HashSet<Action>();
         for (Action action : actions) {
-            if (action.isActive()) {
+            if (!action.isTrash()) {
                 activeActions.add(action);
             }
         }

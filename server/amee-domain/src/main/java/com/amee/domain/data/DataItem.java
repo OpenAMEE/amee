@@ -31,9 +31,9 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @DiscriminatorValue("DI")
@@ -232,4 +232,5 @@ public class DataItem extends Item {
     public boolean isTrash() {
         return status.equals(AMEEStatus.TRASH) || getDataCategory().isTrash() || getItemDefinition().isTrash();
     }
+
 }

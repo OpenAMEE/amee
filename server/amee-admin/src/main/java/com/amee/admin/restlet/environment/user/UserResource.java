@@ -3,6 +3,7 @@ package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
 import com.amee.domain.auth.User;
+import com.amee.domain.data.LocaleName;
 import com.amee.restlet.BaseResource;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.EnvironmentService;
@@ -46,7 +47,7 @@ public class UserResource extends BaseResource {
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         environmentBrowser.setUserUid(request.getAttributes().get("userUid").toString());
     }
-
+    
     @Override
     public boolean isValid() {
         return super.isValid() && (environmentBrowser.getEnvironment() != null) && (environmentBrowser.getUser() != null);
@@ -64,6 +65,7 @@ public class UserResource extends BaseResource {
         values.put("environment", environmentBrowser.getEnvironment());
         values.put("user", environmentBrowser.getUser());
         values.put("apiVersions", environmentBrowser.getApiVersions());
+        values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
         return values;
     }
 
@@ -142,6 +144,12 @@ public class UserResource extends BaseResource {
                         log.error("Unable to find api version '" + form.getFirstValue("APIVersion") + "'");
                         badRequest();
                         return;
+                    }
+                }
+                if (form.getNames().contains("locale")) {
+                    String locale = form.getFirstValue("locale");
+                    if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                        user.setLocale(locale);
                     }
                 }
                 success();

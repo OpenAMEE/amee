@@ -118,6 +118,7 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -129,6 +130,7 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         this.name = name;
     }
 
+    @Override
     public String getPath() {
         return path;
     }
@@ -140,14 +142,12 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         this.path = path;
     }
 
+    @Override
     public ObjectType getObjectType() {
         return ObjectType.PR;
     }
 
-    public APIVersion getAPIVersion() {
-        return getPermission().getAPIVersion();
-    }
-
+    @Override
     public String getDisplayPath() {
         if (getPath().length() > 0) {
             return getPath();
@@ -156,6 +156,7 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
+    @Override
     public String getDisplayName() {
         if (getName().length() > 0) {
             return getName();
@@ -163,4 +164,9 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
             return getDisplayPath();
         }
     }
+
+    public APIVersion getAPIVersion() {
+        return getPermission().getAPIVersion();
+    }
+
 }

@@ -2,13 +2,14 @@ package com.amee.restlet;
 
 import com.amee.domain.Pager;
 import com.amee.domain.PagerSetType;
+import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.SortOrder;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.APIFault;
 import com.amee.restlet.utils.HeaderUtils;
 import com.amee.restlet.utils.MediaTypeUtils;
-import com.amee.service.ThreadBeanHolder;
+import com.amee.core.ThreadBeanHolder;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateHashModel;
@@ -54,6 +55,14 @@ public abstract class BaseResource extends Resource {
         } else {
             variants.add(new Variant(MediaType.APPLICATION_XML));
             variants.add(new Variant(MediaType.APPLICATION_JSON));
+        }
+        initLocales();
+    }
+
+    private void initLocales() {
+        Locale[] locales = Locale.getAvailableLocales();
+        for (Locale l : locales) {
+            LocaleName.AVAILABLE_LOCALES.put(l.toString(),l);
         }
     }
 
@@ -323,6 +332,14 @@ public abstract class BaseResource extends Resource {
         status(Status.SERVER_ERROR_INTERNAL, null);
     }
 
+    public void deprecated() {
+        getResponse().setStatus(Status.CLIENT_ERROR_GONE, "The requested resource has been deprecated");
+    }
+
+    public void deprecated(String deprecator) {
+        getResponse().setStatus(Status.CLIENT_ERROR_GONE, "The requested resource has been deprecated by " + deprecator);
+    }
+
     private void status(Status status, APIFault fault) {
         log.warn("status() - status code " + status + " message: " + ((fault != null) ? fault.toString() : ""));
         RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
@@ -342,6 +359,8 @@ public abstract class BaseResource extends Resource {
             } else {
                 form = getRequest().getResourceRef().getQueryAsForm();
             }
+            RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+            ctx.setForm(form);
         }
         return form;
     }

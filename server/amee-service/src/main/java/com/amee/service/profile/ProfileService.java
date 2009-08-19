@@ -155,6 +155,17 @@ public class ProfileService extends BaseService {
         return checkProfileItems(dao.getProfileItems(profile, dataCategory, startDate, endDate));
     }
 
+    /**
+     * Get a count of all {@link ProfileItem}s belonging to a {@link Profile} with a particular {@link DataCategory}.
+     *
+     * @param profile - the {@link Profile} to which the {@link ProfileItem}s belong
+     * @param dataCategory - the DataCategory containing the ProfileItems
+     * @return the number of {@link ProfileItem}s
+     */
+    public int getProfileItemCount(Profile profile, DataCategory dataCategory) {
+        return dao.getProfileItemCount(profile, dataCategory);
+    }
+
     private List<ProfileItem> checkProfileItems(List<ProfileItem> profileItems) {
         if (log.isDebugEnabled()) {
             log.debug("checkProfileItems() start");

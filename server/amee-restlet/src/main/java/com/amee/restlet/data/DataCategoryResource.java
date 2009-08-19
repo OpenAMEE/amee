@@ -20,10 +20,8 @@
 package com.amee.restlet.data;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemDefinition;
-import com.amee.domain.data.ItemValue;
+import com.amee.domain.AMEEStatus;
+import com.amee.domain.data.*;
 import com.amee.domain.path.PathItem;
 import com.amee.restlet.data.builder.DataCategoryResourceBuilder;
 import com.amee.restlet.utils.APIFault;
@@ -114,17 +112,26 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     @Override
     public void handleGet() {
-        log.debug("handleGet()");                                                
-        if (dataBrowser.getDataCategoryActions().isAllowView()) {
-            if (getAPIVersion().isNotVersionOne()) {
-                Form form = getRequest().getResourceRef().getQueryAsForm();
-                dataBrowser.setQueryStartDate(form.getFirstValue("startDate"));
-                dataBrowser.setQueryEndDate(form.getFirstValue("endDate"));
-            }
-            super.handleGet();
-        } else {
+        log.debug("handleGet()");
+        // l user must have appropriate actions to view a data category. For deprecated data categories, the user
+        // must have the appropriate actions.
+        if (!dataBrowser.getDataCategoryActions().isAllowView()) {
             notAuthorized();
+            return;
+        } else if (getDataCategory() == null) {
+            notFound();
+            return;
+        } else if (getDataCategory().isDeprecated() && !dataBrowser.getDataCategoryActions().isAllowViewDeprecated()) {
+            deprecated();
+            return;
         }
+
+        if (getAPIVersion().isNotVersionOne()) {
+            Form form = getRequest().getResourceRef().getQueryAsForm();
+            dataBrowser.setQueryStartDate(form.getFirstValue("startDate"));
+            dataBrowser.setQueryEndDate(form.getFirstValue("endDate"));
+        }
+        super.handleGet();
     }
 
     @Override
@@ -172,9 +179,9 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                  } else {
                     badRequest();
                  }
-             } else {
-                 successfulPut(getFullPath());
-             }
+            } else {
+                successfulPut(getFullPath());
+            }
         } else {
             badRequest();
         }
@@ -182,6 +189,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     protected void acceptJSON(Representation entity) {
         log.debug("acceptJSON()");
+        setIsBatchPost(true);
         DataCategory dataCategory;
         DataItem dataItem;
         Form form;
@@ -237,6 +245,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     protected void acceptXML(Representation entity) {
         log.debug("acceptXML()");
+        setIsBatchPost(true);
         DataCategory dataCategory;
         DataItem dataItem;
         Form form;
@@ -331,10 +340,21 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         thisDataCategory = getDataCategory();
 
         if (getRequest().getMethod().equals(Method.POST)) {
-            if (dataBrowser.getDataCategoryActions().isAllowCreate()) {
+                if (dataBrowser.getDataCategoryActions().isAllowCreate() && thisDataCategory.getAliasedCategory() == null) {
                 // new DataCategory
                 dataCategory = new DataCategory(thisDataCategory);
-                if (form.getNames().contains("itemDefinitionUid")) {
+
+                // Is this a sym-link to another DataCategory?
+                if (form.getNames().contains("aliasedTo")) {
+                    String aliasedToUid = form.getFirstValue("aliasedTo");
+                    DataCategory aliasedTo = dataService.getDataCategoryByUid(aliasedToUid);
+                    if (aliasedTo != null) {
+                        dataCategory.setAliasedTo(aliasedTo);
+                    } else {
+                        badRequest(APIFault.INVALID_PARAMETERS);
+                        return null;
+                    }
+                } else if (form.getNames().contains("itemDefinitionUid")) {
                     ItemDefinition itemDefinition =
                             definitionService.getItemDefinition(
                                     thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
@@ -342,6 +362,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                         dataCategory.setItemDefinition(itemDefinition);
                     }
                 }
+
                 dataCategory = populateDataCategory(form, dataCategory);
 
                 if (!validDataCategory(dataCategory)) {
@@ -363,7 +384,6 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                     dataCategory = dataService.getDataCategoryByUid(uid);
                     if (dataCategory != null) {
                         dataCategory = populateDataCategory(form, dataCategory);
-
                         if (!validDataCategory(dataCategory)) {
                             badRequest();
                         } else {
@@ -510,14 +530,49 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 thisDataCategory.setPath(form.getFirstValue("path"));
             }
             if (form.getNames().contains("itemDefinitionUid")) {
-                ItemDefinition itemDefinition =
-                        definitionService.getItemDefinition(thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
-                if (itemDefinition != null) {
-                    thisDataCategory.setItemDefinition(itemDefinition);
+
+                // A sym-link category cannot have an itemDefinition
+                if (dataCategory.getAliasedCategory() != null) {
+                    badRequest(APIFault.INVALID_PARAMETERS);
+                    return;
                 } else {
-                    thisDataCategory.setItemDefinition(null);
+                    ItemDefinition itemDefinition =
+                            definitionService.getItemDefinition(thisDataCategory.getEnvironment(),
+                                    form.getFirstValue("itemDefinitionUid"));
+                    if (itemDefinition != null) {
+                        thisDataCategory.setItemDefinition(itemDefinition);
+                    } else {
+                        thisDataCategory.setItemDefinition(null);
+                    }
                 }
             }
+
+            String deprecated = form.getFirstValue("deprecated");
+            if (StringUtils.isNotBlank(deprecated)) {
+                if (deprecated.equals("true")) {
+                    thisDataCategory.setStatus(AMEEStatus.DEPRECATED);
+                } else if (deprecated.equals("false")) {
+                    thisDataCategory.setStatus(AMEEStatus.ACTIVE);
+                }
+            }
+
+            // Parse any submitted locale names
+            for (String name : form.getNames()) {
+                if (name.startsWith("name_")) {
+                    String localeNameStr = form.getFirstValue(name);
+                    String locale = name.substring(name.indexOf("_") + 1);
+                    if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                        LocaleName localeName =
+                                new DataCategoryLocaleName(thisDataCategory, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
+                        thisDataCategory.putLocaleName(localeName);
+                        form.removeFirst(name);
+                    } else {
+                        badRequest(APIFault.INVALID_PARAMETERS);
+                        return;
+                    }
+                }
+            }
+
             dataService.clearCaches(thisDataCategory);
             successfulPut(getFullPath());
             dataCategory = thisDataCategory;

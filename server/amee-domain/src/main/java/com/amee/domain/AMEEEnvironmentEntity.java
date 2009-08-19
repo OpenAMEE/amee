@@ -21,14 +21,19 @@
  */
 package com.amee.domain;
 
+import com.amee.core.ThreadBeanHolder;
+import com.amee.domain.auth.User;
+import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.environment.EnvironmentObject;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
+@Entity
 @MappedSuperclass
 public abstract class AMEEEnvironmentEntity extends AMEEEntity implements EnvironmentObject {
 
@@ -37,6 +42,11 @@ public abstract class AMEEEnvironmentEntity extends AMEEEntity implements Enviro
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
     private Environment environment;
+
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @MapKey(name = "locale")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Map<String, LocaleName> localeNames = new HashMap<String, LocaleName>();
 
     public AMEEEnvironmentEntity() {
         super();
@@ -56,4 +66,21 @@ public abstract class AMEEEnvironmentEntity extends AMEEEntity implements Enviro
             this.environment = environment;
         }
     }
+
+
+    @SuppressWarnings("unchecked")
+    protected String getLocaleName() {
+        User user = (User) ThreadBeanHolder.get("user");
+        String name = null;
+        LocaleName localeName = localeNames.get(user.getLocale());
+        if (localeName != null) {
+            name = localeName.getName();
+        }
+        return name;
+    }
+
+    public void putLocaleName(LocaleName localeName) {
+        localeNames.put(localeName.getLocale(), localeName);
+    }
+
 }

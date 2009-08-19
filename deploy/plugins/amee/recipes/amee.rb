@@ -26,5 +26,11 @@ namespace :amee do
     sudo "lns -s #{current_path}/bin/amee /etc/init.d/amee && chmod 777 /etc/init.d/amee"
   end
 
+  desc "Grep for 40* and 500 status in logs"
+  task :grep_status, roles => :app do
+    stream "egrep 'S:500|S:40' #{current_release}/log/wrapper.log"
+  end
+
   after "deploy:setup", "[amee:chmod, amee:init_d]"   
+
 end

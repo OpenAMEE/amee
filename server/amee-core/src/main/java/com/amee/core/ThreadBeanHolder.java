@@ -1,4 +1,4 @@
-package com.amee.service;
+package com.amee.core;
 
 import java.util.HashMap;
 import java.util.Map;

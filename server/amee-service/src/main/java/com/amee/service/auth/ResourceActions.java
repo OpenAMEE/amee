@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class ResourceActions implements Serializable {
 
     public final static String ACTION_VIEW = ".view";
+    public final static String ACTION_VIEW_DEPRECATED = ".view-deprecated";
     public final static String ACTION_CREATE = ".create";
     public final static String ACTION_MODIFY = ".modify";
     public final static String ACTION_DELETE = ".delete";
@@ -18,12 +19,14 @@ public class ResourceActions implements Serializable {
     private AuthService authService;
 
     private Boolean view = null;
+    private Boolean viewDeprecated = null;
     private Boolean create = null;
     private Boolean modify = null;
     private Boolean delete = null;
     private Boolean list = null;
 
     private String resourceViewAction;
+    private String resourceViewDeprecatedAction;
     private String resourceCreateAction;
     private String resourceModifyAction;
     private String resourceDeleteAction;
@@ -40,6 +43,7 @@ public class ResourceActions implements Serializable {
 
     public void setResource(String resource) {
         this.resourceViewAction = resource + ACTION_VIEW;
+        this.resourceViewDeprecatedAction = resource + ACTION_VIEW_DEPRECATED;
         this.resourceCreateAction = resource + ACTION_CREATE;
         this.resourceModifyAction = resource + ACTION_MODIFY;
         this.resourceDeleteAction = resource + ACTION_DELETE;
@@ -50,16 +54,26 @@ public class ResourceActions implements Serializable {
         JSONObject obj = new JSONObject();
         obj.put("allowList", isAllowList());
         obj.put("allowView", isAllowView());
+        obj.put("allowViewDeprecated", isAllowViewDeprecated());
         obj.put("allowCreate", isAllowCreate());
         obj.put("allowModify", isAllowModify());
         obj.put("allowDelete", isAllowDelete());
         return obj;
     }
 
+    public boolean isAllowViewDeprecated() {
+        if (viewDeprecated == null) {
+            viewDeprecated = authService.isSuperUser() ||
+                    //authService.hasActions(resourceViewDeprecatedAction);
+                    authService.hasActions(resourceCreateAction);
+        }
+        return viewDeprecated;
+    }
+
     public boolean isAllowView() {
         if (view == null) {
-            view = authService.isSuperUser() || (
-                    authService.hasActions(resourceViewAction) &&
+            view = authService.isSuperUser() ||
+                    (authService.hasActions(resourceViewAction) &&
                             authService.isAllowView());
         }
         return view;

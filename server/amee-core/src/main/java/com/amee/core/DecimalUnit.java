@@ -31,12 +31,25 @@ import java.text.ParsePosition;
 public class DecimalUnit {
 
     protected final static UnitFormat UNIT_FORMAT = UnitFormat.getInstance();
-    public final static Unit<Power> KILOWATT = SI.WATT.times(1000);
-    public final static Unit<? extends Quantity> KILOWATT_PER_HOUR = KILOWATT.times(NonSI.HOUR);
+    private final static Unit<Power> KILOWATT = SI.WATT.times(1000);
+    private final static Unit<Power> MEGAWATT = KILOWATT.times(1000);
+    private final static Unit<Power> GIGAWATT = MEGAWATT.times(1000);
+    private final static Unit<Power> TERAWATT = GIGAWATT.times(1000);
+    private final static Unit<? extends Quantity> KILOWATT_HOUR = KILOWATT.times(NonSI.HOUR);
+    private final static Unit<? extends Quantity> MEGAWATT_HOUR = MEGAWATT.times(NonSI.HOUR);
+    private final static Unit<? extends Quantity> GIGAWATT_HOUR = GIGAWATT.times(NonSI.HOUR);
+    private final static Unit<? extends Quantity> TERAWATT_HOUR = TERAWATT.times(NonSI.HOUR);
+
     {
-        // Create a usable ASCII representation for kWh. JScience will use non-ASCII characters by default.
-        UNIT_FORMAT.label(KILOWATT_PER_HOUR, "kWh");
-        UNIT_FORMAT.alias(KILOWATT_PER_HOUR, "kWh");
+        // Create usable ASCII representations. JScience will use non-ASCII characters by default.
+        UNIT_FORMAT.label(KILOWATT_HOUR, "kWh");
+        UNIT_FORMAT.alias(KILOWATT_HOUR, "kWh");
+        UNIT_FORMAT.label(MEGAWATT_HOUR, "MWh");
+        UNIT_FORMAT.alias(MEGAWATT_HOUR, "MWh");
+        UNIT_FORMAT.label(GIGAWATT_HOUR, "GWh");
+        UNIT_FORMAT.alias(GIGAWATT_HOUR, "GWh");
+        UNIT_FORMAT.label(TERAWATT_HOUR, "TWh");
+        UNIT_FORMAT.alias(TERAWATT_HOUR, "TWh");
 
         // Ensure that "gal" and "oz" are always the US versions.
         // JScience will bizarely default "gal" and "oz" to UK units for UK Locale.

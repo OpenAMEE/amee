@@ -40,6 +40,7 @@ import java.util.*;
 @Entity
 @Table(name = "ITEM_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@DiscriminatorValue("ID")
 public class ItemDefinition extends AMEEEnvironmentEntity {
 
     public final static int NAME_SIZE = 255;
@@ -164,7 +165,12 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     }
 
     public String getName() {
-        return name;
+        String localeName = getLocaleName();
+        if (localeName != null) {
+            return localeName;
+        } else {
+            return name;
+        }
     }
 
     public void setName(String name) {
@@ -200,7 +206,7 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     public Set<Algorithm> getActiveAlgorithms() {
         Set<Algorithm> activeAlgorithms = new HashSet<Algorithm>();
         for (Algorithm algorithm : algorithms) {
-            if (algorithm.isActive()) {
+            if (!algorithm.isTrash()) {
                 activeAlgorithms.add(algorithm);
             }
         }
@@ -214,7 +220,7 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     public Set<ItemValueDefinition> getActiveItemValueDefinitions() {
         Set<ItemValueDefinition> activeItemValueDefinitions = new HashSet<ItemValueDefinition>();
         for (ItemValueDefinition itemValueDefinition : itemValueDefinitions) {
-            if (itemValueDefinition.isActive()) {
+            if (!itemValueDefinition.isTrash()) {
                 activeItemValueDefinitions.add(itemValueDefinition);
             }
         }

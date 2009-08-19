@@ -118,10 +118,13 @@ public class ProfileCategoryResource extends BaseProfileResource {
     @Override
     public void handleGet() {
         log.debug("handleGet()");
+
         if (profileBrowser.getProfileCategoryActions().isAllowView()) {
+
             if (!validateParameters()) {
                 return;
             }
+
             Form form = getRequest().getResourceRef().getQueryAsForm();
             if (getAPIVersion().isVersionOne()) {
                 profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
@@ -136,6 +139,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
                 profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
             }
             super.handleGet();
+
         } else {
             notAuthorized();
         }

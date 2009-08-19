@@ -246,7 +246,7 @@ public class Site extends AMEEEnvironmentEntity implements Comparable {
     public Set<SiteApp> getActiveSiteApps() {
         Set<SiteApp> activeSiteApps = new HashSet<SiteApp>();
         for (SiteApp siteApp : siteApps) {
-            if (siteApp.isActive()) {
+            if (!siteApp.isTrash()) {
                 activeSiteApps.add(siteApp);
             }
         }

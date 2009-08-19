@@ -57,7 +57,7 @@
         <property name="maxIdle" value="50"/>
         <property name="minIdle" value="10"/>
         <property name="maxWait" value="-1"/>
-        <property name="validationQuery" value="SELECT 1 FROM DUAL"/>
+        <!--<property name="validationQuery" value="SELECT 1 FROM DUAL"/>-->
         <property name="testOnBorrow" value="true"/>
         <property name="testOnReturn" value="true"/>
         <property name="testWhileIdle" value="true"/>
