@@ -1,87 +1,81 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <!-- Project Metadata. -->
-    <groupId>com.amee</groupId>
-    <artifactId>server</artifactId>
-    <packaging>pom</packaging>
-    <version>${amee.version}</version>
-    <name>AMEE Platform</name>
-
-    <!-- Project Properties. -->
-    <!-- Note: Keep restlet, jetty and servlet-api versions in sync. -->
-    <!-- Note: Check Restlet release notes and jetty dependencies. -->
-    <properties>
-        <amee.version>2.4-SNAPSHOT</amee.version>
-        <restlet.version>1.1.4</restlet.version>
-        <jetty.version>6.1.15</jetty.version>
-        <jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>
-        <commons-fileupload.version>1.2.1</commons-fileupload.version>
-        <org.json.version>2.0</org.json.version>
-        <joda-time.version>1.6</joda-time.version>
-        <spring.version>2.5.6</spring.version>
-        <hibernate-core.version>3.3.0.SP1</hibernate-core.version>
-        <hibernate-entitymanager.version>3.4.0.GA</hibernate-entitymanager.version>
-        <commons-dbcp.version>1.2.2</commons-dbcp.version>
-        <ehcache.version>1.6.0-beta4</ehcache.version>
-        <!--<ehcache.version>1.5.0</ehcache.version>-->
-    </properties>
-
-    <!-- AMEE Modules. -->
-    <modules>
-        <module>amee-admin</module>
-        <module>amee-calculation</module>
-        <module>amee-core</module>
-        <module>amee-domain</module>
-        <module>amee-engine</module>
-        <module>amee-restlet</module>
-        <module>amee-service</module>
-    </modules>
-
-    <!-- Build Plugins. -->
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.5</version>
-		        <configuration>
-		          <reportOutputDirectory>/var/www/qa</reportOutputDirectory>
-		          <destDir>apidocs</destDir>
-		        </configuration>
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+<!-- Project Metadata. -->
+	<groupId>com.amee</groupId>
+	<artifactId>server</artifactId>
+	<packaging>pom</packaging>
+	<version>${amee.version}</version>
+	<name>AMEE Platform</name>
+<!-- Project Properties. -->
+<!-- Note: Keep restlet, jetty and servlet-api versions in sync. -->
+<!-- Note: Check Restlet release notes and jetty dependencies. -->
+	<properties>
+		<amee.version>2.1</amee.version>
+		<restlet.version>1.1.4</restlet.version>
+		<jetty.version>6.1.15</jetty.version>
+		<jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>
+		<commons-fileupload.version>1.2.1</commons-fileupload.version>
+		<org.json.version>2.0</org.json.version>
+		<joda-time.version>1.6</joda-time.version>
+		<spring.version>2.5.6</spring.version>
+		<hibernate-core.version>3.3.0.SP1</hibernate-core.version>
+		<hibernate-entitymanager.version>3.4.0.GA</hibernate-entitymanager.version>
+		<commons-dbcp.version>1.2.2</commons-dbcp.version>
+		<ehcache.version>1.6.0-beta4</ehcache.version>
+<!--<ehcache.version>1.5.0</ehcache.version>-->
+	</properties>
+<!-- AMEE Modules. -->
+	<modules>
+		<module>amee-admin</module>
+		<module>amee-calculation</module>
+		<module>amee-core</module>
+		<module>amee-domain</module>
+		<module>amee-engine</module>
+		<module>amee-restlet</module>
+		<module>amee-service</module>
+	</modules>
+<!-- Build Plugins. -->
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<reportOutputDirectory>/var/www/qa</reportOutputDirectory>
+					<destDir>apidocs</destDir>
+				</configuration>
 			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <excludeGroupIds>com.amee</excludeGroupIds>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<excludeGroupIds>com.amee</excludeGroupIds>
 							<stripVersion>true</stripVersion>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!--  Removing until i get this working - 08/07/09 SM
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+<!--  Removing until i get this working - 08/07/09 SM
 				<plugin>
 				    <groupId>org.apache.jmeter</groupId>
 				    <artifactId>maven-jmeter-plugin</artifactId>
@@ -102,73 +96,68 @@
 				    </configuration>
 				</plugin>
         -->
-        </plugins>
-    </build>
-
-    <!-- Project Dependencies. -->
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- Explicit dependency & version here to avoid transitive dependency mess -->
-        <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>${jetty-servlet-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <version>1.3.04</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.5.0</version>
-        </dependency>
-
-        <!-- Test Dependencies. -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.5</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <scm>
-        <connection>scm:git:ssh://github.com:sambogoat/amee.git</connection>
-        <developerConnection>scm:git:ssh://github.com:sambogoat/amee.git</developerConnection>
-        <url>https://github.com/sambogoat/amee/tree/master</url>
-    </scm>
-
+		</plugins>
+	</build>
+<!-- Project Dependencies. -->
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+<!-- Explicit dependency & version here to avoid transitive dependency mess -->
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${jetty-servlet-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.3.04</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+<!-- Test Dependencies. -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.5</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<scm>
+		<connection>scm:git:ssh://github.com:sambogoat/amee.git</connection>
+		<developerConnection>scm:git:ssh://github.com:sambogoat/amee.git</developerConnection>
+		<url>https://github.com/sambogoat/amee/tree/master</url>
+	</scm>
 </project>

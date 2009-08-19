@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="amee" default="run" basedir=".">
+
+	<target name="init">
+  		<property environment="env"/>
+		<property name="amee.home" value="/var/www/apps/amee" description="The root of the AMEE deployment layout."/>
+		<property name="amee.current" value="${amee.home}/current" description="The root of the current AMEE package"/>
+		<property name="amee.current.lib" value="${amee.current}/lib" 
+			description="The location of the AMEE libs and dependencies."/>		
+		<property name="amee.current.bin" value="${amee.current}/bin" description="The location of the AMEE start scripts."/>		
+	</target>
+
+	<target name="rebuild" depends="clean, package" 
+		description="Perform a clean build from src."/>
+
+	<target name="make" depends="package" 
+		description="Perform an incremental build from src."/>
+	
+	<target name="clean" depends="init" 
+		description="Clean the deployment lib and target directories.">
+		<!-- Clean the amee target dirs. -->
+		<exec executable="mvn" dir="server" failonerror="true">
+			<arg value="clean"/>
+		</exec>
+		<!-- Clean the amee deployment lib dir. -->
+	  	<delete>
+	   	<fileset dir="${amee.current.lib}" includes="*.jar"/>
+	  	</delete>
+	</target>
+
+	<target name="package" 
+		description="Run the mvn package goal.">
+		<exec executable="mvn" dir="server" failonerror="true">
+			<arg value="package"/>
+		</exec>
+	</target>
+			
+	<target name="copy-amee-libs" depends="init" 
+		description="Copy the AMEE libs to the deployment lib folder.">
+	  <copy todir="${amee.current.lib}" flatten="true">
+	    <fileset dir="server">
+	      <include name="**/amee-*.jar"/>
+	    </fileset>
+	  </copy>
+	</target>
+
+	<target name="copy-dependency-libs" depends="init" 
+		description="Copy the AMEE dependencies to the deployment lib folder. ">
+		<exec executable="mvn" dir="server" failonerror="true">
+			<arg value="dependency:copy-dependencies"/>
+			<arg value="-DoutputDirectory=${amee.current.lib}"/>
+			<arg value="-Dmdep.stripVersion=true"/>
+			<arg value="-DexcludeGroupIds=com.amee"/>
+		</exec>
+	</target>
+	
+	<target name="start" depends="init" description="Start AMEE.">
+		<exec executable="amee" dir="${amee.current.bin}" failonerror="true">
+			<env key="RUN_AS_USER" value="${env.USER}"/>
+			<arg value="start"/>
+		</exec>
+	</target>
+		
+	<target name="stop" depends="init" description="Stop AMEE.">
+		<exec executable="amee" dir="${amee.current.bin}" failonerror="true">
+			<env key="RUN_AS_USER" value="${env.USER}"/>
+			<arg value="stop"/>
+		</exec>
+	</target>
+			
+	<target name="run" depends="make, copy-amee-libs, start" description="Make and run AMEE."/>
+
+	<target name="clean-run" depends="rebuild, copy-dependency-libs, copy-amee-libs, start" 
+		description="Rebuild and run AMEE."/>
+				
+</project>
+
