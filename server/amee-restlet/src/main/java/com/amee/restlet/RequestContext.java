@@ -23,8 +23,8 @@ package com.amee.restlet;
 
 import com.amee.domain.auth.User;
 import com.amee.domain.profile.Profile;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
 import org.restlet.data.Request;
 
@@ -34,6 +34,9 @@ import org.restlet.data.Request;
  * Its intended use is in debug statements etc.
  */
 public class RequestContext {
+
+    private final Log log = LogFactory.getLog(getClass());
+    private final Log transactions = LogFactory.getLog("transactions");
 
     private String username;
     private String profileUid;
@@ -69,17 +72,25 @@ public class RequestContext {
         this.form = form.toString();
     }
 
+    public void error() {
+        log.error(toString());
+    }
+
+    public void record() {
+        transactions.info(toString());
+    }
+
     public String toString() {
-        ToStringBuilder sb = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-        sb.append("username", username);
-        sb.append("apiVersion", apiVersion);
+        StringBuilder sb = new StringBuilder();
+        sb.append("username=" + username + ",");
+        sb.append("apiVersion=" + apiVersion + ",");
         if (profileUid != null)
-            sb.append("profile", profileUid);
-        sb.append("path", requestPath);
-        sb.append("method", method);
-        sb.append("parameters", requestParameters);
-        sb.append("form", form);
-        sb.append("error", error);
+            sb.append("profile=" + profileUid + ",");
+        sb.append("path=" + requestPath + ",");
+        sb.append("method=" + method + ",");
+        sb.append("parameters=" + requestParameters + ",");
+        sb.append("form=" + form + ",");
+        sb.append("error=" + error);
         return sb.toString();
     }
 }

@@ -57,6 +57,7 @@ public class ProfileFilter extends RewriteFilter {
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
         removeEmptySegmentAtEnd(segments);
+        RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
         if (!skipRewrite(segments) && segments.get(0).equals("profiles")) {
             // remove '/profiles'
             segments.remove(0);
@@ -72,7 +73,8 @@ public class ProfileFilter extends RewriteFilter {
                 if (profile != null && !profile.isTrash()) {
                     // we found a Profile. Make available to request scope.
                     request.getAttributes().put("profile", profile);
-                    ((RequestContext) ThreadBeanHolder.get("ctx")).setProfile(profile);
+                    ctx.setProfile(profile);
+
                     ThreadBeanHolder.set("permission", profile.getPermission());
                     // look for path match
                     PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
@@ -90,13 +92,17 @@ public class ProfileFilter extends RewriteFilter {
                         }
                     }
                 }
+
                 if (path == null) {
                     response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
                     return STOP;
                 }
             }
         }
+
         log.debug("rewrite() - end profile path rewrite");
+        //Record the request.
+        ctx.record();
         return CONTINUE;
     }
 
