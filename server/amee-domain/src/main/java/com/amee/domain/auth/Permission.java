@@ -25,7 +25,6 @@ import javax.persistence.*;
 public class Permission extends AMEEEnvironmentEntity implements Comparable {
 
     public final static int OBJECT_CLASS_SIZE = 255;
-    public final static int OBJECT_UID_SIZE = 12;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "GROUP_ID")
@@ -39,7 +38,7 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
     @Index(name = "OBJECT_CLASS_IND")
     private String objectClass = "";
 
-    @Column(name = "OBJECT_UID", nullable = false, length = OBJECT_UID_SIZE)
+    @Column(name = "OBJECT_UID", nullable = false, length = UID_SIZE)
     @Index(name = "OBJECT_UID_IND")
     private String objectUid = "";
 
