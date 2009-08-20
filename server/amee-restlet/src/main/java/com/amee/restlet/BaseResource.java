@@ -56,14 +56,6 @@ public abstract class BaseResource extends Resource {
             variants.add(new Variant(MediaType.APPLICATION_XML));
             variants.add(new Variant(MediaType.APPLICATION_JSON));
         }
-        initLocales();
-    }
-
-    private void initLocales() {
-        Locale[] locales = Locale.getAvailableLocales();
-        for (Locale l : locales) {
-            LocaleName.AVAILABLE_LOCALES.put(l.toString(),l);
-        }
     }
 
     /**
