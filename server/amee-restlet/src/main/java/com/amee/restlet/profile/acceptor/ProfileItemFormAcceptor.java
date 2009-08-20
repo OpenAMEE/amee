@@ -55,6 +55,10 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
 
     public List<ProfileItem> accept(ProfileItemResource resource, Form form) {
 
+        // Clients can explicitly specify the return representation in API > 1.0. The default behaviour
+        // for POSTS and PUTS is not to return a representation.
+        resource.setRepresentationRequested(form.getFirstValue("representation", "none"));
+
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
         ProfileItem profileItem;
 

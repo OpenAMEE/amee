@@ -43,6 +43,10 @@ public class ProfileItemValueFormAcceptor implements IItemValueFormAcceptor {
 
     public ItemValue accept(ProfileItemValueResource resource, Form form) {
 
+        // Clients can explicitly specify the return representation in API > 1.0. The default behaviour
+        // for POSTS and PUTS is not to return a representation.
+        resource.setRepresentationRequested(form.getFirstValue("representation", "none"));
+
         ItemValue profileItemValue = resource.getProfileItemValue();
         ProfileItem profileItem = resource.getProfileItem();
 
