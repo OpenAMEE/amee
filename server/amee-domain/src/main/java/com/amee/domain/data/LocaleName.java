@@ -21,7 +21,6 @@
  */                                  
 package com.amee.domain.data;
 
-import com.amee.core.ObjectType;
 import com.amee.domain.AMEEEnvironmentEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -31,6 +30,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Provides a Locale-to-name mapping for an {@link AMEEEnvironmentEntity} instance.
+ *
+ * The name in this context is that of the {@link com.amee.domain.path.Pathable} interface.
+ *
+ * Modelled as a One-to-Many relationship with the owning entity.
+ *
+ */
 @Entity
 @Inheritance
 @Table(name = "LOCALE_NAME")
@@ -38,23 +45,37 @@ import java.util.TreeMap;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class LocaleName extends AMEEEnvironmentEntity {
 
+    // The default {@link Locale} within AMEE.
+    // Typical use would be for initialising a new User locale.
     public static final Locale DEFAULT_LOCALE = Locale.UK;
 
+    // The locale identifier (e.g. Fr or Fr_fr).
     @Column(name = "LOCALE", nullable = false)
     private String locale;
 
+    // The locale-specific name.
     @Column(name = "NAME", nullable = false)
     private String name;
 
+    // The owning entitiy.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENTITY_ID", nullable = false)
     private AMEEEnvironmentEntity entity;
-    public static Map<String, Locale> AVAILABLE_LOCALES = new TreeMap<String, Locale>();
+
+    // The static map of available {@link Locale}.
+    public static final Map<String, Locale> AVAILABLE_LOCALES = initLocales();
 
     public LocaleName() {
         super();
     }
 
+    /**
+     * Instanitate a new LocaleName.
+     *
+     * @param entity - the entity to which the LocaleName belongs.
+     * @param locale - the {@link Locale} for this name.
+     * @param name - the locale-specific name.
+     */
     public LocaleName(AMEEEnvironmentEntity entity, Locale locale, String name) {
         super(entity.getEnvironment());
         this.entity = entity;
@@ -62,10 +83,29 @@ public class LocaleName extends AMEEEnvironmentEntity {
         this.name = name;
     }
 
+    private static Map<String, Locale> initLocales() {
+        Map<String, Locale> localeMap = new TreeMap<String, Locale>();
+        Locale[] locales = Locale.getAvailableLocales();
+        for (Locale l : locales) {
+            localeMap.put(l.toString(),l);
+        }
+        return localeMap;
+    }
+
+    /**
+     * Get the locale-specific name
+     *
+     * @return - the locale-specific name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get the locale identifier (e.g. Fr or Fr_fr)
+     *
+     * @return - the locale identifier
+     */
     public String getLocale() {
         return locale;
     }
