@@ -34,7 +34,8 @@ public enum APIFault {
     EMPTY_LIST,
     ENTITY_NOT_FOUND,
     MAX_BATCH_SIZE_EXCEEDED,
-    DELETE_MUST_LEAVE_AT_LEAST_ONE_ITEM_VALUE;
+    DELETE_MUST_LEAVE_AT_LEAST_ONE_ITEM_VALUE,
+    INVALID_RESOURCE_MODIFICATION;
 
     private String[] strings = {
             "",
@@ -50,7 +51,8 @@ public enum APIFault {
             "An empty list was received or produced.",
             "An entity was not found for the given identifier.",
             "Max batch size was exceeded.",
-            "The DELETE operation must leave at least one ITEM_VALUE per ITEM_VALUE_DEFINTION."};
+            "The DELETE operation must leave at least one ITEM_VALUE per ITEM_VALUE_DEFINTION.",
+            "A PUT was received attempting to make a prohibited modification."};
 
     public String getString() {
         return strings[this.ordinal()];
