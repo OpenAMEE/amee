@@ -4,7 +4,8 @@
 . curl.conf
 
 data="name_fr=taille"
-amee_url="environments/5F5887BCF726/itemDefinitions/123C4A18B5D6/itemValueDefinitions/C6AA71697CCF?method=put"
+#live amee_url="environments/5F5887BCF726/itemDefinitions/123C4A18B5D6/itemValueDefinitions/C6AA71697CCF?method=put"
+amee_url="environments/5F5887BCF726/itemDefinitions/CF344E20E9AC/itemValueDefinitions/976FA4FB9B3D?method=put"
 
 type="xml"
 
