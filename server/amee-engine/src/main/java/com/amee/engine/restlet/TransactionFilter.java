@@ -37,6 +37,8 @@ public class TransactionFilter extends Filter {
             ctx.error();
             throw new RuntimeException(t);
         } finally {
+            RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+            ctx.record();
             transactionController.afterHandle(success && !response.getStatus().isError());
         }
     }

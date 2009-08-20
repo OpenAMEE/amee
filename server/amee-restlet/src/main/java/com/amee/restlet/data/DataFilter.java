@@ -60,10 +60,6 @@ public class DataFilter extends RewriteFilter {
             Environment environment = (Environment) request.getAttributes().get("environment");
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
 
-            // Record this request.
-            RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
-            ctx.record();
-
             // check for flat or heirachical path
             if (!segments.isEmpty() && StringUtils.equals(segments.get(0), "categories")) {
                 PathItem pathItem;

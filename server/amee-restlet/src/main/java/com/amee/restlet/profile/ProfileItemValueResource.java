@@ -19,7 +19,9 @@
  */
 package com.amee.restlet.profile;
 
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.data.ItemValue;
+import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.IItemValueFormAcceptor;
 import com.amee.restlet.profile.acceptor.IItemValueRepresentationAcceptor;
 import com.amee.restlet.profile.builder.IProfileItemValueResourceBuilder;
@@ -73,6 +75,9 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
         setDataCategory(request.getAttributes().get("categoryUid").toString());
         setProfileItem(request.getAttributes().get("itemUid").toString());
         setProfileItemValue(request.getAttributes().get("valuePath").toString());
+        if (getProfileItemValue() != null) {
+            ((RequestContext) ThreadBeanHolder.get("ctx")).setItemValue(getProfileItemValue());
+        }
         setBuilderStrategy();
     }
 

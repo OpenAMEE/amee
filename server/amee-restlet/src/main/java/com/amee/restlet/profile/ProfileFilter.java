@@ -101,8 +101,6 @@ public class ProfileFilter extends RewriteFilter {
         }
 
         log.debug("rewrite() - end profile path rewrite");
-        //Record the request.
-        ctx.record();
         return CONTINUE;
     }
 
