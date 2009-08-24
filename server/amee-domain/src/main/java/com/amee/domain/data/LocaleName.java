@@ -39,6 +39,7 @@ import java.util.TreeMap;
 public class LocaleName extends AMEEEnvironmentEntity {
 
     public static final Locale DEFAULT_LOCALE = Locale.UK;
+    public static Map<String, Locale> AVAILABLE_LOCALES = new TreeMap<String, Locale>();
 
     @Column(name = "LOCALE", nullable = false)
     private String locale;
@@ -49,7 +50,6 @@ public class LocaleName extends AMEEEnvironmentEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENTITY_ID", nullable = false)
     private AMEEEnvironmentEntity entity;
-    public static Map<String, Locale> AVAILABLE_LOCALES = new TreeMap<String, Locale>();
 
     public LocaleName() {
         super();

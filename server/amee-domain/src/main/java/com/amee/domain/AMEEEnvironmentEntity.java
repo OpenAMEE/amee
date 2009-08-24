@@ -67,7 +67,6 @@ public abstract class AMEEEnvironmentEntity extends AMEEEntity implements Enviro
         }
     }
 
-
     @SuppressWarnings("unchecked")
     protected String getLocaleName() {
         User user = (User) ThreadBeanHolder.get("user");
@@ -82,5 +81,4 @@ public abstract class AMEEEnvironmentEntity extends AMEEEntity implements Enviro
     public void putLocaleName(LocaleName localeName) {
         localeNames.put(localeName.getLocale(), localeName);
     }
-
 }

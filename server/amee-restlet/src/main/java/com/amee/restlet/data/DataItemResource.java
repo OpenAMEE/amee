@@ -22,11 +22,14 @@ package com.amee.restlet.data;
 import com.amee.calculation.service.CalculationService;
 import com.amee.core.*;
 import com.amee.domain.StartEndDate;
+import com.amee.domain.auth.Permission;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
+import com.amee.service.auth.AuthService;
+import com.amee.service.auth.PermissionService;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import org.apache.commons.lang.StringUtils;
@@ -65,6 +68,9 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
     @Autowired
     private CalculationService calculationService;
+
+    @Autowired
+    private PermissionService permissionService;
 
     private Form query;
     private List<Choice> parameters = new ArrayList<Choice>();
@@ -129,7 +135,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new DecimalUnit(SI.KILOGRAM), new DecimalPerUnit(NonSI.MONTH));
         JSONObject obj = new JSONObject();
-        obj.put("dataItem", dataItem.getJSONObject(true,false));
+        obj.put("dataItem", dataItem.getJSONObject(true, false));
         obj.put("path", pathItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
         obj.put("amountPerMonth", amount.convert(kgPerMonth).getValue());
@@ -172,7 +178,8 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Override
     public void handleGet() {
         log.debug("handleGet");
-        if (dataBrowser.getDataItemActions().isAllowView()) {
+        if (dataBrowser.getDataItemActions().isAllowView() &&
+                permissionService.hasPermissions(AuthService.getUser(), getDataItem(), Permission.ENTRY_VIEW)) {
             super.handleGet();
         } else {
             notAuthorized();
@@ -281,33 +288,33 @@ public class DataItemResource extends BaseDataResource implements Serializable {
          Out-commenting DI startDate/endDate functionality. Pending final approval from AC, this will be
          permanently deleted in due course - SM (15/07/09).
 
-        // update 'startDate' value
-        if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
-            dataItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
-        }
+         // update 'startDate' value
+         if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
+         dataItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
+         }
 
-        // update 'endDate' value
-        if (names.contains("endDate")) {
-            if (StringUtils.isNotBlank(form.getFirstValue("endDate"))) {
-                dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
-            } else {
-                dataItem.setEndDate(null);
-            }
-        } else {
-            if (StringUtils.isNotBlank(form.getFirstValue("duration"))) {
-                StartEndDate endDate = dataItem.getStartDate().plus(form.getFirstValue("duration"));
-                dataItem.setEndDate(endDate);
-            }
-        }
+         // update 'endDate' value
+         if (names.contains("endDate")) {
+         if (StringUtils.isNotBlank(form.getFirstValue("endDate"))) {
+         dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
+         } else {
+         dataItem.setEndDate(null);
+         }
+         } else {
+         if (StringUtils.isNotBlank(form.getFirstValue("duration"))) {
+         StartEndDate endDate = dataItem.getStartDate().plus(form.getFirstValue("duration"));
+         dataItem.setEndDate(endDate);
+         }
+         }
 
-        // if endDate is set it must be after startDate
-        if (dataItem.getEndDate() != null &&
-                dataItem.getEndDate().before(dataItem.getStartDate())) {
-            badRequest();
-            return;
-        }
+         // if endDate is set it must be after startDate
+         if (dataItem.getEndDate() != null &&
+         dataItem.getEndDate().before(dataItem.getStartDate())) {
+         badRequest();
+         return;
+         }
 
-        */
+         */
 
         // update ItemValues if supplied
         for (String name : form.getNames()) {

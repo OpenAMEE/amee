@@ -83,7 +83,10 @@
     <orderEntry type="module" module-name="amee-calculation" exported="" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.spring:1.1.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.springframework:spring-web:2.5.6" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.springframework:spring-webmvc:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.freemarker:1.1.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.freemarker:freemarker:2.3.15" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.json:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: com.noelios.restlet:com.noelios.restlet:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: xerces:xercesImpl:2.9.1" level="project" />
@@ -124,6 +127,7 @@
     <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty:6.1.15" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty-util:6.1.15" level="project" />
     <orderEntry type="library" exported="" name="Maven: com.noelios.restlet:com.noelios.restlet.ext.jetty:1.1.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty-sslengine:6.1.11" level="project" />
     <orderEntry type="library" exported="" name="Maven: log4jdbc:log4jdbc:4-1.2alpha2" level="project" />
     <orderEntry type="library" exported="" name="Maven: quartz:quartz:1.5.2" level="project" />
     <orderEntry type="library" exported="" name="Maven: javax.mail:mail:1.4" level="project" />

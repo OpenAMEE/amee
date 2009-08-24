@@ -135,7 +135,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
 
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
-
     }
 
     public Environment getEnvironment() {
