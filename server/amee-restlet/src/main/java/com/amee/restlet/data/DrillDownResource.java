@@ -25,6 +25,8 @@ import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DrillDownService;
+import com.amee.restlet.RequestContext;
+import com.amee.core.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -62,6 +64,9 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         setDataCategory(request.getAttributes().get("categoryUid").toString());
+        if (getDataCategory() != null) {
+            ((RequestContext) ThreadBeanHolder.get("ctx")).setDrillDown(getDataCategory());
+        }
     }
 
     @Override

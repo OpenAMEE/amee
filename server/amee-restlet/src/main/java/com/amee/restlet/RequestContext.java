@@ -22,9 +22,13 @@
 package com.amee.restlet;
 
 import com.amee.domain.auth.User;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.Profile;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import com.amee.domain.profile.ProfileItem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
 import org.restlet.data.Request;
 
@@ -35,6 +39,9 @@ import org.restlet.data.Request;
  */
 public class RequestContext {
 
+    private final Log log = LogFactory.getLog(getClass());
+    private final Log transactions = LogFactory.getLog("transactions");
+
     private String username;
     private String profileUid;
     private String apiVersion;
@@ -43,6 +50,9 @@ public class RequestContext {
     private String requestParameters;
     private String error;
     private String form;
+    private String uid;
+    private String label;
+    private String type;
 
     public void setUser(User user) {
         if (user == null)
@@ -61,25 +71,93 @@ public class RequestContext {
         this.requestParameters = request.getResourceRef().getQuery();
     }
 
+    public void setCategory(DataCategory category) {
+        this.uid = category.getUid();
+        this.label = category.getDisplayName();
+        this.type = category.getObjectType().getName();
+    }
+
+    public void setDataItem(DataItem item) {
+        this.uid = item.getUid();
+        this.label = item.getLabel();
+        this.type = item.getObjectType().getName();
+    }
+
+    public void setProfileItem(ProfileItem item) {
+        this.uid = item.getUid();
+        this.label = item.getDisplayName();
+        this.type = item.getObjectType().getName();
+    }
+
+    public void setItemValue(ItemValue value) {
+        this.uid = value.getUid();
+        this.label = value.getPath();
+        this.type = value.getObjectType().getName();
+    }
+
+    public void setDrillDown(DataCategory dataCategory) {
+        this.uid = dataCategory.getUid();
+        this.label = dataCategory.getDisplayName();
+        this.type = "DD";
+    }
+
     public void setError(String error) {
         this.error = error;    
     }
 
     public void setForm(Form form) {
-        this.form = form.toString();
+        if (!form.isEmpty()) {
+            this.form = form.toString();
+        }
+    }
+
+    public void error() {
+        log.error(toString());
+    }
+
+    public void record() {
+        if (uid != null) {
+            transactions.info(toString());
+        }
     }
 
     public String toString() {
-        ToStringBuilder sb = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-        sb.append("username", username);
-        sb.append("apiVersion", apiVersion);
-        if (profileUid != null)
-            sb.append("profile", profileUid);
-        sb.append("path", requestPath);
-        sb.append("method", method);
-        sb.append("parameters", requestParameters);
-        sb.append("form", form);
-        sb.append("error", error);
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("username=" + username + ",");
+
+        sb.append("apiVersion=" + apiVersion + ",");
+
+        if (profileUid != null) {
+            sb.append("profile=" + profileUid + ",");
+        }
+
+        sb.append("uid=" + uid + ",");
+
+        sb.append("path=" + requestPath + ",");
+
+        if (type != null) {
+            sb.append("type=" + type + ",");
+        }
+
+        if (label != null) {
+            sb.append("label=" + label + ",");
+        }
+        
+        if (requestParameters != null) {
+            sb.append("parameters=" + requestParameters + ",");
+        }
+
+        if (form != null) {
+            sb.append("form=" + form + ",");
+        }
+
+        if (error != null) {
+            sb.append("error=" + error + ",");
+        }
+
+        sb.append("method=" + method);
+
         return sb.toString();
     }
 }

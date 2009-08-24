@@ -25,6 +25,10 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.Locale;
 
+/**
+ * {@link LocaleName} implementation for {@link ItemDefinition}
+ *
+ */
 @Entity
 @DiscriminatorValue("ID")
 public class ItemDefinitionLocaleName extends LocaleName {

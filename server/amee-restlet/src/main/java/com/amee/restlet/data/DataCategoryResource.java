@@ -20,11 +20,13 @@
 package com.amee.restlet.data;
 
 import com.amee.core.APIUtils;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.data.*;
 import com.amee.domain.path.PathItem;
 import com.amee.restlet.data.builder.DataCategoryResourceBuilder;
 import com.amee.restlet.utils.APIFault;
+import com.amee.restlet.RequestContext;
 import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
@@ -77,6 +79,9 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         setDataCategory(request.getAttributes().get("categoryUid").toString());
+        if (getDataCategory() != null) {
+            ((RequestContext) ThreadBeanHolder.get("ctx")).setCategory(getDataCategory());
+        }
         setPage(request);
     }
 

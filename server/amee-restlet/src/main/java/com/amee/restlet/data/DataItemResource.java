@@ -32,6 +32,7 @@ import com.amee.service.auth.AuthService;
 import com.amee.service.auth.PermissionService;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
+import com.amee.restlet.RequestContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,7 +82,9 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         query = request.getResourceRef().getQueryAsForm();
         setDataCategory(request.getAttributes().get("categoryUid").toString());
         setDataItemByPathOrUid(request.getAttributes().get("itemPath").toString());
-
+        if (getDataItem() != null) {
+            ((RequestContext) ThreadBeanHolder.get("ctx")).setDataItem(getDataItem());
+        }
         Set<String> names = query.getNames();
 
         // The resource may receive a startDate parameter that sets the current date in an historical sequence of

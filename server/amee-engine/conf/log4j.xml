@@ -13,7 +13,7 @@
     <appender name="EMAIL"  class="org.apache.log4j.net.SMTPAppender">
         <param name="BufferSize" value="512" />
         <param name="SMTPHost" value="localhost" />
-        <param name="From" value="${host.name}" />
+        <param name="From" value="amee@${host.name}" />
         <param name="To" value="steve@amee.com" />
         <param name="Subject" value="AMEE Service Message" />
         <layout class="org.apache.log4j.PatternLayout">
@@ -25,14 +25,16 @@
         </filter>
     </appender>
 
-    <!--<appender name="FILE" class="org.apache.log4j.FileAppender">-->
-    <!--<param name="file" value="/var/www/apps/amee/shared/log/amee.log"/>-->
-    <!--<param name="append" value="true"/>-->
-    <!--<param name="encoding" value="UTF-8"/>-->
-    <!--<layout class="org.apache.log4j.PatternLayout">-->
-    <!--<param name="ConversionPattern" value="[%d] [%-5p] [%t] [%X{ipAddress}] [%X{userUid}] [%c{6}] %m%n"/>-->
-    <!--</layout>-->
-    <!--</appender>-->
+    <appender name="ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="/var/www/apps/amee/shared/log/transactions.log" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="Append" value="true"/>
+        <param name="Threshold" value="INFO"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy:MM:dd:HH:mm:ss:SSS} - %m%n"/>
+        </layout>
+    </appender>
+
 
     <!-- ############### Hibernate ################# -->
 
@@ -70,6 +72,12 @@
         <priority value="INFO"/>
     </category>
 
+
+    <category name="transactions" additivity="false">
+        <priority value="INFO"/>
+        <appender-ref ref="ROLLER"/>
+    </category>
+
     <!-- ############### log4jdbc ################### -->
     <!-- See: http://code.google.com/p/log4jdbc/ -->
 
@@ -101,5 +109,7 @@
         <appender-ref ref="CONSOLE"/>
         <!--<appender-ref ref="EMAIL"/>-->
     </root>
+
+
 
 </log4j:configuration>

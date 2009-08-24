@@ -1,10 +1,8 @@
 package com.amee.engine.restlet;
 
-import com.amee.restlet.RequestContext;
 import com.amee.core.ThreadBeanHolder;
+import com.amee.restlet.RequestContext;
 import com.amee.service.transaction.TransactionController;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
 import org.restlet.Filter;
 import org.restlet.data.Method;
@@ -18,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class TransactionFilter extends Filter {
 
-    private final Log log = LogFactory.getLog(getClass());
     @Autowired
     private TransactionController transactionController;
 
@@ -37,9 +34,11 @@ public class TransactionFilter extends Filter {
             success = false;
             RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
             ctx.setError(t.getMessage());
-            log.error(ctx.toString());
+            ctx.error();
             throw new RuntimeException(t);
         } finally {
+            RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+            ctx.record();
             transactionController.afterHandle(success && !response.getStatus().isError());
         }
     }

@@ -20,11 +20,13 @@
 package com.amee.restlet.profile;
 
 import com.amee.core.CO2AmountUnit;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.acceptor.ProfileItemAtomAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileItemFormAcceptor;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileItemResourceBuilderFactory;
+import com.amee.restlet.RequestContext;
 import com.amee.service.profile.ProfileConstants;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
@@ -72,6 +74,9 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         super.initialise(context, request, response);
         setDataCategory(request.getAttributes().get("categoryUid").toString());
         setProfileItem(request.getAttributes().get("itemUid").toString());
+        if (getProfileItem() != null) {
+            ((RequestContext) ThreadBeanHolder.get("ctx")).setProfileItem(getProfileItem());
+        }
         setBuilderStrategy();
     }
 

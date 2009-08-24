@@ -25,6 +25,10 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.Locale;
 
+/**
+ * {@link LocaleName} implementation for {@link DataCategory}
+ *
+ */
 @Entity
 @DiscriminatorValue("DC")
 public class DataCategoryLocaleName extends LocaleName {

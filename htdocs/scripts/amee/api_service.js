@@ -170,11 +170,13 @@ var ApiService = Class.create({
     },
     load: function(params) {
         this.response = null;
-        params = params || "";
-        params = params.toQueryParams();
-        params['method'] = 'get';
-        new Ajax.Request(window.location.href + '?' + Object.toQueryString(params), {
-            method: 'post',
+        var url = window.location.href;
+        if (params) {
+            params = params.toQueryParams();
+            url = url + '?' + Object.toQueryString(params)   
+        }
+        new Ajax.Request(url, {
+            method: 'get',
             requestHeaders: ['Accept', 'application/json'],
             onSuccess: this.loadSuccess.bind(this),
             onFailure: this.loadFailure.bind(this)});
@@ -435,8 +437,8 @@ var ActionsResource = Class.create({
         }
     },
     load: function() {
-        new Ajax.Request(this.path + '?method=get', {
-            method: 'post',
+        new Ajax.Request(this.path, {
+            method: 'get',
             requestHeaders: ['Accept', 'application/json'],
             onSuccess: this.loadSuccess.bind(this),
             onFailure: this.loadFailure.bind(this)});
