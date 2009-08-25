@@ -18,6 +18,11 @@
   <h2>Update Item Value Definition</h2>
   <p>  <form action='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions/${itemValueDefinition.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
   Name: <input name='name' value='${itemValueDefinition.name}' type='text' size='30'/><br/>
+  <#if itemValueDefinition.localeNames?size != 0>
+    <#list itemValueDefinition.localeNames?keys as locale>
+        Name (${locale}): <input name='name_${locale}' value='${itemValueDefinition.localeNames[locale].name}' type='text' size='30'/><br/>
+    </#list>
+  </#if>
   Path: <input name='path' value='${itemValueDefinition.path}' type='text' size='30'/><br/>
   Default value: <input name='value' <#if itemValueDefinition.value??>value='${itemValueDefinition.value}'</#if> type='text' size='30'/><br/>
   Choices: <input name='choices' <#if itemValueDefinition.choices??>value='${itemValueDefinition.choices}'</#if> type='text' size='30'/> (comma delimited name=value pairs)<br/>

@@ -67,6 +67,9 @@ public abstract class AMEEEnvironmentEntity extends AMEEEntity implements Enviro
         }
     }
 
+    public Map<String, LocaleName> getLocaleNames() {
+        return localeNames;
+    }
 
     @SuppressWarnings("unchecked")
     protected String getLocaleName() {

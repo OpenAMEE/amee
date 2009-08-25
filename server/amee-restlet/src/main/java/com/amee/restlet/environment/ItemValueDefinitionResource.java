@@ -28,6 +28,7 @@ import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import com.amee.service.environment.EnvironmentService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -126,16 +127,23 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
             // Parse any submitted locale names
             for (String name : form.getNames()) {
                 if (name.startsWith("name_")) {
-                    String localeNameStr = form.getFirstValue(name);
+
                     String locale = name.substring(name.indexOf("_") + 1);
-                    if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
-                        ItemValueDefinitionLocaleName localeName =
+                    String localeNameStr = form.getFirstValue(name);
+
+                    if (StringUtils.isBlank(localeNameStr) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                        badRequest(APIFault.INVALID_PARAMETERS);
+                        return;
+                    }
+
+                    if (itemValueDefinition.getLocaleNames().containsKey(locale)) {
+                        LocaleName localeName = itemValueDefinition.getLocaleNames().get(locale);
+                        localeName.setName(localeNameStr);
+                    } else {
+                        LocaleName localeName =
                             new ItemValueDefinitionLocaleName(itemValueDefinition, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
                         itemValueDefinition.putLocaleName(localeName);
                         form.removeFirst(name);
-                    } else {
-                        badRequest(APIFault.INVALID_PARAMETERS);
-                        return;
                     }
                 }
             }

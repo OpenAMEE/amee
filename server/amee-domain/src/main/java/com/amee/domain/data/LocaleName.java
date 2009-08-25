@@ -102,6 +102,15 @@ public class LocaleName extends AMEEEnvironmentEntity {
     }
 
     /**
+     * Set the locale-specific name
+     *
+     * @param name - the locale-specific name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
      * Get the locale identifier (e.g. Fr or Fr_fr)
      *
      * @return - the locale identifier
