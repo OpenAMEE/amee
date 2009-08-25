@@ -124,36 +124,37 @@ public class RequestContext {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("username=" + username + ",");
+        sb.append("username=" + username + "|");
 
-        sb.append("apiVersion=" + apiVersion + ",");
+        sb.append("apiVersion=" + apiVersion + "|");
 
         if (profileUid != null) {
-            sb.append("profile=" + profileUid + ",");
+            sb.append("profile=" + profileUid + "|");
         }
 
-        sb.append("uid=" + uid + ",");
+        sb.append("uid=" + uid + "|");
 
-        sb.append("path=" + requestPath + ",");
+        sb.append("path=" + requestPath + "|");
 
         if (type != null) {
-            sb.append("type=" + type + ",");
+            sb.append("type=" + type + "|");
         }
 
         if (label != null) {
-            sb.append("label=" + label + ",");
+            sb.append("label=" + label + "|");
         }
-        
+
+        //TODO - Do this in the setXX
         if (requestParameters != null) {
-            sb.append("parameters=" + requestParameters + ",");
+            sb.append("parameters=" + requestParameters.replace("=","__") + "|");
         }
 
         if (form != null) {
-            sb.append("form=" + form + ",");
+            sb.append("form=" + form + "|");
         }
 
         if (error != null) {
-            sb.append("error=" + error + ",");
+            sb.append("error=" + error + "|");
         }
 
         sb.append("method=" + method);
