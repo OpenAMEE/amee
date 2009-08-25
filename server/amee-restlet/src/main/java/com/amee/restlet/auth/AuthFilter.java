@@ -3,6 +3,7 @@ package com.amee.restlet.auth;
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.auth.User;
 import com.amee.restlet.RequestContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
@@ -33,11 +34,20 @@ public class AuthFilter extends BaseAuthFilter {
         int result;
         String authToken = authenticated(request);
         if (authToken != null) {
-            // a auth has been found and authenticated (even if this is just the guest auth)
+            // an auth has been found and authenticated (even if this is just the guest auth)
+            User user = (User) ThreadBeanHolder.get("user");
+            
             RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
-            ctx.setUser((User) ThreadBeanHolder.get("user"));
+            ctx.setUser(user);
             ctx.setRequest(request);
             result = accept(request, response, authToken);
+
+            // Set user or request locale information into the thread
+            String locale = request.getResourceRef().getQueryAsForm().getFirstValue("locale");
+            if (StringUtils.isBlank(locale)) {
+                locale = user.getLocale();
+            }
+            ThreadBeanHolder.set("locale", locale);
 
         } else {
             // this will only be executed if a guest auth is not found (really?)

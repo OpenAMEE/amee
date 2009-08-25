@@ -73,9 +73,9 @@ public abstract class AMEEEnvironmentEntity extends AMEEEntity implements Enviro
 
     @SuppressWarnings("unchecked")
     protected String getLocaleName() {
-        User user = (User) ThreadBeanHolder.get("user");
+        String locale = (String) ThreadBeanHolder.get("locale");
         String name = null;
-        LocaleName localeName = localeNames.get(user.getLocale());
+        LocaleName localeName = localeNames.get(locale);
         if (localeName != null) {
             name = localeName.getName();
         }
