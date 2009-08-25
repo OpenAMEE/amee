@@ -45,7 +45,7 @@ public class UserResource extends BaseResource {
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
-        environmentBrowser.setUserUid(request.getAttributes().get("userUid").toString());
+        environmentBrowser.setUserIdentifier(request.getAttributes().get("userUid").toString());
     }
     
     @Override
