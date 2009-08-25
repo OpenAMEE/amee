@@ -60,7 +60,7 @@ public class DefinitionServiceDAO implements Serializable {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(Algorithm.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
-            criteria.add(Restrictions.ne("trash", AMEEStatus.TRASH));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<Algorithm> algorithms = criteria.list();
