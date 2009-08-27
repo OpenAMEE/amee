@@ -29,38 +29,6 @@ import java.util.Set;
 
 public class PermissionEntry implements Serializable {
 
-    /**
-     * Constants for the various permission entry values.
-     */
-    public final static PermissionEntry OWN = new PermissionEntry("own");
-    public final static PermissionEntry VIEW = new PermissionEntry("view");
-    public final static PermissionEntry VIEW_DEPRECATED = new PermissionEntry("view-deprecated");
-    public final static PermissionEntry CREATE = new PermissionEntry("create");
-    public final static PermissionEntry MODIFY = new PermissionEntry("modify");
-    public final static PermissionEntry DELETE = new PermissionEntry("delete");
-
-    /**
-     * Helpful PermissionEntry Sets.
-     */
-    public final static Set<PermissionEntry> OWN_VIEW = new HashSet<PermissionEntry>();
-    public final static Set<PermissionEntry> OWN_CREATE = new HashSet<PermissionEntry>();
-    public final static Set<PermissionEntry> OWN_MODIFY = new HashSet<PermissionEntry>();
-    public final static Set<PermissionEntry> OWN_DELETE = new HashSet<PermissionEntry>();
-
-    /**
-     * Populate PermissionEntry Sets.
-     */
-    {
-        OWN_VIEW.add(OWN);
-        OWN_VIEW.add(VIEW);
-        OWN_CREATE.add(OWN);
-        OWN_CREATE.add(CREATE);
-        OWN_MODIFY.add(OWN);
-        OWN_MODIFY.add(MODIFY);
-        OWN_DELETE.add(OWN);
-        OWN_DELETE.add(DELETE);
-    }
-
     private String value = "";
     private boolean allow = true;
 

@@ -25,9 +25,16 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEEntityReference;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.APIVersion;
+import com.amee.domain.auth.Group;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemValue;
+import com.amee.domain.environment.Environment;
+import com.amee.domain.profile.Profile;
+import com.amee.domain.profile.ProfileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -48,12 +55,70 @@ public class PermissionService {
 
     private static final String CACHE_REGION = "query.permissionService";
 
+    /**
+     * Defines which 'principle' classes (keys) can relate to which 'entity' classes (values).
+     */
+    public final static Map<Class, Set<Class>> PRINCIPLE_ENTITY = new HashMap<Class, Set<Class>>();
+
+    /**
+     * Define which principles can relate to which entities.
+     */
+    {
+        // Users <--> Entities
+        addPrincipleAndEntity(User.class, Environment.class);
+        addPrincipleAndEntity(User.class, Profile.class);
+        addPrincipleAndEntity(User.class, DataCategory.class);
+        addPrincipleAndEntity(User.class, ProfileItem.class);
+        addPrincipleAndEntity(User.class, DataItem.class);
+        addPrincipleAndEntity(User.class, ItemValue.class);
+
+        // Groups <--> Entities
+        addPrincipleAndEntity(Group.class, Environment.class);
+        addPrincipleAndEntity(Group.class, Profile.class);
+        addPrincipleAndEntity(Group.class, DataCategory.class);
+        addPrincipleAndEntity(Group.class, ProfileItem.class);
+        addPrincipleAndEntity(Group.class, DataItem.class);
+        addPrincipleAndEntity(Group.class, ItemValue.class);
+    }
+
+    /**
+     * Constants for the various permission entry values.
+     */
+    public final static PermissionEntry OWN = new PermissionEntry("own");
+    public final static PermissionEntry VIEW = new PermissionEntry("view");
+    public final static PermissionEntry VIEW_DEPRECATED = new PermissionEntry("view-deprecated");
+    public final static PermissionEntry CREATE = new PermissionEntry("create");
+    public final static PermissionEntry MODIFY = new PermissionEntry("modify");
+    public final static PermissionEntry DELETE = new PermissionEntry("delete");
+
+    /**
+     * Helpful PermissionEntry Sets.
+     */
+    public final static Set<PermissionEntry> OWN_VIEW = new HashSet<PermissionEntry>();
+    public final static Set<PermissionEntry> OWN_CREATE = new HashSet<PermissionEntry>();
+    public final static Set<PermissionEntry> OWN_MODIFY = new HashSet<PermissionEntry>();
+    public final static Set<PermissionEntry> OWN_DELETE = new HashSet<PermissionEntry>();
+
+    /**
+     * Populate PermissionEntry Sets.
+     */
+    {
+        OWN_VIEW.add(OWN);
+        OWN_VIEW.add(VIEW);
+        OWN_CREATE.add(OWN);
+        OWN_CREATE.add(CREATE);
+        OWN_MODIFY.add(OWN);
+        OWN_MODIFY.add(MODIFY);
+        OWN_DELETE.add(OWN);
+        OWN_DELETE.add(DELETE);
+    }
+
     @PersistenceContext
     private EntityManager entityManager;
 
     @SuppressWarnings(value = "unchecked")
     public List<Permission> getPermissionsForEntity(AMEEEntity entity) {
-        if ((entity == null) || !Permission.isValidEntity(entity)) {
+        if ((entity == null) || !isValidEntity(entity)) {
             throw new IllegalArgumentException();
         }
         Session session = (Session) entityManager.getDelegate();
@@ -94,7 +159,7 @@ public class PermissionService {
 
     @SuppressWarnings(value = "unchecked")
     public List<Permission> getPermissionsForPrinciple(AMEEEntity principle, Class entityClass) {
-        if ((principle == null) || !Permission.isValidPrinciple(principle)) {
+        if ((principle == null) || !isValidPrinciple(principle)) {
             throw new IllegalArgumentException();
         }
         Session session = (Session) entityManager.getDelegate();
@@ -112,7 +177,7 @@ public class PermissionService {
 
     @SuppressWarnings(value = "unchecked")
     public List<Permission> getPermissionsForPrincipleAndEntity(AMEEEntity principle, AMEEEntity entity) {
-        if ((principle == null) || (entity == null) || !Permission.isValidPrincipleToEntity(principle, entity)) {
+        if ((principle == null) || (entity == null) || !isValidPrincipleToEntity(principle, entity)) {
             throw new IllegalArgumentException();
         }
         Session session = (Session) entityManager.getDelegate();
@@ -214,7 +279,7 @@ public class PermissionService {
     }
 
     public APIVersion getAPIVersion(AMEEEntity entity) {
-        Permission permission = getPermissionForEntity(entity, PermissionEntry.OWN);
+        Permission permission = getPermissionForEntity(entity, OWN);
         if (permission == null) {
             throw new RuntimeException("Profile does not have a Permission expresing ownership.");
         }
@@ -226,5 +291,54 @@ public class PermissionService {
         return user.getAPIVersion();
     }
 
-//    public Set<Long> getIDsForEntities(AMEEEntity )
+    private void addPrincipleAndEntity(Class principleClass, Class entityClass) {
+        Set<Class> entityClasses = PRINCIPLE_ENTITY.get(principleClass);
+        if (entityClasses == null) {
+            entityClasses = new HashSet<Class>();
+            PRINCIPLE_ENTITY.put(principleClass, entityClasses);
+        }
+        entityClasses.add(entityClass);
+    }
+
+    public boolean isValidPrinciple(AMEEEntity principle) {
+        if (principle == null) throw new IllegalArgumentException();
+        return PRINCIPLE_ENTITY.keySet().contains(getRealClass(principle.getClass()));
+    }
+
+    public boolean isValidEntity(AMEEEntity entity) {
+        if (entity == null) throw new IllegalArgumentException();
+        for (Set<Class> entities : PRINCIPLE_ENTITY.values()) {
+            if (entities.contains(getRealClass(entity.getClass()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isValidPrincipleToEntity(AMEEEntity principle, AMEEEntity entity) {
+        if ((principle == null) || (entity == null)) throw new IllegalArgumentException();
+        return isValidPrinciple(principle) &&
+                PRINCIPLE_ENTITY.get(getRealClass(principle.getClass())).contains(getRealClass(entity.getClass()));
+    }
+
+    public Class getRealClass(Class c) {
+        if (User.class.isAssignableFrom(c)) {
+            return User.class;
+        } else if (Group.class.isAssignableFrom(c)) {
+            return Group.class;
+        } else if (Environment.class.isAssignableFrom(c)) {
+            return Environment.class;
+        } else if (Profile.class.isAssignableFrom(c)) {
+            return Profile.class;
+        } else if (DataCategory.class.isAssignableFrom(c)) {
+            return DataCategory.class;
+        } else if (DataItem.class.isAssignableFrom(c)) {
+            return DataItem.class;
+        } else if (ProfileItem.class.isAssignableFrom(c)) {
+            return ProfileItem.class;
+        } else if (ItemValue.class.isAssignableFrom(c)) {
+            return ItemValue.class;
+        }
+        throw new IllegalArgumentException("Class not supported.");
+    }
 }

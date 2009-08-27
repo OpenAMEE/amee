@@ -6,6 +6,8 @@ import com.amee.domain.AMEEEntityReference;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemValue;
+import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import org.hibernate.annotations.Cache;
@@ -31,21 +33,6 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
 
     public final static int OBJECT_CLASS_MAX_SIZE = 255;
     public final static int ENTRIES_MAX_SIZE = 1000;
-    
-    /**
-     * Defines which 'principle' classes (keys) can relate to which 'entity' classes (values).
-     */
-    public final static Map<Class, Set<Class>> PRINCIPLE_ENTITY = new HashMap<Class, Set<Class>>();
-
-    /**
-     * Define which principles can relate to which entities.
-     */
-    {
-        addPrincipleAndEntity(User.class, Profile.class);
-        addPrincipleAndEntity(User.class, DataCategory.class);
-        addPrincipleAndEntity(User.class, ProfileItem.class);
-        addPrincipleAndEntity(User.class, DataItem.class);
-    }
 
     /**
      * The entity that this permission is governing access to.
@@ -131,35 +118,6 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
     @Deprecated
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
-    }
-
-    private static void addPrincipleAndEntity(Class principleClass, Class entityClass) {
-        Set<Class> entityClasses = PRINCIPLE_ENTITY.get(principleClass);
-        if (entityClasses == null) {
-            entityClasses = new HashSet<Class>();
-            PRINCIPLE_ENTITY.put(principleClass, entityClasses);
-        }
-        entityClasses.add(entityClass);
-    }
-
-    public static boolean isValidPrinciple(AMEEEntity principle) {
-        if (principle == null) throw new IllegalArgumentException();
-        return PRINCIPLE_ENTITY.keySet().contains(principle.getClass());
-    }
-
-    public static boolean isValidEntity(AMEEEntity entity) {
-        if (entity == null) throw new IllegalArgumentException();
-        for (Set<Class> entities : PRINCIPLE_ENTITY.values()) {
-            if (entities.contains(entity.getClass())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isValidPrincipleToEntity(AMEEEntity principle, AMEEEntity entity) {
-        if ((principle == null) || (entity == null)) throw new IllegalArgumentException();
-        return isValidPrinciple(principle) && PRINCIPLE_ENTITY.get(principle.getClass()).contains(entity.getClass());
     }
 
     public AMEEEntityReference getEntityReference() {

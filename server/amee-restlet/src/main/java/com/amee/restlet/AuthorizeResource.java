@@ -40,7 +40,7 @@ public abstract class AuthorizeResource extends BaseResource {
     @Override
     public void handleGet() {
         log.debug("handleGet()");
-        if (hasPermissions(PermissionEntry.OWN_VIEW)) {
+        if (hasPermissions(PermissionService.OWN_VIEW)) {
             doGet();
         } else {
             notAuthorized();
@@ -54,7 +54,7 @@ public abstract class AuthorizeResource extends BaseResource {
     @Override
     public void acceptRepresentation(Representation entity) {
         log.debug("acceptRepresentation()");
-        if (hasPermissions(PermissionEntry.OWN_CREATE)) {
+        if (hasPermissions(PermissionService.OWN_CREATE)) {
             doAccept(entity);
         } else {
             notAuthorized();
@@ -68,7 +68,7 @@ public abstract class AuthorizeResource extends BaseResource {
     @Override
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
-        if (hasPermissions(PermissionEntry.OWN_MODIFY)) {
+        if (hasPermissions(PermissionService.OWN_MODIFY)) {
             doStore(entity);
         } else {
             notAuthorized();
@@ -86,7 +86,7 @@ public abstract class AuthorizeResource extends BaseResource {
     @Override
     public void removeRepresentations() {
         log.debug("removeRepresentations()");
-        if (hasPermissions(PermissionEntry.OWN_DELETE)) {
+        if (hasPermissions(PermissionService.OWN_DELETE)) {
             doRemove();
         } else {
             notAuthorized();
