@@ -44,7 +44,7 @@ public class EnvironmentsResource extends AuthorizeResource implements Serializa
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         return new ArrayList<AMEEEntity>();
     }
 

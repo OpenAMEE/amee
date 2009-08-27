@@ -79,7 +79,7 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(definitionBrowser.getEnvironment());
         return entities;
@@ -153,7 +153,7 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
     }
 
     @Override
-    protected void doAccept(Representation entity) {
+    public void doAccept(Representation entity) {
         log.debug("doAccept()");
         Form form = getForm();
         if ((form.getFirstValue("name") != null) && (form.getFirstValue("valueType") != null)) {

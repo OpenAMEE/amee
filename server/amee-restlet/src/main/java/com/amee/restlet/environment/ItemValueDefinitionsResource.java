@@ -79,7 +79,7 @@ public class ItemValueDefinitionsResource extends AuthorizeResource implements S
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(definitionBrowser.getEnvironment());
         entities.add(definitionBrowser.getItemDefinition());

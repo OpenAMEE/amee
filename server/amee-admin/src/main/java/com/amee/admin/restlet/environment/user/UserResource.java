@@ -52,7 +52,7 @@ public class UserResource extends AuthorizeResource {
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(environmentBrowser.getEnvironment());
         entities.add(environmentBrowser.getUser());
@@ -104,7 +104,7 @@ public class UserResource extends AuthorizeResource {
     // TODO: prevent duplicate username/password and enforce unique username per environment?
     // TODO: password validation
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
         log.debug("doStore");
         Form form = getForm();
         User user = environmentBrowser.getUser();

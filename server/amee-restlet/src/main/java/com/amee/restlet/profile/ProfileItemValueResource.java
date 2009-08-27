@@ -96,7 +96,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(getProfileItemValue());
         entities.add(getProfileItem());
@@ -139,7 +139,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     }
 
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
         log.debug("doStore()");
         if (MediaType.APPLICATION_ATOM_XML.includes(entity.getMediaType())) {
             atomAcceptor.accept(this, entity);

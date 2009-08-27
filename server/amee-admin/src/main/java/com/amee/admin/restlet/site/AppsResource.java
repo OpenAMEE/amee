@@ -46,7 +46,7 @@ public class AppsResource extends AuthorizeResource implements Serializable {
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         return new ArrayList<AMEEEntity>();
     }
 

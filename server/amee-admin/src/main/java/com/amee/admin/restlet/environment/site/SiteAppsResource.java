@@ -58,7 +58,7 @@ public class SiteAppsResource extends AuthorizeResource {
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(environmentBrowser.getEnvironment());
         entities.add(environmentBrowser.getSite());
@@ -134,7 +134,7 @@ public class SiteAppsResource extends AuthorizeResource {
 
     // TODO: prevent duplicate instances
     @Override
-    protected void doAccept(Representation entity) {
+    public void doAccept(Representation entity) {
         log.debug("doAccept");
         Form form = getForm();
         // create new instance if submitted

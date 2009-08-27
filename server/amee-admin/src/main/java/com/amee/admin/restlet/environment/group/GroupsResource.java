@@ -52,7 +52,7 @@ public class GroupsResource extends AuthorizeResource implements Serializable {
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(environmentBrowser.getEnvironment());
         return entities;
@@ -124,7 +124,7 @@ public class GroupsResource extends AuthorizeResource implements Serializable {
 
     // TODO: prevent duplicate instances
     @Override
-    protected void doAccept(Representation entity) {
+    public void doAccept(Representation entity) {
         log.debug("doAccept");
         Form form = getForm();
         // create new instance if submitted

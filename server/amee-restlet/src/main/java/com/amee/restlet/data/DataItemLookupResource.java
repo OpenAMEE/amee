@@ -75,7 +75,7 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(environment);
         if (dataItem != null) {

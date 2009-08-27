@@ -85,7 +85,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(getDataItemValue());
         entities.add(getDataItem());
@@ -219,7 +219,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     }
 
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
 
         log.debug("doStore()");
 
@@ -253,7 +253,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     }
 
     @Override
-    protected void doRemove() {
+    public void doRemove() {
 
         log.debug("doRemove()");
 

@@ -60,7 +60,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(environmentBrowser.getEnvironment());
         return entities;

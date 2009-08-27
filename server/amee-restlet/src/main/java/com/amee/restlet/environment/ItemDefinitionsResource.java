@@ -75,7 +75,7 @@ public class ItemDefinitionsResource extends AuthorizeResource implements Serial
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(definitionBrowser.getEnvironment());
         return entities;
@@ -146,7 +146,7 @@ public class ItemDefinitionsResource extends AuthorizeResource implements Serial
     }
 
     @Override
-    protected void doAccept(Representation entity) {
+    public void doAccept(Representation entity) {
         log.debug("doAccept()");
         Form form = getForm();
         if (form.getFirstValue("name") != null) {

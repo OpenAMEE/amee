@@ -83,7 +83,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(definitionBrowser.getEnvironment());
         entities.add(definitionBrowser.getItemDefinition());
@@ -135,7 +135,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
     }
 
     @Override
-    protected void doGet() {
+    public void doGet() {
         log.debug("doGet()");
         Form form = getForm();
         Set<String> names = form.getNames();
@@ -204,7 +204,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
     }
 
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
         log.debug("doStore()");
         Algorithm algorithm = definitionBrowser.getAlgorithm();
         Form form = getForm();
@@ -228,7 +228,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
     }
 
     @Override
-    protected void doRemove() {
+    public void doRemove() {
         log.debug("doRemove()");
         definitionService.remove(definitionBrowser.getAlgorithm());
         success();

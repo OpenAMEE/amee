@@ -79,7 +79,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(definitionBrowser.getEnvironment());
         entities.add(definitionBrowser.getItemDefinition());
@@ -118,7 +118,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
     }
 
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
         log.debug("doStore()");
 
         ItemValueDefinition itemValueDefinition = definitionBrowser.getItemValueDefinition();
@@ -191,7 +191,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
     }
 
     @Override
-    protected void doRemove() {
+    public void doRemove() {
         log.debug("doRemove()");
         definitionService.remove(definitionBrowser.getItemValueDefinition());
         success();

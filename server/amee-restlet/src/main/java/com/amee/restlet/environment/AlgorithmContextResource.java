@@ -72,7 +72,7 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(definitionBrowser.getEnvironment());
         entities.add(definitionBrowser.getItemDefinition());
@@ -109,7 +109,7 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
     }
 
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
         log.debug("doStore");
         AlgorithmContext algorithmContext = definitionBrowser.getAlgorithmContext();
         Form form = getForm();
@@ -124,7 +124,7 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
     }
 
     @Override
-    protected void doRemove() {
+    public void doRemove() {
         log.debug("doRemove");
         AlgorithmContext algorithmContext = definitionBrowser.getAlgorithmContext();
         definitionService.remove(algorithmContext);

@@ -74,7 +74,7 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(definitionBrowser.getEnvironment());
         entities.add(definitionBrowser.getItemDefinition());
@@ -112,7 +112,7 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
     }
 
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
 
         log.debug("doStore()");
 
@@ -151,7 +151,7 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
     }
 
     @Override
-    protected void doRemove() {
+    public void doRemove() {
         log.debug("doRemove");
         definitionService.remove(definitionBrowser.getItemDefinition());
         success();

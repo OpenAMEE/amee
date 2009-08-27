@@ -71,7 +71,7 @@ public class ValueDefinitionResource extends AuthorizeResource implements Serial
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(definitionBrowser.getEnvironment());
         entities.add(definitionBrowser.getValueDefinition());
@@ -110,7 +110,7 @@ public class ValueDefinitionResource extends AuthorizeResource implements Serial
     }
 
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
         log.debug("doStore()");
         ValueDefinition valueDefinition = definitionBrowser.getValueDefinition();
         Form form = getForm();
@@ -128,7 +128,7 @@ public class ValueDefinitionResource extends AuthorizeResource implements Serial
     }
 
     @Override
-    protected void doRemove() {
+    public void doRemove() {
         log.debug("doRemove");
         ValueDefinition valueDefinition = definitionBrowser.getValueDefinition();
         definitionService.remove(valueDefinition);

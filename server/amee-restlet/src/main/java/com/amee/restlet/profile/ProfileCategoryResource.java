@@ -100,7 +100,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         DataCategory dc = getDataCategory();
         while (dc != null) {
@@ -166,7 +166,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     @Override
-    protected void doAcceptOrStore(Representation entity) {
+    public void doAcceptOrStore(Representation entity) {
         log.debug("doAcceptOrStore()");
         try {
             // get list of updated or created ProfileItems
@@ -208,7 +208,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     @Override
-    protected void doRemove() {
+    public void doRemove() {
         log.debug("doRemove()");
         profileService.clearCaches(getProfile());
         profileService.remove(getProfile());

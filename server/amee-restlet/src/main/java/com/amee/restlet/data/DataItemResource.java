@@ -103,7 +103,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(getDataItem());
         DataCategory dc = getDataItem().getDataCategory();
@@ -186,7 +186,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     }
 
     @Override
-    protected void doAccept(Representation entity) {
+    public void doAccept(Representation entity) {
 
         log.debug("doAccept()");
 
@@ -255,7 +255,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     }
 
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
 
         log.debug("doStore()");
 
@@ -321,7 +321,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     }
 
     @Override
-    protected void doRemove() {
+    public void doRemove() {
         log.debug("doRemove()");
         DataItem dataItem = getDataItem();
         dataService.clearCaches(dataItem.getDataCategory());

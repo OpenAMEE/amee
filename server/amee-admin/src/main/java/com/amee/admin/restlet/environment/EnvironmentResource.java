@@ -40,7 +40,7 @@ public class EnvironmentResource extends AuthorizeResource {
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(environmentBrowser.getEnvironment());
         return entities;
@@ -79,7 +79,7 @@ public class EnvironmentResource extends AuthorizeResource {
     }
 
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
         log.debug("doStore");
         Form form = getForm();
         Environment environment = environmentBrowser.getEnvironment();

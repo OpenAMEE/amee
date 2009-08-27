@@ -79,7 +79,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(environment);
         return entities;

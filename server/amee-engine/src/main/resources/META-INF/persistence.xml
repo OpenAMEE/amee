@@ -5,11 +5,9 @@
         <class>com.amee.domain.ValueDefinition</class>
         <class>com.amee.domain.algorithm.Algorithm</class>
         <class>com.amee.domain.algorithm.AlgorithmContext</class>
-        <class>com.amee.domain.auth.Action</class>
         <class>com.amee.domain.auth.Group</class>
         <class>com.amee.domain.auth.GroupPrinciple</class>
         <class>com.amee.domain.auth.Permission</class>
-        <class>com.amee.domain.auth.Role</class>
         <class>com.amee.domain.auth.User</class>
         <class>com.amee.domain.data.DataCategory</class>
         <class>com.amee.domain.data.DataItem</class>

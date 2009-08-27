@@ -42,7 +42,7 @@ public class SiteResource extends AuthorizeResource {
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(environmentBrowser.getEnvironment());
         entities.add(environmentBrowser.getSite());
@@ -86,7 +86,7 @@ public class SiteResource extends AuthorizeResource {
 
     // TODO: prevent duplicate server names
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
         log.debug("doStore");
         Form form = getForm();
         Site site = environmentBrowser.getSite();

@@ -53,7 +53,7 @@ public class AlgorithmContextsResource extends AuthorizeResource implements Seri
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(definitionBrowser.getEnvironment());
         return entities;

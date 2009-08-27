@@ -95,7 +95,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         DataCategory dc = getDataCategory();
         while (dc != null) {
@@ -130,7 +130,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     @Override
-    protected void doGet() {
+    public void doGet() {
         log.debug("doGet()");
         if (getAPIVersion().isNotVersionOne()) {
             Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -141,7 +141,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     @Override
-    protected void doAcceptOrStore(Representation entity) {
+    public void doAcceptOrStore(Representation entity) {
 
         log.debug("doAcceptOrStore()");
 
@@ -574,7 +574,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     @Override
-    protected void doRemove() {
+    public void doRemove() {
         log.debug("doRemove()");
         dataService.clearCaches(getDataCategory());
         dataService.remove(getDataCategory());

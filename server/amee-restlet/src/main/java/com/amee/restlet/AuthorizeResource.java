@@ -47,7 +47,7 @@ public abstract class AuthorizeResource extends BaseResource {
         }
     }
 
-    protected void doGet() {
+    public void doGet() {
         super.handleGet();
     }
 
@@ -61,7 +61,7 @@ public abstract class AuthorizeResource extends BaseResource {
         }
     }
 
-    protected void doAccept(Representation entity) {
+    public void doAccept(Representation entity) {
         doAcceptOrStore(entity);
     }
 
@@ -75,11 +75,11 @@ public abstract class AuthorizeResource extends BaseResource {
         }
     }
 
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
         doAcceptOrStore(entity);
     }
 
-    protected void doAcceptOrStore(Representation entity) {
+    public void doAcceptOrStore(Representation entity) {
         throw new UnsupportedOperationException();
     }
 
@@ -93,20 +93,20 @@ public abstract class AuthorizeResource extends BaseResource {
         }
     }
 
-    protected void doRemove() {
+    public void doRemove() {
         throw new UnsupportedOperationException();
     }
 
-    protected boolean hasPermissions(Set<PermissionEntry> entrySet) {
+    public boolean hasPermissions(Set<PermissionEntry> entrySet) {
         return permissionService.hasPermissions(getPrinciples(), getEntities(), entrySet);
     }
 
-    protected List<AMEEEntity> getPrinciples() {
+    public List<AMEEEntity> getPrinciples() {
         List<AMEEEntity> principles = new ArrayList<AMEEEntity>();
         principles.add(AuthService.getUser());
         // principles.add(AuthService.getGroup());
         return principles;
     }
 
-    protected abstract List<AMEEEntity> getEntities();
+    public abstract List<AMEEEntity> getEntities();
 }

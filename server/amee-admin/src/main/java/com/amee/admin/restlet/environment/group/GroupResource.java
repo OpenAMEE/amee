@@ -42,7 +42,7 @@ public class GroupResource extends AuthorizeResource {
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(environmentBrowser.getEnvironment());
         entities.add(environmentBrowser.getGroup());
@@ -86,7 +86,7 @@ public class GroupResource extends AuthorizeResource {
 
     // TODO: prevent duplicates
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
         log.debug("put");
         Form form = getForm();
         Group group = environmentBrowser.getGroup();

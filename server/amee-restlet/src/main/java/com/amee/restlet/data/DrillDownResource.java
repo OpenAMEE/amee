@@ -66,7 +66,7 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         DataCategory dc = getDataCategory();
         while (dc != null) {

@@ -96,7 +96,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     @Override
-    protected List<AMEEEntity> getEntities() {
+    public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(getProfileItem());
         DataCategory dc = getProfileItem().getDataCategory();
@@ -138,7 +138,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     @Override
-    protected void doGet() {
+    public void doGet() {
         log.debug("doGet()");
         if (getAPIVersion().isNotVersionOne()) {
             Form form = getRequest().getResourceRef().getQueryAsForm();
@@ -154,7 +154,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     @Override
-    protected void doStore(Representation entity) {
+    public void doStore(Representation entity) {
         log.debug("doStore()");
         List<ProfileItem> profileItems = doStoreProfileItems(entity);
         if (!profileItems.isEmpty()) {
@@ -179,7 +179,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     @Override
-    protected void doRemove() {
+    public void doRemove() {
         log.debug("doRemove()");
         ProfileItem profileItem = getProfileItem();
         profileService.remove(profileItem);
