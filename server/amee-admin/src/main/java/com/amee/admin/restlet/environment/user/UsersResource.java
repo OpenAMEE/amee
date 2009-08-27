@@ -12,6 +12,7 @@ import com.amee.restlet.utils.APIFault;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.environment.SiteService;
+import com.amee.service.environment.GroupService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +38,9 @@ public class UsersResource extends AuthorizeResource implements Serializable {
 
     @Autowired
     private SiteService siteService;
+
+    @Autowired
+    private GroupService groupService;
 
     @Autowired
     private EnvironmentBrowser environmentBrowser;
@@ -160,9 +164,9 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                     cloneUser = siteService.getUserByUid(
                             environmentBrowser.getEnvironment(), form.getFirstValue("cloneUserUid"));
                     if (cloneUser != null) {
-                        for (GroupPrinciple groupUser : siteService.getGroupUsers(cloneUser)) {
-                            newGroupPrinciple = new GroupPrinciple(groupUser.getGroup(), newUser);
-                            siteService.save(newGroupPrinciple);
+                        for (GroupPrinciple groupPrinciple : groupService.getGroupPrinciples(cloneUser)) {
+                            newGroupPrinciple = new GroupPrinciple(groupPrinciple.getGroup(), newUser);
+                            groupService.save(newGroupPrinciple);
                         }
                     }
                 } else {

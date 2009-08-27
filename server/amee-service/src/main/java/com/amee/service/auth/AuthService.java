@@ -191,12 +191,6 @@ public class AuthService implements Serializable {
         }
     }
 
-    public String switchToUser(User newUser, String remoteAddress) {
-        reset();
-        ThreadBeanHolder.set("auth", newUser);
-        return AuthToken.createToken(newUser, remoteAddress);
-    }
-
     @SuppressWarnings(value = "unchecked")
     public User getUserByUid(String uid) {
         Site site = (Site) ThreadBeanHolder.get("site");

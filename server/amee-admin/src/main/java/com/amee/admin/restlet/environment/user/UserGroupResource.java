@@ -60,7 +60,7 @@ public class UserGroupResource extends AuthorizeResource {
         values.put("environment", environmentBrowser.getEnvironment());
         values.put("user", environmentBrowser.getUser());
         values.put("group", environmentBrowser.getGroup());
-        values.put("groupUser", environmentBrowser.getGroupPrinciple());
+        values.put("groupPrinciple", environmentBrowser.getGroupPrinciple());
         return values;
     }
 
@@ -69,7 +69,7 @@ public class UserGroupResource extends AuthorizeResource {
         JSONObject obj = new JSONObject();
         obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
         obj.put("user", environmentBrowser.getUser().getJSONObject());
-        obj.put("groupUser", environmentBrowser.getGroupPrinciple().getJSONObject());
+        obj.put("groupPrinciple", environmentBrowser.getGroupPrinciple().getJSONObject());
         return obj;
     }
 

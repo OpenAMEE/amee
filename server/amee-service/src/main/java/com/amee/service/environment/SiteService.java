@@ -1,17 +1,14 @@
 package com.amee.service.environment;
 
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.Pager;
-import com.amee.domain.PagerSetType;
-import com.amee.domain.auth.Group;
-import com.amee.domain.auth.GroupPrinciple;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.site.App;
 import com.amee.domain.site.Site;
 import com.amee.domain.site.SiteApp;
-import com.amee.core.ThreadBeanHolder;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +41,7 @@ public class SiteService implements Serializable {
 
     // TODO: Other entities to cascade dependencies from?
 
-     @SuppressWarnings(value = "unchecked")
+    @SuppressWarnings(value = "unchecked")
     public void beforeUserDelete(User user) {
         log.debug("beforeUserDelete");
         List<Profile> profiles = entityManager.createQuery(
@@ -62,24 +59,6 @@ public class SiteService implements Serializable {
         }
     }
 
-    @SuppressWarnings(value = "unchecked")
-    public void beforeGroupDelete(Group group) {
-        log.debug("beforeGroupDelete");
-        List<Profile> profiles = entityManager.createQuery(
-                "SELECT p " +
-                        "FROM Profile p " +
-                        "WHERE p.environment.id = :environmentId " +
-                        "AND p.permission.group.id = :groupId " +
-                        "AND p.status != :trash")
-                .setParameter("environmentId", group.getEnvironment().getId())
-                .setParameter("groupId", group.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .getResultList();
-        for (Profile profile : profiles) {
-            profileService.remove(profile);
-        }
-    }
-
     public void beforeSiteDelete(Site site) {
         log.debug("beforeSiteDelete");
         environmentService.beforeSiteDelete(site);
@@ -88,11 +67,6 @@ public class SiteService implements Serializable {
 
     public void beforeSiteAppDelete(SiteApp siteApp) {
         log.debug("beforeSiteAppDelete");
-        // TODO: More cascade dependencies?
-    }
-
-    public void beforeGroupUserDelete(GroupPrinciple groupUser) {
-        log.debug("beforeGroupUserDelete");
         // TODO: More cascade dependencies?
     }
 
@@ -287,291 +261,6 @@ public class SiteService implements Serializable {
     public void remove(SiteApp siteApp) {
         beforeSiteAppDelete(siteApp);
         siteApp.setStatus(AMEEStatus.TRASH);
-    }
-
-    // Groups
-
-    public Group getGroupByUid(Environment environment, String uid) {
-        Group group = null;
-        List<Group> groups = entityManager.createQuery(
-                "SELECT g FROM Group g " +
-                        "WHERE g.environment.id = :environmentId " +
-                        "AND g.uid = :uid " +
-                        "AND g.status != :trash")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("uid", uid)
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getResultList();
-        if (groups.size() > 0) {
-            group = groups.get(0);
-        }
-        return group;
-    }
-
-    public Group getGroupByName(Environment environment, String name) {
-        Group group = null;
-        List<Group> groups = entityManager.createQuery(
-                "SELECT g FROM Group g " +
-                        "WHERE g.environment.id = :environmentId " +
-                        "AND g.name = :name " +
-                        "AND g.status != :trash")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("name", name.trim())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getResultList();
-        if (groups.size() > 0) {
-            group = groups.get(0);
-        }
-        return group;
-    }
-
-    private String getPagerSetClause(String alias, Pager pager) {
-
-        StringBuilder ret = new StringBuilder();
-        if (pager.isPagerSetApplicable()) {
-            if (pager.getPagerSetType().equals(PagerSetType.INCLUDE)) {
-                ret.append(" AND ");
-                ret.append(alias);
-                ret.append(" IN (:pagerSet) ");
-            } else {
-                ret.append(" AND ");
-                ret.append(alias);
-                ret.append(" NOT IN (:pagerSet) ");
-            }
-        }
-        return ret.toString();
-    }
-
-    public List<Group> getGroups(Environment environment) {
-        List<Group> groups = entityManager.createQuery(
-                "SELECT g " +
-                        "FROM Group g " +
-                        "WHERE g.environment.id = :environmentId " +
-                        "AND g.status != :trash " +
-                        "ORDER BY g.name")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getResultList();
-        return groups;
-    }
-
-    public List<Group> getGroups(Environment environment, Pager pager) {
-
-        Query query;
-
-        String pagerSetClause = getPagerSetClause("g", pager);
-
-        // first count all objects
-        query = entityManager.createQuery(
-                "SELECT count(g) " +
-                        "FROM Group g " +
-                        "WHERE g.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND g.status != :trash ")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION);
-        if (!"".equals(pagerSetClause)) {
-            query.setParameter("pagerSet", pager.getPagerSet());
-        }
-        // tell pager how many objects there are and give it a chance to select the requested page again
-        long count = (Long) query.getSingleResult();
-        pager.setItems(count);
-        pager.goRequestedPage();
-        // now get the objects for the current page
-        query = entityManager.createQuery(
-                "SELECT g " +
-                        "FROM Group g " +
-                        "WHERE g.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND g.status != :trash " +
-                        "ORDER BY g.name")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .setMaxResults(pager.getItemsPerPage())
-                .setFirstResult((int) pager.getStart());
-        if (!"".equals(pagerSetClause)) {
-            query.setParameter("pagerSet", pager.getPagerSet());
-        }
-        List<Group> groups = query.getResultList();
-        // update the pager
-        pager.setItemsFound(groups.size());
-        // all done, return results
-        return groups;
-    }
-
-    public void save(Group group) {
-        entityManager.persist(group);
-    }
-
-    public void remove(Group group) {
-        beforeGroupDelete(group);
-        group.setStatus(AMEEStatus.TRASH);
-    }
-
-    // GroupUsers
-
-    public GroupPrinciple getGroupUserByUid(Environment environment, String uid) {
-        GroupPrinciple groupUser = null;
-        if ((environment != null) && (uid != null)) {
-            List<GroupPrinciple> groupUsers = entityManager.createQuery(
-                    "SELECT gu FROM GroupPrinciple gu " +
-                            "WHERE gu.environment.id = :environmentId " +
-                            "AND gu.uid = :uid " +
-                            "AND gu.status != :trash")
-                    .setParameter("environmentId", environment.getId())
-                    .setParameter("uid", uid)
-                    .setParameter("trash", AMEEStatus.TRASH)
-                    .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                    .getResultList();
-            if (groupUsers.size() > 0) {
-                groupUser = groupUsers.get(0);
-            }
-        }
-        return groupUser;
-    }
-
-    public GroupPrinciple getGroupUser(Group group, User user) {
-        GroupPrinciple groupUser = null;
-        if ((group != null) && (user != null)) {
-            List<GroupPrinciple> groupUsers = entityManager.createQuery(
-                    "SELECT gu FROM GroupPrinciple gu " +
-                            "WHERE gu.environment.id = :environmentId " +
-                            "AND gu.group.id = :groupId " +
-                            "AND gu.user.id = :userId " +
-                            "AND gu.status != :trash")
-                    .setParameter("environmentId", group.getEnvironment().getId())
-                    .setParameter("groupId", group.getId())
-                    .setParameter("userId", user.getId())
-                    .setParameter("trash", AMEEStatus.TRASH)
-                    .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                    .getResultList();
-            if (groupUsers.size() > 0) {
-                groupUser = groupUsers.get(0);
-            }
-        }
-        return groupUser;
-    }
-
-    public List<GroupPrinciple> getGroupUsers(Group group, Pager pager) {
-        // first count all objects
-        long count = (Long) entityManager.createQuery(
-                "SELECT count(gu) " +
-                        "FROM GroupPrinciple gu " +
-                        "WHERE gu.group.id = :groupId " +
-                        "AND gu.status != :trash")
-                .setParameter("groupId", group.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getSingleResult();
-        // tell pager how many objects there are and give it a chance to select the requested page again
-        pager.setItems(count);
-        pager.goRequestedPage();
-        // now get the objects for the current page
-        List<GroupPrinciple> groupUsers = entityManager.createQuery(
-                "SELECT gu " +
-                        "FROM GroupPrinciple gu " +
-                        "LEFT JOIN FETCH gu.user u " +
-                        "WHERE gu.group.id = :groupId " +
-                        "AND gu.status != :trash " +
-                        "ORDER BY u.username")
-                .setParameter("groupId", group.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .setMaxResults(pager.getItemsPerPage())
-                .setFirstResult((int) pager.getStart())
-                .getResultList();
-        // update the pager
-        pager.setItemsFound(groupUsers.size());
-        // all done, return results
-        return groupUsers;
-    }
-
-    public List<GroupPrinciple> getGroupUsers(User user, Pager pager) {
-        // first count all objects
-        long count = (Long) entityManager.createQuery(
-                "SELECT count(gu) " +
-                        "FROM GroupPrinciple gu " +
-                        "WHERE gu.user.id = :userId " +
-                        "AND gu.status != :trash")
-                .setParameter("userId", user.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getSingleResult();
-        // tell pager how many objects there are and give it a chance to select the requested page again
-        pager.setItems(count);
-        pager.goRequestedPage();
-        // now get the objects for the current page
-        List<GroupPrinciple> groupUsers = entityManager.createQuery(
-                "SELECT gu " +
-                        "FROM GroupPrinciple gu " +
-                        "LEFT JOIN FETCH gu.group g " +
-                        "WHERE gu.user.id = :userId " +
-                        "AND gu.status != :trash " +
-                        "ORDER BY g.name")
-                .setParameter("userId", user.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .setMaxResults(pager.getItemsPerPage())
-                .setFirstResult((int) pager.getStart())
-                .getResultList();
-        // update the pager
-        pager.setItemsFound(groupUsers.size());
-        // all done, return results
-        return groupUsers;
-    }
-
-    public List<GroupPrinciple> getGroupUsers(User user) {
-        List<GroupPrinciple> groupUsers = entityManager.createQuery(
-                "SELECT gu " +
-                        "FROM GroupPrinciple gu " +
-                        "LEFT JOIN FETCH gu.group g " +
-                        "WHERE gu.user.id = :userId " +
-                        "AND gu.status != :trash " +
-                        "ORDER BY g.name")
-                .setParameter("userId", user.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getResultList();
-        // all done, return results
-        return groupUsers;
-    }
-
-    public List<GroupPrinciple> getGroupUsers(Environment environment) {
-        List<GroupPrinciple> groupUsers = entityManager.createQuery(
-                "SELECT gu " +
-                        "FROM GroupPrinciple gu " +
-                        "WHERE gu.environment.id = :environmentId " +
-                        "AND gu.status != :trash")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getResultList();
-        return groupUsers;
-    }
-
-    public void save(GroupPrinciple groupUser) {
-        entityManager.persist(groupUser);
-    }
-
-    public void remove(GroupPrinciple groupUser) {
-        beforeGroupUserDelete(groupUser);
-        groupUser.setStatus(AMEEStatus.TRASH);
     }
 
     // Users

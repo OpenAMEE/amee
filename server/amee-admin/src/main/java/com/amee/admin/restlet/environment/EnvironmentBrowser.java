@@ -6,11 +6,10 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.site.Site;
 import com.amee.domain.site.SiteApp;
 import com.amee.service.BaseBrowser;
-import com.amee.service.auth.AuthService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.environment.SiteService;
+import com.amee.service.environment.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +23,10 @@ public class EnvironmentBrowser extends BaseBrowser {
     private SiteService siteService;
 
     @Autowired
-    private EnvironmentService environmentService;
+    private GroupService groupService;
 
+    @Autowired
+    private EnvironmentService environmentService;
 
     // Environments
 
@@ -119,7 +120,7 @@ public class EnvironmentBrowser extends BaseBrowser {
 
     public Group getGroup() {
         if ((group == null) && (getEnvironment() != null) && (groupUid != null)) {
-            group = siteService.getGroupByUid(environment, groupUid);
+            group = groupService.getGroupByUid(environment, groupUid);
         }
         return group;
     }
@@ -145,7 +146,7 @@ public class EnvironmentBrowser extends BaseBrowser {
 
     public GroupPrinciple getGroupPrinciple() {
         if ((groupPrinciple == null) && (getUser() != null) && (getGroup() != null)) {
-            groupPrinciple = siteService.getGroupUser(group, user);
+            groupPrinciple = groupService.getGroupPrinciple(group, user);
         }
         return groupPrinciple;
     }

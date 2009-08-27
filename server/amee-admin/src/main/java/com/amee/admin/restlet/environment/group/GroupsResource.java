@@ -7,7 +7,7 @@ import com.amee.domain.auth.Group;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.EnvironmentService;
-import com.amee.service.environment.SiteService;
+import com.amee.service.environment.GroupService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +32,7 @@ import java.util.Map;
 public class GroupsResource extends AuthorizeResource implements Serializable {
 
     @Autowired
-    private SiteService siteService;
+    private GroupService groupService;
 
     @Autowired
     private EnvironmentBrowser environmentBrowser;
@@ -66,7 +66,7 @@ public class GroupsResource extends AuthorizeResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
-        List<Group> groups = siteService.getGroups(environmentBrowser.getEnvironment(), pager);
+        List<Group> groups = groupService.getGroups(environmentBrowser.getEnvironment(), pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", environmentBrowser);
@@ -81,7 +81,7 @@ public class GroupsResource extends AuthorizeResource implements Serializable {
         JSONObject obj = new JSONObject();
         if (isGet()) {
             Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
-            List<Group> groups = siteService.getGroups(environmentBrowser.getEnvironment(), pager);
+            List<Group> groups = groupService.getGroups(environmentBrowser.getEnvironment(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
             JSONArray groupsArr = new JSONArray();
@@ -101,7 +101,7 @@ public class GroupsResource extends AuthorizeResource implements Serializable {
         Element element = document.createElement("GroupsResource");
         if (isGet()) {
             Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
-            List<Group> groups = siteService.getGroups(environmentBrowser.getEnvironment(), pager);
+            List<Group> groups = groupService.getGroups(environmentBrowser.getEnvironment(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
             Element groupsElement = document.createElement("Groups");
@@ -133,7 +133,7 @@ public class GroupsResource extends AuthorizeResource implements Serializable {
             newGroup = new Group(environmentBrowser.getEnvironment());
             newGroup.setName(form.getFirstValue("name"));
             newGroup.setDescription(form.getFirstValue("description"));
-            siteService.save(newGroup);
+            groupService.save(newGroup);
         }
         if (newGroup != null) {
             if (isStandardWebBrowser()) {
