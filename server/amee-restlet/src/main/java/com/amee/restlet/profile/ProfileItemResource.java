@@ -21,12 +21,14 @@ package com.amee.restlet.profile;
 
 import com.amee.core.CO2AmountUnit;
 import com.amee.core.ThreadBeanHolder;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.ProfileItem;
+import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.ProfileItemAtomAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileItemFormAcceptor;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileItemResourceBuilderFactory;
-import com.amee.restlet.RequestContext;
 import com.amee.service.profile.ProfileConstants;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
@@ -46,6 +48,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -92,6 +96,21 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getProfileItem());
+        DataCategory dc = getProfileItem().getDataCategory();
+        while (dc != null) {
+            entities.add(dc);
+            dc = dc.getDataCategory();
+        }
+        entities.add(getProfile());
+        entities.add(environment);
+        Collections.reverse(entities);
+        return entities;
+    }
+
+    @Override
     public String getTemplatePath() {
         return getAPIVersion() + "/" + ProfileConstants.VIEW_PROFILE_ITEM;
     }
@@ -119,19 +138,15 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
-        if (profileBrowser.getProfileItemActions().isAllowView()) {
-            if (getAPIVersion().isNotVersionOne()) {
-                Form form = getRequest().getResourceRef().getQueryAsForm();
-                String unit = form.getFirstValue("returnUnit");
-                String perUnit = form.getFirstValue("returnPerUnit");
-                profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
-            }
-            super.handleGet();
-        } else {
-            notAuthorized();
+    protected void doGet() {
+        log.debug("doGet()");
+        if (getAPIVersion().isNotVersionOne()) {
+            Form form = getRequest().getResourceRef().getQueryAsForm();
+            String unit = form.getFirstValue("returnUnit");
+            String perUnit = form.getFirstValue("returnPerUnit");
+            profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
         }
+        super.handleGet();
     }
 
     private void setBuilderStrategy() {
@@ -139,23 +154,15 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation()");
-        if (isStoreAuthorized()) {
-            List<ProfileItem> profileItems = doStore(entity);
-            if (!profileItems.isEmpty()) {
-                successfulPut(getFullPath());
-            }
-        } else {
-            notAuthorized();
+    protected void doStore(Representation entity) {
+        log.debug("doStore()");
+        List<ProfileItem> profileItems = doStoreProfileItems(entity);
+        if (!profileItems.isEmpty()) {
+            successfulPut(getFullPath());
         }
     }
 
-    protected boolean isStoreAuthorized() {
-        return getProfileBrowser().getProfileItemActions().isAllowModify();
-    }
-
-    public List<ProfileItem> doStore(Representation entity) {
+    protected List<ProfileItem> doStoreProfileItems(Representation entity) {
         // units are only supported beyond version one
         if (getAPIVersion().isNotVersionOne()) {
             String unit = getForm().getFirstValue("returnUnit");
@@ -172,16 +179,12 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     }
 
     @Override
-    public void removeRepresentations() {
-        log.debug("removeRepresentations()");
-        if (profileBrowser.getProfileItemActions().isAllowDelete()) {
-            ProfileItem profileItem = getProfileItem();
-            profileService.remove(profileItem);
-            profileService.clearCaches(getProfile());
-            successfulDelete(pathItem.getParent().getFullPath());
-        } else {
-            notAuthorized();
-        }
+    protected void doRemove() {
+        log.debug("doRemove()");
+        ProfileItem profileItem = getProfileItem();
+        profileService.remove(profileItem);
+        profileService.clearCaches(getProfile());
+        successfulDelete(pathItem.getParent().getFullPath());
     }
 
     public List<ProfileItem> getProfileItems() {

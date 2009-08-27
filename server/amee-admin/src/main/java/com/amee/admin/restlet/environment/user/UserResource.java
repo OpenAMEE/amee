@@ -2,9 +2,10 @@ package com.amee.admin.restlet.environment.user;
 
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.LocaleName;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.environment.SiteService;
@@ -23,15 +24,17 @@ import org.w3c.dom.Element;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class UserResource extends BaseResource {
+public class UserResource extends AuthorizeResource {
 
     @PersistenceContext
     private EntityManager entityManager;
-    
+
     @Autowired
     private EnvironmentBrowser environmentBrowser;
 
@@ -47,7 +50,15 @@ public class UserResource extends BaseResource {
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         environmentBrowser.setUserUid(request.getAttributes().get("userUid").toString());
     }
-    
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(environmentBrowser.getEnvironment());
+        entities.add(environmentBrowser.getUser());
+        return entities;
+    }
+
     @Override
     public boolean isValid() {
         return super.isValid() && (environmentBrowser.getEnvironment() != null) && (environmentBrowser.getUser() != null);
@@ -86,16 +97,6 @@ public class UserResource extends BaseResource {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (environmentBrowser.getUserActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPut() {
         return true;
     }
@@ -103,80 +104,62 @@ public class UserResource extends BaseResource {
     // TODO: prevent duplicate username/password and enforce unique username per environment?
     // TODO: password validation
     @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("put");
-        if (environmentBrowser.getUserActions().isAllowModify()) {
-            Form form = getForm();
-            User user = environmentBrowser.getUser();
-            boolean ok = true;
-            // update values
-            if (form.getNames().contains("name")) {
-                user.setName(form.getFirstValue("name"));
-            }
-            if (form.getNames().contains("username")) {
-                if (form.getFirstValue("username").equalsIgnoreCase(user.getUsername())
-                        || siteService.getUserByUsername(environmentBrowser.getEnvironment(), form.getFirstValue("username")) == null) {
-                    user.setUsername(form.getFirstValue("username"));
-                } else {
-                    ok = false;
-                }
-            }
-
-            if (ok) {
-                if (form.getNames().contains("status")) {
-                    user.setStatus(form.getFirstValue("status"));
-                }
-                if (form.getNames().contains("type")) {
-                    user.setType(form.getFirstValue("type"));
-                }
-                if (form.getNames().contains("password")) {
-                    String password = form.getFirstValue("password");
-                    if ((password != null) && password.length() > 0) {
-                        user.setPasswordInClear(password);
-                    }
-                }
-                if (form.getNames().contains("email")) {
-                    user.setEmail(form.getFirstValue("email"));
-                }
-                if (form.getNames().contains("APIVersion")) {
-                    user.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("APIVersion")));
-                    if (user.getAPIVersion() == null) {
-                        log.error("Unable to find api version '" + form.getFirstValue("APIVersion") + "'");
-                        badRequest();
-                        return;
-                    }
-                }
-                if (form.getNames().contains("locale")) {
-                    String locale = form.getFirstValue("locale");
-                    if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
-                        user.setLocale(locale);
-                    }
-                }
-                success();
+    protected void doStore(Representation entity) {
+        log.debug("doStore");
+        Form form = getForm();
+        User user = environmentBrowser.getUser();
+        boolean ok = true;
+        // update values
+        if (form.getNames().contains("name")) {
+            user.setName(form.getFirstValue("name"));
+        }
+        if (form.getNames().contains("username")) {
+            if (form.getFirstValue("username").equalsIgnoreCase(user.getUsername())
+                    || siteService.getUserByUsername(environmentBrowser.getEnvironment(), form.getFirstValue("username")) == null) {
+                user.setUsername(form.getFirstValue("username"));
             } else {
-                badRequest();
+                ok = false;
             }
+        }
+
+        if (ok) {
+            if (form.getNames().contains("status")) {
+                user.setStatus(form.getFirstValue("status"));
+            }
+            if (form.getNames().contains("type")) {
+                user.setType(form.getFirstValue("type"));
+            }
+            if (form.getNames().contains("password")) {
+                String password = form.getFirstValue("password");
+                if ((password != null) && password.length() > 0) {
+                    user.setPasswordInClear(password);
+                }
+            }
+            if (form.getNames().contains("email")) {
+                user.setEmail(form.getFirstValue("email"));
+            }
+            if (form.getNames().contains("APIVersion")) {
+                user.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("APIVersion")));
+                if (user.getAPIVersion() == null) {
+                    log.error("Unable to find api version '" + form.getFirstValue("APIVersion") + "'");
+                    badRequest();
+                    return;
+                }
+            }
+            if (form.getNames().contains("locale")) {
+                String locale = form.getFirstValue("locale");
+                if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                    user.setLocale(locale);
+                }
+            }
+            success();
         } else {
-            notAuthorized();
+            badRequest();
         }
     }
 
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
     @Override
     public boolean allowDelete() {
         return false;
-    }
-
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
-    // TODO: do not allow delete affecting logged-in auth...
-    @Override
-    public void removeRepresentations() {
-        throw new UnsupportedOperationException();
-//        if (environmentBrowser.getUserActions().isAllowDelete()) {
-//            siteService.remove(environmentBrowser.getUser());
-//            success();
-//        } else {
-//            notAuthorized();
-//        }
     }
 }

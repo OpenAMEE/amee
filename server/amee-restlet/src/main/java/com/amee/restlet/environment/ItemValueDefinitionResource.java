@@ -19,11 +19,12 @@
  */
 package com.amee.restlet.environment;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.data.ItemValueDefinitionLocaleName;
 import com.amee.domain.data.LocaleName;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
@@ -44,13 +45,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @Component
 @Scope("prototype")
-public class ItemValueDefinitionResource extends BaseResource implements Serializable {
+public class ItemValueDefinitionResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -74,6 +76,15 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     @Override
     public boolean isValid() {
         return super.isValid() && (definitionBrowser.getItemValueDefinition() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(definitionBrowser.getEnvironment());
+        entities.add(definitionBrowser.getItemDefinition());
+        entities.add(definitionBrowser.getItemValueDefinition());
+        return entities;
     }
 
     @Override
@@ -107,99 +118,82 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
-        if (definitionBrowser.getItemDefinitionActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
+    protected void doStore(Representation entity) {
+        log.debug("doStore()");
 
-    @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation()");
-        if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
-            ItemValueDefinition itemValueDefinition = definitionBrowser.getItemValueDefinition();
-            Form form = getForm();
+        ItemValueDefinition itemValueDefinition = definitionBrowser.getItemValueDefinition();
+        Form form = getForm();
 
-            // Parse any submitted locale names
-            for (String name : form.getNames()) {
-                if (name.startsWith("name_")) {
-                    String localeNameStr = form.getFirstValue(name);
-                    String locale = name.substring(name.indexOf("_") + 1);
-                    if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
-                        ItemValueDefinitionLocaleName localeName =
+        // Parse any submitted locale names
+        for (String name : form.getNames()) {
+            if (name.startsWith("name_")) {
+                String localeNameStr = form.getFirstValue(name);
+                String locale = name.substring(name.indexOf("_") + 1);
+                if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                    ItemValueDefinitionLocaleName localeName =
                             new ItemValueDefinitionLocaleName(itemValueDefinition, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
-                        itemValueDefinition.putLocaleName(localeName);
-                        form.removeFirst(name);
-                    } else {
-                        badRequest(APIFault.INVALID_PARAMETERS);
-                        return;
-                    }
-                }
-            }
-
-            Set<String> names = form.getNames();
-            if (names.contains("name")) {
-                itemValueDefinition.setName(form.getFirstValue("name"));
-            }
-            if (names.contains("path")) {
-                itemValueDefinition.setPath(form.getFirstValue("path"));
-            }
-            if (names.contains("value")) {
-                itemValueDefinition.setValue(form.getFirstValue("value"));
-            }
-            if (names.contains("choices")) {
-                itemValueDefinition.setChoices(form.getFirstValue("choices"));
-            }
-            if (names.contains("unit")) {
-                itemValueDefinition.setUnit(form.getFirstValue("unit"));
-            }
-            if (names.contains("perUnit")) {
-                itemValueDefinition.setPerUnit(form.getFirstValue("perUnit"));
-            }
-            if (names.contains("fromProfile")) {
-                itemValueDefinition.setFromProfile(Boolean.valueOf(form.getFirstValue("fromProfile")));
-            }
-            if (names.contains("fromData")) {
-                itemValueDefinition.setFromData(Boolean.valueOf(form.getFirstValue("fromData")));
-            }
-            if (names.contains("allowedRoles")) {
-                itemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
-            }
-            if (names.contains("aliasedTo")) {
-                itemValueDefinition.setAliasedTo(definitionService.getItemValueDefinitionByUid(form.getFirstValue("aliasedTo")));
-            }
-            if (names.contains("forceTimeSeries")) {
-                itemValueDefinition.setForceTimeSeries(Boolean.valueOf(form.getFirstValue("forceTimeSeries")));
-            }
-
-            // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
-            // Remove any versions that have not been sumbitted.
-            List<APIVersion> apiVersions = environmentService.getAPIVersions();
-            for (APIVersion apiVersion : apiVersions) {
-                String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
-                if (version != null) {
-                    itemValueDefinition.addAPIVersion(apiVersion);
+                    itemValueDefinition.putLocaleName(localeName);
+                    form.removeFirst(name);
                 } else {
-                    itemValueDefinition.removeAPIVersion(apiVersion);
+                    badRequest(APIFault.INVALID_PARAMETERS);
+                    return;
                 }
             }
-            success();
-        } else {
-            notAuthorized();
         }
+
+        Set<String> names = form.getNames();
+        if (names.contains("name")) {
+            itemValueDefinition.setName(form.getFirstValue("name"));
+        }
+        if (names.contains("path")) {
+            itemValueDefinition.setPath(form.getFirstValue("path"));
+        }
+        if (names.contains("value")) {
+            itemValueDefinition.setValue(form.getFirstValue("value"));
+        }
+        if (names.contains("choices")) {
+            itemValueDefinition.setChoices(form.getFirstValue("choices"));
+        }
+        if (names.contains("unit")) {
+            itemValueDefinition.setUnit(form.getFirstValue("unit"));
+        }
+        if (names.contains("perUnit")) {
+            itemValueDefinition.setPerUnit(form.getFirstValue("perUnit"));
+        }
+        if (names.contains("fromProfile")) {
+            itemValueDefinition.setFromProfile(Boolean.valueOf(form.getFirstValue("fromProfile")));
+        }
+        if (names.contains("fromData")) {
+            itemValueDefinition.setFromData(Boolean.valueOf(form.getFirstValue("fromData")));
+        }
+        if (names.contains("allowedRoles")) {
+            itemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
+        }
+        if (names.contains("aliasedTo")) {
+            itemValueDefinition.setAliasedTo(definitionService.getItemValueDefinitionByUid(form.getFirstValue("aliasedTo")));
+        }
+        if (names.contains("forceTimeSeries")) {
+            itemValueDefinition.setForceTimeSeries(Boolean.valueOf(form.getFirstValue("forceTimeSeries")));
+        }
+
+        // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
+        // Remove any versions that have not been sumbitted.
+        List<APIVersion> apiVersions = environmentService.getAPIVersions();
+        for (APIVersion apiVersion : apiVersions) {
+            String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
+            if (version != null) {
+                itemValueDefinition.addAPIVersion(apiVersion);
+            } else {
+                itemValueDefinition.removeAPIVersion(apiVersion);
+            }
+        }
+        success();
     }
 
     @Override
-    public void removeRepresentations() {
-        log.debug("removeRepresentations()");
-        if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
-            definitionService.remove(definitionBrowser.getItemValueDefinition());
-            success();
-        } else {
-            notAuthorized();
-        }
+    protected void doRemove() {
+        log.debug("doRemove()");
+        definitionService.remove(definitionBrowser.getItemValueDefinition());
+        success();
     }
 }

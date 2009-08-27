@@ -2,7 +2,7 @@ package com.amee.service.auth;
 
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.auth.Group;
-import com.amee.domain.auth.GroupUser;
+import com.amee.domain.auth.GroupPrinciple;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.crypto.Crypto;
@@ -37,7 +37,6 @@ public class AuthService implements Serializable {
         if (user != null) {
             log.debug("Guest auth authenticated and signed in");
             ThreadBeanHolder.set("user", user);
-            getAndExportGroups();
             return user;
         } else {
             log.warn("Guest auth NOT authenticated and NOT signed in");
@@ -48,9 +47,6 @@ public class AuthService implements Serializable {
     public void reset() {
         ThreadBeanHolder.set("auth", null);
         ThreadBeanHolder.set("user", null);
-        ThreadBeanHolder.set("groupUsers", null);
-        ThreadBeanHolder.set("group", null);
-        ThreadBeanHolder.set("permission", null);
     }
 
     public String isAuthenticated(String authToken, String remoteAddress) {
@@ -146,7 +142,6 @@ public class AuthService implements Serializable {
                 if (user != null) {
                     log.debug("auth authenticated and signed in: " + user.getUsername());
                     ThreadBeanHolder.set("user", user);
-                    getAndExportGroups();
                     Long touched = new Long(values.get(AuthToken.MODIFIED));
                     // only touch token if older than 60 seconds (60*1000ms)
                     if (now > (touched + 60 * 1000)) {
@@ -177,7 +172,6 @@ public class AuthService implements Serializable {
             if (user.getPassword().equals(sampleUser.getPassword())) {
                 log.debug("authenticate() - auth authenticated and signed in: " + sampleUser.getUsername());
                 ThreadBeanHolder.set("user", user);
-                getAndExportGroups();
                 return true;
             } else {
                 log.debug("authenticate() - auth NOT authenticated, bad password: " + sampleUser.getUsername());
@@ -200,121 +194,7 @@ public class AuthService implements Serializable {
     public String switchToUser(User newUser, String remoteAddress) {
         reset();
         ThreadBeanHolder.set("auth", newUser);
-        getAndExportGroups();
         return AuthToken.createToken(newUser, remoteAddress);
-    }
-
-    public boolean isSuperUser() {
-        User user = getUser();
-        return (user != null) && user.isSuperUser();
-    }
-
-    public boolean hasGroup(String name) {
-        List<GroupUser> groupUsers = getAndExportGroups();
-        if (groupUsers != null) {
-            for (GroupUser groupUser : groupUsers) {
-                if (groupUser.getGroup().getName().equalsIgnoreCase(name)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean hasRoles(String roles) {
-        boolean result = false;
-        List<GroupUser> groupUsers;
-        User user = getUser();
-        if (user != null) {
-            if (user.isSuperUser()) {
-                result = true;
-            } else {
-                if (roles != null) {
-                    groupUsers = getAndExportGroups();
-                    if (groupUsers != null) {
-                        for (GroupUser groupUser : groupUsers) {
-                            if (groupUser.hasRoles(roles)) {
-                                result = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        log.debug("roles: " + roles + " result: " + result);
-        return result;
-    }
-
-    public boolean hasActions(String actions) {
-        boolean result = false;
-        List<GroupUser> groupUsers;
-        User user = getUser();
-        if (user != null) {
-            if (user.isSuperUser()) {
-                result = true;
-            } else {
-                if (actions != null) {
-                    groupUsers = getAndExportGroups();
-                    if (groupUsers != null) {
-                        for (GroupUser groupUser : groupUsers) {
-                            if (groupUser.hasActions(actions)) {
-                                result = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        log.debug("actions: " + actions + " result: " + result);
-        return result;
-    }
-
-    public boolean isAllowView() {
-        User user = getUser();
-        Group group = getGroup();
-        Permission permission = getPermission();
-        if ((permission != null) && (user != null) && (group != null)) {
-            getAndExportGroups();
-            // check permission
-            if (permission.getUser().equals(user)) {
-                // matching User is always allowed
-                return true;
-            } else if (permission.isGroupAllowView() && permission.getGroup().equals(group)) {
-                // matching Group is allowed to view
-                return true;
-            } else {
-                // can others view?
-                return permission.isOtherAllowView();
-            }
-        } else {
-            // allow view by default - permission data not available
-            return true;
-        }
-    }
-
-    public boolean isAllowModify() {
-        User user = getUser();
-        Group group = getGroup();
-        Permission permission = getPermission();
-        if ((permission != null) && (user != null) && (group != null)) {
-            getAndExportGroups();
-            // check permission
-            if (permission.getUser().equals(user)) {
-                // matching User is always allowed
-                return true;
-            } else if (permission.isGroupAllowModify() && permission.getGroup().equals(group)) {
-                // matching Group is allowed to modify
-                return true;
-            } else {
-                // can others modify?
-                return permission.isOtherAllowModify();
-            }
-        } else {
-            // allow modify by default - permission data not available
-            return true;
-        }
     }
 
     @SuppressWarnings(value = "unchecked")
@@ -363,95 +243,13 @@ public class AuthService implements Serializable {
         return null;
     }
 
-    @SuppressWarnings(value = "unchecked")
-    public List<GroupUser> getGroupUsersByUser(User user) {
-        List<GroupUser> groupUsers = entityManager.createQuery(
-                "SELECT DISTINCT gu " +
-                        "FROM GroupUser gu " +
-                        "LEFT JOIN FETCH gu.user u " +
-                        "WHERE u.id = :userId " +
-                        "AND u.status != :trash")
-                .setParameter("userId", user.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.authService")
-                .getResultList();
-        return groupUsers;
-    }
-
-    public Set<String> getGroupNamesByUser(User user) {
-        Set<String> groupNames = new HashSet<String>();
-        List<GroupUser> groupUsers = getGroupUsersByUser(user);
-        for (GroupUser groupUser : groupUsers) {
-            groupNames.add(groupUser.getGroup().getName());
-        }
-        return groupNames;
-    }
-
-    /**
-     * Get list of Group names for given User in order of priority. Priority is from real Groups to the
-     * virtual groups Standard, Anonymous and All in that sequence.
-     */
-    public List<String> getGroupNames(User user) {
-        List<String> groupNames = new ArrayList<String>();
-        if (!user.isGuestUser() && !user.isAnonymousUser()) {
-            groupNames.addAll(getGroupNamesByUser(user));
-        }
-        if (user.isStandardUser()) {
-            groupNames.add("Standard");
-        }
-        if (user.isAnonymousUser() || user.isGuestUser()) {
-            groupNames.add("Anonymous");
-        }
-        groupNames.add("All");
-        return groupNames;
-    }
-
     public void signOut() {
         log.debug("signed out");
         reset();
     }
 
-    // TODO: better way to select default group
-    public List<GroupUser> getAndExportGroups() {
-
-        Group group;
-        List<GroupUser> groupUsers = null;
-        User user = getUser();
-
-        // reset
-        ThreadBeanHolder.set("group", null);
-        ThreadBeanHolder.set("groupUsers", null);
-
-        // find GroupUsers and Group for current User
-        if (user != null) {
-            groupUsers = getGroupUsersByUser(user);
-            ThreadBeanHolder.set("groupUsers", groupUsers);
-            if (groupUsers.size() > 0) {
-                group = groupUsers.get(0).getGroup();
-                ThreadBeanHolder.set("group", group);
-            }
-            user.setGroupNames(getGroupNames(user));
-        }
-
-        return groupUsers;
-    }
-
     public static User getUser() {
         return (User) ThreadBeanHolder.get("user");
-    }
-
-    public static Group getGroup() {
-        return (Group) ThreadBeanHolder.get("group");
-    }
-
-    @SuppressWarnings(value = "unchecked")
-    public static List<GroupUser> getGroupUsers() {
-        return (List<GroupUser>) ThreadBeanHolder.get("groupUsers");
-    }
-
-    public static Permission getPermission() {
-        return (Permission) ThreadBeanHolder.get("permission");
     }
 
     private static class AuthToken implements Serializable {

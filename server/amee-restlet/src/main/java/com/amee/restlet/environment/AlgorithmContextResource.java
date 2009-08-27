@@ -19,8 +19,9 @@
  */
 package com.amee.restlet.environment;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.algorithm.AlgorithmContext;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
@@ -39,12 +40,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @Component
 @Scope("prototype")
-public class AlgorithmContextResource extends BaseResource implements Serializable {
+public class AlgorithmContextResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -66,6 +69,15 @@ public class AlgorithmContextResource extends BaseResource implements Serializab
         return super.isValid() &&
                 (definitionBrowser.getEnvironment() != null) &&
                 (definitionBrowser.getAlgorithmContext() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(definitionBrowser.getEnvironment());
+        entities.add(definitionBrowser.getItemDefinition());
+        entities.add(definitionBrowser.getAlgorithm());
+        return entities;
     }
 
     @Override
@@ -97,44 +109,25 @@ public class AlgorithmContextResource extends BaseResource implements Serializab
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (definitionBrowser.getAlgorithmActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
+    protected void doStore(Representation entity) {
+        log.debug("doStore");
+        AlgorithmContext algorithmContext = definitionBrowser.getAlgorithmContext();
+        Form form = getForm();
+        Set<String> names = form.getNames();
+        if (names.contains("name")) {
+            algorithmContext.setName(form.getFirstValue("name"));
         }
-    }
-
-
-    @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("put");
-        if (definitionBrowser.getAlgorithmActions().isAllowModify()) {
-            AlgorithmContext algorithmContext = definitionBrowser.getAlgorithmContext();
-            Form form = getForm();
-            Set<String> names = form.getNames();
-            if (names.contains("name")) {
-                algorithmContext.setName(form.getFirstValue("name"));
-            }
-            if (names.contains("content")) {
-                algorithmContext.setContent(form.getFirstValue("content"));
-            }
-            success();
-        } else {
-            notAuthorized();
+        if (names.contains("content")) {
+            algorithmContext.setContent(form.getFirstValue("content"));
         }
+        success();
     }
 
     @Override
-    public void removeRepresentations() {
-        log.debug("delete");
-        if (definitionBrowser.getAlgorithmActions().isAllowDelete()) {
-            AlgorithmContext algorithmContext = definitionBrowser.getAlgorithmContext();
-            definitionService.remove(algorithmContext);
-            success();
-        } else {
-            notAuthorized();
-        }
+    protected void doRemove() {
+        log.debug("doRemove");
+        AlgorithmContext algorithmContext = definitionBrowser.getAlgorithmContext();
+        definitionService.remove(algorithmContext);
+        success();
     }
 }

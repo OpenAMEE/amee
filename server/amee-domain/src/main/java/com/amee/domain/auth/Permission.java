@@ -1,18 +1,15 @@
 package com.amee.domain.auth;
 
 import com.amee.core.APIUtils;
-import com.amee.core.PersistentObject;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEEntityReference;
 import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.APIVersion;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Index;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +31,7 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
 
     public final static int OBJECT_CLASS_MAX_SIZE = 255;
     public final static int ENTRIES_MAX_SIZE = 1000;
-
-    public final static String ENTRY_VIEW = "view";
-
+    
     /**
      * Defines which 'principle' classes (keys) can relate to which 'entity' classes (values).
      */
@@ -81,73 +76,19 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
     @Transient
     private Set<PermissionEntry> entrySet;
 
-    // TODO: Stuff below will go.
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "GROUP_ID")
-    private Group group;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "USER_ID")
-    private User user;
-
-    @Column(name = "OBJECT_CLASS", length = OBJECT_CLASS_MAX_SIZE, nullable = false)
-    @Index(name = "OBJECT_CLASS_IND")
-    private String objectClass = "";
-
-    @Column(name = "OBJECT_UID", nullable = false, length = UID_SIZE)
-    @Index(name = "OBJECT_UID_IND")
-    private String objectUid = "";
-
-    @Column(name = "GROUP_ALLOW_VIEW")
-    private boolean groupAllowView = false;
-
-    @Column(name = "GROUP_ALLOW_MODIFY")
-    private boolean groupAllowModify = false;
-
-    @Column(name = "OTHER_ALLOW_VIEW")
-    private boolean otherAllowView = false;
-
-    @Column(name = "OTHER_ALLOW_MODIFY")
-    private boolean otherAllowModify = false;
-
     public Permission() {
         super();
-    }
-
-    public Permission(Group group, User user) {
-        super(group.getEnvironment());
-        setGroup(group);
-        setUser(user);
-    }
-
-    public Permission(Group group, User user, PersistentObject persistentObject) {
-        this(group, user);
-        setObject(persistentObject);
-    }
-
-    public void setObject(PersistentObject persistentObject) {
-        setObjectClass(persistentObject.getClass().getName());
-        setObjectUid(persistentObject.getUid());
     }
 
     public String toString() {
         return "Permission_" + getUid();
     }
 
-    // TODO: Do this properly.
-    public int compareTo(Object o) throws ClassCastException {
+    public int compareTo(Object o) {
         if (this == o) return 0;
         if (equals(o)) return 0;
         Permission permission = (Permission) o;
-        int result = getEnvironment().compareTo(permission.getEnvironment());
-        if (result == 0) {
-            result = getGroup().compareTo(permission.getGroup());
-            if (result == 0) {
-                result = getUser().compareTo(permission.getUser());
-            }
-        }
-        return result;
+        return getUid().compareTo(permission.getUid());
     }
 
     public JSONObject getJSONObject() throws JSONException {
@@ -156,14 +97,6 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         obj.put("created", getCreated());
         obj.put("modified", getModified());
         obj.put("environmentUid", getEnvironment().getUid());
-        JSONObject groupObj = new JSONObject();
-        groupObj.put("uid", getGroup().getUid());
-        groupObj.put("name", getGroup().getName());
-        obj.put("group", groupObj);
-        JSONObject userObj = new JSONObject();
-        userObj.put("uid", getUser().getUid());
-        userObj.put("username", getUser().getUsername());
-        obj.put("auth", userObj);
         return obj;
     }
 
@@ -185,10 +118,6 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         element.setAttribute("created", getCreated().toString());
         element.setAttribute("modified", getModified().toString());
         element.appendChild(getEnvironment().getIdentityElement(document));
-        element.appendChild(getGroup().getIdentityElement(document)
-                .appendChild(APIUtils.getElement(document, "Name", getGroup().getName())));
-        element.appendChild(getUser().getIdentityElement(document)
-                .appendChild(APIUtils.getElement(document, "Username", getUser().getUsername())));
         return element;
     }
 
@@ -299,83 +228,5 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         } catch (JSONException e) {
             return new JSONObject();
         }
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(Group group) {
-        if (group != null) {
-            this.group = group;
-        }
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        if (user != null) {
-            this.user = user;
-        }
-    }
-
-    public String getObjectClass() {
-        return objectClass;
-    }
-
-    public void setObjectClass(String objectClass) {
-        if (objectClass == null) {
-            objectClass = "";
-        }
-        this.objectClass = objectClass;
-    }
-
-    public String getObjectUid() {
-        return objectUid;
-    }
-
-    public void setObjectUid(String objectUid) {
-        if (objectUid == null) {
-            objectUid = "";
-        }
-        this.objectUid = objectUid;
-    }
-
-    public boolean isGroupAllowView() {
-        return groupAllowView;
-    }
-
-    public void setGroupAllowView(boolean groupAllowView) {
-        this.groupAllowView = groupAllowView;
-    }
-
-    public boolean isGroupAllowModify() {
-        return groupAllowModify;
-    }
-
-    public void setGroupAllowModify(boolean groupAllowModify) {
-        this.groupAllowModify = groupAllowModify;
-    }
-
-    public boolean isOtherAllowView() {
-        return otherAllowView;
-    }
-
-    public void setOtherAllowView(boolean otherAllowView) {
-        this.otherAllowView = otherAllowView;
-    }
-
-    public boolean isOtherAllowModify() {
-        return otherAllowModify;
-    }
-
-    public void setOtherAllowModify(boolean otherAllowModify) {
-        this.otherAllowModify = otherAllowModify;
-    }
-
-    public APIVersion getAPIVersion() {
-        return user.getAPIVersion();
     }
 }

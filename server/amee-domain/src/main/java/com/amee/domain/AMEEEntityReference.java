@@ -21,14 +21,30 @@
  */
 package com.amee.domain;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.util.Map;
+import java.util.HashMap;
+
+import com.amee.domain.auth.User;
+import com.amee.domain.profile.Profile;
 
 @Embeddable
 public class AMEEEntityReference implements Serializable {
 
     public final static int ENTITY_CLASS_MAX_SIZE = 50;
+
+    public final static Map<String, Class> CLASSES = new HashMap<String, Class>();
+    {
+        CLASSES.put("User", User.class);
+        CLASSES.put("Profile", Profile.class);
+    }
 
     @Column(name = "ENTITY_ID", nullable = false)
     private Long entityId;
@@ -48,6 +64,20 @@ public class AMEEEntityReference implements Serializable {
         setEntityId(entity.getId());
         setEntityUid(entity.getUid());
         setEntityClass(entity.getClass().getSimpleName());
+    }
+
+    public JSONObject getJSONObject() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("uid", getEntityUid());
+        obj.put("class", getEntityClass());
+        return obj;
+    }
+
+    public Element getElement(Document document, String name) {
+        Element element = document.createElement(name);
+        element.setAttribute("uid", getEntityUid());
+        element.setAttribute("class", getEntityClass());
+        return element;
     }
 
     public Long getEntityId() {

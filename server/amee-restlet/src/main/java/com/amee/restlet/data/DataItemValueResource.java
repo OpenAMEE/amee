@@ -22,11 +22,13 @@ package com.amee.restlet.data;
 import com.amee.core.APIUtils;
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.StartEndDate;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
-import com.amee.restlet.utils.APIFault;
 import com.amee.restlet.RequestContext;
+import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -47,9 +49,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //TODO - Move to builder model
 @Component
@@ -75,6 +75,44 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         if (getDataItemValue() != null) {
             ((RequestContext) ThreadBeanHolder.get("ctx")).setItemValue(getDataItemValue());
         }
+    }
+
+    @Override
+    public boolean isValid() {
+        return super.isValid() &&
+                getDataItem() != null &&
+                (isItemValueValid() || isItemValuesValid());
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getDataItemValue());
+        entities.add(getDataItem());
+        DataCategory dc = getDataItem().getDataCategory();
+        while (dc != null) {
+            entities.add(dc);
+            dc = dc.getDataCategory();
+        }
+        entities.add(environment);
+        Collections.reverse(entities);
+        return entities;
+    }
+
+    @Override
+    public String getTemplatePath() {
+        return getAPIVersion() + "/" + DataConstants.VIEW_CARBON_VALUE;
+    }
+
+    @Override
+    // Note, itemValues (historical sequences) are not supported in V1 API and templates are only used in v1 API.
+    public Map<String, Object> getTemplateValues() {
+        Map<String, Object> values = super.getTemplateValues();
+        values.put("browser", dataBrowser);
+        values.put("dataItem", getDataItem());
+        values.put("itemValue", this.itemValue);
+        values.put("node", this.itemValue);
+        return values;
     }
 
     private void setDataItemValue(Request request) {
@@ -110,20 +148,12 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         }
     }
 
-    @Override
-    public boolean isValid() {
-        return super.isValid() &&
-                getDataItem() != null &&
-                (isItemValueValid() || isItemValuesValid());
-    }
-
     private boolean isItemValueValid() {
         return this.itemValue != null &&
                 !this.itemValue.isTrash() &&
                 this.itemValue.getItem().equals(getDataItem()) &&
                 this.itemValue.getEnvironment().equals(environment);
     }
-
 
     @SuppressWarnings(value = "unchecked")
     private boolean isItemValuesValid() {
@@ -136,29 +166,12 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             public boolean evaluate(Object o) {
                 ItemValue iv = (ItemValue) o;
                 return !iv.isTrash() &&
-                       iv.getItem().equals(getDataItem()) &&
-                       iv.getEnvironment().equals(environment);
+                        iv.getItem().equals(getDataItem()) &&
+                        iv.getEnvironment().equals(environment);
             }
         });
 
         return !itemValues.isEmpty();
-
-    }
-
-    @Override
-    public String getTemplatePath() {
-        return getAPIVersion() + "/" + DataConstants.VIEW_CARBON_VALUE;
-    }
-
-    @Override
-    // Note, itemValues (historical sequences) are not supported in V1 API and templates are only used in v1 API.
-    public Map<String, Object> getTemplateValues() {
-        Map<String, Object> values = super.getTemplateValues();
-        values.put("browser", dataBrowser);
-        values.put("dataItem", getDataItem());
-        values.put("itemValue", this.itemValue);
-        values.put("node", this.itemValue);
-        return values;
     }
 
     @Override
@@ -169,11 +182,11 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             obj.put("itemValue", this.itemValue.getJSONObject());
         } else {
             JSONArray values = new JSONArray();
-            for(ItemValue iv : itemValues) {
+            for (ItemValue iv : itemValues) {
                 iv.setBuilder(new ItemValueBuilder(iv));
                 values.put(iv.getJSONObject(false));
             }
-            obj.put("itemValues",values);
+            obj.put("itemValues", values);
         }
         obj.put("dataItem", getDataItem().getIdentityJSONObject());
         obj.put("path", pathItem.getFullPath());
@@ -188,7 +201,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             element.appendChild(this.itemValue.getElement(document));
         } else {
             Element values = document.createElement("ItemValues");
-            for(ItemValue iv : itemValues) {
+            for (ItemValue iv : itemValues) {
                 iv.setBuilder(new ItemValueBuilder(iv));
                 values.appendChild(iv.getElement(document, false));
             }
@@ -200,79 +213,61 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (dataBrowser.getDataItemActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPost() {
         // POSTs to Data ItemValues are never allowed.
         return false;
     }
 
     @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation()");
+    protected void doStore(Representation entity) {
 
-        if (dataBrowser.getDataItemActions().isAllowModify()) {
-            
-            Form form = getForm();
-            if (StringUtils.isNotBlank(form.getFirstValue("value"))) {
-                this.itemValue.setValue(form.getFirstValue("value"));
-            }
+        log.debug("doStore()");
 
-            // Can't ammend the startDate of the first ItemValue in a history (startDate == DI.startDate)
-            if (itemValue.getStartDate().equals(getDataItem().getStartDate())) {
-                log.error("acceptRepresentation() - badRequest: trying to update the startDate of the first DIV in a history.");
-                badRequest(APIFault.INVALID_RESOURCE_MODIFICATION);
+        Form form = getForm();
+        if (StringUtils.isNotBlank(form.getFirstValue("value"))) {
+            this.itemValue.setValue(form.getFirstValue("value"));
+        }
+
+        // Can't ammend the startDate of the first ItemValue in a history (startDate == DI.startDate)
+        if (itemValue.getStartDate().equals(getDataItem().getStartDate())) {
+            log.error("acceptRepresentation() - badRequest: trying to update the startDate of the first DIV in a history.");
+            badRequest(APIFault.INVALID_RESOURCE_MODIFICATION);
+            return;
+        }
+
+        if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
+            Date startDate = new StartEndDate(form.getFirstValue("startDate"));
+
+            // The submitted startDate must be (i) after or equal to the startDate and (ii) before the endDate of the owning DataItem.
+            if (!getDataItem().isWithinLifeTime(startDate)) {
+                log.error("acceptRepresentation() - badRequest: trying to update a DIV starting after the endDate of the owning DI.");
+                badRequest(APIFault.INVALID_DATE_RANGE);
                 return;
             }
 
-            if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
-                Date startDate = new StartEndDate(form.getFirstValue("startDate"));
-
-                // The submitted startDate must be (i) after or equal to the startDate and (ii) before the endDate of the owning DataItem.
-                if (!getDataItem().isWithinLifeTime(startDate)) {
-                    log.error("acceptRepresentation() - badRequest: trying to update a DIV starting after the endDate of the owning DI.");
-                    badRequest(APIFault.INVALID_DATE_RANGE);
-                    return;
-                }
-
-                this.itemValue.setStartDate(startDate);
-            }
-
-            dataService.clearCaches(getDataItem().getDataCategory());
-            successfulPut(getFullPath());
-        } else {
-            notAuthorized();
+            this.itemValue.setStartDate(startDate);
         }
+
+        dataService.clearCaches(getDataItem().getDataCategory());
+        successfulPut(getFullPath());
     }
 
     @Override
-    public void removeRepresentations() {
-        log.debug("removeRepresentations()");
+    protected void doRemove() {
 
-        if (dataBrowser.getDataItemActions().isAllowDelete()) {
+        log.debug("doRemove()");
 
-            // Only allow delete if there would be at least one DataItemValue for this ItemValueDefinition remaining.
-            ItemValue itemValue = this.itemValue;
-            final ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
+        // Only allow delete if there would be at least one DataItemValue for this ItemValueDefinition remaining.
+        ItemValue itemValue = this.itemValue;
+        final ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
 
-            int remaining = getDataItem().getAllItemValues(itemValueDefinition.getPath()).size();
-            if (remaining > 1) {
-                dataService.clearCaches(getDataItem().getDataCategory());
-                dataService.remove(itemValue);
-                successfulDelete(pathItem.getParent().getFullPath());
-            } else {
-                badRequest(APIFault.DELETE_MUST_LEAVE_AT_LEAST_ONE_ITEM_VALUE);
-            }
+        int remaining = getDataItem().getAllItemValues(itemValueDefinition.getPath()).size();
+        if (remaining > 1) {
+            dataService.clearCaches(getDataItem().getDataCategory());
+            dataService.remove(itemValue);
+            successfulDelete(pathItem.getParent().getFullPath());
         } else {
-            notAuthorized();
+            badRequest(APIFault.DELETE_MUST_LEAVE_AT_LEAST_ONE_ITEM_VALUE);
         }
     }
 

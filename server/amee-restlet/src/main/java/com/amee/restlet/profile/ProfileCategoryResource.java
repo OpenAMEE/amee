@@ -21,7 +21,10 @@ package com.amee.restlet.profile;
 
 import com.amee.core.CO2AmountUnit;
 import com.amee.core.ThreadBeanHolder;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.ProfileItem;
+import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.ProfileCategoryAtomAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileCategoryFormAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileCategoryJSONAcceptor;
@@ -29,14 +32,16 @@ import com.amee.restlet.profile.acceptor.ProfileCategoryXMLAcceptor;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileCategoryResourceBuilderFactory;
 import com.amee.restlet.utils.APIException;
-import com.amee.restlet.RequestContext;
 import com.amee.service.profile.ProfileConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
-import org.restlet.data.*;
+import org.restlet.data.Form;
+import org.restlet.data.MediaType;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -45,6 +50,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +100,20 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        DataCategory dc = getDataCategory();
+        while (dc != null) {
+            entities.add(dc);
+            dc = dc.getDataCategory();
+        }
+        entities.add(getProfile());
+        entities.add(environment);
+        Collections.reverse(entities);
+        return entities;
+    }
+
+    @Override
     public String getTemplatePath() {
         return getAPIVersion() + "/" + ProfileConstants.VIEW_PROFILE_CATEGORY;
     }
@@ -121,84 +141,53 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
+    public void doGet() {
 
-        if (profileBrowser.getProfileCategoryActions().isAllowView()) {
+        log.debug("doGet()");
 
-            if (!validateParameters()) {
-                return;
-            }
-
-            Form form = getRequest().getResourceRef().getQueryAsForm();
-            if (getAPIVersion().isVersionOne()) {
-                profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
-            } else {
-                profileBrowser.setQueryStartDate(form.getFirstValue("startDate"));
-                profileBrowser.setQueryEndDate(form.getFirstValue("endDate"));
-                profileBrowser.setDuration(form.getFirstValue("duration"));
-                profileBrowser.setSelectBy(form.getFirstValue("selectby"));
-                profileBrowser.setMode(form.getFirstValue("mode"));
-                String unit = form.getFirstValue("returnUnit");
-                String perUnit = form.getFirstValue("returnPerUnit");
-                profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
-            }
-            super.handleGet();
-
-        } else {
-            notAuthorized();
+        if (!validateParameters()) {
+            return;
         }
+
+        Form form = getRequest().getResourceRef().getQueryAsForm();
+        if (getAPIVersion().isVersionOne()) {
+            profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
+        } else {
+            profileBrowser.setQueryStartDate(form.getFirstValue("startDate"));
+            profileBrowser.setQueryEndDate(form.getFirstValue("endDate"));
+            profileBrowser.setDuration(form.getFirstValue("duration"));
+            profileBrowser.setSelectBy(form.getFirstValue("selectby"));
+            profileBrowser.setMode(form.getFirstValue("mode"));
+            String unit = form.getFirstValue("returnUnit");
+            String perUnit = form.getFirstValue("returnPerUnit");
+            profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
+        }
+        super.handleGet();
     }
 
     @Override
-    public boolean allowDelete() {
-        // Only allow delete for Profiles (i.e: a request to /profiles/{profileUid}).
-        return super.allowDelete() && (pathItem.getPath().length() == 0);
-    }
-
-    @Override
-    public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation()");
-        acceptOrStore(entity);
-    }
-
-    @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation()");
-        acceptOrStore(entity);
-    }
-
-    protected void acceptOrStore(Representation entity) {
-        log.debug("acceptOrStore()");
-        if (isAcceptOrStoreAuthorized()) {
-            try {
-                // get list of updated or created ProfileItems
-                profileItems = doAcceptOrStore(entity);
-                // clear caches
-                profileService.clearCaches(getProfile());
-                if (isPost()) {
-                    if (isBatchPost()) {
-                        successfulBatchPost();
-                    } else {
-                        successfulPost(getFullPath(), profileItems.get(0).getUid());
-                    }
+    protected void doAcceptOrStore(Representation entity) {
+        log.debug("doAcceptOrStore()");
+        try {
+            // get list of updated or created ProfileItems
+            profileItems = doAcceptOrStoreProfileItems(entity);
+            // clear caches
+            profileService.clearCaches(getProfile());
+            if (isPost()) {
+                if (isBatchPost()) {
+                    successfulBatchPost();
                 } else {
-                    successfulPut(getFullPath());
+                    successfulPost(getFullPath(), profileItems.get(0).getUid());
                 }
-            } catch (APIException e) {
-                badRequest(e.getApiFault());
+            } else {
+                successfulPut(getFullPath());
             }
-        } else {
-            notAuthorized();
+        } catch (APIException e) {
+            badRequest(e.getApiFault());
         }
     }
 
-    protected boolean isAcceptOrStoreAuthorized() {
-        return (getRequest().getMethod().equals(Method.POST) && (profileBrowser.getProfileItemActions().isAllowCreate())) ||
-                (getRequest().getMethod().equals(Method.PUT) && (profileBrowser.getProfileItemActions().isAllowModify()));
-    }
-
-    public List<ProfileItem> doAcceptOrStore(Representation entity) throws APIException {
+    protected List<ProfileItem> doAcceptOrStoreProfileItems(Representation entity) throws APIException {
         // Accept the representation according to the MediaType
         MediaType type = entity.getMediaType();
         if (MediaType.APPLICATION_JSON.includes(type)) {
@@ -213,15 +202,17 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     @Override
-    public void removeRepresentations() {
-        log.debug("removeRepresentations()");
-        if (profileBrowser.getProfileActions().isAllowDelete()) {
-            profileService.clearCaches(getProfile());
-            profileService.remove(getProfile());
-            successfulDelete("/profiles");
-        } else {
-            notAuthorized();
-        }
+    public boolean allowDelete() {
+        // Only allow delete for Profiles (i.e: a request to /profiles/{profileUid}).
+        return super.allowDelete() && (pathItem.getPath().length() == 0);
+    }
+
+    @Override
+    protected void doRemove() {
+        log.debug("doRemove()");
+        profileService.clearCaches(getProfile());
+        profileService.remove(getProfile());
+        successfulDelete("/profiles");
     }
 
     public List<ProfileItem> getProfileItems() {

@@ -19,9 +19,10 @@
  */
 package com.amee.restlet.environment;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.data.ItemDefinition;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
@@ -42,11 +43,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class AlgorithmsResource extends BaseResource implements Serializable {
+public class AlgorithmsResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -68,6 +71,14 @@ public class AlgorithmsResource extends BaseResource implements Serializable {
     @Override
     public boolean isValid() {
         return super.isValid() && (definitionBrowser.getItemDefinition() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(definitionBrowser.getEnvironment());
+        entities.add(definitionBrowser.getItemDefinition());
+        return entities;
     }
 
     @Override
@@ -120,44 +131,30 @@ public class AlgorithmsResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
-        if (definitionBrowser.getAlgorithmActions().isAllowList()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPost() {
         return true;
     }
 
     @Override
-    public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation()");
-        if (definitionBrowser.getAlgorithmActions().isAllowCreate()) {
-            Form form = getForm();
-            if (form.getFirstValue("name") != null) {
-                ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
-                String content = form.getFirstValue("content");
-                newAlgorithm = new Algorithm(itemDefinition, content);
-                newAlgorithm.setName(form.getFirstValue("name"));
-                definitionService.save(newAlgorithm);
-            }
-            if (newAlgorithm != null) {
-                if (isStandardWebBrowser()) {
-                    success();
-                } else {
-                    // Return a response for API calls
-                    super.handleGet();
-                }
+    protected void doAccept(Representation entity) {
+        log.debug("doAccept()");
+        Form form = getForm();
+        if (form.getFirstValue("name") != null) {
+            ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
+            String content = form.getFirstValue("content");
+            newAlgorithm = new Algorithm(itemDefinition, content);
+            newAlgorithm.setName(form.getFirstValue("name"));
+            definitionService.save(newAlgorithm);
+        }
+        if (newAlgorithm != null) {
+            if (isStandardWebBrowser()) {
+                success();
             } else {
-                badRequest();
+                // Return a response for API calls
+                super.handleGet();
             }
         } else {
-            notAuthorized();
+            badRequest();
         }
     }
 }

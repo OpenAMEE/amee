@@ -82,21 +82,8 @@
                         <lookup-method name="createResource" bean="dataItemLookupResource"/>
                     </bean>
                 </entry>
-                <entry key="/actions">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="dataActionsResource"/>
-                    </bean>
-                </entry>
             </map>
         </property>
-    </bean>
-
-    <bean id="dataCategoryActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="dataCategory"/>
-    </bean>
-
-    <bean id="dataItemActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="dataItem"/>
     </bean>
 
 </beans>

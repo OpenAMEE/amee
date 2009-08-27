@@ -22,7 +22,6 @@ package com.amee.service.profile;
 import com.amee.core.CO2AmountUnit;
 import com.amee.domain.profile.ProfileDate;
 import com.amee.service.BaseBrowser;
-import com.amee.service.auth.ResourceActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -33,22 +32,6 @@ import java.util.Date;
 @Component("profileBrowser")
 @Scope("prototype")
 public class ProfileBrowser extends BaseBrowser {
-
-    @Autowired
-    @Qualifier("profileActions")
-    private ResourceActions profileActions;
-
-    @Autowired
-    @Qualifier("profileCategoryActions")
-    private ResourceActions profileCategoryActions;
-
-    @Autowired
-    @Qualifier("profileItemActions")
-    private ResourceActions profileItemActions;
-
-    @Autowired
-    @Qualifier("profileItemValueActions")
-    private ResourceActions profileItemValueActions;
 
     // ProfileDate (API v1)
     private Date profileDate = new ProfileDate();
@@ -62,23 +45,6 @@ public class ProfileBrowser extends BaseBrowser {
 
     public ProfileBrowser() {
         super();
-    }
-
-    // Actions
-    public ResourceActions getProfileActions() {
-        return profileActions;
-    }
-
-    public ResourceActions getProfileCategoryActions() {
-        return profileCategoryActions;
-    }
-
-    public ResourceActions getProfileItemActions() {
-        return profileItemActions;
-    }
-
-    public ResourceActions getProfileItemValueActions() {
-        return profileItemValueActions;
     }
 
     public void setProfileDate(String profileDate) {

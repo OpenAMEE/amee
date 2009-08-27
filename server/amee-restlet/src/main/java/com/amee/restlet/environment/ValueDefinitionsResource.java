@@ -20,10 +20,11 @@
 package com.amee.restlet.environment;
 
 import com.amee.core.ValueType;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.Pager;
 import com.amee.domain.ValueDefinition;
 import com.amee.domain.environment.Environment;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import com.amee.service.environment.EnvironmentService;
@@ -45,12 +46,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class ValueDefinitionsResource extends BaseResource implements Serializable {
+public class ValueDefinitionsResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -74,6 +76,13 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
     @Override
     public boolean isValid() {
         return super.isValid() && (definitionBrowser.getEnvironment() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(definitionBrowser.getEnvironment());
+        return entities;
     }
 
     @Override
@@ -139,44 +148,30 @@ public class ValueDefinitionsResource extends BaseResource implements Serializab
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
-        if (definitionBrowser.getValueDefinitionActions().isAllowList()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPost() {
         return true;
     }
 
     @Override
-    public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation()");
-        if (definitionBrowser.getValueDefinitionActions().isAllowCreate()) {
-            Form form = getForm();
-            if ((form.getFirstValue("name") != null) && (form.getFirstValue("valueType") != null)) {
-                newValueDefinition = new ValueDefinition(
-                        definitionBrowser.getEnvironment(),
-                        form.getFirstValue("name"),
-                        ValueType.valueOf(form.getFirstValue("valueType")));
-                definitionService.save(newValueDefinition);
-            }
-            if (newValueDefinition != null) {
-                if (isStandardWebBrowser()) {
-                    success();
-                } else {
-                    // return a response for API calls
-                    super.handleGet();
-                }
+    protected void doAccept(Representation entity) {
+        log.debug("doAccept()");
+        Form form = getForm();
+        if ((form.getFirstValue("name") != null) && (form.getFirstValue("valueType") != null)) {
+            newValueDefinition = new ValueDefinition(
+                    definitionBrowser.getEnvironment(),
+                    form.getFirstValue("name"),
+                    ValueType.valueOf(form.getFirstValue("valueType")));
+            definitionService.save(newValueDefinition);
+        }
+        if (newValueDefinition != null) {
+            if (isStandardWebBrowser()) {
+                success();
             } else {
-                badRequest();
+                // return a response for API calls
+                super.handleGet();
             }
         } else {
-            notAuthorized();
+            badRequest();
         }
     }
 }

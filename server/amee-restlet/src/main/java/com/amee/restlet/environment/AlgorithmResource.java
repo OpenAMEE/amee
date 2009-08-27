@@ -20,12 +20,13 @@
 package com.amee.restlet.environment;
 
 import com.amee.calculation.service.CalculationService;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choice;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import org.apache.commons.lang.StringUtils;
@@ -49,14 +50,11 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Scope("prototype")
-public class AlgorithmResource extends BaseResource implements Serializable {
+public class AlgorithmResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -69,8 +67,7 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     @Autowired
     private CalculationService calculator;
 
-    private
-    AlgorithmTestWrapper algorithmTestWrapper = null;
+    private AlgorithmTestWrapper algorithmTestWrapper = null;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -83,6 +80,15 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     @Override
     public boolean isValid() {
         return super.isValid() && (definitionBrowser.getAlgorithm() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(definitionBrowser.getEnvironment());
+        entities.add(definitionBrowser.getItemDefinition());
+        entities.add(definitionBrowser.getAlgorithm());
+        return entities;
     }
 
     @Override
@@ -129,20 +135,14 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
-        if (definitionBrowser.getAlgorithmActions().isAllowView()) {
-
-            Form form = getForm();
-            Set<String> names = form.getNames();
-
-            if (names.contains("testAlgorithmContent")) {
-                testAlgorithm(form);
-            }
-            super.handleGet();
-        } else {
-            notAuthorized();
+    protected void doGet() {
+        log.debug("doGet()");
+        Form form = getForm();
+        Set<String> names = form.getNames();
+        if (names.contains("testAlgorithmContent")) {
+            testAlgorithm(form);
         }
+        super.handleGet();
     }
 
     /**
@@ -204,42 +204,34 @@ public class AlgorithmResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation()");
-        if (definitionBrowser.getAlgorithmActions().isAllowModify()) {
-            Algorithm algorithm = definitionBrowser.getAlgorithm();
-            Form form = getForm();
-            Set<String> names = form.getNames();
-            if (names.contains("name")) {
-                algorithm.setName(form.getFirstValue("name"));
-            }
-            if (names.contains("content")) {
-                algorithm.setContent(form.getFirstValue("content"));
-            }
-            if (names.contains("algorithmContextUid")) {
-                String algorithmCxtUid = form.getFirstValue("algorithmContextUid");
-                if (StringUtils.isBlank(algorithmCxtUid)) {
-                    algorithm.setAlgorithmContext(null);
-                } else {
-                    definitionBrowser.setAlgorithmContextUid(algorithmCxtUid);
-                    algorithm.setAlgorithmContext(definitionBrowser.getAlgorithmContext());
-                }
-            }
-            success();
-        } else {
-            notAuthorized();
+    protected void doStore(Representation entity) {
+        log.debug("doStore()");
+        Algorithm algorithm = definitionBrowser.getAlgorithm();
+        Form form = getForm();
+        Set<String> names = form.getNames();
+        if (names.contains("name")) {
+            algorithm.setName(form.getFirstValue("name"));
         }
+        if (names.contains("content")) {
+            algorithm.setContent(form.getFirstValue("content"));
+        }
+        if (names.contains("algorithmContextUid")) {
+            String algorithmCxtUid = form.getFirstValue("algorithmContextUid");
+            if (StringUtils.isBlank(algorithmCxtUid)) {
+                algorithm.setAlgorithmContext(null);
+            } else {
+                definitionBrowser.setAlgorithmContextUid(algorithmCxtUid);
+                algorithm.setAlgorithmContext(definitionBrowser.getAlgorithmContext());
+            }
+        }
+        success();
     }
 
     @Override
-    public void removeRepresentations() {
-        log.debug("removeRepresentations()");
-        if (definitionBrowser.getAlgorithmActions().isAllowDelete()) {
-            definitionService.remove(definitionBrowser.getAlgorithm());
-            success();
-        } else {
-            notAuthorized();
-        }
+    protected void doRemove() {
+        log.debug("doRemove()");
+        definitionService.remove(definitionBrowser.getAlgorithm());
+        success();
     }
 
     private class AlgorithmTestWrapper {

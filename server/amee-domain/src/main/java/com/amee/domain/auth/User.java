@@ -71,9 +71,6 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
     @Column(name = "LOCALE")
     private String locale = LocaleName.DEFAULT_LOCALE.toString();
 
-    @Transient
-    private List<String> groupNames = new ArrayList<String>();
-
     public User() {
         super();
     }
@@ -108,7 +105,6 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         obj.put("uid", getUid());
         obj.put("status", getStatus().getName());
         obj.put("type", getType().getName());
-        obj.put("groupNames", new JSONArray(getGroupNames()));
         obj.put("apiVersion", getAPIVersion());
         obj.put("locale", getLocale());
         if (detailed) {
@@ -137,16 +133,10 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public Element getElement(Document document, String name, boolean detailed) {
-        Element groups;
         Element element = document.createElement(name);
         element.setAttribute("uid", getUid());
         element.appendChild(APIUtils.getElement(document, "Status", getStatus().getName()));
         element.appendChild(APIUtils.getElement(document, "Type", getType().getName()));
-        groups = document.createElement("GroupNames");
-        for (String groupName : getGroupNames()) {
-            groups.appendChild(APIUtils.getElement(document, "GroupName", groupName));
-        }
-        element.appendChild(groups);
         element.appendChild(APIUtils.getElement(document, "ApiVersion", getAPIVersion().toString()));
         element.appendChild(APIUtils.getElement(document, "Locale", getLocale()));
         if (detailed) {
@@ -275,16 +265,6 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         if ((password == null) || password.isEmpty() || (password.length() > size)) {
             throw new IllegalArgumentException(
                     "Password must not be empty and must be <= " + size + " characters long.");
-        }
-    }
-
-    public List<String> getGroupNames() {
-        return groupNames;
-    }
-
-    public void setGroupNames(List<String> groupNames) {
-        if (groupNames != null) {
-            this.groupNames = groupNames;
         }
     }
 

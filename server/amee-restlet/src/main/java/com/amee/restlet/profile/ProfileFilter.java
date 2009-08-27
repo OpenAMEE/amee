@@ -74,8 +74,6 @@ public class ProfileFilter extends RewriteFilter {
                     // we found a Profile. Make available to request scope.
                     request.getAttributes().put("profile", profile);
                     ctx.setProfile(profile);
-
-                    ThreadBeanHolder.set("permission", profile.getPermission());
                     // look for path match
                     PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
                     PathItem pathItem = pathItemGroup.findBySegments(segments, true);

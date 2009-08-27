@@ -1,7 +1,6 @@
 package com.amee.admin.service.app;
 
 import com.amee.domain.Pager;
-import com.amee.domain.auth.Action;
 import com.amee.domain.site.App;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,36 +56,4 @@ public class AppService {
     public void remove(App app) {
         dao.remove(app);
     }
-
-    public Action getActionByUid(App app, String uid) {
-        return dao.getActionByUid(app, uid);
-    }
-
-    public Action getActionByUid(String uid) {
-        return dao.getActionByUid(uid);
-    }
-
-    public Action getActionByKey(String key) {
-        return dao.getActionByKey(key);
-    }
-
-    public List<Action> getActions(App app) {
-        return dao.getActions(app);
-    }
-
-    public List<Action> getActions(App app, Pager pager) {
-        return dao.getActions(app, pager);
-    }
-
-    public List<Action> getActions(Pager pager) {
-        return dao.getActions(pager);
-    }
-
-    public void save(Action action) {
-        dao.save(action);
-    }
-
-    public void remove(Action action) {
-        dao.remove(action);
-    }   
 }

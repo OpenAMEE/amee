@@ -9,8 +9,8 @@
     <bean id="appsApplication" class="org.restlet.Application">
         <property name="root" ref="appsRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
-        <property name="tunnelService.extensionsTunnel" value="true"/>        
-        <property name="tunnelService.queryTunnel" value="true"/>        
+        <property name="tunnelService.extensionsTunnel" value="true"/>
+        <property name="tunnelService.queryTunnel" value="true"/>
         <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="App Administration"/>
     </bean>
@@ -60,22 +60,8 @@
                         <lookup-method name="createResource" bean="appResource"/>
                     </bean>
                 </entry>
-                <entry key="/{appUid}/actions">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="actionsResource"/>
-                    </bean>
-                </entry>
-                <entry key="/{appUid}/actions/{actionUid}">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="actionResource"/>
-                    </bean>
-                </entry>
             </map>
         </property>
-    </bean>
-
-    <bean id="appActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="app"/>
     </bean>
 
 </beans>

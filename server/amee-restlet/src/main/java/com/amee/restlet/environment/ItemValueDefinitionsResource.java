@@ -19,10 +19,11 @@
  */
 package com.amee.restlet.environment;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import com.amee.service.environment.EnvironmentService;
@@ -44,12 +45,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class ItemValueDefinitionsResource extends BaseResource implements Serializable {
+public class ItemValueDefinitionsResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -74,6 +76,14 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
     @Override
     public boolean isValid() {
         return super.isValid() && (definitionBrowser.getItemDefinition() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(definitionBrowser.getEnvironment());
+        entities.add(definitionBrowser.getItemDefinition());
+        return entities;
     }
 
     @Override
@@ -129,64 +139,50 @@ public class ItemValueDefinitionsResource extends BaseResource implements Serial
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
-        if (definitionBrowser.getItemValueDefinitionActions().isAllowList()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPost() {
         return true;
     }
 
     @Override
-    public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation()");
-        if (definitionBrowser.getItemValueDefinitionActions().isAllowCreate()) {
-            Form form = getForm();
-            ValueDefinition valueDefinition =
-                    definitionService.getValueDefinition(definitionBrowser.getEnvironment(), form.getFirstValue("valueDefinitionUid"));
-            if ((form.getFirstValue("name") != null) && (valueDefinition != null)) {
-                newItemValueDefinition = new ItemValueDefinition(definitionBrowser.getItemDefinition());
-                newItemValueDefinition.setValueDefinition(valueDefinition);
-                newItemValueDefinition.setName(form.getFirstValue("name"));
-                newItemValueDefinition.setPath(form.getFirstValue("path"));
-                newItemValueDefinition.setValue(form.getFirstValue("value"));
-                newItemValueDefinition.setChoices(form.getFirstValue("choices"));
-                newItemValueDefinition.setFromData(Boolean.valueOf(form.getFirstValue("fromData")));
-                newItemValueDefinition.setFromProfile(Boolean.valueOf(form.getFirstValue("fromProfile")));
-                newItemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
-                newItemValueDefinition.setUnit(form.getFirstValue("unit"));
-                newItemValueDefinition.setPerUnit(form.getFirstValue("perUnit"));
-                if (form.getFirstValue("aliasedTo") != null) {
-                    newItemValueDefinition.setAliasedTo(definitionService.getItemValueDefinitionByUid(form.getFirstValue("aliasedTo")));
-                }
-                // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
-                List<APIVersion> apiVersions = environmentService.getAPIVersions();
-                for (APIVersion apiVersion : apiVersions) {
-                    String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
-                    if (version != null) {
-                        newItemValueDefinition.addAPIVersion(apiVersion);
-                    }
-                }
-                definitionService.save(newItemValueDefinition);
+    public void doAccept(Representation entity) {
+        log.debug("doAccept()");
+        Form form = getForm();
+        ValueDefinition valueDefinition =
+                definitionService.getValueDefinition(definitionBrowser.getEnvironment(), form.getFirstValue("valueDefinitionUid"));
+        if ((form.getFirstValue("name") != null) && (valueDefinition != null)) {
+            newItemValueDefinition = new ItemValueDefinition(definitionBrowser.getItemDefinition());
+            newItemValueDefinition.setValueDefinition(valueDefinition);
+            newItemValueDefinition.setName(form.getFirstValue("name"));
+            newItemValueDefinition.setPath(form.getFirstValue("path"));
+            newItemValueDefinition.setValue(form.getFirstValue("value"));
+            newItemValueDefinition.setChoices(form.getFirstValue("choices"));
+            newItemValueDefinition.setFromData(Boolean.valueOf(form.getFirstValue("fromData")));
+            newItemValueDefinition.setFromProfile(Boolean.valueOf(form.getFirstValue("fromProfile")));
+            newItemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
+            newItemValueDefinition.setUnit(form.getFirstValue("unit"));
+            newItemValueDefinition.setPerUnit(form.getFirstValue("perUnit"));
+            if (form.getFirstValue("aliasedTo") != null) {
+                newItemValueDefinition.setAliasedTo(definitionService.getItemValueDefinitionByUid(form.getFirstValue("aliasedTo")));
             }
-            if (newItemValueDefinition != null) {
-                if (isStandardWebBrowser()) {
-                    success();
-                } else {
-                    // return a response for API calls
-                    super.handleGet();
+            // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
+            List<APIVersion> apiVersions = environmentService.getAPIVersions();
+            for (APIVersion apiVersion : apiVersions) {
+                String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
+                if (version != null) {
+                    newItemValueDefinition.addAPIVersion(apiVersion);
                 }
+            }
+            definitionService.save(newItemValueDefinition);
+        }
+        if (newItemValueDefinition != null) {
+            if (isStandardWebBrowser()) {
+                success();
             } else {
-                badRequest();
+                // return a response for API calls
+                super.handleGet();
             }
         } else {
-            notAuthorized();
+            badRequest();
         }
     }
 }

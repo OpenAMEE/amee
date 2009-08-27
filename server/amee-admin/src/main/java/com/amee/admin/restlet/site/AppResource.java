@@ -2,9 +2,9 @@ package com.amee.admin.restlet.site;
 
 import com.amee.admin.service.AppBrowser;
 import com.amee.admin.service.AppConstants;
-import com.amee.admin.service.app.AppService;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.site.App;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -18,14 +18,13 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class AppResource extends BaseResource {
-
-    @Autowired
-    private AppService appService;
+public class AppResource extends AuthorizeResource {
 
     @Autowired
     private AppBrowser appBrowser;
@@ -39,6 +38,13 @@ public class AppResource extends BaseResource {
     @Override
     public boolean isValid() {
         return super.isValid() && (appBrowser.getApp() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(appBrowser.getApp());
+        return entities;
     }
 
     @Override
@@ -69,56 +75,28 @@ public class AppResource extends BaseResource {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (appBrowser.getAppActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPut() {
         return true;
     }
 
     // TODO: prevent duplicate names
     @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("put");
-        if (appBrowser.getAppActions().isAllowModify()) {
-            Form form = getForm();
-            App app = appBrowser.getApp();
-            // update values
-            if (form.getNames().contains("name")) {
-                app.setName(form.getFirstValue("name"));
-            }
-            if (form.getNames().contains("description")) {
-                app.setDescription(form.getFirstValue("description"));
-            }
-            success();
-        } else {
-            notAuthorized();
+    public void doStore(Representation entity) {
+        log.debug("doStore");
+        Form form = getForm();
+        App app = appBrowser.getApp();
+        // update values
+        if (form.getNames().contains("name")) {
+            app.setName(form.getFirstValue("name"));
         }
+        if (form.getNames().contains("description")) {
+            app.setDescription(form.getFirstValue("description"));
+        }
+        success();
     }
 
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
     @Override
     public boolean allowDelete() {
         return false;
-    }
-
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
-    // TODO: Prevent deletion of the current app?!
-    @Override
-    public void removeRepresentations() {
-        throw new UnsupportedOperationException();
-//        if (appBrowser.getAppActions().isAllowDelete()) {
-//            appService.remove(appBrowser.getApp());
-//            success();
-//        } else {
-//            notAuthorized();
-//        }
     }
 }

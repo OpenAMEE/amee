@@ -23,6 +23,7 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
+import com.amee.domain.AMEEEntity;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DrillDownService;
 import com.amee.restlet.RequestContext;
@@ -43,10 +44,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 // TODO - need to define actions for this resource
 
@@ -54,8 +52,6 @@ import java.util.Set;
 @Component
 @Scope("prototype")
 public class DrillDownResource extends BaseDataResource implements Serializable {
-
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private DrillDownService drillDownService;
@@ -67,6 +63,19 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
         if (getDataCategory() != null) {
             ((RequestContext) ThreadBeanHolder.get("ctx")).setDrillDown(getDataCategory());
         }
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        DataCategory dc = getDataCategory();
+        while (dc != null) {
+            entities.add(dc);
+            dc = dc.getDataCategory();
+        }
+        entities.add(environment);
+        Collections.reverse(entities);
+        return entities;
     }
 
     @Override
@@ -138,16 +147,6 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
             element.appendChild(choices.getElement(document));
         }
         return element;
-    }
-
-    @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (dataBrowser.getDataCategoryActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
     }
 
     public List<Choice> getSelections() {

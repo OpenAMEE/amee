@@ -19,10 +19,11 @@
  */
 package com.amee.restlet.environment;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.Pager;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.environment.Environment;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
@@ -43,12 +44,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class ItemDefinitionsResource extends BaseResource implements Serializable {
+public class ItemDefinitionsResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -70,6 +72,13 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     @Override
     public boolean isValid() {
         return super.isValid() && (definitionBrowser.getEnvironment() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(definitionBrowser.getEnvironment());
+        return entities;
     }
 
     @Override
@@ -132,41 +141,27 @@ public class ItemDefinitionsResource extends BaseResource implements Serializabl
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
-        if (definitionBrowser.getItemDefinitionActions().isAllowList()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPost() {
         return true;
     }
 
     @Override
-    public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation()");
-        if (definitionBrowser.getItemDefinitionActions().isAllowCreate()) {
-            Form form = getForm();
-            if (form.getFirstValue("name") != null) {
-                newItemDefinition = new ItemDefinition(definitionBrowser.getEnvironment(), form.getFirstValue("name"));
-                definitionService.save(newItemDefinition);
-            }
-            if (newItemDefinition != null) {
-                if (isStandardWebBrowser()) {
-                    success();
-                } else {
-                    // Return a response for API calls
-                    super.handleGet();
-                }
+    protected void doAccept(Representation entity) {
+        log.debug("doAccept()");
+        Form form = getForm();
+        if (form.getFirstValue("name") != null) {
+            newItemDefinition = new ItemDefinition(definitionBrowser.getEnvironment(), form.getFirstValue("name"));
+            definitionService.save(newItemDefinition);
+        }
+        if (newItemDefinition != null) {
+            if (isStandardWebBrowser()) {
+                success();
             } else {
-                badRequest();
+                // Return a response for API calls
+                super.handleGet();
             }
         } else {
-            notAuthorized();
+            badRequest();
         }
     }
 }

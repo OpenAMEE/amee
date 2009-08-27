@@ -2,8 +2,9 @@ package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
 import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
-import com.amee.service.environment.SiteService;
+import com.amee.domain.AMEEEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -16,13 +17,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 @Component
 @Scope("prototype")
-public class UserGroupResource extends BaseResource {
-
-    @Autowired
-    private SiteService siteService;
+public class UserGroupResource extends AuthorizeResource {
 
     @Autowired
     private EnvironmentBrowser environmentBrowser;
@@ -37,9 +37,17 @@ public class UserGroupResource extends BaseResource {
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (environmentBrowser.getEnvironment() != null) && (environmentBrowser.getUser() != null) && (environmentBrowser.getGroupUser() != null);
+        return super.isValid() && (environmentBrowser.getEnvironment() != null) && (environmentBrowser.getUser() != null) && (environmentBrowser.getGroupPrinciple() != null);
     }
 
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(environmentBrowser.getEnvironment());
+        entities.add(environmentBrowser.getUser());
+        entities.add(environmentBrowser.getGroup());
+        return entities;
+    }
     @Override
     public String getTemplatePath() {
         return EnvironmentConstants.VIEW_USER_GROUP;
@@ -52,7 +60,7 @@ public class UserGroupResource extends BaseResource {
         values.put("environment", environmentBrowser.getEnvironment());
         values.put("user", environmentBrowser.getUser());
         values.put("group", environmentBrowser.getGroup());
-        values.put("groupUser", environmentBrowser.getGroupUser());
+        values.put("groupUser", environmentBrowser.getGroupPrinciple());
         return values;
     }
 
@@ -61,7 +69,7 @@ public class UserGroupResource extends BaseResource {
         JSONObject obj = new JSONObject();
         obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
         obj.put("user", environmentBrowser.getUser().getJSONObject());
-        obj.put("groupUser", environmentBrowser.getGroupUser().getJSONObject());
+        obj.put("groupUser", environmentBrowser.getGroupPrinciple().getJSONObject());
         return obj;
     }
 
@@ -70,36 +78,12 @@ public class UserGroupResource extends BaseResource {
         Element element = document.createElement("UserGroupResource");
         element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
         element.appendChild(environmentBrowser.getUser().getIdentityElement(document));
-        element.appendChild(environmentBrowser.getGroupUser().getElement(document));
+        element.appendChild(environmentBrowser.getGroupPrinciple().getElement(document));
         return element;
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (environmentBrowser.getUserActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
-    @Override
     public boolean allowDelete() {
         return false;
-    }
-
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
-    // TODO: do not allow delete affecting logged-in auth...
-    @Override
-    public void removeRepresentations() {
-        throw new UnsupportedOperationException();
-//        if (environmentBrowser.getUserActions().isAllowModify()) {
-//            siteService.remove(environmentBrowser.getGroupUser());
-//            success();
-//        } else {
-//            notAuthorized();
-//        }
     }
 }

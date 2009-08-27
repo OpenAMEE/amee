@@ -21,6 +21,7 @@ package com.amee.restlet.profile;
 
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.Pager;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.User;
@@ -50,6 +51,7 @@ import org.w3c.dom.Element;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 @Component("profilesResource")
 @Scope("prototype")
@@ -67,15 +69,20 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     private AMEEStatistics ameeStatistics;
 
     private User user;
-    private Group group;
     private Profile newProfile = null;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         user = AuthService.getUser();
-        group = AuthService.getGroup();
         setPage(request);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(environment);
+        return entities;
     }
 
     @Override
@@ -86,7 +93,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager(getItemsPerPage());
-        List<Profile> profiles = profileService.getProfiles(environment, pager);
+        List<Profile> profiles = profileService.getProfiles(user, pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", profileBrowser);
@@ -100,7 +107,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
         JSONObject obj = new JSONObject();
         if (isGet()) {
             Pager pager = getPager(getItemsPerPage());
-            List<Profile> profiles = profileService.getProfiles(environment, pager);
+            List<Profile> profiles = profileService.getProfiles(user, pager);
             pager.setCurrentPage(getPage());
             JSONArray profilesJSONArray = new JSONArray();
             for (Profile profile : profiles) {
@@ -119,7 +126,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
         Element element = document.createElement("ProfilesResource");
         if (isGet()) {
             Pager pager = getPager(getItemsPerPage());
-            List<Profile> profiles = profileService.getProfiles(environment, pager);
+            List<Profile> profiles = profileService.getProfiles(user, pager);
             pager.setCurrentPage(getPage());
             Element profilesElement = document.createElement("Profiles");
             for (Profile profile : profiles) {
@@ -134,41 +141,25 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
-        if (profileBrowser.getProfileActions().isAllowList()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
+    public void doAccept(Representation entity) {
+        log.debug("doAccept()");
+        Form form = getForm();
+        // are we creating a new Profile?
+        if ((form.getFirstValue("profile") != null)) {
+            // create new Profile, update statistics
+            newProfile = new Profile(user);
+            profileService.persist(newProfile);
+            ameeStatistics.createProfile();
         }
-    }
-
-    @Override
-    public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation()");
-        if (profileBrowser.getProfileActions().isAllowCreate()) {
-            Form form = getForm();
-            // are we creating a new Profile?
-            if ((form.getFirstValue("profile") != null) && (group != null)) {
-                // create Permission for Profile
-                Permission permission = new Permission(group, user);
-                // create new Profile, update statistics
-                newProfile = new Profile(environment, permission);
-                profileService.persist(newProfile);
-                ameeStatistics.createProfile();
-            }
-            if (newProfile != null) {
-                if (isStandardWebBrowser()) {
-                    success();
-                } else {
-                    // return a response for API calls
-                    super.handleGet();
-                }
+        if (newProfile != null) {
+            if (isStandardWebBrowser()) {
+                success();
             } else {
-                badRequest();
+                // return a response for API calls
+                super.handleGet();
             }
         } else {
-            notAuthorized();
+            badRequest();
         }
     }
 }

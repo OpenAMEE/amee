@@ -52,11 +52,6 @@
                 <entry key="/itemDefinitions">
                     <ref local="itemDefinitionsRouter2"/>
                 </entry>
-                <entry key="/actions">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="definitionActionsResource"/>
-                    </bean>
-                </entry>
             </map>
         </property>
     </bean>

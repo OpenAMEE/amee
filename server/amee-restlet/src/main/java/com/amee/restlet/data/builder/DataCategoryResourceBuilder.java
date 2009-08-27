@@ -81,9 +81,10 @@ public class DataCategoryResourceBuilder {
 
                 DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
 
-                if (child == null || (child.isDeprecated() &&
-                        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated()))
-                    continue;
+                // TODO: PERMISSIONS
+                //if (child == null || (child.isDeprecated() &&
+                //        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated()))
+                //    continue;
 
                 dataCategories.put(pi.getJSONObject());
 
@@ -116,9 +117,10 @@ public class DataCategoryResourceBuilder {
                 obj.put("dataCategories", dataCategories);
                 for (DataCategory dc : resource.getDataCategories()) {
 
-                    if (dc.isDeprecated() &&
-                            !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated())
-                        continue;
+                    // TODO: PERMISSIONS
+                    // if (dc.isDeprecated() &&
+                    //        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated())
+                    //    continue;
 
                     dataCategories.put(dc.getJSONObject(false));
                 }
@@ -167,9 +169,10 @@ public class DataCategoryResourceBuilder {
 
                 DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
 
-                if (child == null || (child.isDeprecated() &&
-                        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated()))
-                    continue;
+                // TODO: PERMISSIONS
+                // if (child == null || (child.isDeprecated() &&
+                //        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated()))
+                //    continue;
 
                 dataCategoriesElement.appendChild(pi.getElement(document));
             }
@@ -194,9 +197,10 @@ public class DataCategoryResourceBuilder {
                 element.appendChild(dataItemsElement);
                 for (DataCategory dc : resource.getDataCategories()) {
 
-                    if (dc.isDeprecated() &&
-                            !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated())
-                        continue;
+                    // TODO: PERMISSIONS
+                    // if (dc.isDeprecated() &&
+                    //        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated())
+                    //    continue;
 
                     dataItemsElement.appendChild(dc.getElement(document, false));
                 }
@@ -241,7 +245,7 @@ public class DataCategoryResourceBuilder {
         if (resource.getDataCategory().getAliasedCategory() != null) {
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getEnvironment());
             pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
-            values.put("pathItem",pathItem);
+            values.put("pathItem", pathItem);
         }
         return values;
     }

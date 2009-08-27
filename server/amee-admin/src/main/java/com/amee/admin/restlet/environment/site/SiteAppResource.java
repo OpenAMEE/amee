@@ -2,9 +2,10 @@ package com.amee.admin.restlet.environment.site;
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
 import com.amee.admin.service.app.AppService;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.site.App;
 import com.amee.domain.site.SiteApp;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.SiteService;
 import org.json.JSONException;
@@ -20,11 +21,13 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class SiteAppResource extends BaseResource {
+public class SiteAppResource extends AuthorizeResource {
 
     @Autowired
     private SiteService siteService;
@@ -46,6 +49,15 @@ public class SiteAppResource extends BaseResource {
     @Override
     public boolean isValid() {
         return super.isValid() && (environmentBrowser.getSiteApp() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(environmentBrowser.getEnvironment());
+        entities.add(environmentBrowser.getSite());
+        entities.add(environmentBrowser.getSiteApp());
+        return entities;
     }
 
     @Override
@@ -83,58 +95,31 @@ public class SiteAppResource extends BaseResource {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (environmentBrowser.getSiteAppActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPut() {
         return true;
     }
 
     @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("put");
-        if (environmentBrowser.getSiteAppActions().isAllowModify()) {
-            Form form = getForm();
-            SiteApp siteApp = environmentBrowser.getSiteApp();
-            // update values
-            String appUid = form.getFirstValue("appUid");
-            if (appUid != null) {
-                App app = appService.getAppByUid(appUid);
-                if (app != null) {
-                    siteApp.setApp(app);
-                }
+    protected void doStore(Representation entity) {
+        log.debug("doStore");
+        Form form = getForm();
+        SiteApp siteApp = environmentBrowser.getSiteApp();
+        // update values
+        String appUid = form.getFirstValue("appUid");
+        if (appUid != null) {
+            App app = appService.getAppByUid(appUid);
+            if (app != null) {
+                siteApp.setApp(app);
             }
-            if (form.getNames().contains("skinPath")) {
-                siteApp.setSkinPath(form.getFirstValue("skinPath"));
-            }
-            success();
-        } else {
-            notAuthorized();
         }
+        if (form.getNames().contains("skinPath")) {
+            siteApp.setSkinPath(form.getFirstValue("skinPath"));
+        }
+        success();
     }
 
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
     @Override
     public boolean allowDelete() {
         return false;
-    }
-
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
-    @Override
-    public void removeRepresentations() {
-        throw new UnsupportedOperationException();
-//        if (environmentBrowser.getSiteAppActions().isAllowDelete()) {
-//            siteService.remove(environmentBrowser.getSiteApp());
-//            success();
-//        } else {
-//            notAuthorized();
-//        }
     }
 }

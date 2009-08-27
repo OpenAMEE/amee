@@ -27,7 +27,6 @@ import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.site.Site;
 import com.amee.service.BaseBrowser;
-import com.amee.service.auth.ResourceActions;
 import com.amee.service.definition.DefinitionService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.environment.SiteService;
@@ -50,30 +49,6 @@ public class DefinitionBrowser extends BaseBrowser {
 
     @Autowired
     private DefinitionService definitionService;
-
-    @Autowired
-    @Qualifier("environmentActions")
-    private ResourceActions environmentActions;
-
-    @Autowired
-    @Qualifier("siteActions")
-    private ResourceActions siteActions;
-
-    @Autowired
-    @Qualifier("valueDefinitionActions")
-    private ResourceActions valueDefinitionActions;
-
-    @Autowired
-    @Qualifier("algorithmActions")
-    private ResourceActions algorithmActions;
-
-    @Autowired
-    @Qualifier("itemDefinitionActions")
-    private ResourceActions itemDefinitionActions;
-
-    @Autowired
-    @Qualifier("itemValueDefinitionActions")
-    private ResourceActions itemValueDefinitionActions;
 
     // Environments
     private String environmentUid = null;
@@ -105,32 +80,6 @@ public class DefinitionBrowser extends BaseBrowser {
 
     public DefinitionBrowser() {
         super();
-    }
-
-    // Actions
-
-    public ResourceActions getEnvironmentActions() {
-        return environmentActions;
-    }
-
-    public ResourceActions getSiteActions() {
-        return siteActions;
-    }
-
-    public ResourceActions getValueDefinitionActions() {
-        return valueDefinitionActions;
-    }
-
-    public ResourceActions getAlgorithmActions() {
-        return algorithmActions;
-    }
-
-    public ResourceActions getItemDefinitionActions() {
-        return itemDefinitionActions;
-    }
-
-    public ResourceActions getItemValueDefinitionActions() {
-        return itemValueDefinitionActions;
     }
 
     // Environments

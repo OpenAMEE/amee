@@ -1,7 +1,8 @@
 package com.amee.admin.restlet.environment;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.environment.Environment;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,11 +17,13 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class EnvironmentResource extends BaseResource {
+public class EnvironmentResource extends AuthorizeResource {
 
     @Autowired
     private EnvironmentBrowser environmentBrowser;
@@ -34,6 +37,13 @@ public class EnvironmentResource extends BaseResource {
     @Override
     public boolean isValid() {
         return super.isValid() && (environmentBrowser.getEnvironment() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(environmentBrowser.getEnvironment());
+        return entities;
     }
 
     @Override
@@ -64,65 +74,37 @@ public class EnvironmentResource extends BaseResource {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (environmentBrowser.getEnvironmentActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPut() {
         return true;
     }
 
     @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation");
-        if (environmentBrowser.getEnvironmentActions().isAllowModify()) {
-            Form form = getForm();
-            Environment environment = environmentBrowser.getEnvironment();
-            // update values
-            if (form.getNames().contains("name")) {
-                environment.setName(form.getFirstValue("name"));
-            }
-            if (form.getNames().contains("path")) {
-                environment.setPath(form.getFirstValue("path"));
-            }
-            if (form.getNames().contains("description")) {
-                environment.setDescription(form.getFirstValue("description"));
-            }
-            if (form.getNames().contains("itemsPerPage")) {
-                try {
-                    environment.setItemsPerPage(new Integer(form.getFirstValue("itemsPerPage")));
-                } catch (NumberFormatException e) {
-                    // swallow
-                }
-            }
-            success();
-        } else {
-            notAuthorized();
+    protected void doStore(Representation entity) {
+        log.debug("doStore");
+        Form form = getForm();
+        Environment environment = environmentBrowser.getEnvironment();
+        // update values
+        if (form.getNames().contains("name")) {
+            environment.setName(form.getFirstValue("name"));
         }
+        if (form.getNames().contains("path")) {
+            environment.setPath(form.getFirstValue("path"));
+        }
+        if (form.getNames().contains("description")) {
+            environment.setDescription(form.getFirstValue("description"));
+        }
+        if (form.getNames().contains("itemsPerPage")) {
+            try {
+                environment.setItemsPerPage(new Integer(form.getFirstValue("itemsPerPage")));
+            } catch (NumberFormatException e) {
+                // swallow
+            }
+        }
+        success();
     }
 
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
     @Override
     public boolean allowDelete() {
         return false;
-    }
-
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
-    // TODO: Prevent deletion of the current environment?!
-    @Override
-    public void removeRepresentations() {
-        throw new UnsupportedOperationException();
-//        if (environmentBrowser.getEnvironmentActions().isAllowDelete()) {
-//            environmentService.remove(environmentBrowser.getEnvironment());
-//            success();
-//        } else {
-//            notAuthorized();
-//        }
     }
 }

@@ -7,7 +7,7 @@
         <class>com.amee.domain.algorithm.AlgorithmContext</class>
         <class>com.amee.domain.auth.Action</class>
         <class>com.amee.domain.auth.Group</class>
-        <class>com.amee.domain.auth.GroupUser</class>
+        <class>com.amee.domain.auth.GroupPrinciple</class>
         <class>com.amee.domain.auth.Permission</class>
         <class>com.amee.domain.auth.Role</class>
         <class>com.amee.domain.auth.User</class>

@@ -88,15 +88,8 @@
                 <entry key="/groups">
                     <ref local="groupsRouter"/>
                 </entry>
-                <entry key="/roles">
-                    <ref local="rolesRouter"/>
-                </entry>
             </map>
         </property>
-    </bean>
-
-    <bean id="environmentActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="environment"/>
     </bean>
 
     <!-- ValueDefinitions -->
@@ -117,10 +110,6 @@
                 </entry>
             </map>
         </property>
-    </bean>
-
-    <bean id="valueDefinitionActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="valueDefinition"/>
     </bean>
 
     <!-- ItemDefinitions -->
@@ -163,18 +152,6 @@
                 </entry>
             </map>
         </property>
-    </bean>
-
-    <bean id="itemDefinitionActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="itemDefinition"/>
-    </bean>
-
-    <bean id="algorithmActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="algorithm"/>
-    </bean>
-
-    <bean id="itemValueDefinitionActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="itemValueDefinition"/>
     </bean>
 
     <!-- AlgorithmContexts -->
@@ -231,14 +208,6 @@
         </property>
     </bean>
 
-    <bean id="siteActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="site"/>
-    </bean>
-
-    <bean id="siteAppActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="site.app"/>
-    </bean>
-
     <!-- Users -->
 
     <bean id="usersRouter" class="org.restlet.ext.spring.SpringRouter">
@@ -250,11 +219,6 @@
                 <entry key="">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="usersResource"/>
-                    </bean>
-                </entry>
-                <entry key="/upload">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="userUploadResource"/>
                     </bean>
                 </entry>
                 <entry key="/{userUid}">
@@ -272,22 +236,8 @@
                         <lookup-method name="createResource" bean="userGroupResource"/>
                     </bean>
                 </entry>
-                <entry key="/{userUid}/groups/{groupUid}/roles">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="userGroupRolesResource"/>
-                    </bean>
-                </entry>
-                <entry key="/{userUid}/groups/{groupUid}/roles/{roleUid}">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="userGroupRoleResource"/>
-                    </bean>
-                </entry>
             </map>
         </property>
-    </bean>
-
-    <bean id="userActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="site.user"/>
     </bean>
 
     <!-- Groups -->
@@ -315,46 +265,6 @@
                 </entry>
             </map>
         </property>
-    </bean>
-
-    <bean id="groupActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="site.group"/>
-    </bean>
-
-    <!-- Roles -->
-
-    <bean id="rolesRouter" class="org.restlet.ext.spring.SpringRouter">
-        <constructor-arg ref="environmentsApplication"/>
-        <property name="defaultMatchingMode" ref="modeEquals"/>
-        <property name="defaultMatchQuery" value="false"/>
-        <property name="attachments">
-            <map>
-                <entry key="">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="rolesResource"/>
-                    </bean>
-                </entry>
-                <entry key="/{roleUid}">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="roleResource"/>
-                    </bean>
-                </entry>
-                <entry key="/{roleUid}/actions">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="roleActionsResource"/>
-                    </bean>
-                </entry>
-                <entry key="/{roleUid}/actions/{actionUid}">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="roleActionResource"/>
-                    </bean>
-                </entry>
-            </map>
-        </property>
-    </bean>
-
-    <bean id="roleActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="site.role"/>
     </bean>
 
 </beans>

@@ -50,7 +50,7 @@ import java.util.Map;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class AMEEResource extends BaseResource implements BeanFactoryAware {
+public abstract class AMEEResource extends AuthorizeResource implements BeanFactoryAware {
 
     // TTL for all representations is (Now - ONE_DAY)
     private static final long ONE_DAY = 1000L * 60L * 60L * 24L;

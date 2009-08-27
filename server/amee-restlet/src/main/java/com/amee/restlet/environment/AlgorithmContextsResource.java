@@ -1,7 +1,8 @@
 package com.amee.restlet.environment;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.algorithm.AlgorithmContext;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
@@ -22,11 +23,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class AlgorithmContextsResource extends BaseResource implements Serializable {
+public class AlgorithmContextsResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -46,8 +49,14 @@ public class AlgorithmContextsResource extends BaseResource implements Serializa
 
     @Override
     public boolean isValid() {
-        return super.isValid() &&
-                (definitionBrowser.getEnvironment() != null);
+        return super.isValid() && (definitionBrowser.getEnvironment() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(definitionBrowser.getEnvironment());
+        return entities;
     }
 
     @Override
@@ -97,43 +106,29 @@ public class AlgorithmContextsResource extends BaseResource implements Serializa
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (definitionBrowser.getAlgorithmActions().isAllowList()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPost() {
         return true;
     }
 
     @Override
-    public void acceptRepresentation(Representation entity) {
-        log.debug("post");
-        if (definitionBrowser.getAlgorithmActions().isAllowCreate()) {
-            Form form = getForm();
-            if (form.getFirstValue("name") != null) {
-                newAlgorithmContext = new AlgorithmContext(definitionBrowser.getEnvironment());
-                newAlgorithmContext.setName(form.getFirstValue("name"));
-                newAlgorithmContext.setContent(form.getFirstValue("content"));
-            }
-            if (newAlgorithmContext != null) {
-                if (isStandardWebBrowser()) {
-                    definitionService.save(newAlgorithmContext);
-                    success();
-                } else {
-                    // return a response for API calls
-                    super.handleGet();
-                }
+    public void doAccept(Representation entity) {
+        log.debug("doAccept");
+        Form form = getForm();
+        if (form.getFirstValue("name") != null) {
+            newAlgorithmContext = new AlgorithmContext(definitionBrowser.getEnvironment());
+            newAlgorithmContext.setName(form.getFirstValue("name"));
+            newAlgorithmContext.setContent(form.getFirstValue("content"));
+        }
+        if (newAlgorithmContext != null) {
+            if (isStandardWebBrowser()) {
+                definitionService.save(newAlgorithmContext);
+                success();
             } else {
-                badRequest();
+                // return a response for API calls
+                super.handleGet();
             }
         } else {
-            notAuthorized();
+            badRequest();
         }
     }
 }

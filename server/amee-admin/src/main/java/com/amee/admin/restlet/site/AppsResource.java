@@ -3,9 +3,10 @@ package com.amee.admin.restlet.site;
 import com.amee.admin.service.AppBrowser;
 import com.amee.admin.service.AppConstants;
 import com.amee.admin.service.app.AppService;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.Pager;
 import com.amee.domain.site.App;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentService;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,12 +23,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class AppsResource extends BaseResource implements Serializable {
+public class AppsResource extends AuthorizeResource implements Serializable {
 
     @Autowired
     private AppService appService;
@@ -41,6 +43,11 @@ public class AppsResource extends BaseResource implements Serializable {
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         setPage(request);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        return new ArrayList<AMEEEntity>();
     }
 
     @Override
@@ -99,45 +106,31 @@ public class AppsResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (appBrowser.getAppActions().isAllowList()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPost() {
         return true;
     }
 
     // TODO: prevent duplicate instances
     @Override
-    public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation");
-        if (appBrowser.getAppActions().isAllowCreate()) {
-            Form form = getForm();
-            // create new instance if submitted
-            if (form.getFirstValue("name") != null) {
-                // create new instance
-                newApp = new App();
-                newApp.setName(form.getFirstValue("name"));
-                appService.save(newApp);
-            }
-            if (newApp != null) {
-                if (isStandardWebBrowser()) {
-                    success();
-                } else {
-                    // return a response for API calls
-                    super.handleGet();
-                }
+    public void doAccept(Representation entity) {
+        log.debug("doAccept");
+        Form form = getForm();
+        // create new instance if submitted
+        if (form.getFirstValue("name") != null) {
+            // create new instance
+            newApp = new App();
+            newApp.setName(form.getFirstValue("name"));
+            appService.save(newApp);
+        }
+        if (newApp != null) {
+            if (isStandardWebBrowser()) {
+                success();
             } else {
-                badRequest();
+                // return a response for API calls
+                super.handleGet();
             }
         } else {
-            notAuthorized();
+            badRequest();
         }
     }
 }

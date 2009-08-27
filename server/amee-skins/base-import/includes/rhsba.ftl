@@ -7,11 +7,6 @@
       <td>User:</td><td>${activeUser.username}</td>
     </tr>
   </#if>
-  <#if activeGroup??>
-    <tr>
-      <td>Group:</td><td>${activeGroup.name}</td>
-    </tr>
-  </#if>
 </table>
 <#if node??>
   <h2>Details</h2>

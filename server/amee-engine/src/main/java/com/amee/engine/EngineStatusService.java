@@ -69,7 +69,6 @@ public class EngineStatusService extends StatusService {
             // values below are mirrored in BaseResource
             values.put("authService", authService);
             values.put("activeUser", AuthService.getUser());
-            values.put("activeGroup", ThreadBeanHolder.get("group"));
             values.put("activeSite", ThreadBeanHolder.get("site"));
             values.put("activeApp", ThreadBeanHolder.get("app"));
             values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));

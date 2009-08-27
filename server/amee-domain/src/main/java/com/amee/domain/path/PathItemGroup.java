@@ -42,7 +42,7 @@ public class PathItemGroup implements Serializable {
         pathItem.setPathItemGroup(this);
     }
 
-    // Used by DataFinder * ServiceResource.
+    // Used by DataFinder.
     public PathItem findByPath(String path, boolean forProfile) {
         return findBySegments(new ArrayList<String>(Arrays.asList(path.split("/"))), forProfile);
     }
@@ -77,7 +77,7 @@ public class PathItemGroup implements Serializable {
         return pathItems;
     }
 
-    // Used by ServiceResource.
+    // Used by DataFilter.
     public PathItem getRootPathItem() {
         return rootPathItem;
     }

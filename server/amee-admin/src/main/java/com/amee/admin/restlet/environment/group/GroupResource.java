@@ -1,10 +1,10 @@
 package com.amee.admin.restlet.environment.group;
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.auth.Group;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
-import com.amee.service.environment.SiteService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -18,14 +18,13 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class GroupResource extends BaseResource {
-
-    @Autowired
-    private SiteService siteService;
+public class GroupResource extends AuthorizeResource {
 
     @Autowired
     private EnvironmentBrowser environmentBrowser;
@@ -40,6 +39,14 @@ public class GroupResource extends BaseResource {
     @Override
     public boolean isValid() {
         return super.isValid() && (environmentBrowser.getGroup() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(environmentBrowser.getEnvironment());
+        entities.add(environmentBrowser.getGroup());
+        return entities;
     }
 
     @Override
@@ -65,16 +72,6 @@ public class GroupResource extends BaseResource {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (environmentBrowser.getGroupActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public Element getElement(Document document) {
         Element element = document.createElement("GroupResource");
         element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
@@ -89,40 +86,22 @@ public class GroupResource extends BaseResource {
 
     // TODO: prevent duplicates
     @Override
-    public void storeRepresentation(Representation entity) {
+    protected void doStore(Representation entity) {
         log.debug("put");
-        if (environmentBrowser.getGroupActions().isAllowModify()) {
-            Form form = getForm();
-            Group group = environmentBrowser.getGroup();
-            // update values
-            if (form.getNames().contains("name")) {
-                group.setName(form.getFirstValue("name"));
-            }
-            if (form.getNames().contains("description")) {
-                group.setDescription(form.getFirstValue("description"));
-            }
-            success();
-        } else {
-            notAuthorized();
+        Form form = getForm();
+        Group group = environmentBrowser.getGroup();
+        // update values
+        if (form.getNames().contains("name")) {
+            group.setName(form.getFirstValue("name"));
         }
+        if (form.getNames().contains("description")) {
+            group.setDescription(form.getFirstValue("description"));
+        }
+        success();
     }
 
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
     @Override
     public boolean allowDelete() {
         return false;
-    }
-
-    // TODO: See http://my.amee.com/developers/ticket/243 & http://my.amee.com/developers/ticket/242
-    // TODO: do not allow delete affecting logged-in auth...
-    @Override
-    public void removeRepresentations() {
-        throw new UnsupportedOperationException();
-//        if (environmentBrowser.getGroupActions().isAllowDelete()) {
-//            siteService.remove(environmentBrowser.getGroup());
-//            success();
-//        } else {
-//            notAuthorized();
-//        }
     }
 }

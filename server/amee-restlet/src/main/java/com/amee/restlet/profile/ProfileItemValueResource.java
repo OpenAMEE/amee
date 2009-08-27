@@ -21,6 +21,8 @@ package com.amee.restlet.profile;
 
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.AMEEEntity;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.IItemValueFormAcceptor;
 import com.amee.restlet.profile.acceptor.IItemValueRepresentationAcceptor;
@@ -46,17 +48,15 @@ import org.w3c.dom.Element;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 @Component
 @Scope("prototype")
 public class ProfileItemValueResource extends BaseProfileResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    private ProfileService profileService;
-
-    private ItemValue itemValue;
 
     @Autowired
     private IItemValueFormAcceptor formAcceptor;
@@ -67,6 +67,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     @Autowired
     private ProfileItemValueResourceBuilderFactory builderFactory;
 
+    private ItemValue itemValue;
     private IProfileItemValueResourceBuilder builder;
 
     @Override
@@ -92,6 +93,22 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
                 getProfileItem().getProfile().equals(getProfile()) &&
                 getProfileItemValue().getItem().equals(getProfileItem()) &&
                 getProfileItemValue().getEnvironment().equals(environment);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getProfileItemValue());
+        entities.add(getProfileItem());
+        DataCategory dc = getProfileItem().getDataCategory();
+        while (dc != null) {
+            entities.add(dc);
+            dc = dc.getDataCategory();
+        }
+        entities.add(getProfile());
+        entities.add(environment);
+        Collections.reverse(entities);
+        return entities;
     }
 
     @Override
@@ -122,28 +139,14 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
-        if (profileBrowser.getProfileItemValueActions().isAllowView()) {
-            super.handleGet();
+    protected void doStore(Representation entity) {
+        log.debug("doStore()");
+        if (MediaType.APPLICATION_ATOM_XML.includes(entity.getMediaType())) {
+            atomAcceptor.accept(this, entity);
         } else {
-            notAuthorized();
+            formAcceptor.accept(this, getForm());
         }
-    }
-
-    @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation()");
-        if (profileBrowser.getProfileItemValueActions().isAllowModify()) {
-            if (MediaType.APPLICATION_ATOM_XML.includes(entity.getMediaType())) {
-                atomAcceptor.accept(this, entity);
-            } else {
-                formAcceptor.accept(this, getForm());
-            }
-            successfulPut(getFullPath());
-        } else {
-            notAuthorized();
-        }
+        successfulPut(getFullPath());
     }
 
     public ProfileBrowser getProfileBrowser() {

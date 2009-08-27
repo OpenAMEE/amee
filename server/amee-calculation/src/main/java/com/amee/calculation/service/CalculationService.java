@@ -32,6 +32,7 @@ import com.amee.domain.profile.CO2CalculationService;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choices;
 import com.amee.service.transaction.TransactionController;
+import com.amee.service.auth.PermissionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -48,6 +49,9 @@ import java.util.Map;
 public class CalculationService implements CO2CalculationService, BeanFactoryAware, Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private PermissionService permissionService;
 
     @Autowired
     private AlgorithmService algorithmService;
@@ -146,7 +150,8 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
 
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
         // Add ItemDefinition defaults
-        profileItem.getItemDefinition().appendInternalValues(values, profileItem.getProfile().getAPIVersion());
+        APIVersion apiVersion = permissionService.getAPIVersion(profileItem.getProfile());
+        profileItem.getItemDefinition().appendInternalValues(values, apiVersion);
         // Add DataItem values, filtered by start and end dates of the ProfileItem
         DataItem dataItem = profileItem.getDataItem();
         dataItem.setEffectiveStartDate(profileItem.getStartDate());

@@ -24,8 +24,42 @@ package com.amee.domain.auth;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PermissionEntry implements Serializable {
+
+    /**
+     * Constants for the various permission entry values.
+     */
+    public final static PermissionEntry OWN = new PermissionEntry("own");
+    public final static PermissionEntry VIEW = new PermissionEntry("view");
+    public final static PermissionEntry VIEW_DEPRECATED = new PermissionEntry("view-deprecated");
+    public final static PermissionEntry CREATE = new PermissionEntry("create");
+    public final static PermissionEntry MODIFY = new PermissionEntry("modify");
+    public final static PermissionEntry DELETE = new PermissionEntry("delete");
+
+    /**
+     * Helpful PermissionEntry Sets.
+     */
+    public final static Set<PermissionEntry> OWN_VIEW = new HashSet<PermissionEntry>();
+    public final static Set<PermissionEntry> OWN_CREATE = new HashSet<PermissionEntry>();
+    public final static Set<PermissionEntry> OWN_MODIFY = new HashSet<PermissionEntry>();
+    public final static Set<PermissionEntry> OWN_DELETE = new HashSet<PermissionEntry>();
+
+    /**
+     * Populate PermissionEntry Sets.
+     */
+    {
+        OWN_VIEW.add(OWN);
+        OWN_VIEW.add(VIEW);
+        OWN_CREATE.add(OWN);
+        OWN_CREATE.add(CREATE);
+        OWN_MODIFY.add(OWN);
+        OWN_MODIFY.add(MODIFY);
+        OWN_DELETE.add(OWN);
+        OWN_DELETE.add(DELETE);
+    }
 
     private String value = "";
     private boolean allow = true;
@@ -69,7 +103,7 @@ public class PermissionEntry implements Serializable {
         return value;
     }
 
-    public void setValue(String value) {
+    private void setValue(String value) {
         if (StringUtils.isBlank(value)) throw new IllegalArgumentException();
         this.value = value.trim().toLowerCase();
     }
@@ -78,7 +112,7 @@ public class PermissionEntry implements Serializable {
         return allow;
     }
 
-    public void setAllow(boolean allow) {
+    private void setAllow(boolean allow) {
         this.allow = allow;
     }
 }

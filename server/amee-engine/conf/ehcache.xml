@@ -346,24 +346,6 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- Role -->
-    <cache name="com.amee.domain.auth.Role"
-           maxElementsInMemory="50"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-    </cache>
-    <cache name="com.amee.domain.auth.Role.actions"
-           maxElementsInMemory="50"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-    </cache>
-
     <!-- Group -->
     <cache name="com.amee.domain.auth.Group"
            maxElementsInMemory="50"
@@ -374,16 +356,8 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- GroupUser -->
-    <cache name="com.amee.domain.auth.GroupUser"
-           maxElementsInMemory="50"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-    </cache>
-    <cache name="com.amee.domain.auth.GroupUser.roles"
+    <!-- GroupPrinciple -->
+    <cache name="com.amee.domain.auth.GroupPrinciple"
            maxElementsInMemory="50"
            eternal="false"
            overflowToDisk="false"
@@ -405,24 +379,6 @@
     <!-- App -->
     <cache name="com.amee.domain.site.App"
            maxElementsInMemory="50"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-    </cache>
-    <cache name="com.amee.domain.site.App.actions"
-           maxElementsInMemory="50"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-    </cache>
-
-    <!-- Action -->
-    <cache name="com.amee.domain.auth.Action"
-           maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"

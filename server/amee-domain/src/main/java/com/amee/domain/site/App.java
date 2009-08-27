@@ -2,7 +2,6 @@ package com.amee.domain.site;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.auth.Action;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -10,19 +9,15 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * An App encapsulates a group of web resources into a logical group under a URI. Apps can be attached
  * to multiple Sites via SiteApps.
  * <p/>
- * Apps define a set of Actions which can be performed by Users within the App.
- * <p/>
- * When deleting an App we need to ensure all relevant SiteApps are also removed. Actions should
- * be automatically removed but we need to deal with dependancies of Actions.
+ * When deleting an App we need to ensure all relevant SiteApps are also removed.
  *
  * @author Diggory Briercliffe
  */
@@ -40,11 +35,6 @@ public class App extends AMEEEntity implements Comparable {
     @Column(name = "DESCRIPTION", length = DESCRIPTION_SIZE, nullable = false)
     private String description = "";
 
-    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("key")
-    private Set<Action> actions = new HashSet<Action>();
-
     @Column(name = "ALLOW_CLIENT_CACHE", nullable = false)
     private Boolean allowClientCache = true;
 
@@ -60,11 +50,6 @@ public class App extends AMEEEntity implements Comparable {
     public App(String name, String description) {
         this(name);
         setDescription(description);
-    }
-
-    public void add(Action action) {
-        action.setApp(this);
-        actions.add(action);
     }
 
     public String toString() {
@@ -163,19 +148,5 @@ public class App extends AMEEEntity implements Comparable {
         if (allowClientCache != null) {
             this.allowClientCache = allowClientCache;
         }
-    }
-
-    public Set<Action> getActions() {
-        return getActiveActions();
-    }
-
-    public Set<Action> getActiveActions() {
-        Set<Action> activeActions = new HashSet<Action>();
-        for (Action action : actions) {
-            if (!action.isTrash()) {
-                activeActions.add(action);
-            }
-        }
-        return Collections.unmodifiableSet(activeActions);
     }
 }

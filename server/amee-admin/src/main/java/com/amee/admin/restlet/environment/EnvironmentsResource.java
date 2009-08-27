@@ -1,8 +1,9 @@
 package com.amee.admin.restlet.environment;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.Pager;
 import com.amee.domain.environment.Environment;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.EnvironmentService;
 import org.json.JSONArray;
@@ -20,12 +21,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class EnvironmentsResource extends BaseResource implements Serializable {
+public class EnvironmentsResource extends AuthorizeResource implements Serializable {
 
     @Autowired
     private EnvironmentService environmentService;
@@ -39,6 +41,11 @@ public class EnvironmentsResource extends BaseResource implements Serializable {
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         setPage(request);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        return new ArrayList<AMEEEntity>();
     }
 
     @Override
@@ -98,51 +105,37 @@ public class EnvironmentsResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (environmentBrowser.getEnvironmentActions().isAllowList()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPost() {
         return true;
     }
 
     @Override
-    public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation");
-        if (environmentBrowser.getEnvironmentActions().isAllowCreate()) {
-            Form form = getForm();
-            // create new instance if submitted
-            if (form.getFirstValue("name") != null) {
-                // create new instance
-                newEnvironment = new Environment();
-                newEnvironment.setName(form.getFirstValue("name"));
-                newEnvironment.setPath(form.getFirstValue("path"));
-                newEnvironment.setDescription(form.getFirstValue("description"));
-                try {
-                    newEnvironment.setItemsPerPage(new Integer(form.getFirstValue("itemsPerPage")));
-                } catch (NumberFormatException e) {
-                    // swallow
-                }
-                environmentService.save(newEnvironment);
+    public void doAccept(Representation entity) {
+        log.debug("doAccept");
+        Form form = getForm();
+        // create new instance if submitted
+        if (form.getFirstValue("name") != null) {
+            // create new instance
+            newEnvironment = new Environment();
+            newEnvironment.setName(form.getFirstValue("name"));
+            newEnvironment.setPath(form.getFirstValue("path"));
+            newEnvironment.setDescription(form.getFirstValue("description"));
+            try {
+                newEnvironment.setItemsPerPage(new Integer(form.getFirstValue("itemsPerPage")));
+            } catch (NumberFormatException e) {
+                // swallow
             }
-            if (newEnvironment != null) {
-                if (isStandardWebBrowser()) {
-                    success();
-                } else {
-                    // return a response for API calls
-                    super.handleGet();
-                }
+            environmentService.save(newEnvironment);
+        }
+        if (newEnvironment != null) {
+            if (isStandardWebBrowser()) {
+                success();
             } else {
-                badRequest();
+                // return a response for API calls
+                super.handleGet();
             }
         } else {
-            notAuthorized();
+            badRequest();
         }
     }
 }

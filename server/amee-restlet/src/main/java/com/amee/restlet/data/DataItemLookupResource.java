@@ -21,12 +21,12 @@
  */
 package com.amee.restlet.data;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
-import com.amee.restlet.BaseResource;
-import com.amee.service.auth.ResourceActions;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.path.PathItemService;
@@ -36,16 +36,17 @@ import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class DataItemLookupResource extends BaseResource implements Serializable {
+public class DataItemLookupResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -55,10 +56,7 @@ public class DataItemLookupResource extends BaseResource implements Serializable
     @Autowired
     private PathItemService pathItemService;
 
-    @Autowired
-    @Qualifier("dataItemActions")
-    private ResourceActions dataItemActions;
-
+    private Environment environment;
     private String dataItemUid = "";
     private DataItem dataItem = null;
     private PathItem pathItem = null;
@@ -66,7 +64,7 @@ public class DataItemLookupResource extends BaseResource implements Serializable
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        Environment environment = (Environment) request.getAttributes().get("environment");
+        environment = (Environment) request.getAttributes().get("environment");
         dataItemUid = request.getResourceRef().getQueryAsForm().getFirstValue("dataItemUid", "");
         dataItem = dataService.getDataItem(environment, dataItemUid);
         if (dataItem != null) {
@@ -77,8 +75,13 @@ public class DataItemLookupResource extends BaseResource implements Serializable
     }
 
     @Override
-    public boolean isValid() {
-        return super.isValid();
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(environment);
+        if (dataItem != null) {
+            entities.add(dataItem);
+        }
+        return entities;
     }
 
     @Override
@@ -97,15 +100,5 @@ public class DataItemLookupResource extends BaseResource implements Serializable
             values.put("itemValuesMap", dataItem.getItemValuesMap());
         }
         return values;
-    }
-
-    @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (dataItemActions.isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
     }
 }

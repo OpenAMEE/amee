@@ -21,9 +21,6 @@ package com.amee.service.data;
 
 import com.amee.domain.data.DataCategory;
 import com.amee.service.BaseBrowser;
-import com.amee.service.auth.ResourceActions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -31,28 +28,11 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class DataBrowser extends BaseBrowser {
 
-    @Autowired
-    @Qualifier("dataCategoryActions")
-    private ResourceActions dataCategoryActions;
-
-    @Autowired
-    @Qualifier("dataItemActions")
-    private ResourceActions dataItemActions;
-
     // DataCategories
     private DataCategory dataCategory = null;
 
     public DataBrowser() {
         super();
-    }
-
-    // Actions
-    public ResourceActions getDataCategoryActions() {
-        return dataCategoryActions;
-    }
-
-    public ResourceActions getDataItemActions() {
-        return dataItemActions;
     }
 
     public DataCategory getDataCategory() {

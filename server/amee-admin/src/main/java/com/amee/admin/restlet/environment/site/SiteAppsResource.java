@@ -2,11 +2,12 @@ package com.amee.admin.restlet.environment.site;
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
 import com.amee.admin.service.app.AppService;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.Pager;
 import com.amee.domain.site.App;
 import com.amee.domain.site.Site;
 import com.amee.domain.site.SiteApp;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.environment.SiteService;
@@ -24,12 +25,13 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class SiteAppsResource extends BaseResource {
+public class SiteAppsResource extends AuthorizeResource {
 
     @Autowired
     private SiteService siteService;
@@ -53,6 +55,14 @@ public class SiteAppsResource extends BaseResource {
     @Override
     public boolean isValid() {
         return super.isValid() && (environmentBrowser.getSite() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(environmentBrowser.getEnvironment());
+        entities.add(environmentBrowser.getSite());
+        return entities;
     }
 
     @Override
@@ -118,49 +128,35 @@ public class SiteAppsResource extends BaseResource {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (environmentBrowser.getSiteAppActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPost() {
         return true;
     }
 
     // TODO: prevent duplicate instances
     @Override
-    public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation");
-        if (environmentBrowser.getSiteAppActions().isAllowModify()) {
-            Form form = getForm();
-            // create new instance if submitted
-            String appUid = form.getFirstValue("appUid");
-            if (appUid != null) {
-                App app = appService.getAppByUid(appUid);
-                if (app != null) {
-                    Site site = environmentBrowser.getSite();
-                    newSiteApp = new SiteApp(app, site);
-                    newSiteApp.setSkinPath(form.getFirstValue("skinPath"));
-                    site.add(newSiteApp);
-                }
+    protected void doAccept(Representation entity) {
+        log.debug("doAccept");
+        Form form = getForm();
+        // create new instance if submitted
+        String appUid = form.getFirstValue("appUid");
+        if (appUid != null) {
+            App app = appService.getAppByUid(appUid);
+            if (app != null) {
+                Site site = environmentBrowser.getSite();
+                newSiteApp = new SiteApp(app, site);
+                newSiteApp.setSkinPath(form.getFirstValue("skinPath"));
+                site.add(newSiteApp);
             }
-            if (newSiteApp != null) {
-                if (isStandardWebBrowser()) {
-                    success();
-                } else {
-                    // return a response for API calls
-                    super.handleGet();
-                }
+        }
+        if (newSiteApp != null) {
+            if (isStandardWebBrowser()) {
+                success();
             } else {
-                badRequest();
+                // return a response for API calls
+                super.handleGet();
             }
         } else {
-            notAuthorized();
+            badRequest();
         }
     }
 }

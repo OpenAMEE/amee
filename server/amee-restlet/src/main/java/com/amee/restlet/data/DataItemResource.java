@@ -21,18 +21,17 @@ package com.amee.restlet.data;
 
 import com.amee.calculation.service.CalculationService;
 import com.amee.core.*;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.StartEndDate;
-import com.amee.domain.auth.Permission;
+import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
-import com.amee.service.auth.AuthService;
-import com.amee.service.auth.PermissionService;
+import com.amee.restlet.RequestContext;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
-import com.amee.restlet.RequestContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,10 +51,7 @@ import org.w3c.dom.Element;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 //TODO - move to builder model
 @Component
@@ -69,9 +65,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
     @Autowired
     private CalculationService calculationService;
-
-    @Autowired
-    private PermissionService permissionService;
 
     private Form query;
     private List<Choice> parameters = new ArrayList<Choice>();
@@ -107,6 +100,20 @@ public class DataItemResource extends BaseDataResource implements Serializable {
                 getDataCategory() != null &&
                 getDataItem().getDataCategory().equals(getDataCategory()) &&
                 getDataItem().getEnvironment().equals(environment);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getDataItem());
+        DataCategory dc = getDataItem().getDataCategory();
+        while (dc != null) {
+            entities.add(dc);
+            dc = dc.getDataCategory();
+        }
+        entities.add(environment);
+        Collections.reverse(entities);
+        return entities;
     }
 
     @Override
@@ -179,24 +186,9 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (dataBrowser.getDataItemActions().isAllowView() &&
-                permissionService.hasPermissions(AuthService.getUser(), getDataItem(), Permission.ENTRY_VIEW)) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
+    protected void doAccept(Representation entity) {
 
-    @Override
-    public void acceptRepresentation(Representation entity) {
-        log.debug("acceptRepresentation()");
-
-        if (!dataBrowser.getDataItemActions().isAllowCreate()) {
-            notAuthorized();
-            return;
-        }
+        log.debug("doAccept()");
 
         // Pull out request parameters.
         String value = getForm().getFirstValue("value");
@@ -263,14 +255,9 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     }
 
     @Override
-    public void storeRepresentation(Representation entity) {
+    protected void doStore(Representation entity) {
 
-        log.debug("storeRepresentation()");
-
-        if (!dataBrowser.getDataItemActions().isAllowModify()) {
-            notAuthorized();
-            return;
-        }
+        log.debug("doStore()");
 
         Form form = getForm();
         DataItem dataItem = getDataItem();
@@ -334,15 +321,11 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     }
 
     @Override
-    public void removeRepresentations() {
-        log.debug("removeRepresentations()");
-        if (dataBrowser.getDataItemActions().isAllowDelete()) {
-            DataItem dataItem = getDataItem();
-            dataService.clearCaches(dataItem.getDataCategory());
-            dataService.remove(dataItem);
-            successfulDelete(pathItem.getParent().getFullPath());
-        } else {
-            notAuthorized();
-        }
+    protected void doRemove() {
+        log.debug("doRemove()");
+        DataItem dataItem = getDataItem();
+        dataService.clearCaches(dataItem.getDataCategory());
+        dataService.remove(dataItem);
+        successfulDelete(pathItem.getParent().getFullPath());
     }
 }

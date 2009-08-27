@@ -19,11 +19,12 @@
  */
 package com.amee.restlet.environment;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemDefinitionLocaleName;
 import com.amee.domain.data.LocaleName;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
@@ -43,13 +44,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @Component
 @Scope("prototype")
-public class ItemDefinitionResource extends BaseResource implements Serializable {
+public class ItemDefinitionResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -69,6 +71,14 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
     @Override
     public boolean isValid() {
         return super.isValid() && (definitionBrowser.getItemDefinitionUid() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(definitionBrowser.getEnvironment());
+        entities.add(definitionBrowser.getItemDefinition());
+        return entities;
     }
 
     @Override
@@ -102,64 +112,48 @@ public class ItemDefinitionResource extends BaseResource implements Serializable
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
-        if (definitionBrowser.getItemDefinitionActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
+    protected void doStore(Representation entity) {
 
-    @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation()");
-        if (definitionBrowser.getItemDefinitionActions().isAllowModify()) {
-            ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
-            Form form = getForm();
+        log.debug("doStore()");
 
-            // Parse any submitted locale names
-            for (String name : form.getNames()) {
-                if (name.startsWith("name_")) {
-                    String localeNameStr = form.getFirstValue(name);
-                    String locale = name.substring(name.indexOf("_") + 1);
-                    if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
-                        LocaleName localeName =
-                                new ItemDefinitionLocaleName(itemDefinition, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
-                        itemDefinition.putLocaleName(localeName);
-                        form.removeFirst(name);
-                    } else {
-                        badRequest(APIFault.INVALID_PARAMETERS);
-                        return;
-                    }
+        ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
+        Form form = getForm();
+
+        // Parse any submitted locale names
+        for (String name : form.getNames()) {
+            if (name.startsWith("name_")) {
+                String localeNameStr = form.getFirstValue(name);
+                String locale = name.substring(name.indexOf("_") + 1);
+                if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                    LocaleName localeName =
+                            new ItemDefinitionLocaleName(itemDefinition, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
+                    itemDefinition.putLocaleName(localeName);
+                    form.removeFirst(name);
+                } else {
+                    badRequest(APIFault.INVALID_PARAMETERS);
+                    return;
                 }
             }
-
-            Set<String> names = form.getNames();
-            if (names.contains("name")) {
-                itemDefinition.setName(form.getFirstValue("name"));
-            }
-            if (form.getNames().contains("skipRecalculation")) {
-                itemDefinition.setSkipRecalculation(Boolean.valueOf(form.getFirstValue("skipRecalculation")));
-            }
-            if (names.contains("drillDown")) {
-                itemDefinition.setDrillDown(form.getFirstValue("drillDown"));
-            }
-            success();
-        } else {
-            notAuthorized();
         }
+
+        Set<String> names = form.getNames();
+        if (names.contains("name")) {
+            itemDefinition.setName(form.getFirstValue("name"));
+        }
+        if (form.getNames().contains("skipRecalculation")) {
+            itemDefinition.setSkipRecalculation(Boolean.valueOf(form.getFirstValue("skipRecalculation")));
+        }
+        if (names.contains("drillDown")) {
+            itemDefinition.setDrillDown(form.getFirstValue("drillDown"));
+        }
+
+        success();
     }
 
     @Override
-    public void removeRepresentations() {
-        log.debug("removeRepresentations()");
-        if (definitionBrowser.getItemDefinitionActions().isAllowDelete()) {
-            ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
-            definitionService.remove(itemDefinition);
-            success();
-        } else {
-            notAuthorized();
-        }
+    protected void doRemove() {
+        log.debug("doRemove");
+        definitionService.remove(definitionBrowser.getItemDefinition());
+        success();
     }
 }

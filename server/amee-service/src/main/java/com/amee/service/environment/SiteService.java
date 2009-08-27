@@ -4,8 +4,7 @@ import com.amee.domain.AMEEStatus;
 import com.amee.domain.Pager;
 import com.amee.domain.PagerSetType;
 import com.amee.domain.auth.Group;
-import com.amee.domain.auth.GroupUser;
-import com.amee.domain.auth.Role;
+import com.amee.domain.auth.GroupPrinciple;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
@@ -92,12 +91,7 @@ public class SiteService implements Serializable {
         // TODO: More cascade dependencies?
     }
 
-    public void beforeRoleDelete(Role role) {
-        log.debug("beforeRoleDelete");
-        // TODO: More cascade dependencies?
-    }
-
-    public void beforeGroupUserDelete(GroupUser groupUser) {
+    public void beforeGroupUserDelete(GroupPrinciple groupUser) {
         log.debug("beforeGroupUserDelete");
         // TODO: More cascade dependencies?
     }
@@ -424,11 +418,11 @@ public class SiteService implements Serializable {
 
     // GroupUsers
 
-    public GroupUser getGroupUserByUid(Environment environment, String uid) {
-        GroupUser groupUser = null;
+    public GroupPrinciple getGroupUserByUid(Environment environment, String uid) {
+        GroupPrinciple groupUser = null;
         if ((environment != null) && (uid != null)) {
-            List<GroupUser> groupUsers = entityManager.createQuery(
-                    "SELECT gu FROM GroupUser gu " +
+            List<GroupPrinciple> groupUsers = entityManager.createQuery(
+                    "SELECT gu FROM GroupPrinciple gu " +
                             "WHERE gu.environment.id = :environmentId " +
                             "AND gu.uid = :uid " +
                             "AND gu.status != :trash")
@@ -445,11 +439,11 @@ public class SiteService implements Serializable {
         return groupUser;
     }
 
-    public GroupUser getGroupUser(Group group, User user) {
-        GroupUser groupUser = null;
+    public GroupPrinciple getGroupUser(Group group, User user) {
+        GroupPrinciple groupUser = null;
         if ((group != null) && (user != null)) {
-            List<GroupUser> groupUsers = entityManager.createQuery(
-                    "SELECT gu FROM GroupUser gu " +
+            List<GroupPrinciple> groupUsers = entityManager.createQuery(
+                    "SELECT gu FROM GroupPrinciple gu " +
                             "WHERE gu.environment.id = :environmentId " +
                             "AND gu.group.id = :groupId " +
                             "AND gu.user.id = :userId " +
@@ -468,11 +462,11 @@ public class SiteService implements Serializable {
         return groupUser;
     }
 
-    public List<GroupUser> getGroupUsers(Group group, Pager pager) {
+    public List<GroupPrinciple> getGroupUsers(Group group, Pager pager) {
         // first count all objects
         long count = (Long) entityManager.createQuery(
                 "SELECT count(gu) " +
-                        "FROM GroupUser gu " +
+                        "FROM GroupPrinciple gu " +
                         "WHERE gu.group.id = :groupId " +
                         "AND gu.status != :trash")
                 .setParameter("groupId", group.getId())
@@ -484,9 +478,9 @@ public class SiteService implements Serializable {
         pager.setItems(count);
         pager.goRequestedPage();
         // now get the objects for the current page
-        List<GroupUser> groupUsers = entityManager.createQuery(
+        List<GroupPrinciple> groupUsers = entityManager.createQuery(
                 "SELECT gu " +
-                        "FROM GroupUser gu " +
+                        "FROM GroupPrinciple gu " +
                         "LEFT JOIN FETCH gu.user u " +
                         "WHERE gu.group.id = :groupId " +
                         "AND gu.status != :trash " +
@@ -504,11 +498,11 @@ public class SiteService implements Serializable {
         return groupUsers;
     }
 
-    public List<GroupUser> getGroupUsers(User user, Pager pager) {
+    public List<GroupPrinciple> getGroupUsers(User user, Pager pager) {
         // first count all objects
         long count = (Long) entityManager.createQuery(
                 "SELECT count(gu) " +
-                        "FROM GroupUser gu " +
+                        "FROM GroupPrinciple gu " +
                         "WHERE gu.user.id = :userId " +
                         "AND gu.status != :trash")
                 .setParameter("userId", user.getId())
@@ -520,9 +514,9 @@ public class SiteService implements Serializable {
         pager.setItems(count);
         pager.goRequestedPage();
         // now get the objects for the current page
-        List<GroupUser> groupUsers = entityManager.createQuery(
+        List<GroupPrinciple> groupUsers = entityManager.createQuery(
                 "SELECT gu " +
-                        "FROM GroupUser gu " +
+                        "FROM GroupPrinciple gu " +
                         "LEFT JOIN FETCH gu.group g " +
                         "WHERE gu.user.id = :userId " +
                         "AND gu.status != :trash " +
@@ -540,10 +534,10 @@ public class SiteService implements Serializable {
         return groupUsers;
     }
 
-    public List<GroupUser> getGroupUsers(User user) {
-        List<GroupUser> groupUsers = entityManager.createQuery(
+    public List<GroupPrinciple> getGroupUsers(User user) {
+        List<GroupPrinciple> groupUsers = entityManager.createQuery(
                 "SELECT gu " +
-                        "FROM GroupUser gu " +
+                        "FROM GroupPrinciple gu " +
                         "LEFT JOIN FETCH gu.group g " +
                         "WHERE gu.user.id = :userId " +
                         "AND gu.status != :trash " +
@@ -557,10 +551,10 @@ public class SiteService implements Serializable {
         return groupUsers;
     }
 
-    public List<GroupUser> getGroupUsers(Environment environment) {
-        List<GroupUser> groupUsers = entityManager.createQuery(
+    public List<GroupPrinciple> getGroupUsers(Environment environment) {
+        List<GroupPrinciple> groupUsers = entityManager.createQuery(
                 "SELECT gu " +
-                        "FROM GroupUser gu " +
+                        "FROM GroupPrinciple gu " +
                         "WHERE gu.environment.id = :environmentId " +
                         "AND gu.status != :trash")
                 .setParameter("environmentId", environment.getId())
@@ -571,126 +565,13 @@ public class SiteService implements Serializable {
         return groupUsers;
     }
 
-    public void save(GroupUser groupUser) {
+    public void save(GroupPrinciple groupUser) {
         entityManager.persist(groupUser);
     }
 
-    public void remove(GroupUser groupUser) {
+    public void remove(GroupPrinciple groupUser) {
         beforeGroupUserDelete(groupUser);
         groupUser.setStatus(AMEEStatus.TRASH);
-    }
-
-    // Roles
-
-    public Role getRoleByUid(Environment environment, String uid) {
-        Role role = null;
-        List<Role> roles = entityManager.createQuery(
-                "SELECT r FROM Role r " +
-                        "WHERE r.environment.id = :environmentId " +
-                        "AND r.uid = :uid " +
-                        "AND r.status != :trash")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("uid", uid)
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getResultList();
-        if (roles.size() > 0) {
-            role = roles.get(0);
-        }
-        return role;
-    }
-
-    public Role getRoleByName(Environment environment, String name) {
-        Role role = null;
-        List<Role> roles = entityManager.createQuery(
-                "SELECT r FROM Role r " +
-                        "WHERE r.environment.id = :environmentId " +
-                        "AND r.name = :name " +
-                        "AND r.status != :trash")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("name", name.trim())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getResultList();
-        if (roles.size() > 0) {
-            role = roles.get(0);
-        }
-        return role;
-    }
-
-    public List<Role> getRoles(Environment environment, Pager pager) {
-
-        Query query;
-        String pagerSetClause = getPagerSetClause("r", pager);
-
-        // first count all objects
-        query = entityManager.createQuery(
-                "SELECT count(r) " +
-                        "FROM Role r " +
-                        "WHERE r.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND r.status != :trash")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION);
-        if (!"".equals(pagerSetClause)) {
-            query.setParameter("pagerSet", pager.getPagerSet());
-        }
-        // tell pager how many objects there are and give it a chance to select the requested page again
-        long count = (Long) query.getSingleResult();
-        pager.setItems(count);
-        pager.goRequestedPage();
-
-        query = entityManager.createQuery(
-                "SELECT r " +
-                        "FROM Role r " +
-                        "WHERE r.environment.id = :environmentId " + pagerSetClause + " " +
-                        "AND r.status != :trash " +
-                        "ORDER BY r.name")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .setMaxResults(pager.getItemsPerPage())
-                .setFirstResult((int) pager.getStart());
-        if (!"".equals(pagerSetClause)) {
-            query.setParameter("pagerSet", pager.getPagerSet());
-        }
-        List<Role> roles = query.getResultList();
-        // update the pager
-        pager.setItemsFound(roles.size());
-        // all done, return results
-        return roles;
-    }
-
-    public List<Role> getRoles(Environment environment) {
-        if (environment != null) {
-            List<Role> roles = entityManager.createQuery(
-                    "SELECT r " +
-                            "FROM Role r " +
-                            "WHERE r.environment.id = :environmentId " +
-                            "AND r.status != :trash " +
-                            "ORDER BY r.name")
-                    .setParameter("environmentId", environment.getId())
-                    .setParameter("trash", AMEEStatus.TRASH)
-                    .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                    .getResultList();
-            return roles;
-        } else {
-            return null;
-        }
-    }
-
-    public void save(Role role) {
-        entityManager.persist(role);
-    }
-
-    public void remove(Role role) {
-        beforeRoleDelete(role);
-        role.setStatus(AMEEStatus.TRASH);
     }
 
     // Users
@@ -811,5 +692,4 @@ public class SiteService implements Serializable {
                 .getResultList();
         return apps;
     }
-
 }

@@ -29,12 +29,14 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.service.auth.AuthService;
+import com.amee.service.auth.PermissionService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -103,23 +105,14 @@ public class ProfileServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    protected List<Profile> getProfiles(Environment environment, Pager pager) {
-        User user = AuthService.getUser();
-        Group group = AuthService.getGroup();
+    protected List<Profile> getProfiles(User user, Pager pager) {
         // first count all profiles
         long count = (Long) entityManager.createQuery(
                 "SELECT count(p) " +
                         "FROM Profile p " +
-                        "WHERE p.environment.id = :environmentId " +
-                        "AND ((p.permission.otherAllowView = :otherAllowView) " +
-                        "     OR (p.permission.group.id = :groupId AND p.permission.groupAllowView = :groupAllowView) " +
-                        "     OR (p.permission.user.id = :userId)) " +
+                        "WHERE p.user.id = :userId " +
                         "AND p.status != :trash")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("groupId", group.getId())
                 .setParameter("userId", user.getId())
-                .setParameter("otherAllowView", true)
-                .setParameter("groupAllowView", true)
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
@@ -131,17 +124,10 @@ public class ProfileServiceDAO implements Serializable {
         List<Profile> profiles = entityManager.createQuery(
                 "SELECT p " +
                         "FROM Profile p " +
-                        "WHERE p.environment.id = :environmentId " +
-                        "AND ((p.permission.otherAllowView = :otherAllowView) " +
-                        "     OR (p.permission.group.id = :groupId AND p.permission.groupAllowView = :groupAllowView) " +
-                        "     OR (p.permission.user.id = :userId)) " +
+                        "WHERE p.user.id = :userId " +
                         "AND p.status != :trash " +
                         "ORDER BY p.created DESC")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("groupId", group.getId())
                 .setParameter("userId", user.getId())
-                .setParameter("otherAllowView", true)
-                .setParameter("groupAllowView", true)
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
@@ -165,7 +151,6 @@ public class ProfileServiceDAO implements Serializable {
      */
     protected void remove(Profile profile) {
         profile.setStatus(AMEEStatus.TRASH);
-        profile.getPermission().setStatus(AMEEStatus.TRASH);
     }
 
     // ProfileItems

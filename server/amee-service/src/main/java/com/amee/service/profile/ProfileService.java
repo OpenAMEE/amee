@@ -1,6 +1,7 @@
 package com.amee.service.profile;
 
 import com.amee.domain.*;
+import com.amee.domain.auth.User;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
@@ -10,6 +11,7 @@ import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Sheet;
 import com.amee.service.BaseService;
+import com.amee.service.auth.PermissionService;
 import com.amee.service.transaction.TransactionController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -47,6 +49,9 @@ public class ProfileService extends BaseService {
 
     @Autowired
     private TransactionController transactionController;
+
+    @Autowired
+    private PermissionService permissionService;
 
     @Autowired
     private ProfileServiceDAO dao;
@@ -94,16 +99,17 @@ public class ProfileService extends BaseService {
         return dao.getProfileByPath(environment, path);
     }
 
-    public List<Profile> getProfiles(Environment environment, Pager pager) {
-        return dao.getProfiles(environment, pager);
+    public List<Profile> getProfiles(User user, Pager pager) {
+        return dao.getProfiles(user, pager);
     }
 
     public void persist(Profile p) {
         dao.persist(p);
     }
 
-    public void remove(Profile p) {
-        dao.remove(p);
+    public void remove(Profile profile) {
+        dao.remove(profile);
+        permissionService.trashPermissionsForEntity(profile);
     }
 
     public void clearCaches(Profile profile) {
@@ -126,11 +132,11 @@ public class ProfileService extends BaseService {
 
     /**
      * Retrieve a list of {@link ProfileItem}s belonging to a {@link Profile} and {@link DataCategory}
-     * occuring on or immediately proceeding the given date context. 
+     * occuring on or immediately proceeding the given date context.
      *
-     * @param profile - the {@link Profile} to which the {@link ProfileItem}s belong
+     * @param profile      - the {@link Profile} to which the {@link ProfileItem}s belong
      * @param dataCategory - the DataCategory containing the ProfileItems
-     * @param date - the date context
+     * @param date         - the date context
      * @return the active {@link ProfileItem} collection
      */
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, Date date) {
@@ -141,10 +147,10 @@ public class ProfileService extends BaseService {
      * Retrieve a list of {@link ProfileItem}s belonging to a {@link Profile} and {@link DataCategory}
      * occuring between a given date context.
      *
-     * @param profile - the {@link Profile} to which the {@link ProfileItem}s belong
+     * @param profile      - the {@link Profile} to which the {@link ProfileItem}s belong
      * @param dataCategory - the DataCategory containing the ProfileItems
-     * @param startDate - the start of the date context
-     * @param endDate - the end of the date context
+     * @param startDate    - the start of the date context
+     * @param endDate      - the end of the date context
      * @return the active {@link ProfileItem} collection
      */
     public List<ProfileItem> getProfileItems(
@@ -158,7 +164,7 @@ public class ProfileService extends BaseService {
     /**
      * Get a count of all {@link ProfileItem}s belonging to a {@link Profile} with a particular {@link DataCategory}.
      *
-     * @param profile - the {@link Profile} to which the {@link ProfileItem}s belong
+     * @param profile      - the {@link Profile} to which the {@link ProfileItem}s belong
      * @param dataCategory - the DataCategory containing the ProfileItems
      * @return the number of {@link ProfileItem}s
      */
@@ -205,7 +211,10 @@ public class ProfileService extends BaseService {
             return null;
         }
 
-        APIVersion apiVersion = profileItem.getProfile().getAPIVersion();
+        // Get APIVersion via Profile, Permissions & Users.
+        APIVersion apiVersion = permissionService.getAPIVersion(profileItem.getProfile());
+
+        // APIVersion apiVersion = profileItem.getProfile().getAPIVersion();
         Set<ItemValueDefinition> existingItemValueDefinitions = profileItem.getItemValueDefinitions();
         Set<ItemValueDefinition> missingItemValueDefinitions = new HashSet<ItemValueDefinition>();
 

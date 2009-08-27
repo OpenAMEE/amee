@@ -68,11 +68,6 @@
                         <lookup-method name="createResource" bean="profileCategoryResource"/>
                     </bean>
                 </entry>
-                <entry key="/categories/{categoryUid}/service">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="serviceResource"/>
-                    </bean>
-                </entry>
                 <entry key="/categories/{categoryUid}/items/{itemUid}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="profileItemResource"/>
@@ -83,29 +78,8 @@
                         <lookup-method name="createResource" bean="profileItemValueResource"/>
                     </bean>
                 </entry>
-                <entry key="/actions">
-                    <bean class="org.restlet.ext.spring.SpringFinder">
-                        <lookup-method name="createResource" bean="profileActionsResource"/>
-                    </bean>
-                </entry>
             </map>
         </property>
-    </bean>
-
-    <bean id="profileActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="profile"/>
-    </bean>
-
-    <bean id="profileCategoryActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="profileCategory"/>
-    </bean>
-
-    <bean id="profileItemActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="profileItem"/>
-    </bean>
-
-    <bean id="profileItemValueActions" class="com.amee.service.auth.ResourceActions" scope="prototype">
-        <constructor-arg index="0" value="profileItemValue"/>
     </bean>
 
 </beans>

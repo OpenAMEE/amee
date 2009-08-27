@@ -1,13 +1,13 @@
 package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.Pager;
-import com.amee.domain.data.LocaleName;
-import com.amee.domain.auth.GroupUser;
-import com.amee.domain.auth.Role;
+import com.amee.domain.auth.GroupPrinciple;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.UserType;
-import com.amee.restlet.BaseResource;
+import com.amee.domain.data.LocaleName;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.EnvironmentService;
@@ -27,12 +27,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class UsersResource extends BaseResource implements Serializable {
+public class UsersResource extends AuthorizeResource implements Serializable {
 
     @Autowired
     private SiteService siteService;
@@ -52,6 +53,13 @@ public class UsersResource extends BaseResource implements Serializable {
     @Override
     public boolean isValid() {
         return super.isValid() && (environmentBrowser.getEnvironment() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(environmentBrowser.getEnvironment());
+        return entities;
     }
 
     @Override
@@ -115,83 +123,65 @@ public class UsersResource extends BaseResource implements Serializable {
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet");
-        if (environmentBrowser.getUserActions().isAllowList()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
-        }
-    }
-
-    @Override
     public boolean allowPost() {
         return true;
     }
 
     // TODO: prevent duplicate instances
     @Override
-    public void acceptRepresentation(Representation entity) {
+    public void doAccept(Representation entity) {
         User cloneUser;
-        GroupUser newGroupUser;
-        log.debug("post");
-        if (environmentBrowser.getUserActions().isAllowCreate()) {
-            Form form = getForm();
-            // create new instance if submitted
-            if (form.getFirstValue("name") != null) {
-                if (siteService.getUserByUsername(environmentBrowser.getEnvironment(), form.getFirstValue("username")) == null) {
-                    // create new instance
-                    newUser = new User(environmentBrowser.getEnvironment());
-                    newUser.setName(form.getFirstValue("name"));
-                    newUser.setUsername(form.getFirstValue("username"));
-                    newUser.setPasswordInClear(form.getFirstValue("password"));
-                    newUser.setEmail(form.getFirstValue("email"));
-                    if (form.getFirstValue("superUser") != null) {
-                        newUser.setType(UserType.SUPER);
-                    } else {
-                        newUser.setType(UserType.STANDARD);
+        GroupPrinciple newGroupPrinciple;
+        Form form = getForm();
+        // create new instance if submitted
+        if (form.getFirstValue("name") != null) {
+            if (siteService.getUserByUsername(environmentBrowser.getEnvironment(), form.getFirstValue("username")) == null) {
+                // create new instance
+                newUser = new User(environmentBrowser.getEnvironment());
+                newUser.setName(form.getFirstValue("name"));
+                newUser.setUsername(form.getFirstValue("username"));
+                newUser.setPasswordInClear(form.getFirstValue("password"));
+                newUser.setEmail(form.getFirstValue("email"));
+                if (form.getFirstValue("superUser") != null) {
+                    newUser.setType(UserType.SUPER);
+                } else {
+                    newUser.setType(UserType.STANDARD);
+                }
+                if (form.getNames().contains("locale")) {
+                    String locale = form.getFirstValue("locale");
+                    if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                        newUser.setLocale(locale);
                     }
-                    if (form.getNames().contains("locale")) {
-                        String locale = form.getFirstValue("locale");
-                        if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
-                            newUser.setLocale(locale);
+                }
+                newUser.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
+                if (newUser.getAPIVersion() != null) {
+                    siteService.save(newUser);
+                    // now clone auth -> group memberships
+                    cloneUser = siteService.getUserByUid(
+                            environmentBrowser.getEnvironment(), form.getFirstValue("cloneUserUid"));
+                    if (cloneUser != null) {
+                        for (GroupPrinciple groupUser : siteService.getGroupUsers(cloneUser)) {
+                            newGroupPrinciple = new GroupPrinciple(groupUser.getGroup(), newUser);
+                            siteService.save(newGroupPrinciple);
                         }
-                    }
-                    newUser.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
-                    if (newUser.getAPIVersion() != null) {
-                        siteService.save(newUser);
-                        // now clone auth -> group memberships
-                        cloneUser = siteService.getUserByUid(
-                                environmentBrowser.getEnvironment(), form.getFirstValue("cloneUserUid"));
-                        if (cloneUser != null) {
-                            for (GroupUser groupUser : siteService.getGroupUsers(cloneUser)) {
-                                newGroupUser = new GroupUser(groupUser.getGroup(), newUser);
-                                for (Role role : groupUser.getRoles()) {
-                                    newGroupUser.add(role);
-                                }
-                                siteService.save(newGroupUser);
-                            }
-                        }
-                    } else {
-                        log.error("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
-                        badRequest(APIFault.INVALID_PARAMETERS);
-                        newUser = null;
                     }
                 } else {
-                    badRequest(APIFault.DUPLICATE_ITEM);
+                    log.error("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
+                    badRequest(APIFault.INVALID_PARAMETERS);
                     newUser = null;
                 }
+            } else {
+                badRequest(APIFault.DUPLICATE_ITEM);
+                newUser = null;
             }
-            if (newUser != null) {
-                if (isStandardWebBrowser()) {
-                    success();
-                } else {
-                    // return a response for API calls
-                    super.handleGet();
-                }
+        }
+        if (newUser != null) {
+            if (isStandardWebBrowser()) {
+                success();
+            } else {
+                // return a response for API calls
+                super.handleGet();
             }
-        } else {
-            notAuthorized();
         }
     }
 }

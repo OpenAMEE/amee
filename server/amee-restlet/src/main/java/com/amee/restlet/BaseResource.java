@@ -44,7 +44,7 @@ public abstract class BaseResource extends Resource {
         super.init(context, request, response);
         initialise(context, request, response);
         setAvailable(isValid());
-        setModifiable(isValid());
+        setModifiable(isAvailable());
     }
 
     public void initialise(Context context, Request request, Response response) {
@@ -155,7 +155,6 @@ public abstract class BaseResource extends Resource {
         // values below are mirrored in EngineStatusFilter
         values.put("authService", springContext.getBean("authService"));
         values.put("activeUser", ThreadBeanHolder.get("user"));
-        values.put("activeGroup", ThreadBeanHolder.get("group"));
         values.put("activeSite", ThreadBeanHolder.get("site"));
         values.put("activeApp", ThreadBeanHolder.get("app"));
         values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));

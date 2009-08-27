@@ -7,7 +7,6 @@ import com.amee.domain.site.Site;
 import com.amee.domain.site.SiteApp;
 import com.amee.service.BaseBrowser;
 import com.amee.service.auth.AuthService;
-import com.amee.service.auth.ResourceActions;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.environment.SiteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,40 +24,8 @@ public class EnvironmentBrowser extends BaseBrowser {
     private SiteService siteService;
 
     @Autowired
-    private AuthService authService;
-
-    @Autowired
     private EnvironmentService environmentService;
 
-    // ResourceActions
-
-    @Autowired
-    @Qualifier("environmentActions")
-    private ResourceActions environmentActions;
-
-    @Autowired
-    @Qualifier("siteActions")
-    private ResourceActions siteActions;
-
-    @Autowired
-    @Qualifier("siteAppActions")
-    private ResourceActions siteAppActions;
-
-    @Autowired
-    @Qualifier("groupActions")
-    private ResourceActions groupActions;
-
-    @Autowired
-    @Qualifier("roleActions")
-    private ResourceActions roleActions;
-
-    @Autowired
-    @Qualifier("userActions")
-    private ResourceActions userActions;
-
-    @Autowired
-    @Qualifier("appActions")
-    private ResourceActions appActions;
 
     // Environments
 
@@ -80,25 +47,14 @@ public class EnvironmentBrowser extends BaseBrowser {
     private String groupUid = null;
     private Group group = null;
 
-    // Roles
-
-    private String roleUid = null;
-    private Role role = null;
-
-    // Actions
-
-    private String actionUid = null;
-    private Action action = null;
-
     // Users
 
     private String userUid = null;
     private User user = null;
-    private Boolean allowUserUpload = null;
 
-    // GroupUsers
+    // GroupPrinciples
 
-    private GroupUser groupUser = null;
+    private GroupPrinciple groupPrinciple = null;
 
     // Environments
 
@@ -168,46 +124,6 @@ public class EnvironmentBrowser extends BaseBrowser {
         return group;
     }
 
-    // Roles
-
-    public String getRoleUid() {
-        return roleUid;
-    }
-
-    public void setRoleUid(String roleUid) {
-        this.roleUid = roleUid;
-    }
-
-    public Role getRole() {
-        if ((role == null) && (getEnvironment() != null) && (roleUid != null)) {
-            role = siteService.getRoleByUid(environment, roleUid);
-        }
-        return role;
-    }
-
-    // Actions
-
-    public String getActionUid() {
-        return actionUid;
-    }
-
-    public void setActionUid(String actionUid) {
-        this.actionUid = actionUid;
-    }
-
-    // TODO: this will be bad if many Actions are attached to Roles
-    public Action getAction() {
-        if ((action == null) && (getRole() != null) && (actionUid != null)) {
-            for (Action a : getRole().getActions()) {
-                if (a.getUid().equals(actionUid)) {
-                    action = a;
-                    break;
-                }
-            }
-        }
-        return action;
-    }
-
     // Users
 
     public String getUserUid() {
@@ -225,50 +141,13 @@ public class EnvironmentBrowser extends BaseBrowser {
         return user;
     }
 
-    public boolean isAllowUserUpload() {
-        if (allowUserUpload == null) {
-            allowUserUpload = authService.isSuperUser();
+    // GroupPrinciples
+
+    public GroupPrinciple getGroupPrinciple() {
+        if ((groupPrinciple == null) && (getUser() != null) && (getGroup() != null)) {
+            groupPrinciple = siteService.getGroupUser(group, user);
         }
-        return allowUserUpload;
-    }
-
-    // GroupUsers
-
-    public GroupUser getGroupUser() {
-        if ((groupUser == null) && (getUser() != null) && (getGroup() != null)) {
-            groupUser = siteService.getGroupUser(group, user);
-        }
-        return groupUser;
-    }
-
-    // ResourceActions
-
-    public ResourceActions getEnvironmentActions() {
-        return environmentActions;
-    }
-
-    public ResourceActions getSiteActions() {
-        return siteActions;
-    }
-
-    public ResourceActions getSiteAppActions() {
-        return siteAppActions;
-    }
-
-    public ResourceActions getGroupActions() {
-        return groupActions;
-    }
-
-    public ResourceActions getRoleActions() {
-        return roleActions;
-    }
-
-    public ResourceActions getUserActions() {
-        return userActions;
-    }
-
-    public ResourceActions getAppActions() {
-        return appActions;
+        return groupPrinciple;
     }
 
     // APIVersion

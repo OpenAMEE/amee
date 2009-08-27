@@ -20,8 +20,9 @@
 package com.amee.restlet.environment;
 
 import com.amee.core.ValueType;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.ValueDefinition;
-import com.amee.restlet.BaseResource;
+import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
@@ -40,12 +41,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @Component
 @Scope("prototype")
-public class ValueDefinitionResource extends BaseResource implements Serializable {
+public class ValueDefinitionResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -65,6 +68,14 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
     @Override
     public boolean isValid() {
         return super.isValid() && (definitionBrowser.getValueDefinitionUid() != null);
+    }
+
+    @Override
+    protected List<AMEEEntity> getEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(definitionBrowser.getEnvironment());
+        entities.add(definitionBrowser.getValueDefinition());
+        return entities;
     }
 
     @Override
@@ -99,47 +110,28 @@ public class ValueDefinitionResource extends BaseResource implements Serializabl
     }
 
     @Override
-    public void handleGet() {
-        log.debug("handleGet()");
-        if (definitionBrowser.getValueDefinitionActions().isAllowView()) {
-            super.handleGet();
-        } else {
-            notAuthorized();
+    protected void doStore(Representation entity) {
+        log.debug("doStore()");
+        ValueDefinition valueDefinition = definitionBrowser.getValueDefinition();
+        Form form = getForm();
+        Set<String> names = form.getNames();
+        if (names.contains("name")) {
+            valueDefinition.setName(form.getFirstValue("name"));
         }
+        if (names.contains("description")) {
+            valueDefinition.setDescription(form.getFirstValue("description"));
+        }
+        if (names.contains("valueType")) {
+            valueDefinition.setValueType(ValueType.valueOf(form.getFirstValue("valueType")));
+        }
+        success();
     }
 
     @Override
-    public void storeRepresentation(Representation entity) {
-        log.debug("storeRepresentation()");
-        if (definitionBrowser.getValueDefinitionActions().isAllowModify()) {
-            ValueDefinition valueDefinition = definitionBrowser.getValueDefinition();
-            Form form = getForm();
-            Set<String> names = form.getNames();
-            if (names.contains("name")) {
-                valueDefinition.setName(form.getFirstValue("name"));
-            }
-            if (names.contains("description")) {
-                valueDefinition.setDescription(form.getFirstValue("description"));
-            }
-            if (names.contains("valueType")) {
-                valueDefinition.setValueType(ValueType.valueOf(form.getFirstValue("valueType")));
-            }
-            success();
-        } else {
-            notAuthorized();
-        }
-    }
-
-
-    @Override
-    public void removeRepresentations() {
-        log.debug("delete");
-        if (definitionBrowser.getValueDefinitionActions().isAllowDelete()) {
-            ValueDefinition valueDefinition = definitionBrowser.getValueDefinition();
-            definitionService.remove(valueDefinition);
-            success();
-        } else {
-            notAuthorized();
-        }
+    protected void doRemove() {
+        log.debug("doRemove");
+        ValueDefinition valueDefinition = definitionBrowser.getValueDefinition();
+        definitionService.remove(valueDefinition);
+        success();
     }
 }
