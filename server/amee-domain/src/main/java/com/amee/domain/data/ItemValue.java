@@ -20,10 +20,7 @@
 package com.amee.domain.data;
 
 import com.amee.core.*;
-import com.amee.domain.AMEEEntity;
-import com.amee.domain.AMEEStatus;
-import com.amee.domain.Builder;
-import com.amee.domain.StartEndDate;
+import com.amee.domain.*;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.lang.StringUtils;

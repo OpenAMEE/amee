@@ -29,22 +29,11 @@ import org.w3c.dom.Element;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-import java.util.Map;
-import java.util.HashMap;
-
-import com.amee.domain.auth.User;
-import com.amee.domain.profile.Profile;
 
 @Embeddable
 public class AMEEEntityReference implements Serializable {
 
-    public final static int ENTITY_CLASS_MAX_SIZE = 50;
-
-    public final static Map<String, Class> CLASSES = new HashMap<String, Class>();
-    {
-        CLASSES.put("User", User.class);
-        CLASSES.put("Profile", Profile.class);
-    }
+    public final static int ENTITY_TYPE_MAX_SIZE = 50;
 
     @Column(name = "ENTITY_ID", nullable = false)
     private Long entityId;
@@ -52,8 +41,8 @@ public class AMEEEntityReference implements Serializable {
     @Column(name = "ENTITY_UID", length = AMEEEntity.UID_SIZE, nullable = false)
     private String entityUid = "";
 
-    @Column(name = "ENTITY_CLASS", length = ENTITY_CLASS_MAX_SIZE, nullable = false)
-    private String entityClass = "";
+    @Column(name = "ENTITY_TYPE", length = ENTITY_TYPE_MAX_SIZE, nullable = false)
+    private String entityType = "";
 
     public AMEEEntityReference() {
         super();
@@ -63,20 +52,20 @@ public class AMEEEntityReference implements Serializable {
         this();
         setEntityId(entity.getId());
         setEntityUid(entity.getUid());
-        setEntityClass(entity.getClass().getSimpleName());
+        setEntityType(ObjectType.getType(entity.getClass()));
     }
 
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getEntityUid());
-        obj.put("class", getEntityClass());
+        obj.put("type", getEntityType().getName());
         return obj;
     }
 
     public Element getElement(Document document, String name) {
         Element element = document.createElement(name);
         element.setAttribute("uid", getEntityUid());
-        element.setAttribute("class", getEntityClass());
+        element.setAttribute("type", getEntityType().getName());
         return element;
     }
 
@@ -99,14 +88,11 @@ public class AMEEEntityReference implements Serializable {
         this.entityUid = entityUid;
     }
 
-    public String getEntityClass() {
-        return entityClass;
+    public ObjectType getEntityType() {
+        return ObjectType.valueOf(entityType);
     }
 
-    public void setEntityClass(String entityClass) {
-        if (entityClass == null) {
-            entityClass = "";
-        }
-        this.entityClass = entityClass;
+    public void setEntityType(ObjectType objectType) {
+        this.entityType = objectType.getName();
     }
 }

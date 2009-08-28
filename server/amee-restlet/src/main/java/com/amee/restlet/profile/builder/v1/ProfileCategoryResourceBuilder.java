@@ -2,6 +2,7 @@ package com.amee.restlet.profile.builder.v1;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.Pager;
+import com.amee.domain.ObjectType;
 import com.amee.core.Decimal;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.path.PathItem;
@@ -110,7 +111,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         // addItemValue Data Categories via pathItem to children
         JSONArray dataCategories = new JSONArray();
-        for (PathItem pi : pathItem.getChildrenByType("DC")) {
+        for (PathItem pi : pathItem.getChildrenByType(ObjectType.DC.getName())) {
             if (resource.isRecurse()) {
                 dataCategories.put(getProfileCategoryJSONObject(resource, pi));
             } else {
@@ -220,7 +221,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         // addItemValue Profile Categories via pathItem
         org.w3c.dom.Element profileCategoriesElement = document.createElement("ProfileCategories");
-        for (PathItem pi : pathItem.getChildrenByType("DC")) {
+        for (PathItem pi : pathItem.getChildrenByType(ObjectType.DC.getName())) {
             if (resource.isRecurse()) {
                 profileCategoriesElement.appendChild(getProfileCategoryElement(resource, document, pi));
             } else {

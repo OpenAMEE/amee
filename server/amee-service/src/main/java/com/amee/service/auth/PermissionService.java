@@ -21,20 +21,10 @@
  */
 package com.amee.service.auth;
 
-import com.amee.domain.AMEEEntity;
-import com.amee.domain.AMEEEntityReference;
-import com.amee.domain.AMEEStatus;
-import com.amee.domain.APIVersion;
-import com.amee.domain.auth.Group;
+import com.amee.domain.*;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;
-import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemValue;
-import com.amee.domain.environment.Environment;
-import com.amee.domain.profile.Profile;
-import com.amee.domain.profile.ProfileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -56,29 +46,29 @@ public class PermissionService {
     private static final String CACHE_REGION = "query.permissionService";
 
     /**
-     * Defines which 'principle' classes (keys) can relate to which 'entity' classes (values).
+     * Defines which 'principles' (keys) can relate to which 'entities' (values).
      */
-    public final static Map<Class, Set<Class>> PRINCIPLE_ENTITY = new HashMap<Class, Set<Class>>();
+    public final static Map<ObjectType, Set<ObjectType>> PRINCIPLE_ENTITY = new HashMap<ObjectType, Set<ObjectType>>();
 
     /**
      * Define which principles can relate to which entities.
      */
     {
         // Users <--> Entities
-        addPrincipleAndEntity(User.class, Environment.class);
-        addPrincipleAndEntity(User.class, Profile.class);
-        addPrincipleAndEntity(User.class, DataCategory.class);
-        addPrincipleAndEntity(User.class, ProfileItem.class);
-        addPrincipleAndEntity(User.class, DataItem.class);
-        addPrincipleAndEntity(User.class, ItemValue.class);
+        addPrincipleAndEntity(ObjectType.USR, ObjectType.ENV);
+        addPrincipleAndEntity(ObjectType.USR, ObjectType.PR);
+        addPrincipleAndEntity(ObjectType.USR, ObjectType.DC);
+        addPrincipleAndEntity(ObjectType.USR, ObjectType.PI);
+        addPrincipleAndEntity(ObjectType.USR, ObjectType.DI);
+        addPrincipleAndEntity(ObjectType.USR, ObjectType.IV);
 
         // Groups <--> Entities
-        addPrincipleAndEntity(Group.class, Environment.class);
-        addPrincipleAndEntity(Group.class, Profile.class);
-        addPrincipleAndEntity(Group.class, DataCategory.class);
-        addPrincipleAndEntity(Group.class, ProfileItem.class);
-        addPrincipleAndEntity(Group.class, DataItem.class);
-        addPrincipleAndEntity(Group.class, ItemValue.class);
+        addPrincipleAndEntity(ObjectType.GRP, ObjectType.ENV);
+        addPrincipleAndEntity(ObjectType.GRP, ObjectType.PR);
+        addPrincipleAndEntity(ObjectType.GRP, ObjectType.DC);
+        addPrincipleAndEntity(ObjectType.GRP, ObjectType.PI);
+        addPrincipleAndEntity(ObjectType.GRP, ObjectType.DI);
+        addPrincipleAndEntity(ObjectType.GRP, ObjectType.IV);
     }
 
     /**
@@ -116,15 +106,20 @@ public class PermissionService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @SuppressWarnings(value = "unchecked")
+
     public List<Permission> getPermissionsForEntity(AMEEEntity entity) {
+        return getPermissionsForEntity(new AMEEEntityReference(entity));
+    }
+
+    @SuppressWarnings(value = "unchecked")
+    public List<Permission> getPermissionsForEntity(AMEEEntityReference entity) {
         if ((entity == null) || !isValidEntity(entity)) {
             throw new IllegalArgumentException();
         }
         Session session = (Session) entityManager.getDelegate();
         Criteria criteria = session.createCriteria(Permission.class);
-        criteria.add(Restrictions.eq("entityReference.entityId", entity.getId()));
-        criteria.add(Restrictions.eq("entityReference.entityClass", entity.getClass()));
+        criteria.add(Restrictions.eq("entityReference.entityId", entity.getEntityId()));
+        criteria.add(Restrictions.eq("entityReference.entityType", entity.getEntityType().getName()));
         criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
         criteria.setCacheable(true);
         criteria.setCacheRegion(CACHE_REGION);
@@ -154,20 +149,20 @@ public class PermissionService {
     }
 
     public List<Permission> getPermissionsForPrinciple(AMEEEntity principle) {
-        return getPermissionsForPrinciple(principle, null);
+        return getPermissionsForPrinciple(new AMEEEntityReference(principle), null);
     }
 
     @SuppressWarnings(value = "unchecked")
-    public List<Permission> getPermissionsForPrinciple(AMEEEntity principle, Class entityClass) {
+    public List<Permission> getPermissionsForPrinciple(AMEEEntityReference principle, Class entityClass) {
         if ((principle == null) || !isValidPrinciple(principle)) {
             throw new IllegalArgumentException();
         }
         Session session = (Session) entityManager.getDelegate();
         Criteria criteria = session.createCriteria(Permission.class);
-        criteria.add(Restrictions.eq("principleReference.entityId", principle.getId()));
-        criteria.add(Restrictions.eq("principleReference.entityClass", principle.getClass()));
+        criteria.add(Restrictions.eq("principleReference.entityId", principle.getEntityId()));
+        criteria.add(Restrictions.eq("principleReference.entityType", principle.getEntityType().getName()));
         if (entityClass != null) {
-            criteria.add(Restrictions.eq("entityReference.entityClass", entityClass.getSimpleName()));
+            criteria.add(Restrictions.eq("entityReference.entityType", ObjectType.getType(entityClass).getName()));
         }
         criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
         criteria.setCacheable(true);
@@ -175,17 +170,21 @@ public class PermissionService {
         return criteria.list();
     }
 
-    @SuppressWarnings(value = "unchecked")
     public List<Permission> getPermissionsForPrincipleAndEntity(AMEEEntity principle, AMEEEntity entity) {
+        return getPermissionsForPrincipleAndEntity(new AMEEEntityReference(principle), new AMEEEntityReference(entity));
+    }
+
+    @SuppressWarnings(value = "unchecked")
+    public List<Permission> getPermissionsForPrincipleAndEntity(AMEEEntityReference principle, AMEEEntityReference entity) {
         if ((principle == null) || (entity == null) || !isValidPrincipleToEntity(principle, entity)) {
             throw new IllegalArgumentException();
         }
         Session session = (Session) entityManager.getDelegate();
         Criteria criteria = session.createCriteria(Permission.class);
-        criteria.add(Restrictions.eq("principleReference.entityId", principle.getId()));
-        criteria.add(Restrictions.eq("principleReference.entityClass", principle.getClass()));
-        criteria.add(Restrictions.eq("entityReference.entityId", entity.getId()));
-        criteria.add(Restrictions.eq("entityReference.entityClass", entity.getClass()));
+        criteria.add(Restrictions.eq("principleReference.entityId", principle.getEntityId()));
+        criteria.add(Restrictions.eq("principleReference.entityType", principle.getEntityType().getName()));
+        criteria.add(Restrictions.eq("entityReference.entityId", entity.getEntityId()));
+        criteria.add(Restrictions.eq("entityReference.entityType", entity.getEntityType().getName()));
         criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
         criteria.setCacheable(true);
         criteria.setCacheRegion(CACHE_REGION);
@@ -261,11 +260,11 @@ public class PermissionService {
                         "SET status = :trash, " +
                         "modified = current_timestamp() " +
                         "WHERE entityReference.entityId = :entityId " +
-                        "AND entityReference.entityClass = :entityClass " +
+                        "AND entityReference.entityType = :entityType " +
                         "AND status != :trash")
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setParameter("entityId", entity.getEntityId())
-                .setParameter("entityClass", entity.getEntityClass())
+                .setParameter("entityType", entity.getEntityType().getName())
                 .executeUpdate();
     }
 
@@ -275,7 +274,7 @@ public class PermissionService {
             throw new IllegalArgumentException();
         }
         return (AMEEEntity) entityManager.find(
-                AMEEEntityReference.CLASSES.get(entityReference.getEntityClass()), entityReference.getEntityId());
+                entityReference.getEntityType().getClazz(), entityReference.getEntityId());
     }
 
     public APIVersion getAPIVersion(AMEEEntity entity) {
@@ -291,24 +290,32 @@ public class PermissionService {
         return user.getAPIVersion();
     }
 
-    private void addPrincipleAndEntity(Class principleClass, Class entityClass) {
-        Set<Class> entityClasses = PRINCIPLE_ENTITY.get(principleClass);
-        if (entityClasses == null) {
-            entityClasses = new HashSet<Class>();
-            PRINCIPLE_ENTITY.put(principleClass, entityClasses);
+    private void addPrincipleAndEntity(ObjectType principle, ObjectType entity) {
+        Set<ObjectType> entities = PRINCIPLE_ENTITY.get(principle);
+        if (entities == null) {
+            entities = new HashSet<ObjectType>();
+            PRINCIPLE_ENTITY.put(principle, entities);
         }
-        entityClasses.add(entityClass);
+        entities.add(entity);
     }
 
     public boolean isValidPrinciple(AMEEEntity principle) {
+        return isValidPrinciple(new AMEEEntityReference(principle));
+    }
+
+    public boolean isValidPrinciple(AMEEEntityReference principle) {
         if (principle == null) throw new IllegalArgumentException();
-        return PRINCIPLE_ENTITY.keySet().contains(getRealClass(principle.getClass()));
+        return PRINCIPLE_ENTITY.keySet().contains(principle.getEntityType());
     }
 
     public boolean isValidEntity(AMEEEntity entity) {
+        return isValidEntity(new AMEEEntityReference(entity));
+    }
+
+    public boolean isValidEntity(AMEEEntityReference entity) {
         if (entity == null) throw new IllegalArgumentException();
-        for (Set<Class> entities : PRINCIPLE_ENTITY.values()) {
-            if (entities.contains(getRealClass(entity.getClass()))) {
+        for (Set<ObjectType> entities : PRINCIPLE_ENTITY.values()) {
+            if (entities.contains(entity.getEntityType())) {
                 return true;
             }
         }
@@ -316,29 +323,12 @@ public class PermissionService {
     }
 
     public boolean isValidPrincipleToEntity(AMEEEntity principle, AMEEEntity entity) {
-        if ((principle == null) || (entity == null)) throw new IllegalArgumentException();
-        return isValidPrinciple(principle) &&
-                PRINCIPLE_ENTITY.get(getRealClass(principle.getClass())).contains(getRealClass(entity.getClass()));
+        return isValidPrincipleToEntity(new AMEEEntityReference(principle), new AMEEEntityReference(entity));
     }
 
-    public Class getRealClass(Class c) {
-        if (User.class.isAssignableFrom(c)) {
-            return User.class;
-        } else if (Group.class.isAssignableFrom(c)) {
-            return Group.class;
-        } else if (Environment.class.isAssignableFrom(c)) {
-            return Environment.class;
-        } else if (Profile.class.isAssignableFrom(c)) {
-            return Profile.class;
-        } else if (DataCategory.class.isAssignableFrom(c)) {
-            return DataCategory.class;
-        } else if (DataItem.class.isAssignableFrom(c)) {
-            return DataItem.class;
-        } else if (ProfileItem.class.isAssignableFrom(c)) {
-            return ProfileItem.class;
-        } else if (ItemValue.class.isAssignableFrom(c)) {
-            return ItemValue.class;
-        }
-        throw new IllegalArgumentException("Class not supported.");
+    public boolean isValidPrincipleToEntity(AMEEEntityReference principle, AMEEEntityReference entity) {
+        if ((principle == null) || (entity == null)) throw new IllegalArgumentException();
+        return isValidPrinciple(principle) &&
+                PRINCIPLE_ENTITY.get(principle.getEntityType()).contains(entity.getEntityType());
     }
 }

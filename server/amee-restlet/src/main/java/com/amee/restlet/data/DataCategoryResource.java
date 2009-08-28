@@ -23,6 +23,7 @@ import com.amee.core.APIUtils;
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.ObjectType;
 import com.amee.domain.data.*;
 import com.amee.domain.path.PathItem;
 import com.amee.restlet.RequestContext;
@@ -169,9 +170,9 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             if (isPost()) {
                 if (isBatchPost()) {
                     successfulBatchPost();
-                } else if (type.equalsIgnoreCase("DC")) {
+                } else if (type.equalsIgnoreCase(ObjectType.DC.getName())) {
                     successfulPost(getFullPath(), dataCategory.getPath());
-                } else if (type.equalsIgnoreCase("DI")) {
+                } else if (type.equalsIgnoreCase(ObjectType.DI.getName())) {
                     successfulPost(getFullPath(), dataItem.getUid());
                 } else {
                     badRequest();
@@ -306,9 +307,9 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         log.debug("acceptFormPost()");
         type = form.getFirstValue("newObjectType");
         if (type != null) {
-            if (type.equalsIgnoreCase("DC")) {
+            if (type.equalsIgnoreCase(ObjectType.DC.getName())) {
                 dataCategory = acceptFormForDataCategory(form);
-            } else if (type.equalsIgnoreCase("DI")) {
+            } else if (type.equalsIgnoreCase(ObjectType.DI.getName())) {
                 dataItem = acceptFormForDataItem(form);
             } else {
                 badRequest();
@@ -413,7 +414,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     // A unique DataCategory is one with a unique path within it's set of un-trashed sibling DataCategories.
     private boolean isUnique(DataCategory dataCategory) {
         boolean unique = true;
-        for (PathItem sibling : getPathItem().getChildrenByType("DC")) {
+        for (PathItem sibling : getPathItem().getChildrenByType(ObjectType.DC.getName())) {
             if (sibling.getPath().equals(dataCategory.getPath())) {
                 if (!dataService.getDataCategoryByUid(sibling.getUid()).isTrash()) {
                     unique = false;

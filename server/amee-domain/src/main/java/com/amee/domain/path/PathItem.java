@@ -20,9 +20,9 @@
 package com.amee.domain.path;
 
 import com.amee.core.APIUtils;
-import com.amee.core.ObjectType;
 import com.amee.domain.APIObject;
 import com.amee.domain.UidGen;
+import com.amee.domain.ObjectType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;

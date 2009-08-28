@@ -1,8 +1,8 @@
 package com.amee.domain.algorithm;
 
 import com.amee.core.APIUtils;
-import com.amee.core.ObjectType;
 import com.amee.domain.environment.Environment;
+import com.amee.domain.ObjectType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

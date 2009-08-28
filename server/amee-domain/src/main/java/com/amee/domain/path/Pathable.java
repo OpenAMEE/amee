@@ -20,7 +20,7 @@
 package com.amee.domain.path;
 
 import com.amee.core.PersistentObject;
-import com.amee.core.ObjectType;
+import com.amee.domain.ObjectType;
 
 public interface Pathable extends PersistentObject {
 

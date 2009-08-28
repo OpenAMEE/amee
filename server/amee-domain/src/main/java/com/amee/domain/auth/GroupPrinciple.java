@@ -37,7 +37,7 @@ public class GroupPrinciple extends AMEEEnvironmentEntity implements Comparable 
     @AttributeOverrides({
             @AttributeOverride(name = "entityId", column = @Column(name = "PRINCIPLE_ID")),
             @AttributeOverride(name = "entityUid", column = @Column(name = "PRINCIPLE_UID")),
-            @AttributeOverride(name = "entityClass", column = @Column(name = "PRINCIPLE_CLASS"))})
+            @AttributeOverride(name = "entityType", column = @Column(name = "PRINCIPLE_TYPE"))})
     private AMEEEntityReference principleReference = new AMEEEntityReference();
 
     public GroupPrinciple() {

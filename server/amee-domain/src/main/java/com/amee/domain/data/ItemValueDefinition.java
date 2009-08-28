@@ -20,10 +20,7 @@
 package com.amee.domain.data;
 
 import com.amee.core.*;
-import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.APIVersion;
-import com.amee.domain.Builder;
-import com.amee.domain.ValueDefinition;
+import com.amee.domain.*;
 import com.amee.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Cache;

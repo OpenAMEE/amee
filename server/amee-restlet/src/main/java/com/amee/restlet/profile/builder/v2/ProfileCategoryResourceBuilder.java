@@ -5,6 +5,7 @@ import com.amee.core.APIUtils;
 import com.amee.core.CO2AmountUnit;
 import com.amee.core.Decimal;
 import com.amee.domain.Pager;
+import com.amee.domain.ObjectType;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
@@ -65,9 +66,6 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     private SelectByProfileService selectByProfileService;
 
     @Autowired
-    private OnlyActiveProfileService onlyActiveProfileService;
-
-    @Autowired
     private ProfileService profileService;
 
     @Autowired
@@ -109,7 +107,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
             // addItemValue Data Categories via pathItem to children
             JSONArray dataCategories = new JSONArray();
-            for (PathItem pi : resource.getChildrenByType("DC")) {
+            for (PathItem pi : resource.getChildrenByType(ObjectType.DC.getName())) {
                 dataCategories.put(pi.getJSONObject());
             }
             obj.put("profileCategories", dataCategories);
@@ -184,7 +182,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
             // addItemValue Data Categories via pathItem to children
             Element dataCategoriesElement = document.createElement("ProfileCategories");
-            for (PathItem dc : resource.getChildrenByType("DC")) {
+            for (PathItem dc : resource.getChildrenByType(ObjectType.DC.getName())) {
                 dataCategoriesElement.appendChild(dc.getElement(document));
             }
             element.appendChild(dataCategoriesElement);

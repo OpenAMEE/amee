@@ -20,11 +20,9 @@
 package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
-import com.amee.core.ObjectType;
-import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.AMEEStatus;
-import com.amee.domain.auth.User;
+import com.amee.domain.ObjectType;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.logging.Log;

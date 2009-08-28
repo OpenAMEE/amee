@@ -20,9 +20,9 @@
 package com.amee.domain.algorithm;
 
 import com.amee.core.APIUtils;
-import com.amee.core.ObjectType;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.environment.Environment;
+import com.amee.domain.ObjectType;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;

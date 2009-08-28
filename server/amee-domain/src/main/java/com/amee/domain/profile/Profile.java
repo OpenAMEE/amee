@@ -20,10 +20,9 @@
 package com.amee.domain.profile;
 
 import com.amee.core.APIUtils;
-import com.amee.core.ObjectType;
 import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.ObjectType;
 import com.amee.domain.auth.User;
-import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

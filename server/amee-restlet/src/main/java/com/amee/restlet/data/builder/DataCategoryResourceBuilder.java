@@ -2,6 +2,7 @@ package com.amee.restlet.data.builder;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.Pager;
+import com.amee.domain.ObjectType;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.path.PathItem;
@@ -77,7 +78,7 @@ public class DataCategoryResourceBuilder {
                 pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
             }
 
-            for (PathItem pi : pathItem.getChildrenByType("DC")) {
+            for (PathItem pi : pathItem.getChildrenByType(ObjectType.DC.getName())) {
 
                 DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
 
@@ -165,7 +166,7 @@ public class DataCategoryResourceBuilder {
                 pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
             }
 
-            for (PathItem pi : pathItem.getChildrenByType("DC")) {
+            for (PathItem pi : pathItem.getChildrenByType(ObjectType.DC.getName())) {
 
                 DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
 

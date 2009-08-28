@@ -20,10 +20,10 @@
 package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
-import com.amee.core.ObjectType;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.InternalValue;
+import com.amee.domain.ObjectType;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.Choice;

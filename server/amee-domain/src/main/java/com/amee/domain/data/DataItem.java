@@ -20,10 +20,10 @@
 package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
-import com.amee.core.ObjectType;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Index;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,8 +32,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.ArrayList;
 
 @Entity
 @DiscriminatorValue("DI")
