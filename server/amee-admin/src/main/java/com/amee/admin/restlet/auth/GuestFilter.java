@@ -2,6 +2,8 @@ package com.amee.admin.restlet.auth;
 
 import com.amee.restlet.auth.AuthUtils;
 import com.amee.restlet.auth.BaseAuthFilter;
+import com.amee.domain.auth.User;
+import com.amee.core.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
@@ -23,18 +25,31 @@ public class GuestFilter extends BaseAuthFilter {
     }
 
     public int doHandle(Request request, Response response) {
-        log.debug("do handle");
+        log.debug("doHandle()");
         int result = CONTINUE;
+        User activeUser;
         String authToken = authenticated(request);
         if (authToken != null) {
+            // find the current active user
+            activeUser = authService.getActiveUser(authToken);
+            // add active user to contexts
+            request.getAttributes().put("activeUser", activeUser);
+            ThreadBeanHolder.set("activeUser", activeUser);
+            // signed-in, accept request
             accept(request, response, authToken);
         } else {
+            // not signed-in, don't accept request 
             AuthUtils.discardAuthCookie(response);
-            if (authService.doGuestSignIn() != null) {
+            activeUser = authService.doGuestSignIn();
+            // add (or clear) active user in contexts
+            request.getAttributes().put("activeUser", activeUser);
+            ThreadBeanHolder.set("activeUser", activeUser);
+            // to continue we must have at least a guest user  
+            if (activeUser != null) {
                 // a guest auth has been found, authenticated and signed in
                 result = super.doHandle(request, response);
             } else {
-                // no auth available
+                // no auth available, stop here
                 response.setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
                 result = STOP;
             }

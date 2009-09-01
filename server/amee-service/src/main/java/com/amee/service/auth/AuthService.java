@@ -1,14 +1,11 @@
 package com.amee.service.auth;
 
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEStatus;
-import com.amee.domain.auth.Group;
-import com.amee.domain.auth.GroupPrinciple;
-import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;
 import com.amee.domain.site.Site;
-import com.amee.core.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Scope;
@@ -17,7 +14,10 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Scope("prototype")
@@ -31,27 +31,12 @@ public class AuthService implements Serializable {
     private EntityManager entityManager;
 
     public User doGuestSignIn() {
-        signOut();
-        reset();
-        User user = getUserByUsername("guest");
-        if (user != null) {
-            log.debug("Guest auth authenticated and signed in");
-            ThreadBeanHolder.set("user", user);
-            return user;
-        } else {
-            log.warn("Guest auth NOT authenticated and NOT signed in");
-            return null;
-        }
-    }
-
-    public void reset() {
-        ThreadBeanHolder.set("auth", null);
-        ThreadBeanHolder.set("user", null);
+        return getUserByUsername("guest");
     }
 
     public String isAuthenticated(String authToken, String remoteAddress) {
 
-        User user;
+        User activeUser;
         Map<String, String> values;
         boolean remoteAddressCheckPassed = false;
         boolean maxAuthDurationCheckPassed = false;
@@ -59,9 +44,6 @@ public class AuthService implements Serializable {
         long now = Calendar.getInstance().getTimeInMillis();
         String oldAuthToken;
         Site site = (Site) ThreadBeanHolder.get("site");
-
-        // signed out by default
-        signOut();
 
         // has authToken been supplied?
         if (authToken != null) {
@@ -138,10 +120,9 @@ public class AuthService implements Serializable {
             // get and check auth
             String userUid = values.get(AuthToken.USER_UID);
             if (userUid != null) {
-                user = getUserByUid(userUid);
-                if (user != null) {
-                    log.debug("auth authenticated and signed in: " + user.getUsername());
-                    ThreadBeanHolder.set("user", user);
+                activeUser = getUserByUid(userUid);
+                if (activeUser != null) {
+                    log.debug("auth authenticated and signed in: " + activeUser.getUsername());
                     Long touched = new Long(values.get(AuthToken.MODIFIED));
                     // only touch token if older than 60 seconds (60*1000ms)
                     if (now > (touched + 60 * 1000)) {
@@ -149,8 +130,6 @@ public class AuthService implements Serializable {
                     } else {
                         return oldAuthToken;
                     }
-                } else {
-                    reset();
                 }
             }
 
@@ -162,33 +141,58 @@ public class AuthService implements Serializable {
         return null;
     }
 
-    public boolean authenticate(User sampleUser) {
-        // signed out by default
-        reset();
-        signOut();
-        // try to find auth based on 'sampleUser' User 'template'
-        User user = getUserByUsername(sampleUser.getUsername());
-        if (user != null) {
-            if (user.getPassword().equals(sampleUser.getPassword())) {
-                log.debug("authenticate() - auth authenticated and signed in: " + sampleUser.getUsername());
-                ThreadBeanHolder.set("user", user);
-                return true;
-            } else {
-                log.debug("authenticate() - auth NOT authenticated, bad password: " + sampleUser.getUsername());
-                return false;
-            }
+    /**
+     * Get the current active user from the supplied AuthToken.
+     *
+     * @param authToken representing the active user.
+     * @return the active user
+     */
+    public User getActiveUser(String authToken) {
+
+        if (authToken == null) {
+            throw new IllegalArgumentException("AuthToken String must not be null.");
+        }
+
+        // get authToken values
+        authToken = AuthToken.decryptToken(authToken);
+        Map<String, String> values = AuthToken.explodeToken(authToken);
+
+        // get and check auth
+        String userUid = values.get(AuthToken.USER_UID);
+        if (userUid != null) {
+            return getUserByUid(userUid);
         } else {
-            log.debug("authenticate() - auth NOT authenticated, not found: " + sampleUser.getUsername());
-            return false;
+            log.debug("getActiveUser() - active user NOT found");
+            return null;
         }
     }
 
-    public String authenticateAndGenerateAuthToken(User sampleUser, String remoteAddress) {
-        if (authenticate(sampleUser)) {
-            return AuthToken.createToken((User) ThreadBeanHolder.get("user"), remoteAddress);
+    /**
+     * Authenticates based on the supplied sample user. The sample user must have a username and password set.
+     * If authentication is successful the persistent User is returned.
+     *
+     * @param sampleUser sample User to authenticate against
+     * @return the authenticated User
+     */
+    public User authenticate(User sampleUser) {
+        // try to find auth based on 'sampleUser' User 'template'
+        User activeUser = getUserByUsername(sampleUser.getUsername());
+        if (activeUser != null) {
+            if (activeUser.getPassword().equals(sampleUser.getPassword())) {
+                log.debug("authenticate() - auth authenticated and signed in: " + sampleUser.getUsername());
+                return activeUser;
+            } else {
+                log.debug("authenticate() - auth NOT authenticated, bad password: " + sampleUser.getUsername());
+                return null;
+            }
         } else {
+            log.debug("authenticate() - auth NOT authenticated, not found: " + sampleUser.getUsername());
             return null;
         }
+    }
+
+    public String generateAuthToken(User activeUser, String remoteAddress) {
+        return AuthToken.createToken(activeUser, remoteAddress);
     }
 
     @SuppressWarnings(value = "unchecked")
@@ -235,15 +239,6 @@ public class AuthService implements Serializable {
         }
         log.debug("auth NOT found: " + username);
         return null;
-    }
-
-    public void signOut() {
-        log.debug("signed out");
-        reset();
-    }
-
-    public static User getUser() {
-        return (User) ThreadBeanHolder.get("user");
     }
 
     private static class AuthToken implements Serializable {

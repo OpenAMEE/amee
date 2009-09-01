@@ -146,7 +146,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
             String perUnit = form.getFirstValue("returnPerUnit");
             profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
         }
-        super.handleGet();
+        super.doGet();
     }
 
     private void setBuilderStrategy() {

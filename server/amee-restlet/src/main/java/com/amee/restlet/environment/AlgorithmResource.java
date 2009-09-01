@@ -142,7 +142,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
         if (names.contains("testAlgorithmContent")) {
             testAlgorithm(form);
         }
-        super.handleGet();
+        super.doGet();
     }
 
     /**

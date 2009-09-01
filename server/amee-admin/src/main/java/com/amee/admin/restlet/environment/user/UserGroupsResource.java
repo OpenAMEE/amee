@@ -68,7 +68,7 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
     @Override
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
-        List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciples(environmentBrowser.getUser());
+        List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciplesForPrinciple(environmentBrowser.getUser());
         Map<String, GroupPrinciple> groupPrincipleMap = new HashMap<String, GroupPrinciple>();
         Set<Object> pagerSet = new HashSet<Object>();
         for (GroupPrinciple groupPrinciple : groupPrinciples) {
@@ -93,7 +93,7 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
         JSONObject obj = new JSONObject();
         if (isGet()) {
             Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
-            List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciples(environmentBrowser.getUser(), pager);
+            List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciplesForPrinciple(environmentBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
             obj.put("user", environmentBrowser.getUser().getJSONObject());
@@ -114,7 +114,7 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
         Element element = document.createElement("UserGroupsResource");
         if (isGet()) {
             Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
-            List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciples(environmentBrowser.getUser(), pager);
+            List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciplesForPrinciple(environmentBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
             element.appendChild(environmentBrowser.getUser().getIdentityElement(document));

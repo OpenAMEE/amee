@@ -138,7 +138,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             dataBrowser.setQueryStartDate(form.getFirstValue("startDate"));
             dataBrowser.setQueryEndDate(form.getFirstValue("endDate"));
         }
-        super.handleGet();
+        super.doGet();
     }
 
     @Override

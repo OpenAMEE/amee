@@ -164,7 +164,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                     cloneUser = siteService.getUserByUid(
                             environmentBrowser.getEnvironment(), form.getFirstValue("cloneUserUid"));
                     if (cloneUser != null) {
-                        for (GroupPrinciple groupPrinciple : groupService.getGroupPrinciples(cloneUser)) {
+                        for (GroupPrinciple groupPrinciple : groupService.getGroupPrinciplesForPrinciple(cloneUser)) {
                             newGroupPrinciple = new GroupPrinciple(groupPrinciple.getGroup(), newUser);
                             groupService.save(newGroupPrinciple);
                         }

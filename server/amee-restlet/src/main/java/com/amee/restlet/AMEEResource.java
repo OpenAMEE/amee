@@ -245,14 +245,6 @@ public abstract class AMEEResource extends AuthorizeResource implements BeanFact
         return values;
     }
 
-    public APIVersion getAPIVersion() {
-        return getUser().getAPIVersion();
-    }
-
-    public User getUser() {
-        return (User) ThreadBeanHolder.get("user");
-    }
-
     /**
      * Produce the appropriate response for a successful PUT.
      *

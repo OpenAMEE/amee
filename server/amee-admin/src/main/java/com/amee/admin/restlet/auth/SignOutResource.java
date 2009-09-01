@@ -1,6 +1,7 @@
 package com.amee.admin.restlet.auth;
 
 import com.amee.core.APIUtils;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.auth.User;
 import com.amee.restlet.BaseResource;
 import com.amee.restlet.auth.AuthUtils;
@@ -28,14 +29,16 @@ public class SignOutResource extends BaseResource implements Serializable {
     @Autowired
     private AuthService authService;
 
-    private User user;
+    private User activeUser;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         // sign out the current User and sign in the guest auth instead
         AuthUtils.discardAuthCookie(response);
-        user = authService.doGuestSignIn();
+        activeUser = authService.doGuestSignIn();
+        request.getAttributes().put("activeUser", activeUser);
+        ThreadBeanHolder.set("activeUser", activeUser);
     }
 
     @Override
@@ -54,8 +57,8 @@ public class SignOutResource extends BaseResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("next", AuthUtils.getNextUrl(getRequest(), getForm()));
-        if (user != null) {
-            obj.put("auth", user.getJSONObject(false));
+        if (activeUser != null) {
+            obj.put("auth", activeUser.getJSONObject(false));
         }
         return obj;
     }
@@ -64,8 +67,8 @@ public class SignOutResource extends BaseResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("SignOutResource");
         element.appendChild(APIUtils.getElement(document, "Next", AuthUtils.getNextUrl(getRequest(), getForm())));
-        if (user != null) {
-            element.appendChild(user.getElement(document, false));
+        if (activeUser != null) {
+            element.appendChild(activeUser.getElement(document, false));
         }
         return element;
     }

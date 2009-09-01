@@ -3,6 +3,7 @@ package com.amee.engine;
 import com.amee.core.APIUtils;
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEStatistics;
+import com.amee.domain.auth.User;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.MediaTypeUtils;
 import com.amee.service.auth.AuthService;
@@ -30,9 +31,6 @@ import java.util.logging.Level;
 
 @Service
 public class EngineStatusService extends StatusService {
-
-    @Autowired
-    private AuthService authService;
 
     @Autowired
     private FreeMarkerConfigurationService freeMarkerConfigurationService;
@@ -67,8 +65,7 @@ public class EngineStatusService extends StatusService {
             Map<String, Object> values = new HashMap<String, Object>();
             values.put("status", status);
             // values below are mirrored in BaseResource
-            values.put("authService", authService);
-            values.put("activeUser", AuthService.getUser());
+            values.put("activeUser", request.getAttributes().get("activeUser"));
             values.put("activeSite", ThreadBeanHolder.get("site"));
             values.put("activeApp", ThreadBeanHolder.get("app"));
             values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));

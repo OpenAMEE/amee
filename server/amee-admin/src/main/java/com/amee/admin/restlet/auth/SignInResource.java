@@ -1,6 +1,7 @@
 package com.amee.admin.restlet.auth;
 
 import com.amee.core.APIUtils;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.auth.User;
 import com.amee.domain.site.Site;
 import com.amee.restlet.BaseResource;
@@ -44,22 +45,22 @@ public class SignInResource extends BaseResource implements Serializable {
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        User user = AuthService.getUser();
+        User activeUser = getActiveUser();
         JSONObject obj = new JSONObject();
         obj.put("next", AuthUtils.getNextUrl(getRequest(), getForm()));
-        if (user != null) {
-            obj.put("auth", user.getJSONObject(false));
+        if (activeUser != null) {
+            obj.put("auth", activeUser.getJSONObject(false));
         }
         return obj;
     }
 
     @Override
     public Element getElement(Document document) {
-        User user = AuthService.getUser();
+        User activeUser = getActiveUser();
         Element element = document.createElement("SignInResource");
         element.appendChild(APIUtils.getElement(document, "Next", AuthUtils.getNextUrl(getRequest(), getForm())));
-        if (user != null) {
-            element.appendChild(user.getElement(document, false));
+        if (activeUser != null) {
+            element.appendChild(activeUser.getElement(document, false));
         }
         return element;
     }
@@ -94,17 +95,23 @@ public class SignInResource extends BaseResource implements Serializable {
 
     public void storeRepresentation(Representation entity) {
         Form form = getForm();
+        String nextUrl;
         User sampleUser;
+        User activeUser;
         String authToken;
-        if ( !StringUtils.isBlank(form.getFirstValue("username")) && !StringUtils.isBlank(form.getFirstValue("password")) ) {
+        if (!StringUtils.isBlank(form.getFirstValue("username")) && !StringUtils.isBlank(form.getFirstValue("password"))) {
             // deal with sign in
-            String nextUrl = AuthUtils.getNextUrl(getRequest(), getForm());
+            nextUrl = AuthUtils.getNextUrl(getRequest(), getForm());
             sampleUser = new User();
             sampleUser.setUsername(form.getFirstValue("username"));
             sampleUser.setPasswordInClear(form.getFirstValue("password"));
-            authToken = authService.authenticateAndGenerateAuthToken(sampleUser, getRequest().getClientInfo().getAddress());
-            if (authToken != null) {
-                // signed in
+            activeUser = authService.authenticate(sampleUser);
+            if (activeUser != null) {
+                // put active user in contextx
+                getRequest().getAttributes().put("activeUser", activeUser);
+                ThreadBeanHolder.set("activeUser", activeUser);
+                // create AuthToken and add to response
+                authToken = authService.generateAuthToken(activeUser, getRequest().getClientInfo().getAddress());
                 AuthUtils.addAuthCookie(getResponse(), authToken);
                 AuthUtils.addAuthHeader(getResponse(), authToken);
                 // different response for API calls
@@ -120,6 +127,9 @@ public class SignInResource extends BaseResource implements Serializable {
                     super.handleGet();
                 }
             } else {
+                // clear contexts
+                getRequest().getAttributes().put("activeUser", null);
+                ThreadBeanHolder.set("activeUser", null);
                 // not signed in
                 AuthUtils.discardAuthCookie(getResponse());
                 // show auth page again

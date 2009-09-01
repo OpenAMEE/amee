@@ -1,5 +1,6 @@
 package com.amee.restlet.auth;
 
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.auth.User;
 import com.amee.service.auth.AuthService;
 import org.restlet.Application;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Basic Authentication Filter.
- * 
+ * <p/>
  * This file is part of AMEE.
  * <p/>
  * AMEE is free software; you can redistribute it and/or modify
@@ -52,9 +53,12 @@ public class BasicAuthFilter extends Guard {
 
     @Override
     public boolean checkSecret(Request request, String identifer, char[] secret) {
-        User user = new User();
-        user.setUsername(identifer);
-        user.setPasswordInClear(new String(secret));
-        return authService.authenticate(user);
+        User sampleUser = new User();
+        sampleUser.setUsername(identifer);
+        sampleUser.setPasswordInClear(new String(secret));
+        User activeUser = authService.authenticate(sampleUser);
+        request.getAttributes().put("activeUser", activeUser);
+        ThreadBeanHolder.set("activeUser", activeUser);
+        return activeUser != null;
     }
 }

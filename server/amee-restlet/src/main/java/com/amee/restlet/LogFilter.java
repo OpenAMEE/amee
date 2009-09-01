@@ -20,7 +20,6 @@
 package com.amee.restlet;
 
 import com.amee.domain.auth.User;
-import com.amee.core.ThreadBeanHolder;
 import org.apache.log4j.MDC;
 import org.restlet.Application;
 import org.restlet.Filter;
@@ -42,9 +41,9 @@ public class LogFilter extends Filter {
     protected int doHandle(Request request, Response response) {
         try {
             MDC.put("ipAddress", request.getClientInfo().getAddress());
-            User user = (User) ThreadBeanHolder.get("user");
-            if (user != null) {
-                MDC.put("userUid", user.getUid());
+            User activeUser = (User) request.getAttributes().get("activeUser");
+            if (activeUser != null) {
+                MDC.put("userUid", activeUser.getUid());
             }
             return super.doHandle(request, response);
         } finally {

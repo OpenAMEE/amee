@@ -77,7 +77,7 @@
         <tr>
             <td>${pi.name}</td>
             <td>
-                <#if browser.profileActions.allowView><a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
+                <a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
             </td>
         </tr>
         </#list>

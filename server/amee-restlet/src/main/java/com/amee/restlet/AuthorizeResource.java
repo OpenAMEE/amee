@@ -25,6 +25,7 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.service.auth.PermissionService;
 import com.amee.service.auth.AuthService;
+import com.amee.service.environment.GroupService;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,6 +37,9 @@ public abstract class AuthorizeResource extends BaseResource {
 
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    private GroupService groupService;
 
     @Override
     public void handleGet() {
@@ -103,8 +107,8 @@ public abstract class AuthorizeResource extends BaseResource {
 
     public List<AMEEEntity> getPrinciples() {
         List<AMEEEntity> principles = new ArrayList<AMEEEntity>();
-        principles.add(AuthService.getUser());
-        // principles.add(AuthService.getGroup());
+        principles.add(getActiveUser());
+        principles.addAll(groupService.getGroupsForPrinciple(getActiveUser()));
         return principles;
     }
 

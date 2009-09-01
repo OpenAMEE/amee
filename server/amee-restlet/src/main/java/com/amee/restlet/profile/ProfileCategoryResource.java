@@ -162,7 +162,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
             String perUnit = form.getFirstValue("returnPerUnit");
             profileBrowser.setCO2AmountUnit(new CO2AmountUnit(unit, perUnit));
         }
-        super.handleGet();
+        super.doGet();
     }
 
     @Override

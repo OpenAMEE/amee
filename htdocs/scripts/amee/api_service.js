@@ -432,9 +432,12 @@ var ActionsResource = Class.create({
         this.path = params.path;
     },
     start: function() {
-        if (this.path) {
-            this.load();
-        }
+        //if (this.path) {
+        //    this.load();
+        //}
+        this.loaded = true;
+        this.available = true;
+        this.notify('loaded', this);
     },
     load: function() {
         new Ajax.Request(this.path, {
@@ -459,7 +462,14 @@ var ActionsResource = Class.create({
         this.notify('loaded', this);
     },
     getActions: function(name) {
-        return this.actions.get(name);
+        // return this.actions.get(name);
+        return new Actions({
+            allowView: true,
+            allowCreate: true,
+            allowModify: true,
+            allowList: true,
+            allowDelee: true
+        });
     }
 });
 Object.Event.extend(ActionsResource);

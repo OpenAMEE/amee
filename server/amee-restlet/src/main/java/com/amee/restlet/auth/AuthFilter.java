@@ -26,21 +26,29 @@ public class AuthFilter extends BaseAuthFilter {
         log.debug("doHandle()");
 
         // Authentication has already been performed upstream so just continue without any further processing
-        if (ThreadBeanHolder.get("user") != null) {
+        if (request.getAttributes().get("activeUser") != null) {
             return super.doHandle(request, response);
         }
 
         int result;
         String authToken = authenticated(request);
         if (authToken != null) {
-            // a auth has been found and authenticated (even if this is just the guest auth)
+            // find the current active user
+            User activeUser = authService.getActiveUser(authToken);
+            // add active user to contexts
+            request.getAttributes().put("activeUser", activeUser);
+            ThreadBeanHolder.set("activeUser", activeUser);
+            // setup RequestContext
             RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
-            ctx.setUser((User) ThreadBeanHolder.get("user"));
+            ctx.setUser(activeUser);
             ctx.setRequest(request);
             result = accept(request, response, authToken);
-
         } else {
             // this will only be executed if a guest auth is not found (really?)
+            // clear active user from contexts
+            request.getAttributes().put("activeUser", null);
+            ThreadBeanHolder.set("activeUser", null);
+            // don't continue
             reject(request, response);
             result = Filter.STOP;
         }

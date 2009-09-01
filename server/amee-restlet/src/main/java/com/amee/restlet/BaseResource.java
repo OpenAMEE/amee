@@ -2,6 +2,8 @@ package com.amee.restlet;
 
 import com.amee.domain.Pager;
 import com.amee.domain.PagerSetType;
+import com.amee.domain.APIVersion;
+import com.amee.domain.auth.User;
 import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.SortOrder;
@@ -153,8 +155,7 @@ public abstract class BaseResource extends Resource {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("path", getRequest().getResourceRef().getPath());
         // values below are mirrored in EngineStatusFilter
-        values.put("authService", springContext.getBean("authService"));
-        values.put("activeUser", ThreadBeanHolder.get("user"));
+        values.put("activeUser", ThreadBeanHolder.get("activeUser"));
         values.put("activeSite", ThreadBeanHolder.get("site"));
         values.put("activeApp", ThreadBeanHolder.get("app"));
         values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));
@@ -278,6 +279,24 @@ public abstract class BaseResource extends Resource {
 
     public void setPage(int page) {
         this.page = page;
+    }
+
+    /**
+     * Get the current active signed-in user.
+     *
+     * @return the current active signed-in user
+     */
+    public User getActiveUser() {
+        return (User) getRequest().getAttributes().get("activeUser");
+    }
+
+    /**
+     * Get the current APIVersion for the active user.
+     *
+     * @return the current APIVersion
+     */
+    public APIVersion getAPIVersion() {
+        return getActiveUser().getAPIVersion();
     }
 
     public void success() {

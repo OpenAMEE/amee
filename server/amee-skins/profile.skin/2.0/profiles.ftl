@@ -44,11 +44,9 @@
 <table id="apiContent"></table>
 <div id="apiBottomPager"></div>
 
-<#if browser.profileActions.allowCreate>
-    <h2>Create Profile</h2>
-    <form onSubmit="return false;">
-        <input type='button' value='Create Profile' onClick='profile.addProfile();'/>
-    </form>
-</#if>
+<h2>Create Profile</h2>
+<form onSubmit="return false;">
+    <input type='button' value='Create Profile' onClick='profile.addProfile();'/>
+</form>
 
 <#include '/includes/after_content.ftl'>

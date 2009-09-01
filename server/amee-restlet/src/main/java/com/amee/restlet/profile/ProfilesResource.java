@@ -19,15 +19,11 @@
  */
 package com.amee.restlet.profile;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.Pager;
-import com.amee.domain.AMEEEntity;
-import com.amee.domain.auth.Group;
-import com.amee.domain.auth.Permission;
-import com.amee.domain.auth.User;
 import com.amee.domain.profile.Profile;
 import com.amee.restlet.AMEEResource;
-import com.amee.service.auth.AuthService;
 import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.ProfileConstants;
 import com.amee.service.profile.ProfileService;
@@ -49,9 +45,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 @Component("profilesResource")
 @Scope("prototype")
@@ -68,13 +64,11 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     @Autowired
     private AMEEStatistics ameeStatistics;
 
-    private User user;
     private Profile newProfile = null;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        user = AuthService.getUser();
         setPage(request);
     }
 
@@ -93,7 +87,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager(getItemsPerPage());
-        List<Profile> profiles = profileService.getProfiles(user, pager);
+        List<Profile> profiles = profileService.getProfiles(getActiveUser(), pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", profileBrowser);
@@ -107,7 +101,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
         JSONObject obj = new JSONObject();
         if (isGet()) {
             Pager pager = getPager(getItemsPerPage());
-            List<Profile> profiles = profileService.getProfiles(user, pager);
+            List<Profile> profiles = profileService.getProfiles(getActiveUser(), pager);
             pager.setCurrentPage(getPage());
             JSONArray profilesJSONArray = new JSONArray();
             for (Profile profile : profiles) {
@@ -126,7 +120,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
         Element element = document.createElement("ProfilesResource");
         if (isGet()) {
             Pager pager = getPager(getItemsPerPage());
-            List<Profile> profiles = profileService.getProfiles(user, pager);
+            List<Profile> profiles = profileService.getProfiles(getActiveUser(), pager);
             pager.setCurrentPage(getPage());
             Element profilesElement = document.createElement("Profiles");
             for (Profile profile : profiles) {
@@ -147,7 +141,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
         // are we creating a new Profile?
         if ((form.getFirstValue("profile") != null)) {
             // create new Profile, update statistics
-            newProfile = new Profile(user);
+            newProfile = new Profile(getActiveUser());
             profileService.persist(newProfile);
             ameeStatistics.createProfile();
         }

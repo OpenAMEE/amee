@@ -229,7 +229,7 @@ public class DataCategoryResourceBuilder {
         values.put("browser", resource.getDataBrowser());
         values.put("dataCategory", dataCategory);
         values.put("itemDefinition", dataCategory.getItemDefinition());
-        values.put("user", resource.getUser());
+        values.put("user", resource.getActiveUser());
         values.put("itemDefinitions", definitionService.getItemDefinitions(resource.getEnvironment()));
         values.put("node", dataCategory);
         if (sheet != null) {

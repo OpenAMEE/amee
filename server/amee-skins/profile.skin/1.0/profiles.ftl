@@ -20,7 +20,7 @@
 
 <p><a href='/profiles'>profiles</a></p>
 
-<#if profiles?? && browser.profileActions.allowList>
+<#if profiles??>
     <h2>Profiles</h2>
     <p>
         <#assign pagerItemsLabel = 'profiles'>
@@ -41,8 +41,8 @@
                 <td>${p.permission.user.username}</td>
                 <td>${p.created?datetime}</td>
                 <td>
-                <#if browser.profileActions.allowView><a href='/profiles/${p.displayPath}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
-                <#if browser.profileActions.allowDelete><input type="image" onClick="deleteProfile('${p.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
+                <a href='/profiles/${p.displayPath}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
+                <input type="image" onClick="deleteProfile('${p.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/>
                 </td>
             </tr>
             </#list>
@@ -72,10 +72,8 @@
     var p = new Profile();
 </script>
 
-<#if browser.profileActions.allowCreate>
-    <h2>Create Profile</h2>
-    <form onSubmit="return false;">
-        <input type='button' value='Create Profile' onClick='p.addProfile();'/>
-    </form>
-</#if>
+<h2>Create Profile</h2>
+<form onSubmit="return false;">
+    <input type='button' value='Create Profile' onClick='p.addProfile();'/>
+</form>
 <#include '/includes/after_content.ftl'>
