@@ -51,9 +51,6 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private PermissionService permissionService;
-
-    @Autowired
     private AlgorithmService algorithmService;
 
     @Autowired
@@ -150,7 +147,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
 
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
         // Add ItemDefinition defaults
-        APIVersion apiVersion = permissionService.getAPIVersion(profileItem.getProfile());
+        APIVersion apiVersion = profileItem.getProfile().getUser().getAPIVersion();
         profileItem.getItemDefinition().appendInternalValues(values, apiVersion);
         // Add DataItem values, filtered by start and end dates of the ProfileItem
         DataItem dataItem = profileItem.getDataItem();

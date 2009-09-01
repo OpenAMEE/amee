@@ -2,6 +2,7 @@ package com.amee.domain.auth;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.ObjectType;
 import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -136,5 +137,10 @@ public class Group extends AMEEEnvironmentEntity implements Comparable {
             description = "";
         }
         this.description = description;
+    }
+
+    @Override
+    public ObjectType getObjectType() {
+        return ObjectType.GRP;
     }
 }

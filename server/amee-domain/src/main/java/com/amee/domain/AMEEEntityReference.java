@@ -31,7 +31,7 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-public class AMEEEntityReference implements Serializable {
+public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
 
     public final static int ENTITY_TYPE_MAX_SIZE = 50;
 
@@ -48,11 +48,27 @@ public class AMEEEntityReference implements Serializable {
         super();
     }
 
-    public AMEEEntityReference(AMEEEntity entity) {
+    public AMEEEntityReference(IAMEEEntityReference entity) {
         this();
-        setEntityId(entity.getId());
-        setEntityUid(entity.getUid());
-        setEntityType(ObjectType.getType(entity.getClass()));
+        setEntityId(entity.getEntityId());
+        setEntityUid(entity.getEntityUid());
+        setEntityType(entity.getObjectType());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if ((o == null) || !IAMEEEntityReference.class.isAssignableFrom(o.getClass())) return false;
+        IAMEEEntityReference entity = (IAMEEEntityReference) o;
+        return getEntityId().equals(entity.getEntityId()) && getEntityType().equals(entity.getObjectType());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (null == getEntityId() ? 0 : getEntityId().hashCode());
+        hash = 31 * hash + (null == getEntityType() ? 0 : getEntityType().hashCode());
+        return hash;
     }
 
     public JSONObject getJSONObject() throws JSONException {
@@ -86,6 +102,10 @@ public class AMEEEntityReference implements Serializable {
             entityUid = "";
         }
         this.entityUid = entityUid;
+    }
+
+    public ObjectType getObjectType() {
+        return getEntityType();
     }
 
     public ObjectType getEntityType() {

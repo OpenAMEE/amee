@@ -2,6 +2,7 @@ package com.amee.domain.site;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -133,5 +134,10 @@ public class SiteApp extends AMEEEnvironmentEntity {
             skinPath = "";
         }
         this.skinPath = skinPath;
+    }
+
+    @Override
+    public ObjectType getObjectType() {
+        return ObjectType.SA;
     }
 }

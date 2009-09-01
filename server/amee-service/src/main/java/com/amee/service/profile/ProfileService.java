@@ -211,8 +211,8 @@ public class ProfileService extends BaseService {
             return null;
         }
 
-        // Get APIVersion via Profile, Permissions & Users.
-        APIVersion apiVersion = permissionService.getAPIVersion(profileItem.getProfile());
+        // Get APIVersion via Profile & User.
+        APIVersion apiVersion = profileItem.getProfile().getUser().getAPIVersion();
 
         // APIVersion apiVersion = profileItem.getProfile().getAPIVersion();
         Set<ItemValueDefinition> existingItemValueDefinitions = profileItem.getItemValueDefinitions();

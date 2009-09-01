@@ -22,6 +22,7 @@ package com.amee.restlet.profile;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.Pager;
+import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.profile.Profile;
 import com.amee.restlet.AMEEResource;
 import com.amee.service.profile.ProfileBrowser;
@@ -45,9 +46,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component("profilesResource")
 @Scope("prototype")
@@ -132,6 +131,14 @@ public class ProfilesResource extends AMEEResource implements Serializable {
             element.appendChild(newProfile.getElement(document));
         }
         return element;
+    }
+
+    @Override
+    public Set<PermissionEntry> getAcceptPermissionEntries() {
+        Set<PermissionEntry> entries = new HashSet<PermissionEntry>();
+        entries.addAll(super.getAcceptPermissionEntries());
+        entries.add(new PermissionEntry("create.pr"));
+        return entries;
     }
 
     @Override

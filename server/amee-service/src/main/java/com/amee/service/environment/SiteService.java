@@ -48,7 +48,7 @@ public class SiteService implements Serializable {
                 "SELECT p " +
                         "FROM Profile p " +
                         "WHERE p.environment.id = :environmentId " +
-                        "AND p.permission.user.id = :userId " +
+                        "AND p.user.id = :userId " +
                         "AND p.status != :trash")
                 .setParameter("environmentId", user.getEnvironment().getId())
                 .setParameter("userId", user.getId())

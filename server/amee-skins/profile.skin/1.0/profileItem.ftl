@@ -5,6 +5,8 @@
 <#include '/includes/furniture.ftl'>
 <#include '/includes/before_content.ftl'>
 
+<#assign allowModify = true>
+
 <script src="/scripts/amee/api_service.js" type="text/javascript"></script>
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 
@@ -41,24 +43,24 @@
         </tr>
         <tr>
             <td>Name</td>
-            <#if browser.profileItemActions.allowModify>
+            <#if allowModify>
                 <td><input name='name' value='${profileItem.name}' type='text' size='30'/><br/>
-                    <#else>
+            <#else>
                 <td>${profileItem.name}</td>
             </#if>
         </tr>
         <tr>
             <td>Valid From</td>
-            <#if browser.profileItemActions.allowModify>
+            <#if allowModify>
                 <td><input name='validFrom' value='${profileItem.startDate?string(getDateFormatV1())}' type='text' size='13'/>
                     (${getDateFormatV1()})<br/>
-                    <#else>
+            <#else>
                 <td>${profileItem.startDate?datetime}</td>
             </#if>
         </tr>
         <tr>
             <td>End Marker</td>
-            <#if browser.profileItemActions.allowModify>
+            <#if allowModify>
                 <td><select name='end'>
                     <option value='true'<#if profileItem.end> selected</#if>>Yes</option>
                     <option value='false'<#if !profileItem.end> selected</#if>>No</option>
@@ -70,7 +72,7 @@
         <#if 0 != profileItem.itemValues?size>
             <#list profileItem.itemValues as iv>
             <tr>
-                <#if browser.profileItemActions.allowModify>
+                <#if allowModify>
                     <td><a href='${basePath}/${iv.displayPath}'>${iv.displayName}</a></td>
                     <td>
                         <#if iv.itemValueDefinition.choicesAvailable>
@@ -96,7 +98,7 @@
             </#list>
         </#if>
     </table>
-    <#if browser.profileItemActions.allowModify>
+    <#if allowModify>
         <br/>
         <input type='submit' value='Update'/>
     </#if>

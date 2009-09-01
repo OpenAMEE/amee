@@ -22,7 +22,9 @@ package com.amee.domain.profile;
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.ObjectType;
+import com.amee.domain.AMEEEntityReference;
 import com.amee.domain.auth.User;
+import com.amee.domain.auth.Permission;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -32,6 +34,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "PROFILE")
@@ -103,6 +106,20 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
 
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
+    }
+
+
+    /**
+     * Add 'built-in' Permission to this Profile, such that the associated User owns the Profile.
+     *
+     * @param permissions the Permissions List to modify
+     */
+    protected void addBuiltInPermissions(List<Permission> permissions) {
+        Permission permission = new Permission();
+        permission.setEntityReference(new AMEEEntityReference(this));
+        permission.setPrincipleReference(new AMEEEntityReference(getUser()));
+        permission.addEntry(Permission.OWN);
+        permissions.add(permission);
     }
 
     public User getUser() {

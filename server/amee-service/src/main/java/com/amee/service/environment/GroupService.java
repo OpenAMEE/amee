@@ -209,11 +209,7 @@ public class GroupService implements Serializable {
         return groupPrinciple;
     }
 
-    public GroupPrinciple getGroupPrinciple(Group group, AMEEEntity entity) {
-        return getGroupPrinciple(group, new AMEEEntityReference(entity));
-    }
-
-    public GroupPrinciple getGroupPrinciple(Group group, AMEEEntityReference entity) {
+    public GroupPrinciple getGroupPrinciple(Group group, IAMEEEntityReference entity) {
         GroupPrinciple groupPrinciple = null;
         if ((group != null) && (entity != null)) {
             List<GroupPrinciple> groupPrinciples = entityManager.createQuery(
@@ -226,7 +222,7 @@ public class GroupService implements Serializable {
                     .setParameter("environmentId", group.getEnvironment().getId())
                     .setParameter("groupId", group.getId())
                     .setParameter("principleReference.entityId", entity.getEntityId())
-                    .setParameter("principleReference.entityType", entity.getEntityType().getName())
+                    .setParameter("principleReference.entityType", entity.getObjectType().getName())
                     .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
                     .setHint("org.hibernate.cacheRegion", CACHE_REGION)
@@ -272,12 +268,8 @@ public class GroupService implements Serializable {
         return groupPrinciples;
     }
 
-    public List<GroupPrinciple> getGroupPrinciplesForPrinciple(AMEEEntity entity, Pager pager) {
-        return getGroupPrinciplesForPrinciple(new AMEEEntityReference(entity), pager);
-    }
-
     @SuppressWarnings(value = "unchecked")
-    public List<GroupPrinciple> getGroupPrinciplesForPrinciple(AMEEEntityReference principle, Pager pager) {
+    public List<GroupPrinciple> getGroupPrinciplesForPrinciple(IAMEEEntityReference principle, Pager pager) {
         // first count all objects
         long count = (Long) entityManager.createQuery(
                 "SELECT count(gp) " +
@@ -286,7 +278,7 @@ public class GroupService implements Serializable {
                         "AND gp.principleReference.entityType = :entityType " +
                         "AND gp.status != :trash")
                 .setParameter("entityId", principle.getEntityId())
-                .setParameter("entityType", principle.getEntityType().getName())
+                .setParameter("entityType", principle.getObjectType().getName())
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
@@ -304,7 +296,7 @@ public class GroupService implements Serializable {
                         "AND gp.status != :trash " +
                         "ORDER BY g.name")
                 .setParameter("entityId", principle.getEntityId())
-                .setParameter("entityType", principle.getEntityType().getName())
+                .setParameter("entityType", principle.getObjectType().getName())
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
@@ -325,12 +317,8 @@ public class GroupService implements Serializable {
         return groups;
     }
 
-    public List<GroupPrinciple> getGroupPrinciplesForPrinciple(AMEEEntity principle) {
-        return getGroupPrinciplesForPrinciple(new AMEEEntityReference(principle));
-    }
-
     @SuppressWarnings(value = "unchecked")
-    public List<GroupPrinciple> getGroupPrinciplesForPrinciple(AMEEEntityReference principle) {
+    public List<GroupPrinciple> getGroupPrinciplesForPrinciple(IAMEEEntityReference principle) {
         List<GroupPrinciple> groupPrinciples = entityManager.createQuery(
                 "SELECT gp " +
                         "FROM GroupPrinciple gp " +
@@ -340,7 +328,7 @@ public class GroupService implements Serializable {
                         "AND gp.status != :trash " +
                         "ORDER BY g.name")
                 .setParameter("entityId", principle.getEntityId())
-                .setParameter("entityType", principle.getEntityType().getName())
+                .setParameter("entityType", principle.getObjectType().getName())
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)

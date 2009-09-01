@@ -2,6 +2,7 @@ package com.amee.domain.site;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -148,5 +149,10 @@ public class App extends AMEEEntity implements Comparable {
         if (allowClientCache != null) {
             this.allowClientCache = allowClientCache;
         }
+    }
+
+    @Override
+    public ObjectType getObjectType() {
+        return ObjectType.AP;
     }
 }

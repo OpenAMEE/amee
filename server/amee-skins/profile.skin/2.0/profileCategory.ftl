@@ -76,7 +76,7 @@
 <p id="apiTAmount"></p>
 <div id="apiBottomPager"></div>
 
-<#if dataCategory.itemDefinition?? && browser.profileItemActions.allowCreate>
+<#if dataCategory.itemDefinition??>
     <h2 id="createProfileHeading"></h2>
     <form id="createProfileFrm" onSubmit="return false;">
         <input name="representation" value="full" type="hidden"/>

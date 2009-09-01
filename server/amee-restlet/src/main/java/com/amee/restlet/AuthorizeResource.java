@@ -23,8 +23,8 @@ package com.amee.restlet;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.auth.PermissionEntry;
+import com.amee.domain.auth.Permission;
 import com.amee.service.auth.PermissionService;
-import com.amee.service.auth.AuthService;
 import com.amee.service.environment.GroupService;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +44,20 @@ public abstract class AuthorizeResource extends BaseResource {
     @Override
     public void handleGet() {
         log.debug("handleGet()");
-        if (hasPermissions(PermissionService.OWN_VIEW)) {
+        if (hasPermissions(getGetPermissionEntries())) {
             doGet();
         } else {
             notAuthorized();
         }
+    }
+
+    /**
+     * Get the PermissionEntries for getting a resource.
+     *
+     * @return PermissionEntries for getting a resource
+     */
+    public Set<PermissionEntry> getGetPermissionEntries() {
+        return Permission.OWN_VIEW;
     }
 
     public void doGet() {
@@ -58,11 +67,20 @@ public abstract class AuthorizeResource extends BaseResource {
     @Override
     public void acceptRepresentation(Representation entity) {
         log.debug("acceptRepresentation()");
-        if (hasPermissions(PermissionService.OWN_CREATE)) {
+        if (hasPermissions(getAcceptPermissionEntries())) {
             doAccept(entity);
         } else {
             notAuthorized();
         }
+    }
+
+    /**
+     * Get the PermissionEntries for accepting a resource.
+     *
+     * @return PermissionEntries for accepting a resource
+     */
+    public Set<PermissionEntry> getAcceptPermissionEntries() {
+        return Permission.OWN_CREATE;
     }
 
     public void doAccept(Representation entity) {
@@ -72,11 +90,20 @@ public abstract class AuthorizeResource extends BaseResource {
     @Override
     public void storeRepresentation(Representation entity) {
         log.debug("storeRepresentation()");
-        if (hasPermissions(PermissionService.OWN_MODIFY)) {
+        if (hasPermissions(getStorePermissionEntries())) {
             doStore(entity);
         } else {
             notAuthorized();
         }
+    }
+
+    /**
+     * Get the PermissionEntries for storing a resource.
+     *
+     * @return PermissionEntries for storing a resource
+     */
+    public Set<PermissionEntry> getStorePermissionEntries() {
+        return Permission.OWN_MODIFY;
     }
 
     public void doStore(Representation entity) {
@@ -90,11 +117,20 @@ public abstract class AuthorizeResource extends BaseResource {
     @Override
     public void removeRepresentations() {
         log.debug("removeRepresentations()");
-        if (hasPermissions(PermissionService.OWN_DELETE)) {
+        if (hasPermissions(getRemovePermissionEntries())) {
             doRemove();
         } else {
             notAuthorized();
         }
+    }
+
+    /**
+     * Get the PermissionEntries for removing a resource.
+     *
+     * @return PermissionEntries for removing a resource
+     */
+    public Set<PermissionEntry> getRemovePermissionEntries() {
+        return Permission.OWN_DELETE;
     }
 
     public void doRemove() {

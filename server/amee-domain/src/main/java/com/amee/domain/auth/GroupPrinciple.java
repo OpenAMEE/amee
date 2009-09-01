@@ -1,9 +1,7 @@
 package com.amee.domain.auth;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.AMEEEntity;
-import com.amee.domain.AMEEEntityReference;
-import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -44,7 +42,7 @@ public class GroupPrinciple extends AMEEEnvironmentEntity implements Comparable 
         super();
     }
 
-    public GroupPrinciple(Group group, AMEEEntity principle) {
+    public GroupPrinciple(Group group, IAMEEEntityReference principle) {
         super(group.getEnvironment());
         setGroup(group);
         setPrincipleReference(new AMEEEntityReference(principle));
@@ -121,5 +119,10 @@ public class GroupPrinciple extends AMEEEnvironmentEntity implements Comparable 
         if (principleReference != null) {
             this.principleReference = principleReference;
         }
+    }
+
+    @Override
+    public ObjectType getObjectType() {
+        return ObjectType.GP;
     }
 }

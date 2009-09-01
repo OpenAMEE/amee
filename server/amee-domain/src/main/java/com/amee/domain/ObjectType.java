@@ -35,7 +35,7 @@ import java.io.Serializable;
 
 public enum ObjectType implements Serializable {
 
-    DC, AL, ID, IVD, DI, PI, IV, PR, ALC, USR, GRP, ENV;
+    DC, AL, ID, IVD, DI, PI, IV, PR, ALC, USR, GRP, ENV, PRM, LN, SI, GP, VD, AP, SA, AV;
 
     private String[] names = {
             "DC",
@@ -49,7 +49,15 @@ public enum ObjectType implements Serializable {
             "ALC",
             "USR",
             "GRP",
-            "ENV"};
+            "ENV",
+            "PRM",
+            "LN",
+            "SI",
+            "GP",
+            "VD",
+            "AP",
+            "SA",
+            "AV"};
 
     private String[] labels = {
             "DataCategory",
@@ -63,7 +71,15 @@ public enum ObjectType implements Serializable {
             "AlgorithmContext",
             "User",
             "Group",
-            "Environment"};
+            "Environment",
+            "Permission",
+            "LocaleName",
+            "Site",
+            "GroupPrinciple",
+            "ValueDefinition",
+            "App",
+            "SiteApp",
+            "APIVersion"};
 
     public String toString() {
         return getName();

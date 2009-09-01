@@ -85,45 +85,42 @@
     </p>
 </#if>
 
-<#if browser.profileItemActions.allowList>
-    <h2>Profile Items</h2>
-    <p>
-        <table>
-            <tr>
-                <th>Item</th>
-                <th>kgCO2 pcm</th>
-                <th>Name</th>
-                <th>Valid From</th>
-                <th>End</th>
-                <th>Actions</th>
+<h2>Profile Items</h2>
+<p>
+    <table>
+        <tr>
+            <th>Item</th>
+            <th>kgCO2 pcm</th>
+            <th>Name</th>
+            <th>Valid From</th>
+            <th>End</th>
+            <th>Actions</th>
+        </tr>
+        <#if sheet?? && 0 != sheet.rows?size>
+            <#list sheet.rows as row>
+            <tr id='Elem_${row.uid}'>
+                <td>${row.findCell('dataItemLabel')}</td>
+                <td>${row.findCell('amountPerMonth')}</td>
+                <td>${row.findCell('name')}</td>
+                <td>${row.findCell('validFrom')}</td>
+                <td><#if row.findCell('end') == 'true'>Yes<#else>No</#if></td>
+                <td>
+                    <a href='${basePath}/${row.findCell('path')}'><img
+                            src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
+                    <input type="image"
+                           onClick="deleteProfileItem('${row.uid}', '${basePath}/${row.uid}'); return false;"
+                           src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/>
+                </td>
             </tr>
-            <#if sheet?? && 0 != sheet.rows?size>
-                <#list sheet.rows as row>
-                <tr id='Elem_${row.uid}'>
-                    <td>${row.findCell('dataItemLabel')}</td>
-                    <td>${row.findCell('amountPerMonth')}</td>
-                    <td>${row.findCell('name')}</td>
-                    <td>${row.findCell('validFrom')}</td>
-                    <td><#if row.findCell('end') == 'true'>Yes<#else>No</#if></td>
-                    <td>
-                        <#if browser.profileItemActions.allowView><a href='${basePath}/${row.findCell('path')}'><img
-                            src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
-                        <#if browser.profileItemActions.allowDelete><input type="image"
-                                                                           onClick="deleteProfileItem('${row.uid}', '${basePath}/${row.uid}'); return false;"
-                                                                           src="/images/icons/page_delete.png" title="Delete"
-                                                                           alt="Delete" border="0"/></#if>
-                    </td>
-                </tr>
-                </#list>
-            </#if>
-        </table>
-    </p>
-    <#if totalAmountPerMonth??>
-        <p>Total kgCO2 Per Month: <span id="totalAmountPerMonth">${totalAmountPerMonth}</span></p>
-    </#if>
+            </#list>
+        </#if>
+    </table>
+</p>
+<#if totalAmountPerMonth??>
+    <p>Total kgCO2 Per Month: <span id="totalAmountPerMonth">${totalAmountPerMonth}</span></p>
 </#if>
 
-<#if dataCategory.itemDefinition?? && browser.profileItemActions.allowCreate>
+<#if dataCategory.itemDefinition??>
     <h2 id="createProfileHeading"></h2>
     <form id="createProfileFrm" onSubmit="return false;">
         <input name="representation" value="full" type="hidden"/>

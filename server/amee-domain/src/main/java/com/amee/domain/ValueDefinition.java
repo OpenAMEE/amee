@@ -139,4 +139,8 @@ public class ValueDefinition extends AMEEEnvironmentEntity {
         this.valueType = valueType;
     }
 
+    @Override
+    public ObjectType getObjectType() {
+        return ObjectType.VD;
+    }
 }

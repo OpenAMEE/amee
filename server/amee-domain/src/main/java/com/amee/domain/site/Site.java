@@ -2,6 +2,7 @@ package com.amee.domain.site;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.ObjectType;
 import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -251,5 +252,10 @@ public class Site extends AMEEEnvironmentEntity implements Comparable {
             }
         }
         return Collections.unmodifiableSet(activeSiteApps);
+    }
+
+    @Override
+    public ObjectType getObjectType() {
+        return ObjectType.SI;
     }
 }

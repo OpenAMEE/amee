@@ -21,16 +21,19 @@
  */
 package com.amee.domain;
 
+import com.amee.domain.auth.Permission;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @MappedSuperclass
-public abstract class AMEEEntity implements DatedObject, Serializable {
+public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, Serializable {
 
     public final static int UID_SIZE = 12;
 
@@ -54,6 +57,13 @@ public abstract class AMEEEntity implements DatedObject, Serializable {
     @Column(name = "MODIFIED", nullable = false)
     private Date modified = null;
 
+    /**
+     * A List of transient Permissions. These Permissions can be bound into the model by resources and
+     * services to be used by the authorization decision logic in PermissionService.
+     */
+    @Transient
+    private List<Permission> permissions;
+
     public AMEEEntity() {
         super();
         setUid(UidGen.getUid());
@@ -62,7 +72,7 @@ public abstract class AMEEEntity implements DatedObject, Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!AMEEEntity.class.isAssignableFrom(o.getClass())) return false;
+        if ((o == null) || !AMEEEntity.class.isAssignableFrom(o.getClass())) return false;
         AMEEEntity ameeEntity = (AMEEEntity) o;
         return getUid().equals(ameeEntity.getUid());
     }
@@ -88,12 +98,20 @@ public abstract class AMEEEntity implements DatedObject, Serializable {
         return id;
     }
 
+    public Long getEntityId() {
+        return id;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
 
     public String getUid() {
         return uid;
+    }
+
+    public String getEntityUid() {
+        return getUid();
     }
 
     public void setUid(String uid) {
@@ -122,7 +140,7 @@ public abstract class AMEEEntity implements DatedObject, Serializable {
     public boolean isDeprecated() {
         return status.equals((AMEEStatus.DEPRECATED));
     }
-    
+
     public void setStatus(AMEEStatus status) {
         this.status = status;
     }
@@ -152,5 +170,59 @@ public abstract class AMEEEntity implements DatedObject, Serializable {
     public void setModified(Date modified) {
         this.modified = modified;
     }
-}
 
+    public List<Permission> getPermissions() {
+        if (permissions == null) {
+            permissions = new ArrayList<Permission>();
+            addBuiltInPermissions(permissions);
+        }
+        return permissions;
+    }
+
+    /**
+     * Add 'built-in' Permissions to this Entity. Allows specific entities to express permissions that
+     * are implicit in the model.
+     *
+     * @param permissions the Permissions List to modify
+     */
+    protected void addBuiltInPermissions(List<Permission> permissions) {
+        // do nothing here
+    }
+
+    public List<Permission> getPermissionsForPrinciple(IAMEEEntityReference principle) {
+        List<Permission> permissions = new ArrayList<Permission>();
+        for (Permission permission : getPermissions()) {
+            if (permission.getPrincipleReference().equals(principle)) {
+                permissions.add(permission);
+            }
+        }
+        return permissions;
+    }
+
+    public List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
+        List<Permission> permissions = new ArrayList<Permission>();
+        for (Permission permission : getPermissions()) {
+            if (permission.getEntityReference().equals(entity)) {
+                permissions.add(permission);
+            }
+        }
+        return permissions;
+    }
+
+    /**
+     * Fetch all Permissions that match the supplied principle and entity.
+     *
+     * @param principle to match on
+     * @param entity    to match on
+     * @return list of matching permissions
+     */
+    public List<Permission> getPermissionsForPrincipleAndEntity(IAMEEEntityReference principle, IAMEEEntityReference entity) {
+        List<Permission> permissions = new ArrayList<Permission>();
+        for (Permission permission : getPermissions()) {
+            if (permission.getPrincipleReference().equals(principle) && permission.getEntityReference().equals(entity)) {
+                permissions.add(permission);
+            }
+        }
+        return permissions;
+    }
+}

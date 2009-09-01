@@ -29,16 +29,12 @@
         <table>
             <tr>
                 <th>Path</th>
-                <th>Group</th>
-                <th>User</th>
                 <th>Created</th>
                 <th>Actions</th>
             </tr>
             <#list profiles as p>
             <tr id='Elem_${p.uid}'>
                 <td>${p.displayPath}</td>
-                <td>${p.permission.group.name}</td>
-                <td>${p.permission.user.username}</td>
                 <td>${p.created?datetime}</td>
                 <td>
                 <a href='/profiles/${p.displayPath}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>

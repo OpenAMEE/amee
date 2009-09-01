@@ -2,6 +2,7 @@ package com.amee.domain.environment;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -195,5 +196,10 @@ public class Environment extends AMEEEntity implements Comparable {
         } catch (NumberFormatException e) {
             // swallow
         }
+    }
+
+    @Override
+    public ObjectType getObjectType() {
+        return ObjectType.ENV;
     }
 }

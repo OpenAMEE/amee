@@ -18,10 +18,11 @@
  *
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
- */                                  
+ */
 package com.amee.domain.data;
 
 import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -32,11 +33,10 @@ import java.util.TreeMap;
 
 /**
  * Provides a Locale-to-name mapping for an {@link AMEEEnvironmentEntity} instance.
- *
+ * <p/>
  * The name in this context is that of the {@link com.amee.domain.path.Pathable} interface.
- *
+ * <p/>
  * Modelled as a One-to-Many relationship with the owning entity.
- *
  */
 @Entity
 @Inheritance
@@ -74,7 +74,7 @@ public class LocaleName extends AMEEEnvironmentEntity {
      *
      * @param entity - the entity to which the LocaleName belongs.
      * @param locale - the {@link Locale} for this name.
-     * @param name - the locale-specific name.
+     * @param name   - the locale-specific name.
      */
     public LocaleName(AMEEEnvironmentEntity entity, Locale locale, String name) {
         super(entity.getEnvironment());
@@ -87,7 +87,7 @@ public class LocaleName extends AMEEEnvironmentEntity {
         Map<String, Locale> localeMap = new TreeMap<String, Locale>();
         Locale[] locales = Locale.getAvailableLocales();
         for (Locale l : locales) {
-            localeMap.put(l.toString(),l);
+            localeMap.put(l.toString(), l);
         }
         return localeMap;
     }
@@ -108,5 +108,10 @@ public class LocaleName extends AMEEEnvironmentEntity {
      */
     public String getLocale() {
         return locale;
+    }
+
+    @Override
+    public ObjectType getObjectType() {
+        return ObjectType.LN;
     }
 }

@@ -3,6 +3,7 @@ package com.amee.domain.auth;
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIVersion;
+import com.amee.domain.ObjectType;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;
 import com.amee.domain.data.LocaleName;
@@ -284,5 +285,10 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
 
     public String getLocale() {
         return locale;
+    }
+
+    @Override
+    public ObjectType getObjectType() {
+        return ObjectType.USR;
     }
 }

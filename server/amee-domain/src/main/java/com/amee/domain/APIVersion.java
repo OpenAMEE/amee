@@ -108,4 +108,9 @@ public class APIVersion extends AMEEEntity {
     public boolean isNotVersionOne() {
         return !this.equals(ONE);
     }
+
+    @Override
+    public ObjectType getObjectType() {
+        return ObjectType.AV;
+    }
 }
