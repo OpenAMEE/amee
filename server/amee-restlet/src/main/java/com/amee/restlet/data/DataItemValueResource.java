@@ -94,7 +94,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             entities.add(dc);
             dc = dc.getDataCategory();
         }
-        entities.add(environment);
+        entities.add(getActiveEnvironment());
         Collections.reverse(entities);
         return entities;
     }
@@ -152,7 +152,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         return this.itemValue != null &&
                 !this.itemValue.isTrash() &&
                 this.itemValue.getItem().equals(getDataItem()) &&
-                this.itemValue.getEnvironment().equals(environment);
+                this.itemValue.getEnvironment().equals(getActiveEnvironment());
     }
 
     @SuppressWarnings(value = "unchecked")
@@ -167,7 +167,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
                 ItemValue iv = (ItemValue) o;
                 return !iv.isTrash() &&
                         iv.getItem().equals(getDataItem()) &&
-                        iv.getEnvironment().equals(environment);
+                        iv.getEnvironment().equals(getActiveEnvironment());
             }
         });
 

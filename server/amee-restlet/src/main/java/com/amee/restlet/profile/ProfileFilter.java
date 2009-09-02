@@ -68,7 +68,7 @@ public class ProfileFilter extends RewriteFilter {
                 // handle suffixes
                 String suffix = handleSuffix(segments);
                 // look for Profile matching path
-                Environment environment = (Environment) request.getAttributes().get("environment");
+                Environment environment = (Environment) request.getAttributes().get("activeEnvironment");
                 Profile profile = profileService.getProfile(environment, profileUid);
                 if (profile != null && !profile.isTrash()) {
                     // we found a Profile. Make available to request scope.

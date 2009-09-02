@@ -74,7 +74,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(environment);
+        entities.add(getActiveEnvironment());
         return entities;
     }
 

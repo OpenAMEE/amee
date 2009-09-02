@@ -72,7 +72,7 @@ public class SiteAppsResource extends AuthorizeResource {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+        Pager pager = getPager(getItemsPerPage());
         List<SiteApp> siteApps = siteService.getSiteApps(environmentBrowser.getSite(), pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -89,7 +89,7 @@ public class SiteAppsResource extends AuthorizeResource {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<SiteApp> siteApps = siteService.getSiteApps(environmentBrowser.getSite(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getIdentityJSONObject());
@@ -110,7 +110,7 @@ public class SiteAppsResource extends AuthorizeResource {
     public Element getElement(Document document) {
         Element element = document.createElement("SiteAppsResource");
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<SiteApp> siteApps = siteService.getSiteApps(environmentBrowser.getSite(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));

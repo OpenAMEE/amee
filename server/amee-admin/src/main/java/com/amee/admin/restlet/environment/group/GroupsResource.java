@@ -65,7 +65,7 @@ public class GroupsResource extends AuthorizeResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+        Pager pager = getPager(getItemsPerPage());
         List<Group> groups = groupService.getGroups(environmentBrowser.getEnvironment(), pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -80,7 +80,7 @@ public class GroupsResource extends AuthorizeResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<Group> groups = groupService.getGroups(environmentBrowser.getEnvironment(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
@@ -100,7 +100,7 @@ public class GroupsResource extends AuthorizeResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("GroupsResource");
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<Group> groups = groupService.getGroups(environmentBrowser.getEnvironment(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));

@@ -92,7 +92,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
                 getProfileItem().getDataCategory().equals(getDataCategory()) &&
                 getProfileItem().getProfile().equals(getProfile()) &&
                 getProfileItemValue().getItem().equals(getProfileItem()) &&
-                getProfileItemValue().getEnvironment().equals(environment);
+                getProfileItemValue().getEnvironment().equals(getActiveEnvironment());
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
             dc = dc.getDataCategory();
         }
         entities.add(getProfile());
-        entities.add(environment);
+        entities.add(getActiveEnvironment());
         Collections.reverse(entities);
         return entities;
     }

@@ -27,7 +27,6 @@ import com.amee.domain.environment.Environment;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
-import com.amee.service.environment.EnvironmentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -62,13 +61,11 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
-    private Environment environment;
     private ValueDefinition newValueDefinition;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        environment = EnvironmentService.getEnvironment();
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
     }
@@ -92,7 +89,7 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(environment.getItemsPerPage());
+        Pager pager = getPager(getItemsPerPage());
         Environment environment = definitionBrowser.getEnvironment();
         List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(environment, pager);
         pager.setCurrentPage(getPage());
@@ -109,7 +106,7 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             Environment environment = definitionBrowser.getEnvironment();
             List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(environment, pager);
             pager.setCurrentPage(getPage());
@@ -130,7 +127,7 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
     public Element getElement(Document document) {
         Element element = document.createElement("ValueDefinitionsResource");
         if (isGet()) {
-            Pager pager = getPager(environment.getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             Environment environment = definitionBrowser.getEnvironment();
             List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(environment, pager);
             pager.setCurrentPage(getPage());

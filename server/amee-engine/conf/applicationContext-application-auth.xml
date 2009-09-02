@@ -6,12 +6,13 @@
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-    <bean id="authApplication" class="org.restlet.Application">
+    <bean id="authApplication" class="com.amee.restlet.AMEEApplication">
         <property name="root" ref="authRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
         <property name="tunnelService.extensionsTunnel" value="true"/>
         <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="Auth"/>
+        <property name="allowClientCache" value="true"/>
     </bean>
 
     <bean id="authRoot" class="org.restlet.ext.spring.SpringRouter">

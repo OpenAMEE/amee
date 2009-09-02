@@ -1,17 +1,17 @@
 package com.amee.restlet;
 
+import com.amee.core.ThreadBeanHolder;
+import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
 import com.amee.domain.PagerSetType;
-import com.amee.domain.APIVersion;
+import com.amee.domain.site.ISite;
 import com.amee.domain.auth.User;
-import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.SortOrder;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.APIFault;
 import com.amee.restlet.utils.HeaderUtils;
 import com.amee.restlet.utils.MediaTypeUtils;
-import com.amee.core.ThreadBeanHolder;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateHashModel;
@@ -26,6 +26,9 @@ import org.restlet.data.*;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.resource.*;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,13 +37,14 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public abstract class BaseResource extends Resource {
+public abstract class BaseResource extends Resource implements BeanFactoryAware {
 
     protected final Log log = LogFactory.getLog(getClass());
 
     private Form form;
     private int page = 1;
     private PagerSetType pagerSetType = PagerSetType.ALL;
+    protected BeanFactory beanFactory;
 
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
@@ -102,13 +106,9 @@ public abstract class BaseResource extends Resource {
     }
 
     protected Representation getHtmlRepresentation() {
-
-        Configuration configuration;
-        ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
         FreeMarkerConfigurationService freeMarkerConfigurationService =
-                (FreeMarkerConfigurationService) springContext.getBean("freeMarkerConfigurationService");
-        configuration = freeMarkerConfigurationService.getConfiguration();
-
+                (FreeMarkerConfigurationService) beanFactory.getBean("freeMarkerConfigurationService");
+        Configuration configuration = freeMarkerConfigurationService.getConfiguration();
         return new TemplateRepresentation(
                 getTemplatePath(),
                 configuration,
@@ -151,14 +151,10 @@ public abstract class BaseResource extends Resource {
     }
 
     public Map<String, Object> getBaseTemplateValues() {
-        ApplicationContext springContext = (ApplicationContext) ThreadBeanHolder.get("springContext");
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("path", getRequest().getResourceRef().getPath());
         // values below are mirrored in EngineStatusFilter
         values.put("activeUser", ThreadBeanHolder.get("activeUser"));
-        values.put("activeSite", ThreadBeanHolder.get("site"));
-        values.put("activeApp", ThreadBeanHolder.get("app"));
-        values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));
         // addItemValue enums
         values.put("SortOrder", getEnumForTemplate(SortOrder.class));
         // addItemValue request params
@@ -222,8 +218,7 @@ public abstract class BaseResource extends Resource {
     }
 
     public int getItemsPerPage() {
-        Environment environment = (Environment) getRequest().getAttributes().get("environment");
-        int itemsPerPage = environment.getItemsPerPage();
+        int itemsPerPage = getActiveEnvironment().getItemsPerPage();
         String itemsPerPageStr = getRequest().getResourceRef().getQueryAsForm().getFirstValue("itemsPerPage");
         if (itemsPerPageStr == null) {
             itemsPerPageStr = HeaderUtils.getHeaderFirstValue("ItemsPerPage", getRequest());
@@ -232,6 +227,42 @@ public abstract class BaseResource extends Resource {
             itemsPerPage = Integer.parseInt(itemsPerPageStr);
         }
         return itemsPerPage;
+    }
+
+    /**
+     * Get the current active Environment.
+     *
+     * @return the current active Environment
+     */
+    public Environment getActiveEnvironment() {
+        return (Environment) getRequest().getAttributes().get("activeEnvironment");
+    }
+
+    /**
+     * Get the current active ISite.
+     *
+     * @return the current active ISite
+     */
+    public ISite getActiveSite() {
+        return (ISite) getRequest().getAttributes().get("activeSite");
+    }
+
+    /**
+     * Get the current active signed-in User.
+     *
+     * @return the current active signed-in User
+     */
+    public User getActiveUser() {
+        return (User) getRequest().getAttributes().get("activeUser");
+    }
+
+    /**
+     * Get the current APIVersion for the active user.
+     *
+     * @return the current APIVersion
+     */
+    public APIVersion getAPIVersion() {
+        return getActiveUser().getAPIVersion();
     }
 
     public void setPage(Request request) {
@@ -279,24 +310,6 @@ public abstract class BaseResource extends Resource {
 
     public void setPage(int page) {
         this.page = page;
-    }
-
-    /**
-     * Get the current active signed-in user.
-     *
-     * @return the current active signed-in user
-     */
-    public User getActiveUser() {
-        return (User) getRequest().getAttributes().get("activeUser");
-    }
-
-    /**
-     * Get the current APIVersion for the active user.
-     *
-     * @return the current APIVersion
-     */
-    public APIVersion getAPIVersion() {
-        return getActiveUser().getAPIVersion();
     }
 
     public void success() {
@@ -406,5 +419,9 @@ public abstract class BaseResource extends Resource {
      */
     public boolean isError() {
         return getResponse().getStatus().isError();
+    }
+
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
     }
 }

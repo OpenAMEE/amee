@@ -1,9 +1,9 @@
 package com.amee.admin.restlet.auth;
 
+import com.amee.core.ThreadBeanHolder;
+import com.amee.domain.auth.User;
 import com.amee.restlet.auth.AuthUtils;
 import com.amee.restlet.auth.BaseAuthFilter;
-import com.amee.domain.auth.User;
-import com.amee.core.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
@@ -31,7 +31,7 @@ public class GuestFilter extends BaseAuthFilter {
         String authToken = authenticated(request);
         if (authToken != null) {
             // find the current active user
-            activeUser = authenticationService.getActiveUser(authToken);
+            activeUser = authenticationService.getActiveUser(getActiveEnvironment(), authToken);
             // add active user to contexts
             request.getAttributes().put("activeUser", activeUser);
             ThreadBeanHolder.set("activeUser", activeUser);
@@ -40,7 +40,7 @@ public class GuestFilter extends BaseAuthFilter {
         } else {
             // not signed-in, don't accept request 
             AuthUtils.discardAuthCookie(response);
-            activeUser = authenticationService.doGuestSignIn();
+            activeUser = authenticationService.doGuestSignIn(getActiveEnvironment());
             // add (or clear) active user in contexts
             request.getAttributes().put("activeUser", activeUser);
             ThreadBeanHolder.set("activeUser", activeUser);

@@ -1,12 +1,8 @@
 package com.amee.restlet;
 
-import com.amee.domain.APIVersion;
-import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.restlet.profile.builder.v2.AtomFeed;
-import com.amee.core.ThreadBeanHolder;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.profile.ProfileService;
@@ -17,9 +13,6 @@ import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.data.*;
 import org.restlet.resource.*;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -50,7 +43,7 @@ import java.util.Map;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public abstract class AMEEResource extends AuthorizeResource implements BeanFactoryAware {
+public abstract class AMEEResource extends AuthorizeResource {
 
     // TTL for all representations is (Now - ONE_DAY)
     private static final long ONE_DAY = 1000L * 60L * 60L * 24L;
@@ -74,8 +67,6 @@ public abstract class AMEEResource extends AuthorizeResource implements BeanFact
     @Autowired
     protected EnvironmentService environmentService;
 
-    protected BeanFactory beanFactory;
-    protected Environment environment;
     protected PathItem pathItem;
     protected DataCategory dataCategory;
 
@@ -83,7 +74,6 @@ public abstract class AMEEResource extends AuthorizeResource implements BeanFact
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         initVariants();
-        environment = (Environment) request.getAttributes().get("environment");
         pathItem = (PathItem) request.getAttributes().get("pathItem");
     }
 
@@ -224,17 +214,9 @@ public abstract class AMEEResource extends AuthorizeResource implements BeanFact
         return dataCategory;
     }
 
-    public Environment getEnvironment() {
-        return environment;
-    }
-
     //TODO - Implementing here so that subclasses are not required to. Admin client templates will be phased out in time.
     public String getTemplatePath() {
         return null;
-    }
-
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
     }
 
     @Override
@@ -341,5 +323,4 @@ public abstract class AMEEResource extends AuthorizeResource implements BeanFact
     public void setIsBatchPost(boolean isBatchPost) {
         this.isBatchPost = isBatchPost;
     }
-
 }

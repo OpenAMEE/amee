@@ -1,25 +1,23 @@
 package com.amee.restlet.auth;
 
-import com.amee.domain.site.Site;
+import com.amee.domain.site.ISite;
 import com.amee.restlet.utils.HeaderUtils;
 import com.amee.service.auth.AuthenticationService;
-import com.amee.service.environment.SiteService;
 import org.restlet.data.CookieSetting;
 import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 
-public class AuthUtils {
+public abstract class AuthUtils {
 
     public static void addAuthCookie(Response response, String authToken) {
         if (authToken != null) {
-            Site site = SiteService.getSite();
             CookieSetting authCookie =
                     new CookieSetting(
                             0,
                             AuthenticationService.AUTH_TOKEN, authToken,
                             "/",
-                            site.getAuthCookieDomain().length() > 0 ? site.getAuthCookieDomain() : null);
+                            getActiveSite().getAuthCookieDomain().length() > 0 ? getActiveSite().getAuthCookieDomain() : null);
             CookieSetting oldAuthCookie = response.getCookieSettings().getFirst(AuthenticationService.AUTH_TOKEN);
             if (oldAuthCookie != null) {
                 response.getCookieSettings().remove(oldAuthCookie);
@@ -29,14 +27,13 @@ public class AuthUtils {
     }
 
     public static void discardAuthCookie(Response response) {
-        Site site = SiteService.getSite();
         CookieSetting authCookie =
                 new CookieSetting(
                         0,
                         AuthenticationService.AUTH_TOKEN,
                         "",
                         "/",
-                        site.getAuthCookieDomain().length() > 0 ? site.getAuthCookieDomain() : null);
+                        getActiveSite().getAuthCookieDomain().length() > 0 ? getActiveSite().getAuthCookieDomain() : null);
         authCookie.setMaxAge(0); // discard cookie now
         response.getCookieSettings().add(authCookie);
     }
@@ -77,5 +74,9 @@ public class AuthUtils {
             next = "/auth";
         }
         return next;
+    }
+
+    public static ISite getActiveSite() {
+        return (ISite) Request.getCurrent().getAttributes().get("activeSite");
     }
 }

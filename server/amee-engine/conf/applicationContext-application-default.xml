@@ -6,12 +6,13 @@
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-    <bean id="defaultApplication" class="org.restlet.Application">
+    <bean id="defaultApplication" class="com.amee.restlet.AMEEApplication">
         <property name="root" ref="defaultRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
         <property name="tunnelService.extensionsTunnel" value="true"/>
         <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="Default App"/>
+        <property name="allowClientCache" value="true"/>
     </bean>
 
     <bean id="defaultRoot" class="org.restlet.ext.spring.SpringRouter">

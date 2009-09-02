@@ -7,7 +7,6 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.Pager;
 import com.amee.domain.site.App;
 import com.amee.restlet.AuthorizeResource;
-import com.amee.service.environment.EnvironmentService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,7 +56,7 @@ public class AppsResource extends AuthorizeResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+        Pager pager = getPager(getItemsPerPage());
         List<App> apps = appService.getApps(pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -71,7 +70,7 @@ public class AppsResource extends AuthorizeResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<App> apps = appService.getApps(pager);
             pager.setCurrentPage(getPage());
             JSONArray appsArr = new JSONArray();
@@ -90,7 +89,7 @@ public class AppsResource extends AuthorizeResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("AppsResource");
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<App> apps = appService.getApps(pager);
             pager.setCurrentPage(getPage());
             Element appsElement = document.createElement("Apps");

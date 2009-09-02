@@ -41,7 +41,7 @@
         </property>
     </bean>
 
-    <bean id="ameeHost" class="org.restlet.ext.spring.SpringHost">
+    <bean id="ameeHost" class="com.amee.restlet.AMEESpringHost">
         <constructor-arg ref="ameeContainer"/>
         <property name="hostDomain" value="${HOST_NAME}"/>
         <property name="attachments">
@@ -53,14 +53,27 @@
                 <entry key="/profiles" value-ref="profilesApplication"/>
             </map>
         </property>
-        <!-- This value must match at least one entry in the SITE.NAME db table column. -->
         <property name="name" value="AMEE"/>
+        <property name="environmentName" value="AMEE"/>
+        <property name="secureAvailable" value="false"/>
+        <property name="checkRemoteAddress" value="false"/>
+        <property name="authCookieDomain" value=""/>
+        <property name="maxAuthDuration" value="7200000"/>
+        <property name="maxAuthIdle" value="1800000"/>
+        <property name="skinPaths">
+            <map>
+                <entry key-ref="defaultApplication" value="client-default"/>
+                <entry key-ref="authApplication" value="auth.client.skin"/>
+                <entry key-ref="definitionsApplication" value="definitions.skin"/>
+                <entry key-ref="dataApplication" value="data.skin"/>
+                <entry key-ref="profilesApplication" value="profile.skin"/>
+            </map>
+        </property>
     </bean>
 
-    <bean id="ameeAdminHost" class="org.restlet.ext.spring.SpringHost">
+    <bean id="ameeAdminHost" class="com.amee.restlet.AMEESpringHost">
         <constructor-arg ref="ameeContainer"/>
-        <property name="hostDomain"
-                  value="${HOST_NAME.ADMIN}"/>
+        <property name="hostDomain" value="${HOST_NAME.ADMIN}"/>
         <property name="attachments">
             <map>
                 <entry key="" value-ref="defaultApplication"/>
@@ -69,8 +82,21 @@
                 <entry key="/apps" value-ref="appsApplication"/>
             </map>
         </property>
-        <!-- This value must match at least one entry in the SITE.NAME db table column. -->
         <property name="name" value="AMEE.ADMIN"/>
+        <property name="environmentName" value="Back Environment"/>
+        <property name="secureAvailable" value="false"/>
+        <property name="checkRemoteAddress" value="false"/>
+        <property name="authCookieDomain" value=""/>
+        <property name="maxAuthDuration" value="1800000"/>
+        <property name="maxAuthIdle" value="600000"/>
+        <property name="skinPaths">
+            <map>
+                <entry key-ref="defaultApplication" value="admin-default"/>
+                <entry key-ref="authApplication" value="auth.admin.skin"/>
+                <entry key-ref="environmentsApplication" value="amee.environment.admin.skin"/>
+                <entry key-ref="appsApplication" value="app-admin"/>
+            </map>
+        </property>
     </bean>
 
     <bean id="modeEquals"

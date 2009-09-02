@@ -2,10 +2,12 @@ package com.amee.service.auth;
 
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.environment.Environment;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;
 import com.amee.domain.site.Site;
+import com.amee.domain.site.ISite;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -30,11 +32,11 @@ public class AuthenticationService implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public User doGuestSignIn() {
-        return getUserByUsername("guest");
+    public User doGuestSignIn(Environment environment) {
+        return getUserByUsername(environment, "guest");
     }
 
-    public String isAuthenticated(String authToken, String remoteAddress) {
+    public String isAuthenticated(Environment environment, ISite site, String authToken, String remoteAddress) {
 
         User activeUser;
         Map<String, String> values;
@@ -43,7 +45,6 @@ public class AuthenticationService implements Serializable {
         boolean maxAuthIdleCheckPassed = false;
         long now = Calendar.getInstance().getTimeInMillis();
         String oldAuthToken;
-        Site site = (Site) ThreadBeanHolder.get("site");
 
         // has authToken been supplied?
         if (authToken != null) {
@@ -120,7 +121,7 @@ public class AuthenticationService implements Serializable {
             // get and check auth
             String userUid = values.get(AuthToken.USER_UID);
             if (userUid != null) {
-                activeUser = getUserByUid(userUid);
+                activeUser = getUserByUid(environment, userUid);
                 if (activeUser != null) {
                     log.debug("auth authenticated and signed in: " + activeUser.getUsername());
                     Long touched = new Long(values.get(AuthToken.MODIFIED));
@@ -147,7 +148,7 @@ public class AuthenticationService implements Serializable {
      * @param authToken representing the active user.
      * @return the active user
      */
-    public User getActiveUser(String authToken) {
+    public User getActiveUser(Environment environment, String authToken) {
 
         if (authToken == null) {
             throw new IllegalArgumentException("AuthToken String must not be null.");
@@ -160,7 +161,7 @@ public class AuthenticationService implements Serializable {
         // get and check auth
         String userUid = values.get(AuthToken.USER_UID);
         if (userUid != null) {
-            return getUserByUid(userUid);
+            return getUserByUid(environment, userUid);
         } else {
             log.debug("getActiveUser() - active user NOT found");
             return null;
@@ -168,15 +169,15 @@ public class AuthenticationService implements Serializable {
     }
 
     /**
-     * Authenticates based on the supplied sample user. The sample user must have a username and password set.
-     * If authentication is successful the persistent User is returned.
+     * Authenticates based on the supplied sample user. The sample user must have an environment, username and
+     * password set. If authentication is successful the persistent User is returned.
      *
      * @param sampleUser sample User to authenticate against
      * @return the authenticated User
      */
     public User authenticate(User sampleUser) {
         // try to find auth based on 'sampleUser' User 'template'
-        User activeUser = getUserByUsername(sampleUser.getUsername());
+        User activeUser = getUserByUsername(sampleUser.getEnvironment(), sampleUser.getUsername());
         if (activeUser != null) {
             if (activeUser.getPassword().equals(sampleUser.getPassword())) {
                 log.debug("authenticate() - auth authenticated and signed in: " + sampleUser.getUsername());
@@ -196,15 +197,14 @@ public class AuthenticationService implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public User getUserByUid(String uid) {
-        Site site = (Site) ThreadBeanHolder.get("site");
+    public User getUserByUid(Environment environment, String uid) {
         List<User> users = entityManager.createQuery(
                 "SELECT DISTINCT u " +
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
                         "AND u.uid = :userUid " +
                         "AND u.status != :trash")
-                .setParameter("environmentId", site.getEnvironment().getId())
+                .setParameter("environmentId", environment.getId())
                 .setParameter("userUid", uid)
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
@@ -219,15 +219,14 @@ public class AuthenticationService implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public User getUserByUsername(String username) {
-        Site site = (Site) ThreadBeanHolder.get("site");
+    public User getUserByUsername(Environment environment, String username) {
         List<User> users = entityManager.createQuery(
                 "SELECT DISTINCT u " +
                         "FROM User u " +
                         "WHERE u.environment.id = :environmentId " +
                         "AND u.username = :username " +
                         "AND u.status != :trash")
-                .setParameter("environmentId", site.getEnvironment().getId())
+                .setParameter("environmentId", environment.getId())
                 .setParameter("username", username)
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)

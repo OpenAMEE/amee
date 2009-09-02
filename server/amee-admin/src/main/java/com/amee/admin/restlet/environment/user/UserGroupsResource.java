@@ -7,7 +7,6 @@ import com.amee.domain.auth.Group;
 import com.amee.domain.auth.GroupPrinciple;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
-import com.amee.service.environment.EnvironmentService;
 import com.amee.service.environment.GroupService;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,7 +66,7 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+        Pager pager = getPager(getItemsPerPage());
         List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciplesForPrinciple(environmentBrowser.getUser());
         Map<String, GroupPrinciple> groupPrincipleMap = new HashMap<String, GroupPrinciple>();
         Set<Object> pagerSet = new HashSet<Object>();
@@ -92,7 +91,7 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciplesForPrinciple(environmentBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
@@ -113,7 +112,7 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
     public Element getElement(Document document) {
         Element element = document.createElement("UserGroupsResource");
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciplesForPrinciple(environmentBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));

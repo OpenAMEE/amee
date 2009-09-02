@@ -55,7 +55,7 @@ public class EnvironmentsResource extends AuthorizeResource implements Serializa
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+        Pager pager = getPager(getItemsPerPage());
         List<Environment> environments = environmentService.getEnvironments(pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -70,7 +70,7 @@ public class EnvironmentsResource extends AuthorizeResource implements Serializa
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<Environment> environments = environmentService.getEnvironments(pager);
             pager.setCurrentPage(getPage());
             JSONArray environmentsArr = new JSONArray();
@@ -89,7 +89,7 @@ public class EnvironmentsResource extends AuthorizeResource implements Serializa
     public Element getElement(Document document) {
         Element element = document.createElement("EnvironmentsResource");
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<Environment> environments = environmentService.getEnvironments(pager);
             pager.setCurrentPage(getPage());
             Element environmentsElement = document.createElement("Environments");

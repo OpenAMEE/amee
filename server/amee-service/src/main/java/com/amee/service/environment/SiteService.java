@@ -173,10 +173,6 @@ public class SiteService implements Serializable {
         site.setStatus(AMEEStatus.TRASH);
     }
 
-    public static Site getSite() {
-        return (Site) ThreadBeanHolder.get("site");
-    }
-
     // SiteApps
 
     public SiteApp getSiteApp(Site site, String appName) {

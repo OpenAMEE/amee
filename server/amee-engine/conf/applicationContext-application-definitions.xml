@@ -6,12 +6,13 @@
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-    <bean id="definitionsApplication" class="org.restlet.Application">
+    <bean id="definitionsApplication" class="com.amee.restlet.AMEEApplication">
         <property name="root" ref="definitionsRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
         <property name="tunnelService.extensionsTunnel" value="true"/>
         <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="AMEE Definitions"/>
+        <property name="allowClientCache" value="true"/>
     </bean>
 
     <bean id="definitionsRoot" class="org.restlet.ext.spring.SpringRouter">

@@ -57,7 +57,7 @@ public class DataFilter extends RewriteFilter {
             // handle suffixes
             String suffix = handleSuffix(segments);
 
-            Environment environment = (Environment) request.getAttributes().get("environment");
+            Environment environment = (Environment) request.getAttributes().get("activeEnvironment");
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
 
             // check for flat or heirachical path

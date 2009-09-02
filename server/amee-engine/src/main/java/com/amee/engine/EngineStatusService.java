@@ -64,9 +64,6 @@ public class EngineStatusService extends StatusService {
             values.put("status", status);
             // values below are mirrored in BaseResource
             values.put("activeUser", request.getAttributes().get("activeUser"));
-            values.put("activeSite", ThreadBeanHolder.get("site"));
-            values.put("activeApp", ThreadBeanHolder.get("app"));
-            values.put("activeSiteApp", ThreadBeanHolder.get("siteApp"));
             // find a Template Representation
             return getTemplateRepresentation(status, request, configuration, values);
         } else {

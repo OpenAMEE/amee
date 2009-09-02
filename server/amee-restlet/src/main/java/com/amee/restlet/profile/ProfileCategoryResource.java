@@ -96,7 +96,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
         return super.isValid() &&
                 getDataCategory() != null &&
                 !getDataCategory().isTrash() &&
-                getDataCategory().getEnvironment().equals(environment);
+                getDataCategory().getEnvironment().equals(getActiveEnvironment());
     }
 
     @Override
@@ -108,7 +108,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
             dc = dc.getDataCategory();
         }
         entities.add(getProfile());
-        entities.add(environment);
+        entities.add(getActiveEnvironment());
         Collections.reverse(entities);
         return entities;
     }

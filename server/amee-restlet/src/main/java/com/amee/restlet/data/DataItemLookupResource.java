@@ -56,7 +56,6 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
     @Autowired
     private PathItemService pathItemService;
 
-    private Environment environment;
     private String dataItemUid = "";
     private DataItem dataItem = null;
     private PathItem pathItem = null;
@@ -64,11 +63,10 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        environment = (Environment) request.getAttributes().get("environment");
         dataItemUid = request.getResourceRef().getQueryAsForm().getFirstValue("dataItemUid", "");
-        dataItem = dataService.getDataItem(environment, dataItemUid);
+        dataItem = dataService.getDataItem(getActiveEnvironment(), dataItemUid);
         if (dataItem != null) {
-            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
+            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(getActiveEnvironment());
             PathItem dataCategoryPathItem = pathItemGroup.findByUId(dataItem.getDataCategory().getUid());
             pathItem = dataCategoryPathItem.findLastPathItem(dataItem.getUid(), true);
         }
@@ -77,7 +75,7 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(environment);
+        entities.add(getActiveEnvironment());
         if (dataItem != null) {
             entities.add(dataItem);
         }

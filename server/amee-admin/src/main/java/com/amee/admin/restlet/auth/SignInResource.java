@@ -67,10 +67,9 @@ public class SignInResource extends BaseResource implements Serializable {
 
     @Override
     public void handleGet() {
-        Site site = SiteService.getSite();
         Request request = getRequest();
         Response response = getResponse();
-        if (site.isSecureAvailable() && !request.getResourceRef().getSchemeProtocol().equals(Protocol.HTTPS)) {
+        if (getActiveSite().isSecureAvailable() && !request.getResourceRef().getSchemeProtocol().equals(Protocol.HTTPS)) {
             // bounce to HTTPS
             response.setLocationRef("https://" +
                     request.getResourceRef().getHostDomain() +
@@ -103,6 +102,7 @@ public class SignInResource extends BaseResource implements Serializable {
             // deal with sign in
             nextUrl = AuthUtils.getNextUrl(getRequest(), getForm());
             sampleUser = new User();
+            sampleUser.setEnvironment(getActiveEnvironment());
             sampleUser.setUsername(form.getFirstValue("username"));
             sampleUser.setPasswordInClear(form.getFirstValue("password"));
             activeUser = authenticationService.authenticate(sampleUser);

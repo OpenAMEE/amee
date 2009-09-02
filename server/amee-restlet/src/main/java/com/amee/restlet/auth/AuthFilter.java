@@ -26,7 +26,7 @@ public class AuthFilter extends BaseAuthFilter {
         log.debug("doHandle()");
 
         // Authentication has already been performed upstream so just continue without any further processing
-        if (request.getAttributes().get("activeUser") != null) {
+        if (getActiveUser() != null) {
             return super.doHandle(request, response);
         }
 
@@ -34,7 +34,7 @@ public class AuthFilter extends BaseAuthFilter {
         String authToken = authenticated(request);
         if (authToken != null) {
             // find the current active user
-            User activeUser = authenticationService.getActiveUser(authToken);
+            User activeUser = authenticationService.getActiveUser(getActiveEnvironment(), authToken);
             // add active user to contexts
             request.getAttributes().put("activeUser", activeUser);
             ThreadBeanHolder.set("activeUser", activeUser);
@@ -55,5 +55,4 @@ public class AuthFilter extends BaseAuthFilter {
 
         return result;
     }
-
 }

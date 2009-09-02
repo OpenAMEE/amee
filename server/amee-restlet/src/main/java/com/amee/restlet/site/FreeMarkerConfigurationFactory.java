@@ -2,6 +2,7 @@ package com.amee.restlet.site;
 
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.cache.CacheableFactory;
+import com.amee.domain.site.ISite;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
@@ -95,11 +96,12 @@ public class FreeMarkerConfigurationFactory implements CacheableFactory {
     }
 
     public String getKey() {
-        String skinPath = (String) ThreadBeanHolder.get("skinPath");
-        if (skinPath == null) {
-            skinPath = "client-default";
+        ISite site = (ISite) ThreadBeanHolder.get("activeSite");
+        if ((site != null) && (site.getActiveSkinPath() != null)) {
+            return site.getActiveSkinPath();
+        } else {
+            return "client-default";
         }
-        return skinPath;
     }
 
     public String getCacheName() {

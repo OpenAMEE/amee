@@ -2,6 +2,7 @@ package com.amee.restlet.auth;
 
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.auth.User;
+import com.amee.domain.environment.Environment;
 import com.amee.service.auth.AuthenticationService;
 import org.restlet.Application;
 import org.restlet.Guard;
@@ -53,6 +54,7 @@ public class BasicAuthFilter extends Guard {
     @Override
     public boolean checkSecret(Request request, String identifer, char[] secret) {
         User sampleUser = new User();
+        sampleUser.setEnvironment((Environment) request.getAttributes().get("activeEnvironment"));
         sampleUser.setUsername(identifer);
         sampleUser.setPasswordInClear(new String(secret));
         User activeUser = authenticationService.authenticate(sampleUser);

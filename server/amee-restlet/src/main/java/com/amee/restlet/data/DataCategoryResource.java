@@ -92,7 +92,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         return super.isValid() &&
                 getDataCategory() != null &&
                 !getDataCategory().isTrash() &&
-                getDataCategory().getEnvironment().equals(environment);
+                getDataCategory().getEnvironment().equals(getActiveEnvironment());
     }
 
     @Override
@@ -103,7 +103,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             entities.add(dc);
             dc = dc.getDataCategory();
         }
-        entities.add(environment);
+        entities.add(getActiveEnvironment());
         Collections.reverse(entities);
         return entities;
     }
@@ -460,7 +460,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
                 dataItem = dataService.getDataItem(
-                        environment,
+                        getActiveEnvironment(),
                         uid);
                 if (dataItem != null) {
                     dataItem = acceptDataItem(form, dataItem);

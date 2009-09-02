@@ -6,12 +6,13 @@
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-    <bean id="profilesApplication" class="org.restlet.Application">
+    <bean id="profilesApplication" class="com.amee.restlet.AMEEApplication">
         <property name="root" ref="profilesRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
         <property name="tunnelService.extensionsTunnel" value="true"/>
         <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="Profile Administration"/>
+        <property name="allowClientCache" value="true"/>
     </bean>
 
     <bean id="profilesRoot" class="org.restlet.ext.spring.SpringRouter">

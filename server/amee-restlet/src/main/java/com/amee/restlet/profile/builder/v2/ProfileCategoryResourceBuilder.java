@@ -100,7 +100,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             }
 
             // addItemValue environment
-            obj.put("environment", resource.getEnvironment().getJSONObject(true));
+            obj.put("environment", resource.getActiveEnvironment().getJSONObject(true));
 
             // addItemValue Data Category
             obj.put("dataCategory", resource.getDataCategory().getJSONObject(true));
@@ -175,7 +175,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             }
 
             // addItemValue environment
-            element.appendChild(resource.getEnvironment().getElement(document, true));
+            element.appendChild(resource.getActiveEnvironment().getElement(document, true));
 
             // addItemValue DataCategory
             element.appendChild(resource.getDataCategory().getIdentityElement(document));

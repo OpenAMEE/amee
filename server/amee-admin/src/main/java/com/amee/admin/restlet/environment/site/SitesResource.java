@@ -65,7 +65,7 @@ public class SitesResource extends AuthorizeResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+        Pager pager = getPager(getItemsPerPage());
         List<Site> sites = siteService.getSites(environmentBrowser.getEnvironment(), pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -80,7 +80,7 @@ public class SitesResource extends AuthorizeResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<Site> sites = siteService.getSites(environmentBrowser.getEnvironment(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getIdentityJSONObject());
@@ -100,7 +100,7 @@ public class SitesResource extends AuthorizeResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("SitesResource");
         if (isGet()) {
-            Pager pager = getPager(EnvironmentService.getEnvironment().getItemsPerPage());
+            Pager pager = getPager(getItemsPerPage());
             List<Site> sites = siteService.getSites(environmentBrowser.getEnvironment(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));

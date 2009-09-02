@@ -36,7 +36,7 @@ public class SignOutResource extends BaseResource implements Serializable {
         super.initialise(context, request, response);
         // sign out the current User and sign in the guest auth instead
         AuthUtils.discardAuthCookie(response);
-        activeUser = authenticationService.doGuestSignIn();
+        activeUser = authenticationService.doGuestSignIn(getActiveEnvironment());
         request.getAttributes().put("activeUser", activeUser);
         ThreadBeanHolder.set("activeUser", activeUser);
     }

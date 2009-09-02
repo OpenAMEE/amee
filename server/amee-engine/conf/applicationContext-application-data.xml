@@ -4,13 +4,15 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
                            http://www.springframework.org/schema/util
-                           http://www.springframework.org/schema/util/spring-util-2.5.xsd">                                                                                                             
-    <bean id="dataApplication" class="org.restlet.Application">
+                           http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+    <bean id="dataApplication" class="com.amee.restlet.AMEEApplication">
         <property name="root" ref="dataRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
         <property name="tunnelService.extensionsTunnel" value="true"/>        
         <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="Data Administration"/>
+        <property name="allowClientCache" value="true"/>
     </bean>
 
     <bean id="dataRoot" class="org.restlet.ext.spring.SpringRouter">

@@ -60,12 +60,12 @@ public abstract class BaseDataResource extends AMEEResource {
 
     public void setDataItemByPathOrUid(String pathOrUid) {
         if (pathOrUid.isEmpty()) return;
-        dataItem = dataService.getDataItem(environment, pathOrUid);
+        dataItem = dataService.getDataItem(getActiveEnvironment(), pathOrUid);
     }
 
     public void setDataItemByUid(String uid) {
         if (uid.isEmpty()) return;
-        dataItem = dataService.getDataItem(environment, uid);
+        dataItem = dataService.getDataItem(getActiveEnvironment(), uid);
     }
 
     public DataItem getDataItem() {

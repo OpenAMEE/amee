@@ -1,19 +1,17 @@
 package com.amee.restlet.auth;
 
-import com.amee.domain.site.Site;
+import com.amee.restlet.BaseFilter;
 import com.amee.restlet.utils.HeaderUtils;
 import com.amee.restlet.utils.MediaTypeUtils;
 import com.amee.service.auth.AuthenticationService;
-import com.amee.service.environment.SiteService;
 import org.restlet.Application;
-import org.restlet.Filter;
 import org.restlet.data.Cookie;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class BaseAuthFilter extends Filter {
+public class BaseAuthFilter extends BaseFilter {
 
     @Autowired
     protected AuthenticationService authenticationService;
@@ -24,6 +22,8 @@ public class BaseAuthFilter extends Filter {
 
     protected String authenticated(Request request) {
         return authenticationService.isAuthenticated(
+                getActiveEnvironment(),
+                getActiveSite(),
                 getAuthToken(request),
                 request.getClientInfo().getAddress());
     }
@@ -59,8 +59,8 @@ public class BaseAuthFilter extends Filter {
 
     protected void reject(Request request, Response response) {
         if (MediaTypeUtils.isStandardWebBrowser(request)) {
-            Site site = SiteService.getSite();
-            if (site.isSecureAvailable()) {
+            // Site site = SiteService.getSite();
+            if (getActiveSite().isSecureAvailable()) {
                 // bounce to HTTPS
                 response.setLocationRef("https://" +
                         request.getResourceRef().getHostDomain() +

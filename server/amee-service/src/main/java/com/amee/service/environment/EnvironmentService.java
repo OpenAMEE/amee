@@ -1,5 +1,6 @@
 package com.amee.service.environment;
 
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
@@ -7,7 +8,6 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.site.Site;
-import com.amee.core.ThreadBeanHolder;
 import com.amee.service.data.DataService;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
@@ -39,7 +39,7 @@ public class EnvironmentService implements Serializable {
 
     @Autowired
     private ProfileService profileService;
-    
+
     // Events
 
     @SuppressWarnings(value = "unchecked")
@@ -101,6 +101,27 @@ public class EnvironmentService implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
+    public Environment getEnvironmentByName(String name) {
+        Environment environment = null;
+        if (!StringUtils.isBlank(name)) {
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(Environment.class);
+            criteria.add(Restrictions.eq("name", name));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<Environment> environments = criteria.list();
+            if (environments.size() == 1) {
+                log.debug("getEnvironmentByName() found: " + name);
+                environment = environments.get(0);
+            } else {
+                log.debug("getEnvironmentByName() NOT found: " + name);
+            }
+        }
+        return environment;
+    }
+
+    @SuppressWarnings(value = "unchecked")
     public List<Environment> getEnvironments() {
         List<Environment> environments = entityManager.createQuery(
                 "FROM Environment e " +
@@ -151,10 +172,6 @@ public class EnvironmentService implements Serializable {
     public void remove(Environment environment) {
         beforeEnvironmentDelete(environment);
         environment.setStatus(AMEEStatus.TRASH);
-    }
-
-    public static Environment getEnvironment() {
-        return (Environment) ThreadBeanHolder.get("environment");
     }
 
     // API Versions

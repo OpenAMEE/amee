@@ -6,12 +6,13 @@
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-    <bean id="environmentsApplication" class="org.restlet.Application">
+    <bean id="environmentsApplication" class="com.amee.restlet.AMEEApplication">
         <property name="root" ref="environmentsRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
         <property name="tunnelService.extensionsTunnel" value="true"/>
         <property name="statusService" ref="engineStatusService"/>
         <property name="name" value="Environment Administration"/>
+        <property name="allowClientCache" value="true"/>
     </bean>
 
     <bean id="environmentsRoot" class="org.restlet.ext.spring.SpringRouter">

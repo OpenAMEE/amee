@@ -73,7 +73,7 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
             entities.add(dc);
             dc = dc.getDataCategory();
         }
-        entities.add(environment);
+        entities.add(getActiveEnvironment());
         Collections.reverse(entities);
         return entities;
     }
@@ -82,7 +82,7 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
     public boolean isValid() {
         return super.isValid() &&
                 (getDataCategory() != null) &&
-                getDataCategory().getEnvironment().equals(environment);
+                getDataCategory().getEnvironment().equals(getActiveEnvironment());
     }
 
     @Override

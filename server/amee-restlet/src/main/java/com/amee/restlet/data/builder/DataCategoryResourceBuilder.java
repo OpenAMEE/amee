@@ -74,7 +74,7 @@ public class DataCategoryResourceBuilder {
             // If the DC is a symlink, use the target PathItem
             PathItem pathItem = resource.getPathItem();
             if (resource.getDataCategory().getAliasedCategory() != null) {
-                PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getEnvironment());
+                PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getActiveEnvironment());
                 pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
             }
 
@@ -162,7 +162,7 @@ public class DataCategoryResourceBuilder {
             // If the DC is a symlink, use the target PathItem
             PathItem pathItem = resource.getPathItem();
             if (resource.getDataCategory().getAliasedCategory() != null) {
-                PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getEnvironment());
+                PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getActiveEnvironment());
                 pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
             }
 
@@ -230,7 +230,7 @@ public class DataCategoryResourceBuilder {
         values.put("dataCategory", dataCategory);
         values.put("itemDefinition", dataCategory.getItemDefinition());
         values.put("user", resource.getActiveUser());
-        values.put("itemDefinitions", definitionService.getItemDefinitions(resource.getEnvironment()));
+        values.put("itemDefinitions", definitionService.getItemDefinitions(resource.getActiveEnvironment()));
         values.put("node", dataCategory);
         if (sheet != null) {
             Pager pager = resource.getPager(resource.getItemsPerPage());
@@ -244,7 +244,7 @@ public class DataCategoryResourceBuilder {
         PathItem pathItem = resource.getPathItem();
         values.put("fullPath", "/data" + pathItem.getFullPath());
         if (resource.getDataCategory().getAliasedCategory() != null) {
-            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getEnvironment());
+            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getActiveEnvironment());
             pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
             values.put("pathItem", pathItem);
         }
