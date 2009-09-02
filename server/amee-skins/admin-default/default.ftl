@@ -4,7 +4,6 @@
 <p>
 <ul>
 <li><a href="/environments">Environments</a></li>
-<li><a href="/apps">Apps</a></li>
 </ul>
 </p>
 <#include '/includes/after_content.ftl'>

@@ -42,7 +42,7 @@ public class GroupService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    private static final String CACHE_REGION = "query.siteService";
+    private static final String CACHE_REGION = "query.groupService";
 
     @PersistenceContext
     private EntityManager entityManager;

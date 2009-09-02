@@ -25,13 +25,10 @@ import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.site.Site;
 import com.amee.service.BaseBrowser;
 import com.amee.service.definition.DefinitionService;
 import com.amee.service.environment.EnvironmentService;
-import com.amee.service.environment.SiteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -45,18 +42,11 @@ public class DefinitionBrowser extends BaseBrowser {
     private EnvironmentService environmentService;
 
     @Autowired
-    private SiteService siteService;
-
-    @Autowired
     private DefinitionService definitionService;
 
     // Environments
     private String environmentUid = null;
     private Environment environment = null;
-
-    // Environment Sites
-    private String siteUid = null;
-    private Site site = null;
 
     // ItemDefinitions
     private String valueDefinitionUid = null;
@@ -99,25 +89,6 @@ public class DefinitionBrowser extends BaseBrowser {
             }
         }
         return environment;
-    }
-
-    // Environment Sites
-
-    public String getSiteUid() {
-        return siteUid;
-    }
-
-    public void setSiteUid(String siteUid) {
-        this.siteUid = siteUid;
-    }
-
-    public Site getSite() {
-        if (site == null) {
-            if ((siteUid != null) && (getEnvironment() != null)) {
-                site = siteService.getSiteByUid(environment, siteUid);
-            }
-        }
-        return site;
     }
 
     // ValueDefinitions

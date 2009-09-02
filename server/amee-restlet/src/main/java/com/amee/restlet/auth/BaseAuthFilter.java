@@ -59,7 +59,6 @@ public class BaseAuthFilter extends BaseFilter {
 
     protected void reject(Request request, Response response) {
         if (MediaTypeUtils.isStandardWebBrowser(request)) {
-            // Site site = SiteService.getSite();
             if (getActiveSite().isSecureAvailable()) {
                 // bounce to HTTPS
                 response.setLocationRef("https://" +

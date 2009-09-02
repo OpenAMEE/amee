@@ -13,10 +13,8 @@ Modified: ${environment.modified?string.short}<br/>
 </#if>
 <h2>Manage</h2>
 <p>
-<a href='/environments/${environment.uid}/sites'>Sites</a><br/>
 <a href='/environments/${environment.uid}/users'>Users</a><br/>
 <a href='/environments/${environment.uid}/groups'>Groups</a><br/>
-<a href='/environments/${environment.uid}/roles'>Roles</a><br/>
 <#include '/sites/environment_child_options.ftl'>
 </p>
 <#if browser.environmentActions.allowModify>

@@ -1,12 +1,10 @@
 package com.amee.service.auth;
 
-import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;
-import com.amee.domain.site.Site;
 import com.amee.domain.site.ISite;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

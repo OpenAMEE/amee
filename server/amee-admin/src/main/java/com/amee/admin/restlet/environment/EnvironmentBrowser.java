@@ -1,14 +1,14 @@
 package com.amee.admin.restlet.environment;
 
 import com.amee.domain.APIVersion;
-import com.amee.domain.auth.*;
+import com.amee.domain.auth.Group;
+import com.amee.domain.auth.GroupPrinciple;
+import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.site.Site;
-import com.amee.domain.site.SiteApp;
 import com.amee.service.BaseBrowser;
 import com.amee.service.environment.EnvironmentService;
-import com.amee.service.environment.SiteService;
 import com.amee.service.environment.GroupService;
+import com.amee.service.environment.SiteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -32,16 +32,6 @@ public class EnvironmentBrowser extends BaseBrowser {
 
     private String environmentUid = null;
     private Environment environment = null;
-
-    // Sites
-
-    private String siteUid = null;
-    private Site site = null;
-
-    // SiteApp
-
-    private String siteAppUid = null;
-    private SiteApp siteApp = null;
 
     // Groups
 
@@ -72,40 +62,6 @@ public class EnvironmentBrowser extends BaseBrowser {
             environment = environmentService.getEnvironmentByUid(environmentUid);
         }
         return environment;
-    }
-
-    // Sites
-
-    public String getSiteUid() {
-        return siteUid;
-    }
-
-    public void setSiteUid(String siteUid) {
-        this.siteUid = siteUid;
-    }
-
-    public Site getSite() {
-        if ((site == null) && (getEnvironment() != null) && (siteUid != null)) {
-            site = siteService.getSiteByUid(environment, siteUid);
-        }
-        return site;
-    }
-
-    // SiteApps
-
-    public String getSiteAppUid() {
-        return siteAppUid;
-    }
-
-    public void setSiteAppUid(String siteAppUid) {
-        this.siteAppUid = siteAppUid;
-    }
-
-    public SiteApp getSiteApp() {
-        if ((siteApp == null) && (getSite() != null) && (siteAppUid != null)) {
-            siteApp = siteService.getSiteAppByUid(site, siteAppUid);
-        }
-        return siteApp;
     }
 
     // Groups

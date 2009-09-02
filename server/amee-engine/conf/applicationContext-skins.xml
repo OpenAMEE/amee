@@ -14,7 +14,6 @@
                 <entry key="amee-base-import" value-ref="ameeBaseImportSkin"/>
                 <entry key="admin-import" value-ref="adminImportSkin"/>
                 <entry key="admin-default" value-ref="adminDefaultSkin"/>
-                <entry key="app-admin" value-ref="appAdminSkin"/>
                 <entry key="cache-admin" value-ref="cacheAdminSkin"/>
                 <entry key="site-admin" value-ref="siteAdminSkin"/>
                 <entry key="account.skin" value-ref="accountSkin"/>
@@ -47,15 +46,6 @@
 
     <bean id="adminDefaultSkin" class="com.amee.restlet.site.Skin">
         <property name="path" value="admin-default"/>
-        <property name="importedSkins">
-            <set>
-                <ref local="adminImportSkin"/>
-            </set>
-        </property>
-    </bean>
-
-    <bean id="appAdminSkin" class="com.amee.restlet.site.Skin">
-        <property name="path" value="app-admin"/>
         <property name="importedSkins">
             <set>
                 <ref local="adminImportSkin"/>

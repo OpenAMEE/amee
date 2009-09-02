@@ -1,13 +1,11 @@
 package com.amee.service.environment;
 
-import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
-import com.amee.domain.site.Site;
 import com.amee.service.data.DataService;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
@@ -71,10 +69,6 @@ public class EnvironmentService implements Serializable {
         for (DataCategory dataCategory : dataCategories) {
             dataService.remove(dataCategory);
         }
-    }
-
-    public void beforeSiteDelete(Site site) {
-        log.debug("beforeSiteDelete");
     }
 
     // Environments
