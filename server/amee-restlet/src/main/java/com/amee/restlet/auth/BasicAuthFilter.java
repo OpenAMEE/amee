@@ -2,14 +2,13 @@ package com.amee.restlet.auth;
 
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.auth.User;
-import com.amee.service.auth.AuthService;
+import com.amee.service.auth.AuthenticationService;
 import org.restlet.Application;
 import org.restlet.Guard;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-
 
 /**
  * Basic Authentication Filter.
@@ -35,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class BasicAuthFilter extends Guard {
 
     @Autowired
-    private AuthService authService;
+    private AuthenticationService authenticationService;
 
     public BasicAuthFilter(Application application) {
         super(application.getContext(), ChallengeScheme.HTTP_BASIC, "AMEE");
@@ -56,7 +55,7 @@ public class BasicAuthFilter extends Guard {
         User sampleUser = new User();
         sampleUser.setUsername(identifer);
         sampleUser.setPasswordInClear(new String(secret));
-        User activeUser = authService.authenticate(sampleUser);
+        User activeUser = authenticationService.authenticate(sampleUser);
         request.getAttributes().put("activeUser", activeUser);
         ThreadBeanHolder.set("activeUser", activeUser);
         return activeUser != null;

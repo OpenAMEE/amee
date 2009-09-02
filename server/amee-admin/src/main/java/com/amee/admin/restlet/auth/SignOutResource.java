@@ -5,7 +5,7 @@ import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.auth.User;
 import com.amee.restlet.BaseResource;
 import com.amee.restlet.auth.AuthUtils;
-import com.amee.service.auth.AuthService;
+import com.amee.service.auth.AuthenticationService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -27,7 +27,7 @@ public class SignOutResource extends BaseResource implements Serializable {
     public final static String VIEW_SIGN_OUT = "auth/signOut.ftl";
 
     @Autowired
-    private AuthService authService;
+    private AuthenticationService authenticationService;
 
     private User activeUser;
 
@@ -36,7 +36,7 @@ public class SignOutResource extends BaseResource implements Serializable {
         super.initialise(context, request, response);
         // sign out the current User and sign in the guest auth instead
         AuthUtils.discardAuthCookie(response);
-        activeUser = authService.doGuestSignIn();
+        activeUser = authenticationService.doGuestSignIn();
         request.getAttributes().put("activeUser", activeUser);
         ThreadBeanHolder.set("activeUser", activeUser);
     }

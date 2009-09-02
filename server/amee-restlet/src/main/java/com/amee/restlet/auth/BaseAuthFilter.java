@@ -3,7 +3,7 @@ package com.amee.restlet.auth;
 import com.amee.domain.site.Site;
 import com.amee.restlet.utils.HeaderUtils;
 import com.amee.restlet.utils.MediaTypeUtils;
-import com.amee.service.auth.AuthService;
+import com.amee.service.auth.AuthenticationService;
 import com.amee.service.environment.SiteService;
 import org.restlet.Application;
 import org.restlet.Filter;
@@ -16,14 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class BaseAuthFilter extends Filter {
 
     @Autowired
-    protected AuthService authService;
+    protected AuthenticationService authenticationService;
 
     public BaseAuthFilter(Application application) {
         super(application.getContext());
     }
 
     protected String authenticated(Request request) {
-        return authService.isAuthenticated(
+        return authenticationService.isAuthenticated(
                 getAuthToken(request),
                 request.getClientInfo().getAddress());
     }
@@ -32,7 +32,7 @@ public class BaseAuthFilter extends Filter {
         String authToken = null;
         Cookie cookie = null;
         try {
-            cookie = request.getCookies().getFirst(AuthService.AUTH_TOKEN);
+            cookie = request.getCookies().getFirst(AuthenticationService.AUTH_TOKEN);
         } catch (Exception e) {
             // swallow
         }
@@ -42,11 +42,11 @@ public class BaseAuthFilter extends Filter {
         }
         if (authToken == null) {
             // next, look in header as token not found in cookie
-            authToken = HeaderUtils.getHeaderFirstValue(AuthService.AUTH_TOKEN, request);
+            authToken = HeaderUtils.getHeaderFirstValue(AuthenticationService.AUTH_TOKEN, request);
         }
         if (authToken == null) {
             //next, look in query string
-            authToken = request.getResourceRef().getQueryAsForm().getFirstValue(AuthService.AUTH_TOKEN);
+            authToken = request.getResourceRef().getQueryAsForm().getFirstValue(AuthenticationService.AUTH_TOKEN);
         }
         return authToken;
     }

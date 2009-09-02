@@ -6,7 +6,7 @@ import com.amee.domain.auth.User;
 import com.amee.domain.site.Site;
 import com.amee.restlet.BaseResource;
 import com.amee.restlet.auth.AuthUtils;
-import com.amee.service.auth.AuthService;
+import com.amee.service.auth.AuthenticationService;
 import com.amee.service.environment.SiteService;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
@@ -29,7 +29,7 @@ public class SignInResource extends BaseResource implements Serializable {
     public final static String VIEW_SIGN_IN = "auth/signIn.ftl";
 
     @Autowired
-    protected AuthService authService;
+    protected AuthenticationService authenticationService;
 
     @Override
     public String getTemplatePath() {
@@ -105,13 +105,13 @@ public class SignInResource extends BaseResource implements Serializable {
             sampleUser = new User();
             sampleUser.setUsername(form.getFirstValue("username"));
             sampleUser.setPasswordInClear(form.getFirstValue("password"));
-            activeUser = authService.authenticate(sampleUser);
+            activeUser = authenticationService.authenticate(sampleUser);
             if (activeUser != null) {
                 // put active user in contextx
                 getRequest().getAttributes().put("activeUser", activeUser);
                 ThreadBeanHolder.set("activeUser", activeUser);
                 // create AuthToken and add to response
-                authToken = authService.generateAuthToken(activeUser, getRequest().getClientInfo().getAddress());
+                authToken = authenticationService.generateAuthToken(activeUser, getRequest().getClientInfo().getAddress());
                 AuthUtils.addAuthCookie(getResponse(), authToken);
                 AuthUtils.addAuthHeader(getResponse(), authToken);
                 // different response for API calls

@@ -68,6 +68,8 @@ public class PermissionService {
     @Autowired
     private PermissionServiceDAO dao;
 
+    // Authorization.
+
     public List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
         if ((entity == null) || !isValidEntity(entity)) {
             throw new IllegalArgumentException();
@@ -118,66 +120,6 @@ public class PermissionService {
         permissions.addAll(entity.getPermissionsForPrincipleAndEntity(principle, entity));
         permissions.addAll(dao.getPermissionsForPrincipleAndEntity(principle, entity));
         return permissions;
-    }
-
-    public boolean hasPermissions(AMEEEntity principle, AMEEEntity entity, String entries) {
-        Set<PermissionEntry> entrySet = new HashSet<PermissionEntry>();
-        for (String entry : entries.split(",")) {
-            entrySet.add(new PermissionEntry(entry));
-        }
-        return hasPermissions(principle, entity, entrySet);
-    }
-
-    public boolean hasPermissions(AMEEEntity principle, AMEEEntity entity, Set<PermissionEntry> entrySet) {
-        List<AMEEEntity> principles = new ArrayList<AMEEEntity>();
-        principles.add(principle);
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(entity);
-        return hasPermissions(principles, entities, entrySet);
-    }
-
-    public boolean hasPermissions(List<AMEEEntity> principles, List<AMEEEntity> entities, Set<PermissionEntry> entrySet) {
-        return hasPermissions(principles, entities, entrySet, false);
-    }
-
-    // TODO: Handle deprecated entities.
-    // TODO: Handle hierarchies.
-    public boolean hasPermissions(List<AMEEEntity> principles, List<AMEEEntity> entities, Set<PermissionEntry> entrySet, boolean all) {
-        // Permissions for earlier entities can be superceeded by those from later entities.
-        for (AMEEEntity entity : entities) {
-            // Permissions for earlier principles can be superceeded by those from later principles.
-            for (AMEEEntity principle : principles) {
-                // Exception for Users who are super-users.
-                if (User.class.isAssignableFrom(principle.getClass())) {
-                    if (((User) principle).isSuperUser()) {
-                        log.debug("hasPermissions() - true");
-                        return true;
-                    }
-                }
-                // Check permissions for this principle and entity combination.
-                Collection<Permission> permissions = getPermissionsForPrincipleAndEntity(principle, entity);
-                for (Permission permission : permissions) {
-                    // Do we need to match all of the entries?
-                    if (all) {
-                        // Does this Permission contain all of the entries supplied?
-                        if (permission.getEntries().containsAll(entrySet)) {
-                            log.debug("hasPermissions() - true");
-                            return true;
-                        }
-                    } else {
-                        // Does this Permission contain at least one of the entries supplied?
-                        for (PermissionEntry entry : entrySet) {
-                            if (permission.getEntries().contains(entry)) {
-                                log.debug("hasPermissions() - true");
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        log.debug("hasPermissions() - false");
-        return false;
     }
 
     public void trashPermissionsForEntity(IAMEEEntityReference entity) {

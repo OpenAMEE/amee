@@ -34,7 +34,7 @@ public class AuthFilter extends BaseAuthFilter {
         String authToken = authenticated(request);
         if (authToken != null) {
             // find the current active user
-            User activeUser = authService.getActiveUser(authToken);
+            User activeUser = authenticationService.getActiveUser(authToken);
             // add active user to contexts
             request.getAttributes().put("activeUser", activeUser);
             ThreadBeanHolder.set("activeUser", activeUser);

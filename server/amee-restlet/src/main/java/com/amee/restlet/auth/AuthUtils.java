@@ -2,7 +2,7 @@ package com.amee.restlet.auth;
 
 import com.amee.domain.site.Site;
 import com.amee.restlet.utils.HeaderUtils;
-import com.amee.service.auth.AuthService;
+import com.amee.service.auth.AuthenticationService;
 import com.amee.service.environment.SiteService;
 import org.restlet.data.CookieSetting;
 import org.restlet.data.Form;
@@ -17,10 +17,10 @@ public class AuthUtils {
             CookieSetting authCookie =
                     new CookieSetting(
                             0,
-                            AuthService.AUTH_TOKEN, authToken,
+                            AuthenticationService.AUTH_TOKEN, authToken,
                             "/",
                             site.getAuthCookieDomain().length() > 0 ? site.getAuthCookieDomain() : null);
-            CookieSetting oldAuthCookie = response.getCookieSettings().getFirst(AuthService.AUTH_TOKEN);
+            CookieSetting oldAuthCookie = response.getCookieSettings().getFirst(AuthenticationService.AUTH_TOKEN);
             if (oldAuthCookie != null) {
                 response.getCookieSettings().remove(oldAuthCookie);
             }
@@ -33,7 +33,7 @@ public class AuthUtils {
         CookieSetting authCookie =
                 new CookieSetting(
                         0,
-                        AuthService.AUTH_TOKEN,
+                        AuthenticationService.AUTH_TOKEN,
                         "",
                         "/",
                         site.getAuthCookieDomain().length() > 0 ? site.getAuthCookieDomain() : null);
@@ -43,7 +43,7 @@ public class AuthUtils {
 
     public static void addAuthHeader(Response response, String authToken) {
         if (authToken != null) {
-            HeaderUtils.addHeader(AuthService.AUTH_TOKEN, authToken, response);
+            HeaderUtils.addHeader(AuthenticationService.AUTH_TOKEN, authToken, response);
         }
     }
 

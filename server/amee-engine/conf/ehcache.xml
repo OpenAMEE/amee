@@ -398,8 +398,8 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- AuthService -->
-    <cache name="query.authService"
+    <!-- AuthenticationService -->
+    <cache name="query.authenticationService"
            maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"

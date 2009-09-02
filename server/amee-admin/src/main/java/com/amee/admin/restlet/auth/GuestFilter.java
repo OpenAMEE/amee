@@ -31,7 +31,7 @@ public class GuestFilter extends BaseAuthFilter {
         String authToken = authenticated(request);
         if (authToken != null) {
             // find the current active user
-            activeUser = authService.getActiveUser(authToken);
+            activeUser = authenticationService.getActiveUser(authToken);
             // add active user to contexts
             request.getAttributes().put("activeUser", activeUser);
             ThreadBeanHolder.set("activeUser", activeUser);
@@ -40,7 +40,7 @@ public class GuestFilter extends BaseAuthFilter {
         } else {
             // not signed-in, don't accept request 
             AuthUtils.discardAuthCookie(response);
-            activeUser = authService.doGuestSignIn();
+            activeUser = authenticationService.doGuestSignIn();
             // add (or clear) active user in contexts
             request.getAttributes().put("activeUser", activeUser);
             ThreadBeanHolder.set("activeUser", activeUser);

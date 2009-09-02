@@ -8,7 +8,6 @@ import com.amee.domain.auth.crypto.CryptoException;
 import com.amee.domain.site.Site;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -20,12 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Scope("prototype")
-public class AuthService implements Serializable {
+public class AuthenticationService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    public final static String AUTH_TOKEN = "authToken";
+    private static final String CACHE_REGION = "query.authenticationService";
+
+    public static final String AUTH_TOKEN = "authToken";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -208,7 +208,7 @@ public class AuthService implements Serializable {
                 .setParameter("userUid", uid)
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.authService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
         if (users.size() == 1) {
             log.debug("auth found: " + uid);
@@ -231,7 +231,7 @@ public class AuthService implements Serializable {
                 .setParameter("username", username)
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", "query.authService")
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
         if (users.size() == 1) {
             log.debug("auth found: " + username);

@@ -24,7 +24,8 @@ package com.amee.restlet;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
-import com.amee.service.auth.PermissionService;
+import com.amee.service.auth.AuthorizationContext;
+import com.amee.service.auth.AuthorizationService;
 import com.amee.service.environment.GroupService;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
@@ -37,7 +38,7 @@ import java.util.Set;
 public abstract class AuthorizeResource extends BaseResource {
 
     @Autowired
-    private PermissionService permissionService;
+    private AuthorizationService authorizationService;
 
     @Autowired
     private GroupService groupService;
@@ -155,7 +156,8 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     public boolean hasPermissions(Set<PermissionEntry> entrySet) {
-        return permissionService.hasPermissions(getPrinciples(), getEntities(), entrySet);
+        return authorizationService.isAuthorized(
+                new AuthorizationContext(getPrinciples(), getEntities(), entrySet));
     }
 
     public List<AMEEEntity> getPrinciples() {

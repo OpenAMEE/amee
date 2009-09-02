@@ -22,21 +22,17 @@ package com.amee.service.profile;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.Pager;
 import com.amee.domain.StartEndDate;
-import com.amee.domain.auth.Group;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.service.auth.AuthService;
-import com.amee.service.auth.PermissionService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -97,7 +93,7 @@ public class ProfileServiceDAO implements Serializable {
                 .getResultList();
         if (profiles.size() == 1) {
             log.debug("getProfileByPath() found: " + path);
-            profile = profiles.get(0);                                                                                                  
+            profile = profiles.get(0);
         } else {
             log.debug("getProfileByPath() NOT found: " + path);
         }
