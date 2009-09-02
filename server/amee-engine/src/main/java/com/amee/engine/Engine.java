@@ -1,7 +1,6 @@
 package com.amee.engine;
 
 import com.amee.domain.cache.CacheHelper;
-import com.amee.service.auth.UserPasswordToMD5;
 import com.amee.service.transaction.TransactionController;
 import org.apache.commons.cli.*;
 import org.apache.commons.logging.Log;
@@ -120,12 +119,7 @@ public class Engine implements WrapperListener, Serializable {
     }
 
     protected void onStart() {
-        // TODO: TEMPORARY CODE!!!! Remove once all databases have been migrated. Get rid of UserPasswordToMD5 too.
-        if (System.getProperty("amee.userPasswordToMD5") != null) {
-            UserPasswordToMD5 userPasswordToMD5 =
-                    (UserPasswordToMD5) springContext.getBean("userPasswordToMD5");
-            userPasswordToMD5.updateUserPasswordToMD5(false);
-        }
+        // do nothing
     }
 
     protected void onShutdown() {

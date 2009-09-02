@@ -1,11 +1,11 @@
 package com.amee.restlet.site;
 
+import com.amee.core.ThreadBeanHolder;
+import com.amee.domain.cache.CacheableFactory;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
-import com.amee.domain.cache.CacheableFactory;
-import com.amee.core.ThreadBeanHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,8 +81,17 @@ public class FreeMarkerConfigurationFactory implements CacheableFactory {
             loaders.add(getFreeMarkerTemplateLoader(s));
         }
 
-        // TODO: if only one TemplateLoader in List then just return that
-        return new MultiTemplateLoader(loaders.toArray(new TemplateLoader[loaders.size()]));
+        // return a TemplateLoader
+        if (loaders.isEmpty()) {
+            // must have a TemplateLoader
+            throw new RuntimeException("Need at least one TemplateLoader.");
+        } else if (loaders.size() == 0) {
+            // just return one TemplateLoader
+            return loaders.get(0);
+        } else {
+            // return multiple TemplateLoaders
+            return new MultiTemplateLoader(loaders.toArray(new TemplateLoader[loaders.size()]));
+        }
     }
 
     public String getKey() {
