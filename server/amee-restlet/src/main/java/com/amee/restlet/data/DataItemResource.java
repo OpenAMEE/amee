@@ -106,7 +106,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(getDataItem());
-        DataCategory dc = getDataItem().getDataCategory();
+        DataCategory dc = getDataCategory();
         while (dc != null) {
             entities.add(dc);
             dc = dc.getDataCategory();

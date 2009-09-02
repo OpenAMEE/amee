@@ -468,7 +468,7 @@ var ActionsResource = Class.create({
             allowCreate: true,
             allowModify: true,
             allowList: true,
-            allowDelee: true
+            allowDelete: true
         });
     }
 });

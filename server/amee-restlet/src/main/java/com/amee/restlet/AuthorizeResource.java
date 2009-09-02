@@ -22,16 +22,17 @@
 package com.amee.restlet;
 
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.Permission;
+import com.amee.domain.auth.PermissionEntry;
 import com.amee.service.auth.PermissionService;
 import com.amee.service.environment.GroupService;
 import org.restlet.resource.Representation;
+import org.restlet.resource.ResourceException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
 
 public abstract class AuthorizeResource extends BaseResource {
 
@@ -44,10 +45,14 @@ public abstract class AuthorizeResource extends BaseResource {
     @Override
     public void handleGet() {
         log.debug("handleGet()");
-        if (hasPermissions(getGetPermissionEntries())) {
-            doGet();
+        if (isAvailable()) {
+            if (hasPermissions(getGetPermissionEntries())) {
+                doGet();
+            } else {
+                notAuthorized();
+            }
         } else {
-            notAuthorized();
+            super.handleGet();
         }
     }
 
@@ -65,12 +70,16 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     @Override
-    public void acceptRepresentation(Representation entity) {
+    public void acceptRepresentation(Representation entity) throws ResourceException {
         log.debug("acceptRepresentation()");
-        if (hasPermissions(getAcceptPermissionEntries())) {
-            doAccept(entity);
+        if (isAvailable()) {
+            if (hasPermissions(getAcceptPermissionEntries())) {
+                doAccept(entity);
+            } else {
+                notAuthorized();
+            }
         } else {
-            notAuthorized();
+            super.acceptRepresentation(entity);
         }
     }
 
@@ -88,12 +97,16 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     @Override
-    public void storeRepresentation(Representation entity) {
+    public void storeRepresentation(Representation entity) throws ResourceException {
         log.debug("storeRepresentation()");
-        if (hasPermissions(getStorePermissionEntries())) {
-            doStore(entity);
+        if (isAvailable()) {
+            if (hasPermissions(getStorePermissionEntries())) {
+                doStore(entity);
+            } else {
+                notAuthorized();
+            }
         } else {
-            notAuthorized();
+            super.storeRepresentation(entity);
         }
     }
 
@@ -115,12 +128,16 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     @Override
-    public void removeRepresentations() {
+    public void removeRepresentations() throws ResourceException {
         log.debug("removeRepresentations()");
-        if (hasPermissions(getRemovePermissionEntries())) {
-            doRemove();
+        if (isAvailable()) {
+            if (hasPermissions(getRemovePermissionEntries())) {
+                doRemove();
+            } else {
+                notAuthorized();
+            }
         } else {
-            notAuthorized();
+            super.removeRepresentations();
         }
     }
 
