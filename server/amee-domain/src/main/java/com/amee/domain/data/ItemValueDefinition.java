@@ -290,7 +290,7 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
      * @return true if it is in the DrillDown, otherwise false
      */
     public boolean isDrillDown() {
-        return this.itemDefinition.isDrillDownValue(getName());
+        return this.itemDefinition.isDrillDownValue(this);
     }
 
     public String getAllowedRoles() {

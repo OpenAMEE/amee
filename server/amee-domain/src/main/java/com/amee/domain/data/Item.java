@@ -414,12 +414,12 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     /**
      * Check if there exists amongst the current set of ItemValues, an entry with the given
      * itemValueDefinition and startDate.
-     * @param itemValueDefinitionUid - a {@link ItemValueDefinition} UID
+     * @param itemValueDefinition - an {@link ItemValueDefinition}
      * @param startDate - an {@link ItemValue} startDate
      * @return - true if the newItemValue is unique, otherwise false
      */
-    public boolean isUnique(String itemValueDefinitionUid, StartEndDate startDate) {
-        String uniqueId = itemValueDefinitionUid + startDate.getTime();
+    public boolean isUnique(ItemValueDefinition itemValueDefinition, StartEndDate startDate) {
+        String uniqueId = itemValueDefinition.getUid() + startDate.getTime();
         for (ItemValue iv : getActiveItemValues()) {
             String checkId = iv.getItemValueDefinition().getUid() + iv.getStartDate().getTime();
             if (uniqueId.equals(checkId)) {
