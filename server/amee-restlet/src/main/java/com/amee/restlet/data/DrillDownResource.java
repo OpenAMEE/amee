@@ -129,7 +129,7 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
         if (itemDefinition != null) {
             element.appendChild(itemDefinition.getIdentityElement(document));
             List<Choice> selections = getSelections();
-            Choices choices = drillDownService.getChoices(dataCategory, selections);
+            Choices choices = drillDownService.getChoices(dataCategory, selections);            
             Element selectionsElement = document.createElement("Selections");
             for (Choice selection : selections) {
                 selectionsElement.appendChild(selection.getElement(document));

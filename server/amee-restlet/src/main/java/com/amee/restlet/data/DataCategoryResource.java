@@ -575,11 +575,13 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                     if (thisDataCategory.getLocaleNames().containsKey(locale)) {
                         LocaleName localeName = thisDataCategory.getLocaleNames().get(locale);
                         localeName.setName(localeNameStr);
+                        if (form.getNames().contains("remove_name_" + locale)) {
+                            localeName.setStatus(AMEEStatus.TRASH);
+                        }
                     } else {
                         LocaleName localeName =
                             new DataCategoryLocaleName(thisDataCategory, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
-                        thisDataCategory.putLocaleName(localeName);
-                        form.removeFirst(name);
+                        thisDataCategory.addLocaleName(localeName);
                     }
                 }
             }

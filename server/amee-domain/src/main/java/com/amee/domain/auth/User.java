@@ -303,6 +303,10 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public String getLocale() {
-        return locale;
+        if (locale == null) {
+            return LocaleName.DEFAULT_LOCALE.toString();
+        } else {
+            return locale;
+        }
     }
 }

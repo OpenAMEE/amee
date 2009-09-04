@@ -42,6 +42,7 @@ public class DataConstants {
     public final static String VIEW_CARBON_TREE_NODE = "carbonDataNode.ftl";
     public final static String VIEW_ENVIRONMENT_SITES = "environmentSites.ftl";
     public final static String VIEW_ENVIRONMENT_SITE = "environmentSite.ftl";
+    public final static String VIEW_LOCALE_NAME = "localeName.ftl";
 
     // CarbonCategories
     public final static String ACTION_DATA_CATEGORY_VIEW = "dataCategory.view";
@@ -85,4 +86,5 @@ public class DataConstants {
     public final static String ACTION_DATA_ITEM_MODIFY = "dataItem.modify";
     public final static String ACTION_DATA_ITEM_DELETE = "dataItem.delete";
     public final static String ACTION_DATA_ITEM_LIST = "dataItem.list";
+
 }

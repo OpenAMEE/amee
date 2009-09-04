@@ -21,12 +21,15 @@ package com.amee.restlet.data;
 
 import com.amee.core.APIUtils;
 import com.amee.core.ThreadBeanHolder;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.ItemValueLocaleName;
+import com.amee.domain.data.LocaleName;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
-import com.amee.restlet.utils.APIFault;
 import com.amee.restlet.RequestContext;
+import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -158,6 +161,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         values.put("dataItem", getDataItem());
         values.put("itemValue", this.itemValue);
         values.put("node", this.itemValue);
+        values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
         return values;
     }
 
@@ -224,6 +228,32 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             Form form = getForm();
             if (StringUtils.isNotBlank(form.getFirstValue("value"))) {
                 this.itemValue.setValue(form.getFirstValue("value"));
+            }
+
+            // Parse any submitted locale values
+            for (String name : form.getNames()) {
+                if (name.startsWith("value_")) {
+
+                    String locale = name.substring(name.indexOf("_") + 1);
+                    String localeValueStr = form.getFirstValue(name);
+
+                    if (StringUtils.isBlank(localeValueStr) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                        badRequest(APIFault.INVALID_PARAMETERS);
+                        return;
+                    }
+
+                    if (this.itemValue.getLocaleValues().containsKey(locale)) {
+                        LocaleName localeName = this.itemValue.getLocaleValues().get(locale);
+                        localeName.setName(localeValueStr);
+                        if (form.getNames().contains("remove_value_" + locale)) {
+                            localeName.setStatus(AMEEStatus.TRASH);
+                        }
+                    } else {
+                        LocaleName localeName =
+                            new ItemValueLocaleName(this.itemValue, LocaleName.AVAILABLE_LOCALES.get(locale), localeValueStr);
+                        this.itemValue.addLocaleName(localeName);
+                    }
+                }
             }
 
             if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {

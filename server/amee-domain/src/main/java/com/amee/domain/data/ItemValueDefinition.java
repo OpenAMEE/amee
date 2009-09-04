@@ -20,10 +20,7 @@
 package com.amee.domain.data;
 
 import com.amee.core.*;
-import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.APIVersion;
-import com.amee.domain.Builder;
-import com.amee.domain.ValueDefinition;
+import com.amee.domain.*;
 import com.amee.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Cache;
@@ -39,7 +36,6 @@ import java.util.*;
 
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
-@DiscriminatorValue("IVD")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemValueDefinition extends AMEEEnvironmentEntity {
 
@@ -106,6 +102,48 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
 
     @Column(name = "FORCE_TIMESERIES")
     private boolean isForceTimeSeries;
+
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @MapKey(name = "locale")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Map<String, LocaleName> localeNames = new HashMap<String, LocaleName>();
+
+    /**
+     * Get the collection of locale specific names for this ItemValueDefinition.
+     *
+     * @return the collection of locale specific names. The collection will be empty
+     * if no locale specific names exist.
+     */
+    public Map<String, LocaleName> getLocaleNames() {
+        Map<String, LocaleName> activeLocaleNames = new TreeMap<String, LocaleName>();
+        for (String locale: localeNames.keySet()) {
+            LocaleName name = localeNames.get(locale);
+            if (!name.isTrash()) {
+                activeLocaleNames.put(locale, name);
+            }
+        }
+        return activeLocaleNames;
+    }
+
+    /*
+     * Get the locale specific name of this ItemValueDefinition for the locale of the current thread.
+     *
+     * The locale specific name of this ItemValueDefinition for the locale of the current thread.
+     * If no locale specific name is found, the default name will be returned.
+     */
+    @SuppressWarnings("unchecked")
+    private String getLocaleName() {
+        String name = null;
+        LocaleName localeName = localeNames.get(LocaleHolder.getLocale());
+        if (localeName != null && !localeName.isTrash()) {
+            name = localeName.getName();
+        }
+        return name;
+    }
+
+    public void addLocaleName(LocaleName localeName) {
+        localeNames.put(localeName.getLocale(), localeName);
+    }
 
     @Transient
     private Builder builder;
@@ -362,8 +400,28 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         }
     }
 
+    /**
+     * Does this represent a decimal value.
+     *
+     * @return true if this value represents a decimal value, otherwise false
+     *
+     * {@see ValueType.DECIMAL}
+     *
+     */
     public boolean isDecimal() {
         return getValueDefinition().getValueType().equals(ValueType.DECIMAL);
+    }
+
+    /**
+     * Does this represent a text value.
+     *
+     * @return true if this value represents a text value, otherwise false
+     *
+     * {@see ValueType.TEXT}
+     * 
+     */
+    public boolean isText() {
+        return getValueDefinition().getValueType().equals(ValueType.TEXT);
     }
 
     public void setBuilder(Builder builder) {

@@ -4,6 +4,22 @@
 <script src="/scripts/amee/api_service.js" type="text/javascript"></script>
 <script src="/scripts/amee/data_service.js" type="text/javascript"></script>
 
+<script type='text/javascript'>
+
+function localeonchange() {
+    var form = $('update');
+    if ($('localeValue')) {
+        $('localeValue').remove();
+    }
+    var locale = form['localeName_part'].value;
+    var value = form['localeValue_part'].value;
+    var locale_value = new Element('input', { id: "localeValue", name: "value_" + locale , value: value});
+    locale_value.hide()
+    form.insert(locale_value);
+}
+
+</script>
+
 <h1>Data Item Value</h1>
 
 <#include 'dataTrail.ftl'>
@@ -24,23 +40,50 @@
 <#if browser.dataItemActions.allowModify>
 <h2>Update Data Item Value</h2>
 <p>
-    <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
-        Value:
-        <#if itemValue.itemValueDefinition.choicesAvailable>
-            <select name='value'>
-            <#list itemValue.itemValueDefinition.choiceList as choice>
-                <option value='${choice.value}'<#if itemValue.value == choice.value> selected</#if>>${choice.name}</option>
-            </#list>
-            </select>
-        <#else>
-            <input name='value' value='${itemValue.value}' type='text' size="30"/><br/>
-            <#if itemValue.hasUnit()>
-                Unit: <input name='unit' value='${itemValue.unit}' type='text' size="30"/><br/>
+    <form id="update" action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+        <table>
+            <tr>
+               <td>Value:</td>
+               <td colspan="2">
+                   <#if itemValue.itemValueDefinition.choicesAvailable>
+                       <select name='value'>
+                       <#list itemValue.itemValueDefinition.choiceList as choice>
+                           <option value='${choice.value}'<#if itemValue.value == choice.value> selected</#if>>${choice.name}</option>
+                       </#list>
+                       </select>
+                   <#else>
+                       <input name='value' value='${itemValue.value}' type='text' size="30"/><br/>
+                       <#if itemValue.hasUnit()>
+                           Unit: <input name='unit' value='${itemValue.unit}' type='text' size="30"/><br/>
+                       </#if>
+                       <#if itemValue.hasPerUnit()>
+                           PerUnit: <input name='perUnit' value='${itemValue.perUnit}' type='text' size="30"/><br/>
+                       </#if>
+                   </#if>
+               </td>
+            </tr>
+            <#if itemValue.localeValues?size != 0>
+                <#list itemValue.localeValues?keys as locale>
+                <tr>
+                    <td>Value: [${locale}]</td>
+                    <td><input name='value_${locale}' value='${itemValue.localeValues[locale].name}' type='text' size='30'/></td>
+                    <td>Remove: <input type="checkbox" name="remove_value_${locale}"/> </td>
+                </tr>
+                </#list>
             </#if>
-            <#if itemValue.hasPerUnit()>
-                PerUnit: <input name='perUnit' value='${itemValue.perUnit}' type='text' size="30"/><br/>
-            </#if>
-        </#if><br/><br/>
+            <tr>
+                <td>New Locale Value:</td>
+                <td>
+                    <select name='localeName_part' onchange='javascript:localeonchange();'> <br/>
+                    <#list availableLocales as locale>
+                        <option value='${locale}'>${locale}</option>
+                    </#list>
+                    </select>
+                    <input name='localeValue_part' type='text' size='30' onchange='javascript:localeonchange();'/><br/>
+                </td>
+            </tr>
+        </table>
+
         <input type='submit' value='Update'/>
     </form>
 </p>

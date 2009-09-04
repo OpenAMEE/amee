@@ -20,10 +20,7 @@
 package com.amee.domain.data;
 
 import com.amee.core.*;
-import com.amee.domain.AMEEEntity;
-import com.amee.domain.AMEEStatus;
-import com.amee.domain.Builder;
-import com.amee.domain.StartEndDate;
+import com.amee.domain.*;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.lang.StringUtils;
@@ -73,6 +70,48 @@ public class ItemValue extends AMEEEntity implements Pathable {
     @Column(name = "END_DATE")
     @Index(name = "END_DATE_IND")
     protected Date endDate;
+
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @MapKey(name = "locale")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Map<String, LocaleName> localeValues = new HashMap<String, LocaleName>();
+
+    /**
+     * Get the collection of locale specific values for this ItemValue.
+     *
+     * @return the collection of locale specific values. The collection will be empty 
+     * if no locale specific values exist.
+     */
+    public Map<String, LocaleName> getLocaleValues() {
+        Map<String, LocaleName> activeLocaleValues = new TreeMap<String, LocaleName>();
+        for (String locale: localeValues.keySet()) {
+            LocaleName value = localeValues.get(locale);
+            if (!value.isTrash()) {
+                activeLocaleValues.put(locale, value);
+            }
+        }
+        return activeLocaleValues;
+    }
+
+    /*
+     * Get the locale specific value of this ItemValue for the locale of the current thread.
+     *
+     * The locale specific value of this ItemValue for the locale of the current thread.
+     * If no locale specific value is found, the default value will be returned.
+     */
+    @SuppressWarnings("unchecked")
+    private String getLocaleValue() {
+        String name = null;
+        LocaleName localeName = localeValues.get(LocaleHolder.getLocale());
+        if (localeName != null && !localeName.isTrash()) {
+            name = localeName.getName();
+        }
+        return name;
+    }
+
+    public void addLocaleName(LocaleName localeName) {
+        localeValues.put(localeName.getLocale(), localeName);
+    }
 
     @Transient
     private Builder builder;
@@ -178,6 +217,12 @@ public class ItemValue extends AMEEEntity implements Pathable {
     }
 
     public String getValue() {
+        if (getItemValueDefinition().isText()) {
+            String localeName = getLocaleValue();
+            if (localeName != null) {
+                return localeName;
+            }
+        }
         return value;
     }
 

@@ -95,6 +95,7 @@ public class DrillDownService implements Serializable {
         cacheHelper.clearCache("DrillDownChoices");
     }
 
+    @SuppressWarnings("unchecked")
     protected List<Choice> getDataItemChoices(
             DataCategory dataCategory,
             Date startDate,

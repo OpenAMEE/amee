@@ -21,6 +21,7 @@
  */
 package com.amee.service.data;
 
+import com.amee.domain.LocaleHolder;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.sheet.Choice;
@@ -98,6 +99,9 @@ public class DrillDownFactory implements CacheableFactory {
                 keyBuilder.append("_ED_");
                 keyBuilder.append(endDate.getTime());
             }
+            keyBuilder.append("__L__");
+            keyBuilder.append(LocaleHolder.getLocale());
+
             key = keyBuilder.toString();
         }
         return key;

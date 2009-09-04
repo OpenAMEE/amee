@@ -24,6 +24,7 @@ import com.amee.core.ObjectType;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.InternalValue;
+import com.amee.domain.LocaleHolder;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.Choice;
@@ -40,7 +41,6 @@ import java.util.*;
 @Entity
 @Table(name = "ITEM_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@DiscriminatorValue("ID")
 public class ItemDefinition extends AMEEEnvironmentEntity {
 
     public final static int NAME_SIZE = 255;
@@ -64,6 +64,47 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OrderBy("name")
     private Set<ItemValueDefinition> itemValueDefinitions = new HashSet<ItemValueDefinition>();
+
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @MapKey(name = "locale")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Map<String, LocaleName> localeNames = new HashMap<String, LocaleName>();
+
+    /**
+     * Get the collection of locale specific names for this ItemDefinition.
+     *
+     * @return the collection of locale specific names. The collection will be empty
+     * if no locale specific names exist.
+     */
+    public Map<String, LocaleName> getLocaleNames() {
+        Map<String, LocaleName> activeLocaleNames = new TreeMap<String, LocaleName>();
+        for (String locale: localeNames.keySet()) {
+            LocaleName name = localeNames.get(locale);
+            if (!name.isTrash()) {
+                activeLocaleNames.put(locale, name);
+            }
+        }
+        return activeLocaleNames;
+    }
+    /*
+     * Get the locale specific name of this Itemefinition for the locale of the current thread.
+     *
+     * The locale specific name of this ItemDefinition for the locale of the current thread.
+     * If no locale specific name is found, the default name will be returned.
+     */
+    @SuppressWarnings("unchecked")
+    private String getLocaleName() {
+        String name = null;
+        LocaleName localeName = localeNames.get(LocaleHolder.getLocale());
+        if (localeName != null && !localeName.isTrash()) {
+            name = localeName.getName();
+        }
+        return name;
+    }
+
+    public void addLocaleName(LocaleName localeName) {
+        localeNames.put(localeName.getLocale(), localeName);
+    }
 
     public ItemDefinition() {
         super();

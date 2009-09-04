@@ -27,6 +27,7 @@ import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -41,6 +42,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Collection;
 
 @Service
 public class DefinitionServiceDAO implements Serializable {
@@ -209,6 +211,7 @@ public class DefinitionServiceDAO implements Serializable {
     public void remove(ItemDefinition itemDefinition) {
         beforeItemDefinitionDelete(itemDefinition);
         itemDefinition.setStatus(AMEEStatus.TRASH);
+        remove(itemDefinition.getLocaleNames().values());
     }
 
     @SuppressWarnings(value = "unchecked")
@@ -269,6 +272,7 @@ public class DefinitionServiceDAO implements Serializable {
 
     public void remove(ItemValueDefinition itemValueDefinition) {
         itemValueDefinition.setStatus(AMEEStatus.TRASH);
+        remove(itemValueDefinition.getLocaleNames().values());
     }
 
     // ValueDefinitions
@@ -350,4 +354,11 @@ public class DefinitionServiceDAO implements Serializable {
     public void remove(ValueDefinition valueDefinition) {
         valueDefinition.setStatus(AMEEStatus.TRASH);
     }
+
+    protected void remove(Collection<LocaleName> localeNames) {
+        for(LocaleName localeName : localeNames) {
+            localeName.setStatus(AMEEStatus.TRASH);
+        }
+    }
+
 }

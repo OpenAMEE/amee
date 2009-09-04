@@ -18,40 +18,26 @@
  *
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
+ */                                  
+package com.amee.domain.data;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import java.util.Locale;
+
+/**
+ * {@link com.amee.domain.data.LocaleName} implementation for {@link com.amee.domain.data.ItemValue}
+ *
  */
-package com.amee.domain;
-
-import com.amee.domain.environment.Environment;
-import com.amee.domain.environment.EnvironmentObject;
-
-import javax.persistence.*;
-
 @Entity
-@MappedSuperclass
-public abstract class AMEEEnvironmentEntity extends AMEEEntity implements EnvironmentObject {
+@DiscriminatorValue("IV")
+public class ItemValueLocaleName extends LocaleName {
 
-    public final static int UID_SIZE = 12;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
-
-    public AMEEEnvironmentEntity() {
+    public ItemValueLocaleName() {
         super();
     }
 
-    public AMEEEnvironmentEntity(Environment environment) {
-        this();
-        setEnvironment(environment);
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        if (environment != null) {
-            this.environment = environment;
-        }
+    public ItemValueLocaleName(ItemValue itemValue, Locale locale, String name) {
+        super(itemValue, locale, name);
     }
 }

@@ -20,6 +20,7 @@
 package com.amee.restlet.environment;
 
 import com.amee.domain.APIVersion;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.data.ItemValueDefinitionLocaleName;
 import com.amee.domain.data.LocaleName;
@@ -90,6 +91,7 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("itemValueDefinition", definitionBrowser.getItemValueDefinition());
         values.put("apiVersions", environmentService.getAPIVersions());
+        values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
         return values;
     }
 
@@ -139,11 +141,13 @@ public class ItemValueDefinitionResource extends BaseResource implements Seriali
                     if (itemValueDefinition.getLocaleNames().containsKey(locale)) {
                         LocaleName localeName = itemValueDefinition.getLocaleNames().get(locale);
                         localeName.setName(localeNameStr);
+                        if (form.getNames().contains("remove_name_" + locale)) {
+                            localeName.setStatus(AMEEStatus.TRASH);
+                        }
                     } else {
                         LocaleName localeName =
                             new ItemValueDefinitionLocaleName(itemValueDefinition, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
-                        itemValueDefinition.putLocaleName(localeName);
-                        form.removeFirst(name);
+                        itemValueDefinition.addLocaleName(localeName);
                     }
                 }
             }

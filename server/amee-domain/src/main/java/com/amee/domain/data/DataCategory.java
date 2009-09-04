@@ -21,10 +21,9 @@ package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
 import com.amee.core.ObjectType;
-import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.AMEEStatus;
-import com.amee.domain.auth.User;
+import com.amee.domain.LocaleHolder;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.logging.Log;
@@ -38,8 +37,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "DATA_CATEGORY")
@@ -74,6 +72,48 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "ALIASED_TO_ID")
     private List<DataCategory> aliases = new ArrayList<DataCategory>();
+
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @MapKey(name = "locale")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Map<String, LocaleName> localeNames = new HashMap<String, LocaleName>();
+
+    /**
+     * Get the collection of locale specific names for this DataCategory.
+     *
+     * @return the collection of locale specific names. The collection will be empty
+     * if no locale specific names exist.
+     */
+    public Map<String, LocaleName> getLocaleNames() {
+        Map<String, LocaleName> activeLocaleNames = new TreeMap<String, LocaleName>();
+        for (String locale: localeNames.keySet()) {
+            LocaleName name = localeNames.get(locale);
+            if (!name.isTrash()) {
+                activeLocaleNames.put(locale, name);
+            }
+        }
+        return activeLocaleNames;
+    }
+
+    /*
+     * Get the locale specific name of this DataCategory for the locale of the current thread.
+     *
+     * The locale specific name of this DataCategory for the locale of the current thread.
+     * If no locale specific name is found, the default name will be returned.
+     */
+    @SuppressWarnings("unchecked")
+    private String getLocaleName() {
+        String name = null;
+        LocaleName localeName = localeNames.get(LocaleHolder.getLocale());
+        if (localeName != null && !localeName.isTrash()) {
+            name = localeName.getName();
+        }
+        return name;
+    }
+
+    public void addLocaleName(LocaleName localeName) {
+        localeNames.put(localeName.getLocale(), localeName);
+    }
 
     public DataCategory() {
         super();
