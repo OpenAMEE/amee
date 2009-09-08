@@ -1,6 +1,5 @@
 package com.amee.domain.auth;
 
-import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEntityReference;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.ObjectType;
@@ -18,7 +17,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Permission.
+ * Permission represents the permissions that a 'principle' has over an 'entity'. The
+ * entity can be any persistent entity within AMEE, such as a Profile or DataCategory. A
+ * principle can be a User, Group or other entity that needs to own or access an entity.
+ * <p/>
+ * The principle and entity are represented by AMEEEntityReference instances, the
+ * principleReference and entityReference properties, respectively.
+ * <p/>
+ * Permissions are made up of permission entries. These typically represent the 'view',
+ * 'create', 'modify', 'delete' verbs (CRUD). Each permission entry is accompanied
+ * by an allow or deny flag. Other types of entries are also possible, such as
+ * 'own' or 'view-deprecated'.
+ * <p/>
+ * The permission entries are stored in the entries property. Internally this is
+ * held and persisted as a JSON String. The entries are exposed externally as a
+ * Set of PermissionEntry instances. The entries String is automatically managed
+ * by Permission.
  *
  * @author Diggory Briercliffe
  */
@@ -31,7 +45,7 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
     public final static int ENTRIES_MAX_SIZE = 1000;
 
     /**
-     * Constants for the various permission entry values.
+     * Constants for the various commonly used permission entry values.
      */
     public final static PermissionEntry OWN = new PermissionEntry("own");
     public final static PermissionEntry VIEW = new PermissionEntry("view");
@@ -41,7 +55,7 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
     public final static PermissionEntry DELETE = new PermissionEntry("delete");
 
     /**
-     * Helpful PermissionEntry Sets.
+     * Helpful PermissionEntry Sets which represent combinations of PermissionEntries.
      */
     public final static Set<PermissionEntry> OWN_VIEW = new HashSet<PermissionEntry>();
     public final static Set<PermissionEntry> OWN_CREATE = new HashSet<PermissionEntry>();
@@ -79,14 +93,17 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
     private AMEEEntityReference principleReference = new AMEEEntityReference();
 
     /**
-     * A String containing permission entries structured as JSON.
+     * A String containing permission entries structured as JSON. These entries
+     * are private but exposed via a Set of PermissionEntty instances.
      */
     @Column(name = "ENTRIES", length = ENTRIES_MAX_SIZE, nullable = false)
     @Lob
     private String entries = "";
 
     /**
-     * Set of PermissionEntry instances.
+     * Set of PermissionEntry instances. This represents the materialised view of
+     * the entries JSON String. This property is managed internally and not exposed in
+     * a form that can be manipulated.
      */
     @Transient
     private Set<PermissionEntry> entrySet;
@@ -115,18 +132,6 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         return obj;
     }
 
-    // TODO: Never used.
-    @Deprecated
-    public JSONObject getJSONObject(boolean detailed) throws JSONException {
-        return getJSONObject();
-    }
-
-    // TODO: Never used.
-    @Deprecated
-    public JSONObject getIdentityJSONObject() throws JSONException {
-        return APIUtils.getIdentityJSONObject(this);
-    }
-
     public Element getElement(Document document) {
         Element element = document.createElement("Permission");
         element.setAttribute("uid", getUid());
@@ -136,38 +141,58 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         return element;
     }
 
-    // TODO: Never used.
-    @Deprecated
-    public Element getElement(Document document, boolean detailed) {
-        return getElement(document);
-    }
-
-    // TODO: Never used.
-    @Deprecated
-    public Element getIdentityElement(Document document) {
-        return APIUtils.getIdentityElement(document, this);
-    }
-
+    /**
+     * Returns the entityReference instance that associates this Permission
+     * with the entity that the principle has permissions over.
+     *
+     * @return the entityReference instance
+     */
     public AMEEEntityReference getEntityReference() {
         return entityReference;
     }
 
+    /**
+     * Update this Permission with the supplied entityReference representing the
+     * entity for this Permission.
+     *
+     * @param entityReference instance to set
+     */
     public void setEntityReference(AMEEEntityReference entityReference) {
         if (entityReference != null) {
             this.entityReference = entityReference;
         }
     }
 
+    /**
+     * Returns the principleReference instance that associates this Permission
+     * with the principle that has permissions over the entity.
+     *
+     * @return the entityReference instance
+     */
     public AMEEEntityReference getPrincipleReference() {
         return principleReference;
     }
 
+    /**
+     * Update this Permission with the supplied principleReference representing
+     * the principle for this Permission.
+     *
+     * @param principleReference instance to set
+     */
     public void setPrincipleReference(AMEEEntityReference principleReference) {
         if (principleReference != null) {
             this.principleReference = principleReference;
         }
     }
 
+    /**
+     * Returns an immutable Set of PermissionEntry instances. As PermissionEntry
+     * instances are also immutable the returned set represents a read-only
+     * view of the permission entries for this Permission instance. Use the addEntry
+     * and removeEntry methods to modify the internal representation of entries.
+     *
+     * @return
+     */
     public Set<PermissionEntry> getEntries() {
         if (entrySet == null) {
             entrySet = new HashSet<PermissionEntry>();
@@ -190,7 +215,8 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
     }
 
     /**
-     * Add a PermissionEntry to the entries. Will internally make sure the entries set and string are updated.
+     * Add a PermissionEntry to the entries. Will internally make sure the entries
+     * set and string are updated.
      *
      * @param entry to add
      */
@@ -201,6 +227,19 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         entrySet.add(entry);
         // update the entries string
         updateEntriesJSONObject();
+    }
+
+    /**
+     * Remove a PermissionEntry, matching the supplied PermissionEntry, from the
+     * entries. Matching is based on the identity of the PermissionEntry as defined
+     * by the equals method. Will internally make sure the entries set and
+     * string are updated.
+     *
+     * @param entry to remove
+     */
+    public void removeEntry(PermissionEntry entry) {
+        // TODO: Implement this.
+        throw new UnsupportedOperationException();
     }
 
     private void updateEntriesJSONObject() {
