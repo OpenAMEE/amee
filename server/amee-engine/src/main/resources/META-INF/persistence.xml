@@ -20,6 +20,7 @@
         <class>com.amee.domain.data.DataCategoryLocaleName</class>
         <class>com.amee.domain.data.ItemDefinitionLocaleName</class>
         <class>com.amee.domain.data.ItemValueDefinitionLocaleName</class>
+        <class>com.amee.domain.data.ItemValueLocaleName</class>
         <properties>
             <!-- *** Hibernate Configuration *** -->
             <!-- See: http://www.hibernate.org/hib_docs/reference/en/html/configuration-optional.html -->

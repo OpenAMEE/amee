@@ -21,6 +21,7 @@
  */
 package com.amee.domain.data;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Cache;
@@ -43,7 +44,7 @@ import java.util.TreeMap;
 @Table(name = "LOCALE_NAME")
 @DiscriminatorColumn(name = "ENTITY_TYPE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class LocaleName extends AMEEEnvironmentEntity {
+public class LocaleName extends AMEEEntity {
 
     // The default {@link Locale} within AMEE.
     // Typical use would be for initialising a new User locale.
@@ -60,7 +61,7 @@ public class LocaleName extends AMEEEnvironmentEntity {
     // The owning entitiy.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENTITY_ID", nullable = false)
-    private AMEEEnvironmentEntity entity;
+    private AMEEEntity entity;
 
     // The static map of available {@link Locale}.
     public static final Map<String, Locale> AVAILABLE_LOCALES = initLocales();
@@ -70,14 +71,13 @@ public class LocaleName extends AMEEEnvironmentEntity {
     }
 
     /**
-     * Instanitate a new LocaleName.
+     * Instantiate a new LocaleName.
      *
      * @param entity - the entity to which the LocaleName belongs.
      * @param locale - the {@link Locale} for this name.
      * @param name   - the locale-specific name.
      */
-    public LocaleName(AMEEEnvironmentEntity entity, Locale locale, String name) {
-        super(entity.getEnvironment());
+    public LocaleName(AMEEEntity entity, Locale locale, String name) {
         this.entity = entity;
         this.locale = locale.toString();
         this.name = name;
@@ -99,6 +99,15 @@ public class LocaleName extends AMEEEnvironmentEntity {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Set the locale-specific name
+     *
+     * @param name - the locale-specific name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**

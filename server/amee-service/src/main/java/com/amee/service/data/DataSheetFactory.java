@@ -20,6 +20,7 @@
 package com.amee.service.data;
 
 import com.amee.core.ValueType;
+import com.amee.domain.LocaleHolder;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.*;
@@ -127,7 +128,9 @@ public class DataSheetFactory implements CacheableFactory {
                 "_" +
                 dataBrowser.getQueryStartDate() +
                 "_" +
-                ((dataBrowser.getQueryEndDate() != null) ? dataBrowser.getQueryEndDate() : "");
+                ((dataBrowser.getQueryEndDate() != null) ? dataBrowser.getQueryEndDate() : "") +
+                "_" +
+                LocaleHolder.getLocale();
     }
 
     public String getCacheName() {

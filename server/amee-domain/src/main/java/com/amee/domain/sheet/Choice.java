@@ -1,7 +1,7 @@
 package com.amee.domain.sheet;
 
-import com.amee.domain.APIObject;
 import com.amee.core.APIUtils;
+import com.amee.domain.APIObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -22,14 +22,14 @@ public class Choice implements Serializable, Comparable, APIObject {
 
     public Choice(String value) {
         this();
-        setName(value);
-        setValue(value);
+        this.name = value;
+        this.value = value;
     }
 
     public Choice(String name, String value) {
         this();
-        setName(name);
-        setValue(value);
+        this.name = name;
+        this.value = value;
     }
 
     public boolean equals(Object o) {
@@ -55,11 +55,9 @@ public class Choice implements Serializable, Comparable, APIObject {
         if (nameAndValue != null) {
             String[] arr = nameAndValue.trim().split("=");
             if (arr.length > 1) {
-                choice.setName(arr[0]);
-                choice.setValue(arr[1]);
+                choice = new Choice(arr[0],arr[1]);
             } else if (arr.length > 0) {
-                choice.setName(arr[0]);
-                choice.setValue(arr[0]);
+                choice = new Choice(arr[0]);
             }
         }
         return choice;
@@ -110,19 +108,7 @@ public class Choice implements Serializable, Comparable, APIObject {
         return name;
     }
 
-    public void setName(String name) {
-        if (name != null) {
-            this.name = name.trim();
-        }
-    }
-
     public String getValue() {
         return value;
-    }
-
-    public void setValue(String value) {
-        if (value != null) {
-            this.value = value.trim();
-        }
     }
 }

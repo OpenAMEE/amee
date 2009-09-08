@@ -26,7 +26,6 @@ import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.restlet.RequestContext;
@@ -190,38 +189,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
         log.debug("doAccept()");
 
-        // Pull out request parameters.
-        String value = getForm().getFirstValue("value");
         StartEndDate startDate = new StartEndDate(getForm().getFirstValue("startDate"));
-        final String valueDefinitionUid = getForm().getFirstValue("valueDefinitionUid");
-
-        // Unit and PerUnit values are not currently supported for DataItemValues, only ProfileItemValues - 08/06/09 steve@amee.com
-        //String unit = getForm().getFirstValue("unit");
-        //String perUnit = getForm().getFirstValue("perUnit");
-
-        // Validations
-
-        // The submitted ItemValueDefinition must be in the owning ItemDefinition
-        ItemValueDefinition matchedItemValueDefinition = null;
-        for (ItemValueDefinition ivd : getDataItem().getItemDefinition().getItemValueDefinitions()) {
-            if (ivd.isFromData() && ivd.getUid().equals(valueDefinitionUid)) {
-                matchedItemValueDefinition = ivd;
-            }
-        }
-
-        if (matchedItemValueDefinition == null) {
-            log.error("acceptRepresentation() - badRequest: trying to create a DIV with an IVD not belonging to the DI ID.");
-            badRequest();
-            return;
-        }
-
-        // Cannot create new ItemValues for ItemValueDefinitions which are used in the DrillDown for the owning
-        // ItemDefinition
-        if (getDataItem().getItemDefinition().isDrillDownValue(matchedItemValueDefinition.getName())) {
-            log.error("acceptRepresentation() - badRequest: trying to create a DIV that is a DrillDown value.");
-            badRequest();
-            return;
-        }
 
         // The submitted startDate must be (i) after or equal to the startDate and (ii) before the endDate of the owning DataItem.
         if (!getDataItem().isWithinLifeTime(startDate)) {
@@ -230,28 +198,43 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             return;
         }
 
-        // The new DataItemValue must be unique on itemValueDefinitionUid + startDate.
-        if (!getDataItem().isUnique(valueDefinitionUid, startDate)) {
-            log.error("acceptRepresentation() - badRequest: trying to create a DIV with the same IVD and StartDate as an existing DIV.");
-            badRequest();
-            return;
+        Set<String> names = getForm().getNames();
+        names.remove("startDate");
+        for (String name : names) {
+            ItemValue itemValue = getDataItem().getItemValue(name);
+            if (itemValue == null) {
+                // The submitted ItemValueDefinition must be in the owning ItemDefinition
+                log.error("acceptRepresentation() - badRequest: trying to create a DIV with an IVD not belonging to the DI ID.");
+                badRequest();
+                return;
+            }
+
+            // Cannot create new ItemValues for ItemValueDefinitions which are used in the DrillDown for the owning
+            // ItemDefinition
+            if (getDataItem().getItemDefinition().isDrillDownValue(itemValue.getItemValueDefinition())) {
+                log.error("acceptRepresentation() - badRequest: trying to create a DIV that is a DrillDown value.");
+                badRequest();
+                return;
+            }
+
+            // The new DataItemValue must be unique on itemValueDefinitionUid + startDate.
+            if (!getDataItem().isUnique(itemValue.getItemValueDefinition(), startDate)) {
+                log.error("acceptRepresentation() - badRequest: trying to create a DIV with the same IVD and StartDate as an existing DIV.");
+                badRequest();
+                return;
+            }
+
+            //Create the new ItemValue entity.
+            ItemValue newDataItemValue = new ItemValue(itemValue.getItemValueDefinition(), getDataItem(), getForm().getFirstValue(name));
+            newDataItemValue.setStartDate(startDate);
+
         }
-
-        //Create the new ItemValue entity.
-        ItemValue newDataItemValue = new ItemValue(matchedItemValueDefinition, getDataItem(), value);
-        newDataItemValue.setStartDate(startDate);
-
-        // Unit and PerUnit values are not currently supported for DataItemValues, only ProfileItemValues - 08/06/09 steve@amee.com
-        //if (StringUtils.isNotBlank(unit))
-        //    newDataItemValue.setUnit(unit);
-        //if (StringUtils.isNotBlank(perUnit))
-        //    newDataItemValue.setPerUnit(perUnit);
 
         // Clear caches
         dataService.clearCaches(getDataItem().getDataCategory());
 
         // Return successful creation of new DataItemValue.
-        successfulPost(getFullPath(), newDataItemValue.getUid());
+        successfulPost(getFullPath(), getDataItem().getUid());
     }
 
     @Override
@@ -272,39 +255,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         if (names.contains("path")) {
             dataItem.setPath(form.getFirstValue("path"));
         }
-
-        /**
-
-         Out-commenting DI startDate/endDate functionality. Pending final approval from AC, this will be
-         permanently deleted in due course - SM (15/07/09).
-
-         // update 'startDate' value
-         if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
-         dataItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
-         }
-
-         // update 'endDate' value
-         if (names.contains("endDate")) {
-         if (StringUtils.isNotBlank(form.getFirstValue("endDate"))) {
-         dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
-         } else {
-         dataItem.setEndDate(null);
-         }
-         } else {
-         if (StringUtils.isNotBlank(form.getFirstValue("duration"))) {
-         StartEndDate endDate = dataItem.getStartDate().plus(form.getFirstValue("duration"));
-         dataItem.setEndDate(endDate);
-         }
-         }
-
-         // if endDate is set it must be after startDate
-         if (dataItem.getEndDate() != null &&
-         dataItem.getEndDate().before(dataItem.getStartDate())) {
-         badRequest();
-         return;
-         }
-
-         */
 
         // update ItemValues if supplied
         for (String name : form.getNames()) {

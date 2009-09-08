@@ -40,7 +40,7 @@ public class EnvironmentBrowser extends BaseBrowser {
 
     // Users
 
-    private String userUid = null;
+    private String userIdOrName = null;
     private User user = null;
 
     // GroupPrinciples
@@ -83,17 +83,16 @@ public class EnvironmentBrowser extends BaseBrowser {
 
     // Users
 
-    public String getUserUid() {
-        return userUid;
-    }
-
-    public void setUserUid(String userUid) {
-        this.userUid = userUid;
+    public void setUserIdentifier(String identifier) {
+        this.userIdOrName = identifier;
     }
 
     public User getUser() {
-        if ((user == null) && (getEnvironment() != null) && (userUid != null)) {
-            user = siteService.getUserByUid(environment, userUid);
+        if ((user == null) && (getEnvironment() != null) && (userIdOrName != null)) {
+            user = siteService.getUserByUid(environment, userIdOrName);
+            if (user == null) {
+                user = siteService.getUserByUsername(environment, userIdOrName);   
+            }
         }
         return user;
     }

@@ -23,6 +23,7 @@ import com.amee.domain.AMEEStatus;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -37,6 +38,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -62,13 +64,13 @@ public class DataServiceDAO implements Serializable {
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<DataCategory> dataCategories = criteria.list();
-            if (dataCategories.size() == 1) {
+            if (dataCategories.size() == 0) {
+                log.debug("getDataCategoryByUid() NOT found: " + uid);
+            } else {
                 if (log.isTraceEnabled()) {
                     log.trace("getDataCategoryByUid() found: " + uid);
                 }
                 dataCategory = dataCategories.get(0);
-            } else {
-                log.debug("getDataCategoryByUid() NOT found: " + uid);
             }
         }
         return dataCategory;
@@ -122,6 +124,7 @@ public class DataServiceDAO implements Serializable {
         }
         // trash this DataCategory
         dataCategory.setStatus(AMEEStatus.TRASH);
+        remove(dataCategory.getLocaleNames().values());
     }
 
     // ItemValues
@@ -239,6 +242,17 @@ public class DataServiceDAO implements Serializable {
 
     protected void remove(ItemValue dataItemValue) {
         dataItemValue.setStatus(AMEEStatus.TRASH);
+        remove(dataItemValue.getLocaleValues().values());
+    }
+
+    protected void remove(Collection<LocaleName> localeNames) {
+        for(LocaleName localeName : localeNames) {
+            remove(localeName);
+        }
+    }
+
+    protected void remove(LocaleName localeName) {
+        localeName.setStatus(AMEEStatus.TRASH);
     }
 
 }

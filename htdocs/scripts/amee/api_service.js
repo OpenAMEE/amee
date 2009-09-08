@@ -186,7 +186,6 @@ var ApiService = Class.create({
         this.render();
     },
     loadFailure: function() {
-        // TODO
     },
     render: function() {
         this.renderTrail();

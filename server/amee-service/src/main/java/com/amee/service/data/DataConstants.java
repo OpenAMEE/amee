@@ -21,7 +21,6 @@ package com.amee.service.data;
 
 public class DataConstants {
 
-    // Views
     public final static String VIEW_CARBON = "amee.ftl";
     public final static String VIEW_DATA_SHEET = "dataSheet.ftl";
     public final static String VIEW_DATA_CATEGORY = "dataCategory.ftl";
@@ -40,47 +39,5 @@ public class DataConstants {
     public final static String VIEW_DATA_ITEM_LOOKUP = "dataItemLookup.ftl";
     public final static String VIEW_CARBON_VALUE = "itemValue.ftl";
     public final static String VIEW_CARBON_TREE_NODE = "carbonDataNode.ftl";
-
-    // CarbonCategories
-    public final static String ACTION_DATA_CATEGORY_VIEW = "dataCategory.view";
-    public final static String ACTION_DATA_CATEGORY_CREATE = "dataCategory.create";
-    public final static String ACTION_DATA_CATEGORY_MODIFY = "dataCategory.modify";
-    public final static String ACTION_DATA_CATEGORY_DELETE = "dataCategory.delete";
-    public final static String ACTION_DATA_CATEGORY_LIST = "dataCategory.list";
-
-    // Algorithms
-    public final static String ACTION_ALGORITHM_VIEW = "algorithm.view";
-    public final static String ACTION_ALGORITHM_CREATE = "algorithm.create";
-    public final static String ACTION_ALGORITHM_MODIFY = "algorithm.modify";
-    public final static String ACTION_ALGORITHM_DELETE = "algorithm.delete";
-    public final static String ACTION_ALGORITHM_LIST = "algorithm.list";
-
-    // ValueDefinitions
-    public final static String ACTION_VALUE_DEFINITION_VIEW = "valueDefinition.view";
-    public final static String ACTION_VALUE_DEFINITION_CREATE = "valueDefinition.create";
-    public final static String ACTION_VALUE_DEFINITION_MODIFY = "valueDefinition.modify";
-    public final static String ACTION_VALUE_DEFINITION_DELETE = "valueDefinition.delete";
-    public final static String ACTION_VALUE_DEFINITION_LIST = "valueDefinition.list";
-
-    // ItemDefinitions
-    public final static String ACTION_DATA_UPLOAD = "carbonData.upload";
-    public final static String ACTION_ITEM_DEFINITION_VIEW = "itemDefinition.view";
-    public final static String ACTION_ITEM_DEFINITION_CREATE = "itemDefinition.create";
-    public final static String ACTION_ITEM_DEFINITION_MODIFY = "itemDefinition.modify";
-    public final static String ACTION_ITEM_DEFINITION_DELETE = "itemDefinition.delete";
-    public final static String ACTION_ITEM_DEFINITION_LIST = "itemDefinition.list";
-
-    // ItemValueDefinitions
-    public final static String ACTION_ITEM_VALUE_DEFINITION_VIEW = "itemValueDefinition.view";
-    public final static String ACTION_ITEM_VALUE_DEFINITION_CREATE = "itemValueDefinition.create";
-    public final static String ACTION_ITEM_VALUE_DEFINITION_MODIFY = "itemValueDefinition.modify";
-    public final static String ACTION_ITEM_VALUE_DEFINITION_DELETE = "itemValueDefinition.delete";
-    public final static String ACTION_ITEM_VALUE_DEFINITION_LIST = "itemValueDefinition.list";
-
-    // DataItems
-    public final static String ACTION_DATA_ITEM_VIEW = "dataItem.view";
-    public final static String ACTION_DATA_ITEM_CREATE = "dataItem.create";
-    public final static String ACTION_DATA_ITEM_MODIFY = "dataItem.modify";
-    public final static String ACTION_DATA_ITEM_DELETE = "dataItem.delete";
-    public final static String ACTION_DATA_ITEM_LIST = "dataItem.list";
+    public final static String VIEW_LOCALE_NAME = "localeName.ftl";
 }

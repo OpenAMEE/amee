@@ -21,11 +21,10 @@ package com.amee.restlet.data;
 
 import com.amee.core.APIUtils;
 import com.amee.core.ThreadBeanHolder;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.data.DataCategory;
+import com.amee.domain.AMEEStatus;
+import com.amee.domain.StartEndDate;
+import com.amee.domain.data.*;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.utils.APIFault;
@@ -112,6 +111,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         values.put("dataItem", getDataItem());
         values.put("itemValue", this.itemValue);
         values.put("node", this.itemValue);
+        values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
         return values;
     }
 
@@ -228,15 +228,41 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             this.itemValue.setValue(form.getFirstValue("value"));
         }
 
-        // Can't ammend the startDate of the first ItemValue in a history (startDate == DI.startDate)
-        if (itemValue.getStartDate().equals(getDataItem().getStartDate())) {
-            log.error("acceptRepresentation() - badRequest: trying to update the startDate of the first DIV in a history.");
-            badRequest(APIFault.INVALID_RESOURCE_MODIFICATION);
-            return;
+        // Parse any submitted locale values
+        for (String name : form.getNames()) {
+            if (name.startsWith("value_")) {
+
+                String locale = name.substring(name.indexOf("_") + 1);
+                String localeValueStr = form.getFirstValue(name);
+
+                if (StringUtils.isBlank(localeValueStr) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                    badRequest(APIFault.INVALID_PARAMETERS);
+                    return;
+                }
+
+                if (this.itemValue.getLocaleValues().containsKey(locale)) {
+                    LocaleName localeName = this.itemValue.getLocaleValues().get(locale);
+                    localeName.setName(localeValueStr);
+                    if (form.getNames().contains("remove_value_" + locale)) {
+                        localeName.setStatus(AMEEStatus.TRASH);
+                    }
+                } else {
+                    LocaleName localeName =
+                            new ItemValueLocaleName(this.itemValue, LocaleName.AVAILABLE_LOCALES.get(locale), localeValueStr);
+                    this.itemValue.addLocaleName(localeName);
+                }
+            }
         }
 
         if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
             Date startDate = new StartEndDate(form.getFirstValue("startDate"));
+
+            // Can't ammend the startDate of the first ItemValue in a history (startDate == DI.startDate)
+            if (itemValue.getStartDate().equals(getDataItem().getStartDate())) {
+                log.error("acceptRepresentation() - badRequest: trying to update the startDate of the first DIV in a history.");
+                badRequest(APIFault.INVALID_RESOURCE_MODIFICATION);
+                return;
+            }
 
             // The submitted startDate must be (i) after or equal to the startDate and (ii) before the endDate of the owning DataItem.
             if (!getDataItem().isWithinLifeTime(startDate)) {
@@ -250,6 +276,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
 
         dataService.clearCaches(getDataItem().getDataCategory());
         successfulPut(getFullPath());
+
     }
 
     @Override

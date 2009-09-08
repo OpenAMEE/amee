@@ -184,6 +184,16 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
+
+    <cache name="com.amee.domain.data.ItemValue.localeNames"
+           maxElementsInMemory="57500"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
     <!-- ItemValueDefinition -->
     <cache name="com.amee.domain.data.ItemValueDefinition"
            maxElementsInMemory="1000"

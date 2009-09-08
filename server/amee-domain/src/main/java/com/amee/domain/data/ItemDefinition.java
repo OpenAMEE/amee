@@ -20,10 +20,7 @@
 package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.APIVersion;
-import com.amee.domain.InternalValue;
-import com.amee.domain.ObjectType;
+import com.amee.domain.*;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.Choice;
@@ -40,7 +37,6 @@ import java.util.*;
 @Entity
 @Table(name = "ITEM_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@DiscriminatorValue("ID")
 public class ItemDefinition extends AMEEEnvironmentEntity {
 
     public final static int NAME_SIZE = 255;
@@ -64,6 +60,48 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OrderBy("name")
     private Set<ItemValueDefinition> itemValueDefinitions = new HashSet<ItemValueDefinition>();
+
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @MapKey(name = "locale")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Map<String, LocaleName> localeNames = new HashMap<String, LocaleName>();
+
+    /**
+     * Get the collection of locale specific names for this ItemDefinition.
+     *
+     * @return the collection of locale specific names. The collection will be empty
+     *         if no locale specific names exist.
+     */
+    public Map<String, LocaleName> getLocaleNames() {
+        Map<String, LocaleName> activeLocaleNames = new TreeMap<String, LocaleName>();
+        for (String locale : localeNames.keySet()) {
+            LocaleName name = localeNames.get(locale);
+            if (!name.isTrash()) {
+                activeLocaleNames.put(locale, name);
+            }
+        }
+        return activeLocaleNames;
+    }
+
+    /*
+    * Get the locale specific name of this Itemefinition for the locale of the current thread.
+    *
+    * The locale specific name of this ItemDefinition for the locale of the current thread.
+    * If no locale specific name is found, the default name will be returned.
+    */
+    @SuppressWarnings("unchecked")
+    private String getLocaleName() {
+        String name = null;
+        LocaleName localeName = localeNames.get(LocaleHolder.getLocale());
+        if (localeName != null && !localeName.isTrash()) {
+            name = localeName.getName();
+        }
+        return name;
+    }
+
+    public void addLocaleName(LocaleName localeName) {
+        localeNames.put(localeName.getLocale(), localeName);
+    }
 
     public ItemDefinition() {
         super();
@@ -99,14 +137,14 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     }
 
     /**
-     * Check if an {@link ItemValueDefinition::name} is included in the list of DrillDowns for this ItemDefinition.
+     * Check if an {@link ItemValueDefinition} is included in the list of DrillDowns for this ItemDefinition.
      *
-     * @param name - the {@link ItemValueDefinition} name
+     * @param itemValueDefinition - the {@link ItemValueDefinition}
      * @return true if the name is in the DrillDown, otherwise false
      */
-    public boolean isDrillDownValue(String name) {
-        for(Choice choice : getDrillDownChoices()) {
-            if (choice.getName().equalsIgnoreCase(name)) {
+    public boolean isDrillDownValue(ItemValueDefinition itemValueDefinition) {
+        for (Choice choice : getDrillDownChoices()) {
+            if (choice.getName().equalsIgnoreCase(itemValueDefinition.getName())) {
                 return true;
             }
         }
@@ -231,7 +269,6 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
         return ObjectType.ID;
     }
 
-    //
     /**
      * Get the algorithm corresponding to the supplied name.
      *

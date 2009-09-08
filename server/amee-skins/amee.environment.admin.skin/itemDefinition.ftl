@@ -1,3 +1,17 @@
+<script type="text/javascript">
+    function localeonchange() {
+        var form = $('update');
+        if ($('localeName')) {
+            $('localeName').remove();
+        }
+        var locale = form['localeName_part'].value;
+        var value = form['localeValue_part'].value;
+        var locale_value = new Element('input', { id: "localeName", name: "name_" + locale , value: value});
+        locale_value.hide()
+        form.insert(locale_value);
+    }
+</script>
+
 <#assign sectionName = 'environments'>
 <#include '/includes/before_content.ftl'>
 <h1>Environment Administration</h1>
@@ -17,15 +31,46 @@
 </p>
 <#if browser.itemDefinitionActions.allowModify>
   <h2>Update Item Definition</h2>
-  <p>
-  <form action='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
-    Name: <input name='name' value='${itemDefinition.name}' type='text' size='30'/><br/>
-    Skip Recalculation (Profile Items):
-      Yes <input type="radio" name="skipRecalculation" value="true"<#if itemDefinition.skipRecalculation> checked</#if>/>
-      No <input type="radio" name="skipRecalculation" value="false"<#if !itemDefinition.skipRecalculation> checked</#if>/><br/>
-    Drill Down: <input name='drillDown' value='${itemDefinition.drillDown}' type='text' size='50'/><br/><br/>
+    <form id="update" action='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+    <table>
+        <tr>
+           <td>Name:</td>
+           <td colspan="2"><input name='name' value='${itemDefinition.name}' type='text' size='30'/></td>
+        </tr>
+        <tr>
+           <td>Skip Recalculation (Profile Items):</td>
+           <td colspan="2">
+                Yes <input type="radio" name="skipRecalculation" value="true"<#if itemDefinition.skipRecalculation> checked</#if>/>
+                No <input type="radio" name="skipRecalculation" value="false"<#if !itemDefinition.skipRecalculation> checked</#if>/>
+           </td>
+        </tr>
+        <tr>
+           <td>Drill Down:</td>
+           <td colspan="2"><input name='drilldown' value='${itemDefinition.drillDown}' type='text' size='30'/></td>
+        </tr>
+        <#if itemDefinition.localeNames?size != 0>
+            <#list itemDefinition.localeNames?keys as locale>
+            <tr>
+                <td>Name: [${locale}]</td>
+                <td><input name='name_${locale}' value='${itemDefinition.localeNames[locale].name}' type='text' size='30'/></td>
+                <td>Remove: <input type="checkbox" name="remove_name_${locale}"/> </td>
+            </tr>
+            </#list>
+        </#if>
+        <tr>
+            <td>New Locale Name:</td>
+            <td>
+                <select name='localeName_part' onchange='javascript:localeonchange();'> <br/>
+                <#list availableLocales as locale>
+                    <option value='${locale}'>${locale}</option>
+                </#list>
+                </select>
+                <input name='localeValue_part' type='text' size='30' onchange='javascript:localeonchange();'/><br/>
+            </td>
+        </tr>
+    </table>
     <input type='submit' value='Update'/>
-  </form>
-  </p>
+</form>
+</p>
 </#if>
 <#include '/includes/after_content.ftl'>

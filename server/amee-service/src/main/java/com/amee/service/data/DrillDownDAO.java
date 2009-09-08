@@ -22,6 +22,7 @@
 package com.amee.service.data;
 
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.LocaleHolder;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValueDefinition;
@@ -194,7 +195,7 @@ class DrillDownDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    protected Collection<String> getDataItemUIDs(Collection<Long> dataItemIds) {
+    private Collection<String> getDataItemUIDs(Collection<Long> dataItemIds) {
 
         StringBuilder sql;
         SQLQuery query;
@@ -232,7 +233,7 @@ class DrillDownDAO implements Serializable {
         }
     }
 
-    protected Collection<String> getDataItemUIDs(
+    private Collection<String> getDataItemUIDs(
             Long dataCategoryId,
             Long itemDefinitionId,
             Date startDate,
@@ -286,7 +287,7 @@ class DrillDownDAO implements Serializable {
         return dataItemUids;
     }
 
-    protected List<String> getDataItemValues(
+    private List<String> getDataItemValues(
             Long itemValueDefinitionId,
             Collection<Long> dataItemIds) {
 
@@ -329,7 +330,7 @@ class DrillDownDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    protected List<String> getDataItemValues(
+    private List<String> getDataItemValues(
             Long dataCategoryId,
             Long itemDefinitionId,
             Long itemValueDefinitionId) {
@@ -378,7 +379,7 @@ class DrillDownDAO implements Serializable {
         }
     }
 
-    protected Collection<Long> getDataItemIds(
+    private Collection<Long> getDataItemIds(
             DataCategory dataCategory,
             List<Choice> selections,
             Date startDate,
@@ -426,21 +427,42 @@ class DrillDownDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    protected Collection<Long> getDataItemIds(
+    private Collection<Long> getDataItemIds(
             Long dataCategoryId,
             Long itemDefinitionId,
-            Long itemValueDefinitionId,
+            Long itemValueDefinition,
             Date startDate,
             Date endDate,
             String value) {
 
-        StringBuilder sql;
-        SQLQuery query;
         List<Object[]> results;
         Set<Long> dataItemIds;
 
+        if (LocaleHolder.isDefaultLocale()) {
+            results = getDataItemIdsUsingValue(dataCategoryId, itemDefinitionId, itemValueDefinition, value);
+        } else {
+            results = getDataItemIdsUsingLocaleNames(dataCategoryId, itemDefinitionId, itemValueDefinition, value);
+        }
+
+        log.debug("getDataItemIds() results: " + results.size());
+
+        // only include DataItem IDs within the correct time frame
+        dataItemIds = new HashSet<Long>();
+        for (Object[] row : results) {
+            if (isWithinTimeFrame(startDate, endDate, (Date) row[1], (Date) row[2])) {
+                    dataItemIds.add((Long) row[0]);
+            }
+        }
+
+        return dataItemIds;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Object[]> getDataItemIdsUsingValue(Long dataCategoryId, Long itemDefinitionId,
+            Long itemValueDefinitionId, String value) {
+
         // create SQL
-        sql = new StringBuilder();
+        StringBuilder sql = new StringBuilder();
         sql.append("SELECT i.ID ID, i.START_DATE START_DATE, i.END_DATE END_DATE ");
         sql.append("FROM ITEM i, ITEM_VALUE iv ");
         sql.append("WHERE i.ID = iv.ITEM_ID ");
@@ -449,11 +471,12 @@ class DrillDownDAO implements Serializable {
         sql.append("AND i.DATA_CATEGORY_ID = :dataCategoryId ");
         sql.append("AND i.ITEM_DEFINITION_ID = :itemDefinitionId ");
         sql.append("AND iv.ITEM_VALUE_DEFINITION_ID = :itemValueDefinitionId ");
-        sql.append("AND iv.value = :value");
+        sql.append("AND iv.VALUE = :value");
+
 
         // create query
         Session session = (Session) entityManager.getDelegate();
-        query = session.createSQLQuery(sql.toString());
+        SQLQuery query = session.createSQLQuery(sql.toString());
         query.addScalar("ID", Hibernate.LONG);
         query.addScalar("START_DATE", Hibernate.TIMESTAMP);
         query.addScalar("END_DATE", Hibernate.TIMESTAMP);
@@ -466,21 +489,49 @@ class DrillDownDAO implements Serializable {
         query.setString("value", value);
 
         // execute SQL
-        results = (List<Object[]>) query.list();
-        log.debug("getDataItemIds() results: " + results.size());
-
-        // only include DataItem IDs within the correct time frame
-        dataItemIds = new HashSet<Long>();
-        for (Object[] row : results) {
-            if (isWithinTimeFrame(startDate, endDate, (Date) row[1], (Date) row[2])) {
-                dataItemIds.add((Long) row[0]);
-            }
-        }
-
-        return dataItemIds;
+        return (List<Object[]>) query.list();
     }
 
-    protected boolean isWithinTimeFrame(Date targetStart, Date targetEnd, Date testStart, Date testEnd) {
+    @SuppressWarnings("unchecked")
+    private List<Object[]> getDataItemIdsUsingLocaleNames(Long dataCategoryId, Long itemDefinitionId,
+            Long itemValueDefinitionId, String value) {
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT i.ID ID, i.START_DATE START_DATE, i.END_DATE END_DATE ");
+        sql.append("FROM ITEM i, ITEM_VALUE iv, LOCALE_NAME ln ");
+        sql.append("WHERE i.ID = iv.ITEM_ID ");
+        sql.append("AND i.STATUS != :trash ");
+        sql.append("AND i.TYPE = 'DI' ");
+        sql.append("AND i.DATA_CATEGORY_ID = :dataCategoryId ");
+        sql.append("AND i.ITEM_DEFINITION_ID = :itemDefinitionId ");
+        sql.append("AND iv.ITEM_VALUE_DEFINITION_ID = :itemValueDefinitionId ");
+        sql.append("AND ln.ENTITY_TYPE='IV' AND ln.ENTITY_ID = iv.ID AND LOCALE = :locale AND ln.NAME = :value");
+
+        // create query
+        Session session = (Session) entityManager.getDelegate();
+        SQLQuery query = session.createSQLQuery(sql.toString());
+        query.addScalar("ID", Hibernate.LONG);
+        query.addScalar("START_DATE", Hibernate.TIMESTAMP);
+        query.addScalar("END_DATE", Hibernate.TIMESTAMP);
+
+        // set parameters
+        query.setInteger("trash", AMEEStatus.TRASH.ordinal());
+        query.setLong("dataCategoryId", dataCategoryId);
+        query.setLong("itemValueDefinitionId", itemValueDefinitionId);
+        query.setLong("itemDefinitionId", itemDefinitionId);
+        query.setString("value", value);
+        query.setString("locale", LocaleHolder.getLocale());
+
+        // execute SQL
+        List results = (List<Object[]>) query.list();
+        // There are no locale specific values for this locale, so get by default value instead.
+        if (results.isEmpty()) {
+            results = getDataItemIdsUsingValue(dataCategoryId, itemDefinitionId, itemValueDefinitionId, value);
+        }
+        return results;
+    }
+
+    private boolean isWithinTimeFrame(Date targetStart, Date targetEnd, Date testStart, Date testEnd) {
         boolean result = true;
         if (targetEnd != null) {
             if (!(testStart.before(targetEnd) &&
