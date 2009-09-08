@@ -30,24 +30,48 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+/**
+ * An embeddable entity for use in AMEEEntity extended classes to encapsulate properties
+ * for refering to another AMEEEntity (from another database table). The entityId, entityUid
+ * and entityType properties allow the application to reference any entity / database row
+ * in another AMEEEntity table.
+ */
 @Embeddable
 public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
 
     public final static int ENTITY_TYPE_MAX_SIZE = 50;
 
+    /**
+     * The ID of the entity an AMEEEntityReference is referring to.
+     */
     @Column(name = "ENTITY_ID", nullable = false)
     private Long entityId;
 
+    /**
+     * The UID of the entity an AMEEEntityReference is referring to.
+     */
     @Column(name = "ENTITY_UID", length = AMEEEntity.UID_SIZE, nullable = false)
     private String entityUid = "";
 
+    /**
+     * The entity type of the entity an AMEEEntityReference is referring to. The entityType
+     * property is exposed externally as an ObjectType but stored internally as a String.
+     */
     @Column(name = "ENTITY_TYPE", length = ENTITY_TYPE_MAX_SIZE, nullable = false)
     private String entityType = "";
 
+    /**
+     * Default constructor.
+     */
     public AMEEEntityReference() {
         super();
     }
 
+    /**
+     * Construct an AMEEEntityReference based on the supplied IAMEEEntityReference.
+     *
+     * @param entity to reference
+     */
     public AMEEEntityReference(IAMEEEntityReference entity) {
         this();
         setEntityId(entity.getEntityId());
@@ -55,6 +79,13 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
         setEntityType(entity.getObjectType());
     }
 
+    /**
+     * Two AMEEEntityReferences are considered equal if the entityId and entityType properties
+     * match, along with standard object equality.
+     *
+     * @param o object to compare against
+     * @return true if the obejcts are considered equal, otherwise false
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,6 +94,11 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
         return getEntityId().equals(entity.getEntityId()) && getEntityType().equals(entity.getObjectType());
     }
 
+    /**
+     * Returns a hash code based on the entityId and entityType properties.
+     *
+     * @return the hash code
+     */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -71,6 +107,12 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
         return hash;
     }
 
+    /**
+     * Returns a JSONObject representing the AMEEEntityReference.
+     *
+     * @return the new JSONObject
+     * @throws JSONException
+     */
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getEntityUid());
@@ -78,6 +120,13 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
         return obj;
     }
 
+    /**
+     * Return a DOM Element representing the AMEEEntityReference.
+     *
+     * @param document which new Element belongs to
+     * @param name of new Element
+     * @return the new Element
+     */
     public Element getElement(Document document, String name) {
         Element element = document.createElement(name);
         element.setAttribute("uid", getEntityUid());
@@ -85,18 +134,38 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
         return element;
     }
 
+    /**
+     * Get the entity id of the referenced entity.
+     *
+     * @return the entity id
+     */
     public Long getEntityId() {
         return entityId;
     }
 
+    /**
+     * Set the entity id of the referenced AMEEEntity.
+     *
+     * @param entityId to set
+     */
     public void setEntityId(Long entityId) {
         this.entityId = entityId;
     }
 
+    /**
+     * Get the UID of the referenced AMEEEntity.
+     *
+     * @return the entity UID
+     */
     public String getEntityUid() {
         return entityUid;
     }
 
+    /**
+     * Set the entityUid property.
+     *
+     * @param entityUid to set
+     */
     public void setEntityUid(String entityUid) {
         if (entityUid == null) {
             entityUid = "";
@@ -104,15 +173,30 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
         this.entityUid = entityUid;
     }
 
+    /**
+     * Get the ObjectType for the entityType property.
+     *
+     * @return the ObjectType
+     */
     public ObjectType getObjectType() {
         return getEntityType();
     }
 
+    /**
+     * Get the ObjectType for the entityType property.
+     *
+     * @return the ObjectType
+     */
     public ObjectType getEntityType() {
         return ObjectType.valueOf(entityType);
     }
 
-    public void setEntityType(ObjectType objectType) {
-        this.entityType = objectType.getName();
+    /**
+     * Set the ObjectType for the entityType property.
+     *
+     * @param entityType to set
+     */
+    public void setEntityType(ObjectType entityType) {
+        this.entityType = entityType.getName();
     }
 }

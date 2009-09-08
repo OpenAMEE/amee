@@ -110,10 +110,10 @@ public class PermissionEntry implements Serializable {
     }
 
     /**
-     * Returns a hash code for a PermissionEntry. Internally uses the hascode of the value
+     * Returns a hash code for a PermissionEntry. Internally uses the hash code of the value
      * property.
      *
-     * @return
+     * @return the hash code
      */
     @Override
     public int hashCode() {

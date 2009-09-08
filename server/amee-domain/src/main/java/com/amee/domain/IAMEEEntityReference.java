@@ -21,11 +21,29 @@
  */
 package com.amee.domain;
 
+/**
+ * Defines an interface exposing the properties required to identify (refer-to) an AMEEEntity.
+ */
 public interface IAMEEEntityReference {
 
+    /**
+     * Fetches the ID of the referenced entity.
+     *
+     * @return the entity id
+     */
     public Long getEntityId();
 
+    /**
+     * Fetches the UID of the referenced entity.
+     *
+     * @return entity UID
+     */
     public String getEntityUid();
 
+    /**
+     * Fetches the ObjectTyoe of the referenced entity.
+     *
+     * @return the ObjectType
+     */
     public ObjectType getObjectType();
 }
