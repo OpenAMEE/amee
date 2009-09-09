@@ -50,6 +50,7 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
      */
     public final static PermissionEntry OWN = new PermissionEntry("own");
     public final static PermissionEntry VIEW = new PermissionEntry("view");
+    public final static PermissionEntry VIEW_DENY = new PermissionEntry("view", false);
     public final static PermissionEntry VIEW_DEPRECATED = new PermissionEntry("view.deprecated");
     public final static PermissionEntry CREATE = new PermissionEntry("create");
     public final static PermissionEntry MODIFY = new PermissionEntry("modify");

@@ -29,6 +29,8 @@ import com.amee.domain.auth.GroupPrinciple;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.environment.Environment;
 import org.springframework.stereotype.Service;
 
@@ -41,32 +43,23 @@ import java.util.Map;
 public class ServiceData {
 
     public Environment ENVIRONMENT;
-
-    public Group GROUP_1;
-    public Group GROUP_2;
-
-    public User USER_1;
-    public User USER_2;
-
-    public GroupPrinciple TEST_GROUP_PRINCIPLE_1;
-    public GroupPrinciple TEST_GROUP_PRINCIPLE_2;
-    public static GroupPrinciple TEST_GROUP_PRINCIPLE_3;
-
-    public DataCategory DC_ROOT;
-    public DataCategory DC_1;
-    public DataCategory DC_2;
-
-    public Permission PERMISSION_1;
-
+    public Group GROUP_STANDARD, GROUP_PREMIUM;
+    public User USER_STANDARD, USER_PREMIUM;
+    public GroupPrinciple GROUP_STANDARD_USER_STANDARD, GROUP_STANDARD_USER_PREMIUM, GROUP_PREMIUM_USER_PREMIUM;
+    public ItemDefinition ID_PUBLIC, ID_PREMIUM;
+    public DataCategory DC_ROOT, DC_PUBLIC, DC_PREMIUM;
+    public DataItem DI_PUBLIC, DI_PREMIUM;
+    public Permission PERMISSION_1, PERMISSION_2, PERMISSION_3;
     public Map<IAMEEEntityReference, List<Permission>> PRINCIPLE_TO_PERMISSIONS;
-
     public Map<ObjectType, Long> ID_MAP;
 
     public void init() {
         initCollections();
         initEnvironment();
-        initGroupsAndUsers();
+        initDefinitions();
         initDataCategories();
+        initDataItems();
+        initGroupsAndUsers();
         initPermissions();
     }
 
@@ -80,33 +73,54 @@ public class ServiceData {
         setId(ENVIRONMENT);
     }
 
-    private void initGroupsAndUsers() {
-        GROUP_1 = new Group(ENVIRONMENT, "Group One");
-        GROUP_2 = new Group(ENVIRONMENT, "Group Two");
-        setId(GROUP_1, GROUP_2);
-
-        USER_1 = new User(ENVIRONMENT, "user_1", "password", "User One");
-        USER_2 = new User(ENVIRONMENT, "user_2", "password", "User Two");
-        setId(USER_1, USER_2);
-
-        TEST_GROUP_PRINCIPLE_1 = new GroupPrinciple(GROUP_1, USER_1);
-        TEST_GROUP_PRINCIPLE_2 = new GroupPrinciple(GROUP_2, USER_1);
-        TEST_GROUP_PRINCIPLE_3 = new GroupPrinciple(GROUP_1, USER_2);
-        setId(TEST_GROUP_PRINCIPLE_1, TEST_GROUP_PRINCIPLE_2, TEST_GROUP_PRINCIPLE_3);
+    private void initDefinitions() {
+        ID_PUBLIC = new ItemDefinition(ENVIRONMENT, "Item Definition Public");
+        ID_PREMIUM = new ItemDefinition(ENVIRONMENT, "Item Definition Premium");
+        setId(ID_PUBLIC, ID_PREMIUM);
     }
 
     private void initDataCategories() {
         DC_ROOT = new DataCategory(ENVIRONMENT, "Root", "root");
-        DC_1 = new DataCategory(DC_ROOT, "DC 1", "dc_1");
-        DC_2 = new DataCategory(DC_ROOT, "DC 2", "dc_2");
-        setId(DC_ROOT, DC_1, DC_2);
+        DC_PUBLIC = new DataCategory(DC_ROOT, "DC Public", "dc_public");
+        DC_PREMIUM = new DataCategory(DC_ROOT, "DC 2", "dc_premium");
+        setId(DC_ROOT, DC_PUBLIC, DC_PREMIUM);
+    }
+
+    private void initDataItems() {
+        DI_PUBLIC = new DataItem(DC_PUBLIC, ID_PUBLIC);
+        DI_PREMIUM = new DataItem(DC_PREMIUM, ID_PREMIUM);
+        setId(DI_PUBLIC, DI_PREMIUM);
+    }
+
+    private void initGroupsAndUsers() {
+        // Groups
+        GROUP_STANDARD = new Group(ENVIRONMENT, "Group Standard");
+        GROUP_PREMIUM = new Group(ENVIRONMENT, "Group Premium");
+        setId(GROUP_STANDARD, GROUP_PREMIUM);
+        // Users
+        USER_STANDARD = new User(ENVIRONMENT, "user_standard", "password", "User Standard");
+        USER_PREMIUM = new User(ENVIRONMENT, "user_premium", "password", "User Premium");
+        setId(USER_STANDARD, USER_PREMIUM);
+        // Users in Groups
+        GROUP_STANDARD_USER_STANDARD = new GroupPrinciple(GROUP_STANDARD, USER_STANDARD);
+        GROUP_STANDARD_USER_PREMIUM = new GroupPrinciple(GROUP_STANDARD, USER_PREMIUM);
+        GROUP_PREMIUM_USER_PREMIUM = new GroupPrinciple(GROUP_PREMIUM, USER_PREMIUM);
+        setId(GROUP_STANDARD_USER_STANDARD, GROUP_STANDARD_USER_PREMIUM, GROUP_PREMIUM_USER_PREMIUM);
     }
 
     private void initPermissions() {
-        // User can view DataCategory
-        PERMISSION_1 = new Permission(USER_1, DC_1, Permission.VIEW);
+        // Standard group members can view root data category.
+        PERMISSION_1 = new Permission(GROUP_STANDARD, DC_ROOT, Permission.VIEW);
         setId(PERMISSION_1);
-        addPermissionToPrinciple(USER_1, PERMISSION_1);
+        addPermissionToPrinciple(GROUP_STANDARD, PERMISSION_1);
+        // Standard group members can not view premium data category.
+        PERMISSION_2 = new Permission(GROUP_STANDARD, DC_PREMIUM, Permission.VIEW_DENY);
+        setId(PERMISSION_2);
+        addPermissionToPrinciple(GROUP_STANDARD, PERMISSION_2);
+        // Premium group members can view premium data category.
+        PERMISSION_3 = new Permission(GROUP_PREMIUM, DC_PREMIUM, Permission.VIEW);
+        setId(PERMISSION_3);
+        addPermissionToPrinciple(GROUP_STANDARD, PERMISSION_3);
     }
 
     private void addPermissionToPrinciple(IAMEEEntityReference principle, Permission permission) {
