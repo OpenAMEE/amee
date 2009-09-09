@@ -22,7 +22,8 @@
 package com.amee.service.auth;
 
 import com.amee.service.ServiceTest;
-import org.junit.Before;
+import com.amee.service.ServiceData;
+import static junit.framework.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,12 @@ public class AuthorizationTest extends ServiceTest {
     @Autowired
     private AuthorizationService authorizationService;
 
-    @Before
-    public void init() {
-    }
-
     @Test
-    public void add() {
+    public void userCanViewDataCategory() {
+        AuthorizationContext ac = new AuthorizationContext();
+        ac.addPrinciple(serviceData.USER_1);
+        ac.addEntity(serviceData.DC_1);
+        ac.addEntries("view");
+        assertTrue("Should be able to view Data Category.", authorizationService.isAuthorized(ac));
     }
 }

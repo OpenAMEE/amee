@@ -25,10 +25,10 @@ import com.amee.domain.auth.Group;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.profile.Profile;
+import com.amee.domain.profile.ProfileItem;
 import com.amee.service.ServiceTest;
-import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.assertFalse;
-import org.junit.Before;
+import static junit.framework.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +40,6 @@ public class PermissionTest extends ServiceTest {
     @Autowired
     private PermissionService permissionService;
 
-    @Before
-    public void init() {
-    }
-
     @Test
     public void areValidPrinciples() {
         assertTrue("Should be a valid principle", permissionService.isValidPrinciple(new Group()));
@@ -54,5 +50,17 @@ public class PermissionTest extends ServiceTest {
     public void areNotValidPrinciples() {
         assertFalse("Should not be a valid principle", permissionService.isValidPrinciple(new DataItem()));
         assertFalse("Should not be a valid principle", permissionService.isValidPrinciple(new Profile()));
+    }
+
+    @Test
+    public void areValidPrinciplesToEntities() {
+        assertTrue("Should be a valid principle-to-entity", permissionService.isValidPrincipleToEntity(new Group(), new DataItem()));
+        assertTrue("Should be a valid principle-to-entity", permissionService.isValidPrincipleToEntity(new User(), new ProfileItem()));
+    }
+
+    @Test
+    public void areNotValidPrinciplesToEntities() {
+        assertFalse("Should not be a valid principle-to-entity", permissionService.isValidPrincipleToEntity(new DataItem(), new Profile()));
+        assertFalse("Should not be a valid principle-to-entity", permissionService.isValidPrincipleToEntity(new User(), new Group()));
     }
 }

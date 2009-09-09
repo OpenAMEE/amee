@@ -91,7 +91,7 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
         if (this == o) return true;
         if ((o == null) || !IAMEEEntityReference.class.isAssignableFrom(o.getClass())) return false;
         IAMEEEntityReference entity = (IAMEEEntityReference) o;
-        return getEntityId().equals(entity.getEntityId()) && getEntityType().equals(entity.getObjectType());
+        return getEntityId().equals(entity.getEntityId()) && getObjectType().equals(entity.getObjectType());
     }
 
     /**

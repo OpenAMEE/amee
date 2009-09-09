@@ -102,9 +102,9 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if ((o == null) || !AMEEEntity.class.isAssignableFrom(o.getClass())) return false;
-        AMEEEntity ameeEntity = (AMEEEntity) o;
-        return getUid().equals(ameeEntity.getUid());
+        if ((o == null) || !IAMEEEntityReference.class.isAssignableFrom(o.getClass())) return false;
+        IAMEEEntityReference entity = (IAMEEEntityReference) o;
+        return getEntityId().equals(entity.getEntityId()) && getObjectType().equals(entity.getObjectType());
     }
 
     /**
