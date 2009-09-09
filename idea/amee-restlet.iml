@@ -21,7 +21,7 @@
     <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:servlet-api:2.5-20081211" level="project" />
     <orderEntry type="library" exported="" name="Maven: xml-apis:xml-apis:1.3.04" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.slf4j:slf4j-api:1.5.0" level="project" />
-    <orderEntry type="library" name="Maven: junit:junit:4.5" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.4" level="project" />
     <orderEntry type="module" module-name="amee-domain" exported="" />
     <orderEntry type="module" module-name="amee-core" exported="" />
     <orderEntry type="library" exported="" name="Maven: org.json:org.json:2.0" level="project" />
