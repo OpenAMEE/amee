@@ -2,6 +2,7 @@ package com.amee.domain.auth;
 
 import com.amee.domain.AMEEEntityReference;
 import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -110,6 +111,13 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
 
     public Permission() {
         super();
+    }
+
+    public Permission(IAMEEEntityReference principle, IAMEEEntityReference entity, PermissionEntry entry) {
+        this();
+        setPrincipleReference(new AMEEEntityReference(principle));
+        setEntityReference(new AMEEEntityReference(entity));
+        addEntry(entry);
     }
 
     public String toString() {

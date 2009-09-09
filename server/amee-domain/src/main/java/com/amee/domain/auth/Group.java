@@ -50,6 +50,11 @@ public class Group extends AMEEEnvironmentEntity implements Comparable {
         super(environment);
     }
 
+    public Group(Environment environment, String name) {
+        super(environment);
+        setName(name);
+    }
+
     public String toString() {
         return "Group_" + getUid();
     }

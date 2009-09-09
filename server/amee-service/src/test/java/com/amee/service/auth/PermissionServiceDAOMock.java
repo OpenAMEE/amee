@@ -24,12 +24,18 @@ package com.amee.service.auth;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.Permission;
+import com.amee.service.ServiceData;
 import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class PermissionServiceDAOMock implements PermissionServiceDAO {
+
+    @Autowired
+    protected ServiceData serviceData;
 
     public List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
         throw new UnsupportedOperationException();
@@ -40,7 +46,15 @@ public class PermissionServiceDAOMock implements PermissionServiceDAO {
     }
 
     public List<Permission> getPermissionsForPrincipleAndEntity(IAMEEEntityReference principle, IAMEEEntityReference entity) {
-        throw new UnsupportedOperationException();
+        List<Permission> permissions = new ArrayList<Permission>();
+        if (serviceData.PRINCIPLE_TO_PERMISSIONS.containsKey(principle)) {
+            for (Permission permission : serviceData.PRINCIPLE_TO_PERMISSIONS.get(principle)) {
+                if (permission.getEntityReference().equals(entity)) {
+                    permissions.add(permission);
+                }
+            }
+        }
+        return permissions;
     }
 
     public AMEEEntity getEntity(IAMEEEntityReference entityReference) {
