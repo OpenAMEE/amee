@@ -25,8 +25,9 @@ import com.amee.domain.auth.Group;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.profile.Profile;
-import com.amee.service.BaseTest;
+import com.amee.service.ServiceTest;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class PermissionTest extends BaseTest {
+public class PermissionTest extends ServiceTest {
 
     @Autowired
     private PermissionService permissionService;
@@ -51,7 +52,7 @@ public class PermissionTest extends BaseTest {
 
     @Test
     public void areNotValidPrinciples() {
-        assertTrue("Should not be a valid principle", permissionService.isValidPrinciple(new DataItem()));
-        assertTrue("Should not be a valid principle", permissionService.isValidPrinciple(new Profile()));
+        assertFalse("Should not be a valid principle", permissionService.isValidPrinciple(new DataItem()));
+        assertFalse("Should not be a valid principle", permissionService.isValidPrinciple(new Profile()));
     }
 }

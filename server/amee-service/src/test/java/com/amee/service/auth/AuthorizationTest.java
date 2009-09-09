@@ -21,7 +21,7 @@
  */
 package com.amee.service.auth;
 
-import com.amee.service.BaseTest;
+import com.amee.service.ServiceTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class AuthorizationTest extends BaseTest {
+public class AuthorizationTest extends ServiceTest {
 
     @Autowired
     private AuthorizationService authorizationService;

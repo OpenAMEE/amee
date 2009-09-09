@@ -7,16 +7,10 @@
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-    <!-- Placeholder property configuration -->
-    <!--<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>-->
+    <bean class="com.amee.service.auth.PermissionService"/>
 
-    <!-- Annotations and other stuff -->
-    <!--<context:load-time-weaver/>-->
-    <!--<context:spring-configured/>-->
-    <!--<context:annotation-config/>-->
-    <!--<context:component-scan base-package="com"/>-->
+    <bean id="permissionServiceDao" class="com.amee.service.auth.PermissionServiceDAOMock"/>
 
-    <!--<bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>-->
-    <!--<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>-->
+    <bean class="com.amee.service.auth.AuthorizationService"/>
 
 </beans>
