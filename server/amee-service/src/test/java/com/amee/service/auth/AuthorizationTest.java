@@ -22,8 +22,8 @@
 package com.amee.service.auth;
 
 import com.amee.service.ServiceTest;
-import com.amee.service.ServiceData;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.assertFalse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +36,24 @@ public class AuthorizationTest extends ServiceTest {
     private AuthorizationService authorizationService;
 
     @Test
-    public void userCanViewDataCategory() {
+    public void standardUserViewPublicDataCategory() {
         AuthorizationContext ac = new AuthorizationContext();
-        ac.addPrinciple(serviceData.USER_1);
-        ac.addEntity(serviceData.DC_1);
+        ac.addPrinciple(serviceData.USER_STANDARD);
+        ac.addPrinciple(serviceData.GROUP_STANDARD);
+        ac.addEntity(serviceData.DC_ROOT);
+        ac.addEntity(serviceData.DC_PUBLIC);
         ac.addEntries("view");
-        assertTrue("Should be able to view Data Category.", authorizationService.isAuthorized(ac));
+        assertTrue("Standard user should be able to view public data category.", authorizationService.isAuthorized(ac));
+    }
+
+    @Test
+    public void standardUserNotViewPremiumDataCategory() {
+        AuthorizationContext ac = new AuthorizationContext();
+        ac.addPrinciple(serviceData.USER_STANDARD);
+        ac.addPrinciple(serviceData.GROUP_STANDARD);
+        ac.addEntity(serviceData.DC_ROOT);
+        ac.addEntity(serviceData.DC_PREMIUM);
+        ac.addEntries("view");
+        assertFalse("Standard user should not be able to view premium data category.", authorizationService.isAuthorized(ac));
     }
 }
