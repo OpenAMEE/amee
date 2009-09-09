@@ -21,7 +21,9 @@
  */
 package com.amee.service;
 
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
+import com.amee.domain.ObjectType;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.GroupPrinciple;
 import com.amee.domain.auth.Permission;
@@ -58,42 +60,81 @@ public class ServiceData {
 
     public Map<IAMEEEntityReference, List<Permission>> PRINCIPLE_TO_PERMISSIONS;
 
+    public Map<ObjectType, Long> ID_MAP;
+
     public void init() {
+        initCollections();
+        initEnvironment();
+        initGroupsAndUsers();
+        initDataCategories();
+        initPermissions();
+    }
 
+    private void initCollections() {
+        PRINCIPLE_TO_PERMISSIONS = new HashMap<IAMEEEntityReference, List<Permission>>();
+        ID_MAP = new HashMap<ObjectType, Long>();
+    }
+
+    private void initEnvironment() {
         ENVIRONMENT = new Environment("Environment");
-        ENVIRONMENT.setId(1L);
+        setId(ENVIRONMENT);
+    }
 
+    private void initGroupsAndUsers() {
         GROUP_1 = new Group(ENVIRONMENT, "Group One");
-        GROUP_1.setId(1L);
         GROUP_2 = new Group(ENVIRONMENT, "Group Two");
-        GROUP_2.setId(2L);
+        setId(GROUP_1, GROUP_2);
 
         USER_1 = new User(ENVIRONMENT, "user_1", "password", "User One");
-        USER_1.setId(1L);
         USER_2 = new User(ENVIRONMENT, "user_2", "password", "User Two");
-        USER_1.setId(2L);
+        setId(USER_1, USER_2);
 
         TEST_GROUP_PRINCIPLE_1 = new GroupPrinciple(GROUP_1, USER_1);
-        TEST_GROUP_PRINCIPLE_1.setId(1L);
         TEST_GROUP_PRINCIPLE_2 = new GroupPrinciple(GROUP_2, USER_1);
-        TEST_GROUP_PRINCIPLE_2.setId(2L);
         TEST_GROUP_PRINCIPLE_3 = new GroupPrinciple(GROUP_1, USER_2);
-        TEST_GROUP_PRINCIPLE_3.setId(3L);
+        setId(TEST_GROUP_PRINCIPLE_1, TEST_GROUP_PRINCIPLE_2, TEST_GROUP_PRINCIPLE_3);
+    }
 
+    private void initDataCategories() {
         DC_ROOT = new DataCategory(ENVIRONMENT, "Root", "root");
-        DC_ROOT.setId(1L);
         DC_1 = new DataCategory(DC_ROOT, "DC 1", "dc_1");
-        DC_1.setId(2L);
         DC_2 = new DataCategory(DC_ROOT, "DC 2", "dc_2");
-        DC_2.setId(3L);
+        setId(DC_ROOT, DC_1, DC_2);
+    }
 
+    private void initPermissions() {
+        // User can view DataCategory
         PERMISSION_1 = new Permission(USER_1, DC_1, Permission.VIEW);
-        PERMISSION_1.setId(1L);
+        setId(PERMISSION_1);
+        addPermissionToPrinciple(USER_1, PERMISSION_1);
+    }
 
-        PRINCIPLE_TO_PERMISSIONS = new HashMap<IAMEEEntityReference, List<Permission>>();
+    private void addPermissionToPrinciple(IAMEEEntityReference principle, Permission permission) {
+        List<Permission> permissions = PRINCIPLE_TO_PERMISSIONS.get(principle);
+        if (permissions == null) {
+            permissions = new ArrayList<Permission>();
+            PRINCIPLE_TO_PERMISSIONS.put(principle, permissions);
+        }
+        permissions.add(permission);
+    }
 
-        List<Permission> permissions = new ArrayList<Permission>();
-        permissions.add(PERMISSION_1);
-        PRINCIPLE_TO_PERMISSIONS.put(USER_1, permissions);
+    private void setId(AMEEEntity... entities) {
+        for (AMEEEntity entity : entities) {
+            setId(entity);
+        }
+    }
+
+    private void setId(AMEEEntity entity) {
+        entity.setId(getNextId(entity));
+    }
+
+    private Long getNextId(AMEEEntity entity) {
+        Long id = ID_MAP.get(entity.getObjectType());
+        if (id == null) {
+            id = 0L;
+        }
+        id++;
+        ID_MAP.put(entity.getObjectType(), id);
+        return id;
     }
 }
