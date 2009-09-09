@@ -24,18 +24,30 @@ package com.amee.service.auth;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.Permission;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface PermissionServiceDAO {
+@Repository
+public class PermissionServiceDAOMock implements PermissionServiceDAO {
 
-    List<Permission> getPermissionsForEntity(IAMEEEntityReference entity);
+    public List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
+        throw new UnsupportedOperationException();
+    }
 
-    List<Permission> getPermissionsForPrinciple(IAMEEEntityReference principle, Class entityClass);
+    public List<Permission> getPermissionsForPrinciple(IAMEEEntityReference principle, Class entityClass) {
+        throw new UnsupportedOperationException();
+    }
 
-    List<Permission> getPermissionsForPrincipleAndEntity(IAMEEEntityReference principle, IAMEEEntityReference entity);
+    public List<Permission> getPermissionsForPrincipleAndEntity(IAMEEEntityReference principle, IAMEEEntityReference entity) {
+        throw new UnsupportedOperationException();
+    }
 
-    AMEEEntity getEntity(IAMEEEntityReference entityReference);
+    public AMEEEntity getEntity(IAMEEEntityReference entityReference) {
+        throw new UnsupportedOperationException();
+    }
 
-    void trashPermissionsForEntity(IAMEEEntityReference entity);
+    public void trashPermissionsForEntity(IAMEEEntityReference entity) {
+        throw new UnsupportedOperationException();
+    }
 }
