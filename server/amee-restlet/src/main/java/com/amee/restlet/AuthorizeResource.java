@@ -22,6 +22,7 @@
 package com.amee.restlet;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.service.auth.AuthorizationContext;
@@ -33,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public abstract class AuthorizeResource extends BaseResource {
 
@@ -47,7 +47,7 @@ public abstract class AuthorizeResource extends BaseResource {
     public void handleGet() {
         log.debug("handleGet()");
         if (isAvailable()) {
-            if (hasPermissions(getGetPermissionEntries())) {
+            if (hasPermissions(getGetAccessSpecifications())) {
                 doGet();
             } else {
                 notAuthorized();
@@ -58,12 +58,16 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     /**
-     * Get the PermissionEntries for getting a resource.
+     * Get the AccessSpecifications for getting a resource.
      *
-     * @return PermissionEntries for getting a resource
+     * @return AccessSpecifications for getting a resource
      */
-    public Set<PermissionEntry> getGetPermissionEntries() {
-        return Permission.OWN_VIEW;
+    public List<AccessSpecification> getGetAccessSpecifications() {
+        List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
+        for (AMEEEntity entity : getEntities()) {
+            accessSpecifications.add(new AccessSpecification(entity, Permission.VIEW));
+        }
+        return accessSpecifications;
     }
 
     public void doGet() {
@@ -74,7 +78,7 @@ public abstract class AuthorizeResource extends BaseResource {
     public void acceptRepresentation(Representation entity) throws ResourceException {
         log.debug("acceptRepresentation()");
         if (isAvailable()) {
-            if (hasPermissions(getAcceptPermissionEntries())) {
+            if (hasPermissions(getAcceptAccessSpecifications())) {
                 doAccept(entity);
             } else {
                 notAuthorized();
@@ -85,12 +89,12 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     /**
-     * Get the PermissionEntries for accepting a resource.
+     * Get the AccessSpecifications for accepting a resource.
      *
-     * @return PermissionEntries for accepting a resource
+     * @return AccessSpecifications for accepting a resource
      */
-    public Set<PermissionEntry> getAcceptPermissionEntries() {
-        return Permission.OWN_CREATE;
+    public List<AccessSpecification> getAcceptAccessSpecifications() {
+        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), Permission.CREATE);
     }
 
     public void doAccept(Representation entity) {
@@ -101,7 +105,7 @@ public abstract class AuthorizeResource extends BaseResource {
     public void storeRepresentation(Representation entity) throws ResourceException {
         log.debug("storeRepresentation()");
         if (isAvailable()) {
-            if (hasPermissions(getStorePermissionEntries())) {
+            if (hasPermissions(getStoreAccessSpecifications())) {
                 doStore(entity);
             } else {
                 notAuthorized();
@@ -112,12 +116,12 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     /**
-     * Get the PermissionEntries for storing a resource.
+     * Get the AccessSpecifications for storing a resource.
      *
-     * @return PermissionEntries for storing a resource
+     * @return AccessSpecifications for storing a resource
      */
-    public Set<PermissionEntry> getStorePermissionEntries() {
-        return Permission.OWN_MODIFY;
+    public List<AccessSpecification> getStoreAccessSpecifications() {
+        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), Permission.MODIFY);
     }
 
     public void doStore(Representation entity) {
@@ -132,7 +136,7 @@ public abstract class AuthorizeResource extends BaseResource {
     public void removeRepresentations() throws ResourceException {
         log.debug("removeRepresentations()");
         if (isAvailable()) {
-            if (hasPermissions(getRemovePermissionEntries())) {
+            if (hasPermissions(getRemoveAccessSpecifications())) {
                 doRemove();
             } else {
                 notAuthorized();
@@ -143,21 +147,28 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     /**
-     * Get the PermissionEntries for removing a resource.
+     * Get the AccessSpecifications for removing a resource.
      *
-     * @return PermissionEntries for removing a resource
+     * @return AccessSpecifications for removing a resource
      */
-    public Set<PermissionEntry> getRemovePermissionEntries() {
-        return Permission.OWN_DELETE;
+    public List<AccessSpecification> getRemoveAccessSpecifications() {
+        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), Permission.DELETE);
+    }
+
+    private List<AccessSpecification> updateLastAccessSpecificationWithPermissionEntry(List<AccessSpecification> specifications, PermissionEntry entry) {
+        if (!specifications.isEmpty()) {
+            specifications.get(specifications.size()).getEntries().add(entry);
+        }
+        return specifications;
     }
 
     public void doRemove() {
         throw new UnsupportedOperationException();
     }
 
-    public boolean hasPermissions(Set<PermissionEntry> entrySet) {
+    public boolean hasPermissions(List<AccessSpecification> accessSpecification) {
         return authorizationService.isAuthorized(
-                new AuthorizationContext(getPrinciples(), getEntities(), entrySet));
+                new AuthorizationContext(getPrinciples(), accessSpecification));
     }
 
     public List<AMEEEntity> getPrinciples() {

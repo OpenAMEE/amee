@@ -49,7 +49,7 @@ public class PermissionEntry implements Serializable {
      * associated with the value property. For example, allow or deny a principle to
      * 'view' an entity.
      */
-    private boolean allow = true;
+    private Boolean allow = true;
 
     /**
      * Private default constructor, enforcing immutability for PermissionEntry instances.
@@ -74,7 +74,7 @@ public class PermissionEntry implements Serializable {
      * @param value for new PermissionEntry
      * @param allow state to set, true or false
      */
-    public PermissionEntry(String value, boolean allow) {
+    public PermissionEntry(String value, Boolean allow) {
         this(value);
         setAllow(allow);
     }
@@ -106,24 +106,26 @@ public class PermissionEntry implements Serializable {
         if (this == o) return true;
         if (!PermissionEntry.class.isAssignableFrom(o.getClass())) return false;
         PermissionEntry entry = (PermissionEntry) o;
-        return getValue().equals(entry.getValue());
+        return getValue().equals(entry.getValue()) && getAllow().equals(entry.getAllow());
     }
 
     /**
-     * Returns a hash code for a PermissionEntry. Internally uses the hash code of the value
-     * property.
+     * Returns a hash code based on the value and allow properties.
      *
      * @return the hash code
      */
     @Override
     public int hashCode() {
-        return getValue().hashCode();
+        int hash = 7;
+        hash = 31 * hash + getValue().hashCode();
+        hash = 31 * hash + getAllow().hashCode();
+        return hash;
     }
 
     /**
      * Get the value of a PermissionEntry.
      *
-     * @return
+     * @return the value
      */
     public String getValue() {
         return value;
@@ -137,13 +139,22 @@ public class PermissionEntry implements Serializable {
     /**
      * Returns true if the allow state of a PermissionEntry is true.
      *
-     * @return
+     * @return true if the allow state of a PermissionEntry is true
      */
-    public boolean isAllow() {
+    public Boolean isAllow() {
         return allow;
     }
 
-    private void setAllow(boolean allow) {
+    /**
+     * Returns true if the allow state of a PermissionEntry is true.
+     *
+     * @return true if the allow state of a PermissionEntry is true
+     */
+    public Boolean getAllow() {
+        return allow;
+    }
+
+    private void setAllow(Boolean allow) {
         this.allow = allow;
     }
 }

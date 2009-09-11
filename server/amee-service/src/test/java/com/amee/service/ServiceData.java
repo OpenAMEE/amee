@@ -120,7 +120,7 @@ public class ServiceData {
         // Premium group members can view premium data category.
         PERMISSION_3 = new Permission(GROUP_PREMIUM, DC_PREMIUM, Permission.VIEW);
         setId(PERMISSION_3);
-        addPermissionToPrinciple(GROUP_STANDARD, PERMISSION_3);
+        addPermissionToPrinciple(GROUP_PREMIUM, PERMISSION_3);
     }
 
     private void addPermissionToPrinciple(IAMEEEntityReference principle, Permission permission) {
