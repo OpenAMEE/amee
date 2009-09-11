@@ -22,13 +22,11 @@
 package com.amee.service.auth;
 
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.auth.PermissionEntry;
+import com.amee.domain.auth.AccessSpecification;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * AuthorizationContext encapsulates the 'context' for an authorization request. The context
@@ -44,20 +42,10 @@ public class AuthorizationContext implements Serializable {
     private List<AMEEEntity> principles = new ArrayList<AMEEEntity>();
 
     /**
-     * A list of entities over which the principles may or may not have permissions.
+     * A list of entities over which the principles may or may not have permissions, along with
+     * the requested permission entries.
      */
-    private List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-
-    /**
-     * The specification of the permissions that are desired for the authorization request.
-     */
-    private Set<PermissionEntry> entries = new HashSet<PermissionEntry>();
-
-    /**
-     * Flag to indicate if all the PermissionEntries in entries should be matched or
-     * if just one should match. The default is false, to match any single PermissionEntry.
-     */
-    private boolean matchAll = false;
+    private List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
 
     /**
      * Default constructor.
@@ -70,57 +58,24 @@ public class AuthorizationContext implements Serializable {
      * Construct an AuthorizationContext with the supplied principle, entity and entries.
      *
      * @param principle
-     * @param entity
-     * @param entries
+     * @param accessSpecification
      */
-    public AuthorizationContext(AMEEEntity principle, AMEEEntity entity, String entries) {
+    public AuthorizationContext(AMEEEntity principle, AccessSpecification accessSpecification) {
         this();
         addPrinciple(principle);
-        addEntity(entity);
-        addEntries(entries);
-    }
-
-    /**
-     * Construct an AuthorizationContext with the supplied principle, entity and entries.
-     *
-     * @param principle
-     * @param entity
-     * @param entries
-     */
-    public AuthorizationContext(AMEEEntity principle, AMEEEntity entity, Set<PermissionEntry> entries) {
-        this();
-        addPrinciple(principle);
-        addEntity(entity);
-        addEntries(entries);
+        addAccessSpecification(accessSpecification);
     }
 
     /**
      * Construct an AuthorizationContext with the supplied principles, entities and entries.
      *
      * @param principles
-     * @param entities
-     * @param entries
+     * @param accessSpecifications
      */
-    public AuthorizationContext(List<AMEEEntity> principles, List<AMEEEntity> entities, Set<PermissionEntry> entries) {
+    public AuthorizationContext(List<AMEEEntity> principles, List<AccessSpecification> accessSpecifications) {
         this();
         addPrinciples(principles);
-        addEntities(entities);
-        addEntries(entries);
-    }
-
-    /**
-     * Construct an AuthorizationContext with the supplied principles, entities and entries.
-     *
-     * @param principles
-     * @param entities
-     * @param entries
-     */
-    public AuthorizationContext(List<AMEEEntity> principles, List<AMEEEntity> entities, Set<PermissionEntry> entries, boolean matchAll) {
-        this();
-        addPrinciples(principles);
-        addEntities(entities);
-        addEntries(entries);
-        setMatchAll(matchAll);
+        addAccessSpecifications(accessSpecifications);
     }
 
     /**
@@ -144,46 +99,23 @@ public class AuthorizationContext implements Serializable {
     }
 
     /**
-     * Convienience method to add an entity to the entities collection.
+     * Convienience method to add an access specification to the accessSpecifications collection.
      *
-     * @param entity to add
+     * @param accessSpecification to add
      */
-    public void addEntity(AMEEEntity entity) {
-        if (entity == null) throw new IllegalArgumentException("The entity argument must not be null.");
-        getEntities().add(entity);
+    public void addAccessSpecification(AccessSpecification accessSpecification) {
+        if (accessSpecification == null) throw new IllegalArgumentException("The accessSpecification argument must not be null.");
+        getAccessSpecifications().add(accessSpecification);
     }
 
     /**
-     * Convienience method to add a list of entities to the entities collection.
+     * Convienience method to add a list of access specifications to the accessSpecifications collection.
      *
-     * @param entities to add
+     * @param accessSpecifications to add
      */
-    public void addEntities(List<AMEEEntity> entities) {
-        if (entities == null) throw new IllegalArgumentException("The entities argument must not be null.");
-        getEntities().addAll(entities);
-    }
-
-    /**
-     * Convienience method to add permission entries. PermissionEntry instances will be constructed
-     * for each value in the supplied comma delimited String.
-     *
-     * @param entries to add
-     */
-    public void addEntries(String entries) {
-        if (entries == null) throw new IllegalArgumentException("The entries argument must not be null.");
-        for (String entry : entries.split(",")) {
-            getEntries().add(new PermissionEntry(entry));
-        }
-    }
-
-    /**
-     * Convienience method to add permission entries.
-     *
-     * @param entries to add
-     */
-    public void addEntries(Set<PermissionEntry> entries) {
-        if (entries == null) throw new IllegalArgumentException("The entries argument must not be null.");
-        getEntries().addAll(entries);
+    public void addAccessSpecifications(List<AccessSpecification> accessSpecifications) {
+        if (accessSpecifications == null) throw new IllegalArgumentException("The accessSpecifications argument must not be null.");
+        getAccessSpecifications().addAll(accessSpecifications);
     }
 
     /**
@@ -196,38 +128,11 @@ public class AuthorizationContext implements Serializable {
     }
 
     /**
-     * Returns the entities list.
+     * Returns the accessSpecifications list.
      *
-     * @return entities list.
+     * @return accessSpecifications list.
      */
-    public List<AMEEEntity> getEntities() {
-        return entities;
-    }
-
-    /**
-     * Returns the set of permission entries.
-     *
-     * @return set of permission entries.
-     */
-    public Set<PermissionEntry> getEntries() {
-        return entries;
-    }
-
-    /**
-     * Ruturns true if AuthorizationContext is set to match all permission entries.
-     *
-     * @return true if all permission entries should be matched
-     */
-    public boolean isMatchAll() {
-        return matchAll;
-    }
-
-    /**
-     * Set true if all permission entries should be match.
-     *
-     * @param matchAll true if all permission entries should be match
-     */
-    public void setMatchAll(boolean matchAll) {
-        this.matchAll = matchAll;
+    public List<AccessSpecification> getAccessSpecifications() {
+        return accessSpecifications;
     }
 }
