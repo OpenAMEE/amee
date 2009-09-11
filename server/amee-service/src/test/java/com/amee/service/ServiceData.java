@@ -24,10 +24,7 @@ package com.amee.service;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.ObjectType;
-import com.amee.domain.auth.Group;
-import com.amee.domain.auth.GroupPrinciple;
-import com.amee.domain.auth.Permission;
-import com.amee.domain.auth.User;
+import com.amee.domain.auth.*;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
@@ -44,10 +41,10 @@ public class ServiceData {
 
     public Environment ENVIRONMENT;
     public Group GROUP_STANDARD, GROUP_PREMIUM;
-    public User USER_STANDARD, USER_PREMIUM;
+    public User USER_SUPER, USER_STANDARD, USER_PREMIUM;
     public GroupPrinciple GROUP_STANDARD_USER_STANDARD, GROUP_STANDARD_USER_PREMIUM, GROUP_PREMIUM_USER_PREMIUM;
     public ItemDefinition ID_PUBLIC, ID_PREMIUM;
-    public DataCategory DC_ROOT, DC_PUBLIC, DC_PREMIUM;
+    public DataCategory DC_ROOT, DC_PUBLIC, DC_PUBLIC_SUB, DC_PREMIUM;
     public DataItem DI_PUBLIC, DI_PREMIUM;
     public Permission PERMISSION_1, PERMISSION_2, PERMISSION_3;
     public Map<IAMEEEntityReference, List<Permission>> PRINCIPLE_TO_PERMISSIONS;
@@ -82,8 +79,9 @@ public class ServiceData {
     private void initDataCategories() {
         DC_ROOT = new DataCategory(ENVIRONMENT, "Root", "root");
         DC_PUBLIC = new DataCategory(DC_ROOT, "DC Public", "dc_public");
+        DC_PUBLIC_SUB = new DataCategory(DC_PUBLIC, "DC Public Sub", "dc_public_sub");
         DC_PREMIUM = new DataCategory(DC_ROOT, "DC 2", "dc_premium");
-        setId(DC_ROOT, DC_PUBLIC, DC_PREMIUM);
+        setId(DC_ROOT, DC_PUBLIC, DC_PUBLIC_SUB, DC_PREMIUM);
     }
 
     private void initDataItems() {
@@ -98,9 +96,11 @@ public class ServiceData {
         GROUP_PREMIUM = new Group(ENVIRONMENT, "Group Premium");
         setId(GROUP_STANDARD, GROUP_PREMIUM);
         // Users
+        USER_SUPER = new User(ENVIRONMENT, "user_super", "password", "User Super");
+        USER_SUPER.setType(UserType.SUPER);
         USER_STANDARD = new User(ENVIRONMENT, "user_standard", "password", "User Standard");
         USER_PREMIUM = new User(ENVIRONMENT, "user_premium", "password", "User Premium");
-        setId(USER_STANDARD, USER_PREMIUM);
+        setId(USER_SUPER, USER_STANDARD, USER_PREMIUM);
         // Users in Groups
         GROUP_STANDARD_USER_STANDARD = new GroupPrinciple(GROUP_STANDARD, USER_STANDARD);
         GROUP_STANDARD_USER_PREMIUM = new GroupPrinciple(GROUP_STANDARD, USER_PREMIUM);
@@ -117,8 +117,8 @@ public class ServiceData {
         PERMISSION_2 = new Permission(GROUP_STANDARD, DC_PREMIUM, Permission.VIEW_DENY);
         setId(PERMISSION_2);
         addPermissionToPrinciple(GROUP_STANDARD, PERMISSION_2);
-        // Premium group members can view premium data category.
-        PERMISSION_3 = new Permission(GROUP_PREMIUM, DC_PREMIUM, Permission.VIEW);
+        // Premium group members own premium data category.
+        PERMISSION_3 = new Permission(GROUP_PREMIUM, DC_PREMIUM, Permission.OWN);
         setId(PERMISSION_3);
         addPermissionToPrinciple(GROUP_PREMIUM, PERMISSION_3);
     }

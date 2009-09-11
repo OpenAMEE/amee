@@ -155,7 +155,7 @@ public abstract class AuthorizeResource extends BaseResource {
         return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), Permission.DELETE);
     }
 
-    private List<AccessSpecification> updateLastAccessSpecificationWithPermissionEntry(List<AccessSpecification> specifications, PermissionEntry entry) {
+    public List<AccessSpecification> updateLastAccessSpecificationWithPermissionEntry(List<AccessSpecification> specifications, PermissionEntry entry) {
         if (!specifications.isEmpty()) {
             specifications.get(specifications.size()).getEntries().add(entry);
         }

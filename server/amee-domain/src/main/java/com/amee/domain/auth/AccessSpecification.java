@@ -22,6 +22,7 @@
 package com.amee.domain.auth;
 
 import com.amee.domain.AMEEEntity;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -44,14 +45,14 @@ public class AccessSpecification implements Serializable {
         this.entity = entity;
     }
 
-    public AccessSpecification(AMEEEntity entity, PermissionEntry entry) {
+    public AccessSpecification(AMEEEntity entity, PermissionEntry... entries) {
         this(entity);
-        entries.add(entry);
+        CollectionUtils.addAll(this.entries, entries);
     }
 
     public AccessSpecification(AMEEEntity entity, Set<PermissionEntry> entries) {
         this(entity);
-        entries.addAll(entries);
+        this.entries.addAll(entries);
     }
 
     public AMEEEntity getEntity() {
