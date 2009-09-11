@@ -48,6 +48,17 @@ public class AuthorizationTest extends ServiceTest {
     }
 
     @Test
+    public void standardUserViewPublicDataCategorySub() {
+        AuthorizationContext ac = new AuthorizationContext();
+        ac.addPrinciple(serviceData.GROUP_STANDARD);
+        ac.addPrinciple(serviceData.USER_STANDARD);
+        ac.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, Permission.VIEW));
+        ac.addAccessSpecification(new AccessSpecification(serviceData.DC_PUBLIC, Permission.VIEW));
+        ac.addAccessSpecification(new AccessSpecification(serviceData.DC_PUBLIC_SUB, Permission.VIEW));
+        assertTrue("Standard user should be able to view public data sub category.", authorizationService.isAuthorized(ac));
+    }
+
+    @Test
     public void standardUserNotViewPremiumDataCategory() {
         AuthorizationContext ac = new AuthorizationContext();
         ac.addPrinciple(serviceData.GROUP_STANDARD);
@@ -55,5 +66,35 @@ public class AuthorizationTest extends ServiceTest {
         ac.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, Permission.VIEW));
         ac.addAccessSpecification(new AccessSpecification(serviceData.DC_PREMIUM, Permission.VIEW));
         assertFalse("Standard user should not be able to view premium data category.", authorizationService.isAuthorized(ac));
+    }
+
+    @Test
+    public void standardUserNotDeletePremiumDataCategory() {
+        AuthorizationContext ac = new AuthorizationContext();
+        ac.addPrinciple(serviceData.GROUP_STANDARD);
+        ac.addPrinciple(serviceData.USER_STANDARD);
+        ac.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, Permission.VIEW));
+        ac.addAccessSpecification(new AccessSpecification(serviceData.DC_PREMIUM, Permission.VIEW, Permission.DELETE));
+        assertFalse("Standard user should not be able to view premium data category.", authorizationService.isAuthorized(ac));
+    }
+
+    @Test
+    public void premiumUserModifyPremiumDataCategory() {
+        AuthorizationContext ac = new AuthorizationContext();
+        ac.addPrinciple(serviceData.GROUP_STANDARD);
+        ac.addPrinciple(serviceData.GROUP_PREMIUM);
+        ac.addPrinciple(serviceData.USER_PREMIUM);
+        ac.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, Permission.VIEW));
+        ac.addAccessSpecification(new AccessSpecification(serviceData.DC_PREMIUM, Permission.VIEW, Permission.MODIFY));
+        assertTrue("Premium user should be able to modify premium data category.", authorizationService.isAuthorized(ac));
+    }
+
+    @Test
+    public void superUserDeletePremiumDataCategory() {
+        AuthorizationContext ac = new AuthorizationContext();
+        ac.addPrinciple(serviceData.USER_SUPER);
+        ac.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, Permission.VIEW));
+        ac.addAccessSpecification(new AccessSpecification(serviceData.DC_PREMIUM, Permission.VIEW, Permission.DELETE));
+        assertTrue("Super user should be able to delete premium data category.", authorizationService.isAuthorized(ac));
     }
 }

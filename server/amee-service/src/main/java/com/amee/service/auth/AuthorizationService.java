@@ -44,17 +44,22 @@ public class AuthorizationService {
     /**
      * Determines if the supplied AuthorizationContext is considered to be authorized or not. Will return true
      * if the authorize result is ALLOW, otherwise false if the result is DENY.
+     *
+     * The supplied AuthorizationContext encapsulates a list of principles and a list of AccessSpecification. The
+     * aim is to discover if the principles have appropriate access to the entities within the AccessSpecification.
      * <p/>
      * The authorization rules are:
      * <p/>
-     * - Super-users, always ALLOW.
-     * - Each entity is evaluated in hierarchical order (e.g., category -> sub-category -> item).
-     * - Permissions are inh
+     * - Super-users, always ALLOW and return.
+     * - DENY if there are no AccessSpecifications.
+     * - Each AccessSpecification is evaluated in hierarchical order (e.g., category -> sub-category -> item).
      * - Principles are evaluated from broader to narrower scope (e.g., organisation -> department -> individual).
+     * - PermissionEntries are consolidated from all Permissions for principle & entity combinations.
+     * - The PermissionEntries are merged for in each iteration allowing inheritence of permissions.
      * - Permissions from later principles override earlier ones.
-     * -
+     * - If an OWN PermissionEntry is present then ALLOW and return.
+     * - TODO
      * - Stop on DENY, don't evaluate entities further down the hierarchy.
-     * <p/>
      * - Inherited Permissions for earlier entities can be superceeded by those from later entities.
      * - Multiple Permissions for related principles have an 'election' with the most permissive Permission winning.
      * <p/>
@@ -67,7 +72,7 @@ public class AuthorizationService {
         // TODO: Handle deprecated entities. Special handling for entity state? Perahaps in PermissionEntry.
 
         List<Permission> permissions;
-        List<PermissionEntry> entries;
+        List<PermissionEntry> etityEntries;
         Set<PermissionEntry> allEntries = new HashSet<PermissionEntry>();
 
         // Super-users can do anything. Stop here.
@@ -92,10 +97,10 @@ public class AuthorizationService {
             }
 
             // Get list of PermissionEntries for current entity from Permissions.
-            entries = getPermissionEntries(permissions);
+            etityEntries = getPermissionEntries(permissions);
 
             // Merge PermissionEntries for current entity with inherited PermissionEntries. 
-            mergePermissionEntries(allEntries, entries);
+            mergePermissionEntries(allEntries, etityEntries);
 
             // Owner can do anything. Stop here.
             if (allEntries.contains(Permission.OWN)) {
@@ -115,7 +120,7 @@ public class AuthorizationService {
         return true;
     }
 
-    private void mergePermissionEntries(Set<PermissionEntry> entries, List<PermissionEntry> newEntries) {
+    protected void mergePermissionEntries(Set<PermissionEntry> entries, List<PermissionEntry> newEntries) {
         PermissionEntry pe1;
         Iterator<PermissionEntry> iterator = entries.iterator();
         while (iterator.hasNext()) {
@@ -130,7 +135,7 @@ public class AuthorizationService {
         entries.addAll(newEntries);
     }
 
-    public List<PermissionEntry> getPermissionEntries(List<Permission> permissions) {
+    protected List<PermissionEntry> getPermissionEntries(List<Permission> permissions) {
         List<PermissionEntry> entries = new ArrayList<PermissionEntry>();
         for (Permission permission : permissions) {
             entries.addAll(permission.getEntries());
