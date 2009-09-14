@@ -24,6 +24,7 @@ import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.ObjectType;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.User;
+import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -114,7 +115,7 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
      * @param permissions the Permissions List to modify
      */
     protected void addBuiltInPermissions(List<Permission> permissions) {
-        permissions.add(new Permission(getUser(), this, Permission.OWN));
+        permissions.add(new Permission(getUser(), this, PermissionEntry.OWN));
     }
 
     public User getUser() {

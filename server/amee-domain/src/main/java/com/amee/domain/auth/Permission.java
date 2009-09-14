@@ -1,9 +1,6 @@
 package com.amee.domain.auth;
 
-import com.amee.domain.AMEEEntityReference;
-import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.IAMEEEntityReference;
-import com.amee.domain.ObjectType;
+import com.amee.domain.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
@@ -44,39 +41,6 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
 
     public final static int OBJECT_CLASS_MAX_SIZE = 255;
     public final static int ENTRIES_MAX_SIZE = 1000;
-
-    /**
-     * Constants for the various commonly used permission entry values.
-     */
-    public final static PermissionEntry OWN = new PermissionEntry("own");
-    public final static PermissionEntry VIEW = new PermissionEntry("view");
-    public final static PermissionEntry VIEW_DENY = new PermissionEntry("view", false);
-    public final static PermissionEntry VIEW_DEPRECATED = new PermissionEntry("view.deprecated");
-    public final static PermissionEntry CREATE = new PermissionEntry("create");
-    public final static PermissionEntry MODIFY = new PermissionEntry("modify");
-    public final static PermissionEntry DELETE = new PermissionEntry("delete");
-
-    /**
-     * Helpful PermissionEntry Sets which represent combinations of PermissionEntries.
-     */
-    public final static Set<PermissionEntry> OWN_VIEW = new HashSet<PermissionEntry>();
-    public final static Set<PermissionEntry> OWN_CREATE = new HashSet<PermissionEntry>();
-    public final static Set<PermissionEntry> OWN_MODIFY = new HashSet<PermissionEntry>();
-    public final static Set<PermissionEntry> OWN_DELETE = new HashSet<PermissionEntry>();
-
-    /**
-     * Populate PermissionEntry Sets.
-     */
-    {
-        OWN_VIEW.add(OWN);
-        OWN_VIEW.add(VIEW);
-        OWN_CREATE.add(OWN);
-        OWN_CREATE.add(CREATE);
-        OWN_MODIFY.add(OWN);
-        OWN_MODIFY.add(MODIFY);
-        OWN_DELETE.add(OWN);
-        OWN_DELETE.add(DELETE);
-    }
 
     /**
      * The entity that this permission is governing access to.
@@ -200,7 +164,7 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
      * view of the permission entries for this Permission instance. Use the addEntry
      * and removeEntry methods to modify the internal representation of entries.
      *
-     * @return
+     * @return set of PermissionEntries
      */
     public Set<PermissionEntry> getEntries() {
         if (entrySet == null) {
@@ -213,7 +177,8 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
                         JSONObject obj = arr.getJSONObject(i);
                         String value = obj.has("value") ? obj.getString("value") : "";
                         String allow = obj.has("allow") ? obj.getString("allow") : "true";
-                        entrySet.add(new PermissionEntry(value, allow));
+                        String status = obj.has("status") ? obj.getString("status") : AMEEStatus.ACTIVE.getName();
+                        entrySet.add(new PermissionEntry(value, allow, status));
                     }
                 }
             } catch (JSONException e) {
@@ -259,6 +224,9 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
                 obj.put("value", entry.getValue());
                 if (!entry.isAllow()) {
                     obj.put("allow", "false");
+                }
+                if (!entry.getStatus().equals(AMEEStatus.ACTIVE)) {
+                    obj.put("status", entry.getStatus().getName());
                 }
                 arr.put(obj);
             }

@@ -65,7 +65,7 @@ public abstract class AuthorizeResource extends BaseResource {
     public List<AccessSpecification> getGetAccessSpecifications() {
         List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
         for (AMEEEntity entity : getEntities()) {
-            accessSpecifications.add(new AccessSpecification(entity, Permission.VIEW));
+            accessSpecifications.add(new AccessSpecification(entity, PermissionEntry.VIEW));
         }
         return accessSpecifications;
     }
@@ -94,7 +94,7 @@ public abstract class AuthorizeResource extends BaseResource {
      * @return AccessSpecifications for accepting a resource
      */
     public List<AccessSpecification> getAcceptAccessSpecifications() {
-        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), Permission.CREATE);
+        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), PermissionEntry.CREATE);
     }
 
     public void doAccept(Representation entity) {
@@ -121,7 +121,7 @@ public abstract class AuthorizeResource extends BaseResource {
      * @return AccessSpecifications for storing a resource
      */
     public List<AccessSpecification> getStoreAccessSpecifications() {
-        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), Permission.MODIFY);
+        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), PermissionEntry.MODIFY);
     }
 
     public void doStore(Representation entity) {
@@ -152,7 +152,7 @@ public abstract class AuthorizeResource extends BaseResource {
      * @return AccessSpecifications for removing a resource
      */
     public List<AccessSpecification> getRemoveAccessSpecifications() {
-        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), Permission.DELETE);
+        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), PermissionEntry.DELETE);
     }
 
     public List<AccessSpecification> updateLastAccessSpecificationWithPermissionEntry(List<AccessSpecification> specifications, PermissionEntry entry) {
