@@ -24,6 +24,7 @@ package com.amee.service;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.ObjectType;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.auth.*;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
@@ -44,9 +45,9 @@ public class ServiceData {
     public User USER_SUPER, USER_STANDARD, USER_PREMIUM;
     public GroupPrinciple GROUP_STANDARD_USER_STANDARD, GROUP_STANDARD_USER_PREMIUM, GROUP_PREMIUM_USER_PREMIUM;
     public ItemDefinition ID_PUBLIC, ID_PREMIUM;
-    public DataCategory DC_ROOT, DC_PUBLIC, DC_PUBLIC_SUB, DC_PREMIUM;
+    public DataCategory DC_ROOT, DC_PUBLIC, DC_PUBLIC_SUB, DC_PREMIUM, DC_DEPRECATED;
     public DataItem DI_PUBLIC, DI_PREMIUM;
-    public Permission PERMISSION_1, PERMISSION_2, PERMISSION_3;
+    public Permission PERMISSION_1, PERMISSION_2, PERMISSION_3, PERMISSION_4;
     public Map<IAMEEEntityReference, List<Permission>> PRINCIPLE_TO_PERMISSIONS;
     public Map<ObjectType, Long> ID_MAP;
 
@@ -80,8 +81,9 @@ public class ServiceData {
         DC_ROOT = new DataCategory(ENVIRONMENT, "Root", "root");
         DC_PUBLIC = new DataCategory(DC_ROOT, "DC Public", "dc_public");
         DC_PUBLIC_SUB = new DataCategory(DC_PUBLIC, "DC Public Sub", "dc_public_sub");
-        DC_PREMIUM = new DataCategory(DC_ROOT, "DC 2", "dc_premium");
-        setId(DC_ROOT, DC_PUBLIC, DC_PUBLIC_SUB, DC_PREMIUM);
+        DC_PREMIUM = new DataCategory(DC_ROOT, "DC Premium", "dc_premium");
+        DC_DEPRECATED = new DataCategory(DC_ROOT, "DC Deprecated", "dc_deprecated");
+        setId(DC_ROOT, DC_PUBLIC, DC_PUBLIC_SUB, DC_PREMIUM, DC_DEPRECATED);
     }
 
     private void initDataItems() {
@@ -110,17 +112,22 @@ public class ServiceData {
 
     private void initPermissions() {
         // Standard group members can view root data category.
-        PERMISSION_1 = new Permission(GROUP_STANDARD, DC_ROOT, Permission.VIEW);
+        PERMISSION_1 = new Permission(GROUP_STANDARD, DC_ROOT, PermissionEntry.VIEW);
         setId(PERMISSION_1);
         addPermissionToPrinciple(GROUP_STANDARD, PERMISSION_1);
         // Standard group members can not view premium data category.
-        PERMISSION_2 = new Permission(GROUP_STANDARD, DC_PREMIUM, Permission.VIEW_DENY);
+        PERMISSION_2 = new Permission(GROUP_STANDARD, DC_PREMIUM, PermissionEntry.VIEW_DENY);
         setId(PERMISSION_2);
         addPermissionToPrinciple(GROUP_STANDARD, PERMISSION_2);
         // Premium group members own premium data category.
-        PERMISSION_3 = new Permission(GROUP_PREMIUM, DC_PREMIUM, Permission.OWN);
+        PERMISSION_3 = new Permission(GROUP_PREMIUM, DC_PREMIUM, PermissionEntry.OWN);
         setId(PERMISSION_3);
         addPermissionToPrinciple(GROUP_PREMIUM, PERMISSION_3);
+        // User can view deprecated data category.
+        PERMISSION_4 = new Permission(USER_STANDARD, DC_DEPRECATED, new PermissionEntry("view", true, AMEEStatus.DEPRECATED));
+        setId(PERMISSION_4);
+        addPermissionToPrinciple(USER_STANDARD, PERMISSION_4);
+
     }
 
     private void addPermissionToPrinciple(IAMEEEntityReference principle, Permission permission) {

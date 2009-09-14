@@ -22,6 +22,7 @@
 package com.amee.service.auth;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
@@ -44,7 +45,7 @@ public class AuthorizationService {
     /**
      * Determines if the supplied AuthorizationContext is considered to be authorized or not. Will return true
      * if the authorize result is ALLOW, otherwise false if the result is DENY.
-     *
+     * <p/>
      * The supplied AuthorizationContext encapsulates a list of principles and a list of AccessSpecification. The
      * aim is to discover if the principles have appropriate access to the entities within the AccessSpecification.
      * <p/>
@@ -69,10 +70,8 @@ public class AuthorizationService {
      */
     public boolean isAuthorized(AuthorizationContext authorizationContext) {
 
-        // TODO: Handle deprecated entities. Special handling for entity state? Perahaps in PermissionEntry.
-
         List<Permission> permissions;
-        List<PermissionEntry> etityEntries;
+        List<PermissionEntry> entityEntries;
         Set<PermissionEntry> allEntries = new HashSet<PermissionEntry>();
 
         // Super-users can do anything. Stop here.
@@ -84,7 +83,7 @@ public class AuthorizationService {
         // Deny if there are no AccessSpecifications. Pretty odd if this happens...
         if (authorizationContext.getAccessSpecifications().isEmpty()) {
             log.debug("isAuthorized() - DENY (not permitted)");
-            return false;
+            return false;          
         }
 
         // Iterate over AccessSpecifications (entities) in hierarchical order.
@@ -97,13 +96,16 @@ public class AuthorizationService {
             }
 
             // Get list of PermissionEntries for current entity from Permissions.
-            etityEntries = getPermissionEntries(permissions);
+            entityEntries = getPermissionEntries(permissions);
+
+            // Remove PermissionEntries that don't relate to the entity state.
+            removePermissionEntriesWithoutState(entityEntries, accessSpecification.getEntity().getStatus());
 
             // Merge PermissionEntries for current entity with inherited PermissionEntries. 
-            mergePermissionEntries(allEntries, etityEntries);
+            mergePermissionEntries(allEntries, entityEntries);
 
-            // Owner can do anything. Stop here.
-            if (allEntries.contains(Permission.OWN)) {
+            // Owner can do anything.
+            if (allEntries.contains(PermissionEntry.OWN)) {
                 log.debug("isAuthorized() - ALLOW (owner)");
                 return true;
             }
@@ -141,6 +143,15 @@ public class AuthorizationService {
             entries.addAll(permission.getEntries());
         }
         return entries;
+    }
+
+    protected void removePermissionEntriesWithoutState(List<PermissionEntry> entries, AMEEStatus status) {
+        Iterator<PermissionEntry> iterator = entries.iterator();
+        while (iterator.hasNext()) {
+            if (!iterator.next().getStatus().equals(status)) {
+                iterator.remove();
+            }
+        }
     }
 
     public boolean isSuperUser(Collection<AMEEEntity> principles) {
