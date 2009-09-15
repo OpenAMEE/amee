@@ -113,9 +113,10 @@ public class AuthorizationTest extends ServiceTest {
     public void userNotViewDeprecatedDataCategory() {
         AuthorizationContext ac = new AuthorizationContext();
         ac.addPrinciple(serviceData.GROUP_STANDARD);
+        ac.addPrinciple(serviceData.GROUP_PREMIUM);
         ac.addPrinciple(serviceData.USER_PREMIUM);
         ac.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, PermissionEntry.VIEW));
         ac.addAccessSpecification(new AccessSpecification(serviceData.DC_DEPRECATED, PermissionEntry.VIEW));
-        assertTrue("User should not be able to view deprecated data category.", authorizationService.isAuthorized(ac));
+        assertFalse("User should not be able to view deprecated data category.", authorizationService.isAuthorized(ac));
     }
 }

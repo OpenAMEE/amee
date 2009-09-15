@@ -12,7 +12,7 @@ INSERT INTO PERMISSION (UID, ENVIRONMENT_ID, STATUS, ENTITY_ID, ENTITY_UID, ENTI
 
 # Group (Administrators) to Environment
 INSERT INTO PERMISSION (UID, ENVIRONMENT_ID, STATUS, ENTITY_ID, ENTITY_UID, ENTITY_TYPE, PRINCIPLE_ID, PRINCIPLE_UID, PRINCIPLE_TYPE, ENTRIES, CREATED, MODIFIED)
-  VALUES ('DA2C6DA71BB7', 2, 1, 2, '5F5887BCF726', 'ENV', 4, '2E4FE8076E5C', 'GRP', '{"entries":[{"value":"view"},{"value":"view.deprecated"},{"value":"create"},{"value":"modify"},{"value":"delete"}]}', now(), now());
+  VALUES ('DA2C6DA71BB7', 2, 1, 2, '5F5887BCF726', 'ENV', 4, '2E4FE8076E5C', 'GRP', '{"entries":[{"value":"view"},{"value":"view", "status":"deprecated"},{"value":"create"},{"value":"modify"},{"value":"delete"}]}', now(), now());
 
 # User (floppyv2) to Data Category
 INSERT INTO PERMISSION (UID, ENVIRONMENT_ID, STATUS, ENTITY_ID, ENTITY_UID, ENTITY_TYPE, PRINCIPLE_ID, PRINCIPLE_UID, PRINCIPLE_TYPE, ENTRIES, CREATED, MODIFIED)
