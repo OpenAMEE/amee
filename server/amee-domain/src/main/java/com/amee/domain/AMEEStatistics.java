@@ -161,6 +161,9 @@ public class AMEEStatistics {
     }
 
     public void addToThreadCalculationDuration(long duration) {
+        if (threadCalculationDuration.get() == null)
+            threadCalculationDuration.set(0L);
+
         threadCalculationDuration.set(threadCalculationDuration.get() + duration);
         addToCalculationDuration(duration);
     }

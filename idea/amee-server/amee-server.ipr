@@ -226,6 +226,11 @@
           <module name="amee-scripts" />
         </modules>
       </facet-type>
+      <facet-type id="web">
+        <modules>
+          <module name="webapp" />
+        </modules>
+      </facet-type>
     </autodetection-disabled>
   </component>
   <component name="IdProvider" IDEtalkID="7B6446BB8E336A546926BE87EE4E5BD4" />
@@ -415,6 +420,7 @@
       <module fileurl="file://$PROJECT_DIR$/../amee-core.iml" filepath="$PROJECT_DIR$/../amee-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/../amee-domain.iml" filepath="$PROJECT_DIR$/../amee-domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/../amee-engine.iml" filepath="$PROJECT_DIR$/../amee-engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-gdata/amee-gdata.iml" filepath="$PROJECT_DIR$/amee-gdata/amee-gdata.iml" />
       <module fileurl="file://$PROJECT_DIR$/../amee-restlet.iml" filepath="$PROJECT_DIR$/../amee-restlet.iml" />
       <module fileurl="file://$PROJECT_DIR$/../amee-scripts.iml" filepath="$PROJECT_DIR$/../amee-scripts.iml" />
       <module fileurl="file://$PROJECT_DIR$/../amee-service.iml" filepath="$PROJECT_DIR$/../amee-service.iml" />
@@ -422,6 +428,7 @@
       <module fileurl="file://$PROJECT_DIR$/../htdocs.iml" filepath="$PROJECT_DIR$/../htdocs.iml" />
       <module fileurl="file://$PROJECT_DIR$/../jmeter.iml" filepath="$PROJECT_DIR$/../jmeter.iml" />
       <module fileurl="file://$PROJECT_DIR$/../server.iml" filepath="$PROJECT_DIR$/../server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/webapp/webapps.iml" filepath="$PROJECT_DIR$/webapp/webapps.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
@@ -1365,6 +1372,105 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.4/junit-4.4-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: ant:ant:1.6">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/ant/ant/1.6/ant-1.6.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/ant/ant/1.6/ant-1.6-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/ant/ant/1.6/ant-1.6-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: jetty:jsp-api:2.1-6.0.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp-api/2.1-6.0.2/jsp-api-2.1-6.0.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp-api/2.1-6.0.2/jsp-api-2.1-6.0.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp-api/2.1-6.0.2/jsp-api-2.1-6.0.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: jetty:jsp:2.1-6.0.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp/2.1-6.0.2/jsp-2.1-6.0.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp/2.1-6.0.2/jsp-2.1-6.0.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp/2.1-6.0.2/jsp-2.1-6.0.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.servlet:servlet-api:2.5">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet-api/2.5/servlet-api-2.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.servlet:servlet:2.5">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet/2.5/servlet-2.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet/2.5/servlet-2.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet/2.5/servlet-2.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: google:visualization-datasource:1.0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/visualization-datasource/1.0/visualization-datasource-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/visualization-datasource/1.0/visualization-datasource-1.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/visualization-datasource/1.0/visualization-datasource-1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: google:gdata-core:1.0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/gdata-core/1.0/gdata-core-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/gdata-core/1.0/gdata-core-1.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/gdata-core/1.0/gdata-core-1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.ibm.icu:icu4j:4.0.1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/com/ibm/icu/icu4j/4.0.1/icu4j-4.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/com/ibm/icu/icu4j/4.0.1/icu4j-4.0.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/com/ibm/icu/icu4j/4.0.1/icu4j-4.0.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: google:google-collect:1.0-rc1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/google-collect/1.0-rc1/google-collect-1.0-rc1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/google-collect/1.0-rc1/google-collect-1.0-rc1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/google-collect/1.0-rc1/google-collect-1.0-rc1-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
