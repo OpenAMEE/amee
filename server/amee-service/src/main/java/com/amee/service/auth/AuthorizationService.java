@@ -98,11 +98,11 @@ public class AuthorizationService {
             // Get list of PermissionEntries for current entity from Permissions.
             entityEntries = getPermissionEntries(permissions);
 
-            // Remove PermissionEntries that don't relate to the entity state.
-            removePermissionEntriesWithoutState(entityEntries, accessSpecification.getEntity().getStatus());
-
-            // Merge PermissionEntries for current entity with inherited PermissionEntries. 
+            // Merge PermissionEntries for current entity with inherited PermissionEntries.
             mergePermissionEntries(allEntries, entityEntries);
+
+            // Remove PermissionEntries that don't match the entity state.
+            removePermissionEntriesWithoutState(allEntries, accessSpecification.getEntity().getStatus());
 
             // Owner can do anything.
             if (allEntries.contains(PermissionEntry.OWN)) {
@@ -122,7 +122,7 @@ public class AuthorizationService {
         return true;
     }
 
-    protected void mergePermissionEntries(Set<PermissionEntry> entries, List<PermissionEntry> newEntries) {
+    protected void mergePermissionEntries(Collection<PermissionEntry> entries, Collection<PermissionEntry> newEntries) {
         PermissionEntry pe1;
         Iterator<PermissionEntry> iterator = entries.iterator();
         while (iterator.hasNext()) {
@@ -137,7 +137,7 @@ public class AuthorizationService {
         entries.addAll(newEntries);
     }
 
-    protected List<PermissionEntry> getPermissionEntries(List<Permission> permissions) {
+    protected List<PermissionEntry> getPermissionEntries(Collection<Permission> permissions) {
         List<PermissionEntry> entries = new ArrayList<PermissionEntry>();
         for (Permission permission : permissions) {
             entries.addAll(permission.getEntries());
@@ -145,7 +145,7 @@ public class AuthorizationService {
         return entries;
     }
 
-    protected void removePermissionEntriesWithoutState(List<PermissionEntry> entries, AMEEStatus status) {
+    protected void removePermissionEntriesWithoutState(Collection<PermissionEntry> entries, AMEEStatus status) {
         Iterator<PermissionEntry> iterator = entries.iterator();
         while (iterator.hasNext()) {
             if (!iterator.next().getStatus().equals(status)) {

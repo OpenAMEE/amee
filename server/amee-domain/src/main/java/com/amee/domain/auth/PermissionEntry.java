@@ -126,18 +126,18 @@ public class PermissionEntry implements Serializable {
      */
     public PermissionEntry(String value, String allow, String status) {
         this(value, allow);
-        setStatus(AMEEStatus.valueOf(status));
+        setStatus(AMEEStatus.valueOf(status.trim().toUpperCase()));
     }
 
     public String toString() {
-        return "PermissionEntry_" + getValue() + "_" + (isAllow() ? "allow" : "deny") + "_" + getStatus().toString();
+        return "PermissionEntry_" + getValue() + "_" + (isAllow() ? "allow" : "deny") + "_" + getStatus().getName().toLowerCase();
     }
 
     /**
      * Compare a PermissionEntry with the supplied object. Asides from
      * standard object equality, PermissionEntries are considered equal if they
-     * have the same property values. If the value is 'own' then only compare the
-     * value property.
+     * have the same property values (excluding status). If the value is 'own' then only
+     * compare the value property.
      *
      * @param o to compare with
      * @return true if supplied object is equal
@@ -150,9 +150,7 @@ public class PermissionEntry implements Serializable {
         if (getValue().equals(OWN.getValue()) && entry.getValue().equals(OWN.getValue())) {
             return true;
         } else {
-            return getValue().equals(entry.getValue()) &&
-                    getAllow().equals(entry.getAllow()) &&
-                    getStatus().equals(entry.getStatus());
+            return getValue().equals(entry.getValue()) && getAllow().equals(entry.getAllow());
         }
     }
 

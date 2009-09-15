@@ -83,6 +83,7 @@ public class ServiceData {
         DC_PUBLIC_SUB = new DataCategory(DC_PUBLIC, "DC Public Sub", "dc_public_sub");
         DC_PREMIUM = new DataCategory(DC_ROOT, "DC Premium", "dc_premium");
         DC_DEPRECATED = new DataCategory(DC_ROOT, "DC Deprecated", "dc_deprecated");
+        DC_DEPRECATED.setStatus(AMEEStatus.DEPRECATED);
         setId(DC_ROOT, DC_PUBLIC, DC_PUBLIC_SUB, DC_PREMIUM, DC_DEPRECATED);
     }
 

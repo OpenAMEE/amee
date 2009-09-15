@@ -15,8 +15,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Permission represents the permissions that a 'principle' has over an 'entity'. The
- * entity can be any persistent entity within AMEE, such as a Profile or DataCategory. A
+ * Permission represents the permissions (rights) that a 'principle' has over an 'entity'.
+ * The entity can be any persistent entity within AMEE, such as a Profile or DataCategory. A
  * principle can be a User, Group or other entity that needs to own or access an entity.
  * <p/>
  * The principle and entity are represented by AMEEEntityReference instances, the
@@ -25,7 +25,7 @@ import java.util.Set;
  * Permissions are made up of permission entries. These typically represent the 'view',
  * 'create', 'modify', 'delete' verbs (CRUD). Each permission entry is accompanied
  * by an allow or deny flag. Other types of entries are also possible, such as
- * 'own' or 'view-deprecated'.
+ * 'own' or 'create.profile'.
  * <p/>
  * The permission entries are stored in the entries property. Internally this is
  * held and persisted as a JSON String. The entries are exposed externally as a
