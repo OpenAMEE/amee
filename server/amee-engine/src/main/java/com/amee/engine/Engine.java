@@ -19,7 +19,7 @@ public class Engine implements WrapperListener, Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    protected ApplicationContext springContext;
+    protected static ApplicationContext springContext;
     protected TransactionController transactionController;
     protected Component container;
     protected String serverName = "localhost";
@@ -54,7 +54,8 @@ public class Engine implements WrapperListener, Serializable {
                 "applicationContext-jobs.xml",
                 "applicationContext-container.xml",
                 "applicationContext-application-*.xml",
-                "applicationContext-skins.xml"});
+                "applicationContext-skins.xml",
+                "applicationContext-servlets.xml"});
 
         // obtain the Restlet container
         container = ((Component) springContext.getBean("ameeContainer"));
@@ -80,6 +81,11 @@ public class Engine implements WrapperListener, Serializable {
         try {
             // get things going
             container.start();
+
+            //org.mortbay.jetty.Server server = (org.mortbay.jetty.Server) springContext.getBean("server");
+            //server.start();
+            //server.join();
+
             log.debug("...Engine started.");
         } catch (Exception e) {
             log.fatal("caught Exception: " + e);
@@ -145,5 +151,10 @@ public class Engine implements WrapperListener, Serializable {
     public void controlEvent(int event) {
         log.debug("controlEvent");
         // do nothing
+    }
+
+
+    public static ApplicationContext getAppContext() {
+        return springContext;
     }
 }

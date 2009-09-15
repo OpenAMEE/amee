@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="server" class="org.mortbay.jetty.Server" destroy-method="stop">
+        <property name="threadPool">
+            <bean class="org.mortbay.thread.QueuedThreadPool">
+                <property name="maxThreads" value="100" />
+            </bean>
+        </property>
+        <property name="connectors">
+            <list>
+                <bean class="org.mortbay.jetty.ajp.Ajp13SocketConnector">
+                    <property name="port" value="8009" />
+                    <property name="maxIdleTime" value="30000" />
+                </bean>
+            </list>
+        </property>
+        <property name="handler">
+            <bean class="org.mortbay.jetty.handler.HandlerCollection">
+                <property name="handlers">
+                    <list>
+                        <ref local="contextHandlerCollection" />
+                        <bean class="org.mortbay.jetty.handler.DefaultHandler"/>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <property name="stopAtShutdown" value="true"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+       <property name="targetObject" ref="server"/>
+       <property name="targetMethod" value="addLifeCycle"/>
+       <property name="arguments">
+           <list><ref local="webAppDeployer"/></list>
+      </property>
+   </bean>
+
+    <bean id="contextHandlerCollection" class="org.mortbay.jetty.handler.ContextHandlerCollection"/>
+
+    <bean id="webAppDeployer" class="org.mortbay.jetty.deployer.WebAppDeployer">
+        <property name="contexts" ref="contextHandlerCollection"/>
+        <property name="webAppDir" value="../../webapps"/>
+        <property name="defaultsDescriptor" value="webdefault.xml"/>
+    </bean>
+
+</beans>
+    

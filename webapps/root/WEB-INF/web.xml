@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+
+	<servlet>
+		<servlet-name>pquery</servlet-name>
+		<jsp-file>/pquery.jsp</jsp-file>
+	</servlet>
+	
+    <servlet>
+        <servlet-name>dquery</servlet-name>
+        <jsp-file>/dquery.jsp</jsp-file>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ptable</servlet-name>
+        <servlet-class>com.amee.googleds.ProfileCategoryServlet</servlet-class>
+    </servlet>
+
+	<servlet>
+		<servlet-name>dtable</servlet-name>
+		<servlet-class>com.amee.googleds.DataCategoryServlet</servlet-class>
+	</servlet>
+
+    <servlet-mapping>
+         <servlet-name>ptable</servlet-name>
+         <url-pattern>/ptable/*</url-pattern>
+     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>dtable</servlet-name>
+        <url-pattern>/dtable/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+		<servlet-name>pquery</servlet-name>
+		<url-pattern>/profiles/*</url-pattern>
+	</servlet-mapping>
+
+    <servlet-mapping>
+		<servlet-name>dquery</servlet-name>
+		<url-pattern>/data/*</url-pattern>
+	</servlet-mapping>		
+
+</web-app>

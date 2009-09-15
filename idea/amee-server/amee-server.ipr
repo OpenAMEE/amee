@@ -89,15 +89,15 @@
   </component>
   <component name="CopyrightManager" default="AMEE">
     <copyright>
-      <option name="notice" value="This file is part of AMEE.&#10;&#10;Copyright (c) 2007, 2008, 2009 AMEE UK LIMITED (help@amee.com).&#10;&#10;AMEE is free software; you can redistribute it and/or modify&#10;it under the terms of the GNU General Public License as published by&#10;the Free Software Foundation; either version 3 of the License, or&#10;(at your option) any later version.&#10;&#10;AMEE is free software and is distributed in the hope that it will be useful,&#10;but WITHOUT ANY WARRANTY; without even the implied warranty of&#10;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10;GNU General Public License for more details.&#10;&#10;You should have received a copy of the GNU General Public License&#10;along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.&#10;&#10;Created by http://www.dgen.net.&#10;Website http://www.amee.cc" />
-      <option name="keyword" value="This file is part of" />
-      <option name="myName" value="AMEE" />
-      <option name="myLocal" value="true" />
-    </copyright>
-    <copyright>
       <option name="notice" value="This file is part of AMEE.&#10;&#10;Copyright (c) 2007, 2008, 2009 AMEE UK LIMITED (help@amee.com).&#10;Copyright (c) 2006, 2007, 2008, 2009 Jellymold Ltd.&#10;&#10;AMEE is free software; you can redistribute it and/or modify&#10;it under the terms of the GNU General Public License as published by&#10;the Free Software Foundation; either version 3 of the License, or&#10;(at your option) any later version.&#10;&#10;AMEE is free software and is distributed in the hope that it will be useful,&#10;but WITHOUT ANY WARRANTY; without even the implied warranty of&#10;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10;GNU General Public License for more details.&#10;&#10;You should have received a copy of the GNU General Public License&#10;along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.&#10;&#10;Created by http://www.dgen.net.&#10;Website http://www.amee.cc" />
       <option name="keyword" value="This file is part of" />
       <option name="myName" value="Jellymold" />
+      <option name="myLocal" value="true" />
+    </copyright>
+    <copyright>
+      <option name="notice" value="This file is part of AMEE.&#10;&#10;Copyright (c) 2007, 2008, 2009 AMEE UK LIMITED (help@amee.com).&#10;&#10;AMEE is free software; you can redistribute it and/or modify&#10;it under the terms of the GNU General Public License as published by&#10;the Free Software Foundation; either version 3 of the License, or&#10;(at your option) any later version.&#10;&#10;AMEE is free software and is distributed in the hope that it will be useful,&#10;but WITHOUT ANY WARRANTY; without even the implied warranty of&#10;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10;GNU General Public License for more details.&#10;&#10;You should have received a copy of the GNU General Public License&#10;along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.&#10;&#10;Created by http://www.dgen.net.&#10;Website http://www.amee.cc" />
+      <option name="keyword" value="This file is part of" />
+      <option name="myName" value="AMEE" />
       <option name="myLocal" value="true" />
     </copyright>
     <module2copyright>
@@ -224,6 +224,11 @@
             </files>
           </module>
           <module name="amee-scripts" />
+        </modules>
+      </facet-type>
+      <facet-type id="web">
+        <modules>
+          <module name="webapp" />
         </modules>
       </facet-type>
     </autodetection-disabled>
@@ -415,6 +420,7 @@
       <module fileurl="file://$PROJECT_DIR$/../amee-core.iml" filepath="$PROJECT_DIR$/../amee-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/../amee-domain.iml" filepath="$PROJECT_DIR$/../amee-domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/../amee-engine.iml" filepath="$PROJECT_DIR$/../amee-engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-gdata/amee-gdata.iml" filepath="$PROJECT_DIR$/amee-gdata/amee-gdata.iml" />
       <module fileurl="file://$PROJECT_DIR$/../amee-restlet.iml" filepath="$PROJECT_DIR$/../amee-restlet.iml" />
       <module fileurl="file://$PROJECT_DIR$/../amee-scripts.iml" filepath="$PROJECT_DIR$/../amee-scripts.iml" />
       <module fileurl="file://$PROJECT_DIR$/../amee-service.iml" filepath="$PROJECT_DIR$/../amee-service.iml" />
@@ -422,6 +428,7 @@
       <module fileurl="file://$PROJECT_DIR$/../htdocs.iml" filepath="$PROJECT_DIR$/../htdocs.iml" />
       <module fileurl="file://$PROJECT_DIR$/../jmeter.iml" filepath="$PROJECT_DIR$/../jmeter.iml" />
       <module fileurl="file://$PROJECT_DIR$/../server.iml" filepath="$PROJECT_DIR$/../server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/webapp/webapps.iml" filepath="$PROJECT_DIR$/webapp/webapps.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
@@ -1354,6 +1361,105 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$PROJECT_DIR$/../../../../repository/org/mortbay/jetty/jetty-sslengine/6.1.11/jetty-sslengine-6.1.11-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: ant:ant:1.6">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/ant/ant/1.6/ant-1.6.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/ant/ant/1.6/ant-1.6-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/ant/ant/1.6/ant-1.6-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: jetty:jsp-api:2.1-6.0.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp-api/2.1-6.0.2/jsp-api-2.1-6.0.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp-api/2.1-6.0.2/jsp-api-2.1-6.0.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp-api/2.1-6.0.2/jsp-api-2.1-6.0.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: jetty:jsp:2.1-6.0.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp/2.1-6.0.2/jsp-2.1-6.0.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp/2.1-6.0.2/jsp-2.1-6.0.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/jetty/jsp/2.1-6.0.2/jsp-2.1-6.0.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.servlet:servlet-api:2.5">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet-api/2.5/servlet-api-2.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.servlet:servlet:2.5">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet/2.5/servlet-2.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet/2.5/servlet-2.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/javax/servlet/servlet/2.5/servlet-2.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: google:visualization-datasource:1.0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/visualization-datasource/1.0/visualization-datasource-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/visualization-datasource/1.0/visualization-datasource-1.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/visualization-datasource/1.0/visualization-datasource-1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: google:gdata-core:1.0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/gdata-core/1.0/gdata-core-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/gdata-core/1.0/gdata-core-1.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/gdata-core/1.0/gdata-core-1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.ibm.icu:icu4j:4.0.1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/com/ibm/icu/icu4j/4.0.1/icu4j-4.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/com/ibm/icu/icu4j/4.0.1/icu4j-4.0.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/com/ibm/icu/icu4j/4.0.1/icu4j-4.0.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: google:google-collect:1.0-rc1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/google-collect/1.0-rc1/google-collect-1.0-rc1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/google-collect/1.0-rc1/google-collect-1.0-rc1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/../../../../repository/google/google-collect/1.0-rc1/google-collect-1.0-rc1-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
