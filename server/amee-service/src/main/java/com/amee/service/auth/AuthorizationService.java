@@ -22,7 +22,6 @@
 package com.amee.service.auth;
 
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.AMEEStatus;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
@@ -43,27 +42,24 @@ public class AuthorizationService {
     private PermissionService permissionService;
 
     /**
-     * Determines if the supplied AuthorizationContext is considered to be authorized or not. Will return true
-     * if the authorize result is ALLOW, otherwise false if the result is DENY.
+     * Returns true the supplied AuthorizationContext is considered to be authorized.
      * <p/>
      * The supplied AuthorizationContext encapsulates a list of principles and a list of AccessSpecification. The
-     * aim is to discover if the principles have appropriate access to the entities within the AccessSpecification.
+     * aim is to discover if the principles have the requested access rights to the entities within the AccessSpecification.
      * <p/>
      * The authorization rules are:
      * <p/>
-     * - Super-users, always ALLOW and return.
-     * - DENY if there are no AccessSpecifications.
-     * - Each AccessSpecification is evaluated in hierarchical order (e.g., category -> sub-category -> item).
+     * - Super-users are always authorized (return true).
+     * - Always deny access if there are no AccessSpecifications.
+     * - Each AccessSpecification is evaluated in entity hierarchical order (e.g., category -> sub-category -> item).
      * - Principles are evaluated from broader to narrower scope (e.g., organisation -> department -> individual).
-     * - PermissionEntries are consolidated from all Permissions for principle & entity combinations.
-     * - The PermissionEntries are merged for in each iteration allowing inheritence of permissions.
-     * - Permissions from later principles override earlier ones.
-     * - If an OWN PermissionEntry is present then ALLOW and return.
-     * - TODO
-     * - Stop on DENY, don't evaluate entities further down the hierarchy.
-     * - Inherited Permissions for earlier entities can be superceeded by those from later entities.
-     * - Multiple Permissions for related principles have an 'election' with the most permissive Permission winning.
-     * <p/>
+     * - PermissionEntries are consolidated from all Permissions for each principle & entity combination.
+     * - The PermissionEntries are inherited down the entity hierarchy.
+     * - PermissionEntries for later principle & entity combinations override those that are inherited.
+     * - Always authorize if an OWN PermissionEntry is present for an entity (return true).
+     * - Apply isAuthorized(AccessSpecification, Collection<PermissionEntry>)to each AccessSpecification, return false
+     * if not authorized.
+     * - Return authorized (true) if isAuthorized is passed for each entity. 
      *
      * @param authorizationContext to consider for authorization
      * @return true if authorize result is allow, otherwise false if result is deny
@@ -83,7 +79,7 @@ public class AuthorizationService {
         // Deny if there are no AccessSpecifications. Pretty odd if this happens...
         if (authorizationContext.getAccessSpecifications().isEmpty()) {
             log.debug("isAuthorized() - DENY (not permitted)");
-            return false;          
+            return false;
         }
 
         // Iterate over AccessSpecifications (entities) in hierarchical order.
@@ -101,9 +97,6 @@ public class AuthorizationService {
             // Merge PermissionEntries for current entity with inherited PermissionEntries.
             mergePermissionEntries(allEntries, entityEntries);
 
-            // Remove PermissionEntries that don't match the entity state.
-            removePermissionEntriesWithoutState(allEntries, accessSpecification.getEntity().getStatus());
-
             // Owner can do anything.
             if (allEntries.contains(PermissionEntry.OWN)) {
                 log.debug("isAuthorized() - ALLOW (owner)");
@@ -111,7 +104,7 @@ public class AuthorizationService {
             }
 
             // Principles must be able to do everything specified.
-            if (!allEntries.containsAll(accessSpecification.getEntries())) {
+            if (!isAuthorized(accessSpecification, allEntries)) {
                 log.debug("isAuthorized() - DENY (not permitted)");
                 return false;
             }
@@ -122,21 +115,13 @@ public class AuthorizationService {
         return true;
     }
 
-    protected void mergePermissionEntries(Collection<PermissionEntry> entries, Collection<PermissionEntry> newEntries) {
-        PermissionEntry pe1;
-        Iterator<PermissionEntry> iterator = entries.iterator();
-        while (iterator.hasNext()) {
-            pe1 = iterator.next();
-            for (PermissionEntry pe2 : newEntries) {
-                if (pe1.getValue().equals(pe2.getValue())) {
-                    iterator.remove();
-                    break;
-                }
-            }
-        }
-        entries.addAll(newEntries);
-    }
-
+    /**
+     * Gets a List of PermissionEntries from a Collection of Permissions. The PermissionEntries list contains all
+     * the PermissionEntries from within all the Permissions.
+     *
+     * @param permissions tp get PermissionEntries from
+     * @return PermissionEntries list
+     */
     protected List<PermissionEntry> getPermissionEntries(Collection<Permission> permissions) {
         List<PermissionEntry> entries = new ArrayList<PermissionEntry>();
         for (Permission permission : permissions) {
@@ -145,15 +130,73 @@ public class AuthorizationService {
         return entries;
     }
 
-    protected void removePermissionEntriesWithoutState(Collection<PermissionEntry> entries, AMEEStatus status) {
-        Iterator<PermissionEntry> iterator = entries.iterator();
+    /**
+     * Merges two PermissionEntries Collections. The merge consists of two stages. Firstly, remove PermissionEntries
+     * from the target collection where those from the source collection have a different allow flag. Secondly, add
+     * all PermissionEntries from the source collection to the target collection.
+     *
+     * @param targetEntries target collection
+     * @param sourceEntries source collection
+     */
+    protected void mergePermissionEntries(Collection<PermissionEntry> targetEntries, Collection<PermissionEntry> sourceEntries) {
+        PermissionEntry pe1;
+        Iterator<PermissionEntry> iterator = targetEntries.iterator();
         while (iterator.hasNext()) {
-            if (!iterator.next().getStatus().equals(status)) {
-                iterator.remove();
+            pe1 = iterator.next();
+            for (PermissionEntry pe2 : sourceEntries) {
+                if (pe1.getValue().equals(pe2.getValue()) && pe1.getStatus().equals(pe2.getStatus())) {
+                    iterator.remove();
+                    break;
+                }
             }
         }
+        targetEntries.addAll(sourceEntries);
     }
 
+    /**
+     * Returns true if access is authorized to an entity. The AccessSpecification declares the entity and what
+     * kind of access is desired. The principles PermissionEntry collection declares what kind of access
+     * the principles are allowed for the entity.
+     *
+     * @param accessSpecification specification of access requested to an entity
+     * @param principleEntries    PermissionEntries from the principles
+     * @return true if access is authorized
+     */
+    protected boolean isAuthorized(AccessSpecification accessSpecification, Collection<PermissionEntry> principleEntries) {
+        // Default to not authorized.
+        Boolean authorized = false;
+        // Iterate over PermissionEntries specified for entity.
+        for (PermissionEntry pe1 : accessSpecification.getEntries()) {
+            // Default to not authorized.
+            authorized = false;
+            // Iterate over PermissionEntries associated with current principles.
+            for (PermissionEntry pe2 : principleEntries) {
+                // Authorized if:
+                // - Both PermissionEntries match by value.
+                // - Principles PermissionEntry is allowed.
+                // - Principles PermissionEntry status matches the entity status.
+                if (pe1.getValue().equals(pe2.getValue()) &&
+                        pe2.isAllow() &&
+                        (pe2.getStatus().equals(accessSpecification.getEntity().getStatus()))) {
+                    // Authorized, no need to continue so break. Most permission principle PermissionEntry 'wins'.
+                    authorized = true;
+                    break;
+                }
+            }
+            // Stop now if not authorized.
+            if (!authorized) {
+                break;
+            }
+        }
+        return authorized;
+    }
+
+    /**
+     * Return true if there is a super-user in the supplied Collection of principles.
+     *
+     * @param principles to check for presence of super-user
+     * @return true if super-user is found
+     */
     public boolean isSuperUser(Collection<AMEEEntity> principles) {
         for (AMEEEntity principle : principles) {
             if (isSuperUser(principle)) {
@@ -163,6 +206,12 @@ public class AuthorizationService {
         return false;
     }
 
+    /**
+     * Returns true if the principle supplied is a User and is a super-user.
+     *
+     * @param principle to examine
+     * @return true if principle is a super-user
+     */
     public boolean isSuperUser(AMEEEntity principle) {
         if (User.class.isAssignableFrom(principle.getClass())) {
             if (((User) principle).isSuperUser()) {

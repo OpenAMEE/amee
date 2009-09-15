@@ -136,7 +136,7 @@ public class PermissionEntry implements Serializable {
     /**
      * Compare a PermissionEntry with the supplied object. Asides from
      * standard object equality, PermissionEntries are considered equal if they
-     * have the same property values (excluding status). If the value is 'own' then only
+     * have the same property values. If the value is 'own' then only
      * compare the value property.
      *
      * @param o to compare with
@@ -147,11 +147,8 @@ public class PermissionEntry implements Serializable {
         if (this == o) return true;
         if (!PermissionEntry.class.isAssignableFrom(o.getClass())) return false;
         PermissionEntry entry = (PermissionEntry) o;
-        if (getValue().equals(OWN.getValue()) && entry.getValue().equals(OWN.getValue())) {
-            return true;
-        } else {
-            return getValue().equals(entry.getValue()) && getAllow().equals(entry.getAllow());
-        }
+        return (getValue().equals(OWN.getValue()) && entry.getValue().equals(OWN.getValue())) ||
+                (getValue().equals(entry.getValue()) && getAllow().equals(entry.getAllow()) && getStatus().equals(entry.getStatus()));
     }
 
     /**
@@ -163,7 +160,10 @@ public class PermissionEntry implements Serializable {
     public int hashCode() {
         int hash = 7;
         hash = 31 * hash + getValue().hashCode();
-        hash = 31 * hash + getAllow().hashCode();
+        if (!getValue().equals(OWN.getValue())) {
+            hash = 31 * hash + getAllow().hashCode();
+            hash = 31 * hash + getStatus().hashCode();
+        }
         return hash;
     }
 
@@ -206,7 +206,7 @@ public class PermissionEntry implements Serializable {
     /**
      * Returns the AMEEStatus of a PermissionEntity.
      *
-     * @return
+     * @return the status
      */
     public AMEEStatus getStatus() {
         return status;
