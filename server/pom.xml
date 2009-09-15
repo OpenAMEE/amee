@@ -35,6 +35,7 @@
         <module>amee-engine</module>
         <module>amee-restlet</module>
         <module>amee-service</module>
+        <module>amee-gdata</module>
     </modules>
     <!-- Build Plugins. -->
     <build>

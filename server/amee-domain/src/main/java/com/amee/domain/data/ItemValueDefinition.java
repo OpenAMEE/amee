@@ -424,6 +424,18 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         return getValueDefinition().getValueType().equals(ValueType.TEXT);
     }
 
+    /**
+     * Does this represent a date value.
+     *
+     * @return true if this value represents a date value, otherwise false
+     *
+     * {@see ValueType.DATE}
+     *
+     */
+    public boolean isDate() {
+        return getValueDefinition().getValueType().equals(ValueType.DATE);
+    }
+
     public void setBuilder(Builder builder) {
         this.builder = builder;
     }
