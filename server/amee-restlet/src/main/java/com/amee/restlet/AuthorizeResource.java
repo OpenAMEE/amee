@@ -23,7 +23,6 @@ package com.amee.restlet;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.auth.AccessSpecification;
-import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.service.auth.AuthorizationContext;
 import com.amee.service.auth.AuthorizationService;
@@ -157,7 +156,7 @@ public abstract class AuthorizeResource extends BaseResource {
 
     public List<AccessSpecification> updateLastAccessSpecificationWithPermissionEntry(List<AccessSpecification> specifications, PermissionEntry entry) {
         if (!specifications.isEmpty()) {
-            specifications.get(specifications.size()).getEntries().add(entry);
+            specifications.get(specifications.size() - 1).getEntries().add(entry);
         }
         return specifications;
     }
