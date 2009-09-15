@@ -80,16 +80,9 @@ public class DataCategoryResourceBuilder {
             }
 
             for (PathItem pi : pathItem.getChildrenByType(ObjectType.DC.getName())) {
-
-                DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
-
                 // TODO: PERMISSIONS
-                //if (child == null || (child.isDeprecated() &&
-                //        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated()))
-                //    continue;
-
+                DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
                 dataCategories.put(pi.getJSONObject());
-
             }
             children.put("dataCategories", dataCategories);
 
@@ -118,12 +111,7 @@ public class DataCategoryResourceBuilder {
                 JSONArray dataCategories = new JSONArray();
                 obj.put("dataCategories", dataCategories);
                 for (DataCategory dc : resource.getDataCategories()) {
-
                     // TODO: PERMISSIONS
-                    // if (dc.isDeprecated() &&
-                    //        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated())
-                    //    continue;
-
                     dataCategories.put(dc.getJSONObject(false));
                 }
             }
@@ -168,14 +156,8 @@ public class DataCategoryResourceBuilder {
             }
 
             for (PathItem pi : pathItem.getChildrenByType(ObjectType.DC.getName())) {
-
-                DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
-
                 // TODO: PERMISSIONS
-                // if (child == null || (child.isDeprecated() &&
-                //        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated()))
-                //    continue;
-
+                DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
                 dataCategoriesElement.appendChild(pi.getElement(document));
             }
             childrenElement.appendChild(dataCategoriesElement);
@@ -198,12 +180,7 @@ public class DataCategoryResourceBuilder {
                 Element dataItemsElement = document.createElement("DataCategories");
                 element.appendChild(dataItemsElement);
                 for (DataCategory dc : resource.getDataCategories()) {
-
                     // TODO: PERMISSIONS
-                    // if (dc.isDeprecated() &&
-                    //        !resource.getDataBrowser().getDataCategoryActions().isAllowViewDeprecated())
-                    //    continue;
-
                     dataItemsElement.appendChild(dc.getElement(document, false));
                 }
             }

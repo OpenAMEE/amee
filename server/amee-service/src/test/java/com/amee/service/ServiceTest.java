@@ -19,31 +19,25 @@
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-package com.amee.domain;
+package com.amee.service;
 
-/**
- * Defines an interface exposing the properties required to identify (refer-to) an AMEEEntity.
- */
-public interface IAMEEEntityReference {
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-    /**
-     * Fetches the ID of the referenced entity.
-     *
-     * @return the entity id
-     */
-    public Long getEntityId();
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration
+public abstract class ServiceTest {
 
-    /**
-     * Fetches the UID of the referenced entity.
-     *
-     * @return entity UID
-     */
-    public String getEntityUid();
+    @Autowired
+    protected ServiceData serviceData;
 
-    /**
-     * Fetches the ObjectTyoe of the referenced entity.
-     *
-     * @return the ObjectType
-     */
-    public ObjectType getObjectType();
+    @Before
+    public void init() {
+        System.setProperty("amee.keyFile", "/var/www/apps/amee/shared/crypto/amee.key");
+        System.setProperty("amee.saltFile", "/var/www/apps/amee/shared/crypto/amee.salt");
+        serviceData.init();
+    }
 }

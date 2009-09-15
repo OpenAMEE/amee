@@ -23,6 +23,8 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.PermissionEntry;
+import com.amee.domain.auth.AccessSpecification;
+import com.amee.domain.auth.Permission;
 import com.amee.domain.profile.Profile;
 import com.amee.restlet.AMEEResource;
 import com.amee.service.profile.ProfileBrowser;
@@ -134,11 +136,8 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     }
 
     @Override
-    public Set<PermissionEntry> getAcceptPermissionEntries() {
-        Set<PermissionEntry> entries = new HashSet<PermissionEntry>();
-        entries.addAll(super.getAcceptPermissionEntries());
-        entries.add(new PermissionEntry("create.pr"));
-        return entries;
+    public List<AccessSpecification> getAcceptAccessSpecifications() {
+        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), new PermissionEntry("create.pr"));
     }
 
     @Override

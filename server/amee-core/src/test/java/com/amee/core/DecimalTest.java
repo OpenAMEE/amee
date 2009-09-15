@@ -92,7 +92,6 @@ public class DecimalTest {
 
     }
 
-    
     @Test
     public void subtract() {
 

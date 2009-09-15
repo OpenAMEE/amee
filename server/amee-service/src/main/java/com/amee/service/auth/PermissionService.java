@@ -26,7 +26,6 @@ import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.ObjectType;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
-import com.amee.domain.auth.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

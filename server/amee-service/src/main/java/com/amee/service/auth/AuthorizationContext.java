@@ -22,103 +22,117 @@
 package com.amee.service.auth;
 
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.auth.PermissionEntry;
+import com.amee.domain.auth.AccessSpecification;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+/**
+ * AuthorizationContext encapsulates the 'context' for an authorization request. The context
+ * contains three main collections; a list of 'principles', a list of 'entities' and a set of
+ * PermissionEntries. These collections are taken into consideration when deciding if a
+ * request should be authorized.
+ */
 public class AuthorizationContext implements Serializable {
 
+    /**
+     * A list of principles which may or may not be authorized for the entities.
+     */
     private List<AMEEEntity> principles = new ArrayList<AMEEEntity>();
-    private List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-    private Set<PermissionEntry> entries = new HashSet<PermissionEntry>();
-    private boolean matchAll = false;
 
+    /**
+     * A list of entities over which the principles may or may not have permissions, along with
+     * the requested permission entries.
+     */
+    private List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
+
+    /**
+     * Default constructor.
+     */
     public AuthorizationContext() {
         super();
     }
 
-    public AuthorizationContext(AMEEEntity principle, AMEEEntity entity, String entries) {
+    /**
+     * Construct an AuthorizationContext with the supplied principle, entity and entries.
+     *
+     * @param principle
+     * @param accessSpecification
+     */
+    public AuthorizationContext(AMEEEntity principle, AccessSpecification accessSpecification) {
         this();
         addPrinciple(principle);
-        addEntity(entity);
-        addEntries(entries);
+        addAccessSpecification(accessSpecification);
     }
 
-    public AuthorizationContext(AMEEEntity principle, AMEEEntity entity, Set<PermissionEntry> entries) {
-        this();
-        addPrinciple(principle);
-        addEntity(entity);
-        addEntries(entries);
-    }
-
-    public AuthorizationContext(List<AMEEEntity> principles, List<AMEEEntity> entities, Set<PermissionEntry> entries) {
+    /**
+     * Construct an AuthorizationContext with the supplied principles, entities and entries.
+     *
+     * @param principles
+     * @param accessSpecifications
+     */
+    public AuthorizationContext(List<AMEEEntity> principles, List<AccessSpecification> accessSpecifications) {
         this();
         addPrinciples(principles);
-        addEntities(entities);
-        addEntries(entries);
+        addAccessSpecifications(accessSpecifications);
     }
 
-    public AuthorizationContext(List<AMEEEntity> principles, List<AMEEEntity> entities, Set<PermissionEntry> entries, boolean matchAll) {
-        this();
-        addPrinciples(principles);
-        addEntities(entities);
-        addEntries(entries);
-        setMatchAll(matchAll);
-    }
-
+    /**
+     * Convienience method to add a principle to the principles collection.
+     *
+     * @param principle to add
+     */
     public void addPrinciple(AMEEEntity principle) {
         if (principle == null) throw new IllegalArgumentException("The principle argument must not be null.");
         getPrinciples().add(principle);
     }
 
+    /**
+     * Convienience method to add a list of principles to the principles collections.
+     *
+     * @param principles to add
+     */
     public void addPrinciples(List<AMEEEntity> principles) {
         if (principles == null) throw new IllegalArgumentException("The principles argument must not be null.");
         getPrinciples().addAll(principles);
     }
 
-    public void addEntity(AMEEEntity entity) {
-        if (entity == null) throw new IllegalArgumentException("The entity argument must not be null.");
-        getEntities().add(entity);
+    /**
+     * Convienience method to add an access specification to the accessSpecifications collection.
+     *
+     * @param accessSpecification to add
+     */
+    public void addAccessSpecification(AccessSpecification accessSpecification) {
+        if (accessSpecification == null) throw new IllegalArgumentException("The accessSpecification argument must not be null.");
+        getAccessSpecifications().add(accessSpecification);
     }
 
-    public void addEntities(List<AMEEEntity> entities) {
-        if (entities == null) throw new IllegalArgumentException("The entities argument must not be null.");
-        getEntities().addAll(entities);
+    /**
+     * Convienience method to add a list of access specifications to the accessSpecifications collection.
+     *
+     * @param accessSpecifications to add
+     */
+    public void addAccessSpecifications(List<AccessSpecification> accessSpecifications) {
+        if (accessSpecifications == null) throw new IllegalArgumentException("The accessSpecifications argument must not be null.");
+        getAccessSpecifications().addAll(accessSpecifications);
     }
 
-    public void addEntries(String entries) {
-        if (entries == null) throw new IllegalArgumentException("The entries argument must not be null.");
-        for (String entry : entries.split(",")) {
-            getEntries().add(new PermissionEntry(entry));
-        }
-    }
-
-    public void addEntries(Set<PermissionEntry> entries) {
-        if (entries == null) throw new IllegalArgumentException("The entries argument must not be null.");
-        getEntries().addAll(entries);
-    }
-
+    /**
+     * Returns the principles list.
+     *
+     * @return principles list.
+     */
     public List<AMEEEntity> getPrinciples() {
         return principles;
     }
 
-    public List<AMEEEntity> getEntities() {
-        return entities;
-    }
-
-    public Set<PermissionEntry> getEntries() {
-        return entries;
-    }
-
-    public boolean isMatchAll() {
-        return matchAll;
-    }
-
-    public void setMatchAll(boolean matchAll) {
-        this.matchAll = matchAll;
+    /**
+     * Returns the accessSpecifications list.
+     *
+     * @return accessSpecifications list.
+     */
+    public List<AccessSpecification> getAccessSpecifications() {
+        return accessSpecifications;
     }
 }
