@@ -69,13 +69,13 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     @Autowired
     private DefinitionService definitionService;
 
+    @Autowired
+    private DataCategoryResourceBuilder builder;
+
     private List<DataCategory> dataCategories;
     private DataItem dataItem;
     private List<DataItem> dataItems;
     private String type = "";
-
-    @Autowired
-    private DataCategoryResourceBuilder builder;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
