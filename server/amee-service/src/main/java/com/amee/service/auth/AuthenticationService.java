@@ -9,6 +9,7 @@ import com.amee.domain.site.ISite;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,12 +24,10 @@ public class AuthenticationService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    private static final String CACHE_REGION = "query.authenticationService";
-
     public static final String AUTH_TOKEN = "authToken";
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private AuthenticationDAO authenticationDao;
 
     public User doGuestSignIn(Environment environment) {
         return getUserByUsername(environment, "guest");
@@ -196,46 +195,12 @@ public class AuthenticationService implements Serializable {
 
     @SuppressWarnings(value = "unchecked")
     public User getUserByUid(Environment environment, String uid) {
-        List<User> users = entityManager.createQuery(
-                "SELECT DISTINCT u " +
-                        "FROM User u " +
-                        "WHERE u.environment.id = :environmentId " +
-                        "AND u.uid = :userUid " +
-                        "AND u.status != :trash")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("userUid", uid)
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getResultList();
-        if (users.size() == 1) {
-            log.debug("auth found: " + uid);
-            return users.get(0);
-        }
-        log.debug("auth NOT found: " + uid);
-        return null;
+        return authenticationDao.getUserByUid(environment, uid);
     }
 
     @SuppressWarnings(value = "unchecked")
     public User getUserByUsername(Environment environment, String username) {
-        List<User> users = entityManager.createQuery(
-                "SELECT DISTINCT u " +
-                        "FROM User u " +
-                        "WHERE u.environment.id = :environmentId " +
-                        "AND u.username = :username " +
-                        "AND u.status != :trash")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("username", username)
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getResultList();
-        if (users.size() == 1) {
-            log.debug("auth found: " + username);
-            return users.get(0);
-        }
-        log.debug("auth NOT found: " + username);
-        return null;
+        return authenticationDao.getUserByUsername(environment, username);
     }
 
     private static class AuthToken implements Serializable {

@@ -66,8 +66,8 @@
                 <tr id='Elem_${pi.uid}'>
                     <td>${pi.name}</td>
                     <td>
-                    <#if browser.dataCategoryActions.allowView><a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
-                    <#if browser.dataCategoryActions.allowDelete><input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
+                    <a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
+                    <input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/>
                     </td>
                 </tr>
             </#if>
@@ -92,8 +92,8 @@
             <tr id='Elem_${row.uid}'>
                 <td>${row.findCell('label')}</td>
                 <td>
-                <#if browser.dataItemActions.allowView><a href='${basePath}/${row.findCell('path')}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
-                <#if browser.dataItemActions.allowDelete><input type="image" onClick="deleteDataItem('${row.uid}', '${basePath}/${row.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
+                <a href='${basePath}/${row.findCell('path')}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
+                <input type="image" onClick="deleteDataItem('${row.uid}', '${basePath}/${row.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/>
                 </td>
             </tr>
         </#list>
@@ -103,74 +103,70 @@
     </p>
 </#if>
 
-<#if browser.dataCategoryActions.allowModify>
-    <h2>Update Data Category</h2>
-    <p>
+<h2>Update Data Category</h2>
+<p>
 
 
-    <form id="update" action='?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
-        <table>
+<form id="update" action='?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+    <table>
+        <tr>
+           <td>Name:</td>
+           <td colspan="2"><input name='name' value='${dataCategory.name}' type='text' size='30'/></td>
+        </tr>
+        <tr>
+           <td>Path:</td>
+           <td colspan="2"><input name='path' value='${dataCategory.path}' type='text' size='30'/></td>
+        </tr>
+        <tr>
+           <td>Item Definition:</td>
+           <td colspan="2">
+               <select name='itemDefinitionUid'>
+               <option value=''>(No Item Definition)</option>
+               <#list itemDefinitions as id>
+                   <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
+               </#list>
+               </select>
+           </td>
+        </tr>
+        <tr>
+           <td>Deprecated:</td>
+           <td colspan="2">
+            Yes <input type="radio" name="deprecated" value="true"<#if dataCategory.deprecated> checked</#if>/>
+            No <input type="radio" name="deprecated" value="false"<#if !dataCategory.deprecated> checked</#if>/>
+           </td>
+        </tr>
+        <#if dataCategory.localeNames?size != 0>
+            <#list dataCategory.localeNames?keys as locale>
             <tr>
-               <td>Name:</td>
-               <td colspan="2"><input name='name' value='${dataCategory.name}' type='text' size='30'/></td>
+                <td>Name: [${locale}]</td>
+                <td><input name='name_${locale}' value='${dataCategory.localeNames[locale].name}' type='text' size='30'/></td>
+                <td>Remove: <input type="checkbox" name="remove_name_${locale}"/> </td>
             </tr>
-            <tr>
-               <td>Path:</td>
-               <td colspan="2"><input name='path' value='${dataCategory.path}' type='text' size='30'/></td>
-            </tr>
-            <tr>
-               <td>Item Definition:</td>
-               <td colspan="2">
-                   <select name='itemDefinitionUid'>
-                   <option value=''>(No Item Definition)</option>
-                   <#list itemDefinitions as id>
-                       <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
-                   </#list>
-                   </select>
-               </td>
-            </tr>
-            <tr>
-               <td>Deprecated:</td>
-               <td colspan="2">
-                Yes <input type="radio" name="deprecated" value="true"<#if dataCategory.deprecated> checked</#if>/>
-                No <input type="radio" name="deprecated" value="false"<#if !dataCategory.deprecated> checked</#if>/>
-               </td>
-            </tr>
-            <#if dataCategory.localeNames?size != 0>
-                <#list dataCategory.localeNames?keys as locale>
-                <tr>
-                    <td>Name: [${locale}]</td>
-                    <td><input name='name_${locale}' value='${dataCategory.localeNames[locale].name}' type='text' size='30'/></td>
-                    <td>Remove: <input type="checkbox" name="remove_name_${locale}"/> </td>
-                </tr>
+            </#list>
+        </#if>
+        <tr>
+            <td>New Locale Name:</td>
+            <td>
+                <select name='localeName_part' onchange='javascript:localeonchange();'> <br/>
+                <#list availableLocales as locale>
+                    <option value='${locale}'>${locale}</option>
                 </#list>
-            </#if>
-            <tr>
-                <td>New Locale Name:</td>
-                <td>
-                    <select name='localeName_part' onchange='javascript:localeonchange();'> <br/>
-                    <#list availableLocales as locale>
-                        <option value='${locale}'>${locale}</option>
-                    </#list>
-                    </select>
-                    <input name='localeValue_part' type='text' size='30' onchange='javascript:localeonchange();'/><br/>
-                </td>
-            </tr>
-        </table>
-        <input type='submit' value='Update'/>
-    </form>
-    </p>
-</#if>
+                </select>
+                <input name='localeValue_part' type='text' size='30' onchange='javascript:localeonchange();'/><br/>
+            </td>
+        </tr>
+    </table>
+    <input type='submit' value='Update'/>
+</form>
+</p>
 
-<#if (browser.dataCategoryActions.allowCreate || browser.dataItemActions.allowCreate) && !dataCategory.aliasedCategory??>
+<#if !dataCategory.aliasedCategory??>
     <h2>Create</h2>
     <p>
     <form action='${basePath}' method='POST' enctype='application/x-www-form-urlencoded'>
         Type: <select id='newObjectType' name='newObjectType'>
-        <#if browser.dataCategoryActions.allowCreate>
             <option value="DC">Data Category</option>
-        </#if>
-        <#if itemDefinition?? && browser.dataItemActions.allowCreate>
+        <#if itemDefinition??>
             <option value="DI">Data Item (for ${itemDefinition.name})</option>
         </#if>
         </select><br/>
