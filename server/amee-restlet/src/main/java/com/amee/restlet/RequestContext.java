@@ -30,7 +30,10 @@ import com.amee.domain.profile.ProfileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
+import org.restlet.data.Parameter;
 import org.restlet.data.Request;
+
+import java.util.Iterator;
 
 /**
  * A simple bean for holding contextual information about the request.
@@ -68,7 +71,31 @@ public class RequestContext {
     public void setRequest(Request request) {
         this.requestPath = request.getResourceRef().getPath();
         this.method = request.getMethod().toString();
-        this.requestParameters = request.getResourceRef().getQuery();
+        this.requestParameters = getParameters(request.getResourceRef().getQueryAsForm());
+    }
+
+    private String getParameters(Form parmameters) {
+        Iterator<Parameter> i = parmameters.iterator();
+        if (!i.hasNext())
+            return null;
+
+        StringBuilder sb = new StringBuilder();
+        for (;;) {
+            Parameter p = i.next();
+            sb.append(p.getName());
+            sb.append("__");
+            if (!p.getName().equals("password")) {
+                sb.append(p.getValue());
+            } else {
+                sb.append("XXXXXX");        
+            }
+            if (i.hasNext()) {
+                sb.append(", ");
+            } else {
+                return sb.toString();
+            }
+        }
+
     }
 
     public void setCategory(DataCategory category) {
@@ -106,9 +133,7 @@ public class RequestContext {
     }
 
     public void setForm(Form form) {
-        if (!form.isEmpty()) {
-            this.form = form.toString();
-        }
+        this.form = getParameters(form);
     }
 
     public void error() {
@@ -144,7 +169,6 @@ public class RequestContext {
             sb.append("label=" + label + "|");
         }
 
-        //TODO - Do this in the setXX
         if (requestParameters != null) {
             sb.append("parameters=" + requestParameters.replace("=","__") + "|");
         }
