@@ -37,11 +37,6 @@ Modified: ${user.modified?datetime}<br/>
     <option value='GUEST' <#if user.type == 'GUEST'>selected='selected'</#if>>GUEST</option>
     <option value='ANONYMOUS' <#if user.type == 'ANONYMOUS'>selected='selected'</#if>>ANONYMOUS</option>
   </select><br/>
-  Status:  <select name='status'> <br/>
-    <option value='NEW' <#if user.status == 'NEW'>selected='selected'</#if>>NEW</option>
-    <option value='ACTIVE' <#if user.status == 'ACTIVE'>selected='selected'</#if>>ACTIVE</option>
-    <option value='CLOSED' <#if user.status == 'BLOCK'>selected='selected'</#if>>BLOCK</option>
-  </select><br/>
   Locale: <select name='locale'> <br/>
         <option value='en_GB'>en_GB</option>
         <#list availableLocales as locale>
