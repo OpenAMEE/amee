@@ -1,8 +1,28 @@
-#!/bin/bash -ex
+#!/bin/bash
 
-# Maybe just use wget + source 
-sudo wget -qO/usr/bin/runurl run.alestic.com/runurl
-sudo chmod 755 /usr/bin/runurl
+# Prepare instance 
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get install -y build-essential 
 
-# TODO - move to amee server or s3 bucket
-#runurl strawberrydiva.com/ghg-boot.sh
+# Install Ruby
+sudo apt-get install -y ruby1.8-dev ruby1.8 ri1.8 rdoc1.8 irb1.8 libreadline-ruby1.8 libruby1.8 libopenssl-ruby
+sudo ln -s /usr/bin/ruby1.8 /usr/bin/ruby
+sudo ln -s /usr/bin/ri1.8 /usr/bin/ri
+sudo ln -s /usr/bin/rdoc1.8 /usr/bin/rdoc
+sudo ln -s /usr/bin/irb1.8 /usr/bin/irb
+
+# Install RubyGems
+wget http://rubyforge.org/frs/download.php/57643/rubygems-1.3.4.tgz
+tar xzvf rubygems-1.3.4.tgz 
+cd rubygems-1.3.4/
+sudo ruby setup.rb
+sudo ln -s /usr/bin/gem1.8 /usr/bin/gem
+sudo gem update --system
+cd ..
+rm -rf rubygems-1.3.4
+
+# Install Merb and other dependencies
+sudo gem install merb-core merb-action-args merb-assets merb-helpers merb-mailer merb-param-protection merb-exceptions fastercsv ferret
+
+# Make deployment dir
+sudo mkdir -p /var/www/apps
