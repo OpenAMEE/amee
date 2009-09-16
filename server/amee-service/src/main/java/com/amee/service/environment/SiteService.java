@@ -4,7 +4,6 @@ import com.amee.domain.AMEEStatus;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.profile.Profile;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,28 +27,6 @@ public class SiteService implements Serializable {
 
     @Autowired
     private ProfileService profileService;
-
-    // Events
-
-    // TODO: Other entities to cascade dependencies from?
-
-    @SuppressWarnings(value = "unchecked")
-    public void beforeUserDelete(User user) {
-        log.debug("beforeUserDelete");
-        List<Profile> profiles = entityManager.createQuery(
-                "SELECT p " +
-                        "FROM Profile p " +
-                        "WHERE p.environment.id = :environmentId " +
-                        "AND p.user.id = :userId " +
-                        "AND p.status != :trash")
-                .setParameter("environmentId", user.getEnvironment().getId())
-                .setParameter("userId", user.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .getResultList();
-        for (Profile profile : profiles) {
-            profileService.remove(profile);
-        }
-    }
 
     // Users
 
@@ -152,7 +129,6 @@ public class SiteService implements Serializable {
     }
 
     public void remove(User user) {
-        beforeUserDelete(user);
         user.setStatus(AMEEStatus.TRASH);
     }
 }
