@@ -42,12 +42,12 @@ public class PermissionEntry implements Serializable {
     /**
      * Constants for the various commonly used permission entry values.
      */
-    public final static PermissionEntry OWN = new PermissionEntry("own");
-    public final static PermissionEntry VIEW = new PermissionEntry("view");
-    public final static PermissionEntry VIEW_DENY = new PermissionEntry("view", false);
-    public final static PermissionEntry CREATE = new PermissionEntry("create");
-    public final static PermissionEntry MODIFY = new PermissionEntry("modify");
-    public final static PermissionEntry DELETE = new PermissionEntry("delete");
+    public final static PermissionEntry OWN = new PermissionEntry("o");
+    public final static PermissionEntry VIEW = new PermissionEntry("v");
+    public final static PermissionEntry VIEW_DENY = new PermissionEntry("v", false);
+    public final static PermissionEntry CREATE = new PermissionEntry("c");
+    public final static PermissionEntry MODIFY = new PermissionEntry("m");
+    public final static PermissionEntry DELETE = new PermissionEntry("d");
 
     /**
      * The 'value' of a PermissionEntry. Examples are 'view' or 'delete.
@@ -95,16 +95,6 @@ public class PermissionEntry implements Serializable {
     }
 
     /**
-     * Constructor to create a new PermissionEntry with the supplied value and allow state.
-     *
-     * @param value for new PermissionEntry
-     * @param allow state to set, true or false
-     */
-    public PermissionEntry(String value, String allow) {
-        this(value, Boolean.valueOf(allow));
-    }
-
-    /**
      * Constructor to create a new PermissionEntry with the supplied value, allow state and status.
      *
      * @param value  for new PermissionEntry
@@ -124,7 +114,7 @@ public class PermissionEntry implements Serializable {
      * @param allow  state to set, true or false
      * @param status for new PermissionEntity
      */
-    public PermissionEntry(String value, String allow, String status) {
+    public PermissionEntry(String value, Boolean allow, String status) {
         this(value, allow);
         setStatus(AMEEStatus.valueOf(status.trim().toUpperCase()));
     }
