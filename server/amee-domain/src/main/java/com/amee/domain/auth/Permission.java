@@ -171,16 +171,18 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
             entrySet = new HashSet<PermissionEntry>();
             JSONObject json = getEntriesJSONObject();
             try {
-                if (json.has("entries")) {
-                    JSONArray arr = json.getJSONArray("entries");
+                if (json.has("e")) {
+                    JSONArray arr = json.getJSONArray("e");
                     for (int i = 0; i < arr.length(); i++) {
                         JSONObject obj = arr.getJSONObject(i);
-                        String value = obj.has("value") ? obj.getString("value") : "";
-                        String allow = obj.has("allow") ? obj.getString("allow") : "true";
-                        String status = obj.has("status") ? obj.getString("status") : AMEEStatus.ACTIVE.getName();
-                        entrySet.add(new PermissionEntry(value, allow, status));
+                        String value = obj.has("v") ? obj.getString("v") : "";
+                        String allow = obj.has("a") ? obj.getString("a") : "1";
+                        AMEEStatus status = obj.has("s") ? AMEEStatus.values()[Integer.valueOf(obj.getString("s"))] : AMEEStatus.ACTIVE;
+                        entrySet.add(new PermissionEntry(value, allow.equals("1"), status));
                     }
                 }
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Caught NumberFormatException: " + e.getMessage(), e);
             } catch (JSONException e) {
                 throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
             }
@@ -221,17 +223,17 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
             JSONArray arr = new JSONArray();
             for (PermissionEntry entry : getEntries()) {
                 JSONObject obj = new JSONObject();
-                obj.put("value", entry.getValue());
+                obj.put("v", entry.getValue());
                 if (!entry.isAllow()) {
-                    obj.put("allow", "false");
+                    obj.put("a", "0");
                 }
                 if (!entry.getStatus().equals(AMEEStatus.ACTIVE)) {
-                    obj.put("status", entry.getStatus().getName());
+                    obj.put("s", entry.getStatus().ordinal());
                 }
                 arr.put(obj);
             }
             JSONObject json = new JSONObject();
-            json.put("entries", arr);
+            json.put("e", arr);
             entries = json.toString();
         } catch (JSONException e) {
             throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
