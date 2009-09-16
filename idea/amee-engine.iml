@@ -42,8 +42,6 @@
       <sourceFolder url="file://$MODULE_DIR$/../server/amee-engine/conf" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../server/amee-engine/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../server/amee-engine/src/main/resources" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../server/amee-engine/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../server/amee-engine/src/test/resources" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/../server/amee-engine/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -110,7 +108,6 @@
     <orderEntry type="library" exported="" name="Maven: commons-httpclient:commons-httpclient:3.1-rc1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.apache.abdera:abdera-extensions-main:0.4.0-incubating" level="project" />
     <orderEntry type="module" module-name="amee-admin" exported="" />
-    <orderEntry type="module" module-name="amee-gdata" exported="" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.fileupload:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: tanukisoft:wrapper:3.2.3" level="project" />
     <orderEntry type="library" exported="" name="Maven: commons-cli:commons-cli:1.1" level="project" />

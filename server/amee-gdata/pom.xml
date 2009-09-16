@@ -14,6 +14,23 @@
    <name>amee-gdata</name>
 
    <dependencies>
+        <!-- Internal Dependencies. -->
+        <dependency>
+            <groupId>com.amee</groupId>
+            <artifactId>amee-domain</artifactId>
+            <version>${amee.version}</version>
+        </dependency>
+       <dependency>
+           <groupId>com.amee</groupId>
+           <artifactId>amee-service</artifactId>
+           <version>${amee.version}</version>
+       </dependency>
+       <dependency>
+           <groupId>com.amee</groupId>
+           <artifactId>amee-engine</artifactId>
+           <version>${amee.version}</version>
+       </dependency>
+       <!-- External Dependencies. -->
        <dependency>
            <groupId>ant</groupId>
            <artifactId>ant</artifactId>
@@ -63,7 +80,6 @@
           <groupId>com.ibm.icu</groupId>
           <artifactId>icu4j</artifactId>
           <version>4.0.1</version>
-          <scope>runtime</scope>
       </dependency>
        <dependency>
            <groupId>google</groupId>
