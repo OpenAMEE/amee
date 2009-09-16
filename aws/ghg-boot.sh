@@ -5,7 +5,7 @@ sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install -y build-essential 
 
 # Install Ruby
-sudo apt-get install -y ruby1.8-dev ruby1.8 ri1.8 rdoc1.8 irb1.8 libreadline-ruby1.8 libruby1.8 libopenssl-ruby
+sudo apt-get install -y ruby1.8-dev ruby1.8 ri1.8 rdoc1.8 irb1.8 libreadline-ruby1.8 libruby1.8 libopenssl-ruby git-core
 sudo ln -s /usr/bin/ruby1.8 /usr/bin/ruby
 sudo ln -s /usr/bin/ri1.8 /usr/bin/ri
 sudo ln -s /usr/bin/rdoc1.8 /usr/bin/rdoc
