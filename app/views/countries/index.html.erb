@@ -1,0 +1,42 @@
+<script type='text/javascript' src='http://www.google.com/jsapi'></script>
+<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAW_tqT0xj2IdAv-D6n9p4TBSJ96pU6mbroTsW1oFFdHcOPyoZbBQyCgZgbQ0-kEtwKqxvSKAhggtGiw' 
+  type='text/javascript'></script>
+
+<script type='text/javascript'>
+  google.load('visualization', '1', {packages:['geomap']});
+  google.setOnLoadCallback(launch);
+  
+  function launch () {
+    drawGlobalMap();
+  };
+    
+  var drawGlobalMap = function () {
+    var data = new google.visualization.DataTable(<%= @ww_map_data %>);
+
+    var options = {};
+    options['dataMode'] = 'regions';
+    options['width'] = 950;
+    options['colors'] = [0x8DD9D6,0x71D9D5,0x41B2AF,0x157470];
+    options['showLegend'] = false;
+
+    var container = document.getElementById('ww_map_canvas');
+    var geomap = new google.visualization.GeoMap(container);
+    geomap.draw(data, options);    
+    
+    google.visualization.events.addListener(geomap, "regionClick", function (e) {
+      window.location = "/countries/" + e.region;
+    });    
+  };
+  
+</script>
+
+<div>
+  <h1>Emissions (t<%= co2 %>e) by Country</h1>
+  
+  <div id="breadcrumb">
+    <%= link_to "Dashboard", "/"%> &raquo; Countries
+  </div>
+  
+  <div id="ww_map_canvas">
+  </div>
+</div>

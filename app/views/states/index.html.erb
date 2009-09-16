@@ -1,0 +1,55 @@
+<script type='text/javascript' src='http://www.google.com/jsapi'></script>
+<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAW_tqT0xj2IdAv-D6n9p4TBSJ96pU6mbroTsW1oFFdHcOPyoZbBQyCgZgbQ0-kEtwKqxvSKAhggtGiw' 
+  type='text/javascript'></script>
+
+<script type='text/javascript'>
+  google.load('visualization', '1', {packages:['table', 'geomap']});
+  google.setOnLoadCallback(launch);
+  
+  function launch() {
+    drawTable();
+    drawUSMap();
+  }
+  
+  function drawTable() {        
+    var data = new google.visualization.DataTable(<%= @us_data %>);
+    
+    var table = new google.visualization.Table(document.getElementById('us_data'));
+    table.draw(data, {showRowNumber: true, width: 450});
+    
+    google.visualization.events.addListener(table, "select", function (e) {
+      var s = table.getSelection();
+      if (s) {
+        var dcName = data.getValue(s[0].row, 0);
+        window.location = "/states/show/" + dcName;
+      }
+    });
+  }
+  
+  var drawUSMap = function () {
+    var data = new google.visualization.DataTable(<%= @us_map_data %>);
+
+    var options = {};
+    options['region'] = 'US';
+    options['colors'] = [0x8DD9D6,0x71D9D5,0x41B2AF,0x157470];
+    options['dataMode'] = 'markers';
+    options['width'] = 450;
+
+    var container = document.getElementById('us_map_canvas');
+    var geomap = new google.visualization.GeoMap(container);
+    geomap.draw(data, options);    
+  };
+  
+</script>
+
+<h1>
+  US State Data
+</h1>
+<div id="breadcrumb">
+  <%= link_to "Dashboard", "/"%> &raquo; States
+</div>
+
+<div id="states-wrapper">
+  <div id="us_map_canvas" class="float-right"></div>
+  <div id='us_data' style="width: 450px;"></div>
+</div>
