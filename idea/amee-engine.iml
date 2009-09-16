@@ -42,8 +42,6 @@
       <sourceFolder url="file://$MODULE_DIR$/../server/amee-engine/conf" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../server/amee-engine/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../server/amee-engine/src/main/resources" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../server/amee-engine/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../server/amee-engine/src/test/resources" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/../server/amee-engine/target" />
     </content>
     <orderEntry type="inheritedJdk" />
