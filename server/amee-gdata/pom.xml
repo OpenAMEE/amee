@@ -2,75 +2,92 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/maven-v4_0_0.xsd">
-   <modelVersion>4.0.0</modelVersion>
-   <parent>
-       <groupId>com.amee</groupId>
-       <artifactId>server</artifactId>
-       <version>${amee.version}</version>
-   </parent>
-   <artifactId>amee-gdata</artifactId>
-   <packaging>jar</packaging>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.amee</groupId>
+        <artifactId>server</artifactId>
+        <version>${amee.version}</version>
+    </parent>
+    <artifactId>amee-gdata</artifactId>
+    <packaging>jar</packaging>
 
-   <name>amee-gdata</name>
+    <name>amee-gdata</name>
 
-   <dependencies>
-       <dependency>
-           <groupId>ant</groupId>
-           <artifactId>ant</artifactId>
-           <version>1.6</version>
-           <scope>runtime</scope>
-       </dependency>
-       <dependency>
-           <groupId>jetty</groupId>
-           <artifactId>jsp-api</artifactId>
-           <version>2.1-6.0.2</version>
-           <scope>runtime</scope>
-       </dependency>
+    <dependencies>
+        <!-- Internal Dependencies -->
+        <dependency>
+            <groupId>com.amee</groupId>
+            <artifactId>amee-domain</artifactId>
+            <version>${amee.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amee</groupId>
+            <artifactId>amee-service</artifactId>
+            <version>${amee.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amee</groupId>
+            <artifactId>amee-engine</artifactId>
+            <version>${amee.version}</version>
+        </dependency>
+        <!-- External Dependencies -->
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.6</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>jetty</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.1-6.0.2</version>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>jetty</groupId>
             <artifactId>jsp</artifactId>
             <version>2.1-6.0.2</version>
             <scope>runtime</scope>
         </dependency>
-       <dependency>
-           <groupId>javax.servlet</groupId>
-           <artifactId>servlet-api</artifactId>
-           <version>2.5</version>
-           <scope>runtime</scope>
-       </dependency>
-       <dependency>
-           <groupId>javax.servlet</groupId>
-           <artifactId>servlet</artifactId>
-           <version>2.5</version>
-           <scope>runtime</scope>
-       </dependency>
-       <dependency>
-           <groupId>google</groupId>
-           <artifactId>visualization-datasource</artifactId>
-           <version>1.0</version>
-       </dependency>
-       <dependency>
-           <groupId>google</groupId>
-           <artifactId>gdata-core</artifactId>
-           <version>1.0</version>
-       </dependency>
-       <dependency>
-          <groupId>org.json</groupId>
-          <artifactId>org.json</artifactId>
-          <version>${org.json.version}</version>
-      </dependency>
-      <dependency>
-          <groupId>com.ibm.icu</groupId>
-          <artifactId>icu4j</artifactId>
-          <version>4.0.1</version>
-          <scope>runtime</scope>
-      </dependency>
-       <dependency>
-           <groupId>google</groupId>
-           <artifactId>google-collect</artifactId>
-           <version>1.0-rc1</version>
-           <scope>runtime</scope>
-       </dependency>
-   </dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet</artifactId>
+            <version>2.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>google</groupId>
+            <artifactId>visualization-datasource</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>google</groupId>
+            <artifactId>gdata-core</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>org.json</artifactId>
+            <version>${org.json.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>4.0.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>google</groupId>
+            <artifactId>google-collect</artifactId>
+            <version>1.0-rc1</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
 
 </project>
