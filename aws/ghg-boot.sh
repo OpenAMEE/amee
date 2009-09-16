@@ -26,3 +26,8 @@ sudo gem install merb-core merb-action-args merb-assets merb-helpers merb-mailer
 
 # Make deployment dir
 sudo mkdir -p /var/www/apps
+
+# How to copy private key to ami?
+#scp -i  ~/.amee-ec2/id_rsa-gsg-keypair ~/.amee-ec2/id_rsa-gsg-keypair  root@ec2-67-202-28-200.compute-1.amazonaws.com:/root/.ssh/id_rsa id_rsa-gsg-keypair
+
+# Need to change dependecies.rb: merb_gems_version = "1.0.12"

@@ -8,6 +8,8 @@ ec2-run-instances --user-data-file ghg-boot.sh --key amee-gsg-keypair ami-ed46a7
 
 ec2-authorize default -p 22
 
+# Notes #
+
 # Connect with for Canonical AMIs
 # ssh -i ~/dev/aws/id_rsa-gsg-keypair ubuntu@$HOST
 
