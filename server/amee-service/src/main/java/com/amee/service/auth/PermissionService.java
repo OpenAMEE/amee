@@ -36,8 +36,6 @@ import java.util.*;
 @Service
 public class PermissionService {
 
-    private final Log log = LogFactory.getLog(getClass());
-
     /**
      * Defines which 'principles' (keys) can relate to which 'entities' (values).
      */
