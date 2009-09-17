@@ -163,7 +163,7 @@ def group_user_migration
       group_id = rs.getInt("GROUP_ID")
       user_id = rs.getInt("USER_ID")
       user_uid = rs.getString("USER_UID")
-      environment_id = rs.getInt("ENVIRONMENT_ID)
+      environment_id = rs.getInt("ENVIRONMENT_ID")
       uid = JM::UidGen.getUid()
       count = count + stmt2.executeUpdate("INSERT INTO GROUP_PRINCIPLE (UID, ENVIRONMENT_ID, STATUS, GROUP_ID, PRINCIPLE_ID, PRINCIPLE_UID, PRINCIPLE_TYPE, CREATED, MODIFIED) VALUES ('#{uid}', #{environment_id}, 1, #{group_id}, #{user_id}, '#{user_uid}', 'USR', now(), now())")
     end
