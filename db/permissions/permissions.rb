@@ -25,11 +25,20 @@
 # -p, --password [password]:
 #    the login password  
 #
+
 require 'java'
+
+# Dev environment
 require '../../server/amee-domain/target/amee-domain-2.1.jar'
 require '/Development/repository/mysql/mysql-connector-java/5.1.6/mysql-connector-java-5.1.6.jar'
 require '/Development/repository/commons-logging/commons-logging/1.1/commons-logging-1.1.jar'
 require '/Development/repository/org/jscience/jscience/4.3.1/jscience-4.3.1.jar'
+
+# Deploy environment
+#require '../../lib/amee-domain-2.1.jar'
+#require '../../lib/mysql-connector-java.jar'
+#require '../../lib/commons-logging.jar'
+#require '../../lib/jscience.jar'
 
 require 'getoptlong'
 require 'rdoc/usage'
