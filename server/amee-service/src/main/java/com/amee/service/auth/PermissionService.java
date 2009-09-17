@@ -120,7 +120,7 @@ public class PermissionService {
     }
 
     public void trashPermissionsForEntity(IAMEEEntityReference entity) {
-        dao.t   rashPermissionsForEntity(entity);
+        dao.trashPermissionsForEntity(entity);
     }
 
     private void addPrincipleAndEntity(ObjectType principle, ObjectType entity) {
