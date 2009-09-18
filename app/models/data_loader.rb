@@ -47,7 +47,8 @@ class DataLoader
   
   def extract_time s
     s =~ /\d{4}_\d{2}/
-    Time.parse $&.sub("_", "-")
+    s = $&.sub("_", "-")
+    Time.parse "#{s}-01"
   end
   
   def convert_val name, val
