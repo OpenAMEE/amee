@@ -22,6 +22,7 @@
 package com.amee.domain;
 
 import com.amee.domain.auth.Permission;
+import com.amee.domain.auth.AccessSpecification;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -83,6 +84,12 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
      */
     @Transient
     private List<Permission> permissions;
+
+    /**
+     * A transient AccessSpecification 
+     */
+    @Transient
+    private AccessSpecification accessSpecification;
 
     /**
      * Default constructor. Set the uid property with a newly generated value.
@@ -328,7 +335,8 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
      * @param principle to match against
      * @return list of matching Permissions
      */
-    public List<Permission> getPermissionsForPrinciple(IAMEEEntityReference principle) {
+    // TODO: Doesn't seem to be required?
+    private List<Permission> getPermissionsForPrinciple(IAMEEEntityReference principle) {
         List<Permission> permissions = new ArrayList<Permission>();
         for (Permission permission : getPermissions()) {
             if (permission.getPrincipleReference().equals(principle)) {
@@ -344,7 +352,8 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
      * @param entity to match against
      * @return list of matching Permissions
      */
-    public List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
+    // TODO: Doesn't seem to be required?
+    private List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
         List<Permission> permissions = new ArrayList<Permission>();
         for (Permission permission : getPermissions()) {
             if (permission.getEntityReference().equals(entity)) {
@@ -369,5 +378,24 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
             }
         }
         return permissions;
+    }
+
+    /**
+     * Returns the transient AccessSpecification for this entity. This will only be present if
+     * an AccessSpecification for this entity has been created in the current thread.
+     *
+     * @return the AccessSpecification for this entity in the current thread
+     */
+    public AccessSpecification getAccessSpecification() {
+        return accessSpecification;
+    }
+
+    /**
+     * Sets the AccessSpecification for this entity.
+     *
+     * @param accessSpecification for this entity
+     */
+    public void setAccessSpecification(AccessSpecification accessSpecification) {
+        this.accessSpecification = accessSpecification;
     }
 }

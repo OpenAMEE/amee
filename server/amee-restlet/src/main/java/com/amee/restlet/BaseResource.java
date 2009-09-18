@@ -4,10 +4,11 @@ import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.APIVersion;
 import com.amee.domain.Pager;
 import com.amee.domain.PagerSetType;
-import com.amee.domain.site.ISite;
+import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.SortOrder;
+import com.amee.domain.site.ISite;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.APIFault;
 import com.amee.restlet.utils.HeaderUtils;
@@ -29,7 +30,6 @@ import org.restlet.resource.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -155,10 +155,12 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         values.put("path", getRequest().getResourceRef().getPath());
         // values below are mirrored in EngineStatusFilter
         values.put("activeUser", ThreadBeanHolder.get("activeUser"));
-        // addItemValue enums
+        // add enums
         values.put("SortOrder", getEnumForTemplate(SortOrder.class));
-        // addItemValue request params
+        // add request params
         values.put("Parameters", getRequest().getResourceRef().getQueryAsForm().getValuesMap());
+        // add PermissionEntry for constants
+        values.put("PermissionEntry", getStaticsForTemplate(PermissionEntry.class));
         return values;
     }
 
@@ -168,6 +170,18 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
             BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
             TemplateHashModel enumModels = wrapper.getEnumModels();
             result = (TemplateHashModel) enumModels.get(clazz.getName());
+        } catch (TemplateModelException e) {
+            // swallow
+        }
+        return result;
+    }
+
+    public TemplateHashModel getStaticsForTemplate(Class clazz) {
+        TemplateHashModel result = null;
+        try {
+            BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+            TemplateHashModel staticModels = wrapper.getStaticModels();
+            result = (TemplateHashModel) staticModels.get(clazz.getName());
         } catch (TemplateModelException e) {
             // swallow
         }

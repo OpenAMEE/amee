@@ -29,12 +29,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Associates permission entries with an entity to specify requested access rights.
+ * Associates PermissionEntries with an AMEEEntity to specify desired and actual access rights.
  */
 public class AccessSpecification implements Serializable {
 
     private AMEEEntity entity;
-    private Set<PermissionEntry> entries = new HashSet<PermissionEntry>();
+    private Set<PermissionEntry> desired = new HashSet<PermissionEntry>();
+    private Set<PermissionEntry> actual = new HashSet<PermissionEntry>();
 
     private AccessSpecification() {
         super();
@@ -43,23 +44,33 @@ public class AccessSpecification implements Serializable {
     public AccessSpecification(AMEEEntity entity) {
         this();
         this.entity = entity;
+        entity.setAccessSpecification(this);
     }
 
-    public AccessSpecification(AMEEEntity entity, PermissionEntry... entries) {
+    public AccessSpecification(AMEEEntity entity, PermissionEntry... desired) {
         this(entity);
-        CollectionUtils.addAll(this.entries, entries);
+        CollectionUtils.addAll(this.desired, desired);
     }
 
-    public AccessSpecification(AMEEEntity entity, Set<PermissionEntry> entries) {
+    public AccessSpecification(AMEEEntity entity, Set<PermissionEntry> desired) {
         this(entity);
-        this.entries.addAll(entries);
+        this.desired.addAll(desired);
     }
 
     public AMEEEntity getEntity() {
         return entity;
     }
 
-    public Set<PermissionEntry> getEntries() {
-        return entries;
+    public Set<PermissionEntry> getDesired() {
+        return desired;
+    }
+
+    public Set<PermissionEntry> getActual() {
+        return actual;
+    }
+
+    public void setActual(Set<PermissionEntry> actual) {
+        this.actual.clear();
+        this.actual.addAll(actual);
     }
 }

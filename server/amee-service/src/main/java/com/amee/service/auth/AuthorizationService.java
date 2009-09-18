@@ -71,6 +71,7 @@ public class AuthorizationService {
         Set<PermissionEntry> allEntries = new HashSet<PermissionEntry>();
 
         // Super-users can do anything. Stop here.
+        // TODO: Jumping out here means accessSpecification.actual will not be populated.
         if (isSuperUser(authorizationContext.getPrinciples())) {
             log.debug("isAuthorized() - ALLOW (super-user)");
             return true;
@@ -96,6 +97,10 @@ public class AuthorizationService {
 
             // Merge PermissionEntries for current entity with inherited PermissionEntries.
             mergePermissionEntries(allEntries, entityEntries);
+
+            // Update the AccessSpecification with the actual PermissionEntries for the
+            // current principles related to the current entity.
+            accessSpecification.setActual(allEntries);
 
             // Owner can do anything.
             if (allEntries.contains(PermissionEntry.OWN)) {
@@ -165,8 +170,8 @@ public class AuthorizationService {
     protected boolean isAuthorized(AccessSpecification accessSpecification, Collection<PermissionEntry> principleEntries) {
         // Default to not authorized.
         Boolean authorized = false;
-        // Iterate over PermissionEntries specified for entity.
-        for (PermissionEntry pe1 : accessSpecification.getEntries()) {
+        // Iterate over the desired PermissionEntries specified for the entity.
+        for (PermissionEntry pe1 : accessSpecification.getDesired()) {
             // Default to not authorized.
             authorized = false;
             // Iterate over PermissionEntries associated with current principles.

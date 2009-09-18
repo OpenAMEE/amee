@@ -48,7 +48,7 @@ public abstract class AuthorizeResource extends BaseResource {
     private GroupService groupService;
 
     /**
-     * Overrides Resource.handleGet to enforce authorization for GET requests. 
+     * Overrides Resource.handleGet to enforce authorization for GET requests.
      * Calls hasPermissions with the AccessSpecifications from getGetAccessSpecifications. If
      * hasPermissions returns true (authorized) then doGet is called, otherwise notAuthorized is
      * called.
@@ -263,12 +263,12 @@ public abstract class AuthorizeResource extends BaseResource {
      * Updates the last AccessSpecification in the supplied list of AccessSpecifications with the PermissionEntry.
      *
      * @param specifications list of AccessSpecifications, of which the last will be updated.
-     * @param entry to add to last AccessSpecification
+     * @param entry          to add to last AccessSpecification
      * @return the list of AccessSpecifications
      */
     public List<AccessSpecification> updateLastAccessSpecificationWithPermissionEntry(List<AccessSpecification> specifications, PermissionEntry entry) {
         if (!specifications.isEmpty()) {
-            specifications.get(specifications.size() - 1).getEntries().add(entry);
+            specifications.get(specifications.size() - 1).getDesired().add(entry);
         }
         return specifications;
     }
