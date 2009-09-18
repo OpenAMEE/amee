@@ -7,6 +7,8 @@ source ec2_credentials.sh
 ec2-run-instances --user-data-file ghg-boot.sh --key amee-gsg-keypair ami-ed46a784
 
 #ec2-authorize default -p 22
+#ec2-authorize default -p 81
+#ec2-authorize default -p 80
 
 # Notes #
 
