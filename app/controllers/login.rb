@@ -9,7 +9,7 @@ class Login < Merb::Controller
   end
   
   def login
-    if params[:password].downcase == "password"
+    if params[:password].downcase == "lithium"
       session["username"] = params[:username]
       redirect "/"
     else 
