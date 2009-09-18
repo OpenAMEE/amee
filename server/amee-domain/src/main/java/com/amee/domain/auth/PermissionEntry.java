@@ -32,7 +32,7 @@ import java.io.Serializable;
  * is private.
  * <p/>
  * PermissionEntry instances are considered equal if all the properties are identical. This allows
- * PermissionEntries to usefully be placed in a Set where.
+ * PermissionEntries to usefully be placed in Sets.
  * <p/>
  * PermissionEntries are intended to precisely specify something that a principle can do with
  * an entity, such as modify it or not delete it.

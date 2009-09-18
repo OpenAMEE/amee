@@ -38,22 +38,22 @@
             <td>${iv.itemValueDefinition.valueDefinition.valueType}</td>
             <td>${iv.value}</td>
             <td>
-            <#if browser.dataItemActions.allowView><a href='${basePath}/${iv.displayPath}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a></#if>
+            <a href='${basePath}/${iv.displayPath}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
             </td>
         </tr>
         </#list>
     </table>
 </p>
 
-<#if browser.dataItemActions.allowModify>
-<h2>Update Data Item</h2>
-<p>
-    <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
-        Name: <input name='name' value='${dataItem.name}' type='text' size='30' style="margin-left:25px"/><br/>
-        Path: <input name='path' value='${dataItem.path}' type='text' size='30'style="margin-left:35px" /><br/>
-        <input type='submit' value='Update'/>
-    </form>
-</p>
+<#if canModify(dataItem)>
+    <h2>Update Data Item</h2>
+    <p>
+        <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+            Name: <input name='name' value='${dataItem.name}' type='text' size='30' style="margin-left:25px"/><br/>
+            Path: <input name='path' value='${dataItem.path}' type='text' size='30'style="margin-left:35px" /><br/>
+            <input type='submit' value='Update'/>
+        </form>
+    </p>
 </#if>
 
 <#include '/includes/after_content.ftl'>
