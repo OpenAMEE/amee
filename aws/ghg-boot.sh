@@ -22,7 +22,7 @@ cd ..
 rm -rf rubygems-1.3.4
 
 # Install Merb and other dependencies
-sudo gem install merb-core merb-action-args merb-assets merb-helpers merb-mailer merb-param-protection merb-exceptions fastercsv ferret
+sudo gem install merb-core merb-action-args merb-assets merb-helpers merb-mailer merb-param-protection merb-exceptions fastercsv ferret mongrel
 
 # Make deployment dir
 sudo mkdir -p /var/www/apps
