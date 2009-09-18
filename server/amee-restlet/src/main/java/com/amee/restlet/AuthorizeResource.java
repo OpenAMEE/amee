@@ -34,6 +34,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An abstract base Resource class providing authentication functionality. Sub-classes
+ * must, at least, implement getEntities. Sub-classes are expected to implement doGet, doAccept, doStore,
+ * doRemove as required. Other methods can be overriden for further custom behaviour.
+ */
 public abstract class AuthorizeResource extends BaseResource {
 
     @Autowired
@@ -42,11 +47,17 @@ public abstract class AuthorizeResource extends BaseResource {
     @Autowired
     private GroupService groupService;
 
+    /**
+     * Overrides Resource.handleGet to enforce authorization for GET requests. 
+     * Calls hasPermissions with the AccessSpecifications from getGetAccessSpecifications. If
+     * hasPermissions returns true (authorized) then doGet is called, otherwise notAuthorized is
+     * called.
+     */
     @Override
     public void handleGet() {
         log.debug("handleGet()");
         if (isAvailable()) {
-            if (hasPermissions(getGetAccessSpecifications())) {
+            if (isAuthorized(getGetAccessSpecifications())) {
                 doGet();
             } else {
                 notAuthorized();
@@ -57,9 +68,11 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     /**
-     * Get the AccessSpecifications for getting a resource.
+     * Get the AccessSpecifications for GET requests. Creates an AccessSpecification for each entity
+     * from getEntities with VIEW as the PermissionEntry. This specifies that principles must have VIEW permissions
+     * for all the entities.
      *
-     * @return AccessSpecifications for getting a resource
+     * @return AccessSpecifications for GET requests
      */
     public List<AccessSpecification> getGetAccessSpecifications() {
         List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
@@ -69,15 +82,26 @@ public abstract class AuthorizeResource extends BaseResource {
         return accessSpecifications;
     }
 
+    /**
+     * Handles a GET request. This is only called if the request is authorized. The default
+     * implementation is to call handleGet in the super-class. The intention is for sub-classes
+     * to override and provide their own GET handling implementation, if required.
+     */
     public void doGet() {
         super.handleGet();
     }
 
+    /**
+     * Overrides Resource.acceptRepresentation to enforce authorization for POST requests.
+     * Calls hasPermissions with the AccessSpecifications from getAcceptAccessSpecifications. If
+     * hasPermissions returns true (authorized) then doAccept is called, otherwise notAuthorized is
+     * called.
+     */
     @Override
     public void acceptRepresentation(Representation entity) throws ResourceException {
         log.debug("acceptRepresentation()");
         if (isAvailable()) {
-            if (hasPermissions(getAcceptAccessSpecifications())) {
+            if (isAuthorized(getAcceptAccessSpecifications())) {
                 doAccept(entity);
             } else {
                 notAuthorized();
@@ -88,23 +112,38 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     /**
-     * Get the AccessSpecifications for accepting a resource.
+     * Get the AccessSpecifications for POST requests. Updates the last entry from getGetAccessSpecifications with
+     * the CREATE PermissionEntry. This specifies that principles must have VIEW permissions
+     * for all the entities and VIEW & CREATE for the last entity.
      *
-     * @return AccessSpecifications for accepting a resource
+     * @return AccessSpecifications for POST requests
      */
     public List<AccessSpecification> getAcceptAccessSpecifications() {
         return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), PermissionEntry.CREATE);
     }
 
+    /**
+     * Handles a POST request. This is only called if the request is authorized. The default
+     * implementation is to call doAcceptOrStore. The intention is for sub-classes
+     * to override and provide their own POST handling implementation, if required.
+     *
+     * @param entity representation
+     */
     public void doAccept(Representation entity) {
         doAcceptOrStore(entity);
     }
 
+    /**
+     * Overrides Resource.storeRepresentation to enforce authorization for PUT requests.
+     * Calls hasPermissions with the AccessSpecifications from getStoreAccessSpecifications. If
+     * hasPermissions returns true (authorized) then doStore is called, otherwise notAuthorized is
+     * called.
+     */
     @Override
     public void storeRepresentation(Representation entity) throws ResourceException {
         log.debug("storeRepresentation()");
         if (isAvailable()) {
-            if (hasPermissions(getStoreAccessSpecifications())) {
+            if (isAuthorized(getStoreAccessSpecifications())) {
                 doStore(entity);
             } else {
                 notAuthorized();
@@ -115,27 +154,49 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     /**
-     * Get the AccessSpecifications for storing a resource.
+     * Get the AccessSpecifications for PUT requests. Updates the last entry from getGetAccessSpecifications with
+     * the MODIFY PermissionEntry. This specifies that principles must have VIEW permissions
+     * for all the entities and VIEW & MODIFY for the last entity.
      *
-     * @return AccessSpecifications for storing a resource
+     * @return AccessSpecifications for PUT requests
      */
     public List<AccessSpecification> getStoreAccessSpecifications() {
         return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), PermissionEntry.MODIFY);
     }
 
+    /**
+     * Handles a PUT request. This is only called if the request is authorized. The default
+     * implementation calls doAcceptOrStore. The intention is for sub-classes
+     * to override and provide their own PUT handling implementation, if required.
+     *
+     * @param entity representation
+     */
     public void doStore(Representation entity) {
         doAcceptOrStore(entity);
     }
 
+    /**
+     * Handles a POST or PUT request. This is only called if the request is authorized. The default
+     * implementation throws UnsupportedOperationException. The intention is for sub-classes
+     * to override and provide their own GET handling implementation, if required.
+     *
+     * @param entity representation
+     */
     public void doAcceptOrStore(Representation entity) {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Overrides Resource.removeRepresentations to enforce authorization for DELETE requests.
+     * Calls hasPermissions with the AccessSpecifications from getRemoveAccessSpecifications. If
+     * hasPermissions returns true (authorized) then doRemove is called, otherwise notAuthorized is
+     * called.
+     */
     @Override
     public void removeRepresentations() throws ResourceException {
         log.debug("removeRepresentations()");
         if (isAvailable()) {
-            if (hasPermissions(getRemoveAccessSpecifications())) {
+            if (isAuthorized(getRemoveAccessSpecifications())) {
                 doRemove();
             } else {
                 notAuthorized();
@@ -146,36 +207,69 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     /**
-     * Get the AccessSpecifications for removing a resource.
+     * Get the AccessSpecifications for DELETE requests. Updates the last entry from getGetAccessSpecifications with
+     * the DELETE PermissionEntry. This specifies that principles must have VIEW permissions
+     * for all the entities and VIEW & DELETE for the last entity.
      *
-     * @return AccessSpecifications for removing a resource
+     * @return AccessSpecifications for DELETE requests
      */
     public List<AccessSpecification> getRemoveAccessSpecifications() {
         return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), PermissionEntry.DELETE);
     }
 
+    /**
+     * Handles a DELETE request. This is only called if the request is authorized. The default
+     * implementation throws UnsupportedOperationException. The intention is for sub-classes
+     * to override and provide their own DELETE handling implementation, if required.
+     */
+    public void doRemove() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Returns true if the request is authorized, otherwise false. AuthorizationService is used to
+     * do the authorization based on the supplied AccessSpecifications and the principles from GetPrinciples.
+     *
+     * @param accessSpecification to use for authorization
+     * @return true if the request is authorized, otherwise false
+     */
+    public boolean isAuthorized(List<AccessSpecification> accessSpecification) {
+        return authorizationService.isAuthorized(
+                new AuthorizationContext(getPrinciples(), accessSpecification));
+    }
+
+    /**
+     * Returns a list of principles involved in authorization. Permissions from these principles will
+     * be compared against AccessSpecifications to determine if a request is authorized.
+     *
+     * @return a list of principles
+     */
+    public List<AMEEEntity> getPrinciples() {
+        List<AMEEEntity> principles = new ArrayList<AMEEEntity>();
+        principles.addAll(groupService.getGroupsForPrinciple(getActiveUser()));
+        principles.add(getActiveUser());
+        return principles;
+    }
+
+    /**
+     * Returns a list of entities required for authorization for the current resource. The list is
+     * in hierarchical order, from general to more specific (e.g., category -> sub-category -> item).
+     *
+     * @return list of entites required for authorization
+     */
+    public abstract List<AMEEEntity> getEntities();
+
+    /**
+     * Updates the last AccessSpecification in the supplied list of AccessSpecifications with the PermissionEntry.
+     *
+     * @param specifications list of AccessSpecifications, of which the last will be updated.
+     * @param entry to add to last AccessSpecification
+     * @return the list of AccessSpecifications
+     */
     public List<AccessSpecification> updateLastAccessSpecificationWithPermissionEntry(List<AccessSpecification> specifications, PermissionEntry entry) {
         if (!specifications.isEmpty()) {
             specifications.get(specifications.size() - 1).getEntries().add(entry);
         }
         return specifications;
     }
-
-    public void doRemove() {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean hasPermissions(List<AccessSpecification> accessSpecification) {
-        return authorizationService.isAuthorized(
-                new AuthorizationContext(getPrinciples(), accessSpecification));
-    }
-
-    public List<AMEEEntity> getPrinciples() {
-        List<AMEEEntity> principles = new ArrayList<AMEEEntity>();
-        principles.add(getActiveUser());
-        principles.addAll(groupService.getGroupsForPrinciple(getActiveUser()));
-        return principles;
-    }
-
-    public abstract List<AMEEEntity> getEntities();
 }
