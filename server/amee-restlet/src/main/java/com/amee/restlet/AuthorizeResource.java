@@ -42,9 +42,6 @@ import java.util.List;
 public abstract class AuthorizeResource extends BaseResource {
 
     @Autowired
-    protected AuthorizationService authorizationService;
-
-    @Autowired
     protected GroupService groupService;
 
     @Autowired
@@ -233,12 +230,13 @@ public abstract class AuthorizeResource extends BaseResource {
      * Returns true if the request is authorized, otherwise false. AuthorizationService is used to
      * do the authorization based on the supplied AccessSpecifications and the principals from GetPrincipals.
      *
-     * @param accessSpecification to use for authorization
+     * @param accessSpecifications to use for authorization
      * @return true if the request is authorized, otherwise false
      */
-    public boolean isAuthorized(List<AccessSpecification> accessSpecification) {
-        return authorizationService.isAuthorized(
-                new AuthorizationContext(getPrincipals(), accessSpecification));
+    public boolean isAuthorized(List<AccessSpecification> accessSpecifications) {
+        authorizationContext.addPrincipals(getPrincipals());
+        authorizationContext.addAccessSpecifications(accessSpecifications);
+        return authorizationContext.isAuthorized();
     }
 
     /**

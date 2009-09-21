@@ -32,9 +32,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.io.Serializable;
 
 @Service
-public class AuthorizationService {
+public class AuthorizationService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 

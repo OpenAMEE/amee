@@ -34,16 +34,22 @@ import java.util.HashSet;
 import org.springframework.stereotype.Service;
 import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * AuthorizationContext encapsulates the 'context' for an authorization request. The context
  * contains three main collections; a list of 'principals', a list of 'entities' and a set of
  * PermissionEntries. These collections are taken into consideration when deciding if a
  * request should be authorized.
+ * <p/>
+ * AuthorizationContext is a Spring bean in the prototype scope and is not considered thread safe.
  */
 @Component
 @Scope("prototype")
 public class AuthorizationContext implements Serializable {
+
+    @Autowired
+    protected AuthorizationService authorizationService;
 
     /**
      * A list of principals which may or may not be authorized for the entities.
@@ -64,34 +70,15 @@ public class AuthorizationContext implements Serializable {
     private Set<PermissionEntry> entries = new HashSet<PermissionEntry>();
 
     /**
+     * Local cache for the result of AuthorizationService.isAuthorized().
+     */
+    private Boolean authorized = null;
+
+    /**
      * Default constructor.
      */
     public AuthorizationContext() {
         super();
-    }
-
-    /**
-     * Construct an AuthorizationContext with the supplied principal, entity and entries.
-     *
-     * @param principal to be authorized
-     * @param accessSpecification
-     */
-    public AuthorizationContext(AMEEEntity principal, AccessSpecification accessSpecification) {
-        this();
-        addPrincipal(principal);
-        addAccessSpecification(accessSpecification);
-    }
-
-    /**
-     * Construct an AuthorizationContext with the supplied principals, entities and entries.
-     *
-     * @param principals to be authorized
-     * @param accessSpecifications
-     */
-    public AuthorizationContext(List<AMEEEntity> principals, List<AccessSpecification> accessSpecifications) {
-        this();
-        addPrincipals(principals);
-        addAccessSpecifications(accessSpecifications);
     }
 
     /**
@@ -120,7 +107,8 @@ public class AuthorizationContext implements Serializable {
      * @param accessSpecification to add
      */
     public void addAccessSpecification(AccessSpecification accessSpecification) {
-        if (accessSpecification == null) throw new IllegalArgumentException("The accessSpecification argument must not be null.");
+        if (accessSpecification == null)
+            throw new IllegalArgumentException("The accessSpecification argument must not be null.");
         getAccessSpecifications().add(accessSpecification);
     }
 
@@ -130,7 +118,8 @@ public class AuthorizationContext implements Serializable {
      * @param accessSpecifications to add
      */
     public void addAccessSpecifications(List<AccessSpecification> accessSpecifications) {
-        if (accessSpecifications == null) throw new IllegalArgumentException("The accessSpecifications argument must not be null.");
+        if (accessSpecifications == null)
+            throw new IllegalArgumentException("The accessSpecifications argument must not be null.");
         getAccessSpecifications().addAll(accessSpecifications);
     }
 
@@ -138,9 +127,23 @@ public class AuthorizationContext implements Serializable {
      * Reset the AuthorizationContext. All collections are cleared.
      */
     public void reset() {
+        authorized = null;
         principals.clear();
         accessSpecifications.clear();
         entries.clear();
+    }
+
+    /**
+     * Returns true of the state of the AuthorizationContext should be considered authorized. Internally uses
+     * AuthorizationService.isAuthorized and caches the result.
+     *
+     * @return true if authorize result is allow, otherwise false if result is deny
+     */
+    public boolean isAuthorized() {
+        if (authorized == null) {
+            authorized = authorizationService.isAuthorized(this);
+        }
+        return authorized;
     }
 
     /**
