@@ -27,6 +27,7 @@ import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
@@ -45,17 +46,17 @@ public class RequestContext {
     private final Log log = LogFactory.getLog(getClass());
     private final Log transactions = LogFactory.getLog("transactions");
 
-    private String username;
-    private String profileUid;
-    private String apiVersion;
-    private String requestPath;
-    private String method;
-    private String requestParameters;
-    private String error;
-    private String form;
-    private String uid;
-    private String label;
-    private String type;
+    private String username = "";
+    private String profileUid = "";
+    private String apiVersion = "";
+    private String requestPath = "";
+    private String method = "";
+    private String requestParameters = "";
+    private String error = "";
+    private String form = "";
+    private String categoryUid = "";
+    private String label = "";
+    private String type = "";
 
     public void setUser(User user) {
         if (user == null)
@@ -65,7 +66,8 @@ public class RequestContext {
     }
 
     public void setProfile(Profile profile) {
-        this.profileUid = profile.getUid();
+        if (profile != null)
+            this.profileUid = profile.getUid();
     }
 
     public void setRequest(Request request) {
@@ -77,7 +79,7 @@ public class RequestContext {
     private String getParameters(Form parmameters) {
         Iterator<Parameter> i = parmameters.iterator();
         if (!i.hasNext())
-            return null;
+            return "";
 
         StringBuilder sb = new StringBuilder();
         for (;;) {
@@ -99,37 +101,38 @@ public class RequestContext {
     }
 
     public void setCategory(DataCategory category) {
-        this.uid = category.getUid();
+        this.categoryUid = category.getUid();
         this.label = category.getDisplayName();
         this.type = category.getObjectType().getName();
     }
 
     public void setDataItem(DataItem item) {
-        this.uid = item.getUid();
+        this.categoryUid = item.getUid();
         this.label = item.getLabel();
         this.type = item.getObjectType().getName();
     }
 
     public void setProfileItem(ProfileItem item) {
-        this.uid = item.getUid();
+        this.categoryUid = item.getUid();
         this.label = item.getDisplayName();
         this.type = item.getObjectType().getName();
     }
 
     public void setItemValue(ItemValue value) {
-        this.uid = value.getUid();
+        this.categoryUid = value.getUid();
         this.label = value.getPath();
         this.type = value.getObjectType().getName();
     }
 
     public void setDrillDown(DataCategory dataCategory) {
-        this.uid = dataCategory.getUid();
+        this.categoryUid = dataCategory.getUid();
         this.label = dataCategory.getDisplayName();
         this.type = "DD";
     }
 
     public void setError(String error) {
-        this.error = error;    
+        if (StringUtils.isNotBlank(error))
+            this.error = error;    
     }
 
     public void setForm(Form form) {
@@ -141,48 +144,24 @@ public class RequestContext {
     }
 
     public void record() {
-        if (uid != null) {
+        if (categoryUid != null) {
             transactions.info(toString());
         }
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-
-        sb.append("username=" + username + "|");
-
-        sb.append("apiVersion=" + apiVersion + "|");
-
-        if (profileUid != null) {
-            sb.append("profile=" + profileUid + "|");
-        }
-
-        sb.append("uid=" + uid + "|");
-
-        sb.append("path=" + requestPath + "|");
-
-        if (type != null) {
-            sb.append("type=" + type + "|");
-        }
-
-        if (label != null) {
-            sb.append("label=" + label + "|");
-        }
-
-        if (requestParameters != null) {
-            sb.append("parameters=" + requestParameters.replace("=","__") + "|");
-        }
-
-        if (form != null) {
-            sb.append("form=" + form + "|");
-        }
-
-        if (error != null) {
-            sb.append("error=" + error + "|");
-        }
-
-        sb.append("method=" + method);
-
+        sb.append(username + "|");
+        sb.append(apiVersion + "|");
+        sb.append(profileUid + "|");
+        sb.append(categoryUid + "|");
+        sb.append(requestPath + "|");
+        sb.append(type + "|");
+        sb.append(label + "|");
+        sb.append(requestParameters.replace("=","__") + "|");
+        sb.append(form + "|");
+        sb.append(error + "|");
+        sb.append(method);
         return sb.toString();
     }
 }
