@@ -330,16 +330,16 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
     }
 
     /**
-     * Returns a list of Permissions associated with the supplied principle.
+     * Returns a list of Permissions associated with the supplied principal.
      *
-     * @param principle to match against
+     * @param principal to match against
      * @return list of matching Permissions
      */
     // TODO: Doesn't seem to be required?
-    private List<Permission> getPermissionsForPrinciple(IAMEEEntityReference principle) {
+    private List<Permission> getPermissionsForPrincipal(IAMEEEntityReference principal) {
         List<Permission> permissions = new ArrayList<Permission>();
         for (Permission permission : getPermissions()) {
-            if (permission.getPrincipleReference().equals(principle)) {
+            if (permission.getPrincipalReference().equals(principal)) {
                 permissions.add(permission);
             }
         }
@@ -364,16 +364,16 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
     }
 
     /**
-     * Fetch all Permissions that match the supplied principle and entity.
+     * Fetch all Permissions that match the supplied principal and entity.
      *
-     * @param principle to match on
+     * @param principal to match on
      * @param entity    to match on
      * @return list of matching permissions
      */
-    public List<Permission> getPermissionsForPrincipleAndEntity(IAMEEEntityReference principle, IAMEEEntityReference entity) {
+    public List<Permission> getPermissionsForPrincipalAndEntity(IAMEEEntityReference principal, IAMEEEntityReference entity) {
         List<Permission> permissions = new ArrayList<Permission>();
         for (Permission permission : getPermissions()) {
-            if (permission.getPrincipleReference().equals(principle) && permission.getEntityReference().equals(entity)) {
+            if (permission.getPrincipalReference().equals(principal) && permission.getEntityReference().equals(entity)) {
                 permissions.add(permission);
             }
         }

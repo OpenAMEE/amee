@@ -17,12 +17,12 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * A Group embodies a community of principles. Principles belong to Groups via GroupPrinciple and can be assigned multiple Roles
+ * A Group embodies a community of principals. Principals belong to Groups via GroupPrincipal and can be assigned multiple Roles
  * applicable within each Group.
  * <p/>
  * A Group belongs to a Environment.
  * <p/>
- * When deleting a Group we need to ensure all relevant GroupPrinciples are also removed.
+ * When deleting a Group we need to ensure all relevant GroupPrincipals are also removed.
  *
  * @author Diggory Briercliffe
  */

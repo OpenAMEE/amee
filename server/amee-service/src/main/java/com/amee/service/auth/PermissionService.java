@@ -26,8 +26,6 @@ import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.ObjectType;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,29 +35,29 @@ import java.util.*;
 public class PermissionService {
 
     /**
-     * Defines which 'principles' (keys) can relate to which 'entities' (values).
+     * Defines which 'principals' (keys) can relate to which 'entities' (values).
      */
-    public final static Map<ObjectType, Set<ObjectType>> PRINCIPLE_ENTITY = new HashMap<ObjectType, Set<ObjectType>>();
+    public final static Map<ObjectType, Set<ObjectType>> PRINCIPAL_ENTITY = new HashMap<ObjectType, Set<ObjectType>>();
 
     /**
-     * Define which principles can relate to which entities.
+     * Define which principals can relate to which entities.
      */
     {
         // Users <--> Entities
-        addPrincipleAndEntity(ObjectType.USR, ObjectType.ENV);
-        addPrincipleAndEntity(ObjectType.USR, ObjectType.PR);
-        addPrincipleAndEntity(ObjectType.USR, ObjectType.DC);
-        addPrincipleAndEntity(ObjectType.USR, ObjectType.PI);
-        addPrincipleAndEntity(ObjectType.USR, ObjectType.DI);
-        addPrincipleAndEntity(ObjectType.USR, ObjectType.IV);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.ENV);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.PR);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.DC);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.PI);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.DI);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.IV);
 
         // Groups <--> Entities
-        addPrincipleAndEntity(ObjectType.GRP, ObjectType.ENV);
-        addPrincipleAndEntity(ObjectType.GRP, ObjectType.PR);
-        addPrincipleAndEntity(ObjectType.GRP, ObjectType.DC);
-        addPrincipleAndEntity(ObjectType.GRP, ObjectType.PI);
-        addPrincipleAndEntity(ObjectType.GRP, ObjectType.DI);
-        addPrincipleAndEntity(ObjectType.GRP, ObjectType.IV);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.ENV);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.PR);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.DC);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.PI);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.DI);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.IV);
     }
 
     @Autowired
@@ -84,38 +82,38 @@ public class PermissionService {
         return null;
     }
 
-    public List<Permission> getPermissionsForPrinciples(Collection<IAMEEEntityReference> principles) {
-        if ((principles == null) || principles.isEmpty()) {
+    public List<Permission> getPermissionsForPrincipals(Collection<IAMEEEntityReference> principals) {
+        if ((principals == null) || principals.isEmpty()) {
             throw new IllegalArgumentException();
         }
         List<Permission> permissions = new ArrayList<Permission>();
-        for (IAMEEEntityReference principle : principles) {
-            permissions.addAll(getPermissionsForPrinciple(principle));
+        for (IAMEEEntityReference principal : principals) {
+            permissions.addAll(getPermissionsForPrincipal(principal));
         }
         return permissions;
     }
 
-    public List<Permission> getPermissionsForPrinciple(IAMEEEntityReference principle) {
-        if ((principle == null) || !isValidPrinciple(principle)) {
+    public List<Permission> getPermissionsForPrincipal(IAMEEEntityReference principal) {
+        if ((principal == null) || !isValidPrincipal(principal)) {
             throw new IllegalArgumentException();
         }
-        return dao.getPermissionsForPrinciple(principle, null);
+        return dao.getPermissionsForPrincipal(principal, null);
     }
 
     /**
-     * Fetch a List of all available Permissions matching the supplied principle and entity.
+     * Fetch a List of all available Permissions matching the supplied principal and entity.
      *
-     * @param principle to match on
+     * @param principal to match on
      * @param entity    to match on
      * @return list of matching permissions
      */
-    public List<Permission> getPermissionsForPrincipleAndEntity(AMEEEntity principle, AMEEEntity entity) {
-        if ((principle == null) || (entity == null) || !isValidPrincipleToEntity(principle, entity)) {
+    public List<Permission> getPermissionsForPrincipalAndEntity(AMEEEntity principal, AMEEEntity entity) {
+        if ((principal == null) || (entity == null) || !isValidPrincipalToEntity(principal, entity)) {
             throw new IllegalArgumentException();
         }
         List<Permission> permissions = new ArrayList<Permission>();
-        permissions.addAll(entity.getPermissionsForPrincipleAndEntity(principle, entity));
-        permissions.addAll(dao.getPermissionsForPrincipleAndEntity(principle, entity));
+        permissions.addAll(entity.getPermissionsForPrincipalAndEntity(principal, entity));
+        permissions.addAll(dao.getPermissionsForPrincipalAndEntity(principal, entity));
         return permissions;
     }
 
@@ -123,23 +121,23 @@ public class PermissionService {
         dao.trashPermissionsForEntity(entity);
     }
 
-    private void addPrincipleAndEntity(ObjectType principle, ObjectType entity) {
-        Set<ObjectType> entities = PRINCIPLE_ENTITY.get(principle);
+    private void addPrincipalAndEntity(ObjectType principal, ObjectType entity) {
+        Set<ObjectType> entities = PRINCIPAL_ENTITY.get(principal);
         if (entities == null) {
             entities = new HashSet<ObjectType>();
-            PRINCIPLE_ENTITY.put(principle, entities);
+            PRINCIPAL_ENTITY.put(principal, entities);
         }
         entities.add(entity);
     }
 
-    public boolean isValidPrinciple(IAMEEEntityReference principle) {
-        if (principle == null) throw new IllegalArgumentException();
-        return PRINCIPLE_ENTITY.keySet().contains(principle.getObjectType());
+    public boolean isValidPrincipal(IAMEEEntityReference principal) {
+        if (principal == null) throw new IllegalArgumentException();
+        return PRINCIPAL_ENTITY.keySet().contains(principal.getObjectType());
     }
 
     public boolean isValidEntity(IAMEEEntityReference entity) {
         if (entity == null) throw new IllegalArgumentException();
-        for (Set<ObjectType> entities : PRINCIPLE_ENTITY.values()) {
+        for (Set<ObjectType> entities : PRINCIPAL_ENTITY.values()) {
             if (entities.contains(entity.getObjectType())) {
                 return true;
             }
@@ -147,9 +145,9 @@ public class PermissionService {
         return false;
     }
 
-    public boolean isValidPrincipleToEntity(IAMEEEntityReference principle, IAMEEEntityReference entity) {
-        if ((principle == null) || (entity == null)) throw new IllegalArgumentException();
-        return isValidPrinciple(principle) &&
-                PRINCIPLE_ENTITY.get(principle.getObjectType()).contains(entity.getObjectType());
+    public boolean isValidPrincipalToEntity(IAMEEEntityReference principal, IAMEEEntityReference entity) {
+        if ((principal == null) || (entity == null)) throw new IllegalArgumentException();
+        return isValidPrincipal(principal) &&
+                PRINCIPAL_ENTITY.get(principal.getObjectType()).contains(entity.getObjectType());
     }
 }

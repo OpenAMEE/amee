@@ -2,7 +2,7 @@ package com.amee.admin.restlet.environment;
 
 import com.amee.domain.APIVersion;
 import com.amee.domain.auth.Group;
-import com.amee.domain.auth.GroupPrinciple;
+import com.amee.domain.auth.GroupPrincipal;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
 import com.amee.service.BaseBrowser;
@@ -43,9 +43,9 @@ public class EnvironmentBrowser extends BaseBrowser {
     private String userIdOrName = null;
     private User user = null;
 
-    // GroupPrinciples
+    // GroupPrincipals
 
-    private GroupPrinciple groupPrinciple = null;
+    private GroupPrincipal groupPrincipal = null;
 
     // Environments
 
@@ -97,13 +97,13 @@ public class EnvironmentBrowser extends BaseBrowser {
         return user;
     }
 
-    // GroupPrinciples
+    // GroupPrincipals
 
-    public GroupPrinciple getGroupPrinciple() {
-        if ((groupPrinciple == null) && (getUser() != null) && (getGroup() != null)) {
-            groupPrinciple = groupService.getGroupPrinciple(group, user);
+    public GroupPrincipal getGroupPrincipal() {
+        if ((groupPrincipal == null) && (getUser() != null) && (getGroup() != null)) {
+            groupPrincipal = groupService.getGroupPrincipal(group, user);
         }
-        return groupPrinciple;
+        return groupPrincipal;
     }
 
     // APIVersion

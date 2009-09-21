@@ -12,51 +12,51 @@ import org.w3c.dom.Element;
 import javax.persistence.*;
 
 /**
- * A GroupPrinciple joins a Group to a principle via an EntityReference.
+ * A GroupPrincipal joins a Group to a principal via an EntityReference.
  *
  * @author Diggory Briercliffe
  */
 @Entity
-@Table(name = "GROUP_PRINCIPLE")
+@Table(name = "GROUP_PRINCIPAL")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class GroupPrinciple extends AMEEEnvironmentEntity implements Comparable {
+public class GroupPrincipal extends AMEEEnvironmentEntity implements Comparable {
 
     /**
-     * The Group that the principle is a member of.
+     * The Group that the principal is a member of.
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "GROUP_ID")
     private Group group;
 
     /**
-     * The principle that is a member of the Group.
+     * The principal that is a member of the Group.
      */
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "entityId", column = @Column(name = "PRINCIPLE_ID")),
-            @AttributeOverride(name = "entityUid", column = @Column(name = "PRINCIPLE_UID")),
-            @AttributeOverride(name = "entityType", column = @Column(name = "PRINCIPLE_TYPE"))})
-    private AMEEEntityReference principleReference = new AMEEEntityReference();
+            @AttributeOverride(name = "entityId", column = @Column(name = "PRINCIPAL_ID")),
+            @AttributeOverride(name = "entityUid", column = @Column(name = "PRINCIPAL_UID")),
+            @AttributeOverride(name = "entityType", column = @Column(name = "PRINCIPAL_TYPE"))})
+    private AMEEEntityReference principalReference = new AMEEEntityReference();
 
-    public GroupPrinciple() {
+    public GroupPrincipal() {
         super();
     }
 
-    public GroupPrinciple(Group group, IAMEEEntityReference principle) {
+    public GroupPrincipal(Group group, IAMEEEntityReference principal) {
         super(group.getEnvironment());
         setGroup(group);
-        setPrincipleReference(new AMEEEntityReference(principle));
+        setPrincipalReference(new AMEEEntityReference(principal));
     }
 
     public String toString() {
-        return "GroupPrinciple_" + getUid();
+        return "GroupPrincipal_" + getUid();
     }
 
     public int compareTo(Object o) throws ClassCastException {
         if (this == o) return 0;
         if (equals(o)) return 0;
-        GroupPrinciple groupPrinciple = (GroupPrinciple) o;
-        return getUid().compareTo(groupPrinciple.getUid());
+        GroupPrincipal groupPrincipal = (GroupPrincipal) o;
+        return getUid().compareTo(groupPrincipal.getUid());
     }
 
     public JSONObject getJSONObject() throws JSONException {
@@ -67,7 +67,7 @@ public class GroupPrinciple extends AMEEEnvironmentEntity implements Comparable 
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
         obj.put("group", getGroup().getIdentityJSONObject());
-        obj.put("principle", getPrincipleReference().getJSONObject());
+        obj.put("principal", getPrincipalReference().getJSONObject());
         if (detailed) {
             obj.put("environment", getEnvironment().getIdentityJSONObject());
             obj.put("created", getCreated());
@@ -85,10 +85,10 @@ public class GroupPrinciple extends AMEEEnvironmentEntity implements Comparable 
     }
 
     public Element getElement(Document document, boolean detailed) {
-        Element element = document.createElement("GroupPrinciple");
+        Element element = document.createElement("GroupPrincipal");
         element.setAttribute("uid", getUid());
         element.appendChild(getGroup().getIdentityElement(document));
-        element.appendChild(getPrincipleReference().getElement(document, "Principle"));
+        element.appendChild(getPrincipalReference().getElement(document, "Principal"));
         if (detailed) {
             element.appendChild(getEnvironment().getIdentityElement(document));
             element.setAttribute("created", getCreated().toString());
@@ -111,13 +111,13 @@ public class GroupPrinciple extends AMEEEnvironmentEntity implements Comparable 
         }
     }
 
-    public AMEEEntityReference getPrincipleReference() {
-        return principleReference;
+    public AMEEEntityReference getPrincipalReference() {
+        return principalReference;
     }
 
-    public void setPrincipleReference(AMEEEntityReference principleReference) {
-        if (principleReference != null) {
-            this.principleReference = principleReference;
+    public void setPrincipalReference(AMEEEntityReference principalReference) {
+        if (principalReference != null) {
+            this.principalReference = principalReference;
         }
     }
 

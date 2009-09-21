@@ -30,19 +30,19 @@ import java.util.List;
 
 /**
  * AuthorizationContext encapsulates the 'context' for an authorization request. The context
- * contains three main collections; a list of 'principles', a list of 'entities' and a set of
+ * contains three main collections; a list of 'principals', a list of 'entities' and a set of
  * PermissionEntries. These collections are taken into consideration when deciding if a
  * request should be authorized.
  */
 public class AuthorizationContext implements Serializable {
 
     /**
-     * A list of principles which may or may not be authorized for the entities.
+     * A list of principals which may or may not be authorized for the entities.
      */
-    private List<AMEEEntity> principles = new ArrayList<AMEEEntity>();
+    private List<AMEEEntity> principals = new ArrayList<AMEEEntity>();
 
     /**
-     * A list of entities over which the principles may or may not have permissions, along with
+     * A list of entities over which the principals may or may not have permissions, along with
      * the requested permission entries.
      */
     private List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
@@ -55,47 +55,47 @@ public class AuthorizationContext implements Serializable {
     }
 
     /**
-     * Construct an AuthorizationContext with the supplied principle, entity and entries.
+     * Construct an AuthorizationContext with the supplied principal, entity and entries.
      *
-     * @param principle
+     * @param principal
      * @param accessSpecification
      */
-    public AuthorizationContext(AMEEEntity principle, AccessSpecification accessSpecification) {
+    public AuthorizationContext(AMEEEntity principal, AccessSpecification accessSpecification) {
         this();
-        addPrinciple(principle);
+        addPrincipal(principal);
         addAccessSpecification(accessSpecification);
     }
 
     /**
-     * Construct an AuthorizationContext with the supplied principles, entities and entries.
+     * Construct an AuthorizationContext with the supplied principals, entities and entries.
      *
-     * @param principles
+     * @param principals
      * @param accessSpecifications
      */
-    public AuthorizationContext(List<AMEEEntity> principles, List<AccessSpecification> accessSpecifications) {
+    public AuthorizationContext(List<AMEEEntity> principals, List<AccessSpecification> accessSpecifications) {
         this();
-        addPrinciples(principles);
+        addPrincipals(principals);
         addAccessSpecifications(accessSpecifications);
     }
 
     /**
-     * Convienience method to add a principle to the principles collection.
+     * Convienience method to add a principal to the principals collection.
      *
-     * @param principle to add
+     * @param principal to add
      */
-    public void addPrinciple(AMEEEntity principle) {
-        if (principle == null) throw new IllegalArgumentException("The principle argument must not be null.");
-        getPrinciples().add(principle);
+    public void addPrincipal(AMEEEntity principal) {
+        if (principal == null) throw new IllegalArgumentException("The principal argument must not be null.");
+        getPrincipals().add(principal);
     }
 
     /**
-     * Convienience method to add a list of principles to the principles collections.
+     * Convienience method to add a list of principals to the principals collections.
      *
-     * @param principles to add
+     * @param principals to add
      */
-    public void addPrinciples(List<AMEEEntity> principles) {
-        if (principles == null) throw new IllegalArgumentException("The principles argument must not be null.");
-        getPrinciples().addAll(principles);
+    public void addPrincipals(List<AMEEEntity> principals) {
+        if (principals == null) throw new IllegalArgumentException("The principals argument must not be null.");
+        getPrincipals().addAll(principals);
     }
 
     /**
@@ -119,12 +119,12 @@ public class AuthorizationContext implements Serializable {
     }
 
     /**
-     * Returns the principles list.
+     * Returns the principals list.
      *
-     * @return principles list.
+     * @return principals list.
      */
-    public List<AMEEEntity> getPrinciples() {
-        return principles;
+    public List<AMEEEntity> getPrincipals() {
+        return principals;
     }
 
     /**

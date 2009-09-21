@@ -3,15 +3,13 @@ package com.amee.admin.restlet.environment.user;
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.Pager;
-import com.amee.domain.environment.Environment;
-import com.amee.domain.auth.GroupPrinciple;
+import com.amee.domain.auth.GroupPrincipal;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.UserType;
 import com.amee.domain.data.LocaleName;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.environment.EnvironmentConstants;
-import com.amee.service.environment.EnvironmentService;
 import com.amee.service.environment.SiteService;
 import com.amee.service.environment.GroupService;
 import org.json.JSONArray;
@@ -136,7 +134,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     @Override
     public void doAccept(Representation entity) {
         User cloneUser;
-        GroupPrinciple newGroupPrinciple;
+        GroupPrincipal newGroupPrincipal;
         Form form = getForm();
         // create new instance if submitted
         if (form.getFirstValue("name") != null) {
@@ -165,9 +163,9 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                     cloneUser = siteService.getUserByUid(
                             environmentBrowser.getEnvironment(), form.getFirstValue("cloneUserUid"));
                     if (cloneUser != null) {
-                        for (GroupPrinciple groupPrinciple : groupService.getGroupPrinciplesForPrinciple(cloneUser)) {
-                            newGroupPrinciple = new GroupPrinciple(groupPrinciple.getGroup(), newUser);
-                            groupService.save(newGroupPrinciple);
+                        for (GroupPrincipal groupPrincipal : groupService.getGroupPrincipalsForPrincipal(cloneUser)) {
+                            newGroupPrincipal = new GroupPrincipal(groupPrincipal.getGroup(), newUser);
+                            groupService.save(newGroupPrincipal);
                         }
                     }
                 } else {

@@ -1,7 +1,6 @@
 package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
-import com.amee.restlet.BaseResource;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.domain.AMEEEntity;
@@ -37,7 +36,7 @@ public class UserGroupResource extends AuthorizeResource {
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (environmentBrowser.getEnvironment() != null) && (environmentBrowser.getUser() != null) && (environmentBrowser.getGroupPrinciple() != null);
+        return super.isValid() && (environmentBrowser.getEnvironment() != null) && (environmentBrowser.getUser() != null) && (environmentBrowser.getGroupPrincipal() != null);
     }
 
     @Override
@@ -60,7 +59,7 @@ public class UserGroupResource extends AuthorizeResource {
         values.put("environment", environmentBrowser.getEnvironment());
         values.put("user", environmentBrowser.getUser());
         values.put("group", environmentBrowser.getGroup());
-        values.put("groupPrinciple", environmentBrowser.getGroupPrinciple());
+        values.put("groupPrincipal", environmentBrowser.getGroupPrincipal());
         return values;
     }
 
@@ -69,7 +68,7 @@ public class UserGroupResource extends AuthorizeResource {
         JSONObject obj = new JSONObject();
         obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
         obj.put("user", environmentBrowser.getUser().getJSONObject());
-        obj.put("groupPrinciple", environmentBrowser.getGroupPrinciple().getJSONObject());
+        obj.put("groupPrincipal", environmentBrowser.getGroupPrincipal().getJSONObject());
         return obj;
     }
 
@@ -78,7 +77,7 @@ public class UserGroupResource extends AuthorizeResource {
         Element element = document.createElement("UserGroupResource");
         element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
         element.appendChild(environmentBrowser.getUser().getIdentityElement(document));
-        element.appendChild(environmentBrowser.getGroupPrinciple().getElement(document));
+        element.appendChild(environmentBrowser.getGroupPrincipal().getElement(document));
         return element;
     }
 
