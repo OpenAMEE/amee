@@ -125,7 +125,7 @@ public class ServiceData {
         setId(PERMISSION_3);
         addPermissionToPrinciple(GROUP_PREMIUM, PERMISSION_3);
         // User can view deprecated data category.
-        PERMISSION_4 = new Permission(USER_STANDARD, DC_DEPRECATED, new PermissionEntry("view", true, AMEEStatus.DEPRECATED));
+        PERMISSION_4 = new Permission(USER_STANDARD, DC_DEPRECATED, new PermissionEntry("v", true, AMEEStatus.DEPRECATED));
         setId(PERMISSION_4);
         addPermissionToPrinciple(USER_STANDARD, PERMISSION_4);
 

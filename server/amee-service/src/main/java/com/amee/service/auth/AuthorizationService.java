@@ -42,9 +42,9 @@ public class AuthorizationService {
     private PermissionService permissionService;
 
     /**
-     * Returns true the supplied AuthorizationContext is considered to be authorized.
+     * Returns true if the supplied AuthorizationContext is considered to be authorized.
      * <p/>
-     * The supplied AuthorizationContext encapsulates a list of principles and a list of AccessSpecification. The
+     * The supplied AuthorizationContext encapsulates a list of principles and a list of AccessSpecifications. The
      * aim is to discover if the principles have the requested access rights to the entities within the AccessSpecification.
      * <p/>
      * The authorization rules are:
@@ -57,7 +57,7 @@ public class AuthorizationService {
      * - The PermissionEntries are inherited down the entity hierarchy.
      * - PermissionEntries for later principle & entity combinations override those that are inherited.
      * - Always authorize if an OWN PermissionEntry is present for an entity (return true).
-     * - Apply isAuthorized(AccessSpecification, Collection<PermissionEntry>)to each AccessSpecification, return false
+     * - Apply isAuthorized(AccessSpecification, Collection<PermissionEntry>) to each AccessSpecification, return false
      * if not authorized.
      * - Return authorized (true) if isAuthorized is passed for each entity. 
      *
@@ -71,6 +71,7 @@ public class AuthorizationService {
         Set<PermissionEntry> allEntries = new HashSet<PermissionEntry>();
 
         // Super-users can do anything. Stop here.
+        // TODO: Jumping out here means accessSpecification.actual will not be populated.
         if (isSuperUser(authorizationContext.getPrinciples())) {
             log.debug("isAuthorized() - ALLOW (super-user)");
             return true;
@@ -96,6 +97,10 @@ public class AuthorizationService {
 
             // Merge PermissionEntries for current entity with inherited PermissionEntries.
             mergePermissionEntries(allEntries, entityEntries);
+
+            // Update the AccessSpecification with the actual PermissionEntries for the
+            // current principles related to the current entity.
+            accessSpecification.setActual(allEntries);
 
             // Owner can do anything.
             if (allEntries.contains(PermissionEntry.OWN)) {
@@ -155,8 +160,8 @@ public class AuthorizationService {
 
     /**
      * Returns true if access is authorized to an entity. The AccessSpecification declares the entity and what
-     * kind of access is desired. The principles PermissionEntry collection declares what kind of access
-     * the principles are allowed for the entity.
+     * kind of access is desired. The PermissionEntry collection declares what kind of access principles are
+     * allowed for the entity.
      *
      * @param accessSpecification specification of access requested to an entity
      * @param principleEntries    PermissionEntries from the principles
@@ -165,8 +170,8 @@ public class AuthorizationService {
     protected boolean isAuthorized(AccessSpecification accessSpecification, Collection<PermissionEntry> principleEntries) {
         // Default to not authorized.
         Boolean authorized = false;
-        // Iterate over PermissionEntries specified for entity.
-        for (PermissionEntry pe1 : accessSpecification.getEntries()) {
+        // Iterate over the desired PermissionEntries specified for the entity.
+        for (PermissionEntry pe1 : accessSpecification.getDesired()) {
             // Default to not authorized.
             authorized = false;
             // Iterate over PermissionEntries associated with current principles.
@@ -178,7 +183,7 @@ public class AuthorizationService {
                 if (pe1.getValue().equals(pe2.getValue()) &&
                         pe2.isAllow() &&
                         (pe2.getStatus().equals(accessSpecification.getEntity().getStatus()))) {
-                    // Authorized, no need to continue so break. Most permission principle PermissionEntry 'wins'.
+                    // Authorized, no need to continue so break. Most permissive principle PermissionEntry 'wins'.
                     authorized = true;
                     break;
                 }

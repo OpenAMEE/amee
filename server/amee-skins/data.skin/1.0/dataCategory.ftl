@@ -22,7 +22,6 @@
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
 
-
     function localeonchange() {
         var form = $('update');
         if ($('localeName')) {
@@ -103,64 +102,65 @@
     </p>
 </#if>
 
-<h2>Update Data Category</h2>
-<p>
+<#if canModify(dataCategory)>
+    <h2>Update Data Category</h2>
+    <p>
 
-
-<form id="update" action='?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
-    <table>
-        <tr>
-           <td>Name:</td>
-           <td colspan="2"><input name='name' value='${dataCategory.name}' type='text' size='30'/></td>
-        </tr>
-        <tr>
-           <td>Path:</td>
-           <td colspan="2"><input name='path' value='${dataCategory.path}' type='text' size='30'/></td>
-        </tr>
-        <tr>
-           <td>Item Definition:</td>
-           <td colspan="2">
-               <select name='itemDefinitionUid'>
-               <option value=''>(No Item Definition)</option>
-               <#list itemDefinitions as id>
-                   <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
-               </#list>
-               </select>
-           </td>
-        </tr>
-        <tr>
-           <td>Deprecated:</td>
-           <td colspan="2">
-            Yes <input type="radio" name="deprecated" value="true"<#if dataCategory.deprecated> checked</#if>/>
-            No <input type="radio" name="deprecated" value="false"<#if !dataCategory.deprecated> checked</#if>/>
-           </td>
-        </tr>
-        <#if dataCategory.localeNames?size != 0>
-            <#list dataCategory.localeNames?keys as locale>
+    <form id="update" action='?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+        <table>
             <tr>
-                <td>Name: [${locale}]</td>
-                <td><input name='name_${locale}' value='${dataCategory.localeNames[locale].name}' type='text' size='30'/></td>
-                <td>Remove: <input type="checkbox" name="remove_name_${locale}"/> </td>
+               <td>Name:</td>
+               <td colspan="2"><input name='name' value='${dataCategory.name}' type='text' size='30'/></td>
             </tr>
-            </#list>
-        </#if>
-        <tr>
-            <td>New Locale Name:</td>
-            <td>
-                <select name='localeName_part' onchange='javascript:localeonchange();'> <br/>
-                <#list availableLocales as locale>
-                    <option value='${locale}'>${locale}</option>
+            <tr>
+               <td>Path:</td>
+               <td colspan="2"><input name='path' value='${dataCategory.path}' type='text' size='30'/></td>
+            </tr>
+            <tr>
+               <td>Item Definition:</td>
+               <td colspan="2">
+                   <select name='itemDefinitionUid'>
+                   <option value=''>(No Item Definition)</option>
+                   <#list itemDefinitions as id>
+                       <option value='${id.uid}'<#if dataCategory.itemDefinition?? && dataCategory.itemDefinition.uid == id.uid> selected</#if>>${id.name}</option>
+                   </#list>
+                   </select>
+               </td>
+            </tr>
+            <tr>
+               <td>Deprecated:</td>
+               <td colspan="2">
+                Yes <input type="radio" name="deprecated" value="true"<#if dataCategory.deprecated> checked</#if>/>
+                No <input type="radio" name="deprecated" value="false"<#if !dataCategory.deprecated> checked</#if>/>
+               </td>
+            </tr>
+            <#if dataCategory.localeNames?size != 0>
+                <#list dataCategory.localeNames?keys as locale>
+                <tr>
+                    <td>Name: [${locale}]</td>
+                    <td><input name='name_${locale}' value='${dataCategory.localeNames[locale].name}' type='text' size='30'/></td>
+                    <td>Remove: <input type="checkbox" name="remove_name_${locale}"/> </td>
+                </tr>
                 </#list>
-                </select>
-                <input name='localeValue_part' type='text' size='30' onchange='javascript:localeonchange();'/><br/>
-            </td>
-        </tr>
-    </table>
-    <input type='submit' value='Update'/>
-</form>
-</p>
+            </#if>
+            <tr>
+                <td>New Locale Name:</td>
+                <td>
+                    <select name='localeName_part' onchange='javascript:localeonchange();'> <br/>
+                    <#list availableLocales as locale>
+                        <option value='${locale}'>${locale}</option>
+                    </#list>
+                    </select>
+                    <input name='localeValue_part' type='text' size='30' onchange='javascript:localeonchange();'/><br/>
+                </td>
+            </tr>
+        </table>
+        <input type='submit' value='Update'/>
+    </form>
+    </p>
+</#if>
 
-<#if !dataCategory.aliasedCategory??>
+<#if canCreate(dataCategory) && !dataCategory.aliasedCategory??>
     <h2>Create</h2>
     <p>
     <form action='${basePath}' method='POST' enctype='application/x-www-form-urlencoded'>
