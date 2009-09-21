@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An abstract base Resource class providing authentication functionality. Sub-classes
@@ -46,6 +47,18 @@ public abstract class AuthorizeResource extends BaseResource {
 
     @Autowired
     protected AuthorizationContext authorizationContext;
+
+    /**
+     * Ensure AuthorizationContext instance is always avilable to templates.
+     *
+     * @return the template map
+     */
+    @Override
+    public Map<String, Object> getTemplateValues() {
+        Map<String, Object> values = super.getTemplateValues();
+        values.put("authorizationContext", authorizationContext);
+        return values;
+    }
 
     /**
      * Overrides Resource.handleGet to enforce authorization for GET requests.

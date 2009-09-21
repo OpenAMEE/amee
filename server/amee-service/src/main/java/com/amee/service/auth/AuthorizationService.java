@@ -34,6 +34,26 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.io.Serializable;
 
+/**
+ * Provides various methods that work with an AuthorizationContext to determine if a request is authorized or not.
+ * <p/>
+ * Each AuthorizationContext encapsulates a list of principals and a list of AccessSpecifications. The
+ * aim is to discover if the principals have the requested access rights to the entities within the AccessSpecification.
+ * <p/>
+ * The authorization rules are:
+ * <p/>
+ * - Super-users are always authorized (return true).
+ * - Always deny access if there are no AccessSpecifications.
+ * - Each AccessSpecification is evaluated in entity hierarchical order (e.g., category -> sub-category -> item).
+ * - Principals are evaluated from broader to narrower scope (e.g., organisation -> department -> individual).
+ * - PermissionEntries are consolidated from all Permissions for each principal & entity combination.
+ * - The PermissionEntries are inherited down the entity hierarchy.
+ * - PermissionEntries for later principal & entity combinations override those that are inherited.
+ * - Always authorize if an OWN PermissionEntry is present for an entity (return true).
+ * - Apply isAuthorized(AccessSpecification, Collection<PermissionEntry>) to each AccessSpecification, return false
+ * if not authorized.
+ * - Return authorized (true) if isAuthorized is passed for each entity.
+ */
 @Service
 public class AuthorizationService implements Serializable {
 
@@ -43,32 +63,22 @@ public class AuthorizationService implements Serializable {
     private PermissionService permissionService;
 
     /**
-     * Returns true if the supplied AuthorizationContext is considered to be authorized.
-     * <p/>
-     * The supplied AuthorizationContext encapsulates a list of principals and a list of AccessSpecifications. The
-     * aim is to discover if the principals have the requested access rights to the entities within the AccessSpecification.
-     * <p/>
-     * The authorization rules are:
-     * <p/>
-     * - Super-users are always authorized (return true).
-     * - Always deny access if there are no AccessSpecifications.
-     * - Each AccessSpecification is evaluated in entity hierarchical order (e.g., category -> sub-category -> item).
-     * - Principals are evaluated from broader to narrower scope (e.g., organisation -> department -> individual).
-     * - PermissionEntries are consolidated from all Permissions for each principal & entity combination.
-     * - The PermissionEntries are inherited down the entity hierarchy.
-     * - PermissionEntries for later principal & entity combinations override those that are inherited.
-     * - Always authorize if an OWN PermissionEntry is present for an entity (return true).
-     * - Apply isAuthorized(AccessSpecification, Collection<PermissionEntry>) to each AccessSpecification, return false
-     * if not authorized.
-     * - Return authorized (true) if isAuthorized is passed for each entity.
+     * Returns true if the supplied AuthorizationContext is considered to be authorized. This method should only
+     * be excuted once for each usage of an AuthorizationContext. The AuthorizationContext.entries collection
+     * is updated based on the result of authenticating the principles for the entities in the AuthorizationContext.
+     *
+     * Conforms to the rules described above.
      *
      * @param authorizationContext to consider for authorization
      * @return true if authorize result is allow, otherwise false if result is deny
      */
     public boolean isAuthorized(AuthorizationContext authorizationContext) {
 
-        List<Permission> permissions;
-        List<PermissionEntry> entityEntries;
+        Boolean allow = null;
+
+        // Work directly with the PermissionEntry Set from the AuthorizationContext.
+        // It's OK to modify the orginal Set at this point.
+        Set<PermissionEntry> entries = authorizationContext.getEntries();
 
         // Super-users can do anything. Stop here.
         // TODO: Jumping out here means accessSpecification.actual will not be populated.
@@ -85,39 +95,113 @@ public class AuthorizationService implements Serializable {
 
         // Iterate over AccessSpecifications (entities) in hierarchical order.
         for (AccessSpecification accessSpecification : authorizationContext.getAccessSpecifications()) {
-
-            // Gather all Permissions for principals for current entity.
-            permissions = new ArrayList<Permission>();
-            for (AMEEEntity principal : authorizationContext.getPrincipals()) {
-                permissions.addAll(permissionService.getPermissionsForPrincipalAndEntity(principal, accessSpecification.getEntity()));
-            }
-
-            // Get list of PermissionEntries for current entity from Permissions.
-            entityEntries = getPermissionEntries(permissions);
-
-            // Merge PermissionEntries for current entity with inherited PermissionEntries.
-            mergePermissionEntries(authorizationContext.getEntries(), entityEntries);
-
-            // Update the AccessSpecification with the actual PermissionEntries for the
-            // current principals related to the current entity.
-            accessSpecification.setActual(authorizationContext.getEntries());
-
-            // Owner can do anything.
-            if (authorizationContext.getEntries().contains(PermissionEntry.OWN)) {
-                log.debug("isAuthorized() - ALLOW (owner)");
-                return true;
-            }
-
-            // Principals must be able to do everything specified.
-            if (!isAuthorized(accessSpecification, authorizationContext.getEntries())) {
-                log.debug("isAuthorized() - DENY (not permitted)");
-                return false;
+            // Try to make an authorization decision.
+            allow = isAuthorized(authorizationContext, accessSpecification, entries);
+            // Was an authorization decision made?
+            if (allow != null) {
+                break;
             }
         }
 
-        // Got to the bottom of the hierarchy, ALLOW.
-        log.debug("isAuthorized() - ALLOW");
-        return true;
+        // Was an authorization decision made?
+        return isAuthorized(allow);
+    }
+
+    /**
+     * Returns true if the principles in AuthorizationContext have the specified access to the entity
+     * in AccessSpecification.
+     *
+     * This method is intended to be used to authorize against children of the last entity held within
+     * the supplied AuthorizationContext.
+     *
+     * This method should only be called after isAuthorized(AuthorizationContext authorizationContext).
+     *
+     * Conforms to the rules described above.
+     *
+     * @param authorizationContext to consider for authorization
+     * @param accessSpecification to consider for authorization
+     * @return true if authorize result is allow, otherwise false if result is deny
+     */
+    public boolean isAuthorized(AuthorizationContext authorizationContext, AccessSpecification accessSpecification) {
+
+        // Copy the PermissionEntry Set from the AuthorizationContext.
+        // It's NOT OK to modify the original Set at this point.
+        Set<PermissionEntry> entries = authorizationContext.getEntries();
+
+        // Super-users can do anything. Stop here.
+        if (isSuperUser(authorizationContext.getPrincipals())) {
+            log.debug("isAuthorized() - ALLOW (super-user)");
+            return true;
+        }
+
+        // Try to make an authorization decision.
+        Boolean allow = isAuthorized(
+                authorizationContext,
+                accessSpecification,
+                new HashSet<PermissionEntry>(entries));
+
+        // Was an authorization decision made?
+        return isAuthorized(allow);
+    }
+
+    /**
+     * Check the supplied allow Boolean. If not null then return the boxed boolean, otherwise return true.
+     *
+     * @param allow to be considered
+     * @return true if authorize result is allow, otherwise false if result is deny
+     */
+    protected boolean isAuthorized(Boolean allow) {
+        if (allow != null) {
+            return allow;
+        } else {
+            log.debug("isAuthorized() - ALLOW");
+            return true;
+        }
+    }
+
+    /**
+     * Local utility method used by the public isAuthorized methods. Conforms to the rules described above.
+     *
+     * @param authorizationContext to consider for authorization
+     * @param accessSpecification to consider for authorization
+     * @param entries inherited from parent enties
+     * @return true if authorize result is allow, false if result is deny or null if the decision is not yet made
+     */
+    protected Boolean isAuthorized(AuthorizationContext authorizationContext, AccessSpecification accessSpecification, Set<PermissionEntry> entries) {
+
+        List<Permission> permissions;
+        List<PermissionEntry> entityEntries;
+        Boolean allow = null;
+
+        // Gather all Permissions for principals for current entity.
+        permissions = new ArrayList<Permission>();
+        for (AMEEEntity principal : authorizationContext.getPrincipals()) {
+            permissions.addAll(permissionService.getPermissionsForPrincipalAndEntity(principal, accessSpecification.getEntity()));
+        }
+
+        // Get list of PermissionEntries for current entity from Permissions.
+        entityEntries = getPermissionEntries(permissions);
+
+        // Merge PermissionEntries for current entity with inherited PermissionEntries.
+        mergePermissionEntries(entries, entityEntries);
+
+        // Update the AccessSpecification with the actual PermissionEntries for the
+        // current principals related to the current entity.
+        accessSpecification.setActual(entries);
+
+        // Owner can do anything.
+        if (entries.contains(PermissionEntry.OWN)) {
+            log.debug("isAuthorized() - ALLOW (owner)");
+            allow = true;
+        }
+
+        // Principals must be able to do everything specified.
+        if ((allow == null) && !isAuthorized(accessSpecification, entries)) {
+            log.debug("isAuthorized() - DENY (not permitted)");
+            allow = false;
+        }
+
+        return allow;
     }
 
     /**
