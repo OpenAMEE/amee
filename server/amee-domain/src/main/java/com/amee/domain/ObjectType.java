@@ -71,7 +71,7 @@ public enum ObjectType implements Serializable {
             "Environment",
             "Permission",
             "LocaleName",
-            "GroupPrinciple",
+            "GroupPrincipal",
             "ValueDefinition",
             "APIVersion"};
 

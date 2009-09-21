@@ -44,18 +44,18 @@ public class AuthorizationService {
     /**
      * Returns true if the supplied AuthorizationContext is considered to be authorized.
      * <p/>
-     * The supplied AuthorizationContext encapsulates a list of principles and a list of AccessSpecifications. The
-     * aim is to discover if the principles have the requested access rights to the entities within the AccessSpecification.
+     * The supplied AuthorizationContext encapsulates a list of principals and a list of AccessSpecifications. The
+     * aim is to discover if the principals have the requested access rights to the entities within the AccessSpecification.
      * <p/>
      * The authorization rules are:
      * <p/>
      * - Super-users are always authorized (return true).
      * - Always deny access if there are no AccessSpecifications.
      * - Each AccessSpecification is evaluated in entity hierarchical order (e.g., category -> sub-category -> item).
-     * - Principles are evaluated from broader to narrower scope (e.g., organisation -> department -> individual).
-     * - PermissionEntries are consolidated from all Permissions for each principle & entity combination.
+     * - Principals are evaluated from broader to narrower scope (e.g., organisation -> department -> individual).
+     * - PermissionEntries are consolidated from all Permissions for each principal & entity combination.
      * - The PermissionEntries are inherited down the entity hierarchy.
-     * - PermissionEntries for later principle & entity combinations override those that are inherited.
+     * - PermissionEntries for later principal & entity combinations override those that are inherited.
      * - Always authorize if an OWN PermissionEntry is present for an entity (return true).
      * - Apply isAuthorized(AccessSpecification, Collection<PermissionEntry>) to each AccessSpecification, return false
      * if not authorized.
@@ -72,7 +72,7 @@ public class AuthorizationService {
 
         // Super-users can do anything. Stop here.
         // TODO: Jumping out here means accessSpecification.actual will not be populated.
-        if (isSuperUser(authorizationContext.getPrinciples())) {
+        if (isSuperUser(authorizationContext.getPrincipals())) {
             log.debug("isAuthorized() - ALLOW (super-user)");
             return true;
         }
@@ -86,10 +86,10 @@ public class AuthorizationService {
         // Iterate over AccessSpecifications (entities) in hierarchical order.
         for (AccessSpecification accessSpecification : authorizationContext.getAccessSpecifications()) {
 
-            // Gather all Permissions for principles for current entity.
+            // Gather all Permissions for principals for current entity.
             permissions = new ArrayList<Permission>();
-            for (AMEEEntity principle : authorizationContext.getPrinciples()) {
-                permissions.addAll(permissionService.getPermissionsForPrincipleAndEntity(principle, accessSpecification.getEntity()));
+            for (AMEEEntity principal : authorizationContext.getPrincipals()) {
+                permissions.addAll(permissionService.getPermissionsForPrincipalAndEntity(principal, accessSpecification.getEntity()));
             }
 
             // Get list of PermissionEntries for current entity from Permissions.
@@ -99,7 +99,7 @@ public class AuthorizationService {
             mergePermissionEntries(allEntries, entityEntries);
 
             // Update the AccessSpecification with the actual PermissionEntries for the
-            // current principles related to the current entity.
+            // current principals related to the current entity.
             accessSpecification.setActual(allEntries);
 
             // Owner can do anything.
@@ -108,7 +108,7 @@ public class AuthorizationService {
                 return true;
             }
 
-            // Principles must be able to do everything specified.
+            // Principals must be able to do everything specified.
             if (!isAuthorized(accessSpecification, allEntries)) {
                 log.debug("isAuthorized() - DENY (not permitted)");
                 return false;
@@ -160,30 +160,30 @@ public class AuthorizationService {
 
     /**
      * Returns true if access is authorized to an entity. The AccessSpecification declares the entity and what
-     * kind of access is desired. The PermissionEntry collection declares what kind of access principles are
+     * kind of access is desired. The PermissionEntry collection declares what kind of access principals are
      * allowed for the entity.
      *
      * @param accessSpecification specification of access requested to an entity
-     * @param principleEntries    PermissionEntries from the principles
+     * @param principalEntries    PermissionEntries from the principals
      * @return true if access is authorized
      */
-    protected boolean isAuthorized(AccessSpecification accessSpecification, Collection<PermissionEntry> principleEntries) {
+    protected boolean isAuthorized(AccessSpecification accessSpecification, Collection<PermissionEntry> principalEntries) {
         // Default to not authorized.
         Boolean authorized = false;
         // Iterate over the desired PermissionEntries specified for the entity.
         for (PermissionEntry pe1 : accessSpecification.getDesired()) {
             // Default to not authorized.
             authorized = false;
-            // Iterate over PermissionEntries associated with current principles.
-            for (PermissionEntry pe2 : principleEntries) {
+            // Iterate over PermissionEntries associated with current principals.
+            for (PermissionEntry pe2 : principalEntries) {
                 // Authorized if:
                 // - Both PermissionEntries match by value.
-                // - Principles PermissionEntry is allowed.
-                // - Principles PermissionEntry status matches the entity status.
+                // - Principals PermissionEntry is allowed.
+                // - Principals PermissionEntry status matches the entity status.
                 if (pe1.getValue().equals(pe2.getValue()) &&
                         pe2.isAllow() &&
                         (pe2.getStatus().equals(accessSpecification.getEntity().getStatus()))) {
-                    // Authorized, no need to continue so break. Most permissive principle PermissionEntry 'wins'.
+                    // Authorized, no need to continue so break. Most permissive principal PermissionEntry 'wins'.
                     authorized = true;
                     break;
                 }
@@ -197,14 +197,14 @@ public class AuthorizationService {
     }
 
     /**
-     * Return true if there is a super-user in the supplied Collection of principles.
+     * Return true if there is a super-user in the supplied Collection of principals.
      *
-     * @param principles to check for presence of super-user
+     * @param principals to check for presence of super-user
      * @return true if super-user is found
      */
-    public boolean isSuperUser(Collection<AMEEEntity> principles) {
-        for (AMEEEntity principle : principles) {
-            if (isSuperUser(principle)) {
+    public boolean isSuperUser(Collection<AMEEEntity> principals) {
+        for (AMEEEntity principal : principals) {
+            if (isSuperUser(principal)) {
                 return true;
             }
         }
@@ -212,14 +212,14 @@ public class AuthorizationService {
     }
 
     /**
-     * Returns true if the principle supplied is a User and is a super-user.
+     * Returns true if the principal supplied is a User and is a super-user.
      *
-     * @param principle to examine
-     * @return true if principle is a super-user
+     * @param principal to examine
+     * @return true if principal is a super-user
      */
-    public boolean isSuperUser(AMEEEntity principle) {
-        if (User.class.isAssignableFrom(principle.getClass())) {
-            if (((User) principle).isSuperUser()) {
+    public boolean isSuperUser(AMEEEntity principal) {
+        if (User.class.isAssignableFrom(principal.getClass())) {
+            if (((User) principal).isSuperUser()) {
                 log.debug("isAuthorized() - true");
                 return true;
             }

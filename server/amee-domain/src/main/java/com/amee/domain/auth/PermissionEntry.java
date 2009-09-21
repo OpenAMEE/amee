@@ -34,7 +34,7 @@ import java.io.Serializable;
  * PermissionEntry instances are considered equal if all the properties are identical. This allows
  * PermissionEntries to usefully be placed in Sets.
  * <p/>
- * PermissionEntries are intended to precisely specify something that a principle can do with
+ * PermissionEntries are intended to precisely specify something that a principal can do with
  * an entity, such as modify it or not delete it.
  */
 public class PermissionEntry implements Serializable {
@@ -61,7 +61,7 @@ public class PermissionEntry implements Serializable {
 
     /**
      * Flag to declare if a PermissionEntry should allow or deny the permission
-     * associated with the value property. For example, allow or deny a principle to
+     * associated with the value property. For example, allow or deny a principal to
      * 'view' an entity.
      */
     private Boolean allow = true;

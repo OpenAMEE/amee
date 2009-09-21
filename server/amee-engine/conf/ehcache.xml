@@ -340,8 +340,8 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- GroupPrinciple -->
-    <cache name="com.amee.domain.auth.GroupPrinciple"
+    <!-- GroupPrincipal -->
+    <cache name="com.amee.domain.auth.GroupPrincipal"
            maxElementsInMemory="2000"
            eternal="false"
            overflowToDisk="false"

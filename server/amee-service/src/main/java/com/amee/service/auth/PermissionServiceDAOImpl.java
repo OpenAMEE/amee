@@ -53,11 +53,11 @@ public class PermissionServiceDAOImpl implements PermissionServiceDAO {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public List<Permission> getPermissionsForPrinciple(IAMEEEntityReference principle, Class entityClass) {
+    public List<Permission> getPermissionsForPrincipal(IAMEEEntityReference principal, Class entityClass) {
         Session session = (Session) entityManager.getDelegate();
         Criteria criteria = session.createCriteria(Permission.class);
-        criteria.add(Restrictions.eq("principleReference.entityId", principle.getEntityId()));
-        criteria.add(Restrictions.eq("principleReference.entityType", principle.getObjectType().getName()));
+        criteria.add(Restrictions.eq("principalReference.entityId", principal.getEntityId()));
+        criteria.add(Restrictions.eq("principalReference.entityType", principal.getObjectType().getName()));
         if (entityClass != null) {
             criteria.add(Restrictions.eq("entityReference.entityType", ObjectType.getType(entityClass).getName()));
         }
@@ -68,11 +68,11 @@ public class PermissionServiceDAOImpl implements PermissionServiceDAO {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public List<Permission> getPermissionsForPrincipleAndEntity(IAMEEEntityReference principle, IAMEEEntityReference entity) {
+    public List<Permission> getPermissionsForPrincipalAndEntity(IAMEEEntityReference principal, IAMEEEntityReference entity) {
         Session session = (Session) entityManager.getDelegate();
         Criteria criteria = session.createCriteria(Permission.class);
-        criteria.add(Restrictions.eq("principleReference.entityId", principle.getEntityId()));
-        criteria.add(Restrictions.eq("principleReference.entityType", principle.getObjectType().getName()));
+        criteria.add(Restrictions.eq("principalReference.entityId", principal.getEntityId()));
+        criteria.add(Restrictions.eq("principalReference.entityType", principal.getObjectType().getName()));
         criteria.add(Restrictions.eq("entityReference.entityId", entity.getEntityId()));
         criteria.add(Restrictions.eq("entityReference.entityType", entity.getObjectType().getName()));
         criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
