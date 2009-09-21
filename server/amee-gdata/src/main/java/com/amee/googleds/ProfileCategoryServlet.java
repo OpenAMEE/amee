@@ -143,7 +143,7 @@ public class ProfileCategoryServlet extends DataSourceServlet {
 		ArrayList<ColumnDescription> cd = new ArrayList<ColumnDescription>();
 
         cd.add(new ColumnDescription("co2",ValueType.NUMBER, "co2"));
-        cd.add(new ColumnDescription("startDate",ValueType.DATETIME, "Start Date"));
+        cd.add(new ColumnDescription("startDate",ValueType.DATETIME, "startDate"));
 
         addItemValues(profileItem.getItemValues(), cd);
         addItemValues(profileItem.getDataItem().getItemValues(), cd);
@@ -153,7 +153,6 @@ public class ProfileCategoryServlet extends DataSourceServlet {
 
     private void addItemValues(List<ItemValue> itemValues, ArrayList<ColumnDescription> cd) {
         for (ItemValue itemValue : itemValues) {
-            String name = itemValue.getName();
             String path = itemValue.getPath();
             ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
             ValueType type;
@@ -164,7 +163,7 @@ public class ProfileCategoryServlet extends DataSourceServlet {
             } else {
                 type = ValueType.TEXT;
             }
-            cd.add(new ColumnDescription(path, type, name));
+            cd.add(new ColumnDescription(path, type, path));
         }
     }
 
