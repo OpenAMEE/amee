@@ -1,0 +1,18 @@
+<script type='text/javascript' src='http://www.google.com/jsapi'></script>
+<script type='text/javascript'>
+ google.load('visualization', '1', {'packages': ['geomap']});
+ google.setOnLoadCallback(drawMap);
+
+  function drawMap() {
+    var data = new google.visualization.DataTable(<%= @data %>);
+
+    var options = {};
+    options['dataMode'] = 'regions';
+
+    var container = document.getElementById('map_canvas');
+    var geomap = new google.visualization.GeoMap(container);
+    geomap.draw(data, options);
+};
+</script>
+
+<div id='map_canvas'></div>
