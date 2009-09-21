@@ -1,0 +1,208 @@
+"data_center_id","data_center_location","geocode_country","geocode_state","region_network","product_id","product_line","product_name","product_server_type","count","watts"
+"1-1RZYA9","Los Angeles, CA/1 Wilshire","US","CA","DDC","B-3-2WEXI7","Akamai Servers","ZT Group 2x8-G4 8GB Fat Opteron Server","2x8 G4 Fat",55,12375
+"1-3KXGLD","Ashburn, VA (Building F - DC2)","US","VA","FreeFlow","A-1-89MKJN","Akamai Servers","ZT Group 2x8-G3 CacheH Opteron Server","2x8 G3 CacheH",55,15125
+"1-3PGVRT","Ashburn, VA (Building G - DC3)","US","VA","Mapper2","1-6M9OG9","Akamai Servers","Verari 2x2-G3 Opteron Server","2x2 G3",55,10725
+"1-DI5QV","Chicago, IL","US","IL","StreamOS","1-2X0B40","Akamai Servers","Verari 2x2-G1 Opteron Server","2x2 G1",55,12375
+"1-EB94W","Seattle, WA","US","WA","FreeFlow","B-3-19M014","Akamai Servers","ZT Group 2x8-G3 73GB Opteron Server","2x8 G3",55,15125
+"A-1-7IHYOR","New York, New York","US","NY","ESSL","B-3-1471SZ","Akamai Servers","Verari 2x4-G3 Opteron Server {BT Chassis}","2x4 G3",55,12375
+"A-1-9SJIJJ","San Jose, CA","US","CA","DDC","A-1-8NVY40","Akamai Servers","Verari 2x8-G3 Fat Opteron Server","2x8 G3 Fat",55,15125
+"B-3-1UCGB1","London, UK","GB","N/A","Flash5 Windows","B-3-4D2E9V","Akamai Servers","ZT Group 1x8-G4 Opteron Server","1x8 G4",55,10450
+"1-1RZYA9","Los Angeles, CA/1 Wilshire","US","CA",,"1-5NXOXI","PDU","APC 7930 MasterSwitch 100/120V 20A - Vertical",,54,540
+"1-6BTFJL","Dallas, TX","US","TX","Windows Media","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",54,14850
+"A-1-9SJIJJ","San Jose, CA","US","CA","Windows Media","A-1-8PAMRC","Akamai Servers","ZT Group 2x2-G3 SATA Opteron Server","2x2 G3 SATA",54,10530
+"A-1-ARYWL8","London, UK","GB","N/A","Mapper2","1-6M9OG9","Akamai Servers","Verari 2x2-G3 Opteron Server","2x2 G3",54,10530
+"B-3-3MXZIX","Paris - St Denis PA2","FR","N/A","FreeFlow","B-3-4D2E9V","Akamai Servers","ZT Group 1x8-G4 Opteron Server","1x8 G4",54,10260
+"1-6BTFJL","Dallas, TX","US","TX","Other","B-3-1JR0DO","Akamai Servers","ZT Group 1x2-G4 Opteron Server","1x2 G4",53,8480
+"A-1-7IHYOR","New York, New York","US","NY","Storage","B-4-52L0X","Akamai Servers","ZT Group 1x2-G4 8GB Opteron Server {Rev B}","1x2 G4",53,6890
+"B-3-2B0CAL","Ashburn, VA","US","VA","ESSL","B-3-28P3SK","Akamai Servers","Verari 2x4-G4 8G Opteron Server","2x4 G4",53,11925
+"1-1Q6LTS","San Jose, CA","US","CA","Infra","A-1-8PAMRC","Akamai Servers","ZT Group 2x2-G3 SATA Opteron Server","2x2 G3 SATA",52,10140
+"1-34TQRK","Amsterdam","NL","N/A","Mapper2","A-1-8PAMRC","Akamai Servers","ZT Group 2x2-G3 SATA Opteron Server","2x2 G3 SATA",52,10140
+"1-6NIR04","Frankfurt","DE","N/A","FreeFlow","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",52,14300
+"A-1-7IHYOR","New York, New York","US","NY","Storage","A-1-8PAMRC","Akamai Servers","ZT Group 2x2-G3 SATA Opteron Server","2x2 G3 SATA",52,10140
+"A-1-7IUSZL","Santa Clara, CA","US","CA","FreeFlow","A-1-B63UQ7","Akamai Servers","Verari 2x8-G4 CacheH Opteron Server","2x8 G4 CacheH",52,11700
+"A-1-8U75Q5","Seattle - Westin","US","WA","Storage","B-3-367ERZ","Akamai Servers","Verari 1x2-G4 8G Opteron Server {Rev B}","1x2 G4",52,6760
+"A-1-AY3AYE","Los Angeles,  CA","US","CA","Flash5 Windows","B-3-576BA7","Akamai Servers","Verari 2x8-G4 CacheH Opteron Server {Upgraded by ZT}","2x8 G4 CacheH",52,11700
+"A-1-BH8LN1","Atlanta, GA","US","GA","FreeFlow","B-3-19M014","Akamai Servers","ZT Group 2x8-G3 73GB Opteron Server","2x8 G3",52,14300
+"B-3-4LEEIT","Santa Clara, CA","US","CA","Flash5 Windows","B-3-39FYL1","Akamai Servers","ZT Group 2x8-G4 8GB SAS CacheH Opteron Server","2x8 G4 CacheH SAS",52,11700
+"1-1RZYA9","Los Angeles, CA/1 Wilshire","US","CA","Flash5 Windows","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",51,14025
+"A-1-9SJIJJ","San Jose, CA","US","CA","DDC","A-1-B63URY","Akamai Servers","Verari 2x8-G4 Fat Opteron Server","2x8 G4 Fat",51,11475
+"B-3-2B0CAL","Ashburn, VA","US","VA","FreeFlow","B-2-782H6","Akamai Servers","Verari 2x8-G1 73GB Opteron Server","2x8 G1",51,18360
+"1-M7ZYE","Odaiba data center","JP","N/A","Flash5 Windows","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",50,13750
+"A-1-7CTUJF","Munich","DE","N/A","FreeFlow","A-1-A0QWUX","Akamai Servers","Verari 2x8-G4 Opteron Server","2x8 G4",50,11250
+"A-1-ARYWL8","London, UK","GB","N/A","Flash5 Windows","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",50,13750
+"A-1-AY55QB","New York, New York","US","NY","Flash5 Windows","1-4439E0","Akamai Servers","Verari 2x8-G1 Opteron Server","2x8 G1",50,18000
+"A-1-BH8LN1","Atlanta, GA","US","GA","FreeFlow","A-1-A0QWUX","Akamai Servers","Verari 2x8-G4 Opteron Server","2x8 G4",50,11250
+"1-5HE1X2","Madrid, Spain","ES","N/A","FreeFlow","B-3-4D2E9J","Akamai Servers","ZT Group 1x8-G4 Opteron Server {Fujitsu Drives Rev B}","1x8 G4",49,9310
+"1-6BTFJL","Dallas, TX","US","TX","FreeFlow","A-1-89MKJN","Akamai Servers","ZT Group 2x8-G3 CacheH Opteron Server","2x8 G3 CacheH",49,13475
+"1-7K0IS","Newark, NJ","US","NJ","FreeFlow","B-3-1CNU5K","Akamai Servers","ZT Group 2x8-G4 Opteron Server","2x8 G4",49,11025
+"A-1-7IHYO1","Palo Alto, CA","US","CA","FreeFlow","B-3-4O0QQK","Akamai Servers","Verari 2x8-G4 8G CacheH SAS Opteron Server {Rev B}","2x8 G4 CacheH SAS",49,11025
+"A-1-9SJIJJ","San Jose, CA","US","CA","Flash5 Windows","A-1-8NVY3H","Akamai Servers","Verari 2x8-G3 Opteron Server {Rev B}","2x8 G3",49,13475
+"1-1K1TMS","Paris II France","FR","N/A","FreeFlow","B-3-32680Y","Akamai Servers","ZT Group 2x8-G4 8GB SAS Opteron Server","2x8 G4 SAS",48,10800
+"1-1Z7FHL","Dallas, TX","US","TX","FreeFlow","B-3-1JT3K0","Akamai Servers","ZT Group 2x8-G4 Opteron Server {Rev B}","2x8 G4",48,10800
+"1-3AJEK5","Munich (INXS)","DE","N/A","FreeFlow","B-3-2Q0PA7","Akamai Servers","Verari 1x8-G4 Opteron Server","1x8 G4",48,9120
+"1-3CURE5","Frankfurt Lyoner Strasse","DE","N/A","Flash5 Windows","B-3-28P3RU","Akamai Servers","Verari 2x8-G4 8G Opteron Server","2x8 G4",48,10800
+"1-3KXGLD","Ashburn, VA (Building F - DC2)","US","VA","FreeFlow","B-3-32680Y","Akamai Servers","ZT Group 2x8-G4 8GB SAS Opteron Server","2x8 G4 SAS",48,10800
+"1-3KXGLD","Ashburn, VA (Building F - DC2)","US","VA","FreeFlow","B-3-39FYL1","Akamai Servers","ZT Group 2x8-G4 8GB SAS CacheH Opteron Server","2x8 G4 CacheH SAS",48,10800
+"1-3PGVRT","Ashburn, VA (Building G - DC3)","US","VA","FreeFlow","B-3-4O0QQK","Akamai Servers","Verari 2x8-G4 8G CacheH SAS Opteron Server {Rev B}","2x8 G4 CacheH SAS",48,10800
+"1-53D6H","Ashburn, VA (Building C - DC1)","US","VA","FreeFlow","B-3-39FYL1","Akamai Servers","ZT Group 2x8-G4 8GB SAS CacheH Opteron Server","2x8 G4 CacheH SAS",48,10800
+"1-5RUQN","San Jose, CA (SV1)","US","CA","ESSL","B-3-1JS273","Akamai Servers","ZT Group 2x4-G4 Opteron Server {Rev B}","2x4 G4",48,10800
+"1-6BTFJL","Dallas, TX","US","TX","Storage","B-4-52L0X","Akamai Servers","ZT Group 1x2-G4 8GB Opteron Server {Rev B}","1x2 G4",48,6240
+"1-9RME5","Apodaca, Nuevo Leon/MENTA","MX","N/A","FreeFlow","B-3-2Q0DVB","Akamai Servers","Dell 2x8-G4 8G CacheH SAS Opteron Server","2x8 G4 CacheH SAS",48,10800
+"1-JEHD","Milano, Italy","IT","N/A","FreeFlow","B-3-4D2E9V","Akamai Servers","ZT Group 1x8-G4 Opteron Server","1x8 G4",48,9120
+"A-1-7IHYO1","Palo Alto, CA","US","CA","FreeFlow","B-3-1CNU5A","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server","2x8 G4 CacheH",48,10800
+"A-1-7IHYOR","New York, New York","US","NY","Flash5 Windows","B-3-39FYL1","Akamai Servers","ZT Group 2x8-G4 8GB SAS CacheH Opteron Server","2x8 G4 CacheH SAS",48,10800
+"A-1-8U75Q5","Seattle - Westin","US","WA","Storage","A-1-8PAMRC","Akamai Servers","ZT Group 2x2-G3 SATA Opteron Server","2x2 G3 SATA",48,9360
+"A-1-8U75Q5","Seattle - Westin","US","WA","FreeFlow","B-4-145GP","Akamai Servers","Verari 2x8-G4 Opteron Server {Upgraded by ZT}","2x8 G4",48,10800
+"A-1-ARYWL8","London, UK","GB","N/A","FreeFlow","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",48,13200
+"B-3-17JT3Y","Columbus, OH","US","OH","FreeFlow","B-3-318VJU","Akamai Servers","Verari 2x8-G4 8G Opteron Server {Rev B}","2x8 G4",48,10800
+"B-3-1DO7MJ","Seattle, WA","US","WA","FreeFlow","B-3-4O0QQK","Akamai Servers","Verari 2x8-G4 8G CacheH SAS Opteron Server {Rev B}","2x8 G4 CacheH SAS",48,10800
+"B-3-2BLKRK","London (HEX 1)","GB","N/A","FreeFlow","B-3-28P3QZ","Akamai Servers","Verari 2x8-G4 8G CacheH Opteron Server","2x8 G4 CacheH",48,10800
+"B-3-3MXO9B","Amsterdam - AM1","NL","N/A","FreeFlow","B-3-4O0QQK","Akamai Servers","Verari 2x8-G4 8G CacheH SAS Opteron Server {Rev B}","2x8 G4 CacheH SAS",48,10800
+"1-17R8W","Houston, TX","US","TX","FreeFlow","B-3-1CNU5K","Akamai Servers","ZT Group 2x8-G4 Opteron Server","2x8 G4",47,10575
+"1-2RVSGH","Los Angeles, CA (LA1)","US","CA","Flash5 Windows","A-1-8NVY3H","Akamai Servers","Verari 2x8-G3 Opteron Server {Rev B}","2x8 G3",47,12925
+"1-34TQRK","Amsterdam","NL","N/A","FreeFlow","A-1-8NVY3H","Akamai Servers","Verari 2x8-G3 Opteron Server {Rev B}","2x8 G3",47,12925
+"1-3PGVRT","Ashburn, VA (Building G - DC3)","US","VA","FreeFlow","B-3-28P3QZ","Akamai Servers","Verari 2x8-G4 8G CacheH Opteron Server","2x8 G4 CacheH",47,10575
+"1-3PGVRT","Ashburn, VA (Building G - DC3)","US","VA","FreeFlow","B-3-28P3RU","Akamai Servers","Verari 2x8-G4 8G Opteron Server","2x8 G4",47,10575
+"1-416AWX","Paris, France - PAR3","FR","N/A","FreeFlow","B-3-2Q0DVB","Akamai Servers","Dell 2x8-G4 8G CacheH SAS Opteron Server","2x8 G4 CacheH SAS",47,10575
+"1-5GP32E","London North, TFM12","GB","N/A","FreeFlow","B-3-1JT3K0","Akamai Servers","ZT Group 2x8-G4 Opteron Server {Rev B}","2x8 G4",47,10575
+"1-6BTFJL","Dallas, TX","US","TX","Other","1-2I3YX6","Akamai Servers","Verari 2x6-G1 Opteron Server {Rev B}","2x6 G1",47,16920
+"1-DI5Q9","Sterling, VA","US","VA","FreeFlow","A-1-B63UQ7","Akamai Servers","Verari 2x8-G4 CacheH Opteron Server","2x8 G4 CacheH",47,10575
+"1-DI5QV","Chicago, IL","US","IL","FreeFlow","1-6G35YH","Akamai Servers","Verari 2x8-G3 Opteron Server {Rev A}","2x8 G3",47,12925
+"A-1-7IHYOR","New York, New York","US","NY","FreeFlow","B-3-28P3QZ","Akamai Servers","Verari 2x8-G4 8G CacheH Opteron Server","2x8 G4 CacheH",47,10575
+"A-1-9SJIJJ","San Jose, CA","US","CA",,"1-6MZ4CH","Akamai Switches","HP ProCurve Switch 3400cl-48G",,47,5640
+"A-1-AY3AYE","Los Angeles,  CA","US","CA","FreeFlow","B-3-4DETLT","Akamai Servers","Verari 2x8-G4 Seagate Opteron Server {Upgraded by ZT}","2x8 G4",47,10575
+"A-1-BH8LN1","Atlanta, GA","US","GA","Flash5 Windows","B-3-1JT3K0","Akamai Servers","ZT Group 2x8-G4 Opteron Server {Rev B}","2x8 G4",47,10575
+"B-2-7P6L0","Nagoya-Sakaekita (OCN), Japan","JP","N/A","FreeFlow","B-3-28P3QZ","Akamai Servers","Verari 2x8-G4 8G CacheH Opteron Server","2x8 G4 CacheH",47,10575
+"B-3-25BTYW","Amsterdam - Amstel Business Park","NL","N/A","FreeFlow","B-3-28P3QZ","Akamai Servers","Verari 2x8-G4 8G CacheH Opteron Server","2x8 G4 CacheH",47,10575
+"1-3CURE5","Frankfurt Lyoner Strasse","DE","N/A","FreeFlow","B-3-4D2E9V","Akamai Servers","ZT Group 1x8-G4 Opteron Server","1x8 G4",46,8740
+"1-3KXGLD","Ashburn, VA (Building F - DC2)","US","VA","FreeFlow","B-3-1U984E","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server {Rev B}","2x8 G4 CacheH",46,10350
+"1-6BTFJL","Dallas, TX","US","TX","FreeFlow","A-1-8NVY3H","Akamai Servers","Verari 2x8-G3 Opteron Server {Rev B}","2x8 G3",46,12650
+"1-7OYV4","Otemachi, Tokyo, Japan","JP","N/A","FreeFlow","B-3-2Q0P49","Akamai Servers","Verari 2x8-G4 8G CacheH SAS Opteron Server","2x8 G4 CacheH SAS",46,10350
+"A-1-7M8VGH","Seoul","KR","N/A","FreeFlow","A-1-89MKJD","Akamai Servers","Verari 2x8-G3 CacheH Opteron Server {Rev A}","2x8 G3 CacheH",46,12650
+"A-1-AY3AYE","Los Angeles,  CA","US","CA","FreeFlow","B-4-145GP","Akamai Servers","Verari 2x8-G4 Opteron Server {Upgraded by ZT}","2x8 G4",46,10350
+"1-2LA8OU","Miami, FL","US","FL","FreeFlow","B-3-4U7PG4","Akamai Servers","Verari 1x8-G4 Opteron Server {Fujitsu Drive}","1x8 G4",45,8550
+"1-6BTFJL","Dallas, TX","US","TX","Flash5 Windows","B-3-39FYL1","Akamai Servers","ZT Group 2x8-G4 8GB SAS CacheH Opteron Server","2x8 G4 CacheH SAS",45,10125
+"1-6BTFJL","Dallas, TX","US","TX","FreeFlow","B-3-4O0QQK","Akamai Servers","Verari 2x8-G4 8G CacheH SAS Opteron Server {Rev B}","2x8 G4 CacheH SAS",45,10125
+"B-3-1UCGB1","London, UK","GB","N/A","Flash5 Windows","B-4-145GP","Akamai Servers","Verari 2x8-G4 Opteron Server {Upgraded by ZT}","2x8 G4",45,10125
+"1-1OZLY0","PCDN-Tokyo, Japan","JP","N/A",,"1-1U7ZDW","Akamai Servers","IBM x330 - NTT Owned HW","Legacy",44,4180
+"1-1RZYA9","Los Angeles, CA/1 Wilshire","US","CA","FreeFlow","B-3-39FYL1","Akamai Servers","ZT Group 2x8-G4 8GB SAS CacheH Opteron Server","2x8 G4 CacheH SAS",44,9900
+"1-2LA8OU","Miami, FL","US","FL","FreeFlow","B-3-32680Y","Akamai Servers","ZT Group 2x8-G4 8GB SAS Opteron Server","2x8 G4 SAS",44,9900
+"1-3KXGM8","Atlanta, GA","US","GA","Infra","B-3-367ERZ","Akamai Servers","Verari 1x2-G4 8G Opteron Server {Rev B}","1x2 G4",44,5720
+"1-6BTFJL","Dallas, TX","US","TX","Mapper2","B-3-367ERZ","Akamai Servers","Verari 1x2-G4 8G Opteron Server {Rev B}","1x2 G4",44,5720
+"1-9UVB","Haninge, Sweden","SE","N/A","FreeFlow","B-3-1JT3K0","Akamai Servers","ZT Group 2x8-G4 Opteron Server {Rev B}","2x8 G4",44,9900
+"1-DI5QV","Chicago, IL","US","IL",,"1-6MZ4CH","Akamai Switches","HP ProCurve Switch 3400cl-48G",,44,5280
+"A-1-7IHYOR","New York, New York","US","NY","FreeFlow","B-3-1CNU5K","Akamai Servers","ZT Group 2x8-G4 Opteron Server","2x8 G4",44,9900
+"A-1-7IUSZL","Santa Clara, CA","US","CA","Flash5 Windows","B-3-576BA7","Akamai Servers","Verari 2x8-G4 CacheH Opteron Server {Upgraded by ZT}","2x8 G4 CacheH",44,9900
+"A-1-9SJIJJ","San Jose, CA","US","CA",,"1-31P7AN","PDU","APC 7901 MasterSwitch 100/120V 20A",,44,440
+"A-1-AY55QB","New York, New York","US","NY",,"1-6MZ4CH","Akamai Switches","HP ProCurve Switch 3400cl-48G",,44,5280
+"B-3-2B0CAL","Ashburn, VA","US","VA","FreeFlow","A-1-7IE309","Akamai Servers","Verari 2x8-G1 CacheH Opteron Server","2x8 G1 CacheH",44,15400
+"B-3-2B0CAL","Ashburn, VA","US","VA",,"A-1-AA82SX","Akamai Switches","HP ProCurve Switch 2900-48G",,44,7260
+"1-6BTFJL","Dallas, TX","US","TX","Other","B-4-52L0X","Akamai Servers","ZT Group 1x2-G4 8GB Opteron Server {Rev B}","1x2 G4",43,5590
+"A-1-8U75Q5","Seattle - Westin","US","WA","Infra","B-4-52L0X","Akamai Servers","ZT Group 1x2-G4 8GB Opteron Server {Rev B}","1x2 G4",43,5590
+"A-1-A5NJYP","Shinkawa, Tokyo (Verio), Japan","JP","N/A","FreeFlow","A-1-89MKJN","Akamai Servers","ZT Group 2x8-G3 CacheH Opteron Server","2x8 G3 CacheH",43,11825
+"1-1RZYA9","Los Angeles, CA/1 Wilshire","US","CA","FreeFlow","A-1-89MKJN","Akamai Servers","ZT Group 2x8-G3 CacheH Opteron Server","2x8 G3 CacheH",42,11550
+"1-1XYVP","Osaka, Japan","JP","N/A","FreeFlow","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",42,11550
+"1-1XYVP","Osaka, Japan","JP","N/A","FreeFlow","A-1-9NR61V","Akamai Servers","Verari 2x8-G3 CacheH Opteron Server {Rev B}","2x8 G3 CacheH",42,11550
+"1-39HCV9","Osaka","JP","N/A","FreeFlow","A-1-9NR61V","Akamai Servers","Verari 2x8-G3 CacheH Opteron Server {Rev B}","2x8 G3 CacheH",42,11550
+"1-3DLO7X","Madrid, Spain (BT)","ES","N/A","FreeFlow","B-3-39FYL1","Akamai Servers","ZT Group 2x8-G4 8GB SAS CacheH Opteron Server","2x8 G4 CacheH SAS",42,9450
+"1-6BTFJL","Dallas, TX","US","TX","Storage","A-1-7FTMP1","Akamai Servers","ZT Group 2x2-G3 Opteron Server","2x2 G3",42,8190
+"1-6BTFJL","Dallas, TX","US","TX","Infra","B-3-367ERZ","Akamai Servers","Verari 1x2-G4 8G Opteron Server {Rev B}","1x2 G4",42,5460
+"1-6HZ06","Highlands Ranch, CO","US","CO","FreeFlow","A-1-9NR61V","Akamai Servers","Verari 2x8-G3 CacheH Opteron Server {Rev B}","2x8 G3 CacheH",42,11550
+"1-8Y5XP","NIKHEF","NL","N/A","FreeFlow","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",42,11550
+"1-9T5V","Sunnyvale, CA","US","CA","FreeFlow","A-1-9NR61V","Akamai Servers","Verari 2x8-G3 CacheH Opteron Server {Rev B}","2x8 G3 CacheH",42,11550
+"1-DI5QV","Chicago, IL","US","IL","Storage","A-1-7FTMP1","Akamai Servers","ZT Group 2x2-G3 Opteron Server","2x2 G3",42,8190
+"1-DI5QV","Chicago, IL","US","IL","FreeFlow","A-1-B63UQ7","Akamai Servers","Verari 2x8-G4 CacheH Opteron Server","2x8 G4 CacheH",42,9450
+"1-DI5QV","Chicago, IL","US","IL","FreeFlow","B-3-19M014","Akamai Servers","ZT Group 2x8-G3 73GB Opteron Server","2x8 G3",42,11550
+"1-M7ZYE","Odaiba data center","JP","N/A","FreeFlow","A-1-89MKJN","Akamai Servers","ZT Group 2x8-G3 CacheH Opteron Server","2x8 G3 CacheH",42,11550
+"1-X9OP","Palermo, Italy","IT","N/A","FreeFlow","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",42,11550
+"179-25SJ","Frankfurt","DE","N/A","FreeFlow","A-1-9NR61V","Akamai Servers","Verari 2x8-G3 CacheH Opteron Server {Rev B}","2x8 G3 CacheH",42,11550
+"A-1-7U5Y49","Sunnyvale, CA","US","CA","FreeFlow","A-1-89MKJN","Akamai Servers","ZT Group 2x8-G3 CacheH Opteron Server","2x8 G3 CacheH",42,11550
+"A-1-9SJIJJ","San Jose, CA","US","CA","Flash5 Windows","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",42,11550
+"A-1-9SJIJJ","San Jose, CA","US","CA","FreeFlow","A-1-89MKJN","Akamai Servers","ZT Group 2x8-G3 CacheH Opteron Server","2x8 G3 CacheH",42,11550
+"1-1RZYA9","Los Angeles, CA/1 Wilshire","US","CA","FreeFlow","B-3-28P3QZ","Akamai Servers","Verari 2x8-G4 8G CacheH Opteron Server","2x8 G4 CacheH",41,9225
+"1-3PGVRT","Ashburn, VA (Building G - DC3)","US","VA",,"1-3R6G1X","Akamai Switches","HP ProCurve Switch 3400cl-24G",,41,2870
+"1-5PKZTB","Houston, TX","US","TX","FreeFlow","A-1-89MKJN","Akamai Servers","ZT Group 2x8-G3 CacheH Opteron Server","2x8 G3 CacheH",41,11275
+"1-5RUQN","San Jose, CA (SV1)","US","CA","FreeFlow","A-1-9NR61V","Akamai Servers","Verari 2x8-G3 CacheH Opteron Server {Rev B}","2x8 G3 CacheH",41,11275
+"1-6BTFJL","Dallas, TX","US","TX","FreeFlow","B-3-28P3QZ","Akamai Servers","Verari 2x8-G4 8G CacheH Opteron Server","2x8 G4 CacheH",41,9225
+"A-1-7IUSZL","Santa Clara, CA","US","CA","FreeFlow","B-3-1U984E","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server {Rev B}","2x8 G4 CacheH",41,9225
+"A-1-ARYWL8","London, UK","GB","N/A","FreeFlow","A-1-89MKJN","Akamai Servers","ZT Group 2x8-G3 CacheH Opteron Server","2x8 G3 CacheH",41,11275
+"A-1-AY55QB","New York, New York","US","NY",,"A-1-AA82SX","Akamai Switches","HP ProCurve Switch 2900-48G",,41,6765
+"B-3-17JT4I","Syracuse, NY","US","NY","FreeFlow","B-3-1CNU5K","Akamai Servers","ZT Group 2x8-G4 Opteron Server","2x8 G4",41,9225
+"B-3-1DO7MJ","Seattle, WA","US","WA","FreeFlow","B-3-1CNU5K","Akamai Servers","ZT Group 2x8-G4 Opteron Server","2x8 G4",41,9225
+"B-3-1UCGB1","London, UK","GB","N/A","FreeFlow","B-3-1U984E","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server {Rev B}","2x8 G4 CacheH",41,9225
+"1-1RZYA9","Los Angeles, CA/1 Wilshire","US","CA","FreeFlow","B-3-1U984E","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server {Rev B}","2x8 G4 CacheH",40,9000
+"1-1Z7FHL","Dallas, TX","US","TX","FreeFlow","B-3-1U984E","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server {Rev B}","2x8 G4 CacheH",40,9000
+"1-23Z7NK","Miami","US","FL","FreeFlow","B-3-1U984E","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server {Rev B}","2x8 G4 CacheH",40,9000
+"1-2LA8OU","Miami, FL","US","FL","FreeFlow","B-3-1U984E","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server {Rev B}","2x8 G4 CacheH",40,9000
+"1-2VPEMP","Paris, France - TSYS, Boulevard Voltaire","FR","N/A","FreeFlow","B-3-1U984E","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server {Rev B}","2x8 G4 CacheH",40,9000
+"1-34TQRK","Amsterdam","NL","N/A","FreeFlow","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",40,11000
+"1-34TQRK","Amsterdam","NL","N/A","FreeFlow","A-1-9NR61V","Akamai Servers","Verari 2x8-G3 CacheH Opteron Server {Rev B}","2x8 G3 CacheH",40,11000
+"1-3ANUGI","Frankfurt Gutleutstrasse","DE","N/A","ESSL","1-3DGQ7L","Akamai Servers","Verari 2x4-G1 Opteron Server","2x4 G1",40,11400
+"1-3CURE5","Frankfurt Lyoner Strasse","DE","N/A","FreeFlow","B-3-2Q0DVB","Akamai Servers","Dell 2x8-G4 8G CacheH SAS Opteron Server","2x8 G4 CacheH SAS",40,9000
+"1-3DBM1P","Shinagawa, Tokyo","JP","N/A","FreeFlow","A-1-89MKJN","Akamai Servers","ZT Group 2x8-G3 CacheH Opteron Server","2x8 G3 CacheH",40,11000
+"1-416AWX","Paris, France - PAR3","FR","N/A","Other","A-1-8PAMRC","Akamai Servers","ZT Group 2x2-G3 SATA Opteron Server","2x2 G3 SATA",40,7800
+"1-416AWX","Paris, France - PAR3","FR","N/A","FreeFlow","A-1-9NR61V","Akamai Servers","Verari 2x8-G3 CacheH Opteron Server {Rev B}","2x8 G3 CacheH",40,11000
+"1-5HE1X2","Madrid, Spain","ES","N/A","FreeFlow","B-3-39FYL1","Akamai Servers","ZT Group 2x8-G4 8GB SAS CacheH Opteron Server","2x8 G4 CacheH SAS",40,9000
+"1-5RUQN","San Jose, CA (SV1)","US","CA","FreeFlow","B-3-2Q0DVB","Akamai Servers","Dell 2x8-G4 8G CacheH SAS Opteron Server","2x8 G4 CacheH SAS",40,9000
+"1-6BTFJL","Dallas, TX","US","TX","Flash5 Windows","A-1-8NVY3H","Akamai Servers","Verari 2x8-G3 Opteron Server {Rev B}","2x8 G3",40,11000
+"1-6BTFJL","Dallas, TX","US","TX","FreeFlow","A-1-A0QWUX","Akamai Servers","Verari 2x8-G4 Opteron Server","2x8 G4",40,9000
+"1-6BTFJL","Dallas, TX","US","TX","FreeFlow","B-3-1U984E","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server {Rev B}","2x8 G4 CacheH",40,9000
+"1-7K0IS","Newark, NJ","US","NJ","ESSL","1-3DGQ7L","Akamai Servers","Verari 2x4-G1 Opteron Server","2x4 G1",40,11400
+"1-9UV4","Copenhagen","DK","N/A","FreeFlow","B-3-2Q0PA7","Akamai Servers","Verari 1x8-G4 Opteron Server","1x8 G4",40,7600
+"1-9UVB","Haninge, Sweden","SE","N/A","FreeFlow","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",40,11000
+"1-EB94W","Seattle, WA","US","WA","FreeFlow","1-4439E0","Akamai Servers","Verari 2x8-G1 Opteron Server","2x8 G1",40,14400
+"1-EB94W","Seattle, WA","US","WA","FreeFlow","B-3-1U984E","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server {Rev B}","2x8 G4 CacheH",40,9000
+"1-EO46E","Hamburg, Germany","DE","N/A","FreeFlow","B-3-2Q0PA7","Akamai Servers","Verari 1x8-G4 Opteron Server","1x8 G4",40,7600
+"A-1-7IUSZL","Santa Clara, CA","US","CA","Flash5 Windows","1-4439E0","Akamai Servers","Verari 2x8-G1 Opteron Server","2x8 G1",40,14400
+"A-1-7IUSZL","Santa Clara, CA","US","CA","FreeFlow","1-4439E0","Akamai Servers","Verari 2x8-G1 Opteron Server","2x8 G1",40,14400
+"A-1-7IUSZL","Santa Clara, CA","US","CA","EUC","B-3-1JR0DO","Akamai Servers","ZT Group 1x2-G4 Opteron Server","1x2 G4",40,6400
+"A-1-8GXNBD","OPAL-BHX Birmingham","GB","N/A","FreeFlow","A-1-7TROE1","Akamai Servers","ZT Group 2x8-G3 Opteron Server","2x8 G3",40,11000
+"A-1-8U75Q5","Seattle - Westin","US","WA","Infra","A-1-8PAMRC","Akamai Servers","ZT Group 2x2-G3 SATA Opteron Server","2x2 G3 SATA",40,7800
+"A-1-8U75Q5","Seattle - Westin","US","WA","Flash5 Windows","B-3-32680Y","Akamai Servers","ZT Group 2x8-G4 8GB SAS Opteron Server","2x8 G4 SAS",40,9000
+"A-1-8U75Q5","Seattle - Westin","US","WA","FreeFlow","B-3-32680Y","Akamai Servers","ZT Group 2x8-G4 8GB SAS Opteron Server","2x8 G4 SAS",40,9000
+"A-1-A5NJYP","Shinkawa, Tokyo (Verio), Japan","JP","N/A","FreeFlow","B-3-1CNU5A","Akamai Servers","ZT Group 2x8-G4 CacheH Opteron Server","2x8 G4 CacheH",40,9000
+"A-1-AY55QB","New York, New York","US","NY","FreeFlow","B-3-28P3QZ","Akamai Servers","Verari 2x8-G4 8G CacheH Opteron Server","2x8 G4 CacheH",40,9000
+"A-1-AY55QB","New York, New York","US","NY","FreeFlow","B-3-39FYL1","Akamai Servers","ZT Group 2x8-G4 8GB SAS CacheH Opteron Server","2x8 G4 CacheH SAS",40,9000
+"A-1-BH8LN1","Atlanta, GA","US","GA","Flash5 Windows","B-4-145GP","Akamai Servers","Verari 2x8-G4 Opteron Server {Upgraded by ZT}","2x8 G4",40,9000
+"B-3-17JT1H","Raleigh, NC","US","NC","FreeFlow","B-3-1471T6","Akamai Servers","Verari 2x8-G3 Opteron Server {BT Chassis}","2x8 G3",40,11000
+"B-3-1KJLMO","Los Angeles, CA","US","CA",,"A-1-AA82SX","Akamai Switches","HP ProCurve Switch 2900-48G",,40,6600
+"B-3-1UCGB1","London, UK","GB","N/A","FreeFlow","B-3-39FYKS","Akamai Servers","ZT Group 1x8-G4 Opteron Server {Fujitsu Drives}","1x8 G4",40,7600
+"B-3-25BTYW","Amsterdam - Amstel Business Park","NL","N/A","FreeFlow","A-1-B63UQ7","Akamai Servers","Verari 2x8-G4 CacheH Opteron Server","2x8 G4 CacheH",40,9000
+"B-3-2DZY2G","21C - Birmingham","GB","N/A","FreeFlow","A-1-A0QWUX","Akamai Servers","Verari 2x8-G4 Opteron Server","2x8 G4",40,9000
+"B-3-2DZY3Z","21C - Baynard/Faraday","GB","N/A","FreeFlow","A-1-A0QWUX","Akamai Servers","Verari 2x8-G4 Opteron Server","2x8 G4",40,9000
+"B-3-2DZY76","21C - Manchester","GB","N/A","FreeFlow","B-3-28P3RU","Akamai Servers","Verari 2x8-G4 8G Opteron Server","2x8 G4",40,9000
+"B-3-2PVSYU","Duesseldorf","DE","N/A","FreeFlow","B-3-28P3RU","Akamai Servers","Verari 2x8-G4 8G Opteron Server","2x8 G4",40,9000
+"B-3-2WEVEN","Vienna, VA","US","VA","FreeFlow","B-3-1CNU5K","Akamai Servers","ZT Group 2x8-G4 Opteron Server","2x8 G4",40,9000
+"B-3-4LEEIT","Santa Clara, CA","US","CA","FreeFlow","B-3-39FYL1","Akamai Servers","ZT Group 2x8-G4 8GB SAS CacheH Opteron Server","2x8 G4 CacheH SAS",40,9000
+"B-3-4LEEIT","Santa Clara, CA","US","CA","Storage","B-3-4U9GSW","Akamai Servers","ZT Group 2x10-G4 1TB SATA LCS 8G Opteron Server","2x10 G4 LCS",40,9000
+"B-3-4LXE06","Paris, France - PAR2","FR","N/A","FreeFlow","B-3-39FYL1","Akamai Servers","ZT Group 2x8-G4 8GB SAS CacheH Opteron Server","2x8 G4 CacheH SAS",40,9000
+"1-1RZYA9","Los Angeles, CA/1 Wilshire","US","CA","DDC","A-1-B63URY","Akamai Servers","Verari 2x8-G4 Fat Opteron Server","2x8 G4 Fat",39,8775
+"1-1Z7FHL","Dallas, TX","US","TX","Flash5 Windows","B-3-1JT3K0","Akamai Servers","ZT Group 2x8-G4 Opteron Server {Rev B}","2x8 G4",39,8775
+"1-3DBM1P","Shinagawa, Tokyo","JP","N/A","Storage","B-3-367ERZ","Akamai Servers","Verari 1x2-G4 8G Opteron Server {Rev B}","1x2 G4",39,5070
+"1-3KXGM8","Atlanta, GA","US","GA","ESSL","1-3DGQ7L","Akamai Servers","Verari 2x4-G1 Opteron Server","2x4 G1",39,11115
+"1-6BTFJL","Dallas, TX","US","TX","Other","1-AYFVD","Akamai Switches","HP ProCurve Switch 2524",,39,1365
+"A-1-7F7NY5","Koutoh","JP","N/A","FreeFlow","1-6G35YH","Akamai Servers","Verari 2x8-G3 Opteron Server {Rev A}","2x8 G3",39,10725
+"A-1-7IHYOR","New York, New York","US","NY","FreeFlow","A-1-9NR61V","Akamai Servers","Verari 2x8-G3 CacheH Opteron Server {Rev B}","2x8 G3 CacheH",39,10725
+"A-1-7IUSZL","Santa Clara, CA","US","CA","FreeFlow","B-3-4O0QQK","Akamai Servers","Verari 2x8-G4 8G CacheH SAS Opteron Server {Rev B}","2x8 G4 CacheH SAS",39,8775
+"A-1-7U5Y49","Sunnyvale, CA","US","CA","FreeFlow","A-1-B63UQ7","Akamai Servers","Verari 2x8-G4 CacheH Opteron Server","2x8 G4 CacheH",39,8775
+"B-3-1DO7MJ","Seattle, WA","US","WA","FreeFlow","A-1-B63UQ7","Akamai Servers","Verari 2x8-G4 CacheH Opteron Server","2x8 G4 CacheH",39,8775
+"B-3-1KJLMO","Los Angeles, CA","US","CA","StreamOS","1-2X0B40","Akamai Servers","Verari 2x2-G1 Opteron Server","2x2 G1",39,8775
+"B-3-1UCGB1","London, UK","GB","N/A","FreeFlow","B-3-28P3QZ","Akamai Servers","Verari 2x8-G4 8G CacheH Opteron Server","2x8 G4 CacheH",39,8775
+"B-3-1UCGB1","London, UK","GB","N/A","FreeFlow","B-3-4D2E9V","Akamai Servers","ZT Group 1x8-G4 Opteron Server","1x8 G4",39,7410
+"B-3-2IRBUO","Dallas, TX(2323)","US","TX","FreeFlow","B-3-28P3QZ","Akamai Servers","Verari 2x8-G4 8G CacheH Opteron Server","2x8 G4 CacheH",39,8775
+"B-4-6676I","Vienna","AT","N/A","FreeFlow","B-3-4D2E9V","Akamai Servers","ZT Group 1x8-G4 Opteron Server","1x8 G4",39,7410
+"1-1YY3UM","Chicago, IL","US","IL","FreeFlow","B-3-4D2E9V","Akamai Servers","ZT Group 1x8-G4 Opteron Server","1x8 G4",38,7220
+"1-1YY3UM","Chicago, IL","US","IL","Flash5 Windows","B-4-K3NZH","Akamai Servers","ZT Group 1x8-G4 CacheH Opteron Server {Fuji}","1x8 G4 CacheH",38,7220
+"1-3DBM1P","Shinagawa, Tokyo","JP","N/A","Storage","B-3-47J1YV","Akamai Servers","Verari 2x10-G4 1TB SATA LCS 8G Opteron Server","2x10 G4 LCS",38,8550
+"1-3KXGLD","Ashburn, VA (Building F - DC2)","US","VA","Storage","A-1-8T0DAL","Akamai Servers","Verari 2x10-G3 SATA LCS Opteron Server","2x10 G3 LCS",38,8550
+"1-3KXGM8","Atlanta, GA","US","GA","Storage","A-1-8T0DAL","Akamai Servers","Verari 2x10-G3 SATA LCS Opteron Server","2x10 G3 LCS",38,8550
+"1-3KXGM8","Atlanta, GA","US","GA","Storage","B-2-C06CB","Akamai Servers","Verari 2x10-G4 SATA LCS 8G Opteron Server {Rev B}","2x10 G4 LCS",38,8550
+"1-5GP32E","London North, TFM12","GB","N/A","Flash5 Windows","B-3-4D2E9V","Akamai Servers","ZT Group 1x8-G4 Opteron Server","1x8 G4",38,7220
+"1-5PKZTB","Houston, TX","US","TX","FreeFlow","B-4-K3NZH","Akamai Servers","ZT Group 1x8-G4 CacheH Opteron Server {Fuji}","1x8 G4 CacheH",38,7220
+"1-6BTFJL","Dallas, TX","US","TX","Other","A-1-8T0DAL","Akamai Servers","Verari 2x10-G3 SATA LCS Opteron Server","2x10 G3 LCS",38,8550
+"1-6NIR04","Frankfurt","DE","N/A","FreeFlow","A-1-8NVY3H","Akamai Servers","Verari 2x8-G3 Opteron Server {Rev B}","2x8 G3",38,10450
+"1-DI5QV","Chicago, IL","US","IL","Storage","A-1-8T0DAL","Akamai Servers","Verari 2x10-G3 SATA LCS Opteron Server","2x10 G3 LCS",38,8550
+"1-DI5QV","Chicago, IL","US","IL","Flash5 Windows","B-4-K3NZH","Akamai Servers","ZT Group 1x8-G4 CacheH Opteron Server {Fuji}","1x8 G4 CacheH",38,7220
+"1-DJSRG","London, UK","GB","N/A","FreeFlow","A-1-9NR61V","Akamai Servers","Verari 2x8-G3 CacheH Opteron Server {Rev B}","2x8 G3 CacheH",38,10450
+"1-DJSRG","London, UK","GB","N/A",,"A-1-AA82SX","Akamai Switches","HP ProCurve Switch 2900-48G",,38,6270
+"1-DJSRG","London, UK","GB","N/A","FreeFlow","B-3-28P3QZ","Akamai Servers","Verari 2x8-G4 8G CacheH Opteron Server","2x8 G4 CacheH",38,8550

@@ -123,9 +123,6 @@ public class UserResource extends AuthorizeResource {
         }
 
         if (ok) {
-            if (form.getNames().contains("status")) {
-                user.setStatus(form.getFirstValue("status"));
-            }
             if (form.getNames().contains("type")) {
                 user.setType(form.getFirstValue("type"));
             }
@@ -160,6 +157,12 @@ public class UserResource extends AuthorizeResource {
 
     @Override
     public boolean allowDelete() {
-        return false;
+        return true;
+    }
+
+    @Override
+    public void doRemove() {
+        siteService.remove(environmentBrowser.getUser());
+        success();
     }
 }
