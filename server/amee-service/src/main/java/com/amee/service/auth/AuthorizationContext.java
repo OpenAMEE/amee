@@ -147,6 +147,37 @@ public class AuthorizationContext implements Serializable {
     }
 
     /**
+     * Returns true if the currently active principles have the requested access, via entry, to the
+     * supplied entity. If the entity has already been considered for authorization then the cached
+     * AccessSpecification is re-used. If the entity has not been considered yet then a fresh authorization
+     * check is made, with the assumption that the entity is a direct child of the last entity declared in
+     * accessSpecifications.
+     *
+     * @param entity to authorize access for
+     * @param entry  specifying access requested
+     * @return true if authorize result is allow, otherwise false if result is deny
+     */
+    public boolean isAuthorized(AMEEEntity entity, PermissionEntry entry) {
+        if (entity.getAccessSpecification() != null) {
+            return entity.getAccessSpecification().getActual().contains(entry);
+        } else {
+            return isAuthorized(new AccessSpecification(entity, entry));
+        }
+    }
+
+    /**
+     * Returns true if the currently active principles have access to the entity with the PermissionEntry in
+     * the supplied AccessSpecification, with the assumption that the entity is a direct child of the last
+     * entity declared in accessSpecifications.  
+     *
+     * @param accessSpecification desired AccessSpecification
+     * @return true if authorize result is allow, otherwise false if result is deny
+     */
+    public boolean isAuthorized(AccessSpecification accessSpecification) {
+        return authorizationService.isAuthorized(this, accessSpecification);
+    }
+
+    /**
      * Returns the principals list.
      *
      * @return principals list

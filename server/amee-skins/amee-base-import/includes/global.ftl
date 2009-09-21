@@ -6,13 +6,13 @@
 <#assign footerCopy = "">
 
 <#function canModify entity>
-    <#return entity.accessSpecification?? && entity.accessSpecification.actual?seq_contains(PermissionEntry.MODIFY)>
+    <#return authorizationContext.isAuthorized(entity, PermissionEntry.MODIFY)>
 </#function>
 
 <#function canCreate entity>
-    <#return entity.accessSpecification?? && entity.accessSpecification.actual?seq_contains(PermissionEntry.CREATE)>
+    <#return authorizationContext.isAuthorized(entity, PermissionEntry.CREATE)>
 </#function>
 
 <#function canDelete entity>
-    <#return entity.accessSpecification?? && entity.accessSpecification.actual?seq_contains(PermissionEntry.DELETE)>
+    <#return authorizationContext.isAuthorized(entity, PermissionEntry.DELETE)>
 </#function>
