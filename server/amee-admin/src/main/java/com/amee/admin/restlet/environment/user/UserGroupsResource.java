@@ -30,9 +30,6 @@ import java.util.*;
 public class UserGroupsResource extends AuthorizeResource implements Serializable {
 
     @Autowired
-    private GroupService groupService;
-
-    @Autowired
     private EnvironmentBrowser environmentBrowser;
 
     private GroupPrincipal newGroupPrincipal;

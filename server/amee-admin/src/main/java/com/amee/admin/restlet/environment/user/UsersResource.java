@@ -39,9 +39,6 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     private SiteService siteService;
 
     @Autowired
-    private GroupService groupService;
-
-    @Autowired
     private EnvironmentBrowser environmentBrowser;
 
     private User newUser;

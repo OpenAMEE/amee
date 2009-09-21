@@ -137,7 +137,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
 
     @Override
     public List<AccessSpecification> getAcceptAccessSpecifications() {
-        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), new PermissionEntry("c.pr"));
+        return updateLastAccessSpecificationWithPermissionEntry(getGetAccessSpecifications(), PermissionEntry.CREATE_PROFILE);
     }
 
     @Override
