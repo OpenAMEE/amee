@@ -151,17 +151,17 @@ public class RequestContext {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(username + "|");
-        sb.append(apiVersion + "|");
-        sb.append(profileUid + "|");
-        sb.append(categoryUid + "|");
-        sb.append(requestPath + "|");
-        sb.append(type + "|");
-        sb.append(label + "|");
-        sb.append(requestParameters.replace("=","__") + "|");
-        sb.append(form + "|");
-        sb.append(error + "|");
-        sb.append(method);
+            sb.append(username + "|");
+            sb.append(apiVersion + "|");
+            sb.append(profileUid + "|");
+            sb.append(categoryUid + "|");
+            sb.append(requestPath + "|");
+            sb.append(type + "|");
+            sb.append(label + "|");
+            sb.append(requestParameters.replace("=","__") + "|");
+            sb.append(form + "|");
+            sb.append(error + "|");
+            sb.append(method);
         return sb.toString();
     }
 }
