@@ -42,10 +42,13 @@ import java.util.List;
 public abstract class AuthorizeResource extends BaseResource {
 
     @Autowired
-    private AuthorizationService authorizationService;
+    protected AuthorizationService authorizationService;
 
     @Autowired
-    private GroupService groupService;
+    protected GroupService groupService;
+
+    @Autowired
+    protected AuthorizationContext authorizationContext;
 
     /**
      * Overrides Resource.handleGet to enforce authorization for GET requests.

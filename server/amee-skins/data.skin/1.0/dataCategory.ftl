@@ -66,7 +66,7 @@
                     <td>${pi.name}</td>
                     <td>
                     <a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
-                    <input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/>
+                    <#if canDelete(dataCategory)><input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
                     </td>
                 </tr>
             </#if>
@@ -92,7 +92,7 @@
                 <td>${row.findCell('label')}</td>
                 <td>
                 <a href='${basePath}/${row.findCell('path')}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
-                <input type="image" onClick="deleteDataItem('${row.uid}', '${basePath}/${row.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/>
+                <#if canDelete(dataCategory)><input type="image" onClick="deleteDataItem('${row.uid}', '${basePath}/${row.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
                 </td>
             </tr>
         </#list>

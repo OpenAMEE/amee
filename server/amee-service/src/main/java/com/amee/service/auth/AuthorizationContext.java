@@ -23,10 +23,17 @@ package com.amee.service.auth;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.auth.AccessSpecification;
+import com.amee.domain.auth.PermissionEntry;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+
+import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Scope;
 
 /**
  * AuthorizationContext encapsulates the 'context' for an authorization request. The context
@@ -34,6 +41,8 @@ import java.util.List;
  * PermissionEntries. These collections are taken into consideration when deciding if a
  * request should be authorized.
  */
+@Component
+@Scope("prototype")
 public class AuthorizationContext implements Serializable {
 
     /**
@@ -48,6 +57,13 @@ public class AuthorizationContext implements Serializable {
     private List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
 
     /**
+     * A set of PermissionEntries representing the consolidated & inherited access rights following
+     * execution of AuthorizationService.isAuthorized(). The PermissionEntries will reflect the state-of-play at
+     * the point of AuthorizationService.isAuthorized() returning ALLOW or DENY for the authorization check.
+     */
+    private Set<PermissionEntry> entries = new HashSet<PermissionEntry>();
+
+    /**
      * Default constructor.
      */
     public AuthorizationContext() {
@@ -57,7 +73,7 @@ public class AuthorizationContext implements Serializable {
     /**
      * Construct an AuthorizationContext with the supplied principal, entity and entries.
      *
-     * @param principal
+     * @param principal to be authorized
      * @param accessSpecification
      */
     public AuthorizationContext(AMEEEntity principal, AccessSpecification accessSpecification) {
@@ -69,7 +85,7 @@ public class AuthorizationContext implements Serializable {
     /**
      * Construct an AuthorizationContext with the supplied principals, entities and entries.
      *
-     * @param principals
+     * @param principals to be authorized
      * @param accessSpecifications
      */
     public AuthorizationContext(List<AMEEEntity> principals, List<AccessSpecification> accessSpecifications) {
@@ -119,9 +135,18 @@ public class AuthorizationContext implements Serializable {
     }
 
     /**
+     * Reset the AuthorizationContext. All collections are cleared.
+     */
+    public void reset() {
+        principals.clear();
+        accessSpecifications.clear();
+        entries.clear();
+    }
+
+    /**
      * Returns the principals list.
      *
-     * @return principals list.
+     * @return principals list
      */
     public List<AMEEEntity> getPrincipals() {
         return principals;
@@ -130,9 +155,18 @@ public class AuthorizationContext implements Serializable {
     /**
      * Returns the accessSpecifications list.
      *
-     * @return accessSpecifications list.
+     * @return accessSpecifications list
      */
     public List<AccessSpecification> getAccessSpecifications() {
         return accessSpecifications;
+    }
+
+    /**
+     * Returns the entries set;
+     *
+     * @return entries set
+     */
+    public Set<PermissionEntry> getEntries() {
+        return entries;
     }
 }

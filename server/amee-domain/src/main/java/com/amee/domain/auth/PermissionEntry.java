@@ -46,6 +46,7 @@ public class PermissionEntry implements Serializable {
     public final static PermissionEntry VIEW = new PermissionEntry("v");
     public final static PermissionEntry VIEW_DENY = new PermissionEntry("v", false);
     public final static PermissionEntry CREATE = new PermissionEntry("c");
+    public final static PermissionEntry CREATE_PROFILE = new PermissionEntry("c.pr");
     public final static PermissionEntry MODIFY = new PermissionEntry("m");
     public final static PermissionEntry DELETE = new PermissionEntry("d");
 

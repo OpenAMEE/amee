@@ -12,3 +12,7 @@
 <#function canCreate entity>
     <#return entity.accessSpecification?? && entity.accessSpecification.actual?seq_contains(PermissionEntry.CREATE)>
 </#function>
+
+<#function canDelete entity>
+    <#return entity.accessSpecification?? && entity.accessSpecification.actual?seq_contains(PermissionEntry.DELETE)>
+</#function>

@@ -357,5 +357,4 @@ public class PathItem implements APIObject, Serializable, Comparable {
     public Set<PathItem> getChildren() {
         return children;
     }
-
 }

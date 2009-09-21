@@ -59,7 +59,7 @@ public class AuthorizationService {
      * - Always authorize if an OWN PermissionEntry is present for an entity (return true).
      * - Apply isAuthorized(AccessSpecification, Collection<PermissionEntry>) to each AccessSpecification, return false
      * if not authorized.
-     * - Return authorized (true) if isAuthorized is passed for each entity. 
+     * - Return authorized (true) if isAuthorized is passed for each entity.
      *
      * @param authorizationContext to consider for authorization
      * @return true if authorize result is allow, otherwise false if result is deny
@@ -68,7 +68,6 @@ public class AuthorizationService {
 
         List<Permission> permissions;
         List<PermissionEntry> entityEntries;
-        Set<PermissionEntry> allEntries = new HashSet<PermissionEntry>();
 
         // Super-users can do anything. Stop here.
         // TODO: Jumping out here means accessSpecification.actual will not be populated.
@@ -96,20 +95,20 @@ public class AuthorizationService {
             entityEntries = getPermissionEntries(permissions);
 
             // Merge PermissionEntries for current entity with inherited PermissionEntries.
-            mergePermissionEntries(allEntries, entityEntries);
+            mergePermissionEntries(authorizationContext.getEntries(), entityEntries);
 
             // Update the AccessSpecification with the actual PermissionEntries for the
             // current principals related to the current entity.
-            accessSpecification.setActual(allEntries);
+            accessSpecification.setActual(authorizationContext.getEntries());
 
             // Owner can do anything.
-            if (allEntries.contains(PermissionEntry.OWN)) {
+            if (authorizationContext.getEntries().contains(PermissionEntry.OWN)) {
                 log.debug("isAuthorized() - ALLOW (owner)");
                 return true;
             }
 
             // Principals must be able to do everything specified.
-            if (!isAuthorized(accessSpecification, allEntries)) {
+            if (!isAuthorized(accessSpecification, authorizationContext.getEntries())) {
                 log.debug("isAuthorized() - DENY (not permitted)");
                 return false;
             }

@@ -32,9 +32,6 @@ import java.util.Map;
 public class GroupsResource extends AuthorizeResource implements Serializable {
 
     @Autowired
-    private GroupService groupService;
-
-    @Autowired
     private EnvironmentBrowser environmentBrowser;
 
     private Group newGroup;
