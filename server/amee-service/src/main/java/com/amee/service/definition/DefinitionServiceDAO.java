@@ -49,7 +49,7 @@ public class DefinitionServiceDAO implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    private static final String CACHE_REGION = "query.environmentService";
+    private static final String CACHE_REGION = "query.definitionService";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -360,5 +360,4 @@ public class DefinitionServiceDAO implements Serializable {
             localeName.setStatus(AMEEStatus.TRASH);
         }
     }
-
 }

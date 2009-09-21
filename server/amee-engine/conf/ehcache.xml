@@ -37,8 +37,6 @@
            overflowToDisk="false">
     </cache>
 
-    <!-- **** Includes **** -->
-
     <!--
         **** Data capacity (collected from DB, with some contingency) ****
         5 Environments
@@ -70,7 +68,7 @@
         50 Profile PIGs (= Profiles)
     -->
 
-    <!-- **** AMEE Entities **** -->
+    <!-- **** AMEE - Entities **** -->
 
     <!-- APIVersion -->
     <cache name="com.amee.domain.APIVersion"
@@ -111,7 +109,6 @@
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
     </cache>
-
     <cache name="com.amee.domain.data.DataCategory.localeNames"
            maxElementsInMemory="200"
            eternal="false"
@@ -164,7 +161,6 @@
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
     </cache>
-
     <cache name="com.amee.domain.data.ItemDefinition.localeNames"
            maxElementsInMemory="200"
            eternal="false"
@@ -183,9 +179,7 @@
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
     </cache>
-
-
-    <cache name="com.amee.domain.data.ItemValue.localeNames"
+    <cache name="com.amee.domain.data.ItemValue.localeValues"
            maxElementsInMemory="57500"
            eternal="false"
            overflowToDisk="false"
@@ -211,7 +205,6 @@
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
     </cache>
-
     <cache name="com.amee.domain.data.ItemValueDefinition.localeNames"
            maxElementsInMemory="200"
            eternal="false"
@@ -241,7 +234,7 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- **** Queries **** -->
+    <!-- **** AMEE - Queries **** -->
 
     <!-- DataServiceDAO -->
     <cache name="query.dataService"
@@ -263,9 +256,19 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- **** Application objects **** -->
+    <!-- DefinitionServiceDAO -->
+    <cache name="query.definitionService"
+           maxElementsInMemory="2000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
 
-    <!-- Data Sheets -->
+    <!-- **** AMEE - Application objects **** -->
+
+    <!-- Drill Down Choices -->
     <cache name="DrillDownChoices"
            maxElementsInMemory="1000"
            eternal="false"
@@ -319,7 +322,7 @@
 
     <!-- User -->
     <cache name="com.amee.domain.auth.User"
-           maxElementsInMemory="100"
+           maxElementsInMemory="2000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -339,7 +342,7 @@
 
     <!-- GroupPrinciple -->
     <cache name="com.amee.domain.auth.GroupPrinciple"
-           maxElementsInMemory="50"
+           maxElementsInMemory="2000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -349,7 +352,7 @@
 
     <!-- Permission -->
     <cache name="com.amee.domain.auth.Permission"
-           maxElementsInMemory="20"
+           maxElementsInMemory="2000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -359,8 +362,28 @@
 
     <!-- **** Kiwi - Queries **** -->
 
-    <!-- AuthenticationService -->
+    <!-- AuthenticationDAO -->
     <cache name="query.authenticationService"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
+    <!-- PermissionServiceDAO -->
+    <cache name="query.permissionService"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
+    <!-- GroupService -->
+    <cache name="query.groupService"
            maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"
