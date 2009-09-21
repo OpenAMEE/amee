@@ -1,0 +1,132 @@
+# Using lat / lng coords rather than city names will significantly speed up map rendering
+
+_xdc_._2fyx20bjq && _xdc_._2fyx20bjq({
+  "name": "Raleigh US",
+  "Status": {
+    "code": 200,
+    "request": "geocode"
+  },
+  "Placemark": [ {
+    "id": "p1",
+    "address": "Raleigh, NC, USA",
+    "AddressDetails": {
+   "Accuracy" : 4,
+   "Country" : {
+      "AdministrativeArea" : {
+         "AdministrativeAreaName" : "NC",
+         "Locality" : {
+            "LocalityName" : "Raleigh"
+         }
+      },
+      "CountryName" : "USA",
+      "CountryNameCode" : "US"
+   }
+},
+    "ExtendedData": {
+      "LatLonBox": {
+        "north": 35.9244374,
+        "south": 35.6347688,
+        "east": -78.3872672,
+        "west": -78.8995048
+      }
+    },
+    "Point": {
+      "coordinates": [ -78.6433860, 35.7797350, 0 ]
+    }
+  } ]
+}
+)
+
+
+
+_xdc_._3fyx20c8b && _xdc_._3fyx20c8b({
+  "name": "Santa Clara US",
+  "Status": {
+    "code": 200,
+    "request": "geocode"
+  },
+  "Placemark": [ {
+    "id": "p1",
+    "address": "Santa Clara, CA, USA",
+    "AddressDetails": {
+   "Accuracy" : 4,
+   "Country" : {
+      "AdministrativeArea" : {
+         "AdministrativeAreaName" : "CA",
+         "Locality" : {
+            "LocalityName" : "Santa Clara"
+         }
+      },
+      "CountryName" : "USA",
+      "CountryNameCode" : "US"
+   }
+},
+    "ExtendedData": {
+      "LatLonBox": {
+        "north": 37.3877834,
+        "south": 37.3168258,
+        "east": -121.9039523,
+        "west": -122.0320117
+      }
+    },
+    "Point": {
+      "coordinates": [ -121.9679820, 37.3523130, 0 ]
+    }
+  } ]
+}
+)
+
+_xdc_._4fyx20cbe && _xdc_._4fyx20cbe({
+  "name": "Highlands Ranch US",
+  "Status": {
+    "code": 200,
+    "request": "geocode"
+  },
+  "Placemark": [ {
+    "id": "p1",
+    "address": "Highlands Ranch, Colorado, USA",
+    "AddressDetails": {
+   "Accuracy" : 4,
+   "Country" : {
+      "AdministrativeArea" : {
+         "AdministrativeAreaName" : "CO",
+         "DependentLocality" : {
+            "DependentLocalityName" : "Highlands Ranch"
+         }
+      },
+      "CountryName" : "USA",
+      "CountryNameCode" : "US"
+   }
+},
+    "ExtendedData": {
+      "LatLonBox": {
+        "north": 39.5876422,
+        "south": 39.5188167,
+        "east": -104.8911283,
+        "west": -105.0191877
+      }
+    },
+    "Point": {
+      "coordinates": [ -104.9551580, 39.5532380, 0 ]
+    }
+  }, {
+    "id": "p2",
+    "address": "Highlands Ranch, Colorado 80126, USA",
+    "AddressDetails": {
+   "Accuracy" : 9,
+   "AddressLine" : [ "Highlands Ranch" ]
+},
+    "ExtendedData": {
+      "LatLonBox": {
+        "north": 39.5475920,
+        "south": 39.5412968,
+        "east": -104.9649080,
+        "west": -104.9712032
+      }
+    },
+    "Point": {
+      "coordinates": [ -104.9680556, 39.5444444, 0 ]
+    }
+  } ]
+}
+)

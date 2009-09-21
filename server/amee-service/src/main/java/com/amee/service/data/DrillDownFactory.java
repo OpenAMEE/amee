@@ -25,6 +25,7 @@ import com.amee.domain.LocaleHolder;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.sheet.Choice;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -88,8 +89,10 @@ public class DrillDownFactory implements CacheableFactory {
             keyBuilder.append("DrillDown_");
             keyBuilder.append(dataCategory.getUid());
             for (Choice selection : selections) {
-                keyBuilder.append("_SL_");
-                keyBuilder.append(selection.getValue().hashCode());
+                if (StringUtils.isNotBlank(selection.getValue())) {
+                    keyBuilder.append("_SL_");
+                    keyBuilder.append(selection.getValue().hashCode());
+                }
             }
             if (startDate != null) {
                 keyBuilder.append("_SD_");

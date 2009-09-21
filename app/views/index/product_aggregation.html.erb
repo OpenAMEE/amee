@@ -1,0 +1,20 @@
+<script type='text/javascript' src='http://www.google.com/jsapi'></script>
+<script type='text/javascript'>
+  google.load('visualization', '1', {packages:['table', 'columnchart']});
+  google.setOnLoadCallback(drawTable);
+  function drawTable() {        
+    var data = new google.visualization.DataTable(<%= @data %>);
+    
+    var chart = new google.visualization.ColumnChart(document.getElementById('vis_div'));
+    chart.draw(data, {width: 800, height: 600, is3D: true, title: 'Product Emissions'});    
+        
+    google.visualization.events.addListener(chart, "select", function (e) {
+      var s = chart.getSelection()[0];
+      var dcName = data.getValue(s.row, 0);
+      window.location = "/products/" + dcName;
+    });
+    
+  }
+</script>
+
+<div id='vis_div'></div>
