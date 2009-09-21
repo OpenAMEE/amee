@@ -1,0 +1,12 @@
+<script type='text/javascript' src='http://www.google.com/jsapi'></script>
+<script type='text/javascript'>
+  google.load('visualization', '1', {packages:['table']});
+  google.setOnLoadCallback(drawTable);
+  function drawTable() {        
+    var data = new google.visualization.DataTable(<%= partial :data %>);
+    var table = new google.visualization.Table(document.getElementById('table_div'));
+    table.draw(data, {showRowNumber: true});
+  }
+</script>
+
+<div id='table_div'></div>

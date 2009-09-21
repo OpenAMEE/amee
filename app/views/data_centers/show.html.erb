@@ -1,0 +1,37 @@
+<script type='text/javascript' src='http://www.google.com/jsapi'></script>
+<script type='text/javascript'>
+  google.load('visualization', '1', {packages:['table', 'annotatedtimeline']});
+  google.setOnLoadCallback(launch);
+  
+  function launch() {
+    drawTable();
+    drawTimeLine();
+  }
+  
+  function drawTable() {        
+    var data = new google.visualization.DataTable(<%= @table_data %>);    
+    var table = new google.visualization.Table(document.getElementById('table_div'));
+    table.draw(data, {showRowNumber: true});
+  }
+  
+  function drawTimeLine() {
+    var data = new google.visualization.DataTable(<%= @timeline_data %>);
+    var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart'));
+    chart.draw(data, {displayAnnotations: true, annotationsWidth: 15});    
+  }
+  
+</script>
+
+<h1>
+  <%= @data_center.data_center_location %> 
+  <span class="minor-info"><%= @data_center.data_center_id %></span>
+</h1>
+<div id="breadcrumb">
+  <%= link_to "Dashboard", "/"%> &raquo; <%= link_to "Facilities", "/facilities" %>
+</div>
+
+<div id="chart"></div>
+
+<div class="table-wrapper">
+  <div id='table_div'></div>
+</div>
