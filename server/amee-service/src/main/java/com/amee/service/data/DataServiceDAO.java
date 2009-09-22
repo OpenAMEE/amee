@@ -34,6 +34,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -41,7 +42,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-@Service
+@Repository
 public class DataServiceDAO implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
