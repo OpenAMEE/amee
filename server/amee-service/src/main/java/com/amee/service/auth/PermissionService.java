@@ -63,8 +63,6 @@ public class PermissionService {
     @Autowired
     private PermissionServiceDAO dao;
 
-    // Authorization.
-
     public List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
         if ((entity == null) || !isValidEntity(entity)) {
             throw new IllegalArgumentException();
@@ -103,14 +101,15 @@ public class PermissionService {
     /**
      * Fetch a List of all available Permissions matching the supplied principal and entity.
      *
-     * @param principal to match on
-     * @param entity    to match on
+     * @param principal       to match on
+     * @param entityReference to match on
      * @return list of matching permissions
      */
-    public List<Permission> getPermissionsForPrincipalAndEntity(AMEEEntity principal, AMEEEntity entity) {
-        if ((principal == null) || (entity == null) || !isValidPrincipalToEntity(principal, entity)) {
+    public List<Permission> getPermissionsForPrincipalAndEntity(AMEEEntity principal, IAMEEEntityReference entityReference) {
+        if ((principal == null) || (entityReference == null) || !isValidPrincipalToEntity(principal, entityReference)) {
             throw new IllegalArgumentException();
         }
+        AMEEEntity entity = getEntity(entityReference);
         List<Permission> permissions = new ArrayList<Permission>();
         permissions.addAll(entity.getPermissionsForPrincipalAndEntity(principal, entity));
         permissions.addAll(dao.getPermissionsForPrincipalAndEntity(principal, entity));
@@ -149,5 +148,27 @@ public class PermissionService {
         if ((principal == null) || (entity == null)) throw new IllegalArgumentException();
         return isValidPrincipal(principal) &&
                 PRINCIPAL_ENTITY.get(principal.getObjectType()).contains(entity.getObjectType());
+    }
+
+    /**
+     * Fetch the entity referenced by the IAMEEEntityReference from the database. Copies the
+     * AccessSpecification from the entityReference to the entity.
+     *
+     * @param entityReference to fetch
+     * @return fetched entity
+     */
+    public AMEEEntity getEntity(IAMEEEntityReference entityReference) {
+        AMEEEntity entity = entityReference.getEntity();
+        if (entity == null) {
+            entity = dao.getEntity(entityReference);
+            if (entity == null) {
+                throw new RuntimeException("An entity was not found for the entityReference.");
+            }
+            if (entity.getAccessSpecification() == null) {
+                entity.setAccessSpecification(entityReference.getAccessSpecification());
+            }
+            entityReference.setEntity(entity);
+        }
+        return entity;
     }
 }
