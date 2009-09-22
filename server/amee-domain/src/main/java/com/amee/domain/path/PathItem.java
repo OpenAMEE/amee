@@ -20,9 +20,8 @@
 package com.amee.domain.path;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.APIObject;
-import com.amee.domain.UidGen;
-import com.amee.domain.ObjectType;
+import com.amee.domain.*;
+import com.amee.domain.auth.AccessSpecification;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -30,10 +29,9 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.Serializable;
 import java.util.*;
 
-public class PathItem implements APIObject, Serializable, Comparable {
+public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -47,6 +45,8 @@ public class PathItem implements APIObject, Serializable, Comparable {
     private PathItem parent = null;
     private Set<PathItem> children = new TreeSet<PathItem>();
     private boolean deprecated;
+    private ThreadLocal<AccessSpecification> accessSpecification;
+    private ThreadLocal<AMEEEntity> entity;
 
     public PathItem() {
         super();
@@ -60,6 +60,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
         setPath(pathable.getDisplayPath());
         setName(pathable.getDisplayName());
         setIsDeprecated(pathable.isDeprecated());
+        setEntity(pathable.getEntity());
     }
 
     @Override
@@ -289,6 +290,11 @@ public class PathItem implements APIObject, Serializable, Comparable {
         this.id = id;
     }
 
+    @Override
+    public Long getEntityId() {
+        return getId();
+    }
+
     public String getUid() {
         return uid;
     }
@@ -297,6 +303,12 @@ public class PathItem implements APIObject, Serializable, Comparable {
         this.uid = uid;
     }
 
+    @Override
+    public String getEntityUid() {
+        return getUid();
+    }
+
+    @Override
     public ObjectType getObjectType() {
         return objectType;
     }
@@ -334,7 +346,7 @@ public class PathItem implements APIObject, Serializable, Comparable {
     }
 
     public boolean isDeprecated() {
-        return deprecated;    
+        return deprecated;
     }
 
     public boolean hasParent() {
@@ -356,5 +368,36 @@ public class PathItem implements APIObject, Serializable, Comparable {
 
     public Set<PathItem> getChildren() {
         return children;
+    }
+
+    @Override
+    public AccessSpecification getAccessSpecification() {
+        if (accessSpecification != null) {
+            return accessSpecification.get();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void setAccessSpecification(AccessSpecification accessSpecification) {
+        this.accessSpecification = new ThreadLocal<AccessSpecification>();
+        this.accessSpecification.set(accessSpecification);
+    }
+
+    @Override
+    public AMEEEntity getEntity() {
+        if (entity != null) {
+            return entity.get();
+        } else {
+            return null;
+        }
+
+    }
+
+    @Override
+    public void setEntity(AMEEEntity entity) {
+        this.entity = new ThreadLocal<AMEEEntity>();
+        this.entity.set(entity);
     }
 }

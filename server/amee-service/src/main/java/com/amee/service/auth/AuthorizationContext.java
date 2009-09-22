@@ -22,19 +22,18 @@
 package com.amee.service.auth;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.PermissionEntry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
-
-import org.springframework.stereotype.Service;
-import org.springframework.stereotype.Component;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * AuthorizationContext encapsulates the 'context' for an authorization request. The context
@@ -153,22 +152,22 @@ public class AuthorizationContext implements Serializable {
      * check is made, with the assumption that the entity is a direct child of the last entity declared in
      * accessSpecifications.
      *
-     * @param entity to authorize access for
-     * @param entry  specifying access requested
+     * @param entityReference to authorize access for
+     * @param entry           specifying access requested
      * @return true if authorize result is allow, otherwise false if result is deny
      */
-    public boolean isAuthorized(AMEEEntity entity, PermissionEntry entry) {
-        if (entity.getAccessSpecification() != null) {
-            return entity.getAccessSpecification().getActual().contains(entry);
+    public boolean isAuthorized(IAMEEEntityReference entityReference, PermissionEntry entry) {
+        if (entityReference.getAccessSpecification() != null) {
+            return entityReference.getAccessSpecification().getActual().contains(entry);
         } else {
-            return isAuthorized(new AccessSpecification(entity, entry));
+            return isAuthorized(new AccessSpecification(entityReference, entry));
         }
     }
 
     /**
      * Returns true if the currently active principles have access to the entity with the PermissionEntry in
      * the supplied AccessSpecification, with the assumption that the entity is a direct child of the last
-     * entity declared in accessSpecifications.  
+     * entity declared in accessSpecifications.
      *
      * @param accessSpecification desired AccessSpecification
      * @return true if authorize result is allow, otherwise false if result is deny

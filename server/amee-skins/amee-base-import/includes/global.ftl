@@ -5,12 +5,16 @@
 <#assign supportDetails = false>
 <#assign footerCopy = "">
 
-<#function canModify entity>
-    <#return authorizationContext.isAuthorized(entity, PermissionEntry.MODIFY)>
+<#function canView entity>
+    <#return authorizationContext.isAuthorized(entity, PermissionEntry.VIEW)>
 </#function>
 
 <#function canCreate entity>
     <#return authorizationContext.isAuthorized(entity, PermissionEntry.CREATE)>
+</#function>
+
+<#function canModify entity>
+    <#return authorizationContext.isAuthorized(entity, PermissionEntry.MODIFY)>
 </#function>
 
 <#function canDelete entity>

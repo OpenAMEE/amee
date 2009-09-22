@@ -216,12 +216,12 @@ public class GroupService implements Serializable {
                     "SELECT gp FROM GroupPrincipal gp " +
                             "WHERE gp.environment.id = :environmentId " +
                             "AND gp.group.id = :groupId " +
-                            "AND gp.principalReference.entityId = :entityId " +
+                            "AND gp.principalReference.entityUid = :entityUid " +
                             "AND gp.principalReference.entityType = :entityType " +
                             "AND gp.status != :trash")
                     .setParameter("environmentId", group.getEnvironment().getId())
                     .setParameter("groupId", group.getId())
-                    .setParameter("principalReference.entityId", entity.getEntityId())
+                    .setParameter("principalReference.entityUid", entity.getEntityUid())
                     .setParameter("principalReference.entityType", entity.getObjectType().getName())
                     .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
@@ -274,10 +274,10 @@ public class GroupService implements Serializable {
         long count = (Long) entityManager.createQuery(
                 "SELECT count(gp) " +
                         "FROM GroupPrincipal gp " +
-                        "WHERE gp.principalReference.entityId = :entityId " +
+                        "WHERE gp.principalReference.entityUid = :entityUid " +
                         "AND gp.principalReference.entityType = :entityType " +
                         "AND gp.status != :trash")
-                .setParameter("entityId", principal.getEntityId())
+                .setParameter("entityUid", principal.getEntityUid())
                 .setParameter("entityType", principal.getObjectType().getName())
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
@@ -291,11 +291,11 @@ public class GroupService implements Serializable {
                 "SELECT gp " +
                         "FROM GroupPrincipal gp " +
                         "LEFT JOIN FETCH gp.group g " +
-                        "WHERE gp.principalReference.entityId = :entityId " +
+                        "WHERE gp.principalReference.entityUid = :entityUid " +
                         "AND gp.principalReference.entityType = :entityType " +
                         "AND gp.status != :trash " +
                         "ORDER BY g.name")
-                .setParameter("entityId", principal.getEntityId())
+                .setParameter("entityUid", principal.getEntityUid())
                 .setParameter("entityType", principal.getObjectType().getName())
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
@@ -323,11 +323,11 @@ public class GroupService implements Serializable {
                 "SELECT gp " +
                         "FROM GroupPrincipal gp " +
                         "LEFT JOIN FETCH gp.group g " +
-                        "WHERE gp.principalReference.entityId = :entityId " +
+                        "WHERE gp.principalReference.entityUid = :entityUid " +
                         "AND gp.principalReference.entityType = :entityType " +
                         "AND gp.status != :trash " +
                         "ORDER BY g.name")
-                .setParameter("entityId", principal.getEntityId())
+                .setParameter("entityUid", principal.getEntityUid())
                 .setParameter("entityType", principal.getObjectType().getName())
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)

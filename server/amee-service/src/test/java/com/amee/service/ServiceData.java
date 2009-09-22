@@ -50,6 +50,7 @@ public class ServiceData {
     public Permission PERMISSION_1, PERMISSION_2, PERMISSION_3, PERMISSION_4;
     public Map<IAMEEEntityReference, List<Permission>> PRINCIPAL_TO_PERMISSIONS;
     public Map<ObjectType, Long> ID_MAP;
+    public Map<String, AMEEEntity> ENTITY_MAP;
 
     public void init() {
         initCollections();
@@ -64,6 +65,7 @@ public class ServiceData {
     private void initCollections() {
         PRINCIPAL_TO_PERMISSIONS = new HashMap<IAMEEEntityReference, List<Permission>>();
         ID_MAP = new HashMap<ObjectType, Long>();
+        ENTITY_MAP = new HashMap<String, AMEEEntity>();
     }
 
     private void initEnvironment() {
@@ -74,7 +76,7 @@ public class ServiceData {
     private void initDefinitions() {
         ID_PUBLIC = new ItemDefinition(ENVIRONMENT, "Item Definition Public");
         ID_PREMIUM = new ItemDefinition(ENVIRONMENT, "Item Definition Premium");
-        setId(ID_PUBLIC, ID_PREMIUM);
+        addEntities(ID_PUBLIC, ID_PREMIUM);
     }
 
     private void initDataCategories() {
@@ -84,31 +86,31 @@ public class ServiceData {
         DC_PREMIUM = new DataCategory(DC_ROOT, "DC Premium", "dc_premium");
         DC_DEPRECATED = new DataCategory(DC_ROOT, "DC Deprecated", "dc_deprecated");
         DC_DEPRECATED.setStatus(AMEEStatus.DEPRECATED);
-        setId(DC_ROOT, DC_PUBLIC, DC_PUBLIC_SUB, DC_PREMIUM, DC_DEPRECATED);
+        addEntities(DC_ROOT, DC_PUBLIC, DC_PUBLIC_SUB, DC_PREMIUM, DC_DEPRECATED);
     }
 
     private void initDataItems() {
         DI_PUBLIC = new DataItem(DC_PUBLIC, ID_PUBLIC);
         DI_PREMIUM = new DataItem(DC_PREMIUM, ID_PREMIUM);
-        setId(DI_PUBLIC, DI_PREMIUM);
+        addEntities(DI_PUBLIC, DI_PREMIUM);
     }
 
     private void initGroupsAndUsers() {
         // Groups
         GROUP_STANDARD = new Group(ENVIRONMENT, "Group Standard");
         GROUP_PREMIUM = new Group(ENVIRONMENT, "Group Premium");
-        setId(GROUP_STANDARD, GROUP_PREMIUM);
+        addEntities(GROUP_STANDARD, GROUP_PREMIUM);
         // Users
         USER_SUPER = new User(ENVIRONMENT, "user_super", "password", "User Super");
         USER_SUPER.setType(UserType.SUPER);
         USER_STANDARD = new User(ENVIRONMENT, "user_standard", "password", "User Standard");
         USER_PREMIUM = new User(ENVIRONMENT, "user_premium", "password", "User Premium");
-        setId(USER_SUPER, USER_STANDARD, USER_PREMIUM);
+        addEntities(USER_SUPER, USER_STANDARD, USER_PREMIUM);
         // Users in Groups
         GROUP_STANDARD_USER_STANDARD = new GroupPrincipal(GROUP_STANDARD, USER_STANDARD);
         GROUP_STANDARD_USER_PREMIUM = new GroupPrincipal(GROUP_STANDARD, USER_PREMIUM);
         GROUP_PREMIUM_USER_PREMIUM = new GroupPrincipal(GROUP_PREMIUM, USER_PREMIUM);
-        setId(GROUP_STANDARD_USER_STANDARD, GROUP_STANDARD_USER_PREMIUM, GROUP_PREMIUM_USER_PREMIUM);
+        addEntities(GROUP_STANDARD_USER_STANDARD, GROUP_STANDARD_USER_PREMIUM, GROUP_PREMIUM_USER_PREMIUM);
     }
 
     private void initPermissions() {
@@ -140,9 +142,10 @@ public class ServiceData {
         permissions.add(permission);
     }
 
-    private void setId(AMEEEntity... entities) {
+    private void addEntities(AMEEEntity... entities) {
         for (AMEEEntity entity : entities) {
             setId(entity);
+            ENTITY_MAP.put(entity.getObjectType() + "_" + entity.getEntityUid(), entity);
         }
     }
 

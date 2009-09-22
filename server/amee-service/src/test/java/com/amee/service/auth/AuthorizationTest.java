@@ -35,9 +35,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class AuthorizationTest extends ServiceTest {
 
     @Autowired
-    private AuthorizationService authorizationService;
-
-    @Autowired
     private AuthorizationContext authorizationContext;
 
     @Test

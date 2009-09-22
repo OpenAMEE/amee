@@ -93,7 +93,7 @@ public class AuthorizationService implements Serializable {
             return false;
         }
 
-        // Iterate over AccessSpecifications (entities) in hierarchical order.
+        // Iterate over AccessSpecifications in hierarchical order.
         for (AccessSpecification accessSpecification : authorizationContext.getAccessSpecifications()) {
             // Try to make an authorization decision.
             allow = isAuthorized(authorizationContext, accessSpecification, entries);
@@ -176,7 +176,7 @@ public class AuthorizationService implements Serializable {
         // Gather all Permissions for principals for current entity.
         permissions = new ArrayList<Permission>();
         for (AMEEEntity principal : authorizationContext.getPrincipals()) {
-            permissions.addAll(permissionService.getPermissionsForPrincipalAndEntity(principal, accessSpecification.getEntity()));
+            permissions.addAll(permissionService.getPermissionsForPrincipalAndEntity(principal, accessSpecification.getEntityReference()));
         }
 
         // Get list of PermissionEntries for current entity from Permissions.
@@ -252,6 +252,7 @@ public class AuthorizationService implements Serializable {
      * @return true if access is authorized
      */
     protected boolean isAuthorized(AccessSpecification accessSpecification, Collection<PermissionEntry> principalEntries) {
+        AMEEEntity entity;
         // Default to not authorized.
         Boolean authorized = false;
         // Iterate over the desired PermissionEntries specified for the entity.
@@ -264,9 +265,10 @@ public class AuthorizationService implements Serializable {
                 // - Both PermissionEntries match by value.
                 // - Principals PermissionEntry is allowed.
                 // - Principals PermissionEntry status matches the entity status.
+                entity = permissionService.getEntity(accessSpecification.getEntityReference());
                 if (pe1.getValue().equals(pe2.getValue()) &&
                         pe2.isAllow() &&
-                        (pe2.getStatus().equals(accessSpecification.getEntity().getStatus()))) {
+                        (pe2.getStatus().equals(entity.getStatus()))) {
                     // Authorized, no need to continue so break. Most permissive principal PermissionEntry 'wins'.
                     authorized = true;
                     break;

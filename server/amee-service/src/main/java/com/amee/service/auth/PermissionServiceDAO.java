@@ -35,6 +35,12 @@ public interface PermissionServiceDAO {
 
     List<Permission> getPermissionsForPrincipalAndEntity(IAMEEEntityReference principal, IAMEEEntityReference entity);
 
+    /**
+     * Fetch the entity referenced by the IAMEEEntityReference from the database.
+     *
+     * @param entityReference to fetch
+     * @return fetched entity
+     */
     AMEEEntity getEntity(IAMEEEntityReference entityReference);
 
     void trashPermissionsForEntity(IAMEEEntityReference entity);

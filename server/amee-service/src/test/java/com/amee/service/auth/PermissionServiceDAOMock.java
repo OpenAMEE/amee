@@ -58,7 +58,7 @@ public class PermissionServiceDAOMock implements PermissionServiceDAO {
     }
 
     public AMEEEntity getEntity(IAMEEEntityReference entityReference) {
-        throw new UnsupportedOperationException();
+        return serviceData.ENTITY_MAP.get(entityReference.getObjectType() + "_" + entityReference.getEntityUid());
     }
 
     public void trashPermissionsForEntity(IAMEEEntityReference entity) {

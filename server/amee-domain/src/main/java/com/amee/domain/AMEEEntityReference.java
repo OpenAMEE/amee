@@ -28,7 +28,10 @@ import org.w3c.dom.Element;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import java.io.Serializable;
+
+import com.amee.domain.auth.AccessSpecification;
 
 /**
  * An embeddable entity for use in AMEEEntity extended classes to encapsulate properties
@@ -61,6 +64,18 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
     private String entityType = "";
 
     /**
+     * A transient AccessSpecification. 
+     */
+    @Transient
+    private AccessSpecification accessSpecification;
+
+    /**
+     * A transient reference to the actual entity.
+     */
+    @Transient
+    private AMEEEntity entity;
+
+    /**
      * Default constructor.
      */
     public AMEEEntityReference() {
@@ -70,13 +85,15 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
     /**
      * Construct an AMEEEntityReference based on the supplied IAMEEEntityReference.
      *
-     * @param entity to reference
+     * @param entityReference to reference
      */
-    public AMEEEntityReference(IAMEEEntityReference entity) {
+    public AMEEEntityReference(IAMEEEntityReference entityReference) {
         this();
-        setEntityId(entity.getEntityId());
-        setEntityUid(entity.getEntityUid());
-        setEntityType(entity.getObjectType());
+        setEntityId(entityReference.getEntityId());
+        setEntityUid(entityReference.getEntityUid());
+        setEntityType(entityReference.getObjectType());
+        setAccessSpecification(entityReference.getAccessSpecification());
+        setEntity(entityReference.getEntity());
     }
 
     /**
@@ -91,7 +108,7 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
         if (this == o) return true;
         if ((o == null) || !IAMEEEntityReference.class.isAssignableFrom(o.getClass())) return false;
         IAMEEEntityReference entity = (IAMEEEntityReference) o;
-        return getEntityId().equals(entity.getEntityId()) && getObjectType().equals(entity.getObjectType());
+        return getEntityUid().equals(entity.getEntityUid()) && getObjectType().equals(entity.getObjectType());
     }
 
     /**
@@ -102,7 +119,7 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 31 * hash + (null == getEntityId() ? 0 : getEntityId().hashCode());
+        hash = 31 * hash + (null == getEntityUid() ? 0 : getEntityUid().hashCode());
         hash = 31 * hash + (null == getEntityType() ? 0 : getEntityType().hashCode());
         return hash;
     }
@@ -198,5 +215,34 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
      */
     public void setEntityType(ObjectType entityType) {
         this.entityType = entityType.getName();
+    }
+
+    /**
+     * Returns the transient AccessSpecification for this entity. This will only be present if
+     * an AccessSpecification for this entity has been created in the current thread.
+     *
+     * @return the AccessSpecification for this entity in the current thread
+     */
+    public AccessSpecification getAccessSpecification() {
+        return accessSpecification;
+    }
+
+    /**
+     * Sets the AccessSpecification for this entity.
+     *
+     * @param accessSpecification for this entity
+     */
+    public void setAccessSpecification(AccessSpecification accessSpecification) {
+        this.accessSpecification = accessSpecification;
+    }
+
+    @Override
+    public AMEEEntity getEntity() {
+        return entity;
+    }
+
+    @Override
+    public void setEntity(AMEEEntity entity) {
+        this.entity = entity;
     }
 }

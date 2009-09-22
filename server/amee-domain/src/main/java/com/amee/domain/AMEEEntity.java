@@ -86,7 +86,7 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
     private List<Permission> permissions;
 
     /**
-     * A transient AccessSpecification 
+     * A transient AccessSpecification.
      */
     @Transient
     private AccessSpecification accessSpecification;
@@ -111,7 +111,7 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
         if (this == o) return true;
         if ((o == null) || !IAMEEEntityReference.class.isAssignableFrom(o.getClass())) return false;
         IAMEEEntityReference entity = (IAMEEEntityReference) o;
-        return getEntityId().equals(entity.getEntityId()) && getObjectType().equals(entity.getObjectType());
+        return getEntityUid().equals(entity.getEntityUid()) && getObjectType().equals(entity.getObjectType());
     }
 
     /**
@@ -386,6 +386,7 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
      *
      * @return the AccessSpecification for this entity in the current thread
      */
+    @Override
     public AccessSpecification getAccessSpecification() {
         return accessSpecification;
     }
@@ -395,7 +396,18 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
      *
      * @param accessSpecification for this entity
      */
+    @Override
     public void setAccessSpecification(AccessSpecification accessSpecification) {
         this.accessSpecification = accessSpecification;
+    }
+
+    @Override
+    public AMEEEntity getEntity() {
+        return this;
+    }
+
+    @Override
+    public void setEntity(AMEEEntity entity) {
+        // do nothing
     }
 }

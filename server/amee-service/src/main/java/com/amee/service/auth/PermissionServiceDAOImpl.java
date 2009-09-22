@@ -44,7 +44,7 @@ public class PermissionServiceDAOImpl implements PermissionServiceDAO {
     public List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
         Session session = (Session) entityManager.getDelegate();
         Criteria criteria = session.createCriteria(Permission.class);
-        criteria.add(Restrictions.eq("entityReference.entityId", entity.getEntityId()));
+        criteria.add(Restrictions.eq("entityReference.entityUid", entity.getEntityUid()));
         criteria.add(Restrictions.eq("entityReference.entityType", entity.getObjectType().getName()));
         criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
         criteria.setCacheable(true);
@@ -56,7 +56,7 @@ public class PermissionServiceDAOImpl implements PermissionServiceDAO {
     public List<Permission> getPermissionsForPrincipal(IAMEEEntityReference principal, Class entityClass) {
         Session session = (Session) entityManager.getDelegate();
         Criteria criteria = session.createCriteria(Permission.class);
-        criteria.add(Restrictions.eq("principalReference.entityId", principal.getEntityId()));
+        criteria.add(Restrictions.eq("principalReference.entityUid", principal.getEntityUid()));
         criteria.add(Restrictions.eq("principalReference.entityType", principal.getObjectType().getName()));
         if (entityClass != null) {
             criteria.add(Restrictions.eq("entityReference.entityType", ObjectType.getType(entityClass).getName()));
@@ -71,9 +71,9 @@ public class PermissionServiceDAOImpl implements PermissionServiceDAO {
     public List<Permission> getPermissionsForPrincipalAndEntity(IAMEEEntityReference principal, IAMEEEntityReference entity) {
         Session session = (Session) entityManager.getDelegate();
         Criteria criteria = session.createCriteria(Permission.class);
-        criteria.add(Restrictions.eq("principalReference.entityId", principal.getEntityId()));
+        criteria.add(Restrictions.eq("principalReference.entityUid", principal.getEntityUid()));
         criteria.add(Restrictions.eq("principalReference.entityType", principal.getObjectType().getName()));
-        criteria.add(Restrictions.eq("entityReference.entityId", entity.getEntityId()));
+        criteria.add(Restrictions.eq("entityReference.entityUid", entity.getEntityUid()));
         criteria.add(Restrictions.eq("entityReference.entityType", entity.getObjectType().getName()));
         criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
         criteria.setCacheable(true);
@@ -95,11 +95,11 @@ public class PermissionServiceDAOImpl implements PermissionServiceDAO {
                 "UPDATE Permission " +
                         "SET status = :trash, " +
                         "modified = current_timestamp() " +
-                        "WHERE entityReference.entityId = :entityId " +
+                        "WHERE entityReference.entityUid = :entityUid " +
                         "AND entityReference.entityType = :entityType " +
                         "AND status != :trash")
                 .setParameter("trash", AMEEStatus.TRASH)
-                .setParameter("entityId", entity.getEntityId())
+                .setParameter("entityUid", entity.getEntityUid())
                 .setParameter("entityType", entity.getObjectType().getName())
                 .executeUpdate();
     }
