@@ -21,6 +21,7 @@
  */
 package com.amee.domain;
 
+import com.amee.domain.auth.AccessSpecification;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -30,8 +31,6 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 import java.io.Serializable;
-
-import com.amee.domain.auth.AccessSpecification;
 
 /**
  * An embeddable entity for use in AMEEEntity extended classes to encapsulate properties
@@ -64,7 +63,7 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
     private String entityType = "";
 
     /**
-     * A transient AccessSpecification. 
+     * A transient AccessSpecification.
      */
     @Transient
     private AccessSpecification accessSpecification;
@@ -94,6 +93,29 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
         setEntityType(entityReference.getObjectType());
         setAccessSpecification(entityReference.getAccessSpecification());
         setEntity(entityReference.getEntity());
+    }
+
+    /**
+     * Construct an AMEEEntityReference based on the supplied ObjectType and UID.
+     *
+     * @param entityType for new instance
+     * @param uid        for new instance
+     */
+    public AMEEEntityReference(ObjectType entityType, String uid) {
+        this();
+        setEntityUid(uid);
+        setEntityType(entityType);
+    }
+
+    /**
+     * Factory method for creating a new AMEEEntityReference instance. Useful in templates.
+     *
+     * @param entityType for new instance
+     * @param uid        for new instance
+     * @return the new AMEEEntityReference instance
+     */
+    public static AMEEEntityReference getInstance(ObjectType entityType, String uid) {
+        return new AMEEEntityReference(entityType, uid);
     }
 
     /**
@@ -141,7 +163,7 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
      * Return a DOM Element representing the AMEEEntityReference.
      *
      * @param document which new Element belongs to
-     * @param name of new Element
+     * @param name     of new Element
      * @return the new Element
      */
     public Element getElement(Document document, String name) {

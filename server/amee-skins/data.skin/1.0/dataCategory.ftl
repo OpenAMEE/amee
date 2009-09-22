@@ -88,13 +88,16 @@
             <th>Actions</th>
         </tr>
         <#list sheet.rows as row>
-            <tr id='Elem_${row.uid}'>
-                <td>${row.findCell('label')}</td>
-                <td>
-                <a href='${basePath}/${row.findCell('path')}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
-                <#if canDelete(dataCategory)><input type="image" onClick="deleteDataItem('${row.uid}', '${basePath}/${row.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
-                </td>
-            </tr>
+            <#assign ref = AMEEEntityReference.getInstance(ObjectType.DI, row.uid)>
+            <#if canView(ref)>
+                <tr id='Elem_${row.uid}'>
+                    <td>${row.findCell('label')}</td>
+                    <td>
+                    <a href='${basePath}/${row.findCell('path')}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
+                    <#if canDelete(ref)><input type="image" onClick="deleteDataItem('${row.uid}', '${basePath}/${row.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
+                    </td>
+                </tr>
+            </#if>
         </#list>
     </table>
     <#assign pagerName = 'pagerBottom'>

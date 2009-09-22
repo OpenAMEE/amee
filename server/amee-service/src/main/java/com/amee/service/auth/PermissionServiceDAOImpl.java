@@ -21,8 +21,13 @@
  */
 package com.amee.service.auth;
 
-import com.amee.domain.*;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEStatus;
+import com.amee.domain.IAMEEEntityReference;
+import com.amee.domain.ObjectType;
 import com.amee.domain.auth.Permission;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -34,6 +39,8 @@ import java.util.List;
 
 @Repository
 public class PermissionServiceDAOImpl implements PermissionServiceDAO {
+
+    private final Log log = LogFactory.getLog(getClass());
 
     private static final String CACHE_REGION = "query.permissionService";
 
@@ -86,8 +93,20 @@ public class PermissionServiceDAOImpl implements PermissionServiceDAO {
         if (entityReference == null) {
             throw new IllegalArgumentException();
         }
-        return (AMEEEntity) entityManager.find(
-                entityReference.getObjectType().getClazz(), entityReference.getEntityId());
+        if (entityReference.getEntityId() != null) {
+            log.debug("getEntity() - using entityManager.find()");
+            return (AMEEEntity) entityManager.find(
+                    entityReference.getObjectType().getClazz(), entityReference.getEntityId());
+        } else {
+            log.debug("getEntity() - using query");
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(entityReference.getObjectType().getClazz());
+            criteria.add(Restrictions.naturalId().set("uid", entityReference.getEntityUid()));
+            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            return (AMEEEntity) criteria.uniqueResult();
+        }
     }
 
     public void trashPermissionsForEntity(IAMEEEntityReference entity) {
