@@ -21,30 +21,28 @@
     Modified: ${profileItemValue.modified?datetime}<br/>
 </p>
 
-<#if browser.profileItemValueActions.allowModify>
-    <h2>Update Profile Item Value</h2>
-    <p>
-    <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
-        Value:
-        <#if profileItemValue.itemValueDefinition.choicesAvailable>
-            <select name='value'>
-                <#list profileItemValue.itemValueDefinition.choiceList as choice>
-                    <option value='${choice.value}'<#if profileItemValue.value == choice.value>
-                            selected</#if>>${choice.name}</option>
-                </#list>
-            </select>
-        <#else>
-            <input name='value' value='${profileItemValue.value}' type='text' size="30"/><br/>
-            <#if profileItemValue.hasUnit()>
-                Unit: <input name='unit' value='${profileItemValue.unit}' type='text' size="30"/><br/>
-            </#if>
-            <#if profileItemValue.hasPerUnit()>
-                PerUnit: <input name='perUnit' value='${profileItemValue.perUnit}' type='text' size="30"/><br/>
-            </#if>
-        </#if><br/><br/>
-        <input type='submit' value='Update'/>
-    </form>
-    </p>
-</#if>
+<h2>Update Profile Item Value</h2>
+<p>
+<form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+    Value:
+    <#if profileItemValue.itemValueDefinition.choicesAvailable>
+        <select name='value'>
+            <#list profileItemValue.itemValueDefinition.choiceList as choice>
+                <option value='${choice.value}'<#if profileItemValue.value == choice.value>
+                        selected</#if>>${choice.name}</option>
+            </#list>
+        </select>
+    <#else>
+        <input name='value' value='${profileItemValue.value}' type='text' size="30"/><br/>
+        <#if profileItemValue.hasUnit()>
+            Unit: <input name='unit' value='${profileItemValue.unit}' type='text' size="30"/><br/>
+        </#if>
+        <#if profileItemValue.hasPerUnit()>
+            PerUnit: <input name='perUnit' value='${profileItemValue.perUnit}' type='text' size="30"/><br/>
+        </#if>
+    </#if><br/><br/>
+    <input type='submit' value='Update'/>
+</form>
+</p>
 
 <#include '/includes/after_content.ftl'>

@@ -8,6 +8,8 @@
 
 <script type="text/javascript">
 
+    var AUTHORIZATION_CONTEXT = new AuthorizationContext(${authorizationContext.getJSONObject()});
+
     function profileCategoryLoaded() {
         $("tAmount").innerHTML = this.resource.tAmount;
     }
@@ -33,8 +35,6 @@
     }
 
     // create resource objects
-    var PROFILE_ACTIONS = new ActionsResource({path: '/profiles/actions'});
-    var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
     var profileCategoryApiService = new ProfileCategoryApiService({
         heading: "Profile Items",
         headingElementName: "apiHeading",
@@ -54,8 +54,6 @@
 
     // use resource loader to load resources and notify on loaded
     var resourceLoader = new ResourceLoader();
-    resourceLoader.addResource(PROFILE_ACTIONS);
-    resourceLoader.addResource(DATA_ACTIONS);
     resourceLoader.observe('loaded', function() {
         profileCategoryApiService.start();
         drillDown.start();

@@ -2,8 +2,6 @@
 <#include '/includes/furniture.ftl'>
 <#include '/includes/before_content.ftl'>
 
-<#assign allowModify = true>
-
 <script src="/scripts/amee/api_service.js" type="text/javascript"></script>
 <script src="/scripts/amee/profile_service.js" type="text/javascript"></script>
 
@@ -40,65 +38,45 @@
         </tr>
         <tr>
             <td>Name</td>
-            <#if allowModify>
-                <td><input name='name' value='${profileItem.name}' type='text' size='30'/><br/>
-            <#else>
-                <td>${profileItem.name}</td>
-            </#if>
+            <td><input name='name' value='${profileItem.name}' type='text' size='30'/><br/>
         </tr>
         <tr>
             <td>Valid From</td>
-            <#if allowModify>
-                <td><input name='validFrom' value='${profileItem.startDate?string(getDateFormatV1())}' type='text' size='13'/>
-                    (${getDateFormatV1()})<br/>
-            <#else>
-                <td>${profileItem.startDate?datetime}</td>
-            </#if>
+            <td><input name='validFrom' value='${profileItem.startDate?string(getDateFormatV1())}' type='text' size='13'/>(${getDateFormatV1()})<br/>
         </tr>
         <tr>
             <td>End Marker</td>
-            <#if allowModify>
-                <td><select name='end'>
-                    <option value='true'<#if profileItem.end> selected</#if>>Yes</option>
-                    <option value='false'<#if !profileItem.end> selected</#if>>No</option>
-                </select></td>
-            <#else>
-                <td>${profileItem.end}</td>
-            </#if>
+            <td><select name='end'>
+                <option value='true'<#if profileItem.end> selected</#if>>Yes</option>
+                <option value='false'<#if !profileItem.end> selected</#if>>No</option>
+            </select></td>
         </tr>
         <#if 0 != profileItem.itemValues?size>
             <#list profileItem.itemValues as iv>
             <tr>
-                <#if allowModify>
-                    <td><a href='${basePath}/${iv.displayPath}'>${iv.displayName}</a></td>
-                    <td>
-                        <#if iv.itemValueDefinition.choicesAvailable>
-                            <select name='${iv.displayPath}'>
-                                <#list iv.itemValueDefinition.choiceList as choice>
-                                    <option value='${choice.value}' <#if iv.value == choice.value>selected</#if>>${choice.name}</option>
-                                </#list>
-                            </select>
-                        <#else>
-                            <input name='${iv.displayPath}' value='${iv.value}' type='text' size="30"/>
-                            <#if iv.hasUnit() && iv.hasPerUnit()>
-                                (${iv.unit} per ${iv.perUnit})
-                            <#elseif iv.hasUnit()>
-                                (${iv.unit})
-                            </#if>
+                <td><a href='${basePath}/${iv.displayPath}'>${iv.displayName}</a></td>
+                <td>
+                    <#if iv.itemValueDefinition.choicesAvailable>
+                        <select name='${iv.displayPath}'>
+                            <#list iv.itemValueDefinition.choiceList as choice>
+                                <option value='${choice.value}' <#if iv.value == choice.value>selected</#if>>${choice.name}</option>
+                            </#list>
+                        </select>
+                    <#else>
+                        <input name='${iv.displayPath}' value='${iv.value}' type='text' size="30"/>
+                        <#if iv.hasUnit() && iv.hasPerUnit()>
+                            (${iv.unit} per ${iv.perUnit})
+                        <#elseif iv.hasUnit()>
+                            (${iv.unit})
                         </#if>
-                    </td>
-                <#else>
-                    <td>${iv.displayName}</td>
-                    <td>${iv.value}</td>
-                </#if>
+                    </#if>
+                </td>
             </tr>
             </#list>
         </#if>
     </table>
-    <#if allowModify>
-        <br/>
-        <input type='submit' value='Update'/>
-    </#if>
+    <br/>
+    <input type='submit' value='Update'/>
 </form>
 </p>
 

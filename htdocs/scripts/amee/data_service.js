@@ -80,7 +80,7 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             // update elements
             this.dataCategoriesHeadingElement = $(this.dataCategoriesHeadingElementName);
             this.dataCategoriesContentElement = $(this.dataCategoriesContentElementName);
-            
+
             // set section heading
             this.dataCategoriesHeadingElement.innerHTML = this.dataCategoriesHeading;
 
@@ -108,13 +108,9 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
     },
     getCreateCategoryElement: function(id, json) {
 
-        var dataCategoryActions = DATA_ACTIONS.getActions('dataCategory');
-        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
-
         var createCatElement = new Element('div', {id : id});
 
-        if ((dataCategoryActions.isAllowCreate() || dataItemActions.isAllowCreate()) &&
-            ITEM_DEFINITIONS.available) {
+        if (AUTHORIZATION_CONTEXT.isAllowCreate() && ITEM_DEFINITIONS.available) {
 
             createCatElement.insert(new Element('h2').update('Create Data Category / Data Item'));
 
@@ -126,10 +122,8 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
             var pElement = new Element('p');
 
             formElement.insert('Type: ');
-            if (dataCategoryActions.isAllowCreate()) {
-                typeSelectElement.insert(new Element('option', {value : 'DC'}).update('Data Category'));
-            }
-            if (dataCategory.itemDefinition && dataItemActions.isAllowCreate()) {
+            typeSelectElement.insert(new Element('option', {value : 'DC'}).update('Data Category'));
+            if (dataCategory.itemDefinition) {
                 typeSelectElement.insert(new Element('option', {value : 'DI'}).update('Data Item (for ' + dataCategory.itemDefinition.name + ')'));
             }
             formElement.insert(typeSelectElement).insert(new Element('br'));
@@ -160,11 +154,9 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
     },
     getUpdateCategoryElement: function(id, json) {
 
-        var dataCategoryActions = DATA_ACTIONS.getActions('dataCategory');
-
         var updateCatElement = new Element('div', {id : id});
 
-        if (dataCategoryActions.isAllowModify() && ITEM_DEFINITIONS.available) {
+        if (AUTHORIZATION_CONTEXT.isAllowModify() && ITEM_DEFINITIONS.available) {
 
             updateCatElement.insert(new Element('h2').update('Update Data Category'));
 
@@ -220,7 +212,6 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
                 .insert(this.getHeadingData('Actions'));
     },
     getDetailRows: function(json) {
-        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
         var rows = [];
         if (json.children.dataItems) {
             for (var i = 0; i < json.children.dataItems.rows.length; i++) {
@@ -231,7 +222,6 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
                 // create actions
                 detailRow.insert(this.getActionsTableData({
                     deleteable: true,
-                    actions: dataItemActions,
                     method: 'deleteDataItem',
                     uid: dataItem.uid,
                     path: dataItem.path}));
@@ -270,16 +260,12 @@ var DataCategoryApiService = Class.create(BaseDataApiService, ({
     },
     getCategoryActionsTableData: function(dMethod, uid, path) {
 
-        var dataCategoryActions = DATA_ACTIONS.getActions('dataCategory');
-
         var actions = new Element('td');
 
-        if (dataCategoryActions.isAllowView()) {
-            actions.insert(new Element('a', {href : this.getUrl(path)})
-                    .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
-        }
+        actions.insert(new Element('a', {href : this.getUrl(path)})
+                .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
 
-        if (dataCategoryActions.isAllowDelete()) {
+        if (AUTHORIZATION_CONTEXT.isAllowDelete()) {
             var dUrl = "'" + uid + "','" + window.location.pathname + "/" + path + "'";
             actions.insert(
                     new Element('a', {
@@ -450,7 +436,6 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
                 .insert(this.getHeadingData('Actions'));
     },
     getDetailRows: function(json) {
-        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
         var rows = [];
         if (json.dataItem.itemValues) {
             var itemValues = json.dataItem.itemValues;
@@ -459,25 +444,24 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
                 var itemValue = itemValues[i];
                 //var itemValuesArray = itemValues[i];
                 //for(var name in itemValuesArray) {
-                    //var itemValueSeries = itemValuesArray[name];
-                    //for (var j = 0; j < itemValueSeries.length; j++) {
-                        //var itemValue = itemValueSeries[j];
-                        var detailRow = new Element('tr', {id : 'Elem_' + itemValue.uid})
-                                .insert(new Element('td').insert(itemValue.itemValueDefinition.name))
-                                .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.name))
-                                .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.valueType))
-                                .insert(new Element('td').insert(itemValue.value))
-                                .insert(new Element('td').insert(itemValue.startDate));
+                //var itemValueSeries = itemValuesArray[name];
+                //for (var j = 0; j < itemValueSeries.length; j++) {
+                //var itemValue = itemValueSeries[j];
+                var detailRow = new Element('tr', {id : 'Elem_' + itemValue.uid})
+                        .insert(new Element('td').insert(itemValue.itemValueDefinition.name))
+                        .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.name))
+                        .insert(new Element('td').insert(itemValue.itemValueDefinition.valueDefinition.valueType))
+                        .insert(new Element('td').insert(itemValue.value))
+                        .insert(new Element('td').insert(itemValue.startDate));
 
-                        // create actions
-                        detailRow.insert(this.getActionsTableData({
-                            actions: dataItemActions,
-                            method: '',
-                            uid: itemValue.uid}));
-                        // update array
-                        rows[k] = detailRow;
-                        k++;
-                    //}
+                // create actions
+                detailRow.insert(this.getActionsTableData({
+                    method: '',
+                    uid: itemValue.uid}));
+                // update array
+                rows[k] = detailRow;
+                k++;
+                //}
                 //}
             }
         }
@@ -485,11 +469,9 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
     },
     getCreateItemValueElement: function(id, dataItem) {
 
-        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
-
         var createItemValueElement = new Element('div', {id : id});
 
-        if (dataItemActions.isAllowCreate() && ITEM_VALUE_DEFINITIONS.available) {
+        if (AUTHORIZATION_CONTEXT.isAllowCreate() && ITEM_VALUE_DEFINITIONS.available) {
 
             createItemValueElement.insert(new Element('h2').update('Create Data Item Value'));
 
@@ -550,10 +532,9 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
     },
     getUpdateItemElement: function(id, dataItem) {
 
-        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
         var updateItemElement = new Element('div', {id : id});
 
-        if (dataItemActions.isAllowModify()) {
+        if (AUTHORIZATION_CONTEXT.isAllowModify()) {
             var dateFormat = " (" + this.getDateFormat() + ")";
             var formElement = new Element('form', {action : "#", id : this.updateFormName});
             var pElement = new Element('p');
@@ -713,11 +694,9 @@ var DataItemValueApiService = Class.create(DataItemApiService, ({
     },
     getUpdateItemValueElement: function(id, itemValue) {
 
-        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
-
         var updateItemElement = new Element('div', {id : id});
 
-        if (dataItemActions.isAllowModify()) {
+        if (AUTHORIZATION_CONTEXT.isAllowModify()) {
             var formElement = new Element('form', {action : "#", id : this.updateFormName});
             var pElement = new Element('p');
 
@@ -780,11 +759,12 @@ var DrillDown = Class.create({
         this.dateFormat = dateFormat || 'date format not specified';
     },
     start: function() {
-        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
-        var dataItemActions = DATA_ACTIONS.getActions('dataItem');
-        if (profileItemActions.isAllowCreate() && dataItemActions.isAllowView()) {
+        // TODO: Permissions?
+        //var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
+        //var dataItemActions = DATA_ACTIONS.getActions('dataItem');
+        //if (profileItemActions.isAllowCreate() && dataItemActions.isAllowView()) {
             this.load();
-        }
+        //}
     },
     load: function(params) {
         params = params || {};
@@ -970,7 +950,7 @@ var ItemValueDefinition = Class.create({
 var ItemValueDefinitionsResource = Class.create({
     initialize: function(itemDefinitionUid) {
         this.itemValueDefinitions = [];
-        this.path = '/definitions/itemDefinitions/'+ itemDefinitionUid + '/itemValueDefinitions';
+        this.path = '/definitions/itemDefinitions/' + itemDefinitionUid + '/itemValueDefinitions';
     },
     start: function() {
         this.load();

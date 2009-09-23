@@ -6,8 +6,9 @@
 
 <script type='text/javascript'>
 
+    var AUTHORIZATION_CONTEXT = new AuthorizationContext(${authorizationContext.getJSONObject()});
+
     // create resource objects
-    var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
     var dataItemValueApiService = new DataItemValueApiService({
         dataHeadingItem : 'Data Item Value Details',
         dataHeadingItemElementName : 'apiDataItemHeading',
@@ -17,7 +18,6 @@
 
     // use resource loader to load resources and notify on loaded
     var resourceLoader = new ResourceLoader();
-    resourceLoader.addResource(DATA_ACTIONS);
     resourceLoader.observe('loaded', function() {
         dataItemValueApiService.start();
     });
