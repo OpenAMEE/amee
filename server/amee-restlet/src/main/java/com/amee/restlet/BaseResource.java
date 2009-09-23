@@ -1,9 +1,7 @@
 package com.amee.restlet;
 
 import com.amee.core.ThreadBeanHolder;
-import com.amee.domain.APIVersion;
-import com.amee.domain.Pager;
-import com.amee.domain.PagerSetType;
+import com.amee.domain.*;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
@@ -155,12 +153,14 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         values.put("path", getRequest().getResourceRef().getPath());
         // values below are mirrored in EngineStatusFilter
         values.put("activeUser", ThreadBeanHolder.get("activeUser"));
-        // add enums
-        values.put("SortOrder", getEnumForTemplate(SortOrder.class));
         // add request params
         values.put("Parameters", getRequest().getResourceRef().getQueryAsForm().getValuesMap());
-        // add PermissionEntry for constants
+        // add enums
+        values.put("SortOrder", getEnumForTemplate(SortOrder.class));
+        values.put("ObjectType", getEnumForTemplate(ObjectType.class));
+        // add classes
         values.put("PermissionEntry", getStaticsForTemplate(PermissionEntry.class));
+        values.put("AMEEEntityReference", getStaticsForTemplate(AMEEEntityReference.class));
         return values;
     }
 

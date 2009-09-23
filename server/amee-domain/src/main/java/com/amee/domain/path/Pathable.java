@@ -21,6 +21,7 @@ package com.amee.domain.path;
 
 import com.amee.core.PersistentObject;
 import com.amee.domain.ObjectType;
+import com.amee.domain.AMEEEntity;
 
 public interface Pathable extends PersistentObject {
 
@@ -35,5 +36,7 @@ public interface Pathable extends PersistentObject {
     public boolean isDeprecated();
 
     public ObjectType getObjectType();
+
+    public AMEEEntity getEntity();
 }
 

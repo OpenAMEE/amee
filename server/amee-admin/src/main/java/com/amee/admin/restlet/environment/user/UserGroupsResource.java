@@ -4,7 +4,7 @@ import com.amee.admin.restlet.environment.EnvironmentBrowser;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.Group;
-import com.amee.domain.auth.GroupPrinciple;
+import com.amee.domain.auth.GroupPrincipal;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.GroupService;
@@ -30,12 +30,9 @@ import java.util.*;
 public class UserGroupsResource extends AuthorizeResource implements Serializable {
 
     @Autowired
-    private GroupService groupService;
-
-    @Autowired
     private EnvironmentBrowser environmentBrowser;
 
-    private GroupPrinciple newGroupPrinciple;
+    private GroupPrincipal newGroupPrincipal;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -67,12 +64,12 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
     @Override
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager(getItemsPerPage());
-        List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciplesForPrinciple(environmentBrowser.getUser());
-        Map<String, GroupPrinciple> groupPrincipleMap = new HashMap<String, GroupPrinciple>();
+        List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(environmentBrowser.getUser());
+        Map<String, GroupPrincipal> groupPrincipalMap = new HashMap<String, GroupPrincipal>();
         Set<Object> pagerSet = new HashSet<Object>();
-        for (GroupPrinciple groupPrinciple : groupPrinciples) {
-            groupPrincipleMap.put(groupPrinciple.getGroup().getUid(), groupPrinciple);
-            pagerSet.add(groupPrinciple.getGroup());
+        for (GroupPrincipal groupPrincipal : groupPrincipals) {
+            groupPrincipalMap.put(groupPrincipal.getGroup().getUid(), groupPrincipal);
+            pagerSet.add(groupPrincipal.getGroup());
         }
         pager.setPagerSet(pagerSet);
         List<Group> groups = groupService.getGroups(environmentBrowser.getEnvironment(), pager);
@@ -82,7 +79,7 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
         values.put("environment", environmentBrowser.getEnvironment());
         values.put("user", environmentBrowser.getUser());
         values.put("groups", groups);
-        values.put("groupPrincipleMap", groupPrincipleMap);
+        values.put("groupPrincipalMap", groupPrincipalMap);
         values.put("pager", pager);
         return values;
     }
@@ -92,18 +89,18 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
         JSONObject obj = new JSONObject();
         if (isGet()) {
             Pager pager = getPager(getItemsPerPage());
-            List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciplesForPrinciple(environmentBrowser.getUser(), pager);
+            List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(environmentBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
             obj.put("user", environmentBrowser.getUser().getJSONObject());
-            JSONArray groupPrinciplesArr = new JSONArray();
-            for (GroupPrinciple groupPrinciple : groupPrinciples) {
-                groupPrinciplesArr.put(groupPrinciple.getJSONObject());
+            JSONArray groupPrincipalsArr = new JSONArray();
+            for (GroupPrincipal groupPrincipal : groupPrincipals) {
+                groupPrincipalsArr.put(groupPrincipal.getJSONObject());
             }
-            obj.put("groupPrinciples", groupPrinciples);
+            obj.put("groupPrincipals", groupPrincipals);
             obj.put("pager", pager.getJSONObject());
         } else if (isPost()) {
-            obj.put("groupPrinciple", newGroupPrinciple.getJSONObject());
+            obj.put("groupPrincipal", newGroupPrincipal.getJSONObject());
         }
         return obj;
     }
@@ -113,18 +110,18 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
         Element element = document.createElement("UserGroupsResource");
         if (isGet()) {
             Pager pager = getPager(getItemsPerPage());
-            List<GroupPrinciple> groupPrinciples = groupService.getGroupPrinciplesForPrinciple(environmentBrowser.getUser(), pager);
+            List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(environmentBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
             element.appendChild(environmentBrowser.getUser().getIdentityElement(document));
-            Element groupPrinciplesElement = document.createElement("GroupPrinciples");
-            for (GroupPrinciple groupPrinciple : groupPrinciples) {
-                groupPrinciplesElement.appendChild(groupPrinciple.getElement(document));
+            Element groupPrincipalsElement = document.createElement("GroupPrincipals");
+            for (GroupPrincipal groupPrincipal : groupPrincipals) {
+                groupPrincipalsElement.appendChild(groupPrincipal.getElement(document));
             }
-            element.appendChild(groupPrinciplesElement);
+            element.appendChild(groupPrincipalsElement);
             element.appendChild(pager.getElement(document));
         } else if (isPost()) {
-            element.appendChild(newGroupPrinciple.getElement(document));
+            element.appendChild(newGroupPrincipal.getElement(document));
         }
         return element;
     }
@@ -146,11 +143,11 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
             Group group = groupService.getGroupByUid(environmentBrowser.getEnvironment(), groupUid);
             if (group != null) {
                 // create new instance
-                newGroupPrinciple = new GroupPrinciple(group, environmentBrowser.getUser());
-                groupService.save(newGroupPrinciple);
+                newGroupPrincipal = new GroupPrincipal(group, environmentBrowser.getUser());
+                groupService.save(newGroupPrincipal);
             }
         }
-        if (newGroupPrinciple != null) {
+        if (newGroupPrincipal != null) {
             if (isStandardWebBrowser()) {
                 success();
             } else {

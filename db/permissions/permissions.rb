@@ -155,7 +155,7 @@ def profile_migration
     
 end
 
-# Migrating GroupUser to GroupPrinciple
+# Migrating GroupUser to GroupPrincipal
 def group_user_migration
 
   puts "GroupUser Migration - Start"
@@ -174,7 +174,7 @@ def group_user_migration
       user_uid = rs.getString("USER_UID")
       environment_id = rs.getInt("ENVIRONMENT_ID")
       uid = JM::UidGen.getUid()
-      count = count + stmt2.executeUpdate("INSERT INTO GROUP_PRINCIPLE (UID, ENVIRONMENT_ID, STATUS, GROUP_ID, PRINCIPLE_ID, PRINCIPLE_UID, PRINCIPLE_TYPE, CREATED, MODIFIED) VALUES ('#{uid}', #{environment_id}, 1, #{group_id}, #{user_id}, '#{user_uid}', 'USR', now(), now())")
+      count = count + stmt2.executeUpdate("INSERT INTO GROUP_PRINCIPAL (UID, ENVIRONMENT_ID, STATUS, GROUP_ID, PRINCIPAL_ID, PRINCIPAL_UID, PRINCIPAL_TYPE, CREATED, MODIFIED) VALUES ('#{uid}', #{environment_id}, 1, #{group_id}, #{user_id}, '#{user_uid}', 'USR', now(), now())")
     end
 
     puts "GroupUser Migration - Inserted #{count} rows"
@@ -212,7 +212,7 @@ end
 #profile_migration
 #run_sql("after_profile_migration.sql")
 #run_sql("alter_permission_table.sql")
-#run_sql("create_group_principle_table.sql")
+#run_sql("create_group_principal_table.sql")
 #group_user_migration
 #run_sql("create_permissions.sql")
 #run_sql("remove_redundant_tables.sql")

@@ -15,12 +15,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Permission represents the permissions (rights) that a 'principle' has over an 'entity'.
+ * Permission represents the permissions (rights) that a 'principal' has over an 'entity'.
  * The entity can be any persistent entity within AMEE, such as a Profile or DataCategory. A
- * principle can be a User, Group or other entity that needs to own or access an entity.
+ * principal can be a User, Group or other entity that needs to own or access an entity.
  * <p/>
- * The principle and entity are represented by AMEEEntityReference instances, the
- * principleReference and entityReference properties, respectively.
+ * The principal and entity are represented by AMEEEntityReference instances, the
+ * principalReference and entityReference properties, respectively.
  * <p/>
  * Permissions are made up of permission entries. These typically represent the 'view',
  * 'create', 'modify', 'delete' verbs (CRUD). Each permission entry is accompanied
@@ -49,14 +49,14 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
     private AMEEEntityReference entityReference = new AMEEEntityReference();
 
     /**
-     * The principle that this permission is defining access permissions for.
+     * The principal that this permission is defining access permissions for.
      */
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "entityId", column = @Column(name = "PRINCIPLE_ID")),
-            @AttributeOverride(name = "entityUid", column = @Column(name = "PRINCIPLE_UID")),
-            @AttributeOverride(name = "entityType", column = @Column(name = "PRINCIPLE_TYPE"))})
-    private AMEEEntityReference principleReference = new AMEEEntityReference();
+            @AttributeOverride(name = "entityId", column = @Column(name = "PRINCIPAL_ID")),
+            @AttributeOverride(name = "entityUid", column = @Column(name = "PRINCIPAL_UID")),
+            @AttributeOverride(name = "entityType", column = @Column(name = "PRINCIPAL_TYPE"))})
+    private AMEEEntityReference principalReference = new AMEEEntityReference();
 
     /**
      * A String containing permission entries structured as JSON. These entries
@@ -78,9 +78,9 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         super();
     }
 
-    public Permission(IAMEEEntityReference principle, IAMEEEntityReference entity, PermissionEntry entry) {
+    public Permission(IAMEEEntityReference principal, IAMEEEntityReference entity, PermissionEntry entry) {
         this();
-        setPrincipleReference(new AMEEEntityReference(principle));
+        setPrincipalReference(new AMEEEntityReference(principal));
         setEntityReference(new AMEEEntityReference(entity));
         addEntry(entry);
     }
@@ -116,7 +116,7 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
 
     /**
      * Returns the entityReference instance that associates this Permission
-     * with the entity that the principle has permissions over.
+     * with the entity that the principal has permissions over.
      *
      * @return the entityReference instance
      */
@@ -137,24 +137,24 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
     }
 
     /**
-     * Returns the principleReference instance that associates this Permission
-     * with the principle that has permissions over the entity.
+     * Returns the principalReference instance that associates this Permission
+     * with the principal that has permissions over the entity.
      *
      * @return the entityReference instance
      */
-    public AMEEEntityReference getPrincipleReference() {
-        return principleReference;
+    public AMEEEntityReference getPrincipalReference() {
+        return principalReference;
     }
 
     /**
-     * Update this Permission with the supplied principleReference representing
-     * the principle for this Permission.
+     * Update this Permission with the supplied principalReference representing
+     * the principal for this Permission.
      *
-     * @param principleReference instance to set
+     * @param principalReference instance to set
      */
-    public void setPrincipleReference(AMEEEntityReference principleReference) {
-        if (principleReference != null) {
-            this.principleReference = principleReference;
+    public void setPrincipalReference(AMEEEntityReference principalReference) {
+        if (principalReference != null) {
+            this.principalReference = principalReference;
         }
     }
 

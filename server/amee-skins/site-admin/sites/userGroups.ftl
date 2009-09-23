@@ -8,14 +8,14 @@ function changeButtons(response) {
   var button = $('Button_' + this.groupUid);
   if (this.action == 'create') {
     member.innerHTML = 'Yes';
-    button.innerHTML = '<button type="button" onClick="deleteGroupPrinciple(\'' + this.groupUid + '\');">Leave</button>';
+    button.innerHTML = '<button type="button" onClick="deleteGroupPrincipal(\'' + this.groupUid + '\');">Leave</button>';
   } else {
     member.innerHTML = 'No';
-    button.innerHTML = '<button type="button" onClick="addGroupPrinciple(\'' + this.groupUid + '\');">Join</button>';
+    button.innerHTML = '<button type="button" onClick="addGroupPrincipal(\'' + this.groupUid + '\');">Join</button>';
   }
 }
 
-function deleteGroupPrinciple(groupUid) {
+function deleteGroupPrincipal(groupUid) {
   resourceUrl = '/environments/${environment.uid}/users/${user.uid}/groups/' + groupUid + '?method=delete';
   resourceElem = $('Elem_' + groupUid);
   resourceType = 'membership'; 
@@ -26,7 +26,7 @@ function deleteGroupPrinciple(groupUid) {
   deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
 }
 
-function addGroupPrinciple(groupUid) {
+function addGroupPrincipal(groupUid) {
   resourceUrl = '/environments/${environment.uid}/users/${user.uid}/groups';
   resourceElem = $('Elem_' + groupUid);
   resourceType = 'membership'; 
@@ -60,8 +60,8 @@ function addGroupPrinciple(groupUid) {
   <th>Actions</th>
 </tr>
 <#list groups as g>
-  <#if groupPrincipleMap[g.uid]??>
-    <#assign gu = groupPrincipleMap[g.uid]>
+  <#if groupPrincipalMap[g.uid]??>
+    <#assign gu = groupPrincipalMap[g.uid]>
   <#else>
     <#assign gu = "">
   </#if>
@@ -82,9 +82,9 @@ function addGroupPrinciple(groupUid) {
       <#if browser.userActions.allowModify>
         <span id="Button_${g.uid}">
           <#if gu != "">
-            <button type="button" onClick="deleteGroupPrinciple('${g.uid}');">Leave</button>
+            <button type="button" onClick="deleteGroupPrincipal('${g.uid}');">Leave</button>
           <#else>
-            <button type="button" onClick="addGroupPrinciple('${g.uid}');">Join</button>
+            <button type="button" onClick="addGroupPrincipal('${g.uid}');">Join</button>
           </#if>
         </span>
       </#if>

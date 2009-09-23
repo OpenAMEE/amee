@@ -41,14 +41,14 @@ public class PermissionServiceDAOMock implements PermissionServiceDAO {
         throw new UnsupportedOperationException();
     }
 
-    public List<Permission> getPermissionsForPrinciple(IAMEEEntityReference principle, Class entityClass) {
+    public List<Permission> getPermissionsForPrincipal(IAMEEEntityReference principal, Class entityClass) {
         throw new UnsupportedOperationException();
     }
 
-    public List<Permission> getPermissionsForPrincipleAndEntity(IAMEEEntityReference principle, IAMEEEntityReference entity) {
+    public List<Permission> getPermissionsForPrincipalAndEntity(IAMEEEntityReference principal, IAMEEEntityReference entity) {
         List<Permission> permissions = new ArrayList<Permission>();
-        if (serviceData.PRINCIPLE_TO_PERMISSIONS.containsKey(principle)) {
-            for (Permission permission : serviceData.PRINCIPLE_TO_PERMISSIONS.get(principle)) {
+        if (serviceData.PRINCIPAL_TO_PERMISSIONS.containsKey(principal)) {
+            for (Permission permission : serviceData.PRINCIPAL_TO_PERMISSIONS.get(principal)) {
                 if (permission.getEntityReference().equals(entity)) {
                     permissions.add(permission);
                 }
@@ -58,7 +58,7 @@ public class PermissionServiceDAOMock implements PermissionServiceDAO {
     }
 
     public AMEEEntity getEntity(IAMEEEntityReference entityReference) {
-        throw new UnsupportedOperationException();
+        return serviceData.ENTITY_MAP.get(entityReference.getObjectType() + "_" + entityReference.getEntityUid());
     }
 
     public void trashPermissionsForEntity(IAMEEEntityReference entity) {
