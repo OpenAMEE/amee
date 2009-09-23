@@ -13,8 +13,6 @@
 
     <bean id="permissionServiceDao" class="com.amee.service.auth.PermissionServiceDAOMock"/>
 
-    <bean class="com.amee.service.auth.AuthorizationContext" scope="prototype"/>
-
     <bean class="com.amee.service.auth.AuthorizationService"/>
 
 </beans>

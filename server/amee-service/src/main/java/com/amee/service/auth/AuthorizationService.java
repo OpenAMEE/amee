@@ -22,6 +22,7 @@
 package com.amee.service.auth;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
@@ -31,8 +32,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
 import java.io.Serializable;
+import java.util.*;
 
 /**
  * Provides various methods that work with an AuthorizationContext to determine if a request is authorized or not.
@@ -66,7 +67,7 @@ public class AuthorizationService implements Serializable {
      * Returns true if the supplied AuthorizationContext is considered to be authorized. This method should only
      * be excuted once for each usage of an AuthorizationContext. The AuthorizationContext.entries collection
      * is updated based on the result of authenticating the principles for the entities in the AuthorizationContext.
-     *
+     * <p/>
      * Conforms to the rules described above.
      *
      * @param authorizationContext to consider for authorization
@@ -108,25 +109,47 @@ public class AuthorizationService implements Serializable {
     }
 
     /**
+     * Returns true if the currently active principles have the requested access, via entry, to the
+     * supplied entity. If the entity has already been considered for authorization then the cached
+     * AccessSpecification is re-used. If the entity has not been considered yet then a fresh authorization
+     * check is made, with the assumption that the entity is a direct child of the last entity declared in
+     * accessSpecifications.
+     *
+     * Note: This is used in global.ftl.
+     *
+     * @param authorizationContext to consider for authorization
+     * @param entityReference      to authorize access for
+     * @param entry                specifying access requested
+     * @return true if authorize result is allow, otherwise false if result is deny
+     */
+    public boolean isAuthorized(AuthorizationContext authorizationContext, IAMEEEntityReference entityReference, PermissionEntry entry) {
+        if (entityReference.getAccessSpecification() != null) {
+            return entityReference.getAccessSpecification().getActual().contains(entry);
+        } else {
+            return isAuthorized(authorizationContext, new AccessSpecification(entityReference, entry));
+        }
+    }
+
+    /**
      * Returns true if the principles in AuthorizationContext have the specified access to the entity
      * in AccessSpecification.
-     *
+     * <p/>
      * This method is intended to be used to authorize against children of the last entity held within
      * the supplied AuthorizationContext.
-     *
+     * <p/>
      * This method should only be called after isAuthorized(AuthorizationContext authorizationContext).
-     *
+     * <p/>
      * Conforms to the rules described above.
      *
      * @param authorizationContext to consider for authorization
-     * @param accessSpecification to consider for authorization
+     * @param accessSpecification  to consider for authorization
      * @return true if authorize result is allow, otherwise false if result is deny
      */
-    public boolean isAuthorized(AuthorizationContext authorizationContext, AccessSpecification accessSpecification) {
+    protected boolean isAuthorized(AuthorizationContext authorizationContext, AccessSpecification accessSpecification) {
 
         // Copy the PermissionEntry Set from the AuthorizationContext.
         // It's NOT OK to modify the original Set at this point.
-        Set<PermissionEntry> entries = authorizationContext.getEntries();
+        Set<PermissionEntry> entries = new HashSet<PermissionEntry>(authorizationContext.getEntries());
 
         // Super-users can do anything. Stop here.
         if (isSuperUser(authorizationContext.getPrincipals())) {
@@ -135,10 +158,7 @@ public class AuthorizationService implements Serializable {
         }
 
         // Try to make an authorization decision.
-        Boolean allow = isAuthorized(
-                authorizationContext,
-                accessSpecification,
-                new HashSet<PermissionEntry>(entries));
+        Boolean allow = isAuthorized(authorizationContext, accessSpecification, entries);
 
         // Was an authorization decision made?
         return isAuthorized(allow);
@@ -163,8 +183,8 @@ public class AuthorizationService implements Serializable {
      * Local utility method used by the public isAuthorized methods. Conforms to the rules described above.
      *
      * @param authorizationContext to consider for authorization
-     * @param accessSpecification to consider for authorization
-     * @param entries inherited from parent enties
+     * @param accessSpecification  to consider for authorization
+     * @param entries              inherited from parent enties
      * @return true if authorize result is allow, false if result is deny or null if the decision is not yet made
      */
     protected Boolean isAuthorized(AuthorizationContext authorizationContext, AccessSpecification accessSpecification, Set<PermissionEntry> entries) {

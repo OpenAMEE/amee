@@ -20,6 +20,7 @@
 package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.InternalValue;
 import com.amee.domain.StartEndDate;
@@ -116,6 +117,19 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         return APIUtils.getIdentityElement(document, this);
     }
 
+    public List<AMEEEntity> getHierarchy() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(this);
+        DataCategory dc = getDataCategory();
+        while (dc != null) {
+            entities.add(dc);
+            dc = dc.getDataCategory();
+        }
+        entities.add(getEnvironment());
+        Collections.reverse(entities);
+        return entities;
+    }
+
     public ItemDefinition getItemDefinition() {
         return itemDefinition;
     }
@@ -161,8 +175,8 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
     /**
      * Get an unmodifiable List of {@link ItemValue}s owned by this Item.
-     *
-     * For an historical sequence of {@link ItemValue}s, only the active entry for each {@link ItemValueDefinition} 
+     * <p/>
+     * For an historical sequence of {@link ItemValue}s, only the active entry for each {@link ItemValueDefinition}
      * for the prevailing datetime context is returned.
      *
      * @return - the List of {@link ItemValue}
@@ -219,8 +233,8 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      * or UID.
      *
      * @param identifier - a value to be compared to the path and then the uid of the {@link ItemValue}s belonging
-     * to this Item.
-     * @param startDate - the startDate to use in the {@link ItemValue} lookup
+     *                   to this Item.
+     * @param startDate  - the startDate to use in the {@link ItemValue} lookup
      * @return the matched {@link ItemValue} or NULL if no match is found.
      */
     public ItemValue getItemValue(String identifier, Date startDate) {
@@ -231,11 +245,11 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         return iv;
     }
 
-     /**
+    /**
      * Get an {@link ItemValue} belonging to this Item using some identifier and prevailing datetime context.
      *
      * @param identifier - a value to be compared to the path and then the uid of the {@link ItemValue}s belonging
-     * to this Item.
+     *                   to this Item.
      * @return the matched {@link ItemValue} or NULL if no match is found.
      */
     public ItemValue getItemValue(String identifier) {
@@ -249,7 +263,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      * @return the {@link ItemValue} if found or NULL
      */
     private ItemValue getByUid(final String uid) {
-        return(ItemValue) CollectionUtils.find(getActiveItemValues(), new Predicate() {
+        return (ItemValue) CollectionUtils.find(getActiveItemValues(), new Predicate() {
             @Override
             public boolean evaluate(Object o) {
                 ItemValue iv = (ItemValue) o;
@@ -269,7 +283,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         for (Object path : itemValueMap.keySet()) {
             // Get all ItemValues with this ItemValueDefinition path.
             List<ItemValue> itemValues = getAllItemValues((String) path);
-            if (itemValues.size() > 1 || itemValues.get(0).getItemValueDefinition().isForceTimeSeries() ) {
+            if (itemValues.size() > 1 || itemValues.get(0).getItemValueDefinition().isForceTimeSeries()) {
                 appendTimeSeriesItemValue(values, itemValues);
             } else if (itemValues.size() == 1) {
                 appendSingleValuedItemValue(values, itemValues.get(0));
@@ -349,7 +363,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      *
      * @param date - the {@link Date} to check if within the lifetime as this Item.
      * @return true if the the passed date is greater or equal to the start date of this Item
-     *  and less than the end date of this Item, otherwise false.
+     *         and less than the end date of this Item, otherwise false.
      */
     public boolean isWithinLifeTime(Date date) {
         return (date.equals(getStartDate()) || date.after(getStartDate())) &&
@@ -359,9 +373,8 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     /**
      * Set the effective start date for {@link ItemValue} look-ups.
      *
-     *
      * @param effectiveStartDate - the effective start date for {@link ItemValue} look-ups. If NULL or
-     * before {@link com.amee.domain.data.Item#getStartDate()} this value is ignored.
+     *                           before {@link com.amee.domain.data.Item#getStartDate()} this value is ignored.
      */
     public void setEffectiveStartDate(Date effectiveStartDate) {
         if (effectiveStartDate == null || effectiveStartDate.before(getStartDate()))
@@ -373,7 +386,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      * Get the effective start date for {@link ItemValue} look-ups.
      *
      * @return - the effective start date. If no date has been explicitly specified, then either
-     * now or the Item startDate is returned, whichever is the later.
+     *         now or the Item startDate is returned, whichever is the later.
      */
     protected Date getEffectiveStartDate() {
         if (effectiveStartDate != null) {
@@ -388,7 +401,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      * Set the effective end date for {@link ItemValue} look-ups.
      *
      * @param effectiveEndDate - the effective end date for {@link ItemValue} look-ups. If NULL or
-     * after {@link com.amee.domain.data.Item#getEndDate()} (if set) this value is ignored.
+     *                         after {@link com.amee.domain.data.Item#getEndDate()} (if set) this value is ignored.
      */
     public void setEffectiveEndDate(Date effectiveEndDate) {
         if (effectiveEndDate == null ||
@@ -401,7 +414,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      * Get the effective end date for {@link ItemValue} look-ups.
      *
      * @return - the effective end date. If no date has been explicitly specified, then Date(Long.MAX_VALUE)
-     * is returned
+     *         is returned
      */
     protected Date getEffectiveEndDate() {
         if (effectiveEndDate != null) {
@@ -414,8 +427,9 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     /**
      * Check if there exists amongst the current set of ItemValues, an entry with the given
      * itemValueDefinition and startDate.
+     *
      * @param itemValueDefinition - an {@link ItemValueDefinition}
-     * @param startDate - an {@link ItemValue} startDate
+     * @param startDate           - an {@link ItemValue} startDate
      * @return - true if the newItemValue is unique, otherwise false
      */
     public boolean isUnique(ItemValueDefinition itemValueDefinition, StartEndDate startDate) {

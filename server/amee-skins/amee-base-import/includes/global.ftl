@@ -6,17 +6,17 @@
 <#assign footerCopy = "">
 
 <#function canView entity>
-    <#return authorizationContext.isAuthorized(entity, PermissionEntry.VIEW)>
+    <#return authorizationService.isAuthorized(authorizationContext, entity, PermissionEntry.VIEW)>
 </#function>
 
 <#function canCreate entity>
-    <#return authorizationContext.isAuthorized(entity, PermissionEntry.CREATE)>
+    <#return authorizationService.isAuthorized(authorizationContext, entity, PermissionEntry.CREATE)>
 </#function>
 
 <#function canModify entity>
-    <#return authorizationContext.isAuthorized(entity, PermissionEntry.MODIFY)>
+    <#return authorizationService.isAuthorized(authorizationContext, entity, PermissionEntry.MODIFY)>
 </#function>
 
 <#function canDelete entity>
-    <#return authorizationContext.isAuthorized(entity, PermissionEntry.DELETE)>
+    <#return authorizationService.isAuthorized(authorizationContext, entity, PermissionEntry.DELETE)>
 </#function>
