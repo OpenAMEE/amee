@@ -22,30 +22,56 @@
 package com.amee.service.auth;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
+import com.amee.domain.auth.PermissionEntry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * AuthorizationContext encapsulates the 'context' for an authorization request. The context
- * contains three main collections; a list of 'principles', a list of 'entities' and a set of
+ * contains three main collections; a list of 'principals', a list of 'entities' and a set of
  * PermissionEntries. These collections are taken into consideration when deciding if a
  * request should be authorized.
+ * <p/>
+ * AuthorizationContext is a Spring bean in the prototype scope and is not considered thread safe.
  */
+@Component
+@Scope("prototype")
 public class AuthorizationContext implements Serializable {
 
-    /**
-     * A list of principles which may or may not be authorized for the entities.
-     */
-    private List<AMEEEntity> principles = new ArrayList<AMEEEntity>();
+    @Autowired
+    protected AuthorizationService authorizationService;
 
     /**
-     * A list of entities over which the principles may or may not have permissions, along with
+     * A list of principals which may or may not be authorized for the entities.
+     */
+    private List<AMEEEntity> principals = new ArrayList<AMEEEntity>();
+
+    /**
+     * A list of entities over which the principals may or may not have permissions, along with
      * the requested permission entries.
      */
     private List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
+
+    /**
+     * A set of PermissionEntries representing the consolidated & inherited access rights following
+     * execution of AuthorizationService.isAuthorized(). The PermissionEntries will reflect the state-of-play at
+     * the point of AuthorizationService.isAuthorized() returning ALLOW or DENY for the authorization check.
+     */
+    private Set<PermissionEntry> entries = new HashSet<PermissionEntry>();
+
+    /**
+     * Local cache for the result of AuthorizationService.isAuthorized().
+     */
+    private Boolean authorized = null;
 
     /**
      * Default constructor.
@@ -55,47 +81,23 @@ public class AuthorizationContext implements Serializable {
     }
 
     /**
-     * Construct an AuthorizationContext with the supplied principle, entity and entries.
+     * Convienience method to add a principal to the principals collection.
      *
-     * @param principle
-     * @param accessSpecification
+     * @param principal to add
      */
-    public AuthorizationContext(AMEEEntity principle, AccessSpecification accessSpecification) {
-        this();
-        addPrinciple(principle);
-        addAccessSpecification(accessSpecification);
+    public void addPrincipal(AMEEEntity principal) {
+        if (principal == null) throw new IllegalArgumentException("The principal argument must not be null.");
+        getPrincipals().add(principal);
     }
 
     /**
-     * Construct an AuthorizationContext with the supplied principles, entities and entries.
+     * Convienience method to add a list of principals to the principals collections.
      *
-     * @param principles
-     * @param accessSpecifications
+     * @param principals to add
      */
-    public AuthorizationContext(List<AMEEEntity> principles, List<AccessSpecification> accessSpecifications) {
-        this();
-        addPrinciples(principles);
-        addAccessSpecifications(accessSpecifications);
-    }
-
-    /**
-     * Convienience method to add a principle to the principles collection.
-     *
-     * @param principle to add
-     */
-    public void addPrinciple(AMEEEntity principle) {
-        if (principle == null) throw new IllegalArgumentException("The principle argument must not be null.");
-        getPrinciples().add(principle);
-    }
-
-    /**
-     * Convienience method to add a list of principles to the principles collections.
-     *
-     * @param principles to add
-     */
-    public void addPrinciples(List<AMEEEntity> principles) {
-        if (principles == null) throw new IllegalArgumentException("The principles argument must not be null.");
-        getPrinciples().addAll(principles);
+    public void addPrincipals(List<AMEEEntity> principals) {
+        if (principals == null) throw new IllegalArgumentException("The principals argument must not be null.");
+        getPrincipals().addAll(principals);
     }
 
     /**
@@ -104,7 +106,8 @@ public class AuthorizationContext implements Serializable {
      * @param accessSpecification to add
      */
     public void addAccessSpecification(AccessSpecification accessSpecification) {
-        if (accessSpecification == null) throw new IllegalArgumentException("The accessSpecification argument must not be null.");
+        if (accessSpecification == null)
+            throw new IllegalArgumentException("The accessSpecification argument must not be null.");
         getAccessSpecifications().add(accessSpecification);
     }
 
@@ -114,25 +117,89 @@ public class AuthorizationContext implements Serializable {
      * @param accessSpecifications to add
      */
     public void addAccessSpecifications(List<AccessSpecification> accessSpecifications) {
-        if (accessSpecifications == null) throw new IllegalArgumentException("The accessSpecifications argument must not be null.");
+        if (accessSpecifications == null)
+            throw new IllegalArgumentException("The accessSpecifications argument must not be null.");
         getAccessSpecifications().addAll(accessSpecifications);
     }
 
     /**
-     * Returns the principles list.
-     *
-     * @return principles list.
+     * Reset the AuthorizationContext. All collections are cleared.
      */
-    public List<AMEEEntity> getPrinciples() {
-        return principles;
+    public void reset() {
+        authorized = null;
+        principals.clear();
+        accessSpecifications.clear();
+        entries.clear();
+    }
+
+    /**
+     * Returns true of the state of the AuthorizationContext should be considered authorized. Internally uses
+     * AuthorizationService.isAuthorized and caches the result.
+     *
+     * @return true if authorize result is allow, otherwise false if result is deny
+     */
+    public boolean isAuthorized() {
+        if (authorized == null) {
+            authorized = authorizationService.isAuthorized(this);
+        }
+        return authorized;
+    }
+
+    /**
+     * Returns true if the currently active principles have the requested access, via entry, to the
+     * supplied entity. If the entity has already been considered for authorization then the cached
+     * AccessSpecification is re-used. If the entity has not been considered yet then a fresh authorization
+     * check is made, with the assumption that the entity is a direct child of the last entity declared in
+     * accessSpecifications.
+     *
+     * @param entityReference to authorize access for
+     * @param entry           specifying access requested
+     * @return true if authorize result is allow, otherwise false if result is deny
+     */
+    public boolean isAuthorized(IAMEEEntityReference entityReference, PermissionEntry entry) {
+        if (entityReference.getAccessSpecification() != null) {
+            return entityReference.getAccessSpecification().getActual().contains(entry);
+        } else {
+            return isAuthorized(new AccessSpecification(entityReference, entry));
+        }
+    }
+
+    /**
+     * Returns true if the currently active principles have access to the entity with the PermissionEntry in
+     * the supplied AccessSpecification, with the assumption that the entity is a direct child of the last
+     * entity declared in accessSpecifications.
+     *
+     * @param accessSpecification desired AccessSpecification
+     * @return true if authorize result is allow, otherwise false if result is deny
+     */
+    public boolean isAuthorized(AccessSpecification accessSpecification) {
+        return authorizationService.isAuthorized(this, accessSpecification);
+    }
+
+    /**
+     * Returns the principals list.
+     *
+     * @return principals list
+     */
+    public List<AMEEEntity> getPrincipals() {
+        return principals;
     }
 
     /**
      * Returns the accessSpecifications list.
      *
-     * @return accessSpecifications list.
+     * @return accessSpecifications list
      */
     public List<AccessSpecification> getAccessSpecifications() {
         return accessSpecifications;
+    }
+
+    /**
+     * Returns the entries set;
+     *
+     * @return entries set
+     */
+    public Set<PermissionEntry> getEntries() {
+        return entries;
     }
 }

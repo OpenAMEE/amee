@@ -41,26 +41,26 @@ public class PermissionTest extends ServiceTest {
     private PermissionService permissionService;
 
     @Test
-    public void areValidPrinciples() {
-        assertTrue("Should be a valid principle", permissionService.isValidPrinciple(new Group()));
-        assertTrue("Should be a valid principle", permissionService.isValidPrinciple(new User()));
+    public void areValidPrincipals() {
+        assertTrue("Should be a valid principal", permissionService.isValidPrincipal(new Group()));
+        assertTrue("Should be a valid principal", permissionService.isValidPrincipal(new User()));
     }
 
     @Test
-    public void areNotValidPrinciples() {
-        assertFalse("Should not be a valid principle", permissionService.isValidPrinciple(new DataItem()));
-        assertFalse("Should not be a valid principle", permissionService.isValidPrinciple(new Profile()));
+    public void areNotValidPrincipals() {
+        assertFalse("Should not be a valid principal", permissionService.isValidPrincipal(new DataItem()));
+        assertFalse("Should not be a valid principal", permissionService.isValidPrincipal(new Profile()));
     }
 
     @Test
-    public void areValidPrinciplesToEntities() {
-        assertTrue("Should be a valid principle-to-entity", permissionService.isValidPrincipleToEntity(new Group(), new DataItem()));
-        assertTrue("Should be a valid principle-to-entity", permissionService.isValidPrincipleToEntity(new User(), new ProfileItem()));
+    public void areValidPrincipalsToEntities() {
+        assertTrue("Should be a valid principal-to-entity", permissionService.isValidPrincipalToEntity(new Group(), new DataItem()));
+        assertTrue("Should be a valid principal-to-entity", permissionService.isValidPrincipalToEntity(new User(), new ProfileItem()));
     }
 
     @Test
-    public void areNotValidPrinciplesToEntities() {
-        assertFalse("Should not be a valid principle-to-entity", permissionService.isValidPrincipleToEntity(new DataItem(), new Profile()));
-        assertFalse("Should not be a valid principle-to-entity", permissionService.isValidPrincipleToEntity(new User(), new Group()));
+    public void areNotValidPrincipalsToEntities() {
+        assertFalse("Should not be a valid principal-to-entity", permissionService.isValidPrincipalToEntity(new DataItem(), new Profile()));
+        assertFalse("Should not be a valid principal-to-entity", permissionService.isValidPrincipalToEntity(new User(), new Group()));
     }
 }

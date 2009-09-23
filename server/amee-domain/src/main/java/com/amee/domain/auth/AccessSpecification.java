@@ -21,7 +21,7 @@
  */
 package com.amee.domain.auth;
 
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public class AccessSpecification implements Serializable {
 
-    private AMEEEntity entity;
+    private IAMEEEntityReference entityReference;
     private Set<PermissionEntry> desired = new HashSet<PermissionEntry>();
     private Set<PermissionEntry> actual = new HashSet<PermissionEntry>();
 
@@ -41,24 +41,24 @@ public class AccessSpecification implements Serializable {
         super();
     }
 
-    public AccessSpecification(AMEEEntity entity) {
+    public AccessSpecification(IAMEEEntityReference entityReference) {
         this();
-        this.entity = entity;
-        entity.setAccessSpecification(this);
+        this.entityReference = entityReference;
+        entityReference.setAccessSpecification(this);
     }
 
-    public AccessSpecification(AMEEEntity entity, PermissionEntry... desired) {
-        this(entity);
+    public AccessSpecification(IAMEEEntityReference entityReference, PermissionEntry... desired) {
+        this(entityReference);
         CollectionUtils.addAll(this.desired, desired);
     }
 
-    public AccessSpecification(AMEEEntity entity, Set<PermissionEntry> desired) {
-        this(entity);
+    public AccessSpecification(IAMEEEntityReference entityReference, Set<PermissionEntry> desired) {
+        this(entityReference);
         this.desired.addAll(desired);
     }
 
-    public AMEEEntity getEntity() {
-        return entity;
+    public IAMEEEntityReference getEntityReference() {
+        return entityReference;
     }
 
     public Set<PermissionEntry> getDesired() {

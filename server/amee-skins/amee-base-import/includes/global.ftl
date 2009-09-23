@@ -5,10 +5,18 @@
 <#assign supportDetails = false>
 <#assign footerCopy = "">
 
-<#function canModify entity>
-    <#return entity.accessSpecification?? && entity.accessSpecification.actual?seq_contains(PermissionEntry.MODIFY)>
+<#function canView entity>
+    <#return authorizationContext.isAuthorized(entity, PermissionEntry.VIEW)>
 </#function>
 
 <#function canCreate entity>
-    <#return entity.accessSpecification?? && entity.accessSpecification.actual?seq_contains(PermissionEntry.CREATE)>
+    <#return authorizationContext.isAuthorized(entity, PermissionEntry.CREATE)>
+</#function>
+
+<#function canModify entity>
+    <#return authorizationContext.isAuthorized(entity, PermissionEntry.MODIFY)>
+</#function>
+
+<#function canDelete entity>
+    <#return authorizationContext.isAuthorized(entity, PermissionEntry.DELETE)>
 </#function>

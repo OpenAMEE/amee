@@ -26,11 +26,11 @@ import java.util.List;
 /**
  * A User represents a single person or entity who has authenticated access to an Environment.
  * <p/>
- * Users can be members of Groups via GroupPrinciple.
+ * Users can be members of Groups via GroupPrincipal.
  * <p/>
  * A User belongs to an Environment.
  * <p/>
- * When deleting a User we need to ensure all relevant GroupPrinciples are also removed.
+ * When deleting a User we need to ensure all relevant GroupPrincipals are also removed.
  *
  * @author Diggory Briercliffe
  */

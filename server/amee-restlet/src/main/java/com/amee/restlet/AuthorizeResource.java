@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An abstract base Resource class providing authentication functionality. Sub-classes
@@ -42,10 +43,22 @@ import java.util.List;
 public abstract class AuthorizeResource extends BaseResource {
 
     @Autowired
-    private AuthorizationService authorizationService;
+    protected GroupService groupService;
 
     @Autowired
-    private GroupService groupService;
+    protected AuthorizationContext authorizationContext;
+
+    /**
+     * Ensure AuthorizationContext instance is always avilable to templates.
+     *
+     * @return the template map
+     */
+    @Override
+    public Map<String, Object> getTemplateValues() {
+        Map<String, Object> values = super.getTemplateValues();
+        values.put("authorizationContext", authorizationContext);
+        return values;
+    }
 
     /**
      * Overrides Resource.handleGet to enforce authorization for GET requests.
@@ -69,7 +82,7 @@ public abstract class AuthorizeResource extends BaseResource {
 
     /**
      * Get the AccessSpecifications for GET requests. Creates an AccessSpecification for each entity
-     * from getEntities with VIEW as the PermissionEntry. This specifies that principles must have VIEW permissions
+     * from getEntities with VIEW as the PermissionEntry. This specifies that principals must have VIEW permissions
      * for all the entities.
      *
      * @return AccessSpecifications for GET requests
@@ -113,7 +126,7 @@ public abstract class AuthorizeResource extends BaseResource {
 
     /**
      * Get the AccessSpecifications for POST requests. Updates the last entry from getGetAccessSpecifications with
-     * the CREATE PermissionEntry. This specifies that principles must have VIEW permissions
+     * the CREATE PermissionEntry. This specifies that principals must have VIEW permissions
      * for all the entities and VIEW & CREATE for the last entity.
      *
      * @return AccessSpecifications for POST requests
@@ -155,7 +168,7 @@ public abstract class AuthorizeResource extends BaseResource {
 
     /**
      * Get the AccessSpecifications for PUT requests. Updates the last entry from getGetAccessSpecifications with
-     * the MODIFY PermissionEntry. This specifies that principles must have VIEW permissions
+     * the MODIFY PermissionEntry. This specifies that principals must have VIEW permissions
      * for all the entities and VIEW & MODIFY for the last entity.
      *
      * @return AccessSpecifications for PUT requests
@@ -208,7 +221,7 @@ public abstract class AuthorizeResource extends BaseResource {
 
     /**
      * Get the AccessSpecifications for DELETE requests. Updates the last entry from getGetAccessSpecifications with
-     * the DELETE PermissionEntry. This specifies that principles must have VIEW permissions
+     * the DELETE PermissionEntry. This specifies that principals must have VIEW permissions
      * for all the entities and VIEW & DELETE for the last entity.
      *
      * @return AccessSpecifications for DELETE requests
@@ -228,27 +241,28 @@ public abstract class AuthorizeResource extends BaseResource {
 
     /**
      * Returns true if the request is authorized, otherwise false. AuthorizationService is used to
-     * do the authorization based on the supplied AccessSpecifications and the principles from GetPrinciples.
+     * do the authorization based on the supplied AccessSpecifications and the principals from GetPrincipals.
      *
-     * @param accessSpecification to use for authorization
+     * @param accessSpecifications to use for authorization
      * @return true if the request is authorized, otherwise false
      */
-    public boolean isAuthorized(List<AccessSpecification> accessSpecification) {
-        return authorizationService.isAuthorized(
-                new AuthorizationContext(getPrinciples(), accessSpecification));
+    public boolean isAuthorized(List<AccessSpecification> accessSpecifications) {
+        authorizationContext.addPrincipals(getPrincipals());
+        authorizationContext.addAccessSpecifications(accessSpecifications);
+        return authorizationContext.isAuthorized();
     }
 
     /**
-     * Returns a list of principles involved in authorization. Permissions from these principles will
+     * Returns a list of principals involved in authorization. Permissions from these principals will
      * be compared against AccessSpecifications to determine if a request is authorized.
      *
-     * @return a list of principles
+     * @return a list of principals
      */
-    public List<AMEEEntity> getPrinciples() {
-        List<AMEEEntity> principles = new ArrayList<AMEEEntity>();
-        principles.addAll(groupService.getGroupsForPrinciple(getActiveUser()));
-        principles.add(getActiveUser());
-        return principles;
+    public List<AMEEEntity> getPrincipals() {
+        List<AMEEEntity> principals = new ArrayList<AMEEEntity>();
+        principals.addAll(groupService.getGroupsForPrincipal(getActiveUser()));
+        principals.add(getActiveUser());
+        return principals;
     }
 
     /**
