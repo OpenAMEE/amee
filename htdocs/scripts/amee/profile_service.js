@@ -20,7 +20,7 @@ var ProfileCategoryResource = Class.create({
         this.categoryPath = categoryPath;
         this.loaded = false;
         this.resource = null;
-   },
+    },
     load: function() {
         var url = '/profiles/' + this.profileUid + this.categoryPath;
         new Ajax.Request(url, {
@@ -105,14 +105,11 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
 
         var json = this.response.responseJSON;
 
-        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
-        var profileCategoryActions = PROFILE_ACTIONS.getActions('profileCategory');
-
-        if ((json.profileItems.length > 0) && profileItemActions.isAllowList()) {
+        if (json.profileItems.length > 0) {
             $super();
         }
 
-        if ((json.profileCategories.length > 0) && profileCategoryActions.isAllowList()) {
+        if (json.profileCategories.length > 0) {
             // update elements
             this.headingCategoryElement = $(this.headingElementName);
             this.headingContentElement = $(this.headingElementName);
@@ -135,7 +132,6 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
         }
     },
     getDetailRows: function(json) {
-        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
         var rows = [];
         if (json.profileItems) {
             for (var i = 0; i < json.profileItems.length; i++) {
@@ -151,7 +147,6 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
                 detailRow.insert(this.getActionsTableData({
                     deleteable: true,
                     method: "deleteProfileItem",
-                    actions: profileItemActions,
                     uid: profileItem.uid}));
 
                 // update array
@@ -187,12 +182,9 @@ var ProfileCategoryApiService = Class.create(ProfileItemsApiService, ({
         return rows;
     },
     getCategoryActionsTableData: function(path) {
-        var profileCategoryActions = PROFILE_ACTIONS.getActions('profileCategory');
         var actions = new Element('td');
-        if (profileCategoryActions.isAllowView()) {
-            actions.insert(new Element('a', {href : this.getUrl(path)})
-                    .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
-        }
+        actions.insert(new Element('a', {href : this.getUrl(path)})
+                .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
         return actions;
     }
 }));
@@ -205,8 +197,6 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
     renderApiResponse: function() {
 
         var json = this.response.responseJSON;
-
-        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
 
         if (json.profileItem) {
             var profileItem = json.profileItem;
@@ -237,102 +227,84 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
             for (var i = 0; i < profileItem.itemValues.length; i++) {
                 var itemValue = profileItem.itemValues[i];
 
-                if (profileItemActions.isAllowModify()) {
+                var newRow = new Element("tr");
+                var dataLabel = new Element("td").insert(
+                        new Element('a', {href : this.getUrl(itemValue.displayPath) }).update(itemValue.displayName));
+                var dataInfo = new Element('td');
+                var inputValue = new Element('input', {type : 'text', name : itemValue.displayPath, value : itemValue.value, size : 30});
+                dataInfo.insert(inputValue);
 
-                    var newRow = new Element("tr");
-                    var dataLabel = new Element("td").insert(
-                            new Element('a', {href : this.getUrl(itemValue.displayPath) }).update(itemValue.displayName));
-                    var dataInfo = new Element('td');
-                    var inputValue = new Element('input', {type : 'text', name : itemValue.displayPath, value : itemValue.value, size : 30});
-                    dataInfo.insert(inputValue);
+                var unitSelectElement;
+                var choices;
+                var choice;
+                var optionElement;
+                var unitInfo;
 
-                    var unitSelectElement;
-                    var choices;
-                    var choice;
-                    var optionElement;
-                    var unitInfo;
+                if (itemValue.unit) {
+                    if (itemValue.itemValueDefinition.unit[i] && itemValue.itemValueDefinition.unit[i].choices) {
 
-                    if (itemValue.unit) {
-                        if (itemValue.itemValueDefinition.unit[i] && itemValue.itemValueDefinition.unit[i].choices) {
+                        unitSelectElement = new Element('select', {name : itemValue.displayPath + "Unit"});
+                        choices = itemValue.itemValueDefinition.unit[i].choices.split(",");
 
-                            unitSelectElement = new Element('select', {name : itemValue.displayPath + "Unit"});
-                            choices = itemValue.itemValueDefinition.unit[i].choices.split(",");
-
-                            for (var k = 0; k < choices.length; k++) {
-                                choice = choices[k];
-                                if (itemValue.unit == choice) {
-                                    optionElement = new Element("option", {value : choice, selected : true}).update(choice);
-                                } else {
-                                    optionElement = new Element("option", {value : choice}).update(choice);
-                                }
-                                unitSelectElement.insert(optionElement);
+                        for (var k = 0; k < choices.length; k++) {
+                            choice = choices[k];
+                            if (itemValue.unit == choice) {
+                                optionElement = new Element("option", {value : choice, selected : true}).update(choice);
+                            } else {
+                                optionElement = new Element("option", {value : choice}).update(choice);
                             }
-                            dataInfo.insert(unitSelectElement);
-
-                        } else {
-                            unitInfo = new Element('input', {type : 'text', name : itemValue.displayPath + "Unit", value : itemValue.unit, size : 30});
-                            dataInfo.insert(unitInfo);
+                            unitSelectElement.insert(optionElement);
                         }
-                    }
+                        dataInfo.insert(unitSelectElement);
 
-                    if (itemValue.perUnit) {
-                        if (itemValue.itemValueDefinition.perUnit[i] && itemValue.itemValueDefinition.perUnit[i].choices) {
-
-                            unitSelectElement = new Element('select', {name : itemValue.displayPath + "PerUnit"});
-                            choices = itemValue.itemValueDefinition.perUnit[i].choices.split(",");
-
-                            for (var k = 0; k < choices.length; k++) {
-                                choice = choices[k];
-                                if (itemValue.perUnit == choice) {
-                                    optionElement = new Element("option", {value : choice, selected : true}).update(choice);
-                                } else {
-                                    optionElement = new Element("option", {value : choice}).update(choice);
-                                }
-                                unitSelectElement.insert(optionElement);
-                            }
-                            dataInfo.insert(unitSelectElement);
-
-                        } else {
-                            unitInfo = new Element('input', {type : 'text', name : itemValue.displayPath + "PerUnit", value : itemValue.perUnit, size : 30});
-                            dataInfo.insert(unitInfo);
-                        }
-                    }
-
-
-                    newRow.insert(dataLabel);
-                    newRow.insert(dataInfo);
-
-                    tableBody.insert(newRow);
-
-                } else {
-                    tableBody.insert(new Element("td").update(itemValue.displayName));
-                    if (itemValue.perUnit) {
-                        tableBody.insert(new Element("td").update(itemValue.value + " " + itemValue.perUnit));
                     } else {
-                        tableBody.insert(new Element("td").update(itemValue.value));
+                        unitInfo = new Element('input', {type : 'text', name : itemValue.displayPath + "Unit", value : itemValue.unit, size : 30});
+                        dataInfo.insert(unitInfo);
                     }
                 }
+
+                if (itemValue.perUnit) {
+                    if (itemValue.itemValueDefinition.perUnit[i] && itemValue.itemValueDefinition.perUnit[i].choices) {
+
+                        unitSelectElement = new Element('select', {name : itemValue.displayPath + "PerUnit"});
+                        choices = itemValue.itemValueDefinition.perUnit[i].choices.split(",");
+
+                        for (var k = 0; k < choices.length; k++) {
+                            choice = choices[k];
+                            if (itemValue.perUnit == choice) {
+                                optionElement = new Element("option", {value : choice, selected : true}).update(choice);
+                            } else {
+                                optionElement = new Element("option", {value : choice}).update(choice);
+                            }
+                            unitSelectElement.insert(optionElement);
+                        }
+                        dataInfo.insert(unitSelectElement);
+
+                    } else {
+                        unitInfo = new Element('input', {type : 'text', name : itemValue.displayPath + "PerUnit", value : itemValue.perUnit, size : 30});
+                        dataInfo.insert(unitInfo);
+                    }
+                }
+
+
+                newRow.insert(dataLabel);
+                newRow.insert(dataInfo);
+
+                tableBody.insert(newRow);
             }
 
             var tableElement = new Element('table', {id : 'inputTable'}).insert(tableBody);
             $('inputTable').replace(tableElement);
 
-            if (profileItemActions.isAllowModify()) {
-                var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
-                $("inputSubmit").replace(btnSubmit);
-                Event.observe(btnSubmit, "click", this.updateProfileItem.bind(this));
-            }
+            var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
+            $("inputSubmit").replace(btnSubmit);
+            Event.observe(btnSubmit, "click", this.updateProfileItem.bind(this));
         }
     },
     getFormInfoElement: function(label, name, info, size) {
-        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
         var newRow = new Element("tr").insert(new Element("td").update(label));
         var dataElement = new Element("td");
-        if (profileItemActions.isAllowModify()) {
-            dataElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size}));
-        } else {
-            dataElement.insert(info);
-        }
+        dataElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size}));
         newRow.insert(dataElement);
         return newRow;
     },
@@ -399,24 +371,19 @@ var ProfilesApiService = Class.create(BaseProfileApiService, ({
     getActionsTableData: function(params) {
         params.deleteable = params.deleteable || false;
         var actions = new Element('td');
-        if (params.actions.isAllowView()) {
-            actions.insert(new Element('a', {href : this.getUrl(params.uid)})
-                    .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
-        }
-        if (params.deleteable && params.actions.isAllowDelete()) {
-            actions.insert(new Element('a', {
-                onClick: params.method + '("' + params.uid + '") ; return false;',
-                href: 'javascript:' + params.method + '("' + params.uid + '");'})
-                    .insert(new Element('img', {
-                src: '/images/icons/page_delete.png',
-                title: 'Delete',
-                alt: 'Delete',
-                border: 0})));
-        }
+        actions.insert(new Element('a', {href : this.getUrl(params.uid)})
+                .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
+        actions.insert(new Element('a', {
+            onClick: params.method + '("' + params.uid + '") ; return false;',
+            href: 'javascript:' + params.method + '("' + params.uid + '");'})
+                .insert(new Element('img', {
+            src: '/images/icons/page_delete.png',
+            title: 'Delete',
+            alt: 'Delete',
+            border: 0})));
         return actions;
     },
     getDetailRows: function($super, json) {
-        var profileActions = PROFILE_ACTIONS.getActions('profile');
         var rows = [];
         if (json.profiles) {
             for (var i = 0; i < json.profiles.length; i++) {
@@ -430,7 +397,6 @@ var ProfilesApiService = Class.create(BaseProfileApiService, ({
                 // create actions
                 detailRow.insert(this.getActionsTableData({
                     deleteable: true,
-                    actions: profileActions,
                     method: 'deleteProfile',
                     uid: profile.uid}));
 
@@ -451,7 +417,6 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
     },
     renderApiResponse: function() {
 
-        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
         var json = this.response.responseJSON;
 
         // render info
@@ -472,57 +437,50 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
         }
 
         // render form
-        if (profileItemActions.isAllowModify()) {
-            var inputValuesElement = new Element('span', {id : 'inputValues'});
-            if (itemValue.itemValueDefinition.choices) {
-                var choice, choiceName, choiceValue;
-                var choices = itemValue.itemValueDefinition.choices.split(",");
-                var selectElement = new Element('select', {name : 'value'});
-                var selectedOption = false;
-                for (var i = 0; i < choices.length; i++) {
-                    choice = choices[i].split("=");
-                    if (choice.length == 2) {
-                        choiceName = choice[0];
-                        choiceValue = choice[1];
-                    } else {
-                        choiceName = choiceValue = choice[0];
-                    }
-                    selectedOption = itemValue.value == choiceValue;
-                    selectElement.insert(new Element('option', {value : choiceValue, selected : selectedOption}).update(choiceValue));
+        var inputValuesElement = new Element('span', {id : 'inputValues'});
+        if (itemValue.itemValueDefinition.choices) {
+            var choice, choiceName, choiceValue;
+            var choices = itemValue.itemValueDefinition.choices.split(",");
+            var selectElement = new Element('select', {name : 'value'});
+            var selectedOption = false;
+            for (var i = 0; i < choices.length; i++) {
+                choice = choices[i].split("=");
+                if (choice.length == 2) {
+                    choiceName = choice[0];
+                    choiceValue = choice[1];
+                } else {
+                    choiceName = choiceValue = choice[0];
                 }
-                inputValuesElement.insert('Value: ');
-                inputValuesElement.insert(selectElement);
-                inputValuesElement.insert(new Element('br'));
-            } else {
-                this.addFormInfoElement('Value: ', inputValuesElement, 'value', itemValue.value, 30, 'margin-left:23px');
-                if (itemValue.unit) {
-                    this.addFormInfoElement('Unit: ', inputValuesElement, 'unit', itemValue.unit, 30, 'margin-left:34px');
-                }
-                if (itemValue.perUnit) {
-                    this.addFormInfoElement('PerUnit: ', inputValuesElement, 'perUnit', itemValue.perUnit, 30, 'margin-left:9px');
-                }
+                selectedOption = itemValue.value == choiceValue;
+                selectElement.insert(new Element('option', {value : choiceValue, selected : selectedOption}).update(choiceValue));
             }
-            $('inputValues').replace(inputValuesElement);
-            var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
-            $("inputSubmit").replace(btnSubmit);
-            Event.observe(btnSubmit, "click", this.updateProfileItemValue.bind(this));
+            inputValuesElement.insert('Value: ');
+            inputValuesElement.insert(selectElement);
+            inputValuesElement.insert(new Element('br'));
+        } else {
+            this.addFormInfoElement('Value: ', inputValuesElement, 'value', itemValue.value, 30, 'margin-left:23px');
+            if (itemValue.unit) {
+                this.addFormInfoElement('Unit: ', inputValuesElement, 'unit', itemValue.unit, 30, 'margin-left:34px');
+            }
+            if (itemValue.perUnit) {
+                this.addFormInfoElement('PerUnit: ', inputValuesElement, 'perUnit', itemValue.perUnit, 30, 'margin-left:9px');
+            }
         }
+        $('inputValues').replace(inputValuesElement);
+        var btnSubmit = new Element('input', {type : 'button', value : 'Update'});
+        $("inputSubmit").replace(btnSubmit);
+        Event.observe(btnSubmit, "click", this.updateProfileItemValue.bind(this));
     },
     render: function() {
         this.renderTrail();
         this.renderApiResponse();
     },
     addFormInfoElement: function(label, pElement, name, info, size, style) {
-        var profileItemActions = PROFILE_ACTIONS.getActions('profileItem');
         pElement.insert(label);
-        if (profileItemActions.isAllowModify()) {
-            if (style) {
-                pElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size, style : style}));
-            } else {
-                pElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size}));
-            }
+        if (style) {
+            pElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size, style : style}));
         } else {
-            pElement.insert(info);
+            pElement.insert(new Element('input', {type : 'text', name : name, value : info, size : size}));
         }
         pElement.insert(new Element('br'));
     },

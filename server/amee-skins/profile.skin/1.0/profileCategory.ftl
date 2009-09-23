@@ -33,8 +33,6 @@
     }
     
     // create resource objects
-    var PROFILE_ACTIONS = new ActionsResource({path: '/profiles/actions'});
-    var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
     var drillDown = new DrillDown(
         "/data${pathItem.fullPath}",
         "1.0",
@@ -42,8 +40,6 @@
 
     // use resource loader to load resources and notify on loaded
     var resourceLoader = new ResourceLoader();
-    resourceLoader.addResource(PROFILE_ACTIONS);
-    resourceLoader.addResource(DATA_ACTIONS);
     resourceLoader.observe('loaded', function() {
         drillDown.start();
     });

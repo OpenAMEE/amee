@@ -22,14 +22,27 @@
 package com.amee.service.auth;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.sheet.Choices;
+import com.amee.domain.data.DataItem;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.PermissionEntry;
+import com.amee.core.CO2Amount;
+import com.amee.core.CO2AmountUnit;
+import com.amee.core.DecimalUnit;
+import com.amee.core.DecimalPerUnit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONArray;
+
+import javax.measure.unit.SI;
+import javax.measure.unit.NonSI;
 
 /**
  * AuthorizationContext encapsulates the 'context' for an authorization request. The context
@@ -119,6 +132,16 @@ public class AuthorizationContext implements Serializable {
         principals.clear();
         accessSpecifications.clear();
         entries.clear();
+    }
+
+    public JSONObject getJSONObject() throws JSONException {
+        JSONObject obj = new JSONObject();
+        JSONArray entries = new JSONArray();
+        for (PermissionEntry entry : getEntries()) {
+            entries.put(entry.getJSONObject());
+        }
+        obj.put("entries", entries);
+        return obj;
     }
 
     /**
