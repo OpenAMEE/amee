@@ -57,6 +57,11 @@ public class RequestContext {
     private String categoryUid = "";
     private String label = "";
     private String type = "";
+    private long start = 0L;
+
+    public RequestContext() {
+        this.start = System.currentTimeMillis();
+    }
 
     public void setUser(User user) {
         if (user == null)
@@ -161,7 +166,8 @@ public class RequestContext {
             sb.append(requestParameters.replace("=","__") + "|");
             sb.append(form + "|");
             sb.append(error + "|");
-            sb.append(method);
+            sb.append(method + "|");
+            sb.append(System.currentTimeMillis() - start);
         return sb.toString();
     }
 }
