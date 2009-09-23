@@ -43,9 +43,11 @@ import java.util.Map;
 public abstract class AuthorizeResource extends BaseResource {
 
     @Autowired
-    protected GroupService groupService;
+    protected AuthorizationService authorizationService;
 
     @Autowired
+    protected GroupService groupService;
+
     protected AuthorizationContext authorizationContext;
 
     /**
@@ -57,6 +59,7 @@ public abstract class AuthorizeResource extends BaseResource {
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("authorizationContext", authorizationContext);
+        values.put("authorizationService", authorizationService);
         return values;
     }
 
@@ -247,9 +250,10 @@ public abstract class AuthorizeResource extends BaseResource {
      * @return true if the request is authorized, otherwise false
      */
     public boolean isAuthorized(List<AccessSpecification> accessSpecifications) {
+        authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipals(getPrincipals());
         authorizationContext.addAccessSpecifications(accessSpecifications);
-        return authorizationContext.isAuthorized();
+        return authorizationService.isAuthorized(authorizationContext);
     }
 
     /**
