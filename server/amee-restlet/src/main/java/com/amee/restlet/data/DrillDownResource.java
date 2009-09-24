@@ -46,8 +46,6 @@ import org.w3c.dom.Element;
 import java.io.Serializable;
 import java.util.*;
 
-// TODO - need to define actions for this resource
-
 // TODO - move to builder resource
 @Component
 @Scope("prototype")

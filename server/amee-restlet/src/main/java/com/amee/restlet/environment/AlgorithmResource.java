@@ -85,6 +85,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getActiveEnvironment());
         entities.add(definitionBrowser.getEnvironment());
         entities.add(definitionBrowser.getItemDefinition());
         entities.add(definitionBrowser.getAlgorithm());

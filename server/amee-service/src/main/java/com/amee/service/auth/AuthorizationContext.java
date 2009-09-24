@@ -68,7 +68,7 @@ public class AuthorizationContext implements Serializable {
     /**
      * Indicates if a User that is a super-user is one of the principles.
      */
-    private Boolean superUser = null;
+    private boolean superUser = false;
 
     /**
      * Default constructor.
@@ -209,7 +209,7 @@ public class AuthorizationContext implements Serializable {
      *
      * @return true if one of the priniples was a super-user
      */
-    public Boolean isSuperUser() {
+    public boolean isSuperUser() {
         return superUser;
     }
 

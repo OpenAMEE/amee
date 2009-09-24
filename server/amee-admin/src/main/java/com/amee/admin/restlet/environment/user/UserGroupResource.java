@@ -48,6 +48,7 @@ public class UserGroupResource extends AuthorizeResource {
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getActiveEnvironment());
         entities.add(environmentBrowser.getEnvironment());
         entities.add(environmentBrowser.getUser());
         entities.add(environmentBrowser.getGroup());

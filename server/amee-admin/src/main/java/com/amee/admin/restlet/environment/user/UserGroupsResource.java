@@ -51,6 +51,7 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getActiveEnvironment());
         entities.add(environmentBrowser.getEnvironment());
         entities.add(environmentBrowser.getUser());
         return entities;
