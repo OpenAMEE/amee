@@ -78,6 +78,7 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getActiveEnvironment());
         entities.add(definitionBrowser.getEnvironment());
         entities.add(definitionBrowser.getItemDefinition());
         return entities;

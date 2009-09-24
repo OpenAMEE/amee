@@ -83,6 +83,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getActiveEnvironment());
         entities.add(definitionBrowser.getEnvironment());
         entities.add(definitionBrowser.getItemDefinition());
         entities.add(definitionBrowser.getItemValueDefinition());

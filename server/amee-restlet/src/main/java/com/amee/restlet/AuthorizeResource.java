@@ -92,7 +92,7 @@ public abstract class AuthorizeResource extends BaseResource {
      */
     public List<AccessSpecification> getGetAccessSpecifications() {
         List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
-        for (AMEEEntity entity : getEntities()) {
+        for (AMEEEntity entity : getDistinctEntities()) {
             accessSpecifications.add(new AccessSpecification(entity, PermissionEntry.VIEW));
         }
         return accessSpecifications;
@@ -276,6 +276,22 @@ public abstract class AuthorizeResource extends BaseResource {
      * @return list of entites required for authorization
      */
     public abstract List<AMEEEntity> getEntities();
+
+
+    /**
+     * Returns a de-duped version of the list from getEntities().
+     *
+     * @return list of entites required for authorization
+     */
+    public List<AMEEEntity> getDistinctEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        for (AMEEEntity entity : getEntities()) {
+            if (!entities.contains(entity)) {
+                entities.add(entity);
+            }
+        }
+        return entities;
+    }
 
     /**
      * Updates the last AccessSpecification in the supplied list of AccessSpecifications with the PermissionEntry.

@@ -50,6 +50,13 @@ public class PermissionService {
         addPrincipalAndEntity(ObjectType.USR, ObjectType.PI);
         addPrincipalAndEntity(ObjectType.USR, ObjectType.DI);
         addPrincipalAndEntity(ObjectType.USR, ObjectType.IV);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.AL);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.ID);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.IVD);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.ALC);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.USR);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.GRP);
+        addPrincipalAndEntity(ObjectType.USR, ObjectType.VD);
 
         // Groups <--> Entities
         addPrincipalAndEntity(ObjectType.GRP, ObjectType.ENV);
@@ -58,6 +65,13 @@ public class PermissionService {
         addPrincipalAndEntity(ObjectType.GRP, ObjectType.PI);
         addPrincipalAndEntity(ObjectType.GRP, ObjectType.DI);
         addPrincipalAndEntity(ObjectType.GRP, ObjectType.IV);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.AL);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.ID);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.IVD);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.ALC);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.USR);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.GRP);
+        addPrincipalAndEntity(ObjectType.GRP, ObjectType.VD);
     }
 
     @Autowired

@@ -73,6 +73,7 @@ public class ValueDefinitionResource extends AuthorizeResource implements Serial
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getActiveEnvironment());
         entities.add(definitionBrowser.getEnvironment());
         entities.add(definitionBrowser.getValueDefinition());
         return entities;
