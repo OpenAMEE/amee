@@ -61,12 +61,12 @@
             <th>Actions</th>
         </tr>
         <#list children as pi>
-            <#if canView(pi)>
+            <#if canViewEntity(pi)>
                 <tr id='Elem_${pi.uid}'>
                     <td>${pi.name}</td>
                     <td>
                     <a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
-                    <#if canDelete(pi)><input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
+                    <#if canDeleteEntity(pi)><input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
                     </td>
                 </tr>
             </#if>
@@ -89,12 +89,12 @@
         </tr>
         <#list sheet.rows as row>
             <#assign ref = AMEEEntityReference.getInstance(ObjectType.DI, row.uid)>
-            <#if canView(ref)>
+            <#if canViewEntity(ref)>
                 <tr id='Elem_${row.uid}'>
                     <td>${row.findCell('label')}</td>
                     <td>
                     <a href='${basePath}/${row.findCell('path')}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
-                    <#if canDelete(ref)><input type="image" onClick="deleteDataItem('${row.uid}', '${basePath}/${row.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
+                    <#if canDeleteEntity(ref)><input type="image" onClick="deleteDataItem('${row.uid}', '${basePath}/${row.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
                     </td>
                 </tr>
             </#if>
@@ -105,7 +105,7 @@
     </p>
 </#if>
 
-<#if canModify(dataCategory)>
+<#if canModifyEntity(dataCategory)>
     <h2>Update Data Category</h2>
     <p>
 
@@ -163,7 +163,7 @@
     </p>
 </#if>
 
-<#if canCreate(dataCategory) && !dataCategory.aliasedCategory??>
+<#if canCreateEntity(dataCategory) && !dataCategory.aliasedCategory??>
     <h2>Create</h2>
     <p>
     <form action='${basePath}' method='POST' enctype='application/x-www-form-urlencoded'>

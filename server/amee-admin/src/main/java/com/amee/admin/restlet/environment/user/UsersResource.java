@@ -11,7 +11,6 @@ import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.SiteService;
-import com.amee.service.environment.GroupService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,12 +41,17 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     private EnvironmentBrowser environmentBrowser;
 
     private User newUser;
+    private String search;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         setPage(request);
+        search = request.getResourceRef().getQueryAsForm().getFirstValue("search");
+        if (search == null) {
+            search = "";
+        }
     }
 
     @Override
@@ -70,7 +74,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager(getItemsPerPage());
-        List<User> users = siteService.getUsers(environmentBrowser.getEnvironment(), pager);
+        List<User> users = siteService.getUsers(environmentBrowser.getEnvironment(), pager, search);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", environmentBrowser);
@@ -79,6 +83,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
         values.put("pager", pager);
         values.put("apiVersions", environmentBrowser.getApiVersions());
         values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
+        values.put("search", search);
         return values;
     }
 

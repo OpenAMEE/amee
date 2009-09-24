@@ -1,5 +1,9 @@
-<script type="text/javascript">
+<#assign sectionName = 'environments' />
 
+<#include '/includes/furniture.ftl'>
+<#include '/includes/before_content.ftl' />
+
+<script type="text/javascript">
 
     function success(response) {
         document.algorithmFrm.algorithmContextContent.value = response.responseJSON.algorithmContextResource.content;
@@ -73,7 +77,6 @@
         document.algorithmTestFrm.startDate.value = document.algorithmFrm.startDate.value;
         document.algorithmTestFrm.endDate.value = document.algorithmFrm.endDate.value;
 
-
         var myAjax = new Ajax.Request(
                 path, {
             method: 'get',
@@ -102,10 +105,8 @@
     }
 </style>
 
-<#assign sectionName = 'environments' />
-<#include '/includes/furniture.ftl'>
-<#include '/includes/before_content.ftl' />
 <h1>Environment Administration</h1>
+
 <p><a href='/environments'>Environments</a> /
     <a href='/environments/${environment.uid}'>${environment.name}</a> /
     <a href='/environments/${environment.uid}/itemDefinitions'>Item Definitions</a> /
@@ -113,95 +114,93 @@
     <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/algorithms'>Algorithms</a> /
     <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/algorithms/${algorithm.uid}'>${algorithm.name}</a>
 </p>
+
 <h2>Algorithm Details</h2>
 <p>Name: ${algorithm.name}<br/>
     Created: ${algorithm.created?datetime}<br/>
     Modified: ${algorithm.modified?datetime}<br/>
 </p>
-<p>
-    <a href="/environments/${environment.uid}/algorithmContexts">Algorithm Contexts</a>
-</p>
-<#if browser.algorithmActions.allowModify>
-<h2>Update Algorithm</h2>
-<p>
-<form id="algorithmFrm" name="algorithmFrm"
-      action='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/algorithms/${algorithm.uid}?method=put'
-      method='POST' enctype='application/x-www-form-urlencoded'>
-    <fieldset>
-        <legend>Algorithm</legend>
-        <div class="nameCol">Name:</div>
-        <div class="valueCol"><input name='name' value='${algorithm.name}' type='text' size='30'/></div>
 
-        <div class="nameCol">Content:</div>
-        <div class="valueCol"><textarea name='content' rows='15' cols='60'>${algorithm.content}</textarea></div>
-    </fieldset>
+<#if canModify()>
 
-    <fieldset>
-        <legend>Algorithm Test</legend>
-        <div class="nameCol">Values:</div>
-        <#if !testValues?? >
-          <#assign testValues="" />
-        </#if>
-        <div class="valueCol"><input name='testValues' value='${testValues}' type='text' size='60'/> <a href="#" onclick="return testAlgorithm('${path}');" style="margin-left:10%">Test</a><br/>
-            <span style="font-size:12; font-weight:bold; color:silver;">Comma delimited list of name=value pairs (e.g name=1,kg=2)</span>
-        </div><br/><br/>
+    <#if !testValues?? >
+        <#assign testValues="" />
+    </#if>
 
-        <div class="nameCol">Date(s):<br/><span style="font-size:12; font-weight:bold; color:silver;">optional</span></div>
-        <div class="valueCol">
-            <div class="nameCol">Start:</div> <input name='startDate' value='' type='text' size='20' />
-            <span style="font-size:12; font-weight:bold; color:silver;">format (${getDateFormat(activeUser.APIVersion.version)})</span><br/>
-            <div class="nameCol">End:</div> <input name='endDate' value='' type='text' size='20' />
-            <span style="font-size:12; font-weight:bold; color:silver;">format (${getDateFormat(activeUser.APIVersion.version)})</span>
-        </div><br/><br/><br/><hr>
+    <h2>Update Algorithm</h2>
 
-        <div name="testResult" id="testResult" style="visibility:visible;">
-            <div class="nameCol">Result:</div>
-            <div name="result" id="result" class="valueCol"><b id="resultTxt">&nbsp;</b></div>
-        </div><br/><br/>
+    <p>
 
-        <div name="testError" id="testError" style="visibility:visible;">
-            <div class="nameCol">Error:</div>
-            <div name="error" id="error" class="valueCol"><textarea id="errorTxt" rows="15" cols="60" readonly="" style="color:red;"></textarea></div>
-        </div>
-    </fieldset>
+        <form id="algorithmFrm" name="algorithmFrm"
+              action='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/algorithms/${algorithm.uid}?method=put'
+              method='POST' enctype='application/x-www-form-urlencoded'>
 
-    <fieldset>
-        <legend>Algorithm Context</legend>
-        <div class="nameCol">Context:</div>
-        <div class="valueCol">
-            <SELECT NAME="algorithmContextUid" onchange="updateContext(this)">
-                <OPTION VALUE=""/>
-                <#list algorithmContexts as algorithmContext>
-                <#if algorithm.algorithmContext?? && algorithm.algorithmContext == algorithmContext>
-                <OPTION VALUE="${algorithmContext.uid}" selected="true">${algorithmContext.name}</OPTION>
-                <#else>
-                <OPTION VALUE="${algorithmContext.uid}">${algorithmContext.name}</OPTION>
-                </#if>
-                </#list>
-            </SELECT>
-        </div>
-        <br/><br/>
+            <fieldset>
+                <legend>Algorithm</legend>
+                <div class="nameCol">Name:</div>
+                <div class="valueCol"><input name='name' value='${algorithm.name}' type='text' size='30'/></div>
+                <div class="nameCol">Context:</div>
+                <div class="valueCol">
+                    <select name="algorithmContextUid" onchange="updateContext(this)">
+                        <option value="">None</option>
+                        <#list algorithmContexts as algorithmContext>
+                            <#if algorithm.algorithmContext?? && algorithm.algorithmContext == algorithmContext>
+                                <option value="${algorithmContext.uid}" selected="true">${algorithmContext.name}</option>
+                            <#else>
+                                <option value="${algorithmContext.uid}">${algorithmContext.name}</option>
+                            </#if>
+                        </#list>
+                    </select>
+                </div>
+                <div class="nameCol">Content:</div>
+                <div class="valueCol"><textarea name='content' rows='15' cols='60'>${algorithm.content}</textarea></div>
+                <input type='submit' value='Update' class="valueCol"/>
+            </fieldset>
 
-        <#if algorithm.algorithmContext??>
-        <div class="nameCol">Content:</div>
-        <div class="valueCol"><textarea name='algorithmContextContent' rows='15' cols='60'
-                                        readonly="">${algorithm.algorithmContext.content}</textarea></div>
-        </#if>
-    </fieldset>
-    <br/><br/>
+            <fieldset>
 
-    <input type='submit' value='Update'/>
-</form>
+                <legend>Algorithm Test</legend>
 
-<form id="algorithmTestFrm" name="algorithmTestFrm" action='#' method='POST'
-      enctype='application/x-www-form-urlencoded'>
-    <input type="hidden" name="testAlgorithmContent" value=""/>
-    <input type="hidden" name="testAlgorithmContextContent" value=""/>
-    <input type="hidden" name="testValues" value=""/>
-    <input type="hidden" name="startDate" value=""/>
-    <input type="hidden" name="endDate" value=""/>
-</form>
+                <div class="nameCol">Values:</div>
+                <div class="valueCol"><input name='testValues' value='${testValues}' type='text' size='60'/> <a href="#" onclick="return testAlgorithm('${path}');" style="margin-left:10%">Test</a><br/>
+                    <span style="font-size:12; font-weight:bold; color:silver;">Comma delimited list of name=value pairs (e.g name=1,kg=2)</span>
+                </div><br/><br/>
 
-</p>
+                <div class="nameCol">Date(s):<br/><span style="font-size:12; font-weight:bold; color:silver;">optional</span></div>
+                <div class="valueCol">
+                    <div class="nameCol">Start:</div> <input name='startDate' value='' type='text' size='20' />
+                    <span style="font-size:12; font-weight:bold; color:silver;">format (${getDateFormat(activeUser.APIVersion.version)})</span><br/>
+                    <div class="nameCol">End:</div> <input name='endDate' value='' type='text' size='20' />
+                    <span style="font-size:12; font-weight:bold; color:silver;">format (${getDateFormat(activeUser.APIVersion.version)})</span>
+                </div><br/><br/><br/><hr>
+
+                <div name="testResult" id="testResult" style="visibility:visible;">
+                    <div class="nameCol">Result:</div>
+                    <div name="result" id="result" class="valueCol"><b id="resultTxt">&nbsp;</b></div>
+                </div><br/><br/>
+
+                <div name="testError" id="testError" style="visibility:visible;">
+                    <div class="nameCol">Error:</div>
+                    <div name="error" id="error" class="valueCol"><textarea id="errorTxt" rows="15" cols="60" readonly="" style="color:red;"></textarea></div>
+                </div>
+
+            </fieldset>
+
+        </form>
+
+        <form id="algorithmTestFrm" name="algorithmTestFrm" action='#' method='POST'
+              enctype='application/x-www-form-urlencoded'>
+
+            <input type="hidden" name="testAlgorithmContent" value=""/>
+            <input type="hidden" name="testAlgorithmContextContent" value=""/>
+            <input type="hidden" name="testValues" value=""/>
+            <input type="hidden" name="startDate" value=""/>
+            <input type="hidden" name="endDate" value=""/>
+
+        </form>
+
+    </p>
+
 </#if>
+
 <#include '/includes/after_content.ftl'>

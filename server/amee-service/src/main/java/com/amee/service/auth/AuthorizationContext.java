@@ -22,27 +22,17 @@
 package com.amee.service.auth;
 
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.sheet.Choices;
-import com.amee.domain.data.DataItem;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.PermissionEntry;
-import com.amee.core.CO2Amount;
-import com.amee.core.CO2AmountUnit;
-import com.amee.core.DecimalUnit;
-import com.amee.core.DecimalPerUnit;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.json.JSONObject;
-import org.json.JSONException;
-import org.json.JSONArray;
-
-import javax.measure.unit.SI;
-import javax.measure.unit.NonSI;
 
 /**
  * AuthorizationContext encapsulates the 'context' for an authorization request. The context
@@ -74,6 +64,11 @@ public class AuthorizationContext implements Serializable {
      * Local cache for the result of AuthorizationService.isAuthorized().
      */
     private Boolean authorized = null;
+
+    /**
+     * Indicates if a User that is a super-user is one of the principles.
+     */
+    private Boolean superUser = null;
 
     /**
      * Default constructor.
@@ -172,6 +167,17 @@ public class AuthorizationContext implements Serializable {
     }
 
     /**
+     * Return true if this AuthorizationContext is considered to be authorized for the supplied PermissionEntry.
+     * Internally calls isAuthorized, checks the super-user flag and searches the entries collection.
+     *
+     * @param entry to search for
+     * @return true if entry is found
+     */
+    public boolean isAuthorized(PermissionEntry entry) {
+        return isAuthorized() && (isSuperUser() || getEntries().contains(entry));
+    }
+
+    /**
      * Returns true if this AuthorizationContext has been checked.
      *
      * @return true if this AuthorizationContext has been checked
@@ -190,11 +196,29 @@ public class AuthorizationContext implements Serializable {
     }
 
     /**
-     * Set the authorized flag. 
+     * Set the authorized flag.
      *
      * @param authorized value to set
      */
     public void setAuthorized(boolean authorized) {
         this.authorized = authorized;
+    }
+
+    /**
+     * Returns true if one of the priniples was a super-user.
+     *
+     * @return true if one of the priniples was a super-user
+     */
+    public Boolean isSuperUser() {
+        return superUser;
+    }
+
+    /**
+     * Sets the super-user flag.
+     *
+     * @param superUser new value for the super-user flag
+     */
+    public void setSuperUser(Boolean superUser) {
+        this.superUser = superUser;
     }
 }
