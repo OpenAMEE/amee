@@ -45,7 +45,7 @@
     </table>
 </p>
 
-<#if canModify(dataItem)>
+<#if canModifyEntity(dataItem)>
     <h2>Update Data Item</h2>
     <p>
         <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>

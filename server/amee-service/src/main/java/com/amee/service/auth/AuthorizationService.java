@@ -64,16 +64,30 @@ public class AuthorizationService implements Serializable {
     private PermissionService permissionService;
 
     /**
-     * Returns true if the supplied AuthorizationContext is considered to be authorized. This method should only
-     * be excuted once for each usage of an AuthorizationContext. The AuthorizationContext.entries collection
-     * is updated based on the result of authenticating the principles for the entities in the AuthorizationContext.
-     * <p/>
-     * Conforms to the rules described above.
+     * Returns true if the supplied AuthorizationContext is considered to be authorized. Internally calls
+     * doAuthorization(). This can be called multiple times as the result is cached within AuthorizationContext.
      *
      * @param authorizationContext to consider for authorization
      * @return true if authorize result is allow, otherwise false if result is deny
      */
     public boolean isAuthorized(AuthorizationContext authorizationContext) {
+        if (!authorizationContext.hasBeenChecked()) {
+            doAuthorization(authorizationContext);
+        }
+        return authorizationContext.isAuthorized();
+    }
+
+    /**
+     * Determins if the supplied AuthorizationContext is considered to be authorized and updates the authorized
+     * flag with this. This method should only be excuted once for each usage of an AuthorizationContext instance.
+     * The AuthorizationContext.entries collection is updated based on the result of authenticating the
+     * principles for the entities in the AuthorizationContext.
+     * <p/>
+     * Conforms to the rules described above.
+     *
+     * @param authorizationContext to consider for authorization
+     */
+    protected void doAuthorization(AuthorizationContext authorizationContext) {
 
         Boolean allow = null;
 
@@ -82,16 +96,19 @@ public class AuthorizationService implements Serializable {
         Set<PermissionEntry> entries = authorizationContext.getEntries();
 
         // Super-users can do anything. Stop here.
-        // TODO: Jumping out here means accessSpecification.actual will not be populated.
+        // NOTE: Jumping out here means authorizationContext & accessSpecifications will not be fully populated.
         if (isSuperUser(authorizationContext.getPrincipals())) {
             log.debug("isAuthorized() - ALLOW (super-user)");
-            return true;
+            authorizationContext.setSuperUser(true);
+            authorizationContext.setAuthorized(true);
+            return;
         }
 
         // Deny if there are no AccessSpecifications. Pretty odd if this happens...
         if (authorizationContext.getAccessSpecifications().isEmpty()) {
             log.debug("isAuthorized() - DENY (not permitted)");
-            return false;
+            authorizationContext.setAuthorized(false);
+            return;
         }
 
         // Iterate over AccessSpecifications in hierarchical order.
@@ -105,7 +122,7 @@ public class AuthorizationService implements Serializable {
         }
 
         // Was an authorization decision made?
-        return isAuthorized(allow);
+        authorizationContext.setAuthorized(isAuthorized(allow));
     }
 
     /**
@@ -114,19 +131,27 @@ public class AuthorizationService implements Serializable {
      * AccessSpecification is re-used. If the entity has not been considered yet then a fresh authorization
      * check is made, with the assumption that the entity is a direct child of the last entity declared in
      * accessSpecifications.
-     *
+     * <p/>
      * Note: This is used in global.ftl.
      *
      * @param authorizationContext to consider for authorization
-     * @param entityReference      to authorize access for
      * @param entry                specifying access requested
+     * @param entityReference      to authorize access for
      * @return true if authorize result is allow, otherwise false if result is deny
      */
-    public boolean isAuthorized(AuthorizationContext authorizationContext, IAMEEEntityReference entityReference, PermissionEntry entry) {
-        if (entityReference.getAccessSpecification() != null) {
-            return entityReference.getAccessSpecification().getActual().contains(entry);
+    public boolean isAuthorized(AuthorizationContext authorizationContext, PermissionEntry entry, IAMEEEntityReference entityReference) {
+        if (authorizationContext.isAuthorized()) {
+            if (authorizationContext.isSuperUser()) {
+                return true;
+            } else {
+                if (entityReference.getAccessSpecification() != null) {
+                    return entityReference.getAccessSpecification().getActual().contains(entry);
+                } else {
+                    return isAuthorized(authorizationContext, new AccessSpecification(entityReference, entry));
+                }
+            }
         } else {
-            return isAuthorized(authorizationContext, new AccessSpecification(entityReference, entry));
+            return false;
         }
     }
 
@@ -134,7 +159,7 @@ public class AuthorizationService implements Serializable {
      * Returns true if the principles in AuthorizationContext have the specified access to the entity
      * in AccessSpecification.
      * <p/>
-     * This method is intended to be used to authorize against children of the last entity held within
+     * This method is intended for authorization against children of the last entity held within
      * the supplied AuthorizationContext.
      * <p/>
      * This method should only be called after isAuthorized(AuthorizationContext authorizationContext).
@@ -180,7 +205,9 @@ public class AuthorizationService implements Serializable {
     }
 
     /**
-     * Local utility method used by the public isAuthorized methods. Conforms to the rules described above.
+     * Performs authorization for the supplied AccessSpecification.
+     *
+     * Conforms to the rules described above.
      *
      * @param authorizationContext to consider for authorization
      * @param accessSpecification  to consider for authorization

@@ -165,7 +165,7 @@
                         <lookup-method name="createResource" bean="algorithmContextsResource"/>
                     </bean>
                 </entry>
-                <entry key="/{algorithmContentUid}">
+                <entry key="/{algorithmContextUid}">
                     <bean class="org.restlet.ext.spring.SpringFinder">
                         <lookup-method name="createResource" bean="algorithmContextResource"/>
                     </bean>

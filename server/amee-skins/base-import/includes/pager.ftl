@@ -1,34 +1,39 @@
 <#if !pagerItemsLabel??>
-        <#assign pagerItemsLabel = 'items'>
+    <#assign pagerItemsLabel = 'items'>
 </#if>
 <#if !pagerName??>
-        <#assign pagerName = 'pagerTop'>
+    <#assign pagerName = 'pagerTop'>
 </#if>
 <#if !pagerUrl??>
-        <#assign pagerUrl = path>
+    <#assign pagerUrl = path>
 </#if>
 <#if !pagerLocalSort??>
-        <#assign pagerLocalSort = "false">
+    <#assign pagerLocalSort = "false">
 </#if>
 <#if !pagerJs??>
     <script type="text/javascript">
-    // <![CDATA[
-    function goToPage(pagerUrl, page) {
-        Form.disable('pagerTop');
-        Form.disable('pagerBottom');
-        window.location = pagerUrl + '?page=' + page;
-        return false;
-    }
+        function goToPage(url, page) {
+            Form.disable('pagerTop');
+            Form.disable('pagerBottom');
+            if (url.indexOf('?') === -1) {
+                url = url + '?';
+            } else {
+                url = url + '&';
+            }
+            url = url + 'page=' + page;
+            window.location = url;
+            return false;
+        }
     </script>
     <#assign pagerJs = true>
 </#if>
 
 <form id="${pagerName}" name="${pagerName}" method="GET" action="${pagerUrl}" enctype="application/x-www-form-urlencoded">
-<#if pagerLocalSort != "false" && pagerName == "pagerTop">
-	<div class="border textDiv padding marginTopBottom">
-		<#include '/includes/localPagerSort.ftl'>
-	</div>
-</#if>
+    <#if pagerLocalSort != "false" && pagerName == "pagerTop">
+        <div class="border textDiv padding marginTopBottom">
+            <#include '/includes/localPagerSort.ftl'>
+        </div>
+    </#if>
     <div class="border textDiv padding">
         <button class="inputSubmitStd" type="submit" value="Previous page" onclick="return goToPage('${pagerUrl}', ${pager.previousPage?c});"<#if pager.atFirstPage> disabled="disabled"</#if>/>Previous page</button>
         &#160;

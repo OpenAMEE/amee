@@ -37,7 +37,7 @@ function localeonchange() {
     Modified: ${itemValue.modified?string.short}<br/>
 </p>
 
-<#if canModify(itemValue)>
+<#if canModifyEntity(itemValue)>
     <h2>Update Data Item Value</h2>
     <p>
         <form id="update" action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>

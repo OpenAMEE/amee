@@ -28,6 +28,10 @@ public class AlgorithmContext extends AbstractAlgorithm {
         super(environment, content);
     }
 
+    public String toString() {
+        return "AlgorithmContext_" + getUid();
+    }
+
     public Element getIdentityElement(Document document) {
         return APIUtils.getIdentityElement(document, this);
     }
@@ -35,10 +39,6 @@ public class AlgorithmContext extends AbstractAlgorithm {
     @Override
     public String getElementName() {
         return "AlgorithmContext";
-    }
-
-    public String toString() {
-        return "AlgorithmContext_" + getUid();
     }
 
     public ObjectType getObjectType() {

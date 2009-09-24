@@ -1,9 +1,10 @@
 package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
-import com.amee.restlet.AuthorizeResource;
-import com.amee.service.environment.EnvironmentConstants;
 import com.amee.domain.AMEEEntity;
+import com.amee.restlet.AuthorizeResource;
+import com.amee.service.environment.SiteService;
+import com.amee.service.environment.GroupService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -15,17 +16,19 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Scope("prototype")
 public class UserGroupResource extends AuthorizeResource {
 
     @Autowired
+    private GroupService GroupService;
+
+    @Autowired
     private EnvironmentBrowser environmentBrowser;
-    
+
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
@@ -36,7 +39,10 @@ public class UserGroupResource extends AuthorizeResource {
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (environmentBrowser.getEnvironment() != null) && (environmentBrowser.getUser() != null) && (environmentBrowser.getGroupPrincipal() != null);
+        return super.isValid() &&
+                (environmentBrowser.getEnvironment() != null) &&
+                (environmentBrowser.getUser() != null) &&
+                (environmentBrowser.getGroupPrincipal() != null);
     }
 
     @Override
@@ -47,20 +53,10 @@ public class UserGroupResource extends AuthorizeResource {
         entities.add(environmentBrowser.getGroup());
         return entities;
     }
-    @Override
-    public String getTemplatePath() {
-        return EnvironmentConstants.VIEW_USER_GROUP;
-    }
 
     @Override
-    public Map<String, Object> getTemplateValues() {
-        Map<String, Object> values = super.getTemplateValues();
-        values.put("browser", environmentBrowser);
-        values.put("environment", environmentBrowser.getEnvironment());
-        values.put("user", environmentBrowser.getUser());
-        values.put("group", environmentBrowser.getGroup());
-        values.put("groupPrincipal", environmentBrowser.getGroupPrincipal());
-        return values;
+    public String getTemplatePath() {
+        throw new UnsupportedOperationException("UserGroupResource does not have or need a template.");
     }
 
     @Override
@@ -81,8 +77,15 @@ public class UserGroupResource extends AuthorizeResource {
         return element;
     }
 
+
     @Override
     public boolean allowDelete() {
-        return false;
+        return true;
+    }
+
+    @Override
+    public void removeRepresentations() {
+        groupService.remove(environmentBrowser.getGroupPrincipal());
+        success();
     }
 }
