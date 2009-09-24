@@ -105,7 +105,7 @@
     </p>
 </#if>
 
-<#if canModifyEntity(dataCategory)>
+<#if canModify()>
     <h2>Update Data Category</h2>
     <p>
 
@@ -163,7 +163,7 @@
     </p>
 </#if>
 
-<#if canCreateEntity(dataCategory) && !dataCategory.aliasedCategory??>
+<#if canCreate() && !dataCategory.aliasedCategory??>
     <h2>Create</h2>
     <p>
     <form action='${basePath}' method='POST' enctype='application/x-www-form-urlencoded'>
