@@ -66,6 +66,8 @@ public class AuthorizationService implements Serializable {
     /**
      * Returns true if the supplied AuthorizationContext is considered to be authorized. Internally calls
      * doAuthorization(). This can be called multiple times as the result is cached within AuthorizationContext.
+     * <p/>
+     * This is used by Resources to authorize incoming requests.
      *
      * @param authorizationContext to consider for authorization
      * @return true if authorize result is allow, otherwise false if result is deny
@@ -78,12 +80,9 @@ public class AuthorizationService implements Serializable {
     }
 
     /**
-     * Determins if the supplied AuthorizationContext is considered to be authorized and updates the authorized
-     * flag with this. This method should only be excuted once for each usage of an AuthorizationContext instance.
-     * The AuthorizationContext.entries collection is updated based on the result of authenticating the
-     * principles for the entities in the AuthorizationContext.
-     * <p/>
-     * Conforms to the rules described above.
+     * Determines if the supplied AuthorizationContext is considered to be authorized. This method
+     * should (is) only be executed once for each usage of an AuthorizationContext instance. The
+     * AuthorizationContext is updated based on the result of authentication.
      *
      * @param authorizationContext to consider for authorization
      */
@@ -91,9 +90,9 @@ public class AuthorizationService implements Serializable {
 
         Boolean allow = null;
 
-        // Work directly with the PermissionEntry Set from the AuthorizationContext.
+        // Work directly with PermissionEntries for the current principals from the AuthorizationContext.
         // It's OK to modify the orginal Set at this point.
-        Set<PermissionEntry> entries = authorizationContext.getEntries();
+        Set<PermissionEntry> principalEntries = authorizationContext.getEntries();
 
         // Super-users can do anything. Stop here.
         // NOTE: Jumping out here means authorizationContext & accessSpecifications will not be fully populated.
@@ -114,7 +113,7 @@ public class AuthorizationService implements Serializable {
         // Iterate over AccessSpecifications in hierarchical order.
         for (AccessSpecification accessSpecification : authorizationContext.getAccessSpecifications()) {
             // Try to make an authorization decision.
-            allow = isAuthorized(authorizationContext, accessSpecification, entries);
+            allow = isAuthorized(authorizationContext, accessSpecification, principalEntries);
             // Was an authorization decision made?
             if (allow != null) {
                 break;
@@ -126,64 +125,114 @@ public class AuthorizationService implements Serializable {
     }
 
     /**
-     * Returns true if the currently active principles have the requested access, via entry, to the
-     * supplied entity. If the entity has already been considered for authorization then the cached
-     * AccessSpecification is re-used. If the entity has not been considered yet then a fresh authorization
-     * check is made, with the assumption that the entity is a direct child of the last entity declared in
-     * accessSpecifications.
+     * Returns true if the desired access is granted to the last entity in AuthorizationContext. A previously
+     * processed AuthorizationContext is required. Will update the cached AccessSpecification for the
+     * entity, if it exists.
      * <p/>
-     * Note: This is used in global.ftl.
+     * This is used in resources.
      *
      * @param authorizationContext to consider for authorization
-     * @param entry                specifying access requested
-     * @param entityReference      to authorize access for
+     * @param desired              PermissionEntries specifying access desired
      * @return true if authorize result is allow, otherwise false if result is deny
      */
-    public boolean isAuthorized(AuthorizationContext authorizationContext, PermissionEntry entry, IAMEEEntityReference entityReference) {
-        if (authorizationContext.isAuthorized()) {
-            if (authorizationContext.isSuperUser()) {
-                return true;
-            } else {
-                if (entityReference.getAccessSpecification() != null) {
-                    return entityReference.getAccessSpecification().getActual().contains(entry);
-                } else {
-                    return isAuthorized(authorizationContext, new AccessSpecification(entityReference, entry));
-                }
-            }
-        } else {
+    public boolean isAuthorized(AuthorizationContext authorizationContext, PermissionEntry... desired) {
+
+        // AuthorizationContext must have already been checked.
+        if (!authorizationContext.hasBeenChecked()) {
+            throw new IllegalArgumentException("The supplied AuthorizationContext must have already been checked.");
+        }
+
+        // Always ALLOW a super-user.
+        if (authorizationContext.isSuperUser()) {
+            log.debug("isAuthorized() - ALLOW (super-user)");
+            return true;
+        }
+
+        // Work with the last checked AccessSpecification.
+        AccessSpecification lastAccessSpecification = authorizationContext.getLastAccessSpecifications();
+
+        // We must have an AccessSpecification to work with.
+        if (lastAccessSpecification == null) {
             return false;
         }
+
+        // Create new AccessSpecification to check for desired PermissionEntries.
+        AccessSpecification accessSpecification =
+                new AccessSpecification(lastAccessSpecification.getEntityReference(),
+                        lastAccessSpecification.getActual(),
+                        desired);
+
+        // Try to make an authorization decision.
+        // Copy the inherited PermissionEntries for current principals from the AuthorizationContext.
+        // It's NOT OK to modify the original Set at this point.
+        Boolean allow = isAuthorized(
+                authorizationContext,
+                accessSpecification,
+                new HashSet<PermissionEntry>(authorizationContext.getEntries()));
+
+        // Was an authorization decision made?
+        return isAuthorized(allow);
     }
 
     /**
-     * Returns true if the principles in AuthorizationContext have the specified access to the entity
-     * in AccessSpecification.
+     * Returns true if the desired access is granted to the supplied entity. The entity is evaluated as a
+     * child of the existing entities within the AuthorizationContext. A previously processed AuthorizationContext
+     * is required. Will update the cached AccessSpecification for the entity, if it exists.
      * <p/>
-     * This method is intended for authorization against children of the last entity held within
-     * the supplied AuthorizationContext.
-     * <p/>
-     * This method should only be called after isAuthorized(AuthorizationContext authorizationContext).
-     * <p/>
-     * Conforms to the rules described above.
+     * This is used by resources & templates.
+     *
+     * @param authorizationContext to consider for authorization
+     * @param entityReference      to authorize access for
+     * @param desired              PermissionEntries specifying access desired
+     * @return true if authorize result is allow, otherwise false if result is deny
+     */
+    public boolean isAuthorized(AuthorizationContext authorizationContext, IAMEEEntityReference entityReference, PermissionEntry... desired) {
+
+        Set<PermissionEntry> actual = null;
+
+        // Can we try and re-use the actual entries from an existing AccessSpecification for this entry?
+        if (entityReference.getAccessSpecification() != null) {
+            actual = entityReference.getAccessSpecification().getActual();
+        }
+
+        // Authorize based on existing AuthorizationContext and a new AccessSpecification.
+        return isAuthorized(authorizationContext, new AccessSpecification(entityReference, actual, desired));
+    }
+
+    /**
+     * Returns true if the desired access is granted to the entity, both expressed in AccessSpecification. The
+     * entity is evaluated as a child of the existing entities within the AuthorizationContext. A previously
+     * processed AuthorizationContext is required.
      *
      * @param authorizationContext to consider for authorization
      * @param accessSpecification  to consider for authorization
      * @return true if authorize result is allow, otherwise false if result is deny
      */
-    protected boolean isAuthorized(AuthorizationContext authorizationContext, AccessSpecification accessSpecification) {
+    public boolean isAuthorized(AuthorizationContext authorizationContext, AccessSpecification accessSpecification) {
 
-        // Copy the PermissionEntry Set from the AuthorizationContext.
-        // It's NOT OK to modify the original Set at this point.
-        Set<PermissionEntry> entries = new HashSet<PermissionEntry>(authorizationContext.getEntries());
+        // AuthorizationContext must have already been checked.
+        if (!authorizationContext.hasBeenChecked()) {
+            throw new IllegalArgumentException("The supplied AuthorizationContext must have already been checked.");
+        }
 
-        // Super-users can do anything. Stop here.
-        if (isSuperUser(authorizationContext.getPrincipals())) {
+        // Was a DENY decision previously made for this AuthorizationContext?
+        if (!authorizationContext.isAuthorized()) {
+            return false;
+        }
+
+        // Always ALLOW super-users.
+        if (authorizationContext.isSuperUser()) {
             log.debug("isAuthorized() - ALLOW (super-user)");
             return true;
         }
 
         // Try to make an authorization decision.
-        Boolean allow = isAuthorized(authorizationContext, accessSpecification, entries);
+        // Copy the inherited PermissionEntries for current principals from the AuthorizationContext.
+        // It's NOT OK to modify the original Set at this point.
+        Boolean allow = isAuthorized(
+                authorizationContext,
+                accessSpecification,
+                new HashSet<PermissionEntry>(authorizationContext.getEntries()));
 
         // Was an authorization decision made?
         return isAuthorized(allow);
@@ -206,44 +255,48 @@ public class AuthorizationService implements Serializable {
 
     /**
      * Performs authorization for the supplied AccessSpecification.
-     *
+     * <p/>
      * Conforms to the rules described above.
      *
      * @param authorizationContext to consider for authorization
      * @param accessSpecification  to consider for authorization
-     * @param entries              inherited from parent enties
+     * @param principalEntries     inherited from parent entities
      * @return true if authorize result is allow, false if result is deny or null if the decision is not yet made
      */
-    protected Boolean isAuthorized(AuthorizationContext authorizationContext, AccessSpecification accessSpecification, Set<PermissionEntry> entries) {
+    protected Boolean isAuthorized(AuthorizationContext authorizationContext, AccessSpecification accessSpecification, Set<PermissionEntry> principalEntries) {
 
         List<Permission> permissions;
         List<PermissionEntry> entityEntries;
         Boolean allow = null;
 
-        // Gather all Permissions for principals for current entity.
-        permissions = new ArrayList<Permission>();
-        for (AMEEEntity principal : authorizationContext.getPrincipals()) {
-            permissions.addAll(permissionService.getPermissionsForPrincipalAndEntity(principal, accessSpecification.getEntityReference()));
+        // Do we need to fetch the actual permission entries for the current principals and entity.
+        if (!accessSpecification.hasActual()) {
+
+            // Gather all Permissions for principals for current entity.
+            permissions = new ArrayList<Permission>();
+            for (AMEEEntity principal : authorizationContext.getPrincipals()) {
+                permissions.addAll(permissionService.getPermissionsForPrincipalAndEntity(principal, accessSpecification.getEntityReference()));
+            }
+
+            // Get list of PermissionEntries for current entity from Permissions.
+            entityEntries = getPermissionEntries(permissions);
+
+            // Merge PermissionEntries for current entity with inherited PermissionEntries for current principals.
+            mergePermissionEntries(principalEntries, entityEntries);
+
+            // Update the AccessSpecification with the actual PermissionEntries for the current principals related
+            // to the current entity.
+            accessSpecification.setActual(principalEntries);
         }
 
-        // Get list of PermissionEntries for current entity from Permissions.
-        entityEntries = getPermissionEntries(permissions);
-
-        // Merge PermissionEntries for current entity with inherited PermissionEntries.
-        mergePermissionEntries(entries, entityEntries);
-
-        // Update the AccessSpecification with the actual PermissionEntries for the
-        // current principals related to the current entity.
-        accessSpecification.setActual(entries);
-
         // Owner can do anything.
-        if (entries.contains(PermissionEntry.OWN)) {
+        if (principalEntries.contains(PermissionEntry.OWN)) {
             log.debug("isAuthorized() - ALLOW (owner)");
             allow = true;
         }
 
         // Principals must be able to do everything specified.
-        if ((allow == null) && !isAuthorized(accessSpecification, entries)) {
+        if ((allow == null) && !isAuthorized(accessSpecification, principalEntries)) {
             log.debug("isAuthorized() - DENY (not permitted)");
             allow = false;
         }
@@ -295,7 +348,7 @@ public class AuthorizationService implements Serializable {
      * allowed for the entity.
      *
      * @param accessSpecification specification of access requested to an entity
-     * @param principalEntries    PermissionEntries from the principals
+     * @param principalEntries    PermissionEntries for the current principals
      * @return true if access is authorized
      */
     protected boolean isAuthorized(AccessSpecification accessSpecification, Collection<PermissionEntry> principalEntries) {
@@ -303,19 +356,19 @@ public class AuthorizationService implements Serializable {
         // Default to not authorized.
         Boolean authorized = false;
         // Iterate over the desired PermissionEntries specified for the entity.
-        for (PermissionEntry pe1 : accessSpecification.getDesired()) {
+        for (PermissionEntry desiredEntry : accessSpecification.getDesired()) {
             // Default to not authorized.
             authorized = false;
             // Iterate over PermissionEntries associated with current principals.
-            for (PermissionEntry pe2 : principalEntries) {
+            for (PermissionEntry principalEntry : principalEntries) {
                 // Authorized if:
                 // - Both PermissionEntries match by value.
                 // - Principals PermissionEntry is allowed.
                 // - Principals PermissionEntry status matches the entity status.
                 entity = permissionService.getEntity(accessSpecification.getEntityReference());
-                if (pe1.getValue().equals(pe2.getValue()) &&
-                        pe2.isAllow() &&
-                        (pe2.getStatus().equals(entity.getStatus()))) {
+                if (desiredEntry.getValue().equals(principalEntry.getValue()) &&
+                        principalEntry.isAllow() &&
+                        (principalEntry.getStatus().equals(entity.getStatus()))) {
                     // Authorized, no need to continue so break. Most permissive principal PermissionEntry 'wins'.
                     authorized = true;
                     break;
@@ -353,7 +406,6 @@ public class AuthorizationService implements Serializable {
     public boolean isSuperUser(AMEEEntity principal) {
         if (User.class.isAssignableFrom(principal.getClass())) {
             if (((User) principal).isSuperUser()) {
-                log.debug("isAuthorized() - true");
                 return true;
             }
         }

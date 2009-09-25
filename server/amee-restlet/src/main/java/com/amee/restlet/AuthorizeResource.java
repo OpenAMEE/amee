@@ -306,4 +306,8 @@ public abstract class AuthorizeResource extends BaseResource {
         }
         return specifications;
     }
+
+    public AuthorizationContext getAuthorizationContext() {
+        return authorizationContext;
+    }
 }

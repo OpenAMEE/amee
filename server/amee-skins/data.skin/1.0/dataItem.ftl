@@ -32,15 +32,15 @@
             <th>Actions</th>
         </tr>
         <#list dataItem.itemValues as iv>
-        <tr id="CV_${iv.uid}">
-            <td>${iv.itemValueDefinition.name}</td>
-            <td>${iv.itemValueDefinition.valueDefinition.name}</td>
-            <td>${iv.itemValueDefinition.valueDefinition.valueType}</td>
-            <td>${iv.value}</td>
-            <td>
-            <a href='${basePath}/${iv.displayPath}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
-            </td>
-        </tr>
+            <tr id="CV_${iv.uid}">
+                <td>${iv.itemValueDefinition.name}</td>
+                <td>${iv.itemValueDefinition.valueDefinition.name}</td>
+                <td>${iv.itemValueDefinition.valueDefinition.valueType}</td>
+                <td>${iv.value}</td>
+                <td>
+                    <a href='${basePath}/${iv.displayPath}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
+                </td>
+            </tr>
         </#list>
     </table>
 </p>

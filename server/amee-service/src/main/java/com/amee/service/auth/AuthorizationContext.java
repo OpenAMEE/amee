@@ -66,7 +66,7 @@ public class AuthorizationContext implements Serializable {
     private Boolean authorized = null;
 
     /**
-     * Indicates if a User that is a super-user is one of the principles.
+     * Indicates if a User that is a super-user is one of the principals.
      */
     private boolean superUser = false;
 
@@ -158,23 +158,25 @@ public class AuthorizationContext implements Serializable {
     }
 
     /**
+     * Returns the last AccessSpecifications from the accessSpecifications collection.
+     *
+     * @return the last AccessSpecifications or null
+     */
+    public AccessSpecification getLastAccessSpecifications() {
+        if (!accessSpecifications.isEmpty()) {
+            return accessSpecifications.get(accessSpecifications.size() - 1);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Returns the entries set;
      *
      * @return entries set
      */
     public Set<PermissionEntry> getEntries() {
         return entries;
-    }
-
-    /**
-     * Return true if this AuthorizationContext is considered to be authorized for the supplied PermissionEntry.
-     * Internally calls isAuthorized, checks the super-user flag and searches the entries collection.
-     *
-     * @param entry to search for
-     * @return true if entry is found
-     */
-    public boolean isAuthorized(PermissionEntry entry) {
-        return isAuthorized() && (isSuperUser() || getEntries().contains(entry));
     }
 
     /**
