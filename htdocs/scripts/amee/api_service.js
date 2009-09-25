@@ -173,10 +173,12 @@ var ApiService = Class.create({
         var url = window.location.href;
         if (params) {
             params = params.toQueryParams();
-            url = url + '?' + Object.toQueryString(params)
+        } else {
+            params =  new Hash();
         }
-        new Ajax.Request(url, {
-            method: 'get',
+        params.set('method', 'get');
+        new Ajax.Request(url + '?' + Object.toQueryString(params), {
+            method: 'post',
             requestHeaders: ['Accept', 'application/json'],
             onSuccess: this.loadSuccess.bind(this),
             onFailure: this.loadFailure.bind(this)});
