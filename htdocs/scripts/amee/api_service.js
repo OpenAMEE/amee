@@ -371,7 +371,7 @@ var ApiService = Class.create({
         var path = params.path || params.uid;
         actions.insert(new Element('a', {href : this.getUrl(path)})
                 .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
-        if (params.deleteable && AUTHORIZATION_CONTEXT.isAllowDelete()) {
+        if (AUTHORIZATION_CONTEXT.isAllowDelete() && params.deleteable) {
             var methodParams = '"' + params.uid + '", "' + this.getUrl(params.uid) + '"';
             var link = new Element('a', {
                 onClick: params.method + '(' + methodParams + ') ; return false;',

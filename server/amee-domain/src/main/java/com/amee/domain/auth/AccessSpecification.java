@@ -34,8 +34,8 @@ import java.util.Set;
 public class AccessSpecification implements Serializable {
 
     private IAMEEEntityReference entityReference;
+    private Set<PermissionEntry> actual;
     private Set<PermissionEntry> desired = new HashSet<PermissionEntry>();
-    private Set<PermissionEntry> actual = new HashSet<PermissionEntry>();
 
     private AccessSpecification() {
         super();
@@ -49,28 +49,36 @@ public class AccessSpecification implements Serializable {
 
     public AccessSpecification(IAMEEEntityReference entityReference, PermissionEntry... desired) {
         this(entityReference);
-        CollectionUtils.addAll(this.desired, desired);
+        CollectionUtils.addAll(getDesired(), desired);
     }
 
-    public AccessSpecification(IAMEEEntityReference entityReference, Set<PermissionEntry> desired) {
+    public AccessSpecification(IAMEEEntityReference entityReference, Set<PermissionEntry> actual, PermissionEntry... desired) {
         this(entityReference);
-        this.desired.addAll(desired);
+        setActual(actual);
+        CollectionUtils.addAll(getDesired(), desired);
     }
 
     public IAMEEEntityReference getEntityReference() {
         return entityReference;
     }
 
-    public Set<PermissionEntry> getDesired() {
-        return desired;
-    }
-
     public Set<PermissionEntry> getActual() {
         return actual;
     }
 
+    public boolean hasActual() {
+        return actual != null;
+    }
+
     public void setActual(Set<PermissionEntry> actual) {
-        this.actual.clear();
-        this.actual.addAll(actual);
+        if (actual != null) {
+            this.actual = new HashSet<PermissionEntry>(actual);
+        } else {
+            this.actual = null;
+        }
+    }
+
+    public Set<PermissionEntry> getDesired() {
+        return desired;
     }
 }
