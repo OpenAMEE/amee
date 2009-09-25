@@ -23,8 +23,10 @@ var ProfileCategoryResource = Class.create({
     },
     load: function() {
         var url = '/profiles/' + this.profileUid + this.categoryPath;
-        new Ajax.Request(url, {
-            method: 'get',
+        var params = new Hash();
+        params.set('method', 'get');
+        new Ajax.Request(url + '?' + Object.toQueryString(params), {
+            method: 'post',
             requestHeaders: ['Accept', 'application/json'],
             onSuccess: this.loadSuccess.bind(this)
         });
