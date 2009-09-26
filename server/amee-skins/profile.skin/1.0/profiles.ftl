@@ -48,28 +48,33 @@
     </p>
 </#if>
 
-<script type='text/javascript'>
-    var Profile = Class.create();
-    Profile.prototype = {
-        initialize: function() {
-    },
-    addProfile: function() {
-        var myAjax = new Ajax.Request(window.location.href, {
-            method: 'post',
-            parameters: 'profile=true',
-            requestHeaders: ['Accept', 'application/json'],
-            onSuccess: this.addProfileSuccess.bind(this)
-        });
-    },
-    addProfileSuccess: function(t) {
-        window.location.href = window.location.href;
-        }
-    };
-    var p = new Profile();
-</script>
+<#if canCreateProfile()>
 
-<h2>Create Profile</h2>
-<form onSubmit="return false;">
-    <input type='button' value='Create Profile' onClick='p.addProfile();'/>
-</form>
+    <script type='text/javascript'>
+        var Profile = Class.create();
+        Profile.prototype = {
+            initialize: function() {
+        },
+        addProfile: function() {
+            var myAjax = new Ajax.Request(window.location.href, {
+                method: 'post',
+                parameters: 'profile=true',
+                requestHeaders: ['Accept', 'application/json'],
+                onSuccess: this.addProfileSuccess.bind(this)
+            });
+        },
+        addProfileSuccess: function(t) {
+            window.location.href = window.location.href;
+            }
+        };
+        var p = new Profile();
+    </script>
+
+    <h2>Create Profile</h2>
+    <form onSubmit="return false;">
+        <input type='button' value='Create Profile' onClick='p.addProfile();'/>
+    </form>
+
+</#if>
+
 <#include '/includes/after_content.ftl'>

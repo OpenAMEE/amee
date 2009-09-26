@@ -158,6 +158,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         // add enums
         values.put("SortOrder", getEnumForTemplate(SortOrder.class));
         values.put("ObjectType", getEnumForTemplate(ObjectType.class));
+        values.put("AMEEStatus", getEnumForTemplate(AMEEStatus.class));
         // add classes
         values.put("PermissionEntry", getStaticsForTemplate(PermissionEntry.class));
         values.put("AMEEEntityReference", getStaticsForTemplate(AMEEEntityReference.class));
