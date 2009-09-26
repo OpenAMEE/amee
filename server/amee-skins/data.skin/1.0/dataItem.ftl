@@ -50,7 +50,7 @@
     <p>
         <form action='${basePath}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
             Name: <input name='name' value='${dataItem.name}' type='text' size='30' style="margin-left:25px"/><br/>
-            Path: <input name='path' value='${dataItem.path}' type='text' size='30'style="margin-left:35px" /><br/>
+            Path: <input name='path' value='${dataItem.path}' type='text' size='30' style="margin-left:35px"/><br/><br/>
             <input type='submit' value='Update'/>
         </form>
     </p>

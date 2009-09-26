@@ -47,42 +47,42 @@ function localeonchange() {
                    <td colspan="2">
                        <#if itemValue.itemValueDefinition.choicesAvailable>
                            <select name='value'>
-                           <#list itemValue.itemValueDefinition.choiceList as choice>
-                               <option value='${choice.value}'<#if itemValue.value == choice.value> selected</#if>>${choice.name}</option>
-                           </#list>
+                               <#list itemValue.itemValueDefinition.choiceList as choice>
+                                   <option value='${choice.value}'<#if itemValue.value == choice.value> selected</#if>>${choice.name}</option>
+                               </#list>
                            </select>
                        <#else>
-                           <input name='value' value='${itemValue.value}' type='text' size="30"/><br/>
+                           <input name='value' value='${itemValue.value}' type='text' size="30"/>
                            <#if itemValue.hasUnit()>
-                               Unit: <input name='unit' value='${itemValue.unit}' type='text' size="30"/><br/>
+                               Unit: <input name='unit' value='${itemValue.unit}' type='text' size="10"/>
                            </#if>
                            <#if itemValue.hasPerUnit()>
-                               PerUnit: <input name='perUnit' value='${itemValue.perUnit}' type='text' size="30"/><br/>
+                               Per Unit: <input name='perUnit' value='${itemValue.perUnit}' type='text' size="10"/>
                            </#if>
                        </#if>
                    </td>
                 </tr>
                 <#if itemValue.localeValues?size != 0>
                     <#list itemValue.localeValues?keys as locale>
-                    <tr>
-                        <td>Value: [${locale}]</td>
-                        <td><input name='value_${locale}' value='${itemValue.localeValues[locale].name}' type='text' size='30'/></td>
-                        <td>Remove: <input type="checkbox" name="remove_value_${locale}"/> </td>
-                    </tr>
+                        <tr>
+                            <td>Value: [${locale}]</td>
+                            <td><input name='value_${locale}' value='${itemValue.localeValues[locale].name}' type='text' size='30'/></td>
+                            <td>Remove: <input type="checkbox" name="remove_value_${locale}"/> </td>
+                        </tr>
                     </#list>
                 </#if>
                 <tr>
                     <td>New Locale Value:</td>
-                    <td>
+                    <td colspan="2">
                         <select name='localeName_part' onchange='javascript:localeonchange();'> <br/>
-                        <#list availableLocales as locale>
-                            <option value='${locale}'>${locale}</option>
-                        </#list>
+                            <#list availableLocales as locale>
+                                <option value='${locale}'>${locale}</option>
+                            </#list>
                         </select>
-                        <input name='localeValue_part' type='text' size='30' onchange='javascript:localeonchange();'/><br/>
+                        <input name='localeValue_part' type='text' size='30' onchange='javascript:localeonchange();'/>
                     </td>
                 </tr>
-            </table>
+            </table><br/>
 
             <input type='submit' value='Update'/>
         </form>
