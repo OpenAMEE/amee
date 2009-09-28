@@ -45,7 +45,9 @@ public class EnvironmentsResource extends AuthorizeResource implements Serializa
 
     @Override
     public List<AMEEEntity> getEntities() {
-        return new ArrayList<AMEEEntity>();
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getActiveEnvironment());
+        return entities;
     }
 
     @Override

@@ -21,6 +21,7 @@
  */
 package com.amee.service.auth;
 
+import com.amee.domain.APIVersion;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.DataItem;
@@ -61,6 +62,6 @@ public class PermissionTest extends ServiceTest {
     @Test
     public void areNotValidPrincipalsToEntities() {
         assertFalse("Should not be a valid principal-to-entity", permissionService.isValidPrincipalToEntity(new DataItem(), new Profile()));
-        assertFalse("Should not be a valid principal-to-entity", permissionService.isValidPrincipalToEntity(new User(), new Group()));
+        assertFalse("Should not be a valid principal-to-entity", permissionService.isValidPrincipalToEntity(new User(), new APIVersion()));
     }
 }

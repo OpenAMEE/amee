@@ -35,87 +35,87 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class AuthorizationTest extends ServiceTest {
 
     @Autowired
-    private AuthorizationContext authorizationContext;
+    private AuthorizationService authorizationService;
 
     @Test
     public void standardUserViewPublicDataCategory() {
-        authorizationContext.reset();
+        AuthorizationContext authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipal(serviceData.GROUP_STANDARD);
         authorizationContext.addPrincipal(serviceData.USER_STANDARD);
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, PermissionEntry.VIEW));
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_PUBLIC, PermissionEntry.VIEW));
-        assertTrue("Standard user should be able to view public data category.", authorizationContext.isAuthorized());
+        assertTrue("Standard user should be able to view public data category.", authorizationService.isAuthorized(authorizationContext));
     }
 
     @Test
     public void standardUserViewPublicDataCategorySub() {
-        authorizationContext.reset();
+        AuthorizationContext authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipal(serviceData.GROUP_STANDARD);
         authorizationContext.addPrincipal(serviceData.USER_STANDARD);
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, PermissionEntry.VIEW));
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_PUBLIC, PermissionEntry.VIEW));
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_PUBLIC_SUB, PermissionEntry.VIEW));
-        assertTrue("Standard user should be able to view public data sub category.", authorizationContext.isAuthorized());
+        assertTrue("Standard user should be able to view public data sub category.", authorizationService.isAuthorized(authorizationContext));
     }
 
     @Test
     public void standardUserNotViewPremiumDataCategory() {
-        authorizationContext.reset();
+        AuthorizationContext authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipal(serviceData.GROUP_STANDARD);
         authorizationContext.addPrincipal(serviceData.USER_STANDARD);
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, PermissionEntry.VIEW));
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_PREMIUM, PermissionEntry.VIEW));
-        assertFalse("Standard user should not be able to view premium data category.", authorizationContext.isAuthorized());
+        assertFalse("Standard user should not be able to view premium data category.", authorizationService.isAuthorized(authorizationContext));
     }
 
     @Test
     public void standardUserNotDeletePremiumDataCategory() {
-        authorizationContext.reset();
+        AuthorizationContext authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipal(serviceData.GROUP_STANDARD);
         authorizationContext.addPrincipal(serviceData.USER_STANDARD);
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, PermissionEntry.VIEW));
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_PREMIUM, PermissionEntry.VIEW, PermissionEntry.DELETE));
-        assertFalse("Standard user should not be able to view premium data category.", authorizationContext.isAuthorized());
+        assertFalse("Standard user should not be able to view premium data category.", authorizationService.isAuthorized(authorizationContext));
     }
 
     @Test
     public void premiumUserModifyPremiumDataCategory() {
-        authorizationContext.reset();
+        AuthorizationContext authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipal(serviceData.GROUP_STANDARD);
         authorizationContext.addPrincipal(serviceData.GROUP_PREMIUM);
         authorizationContext.addPrincipal(serviceData.USER_PREMIUM);
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, PermissionEntry.VIEW));
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_PREMIUM, PermissionEntry.VIEW, PermissionEntry.MODIFY));
-        assertTrue("Premium user should be able to modify premium data category.", authorizationContext.isAuthorized());
+        assertTrue("Premium user should be able to modify premium data category.", authorizationService.isAuthorized(authorizationContext));
     }
 
     @Test
     public void superUserDeletePremiumDataCategory() {
-        authorizationContext.reset();
+        AuthorizationContext authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipal(serviceData.USER_SUPER);
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, PermissionEntry.VIEW));
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_PREMIUM, PermissionEntry.VIEW, PermissionEntry.DELETE));
-        assertTrue("Super user should be able to delete premium data category.", authorizationContext.isAuthorized());
+        assertTrue("Super user should be able to delete premium data category.", authorizationService.isAuthorized(authorizationContext));
     }
 
     @Test
     public void userViewDeprecatedDataCategory() {
-        authorizationContext.reset();
+        AuthorizationContext authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipal(serviceData.GROUP_STANDARD);
         authorizationContext.addPrincipal(serviceData.USER_STANDARD);
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, PermissionEntry.VIEW));
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_DEPRECATED, PermissionEntry.VIEW));
-        assertTrue("User should be able to view deprecated data category.", authorizationContext.isAuthorized());
+        assertTrue("User should be able to view deprecated data category.", authorizationService.isAuthorized(authorizationContext));
     }
 
     @Test
     public void userNotViewDeprecatedDataCategory() {
-        authorizationContext.reset();
+        AuthorizationContext authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipal(serviceData.GROUP_STANDARD);
         authorizationContext.addPrincipal(serviceData.GROUP_PREMIUM);
         authorizationContext.addPrincipal(serviceData.USER_PREMIUM);
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_ROOT, PermissionEntry.VIEW));
         authorizationContext.addAccessSpecification(new AccessSpecification(serviceData.DC_DEPRECATED, PermissionEntry.VIEW));
-        assertFalse("User should not be able to view deprecated data category.", authorizationContext.isAuthorized());
+        assertFalse("User should not be able to view deprecated data category.", authorizationService.isAuthorized(authorizationContext));
     }
 }

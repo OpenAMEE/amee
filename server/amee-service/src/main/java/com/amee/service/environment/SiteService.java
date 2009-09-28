@@ -4,29 +4,22 @@ import com.amee.domain.AMEEStatus;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
-import com.amee.service.profile.ProfileService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
 
 @Service
 public class SiteService implements Serializable {
 
-    private final Log log = LogFactory.getLog(getClass());
-
     private static final String CACHE_REGION = "query.siteService";
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    @Autowired
-    private ProfileService profileService;
 
     // Users
 
@@ -71,34 +64,46 @@ public class SiteService implements Serializable {
     }
 
     public List<User> getUsers(Environment environment, Pager pager) {
+        return getUsers(environment, pager, null);
+    }
+
+    public List<User> getUsers(Environment environment, Pager pager, String search) {
         // first count all objects
-        long count = (Long) entityManager.createQuery(
-                "SELECT count(u) " +
-                        "FROM User u " +
-                        "WHERE u.environment.id = :environmentId " +
-                        "AND u.status != :trash")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getSingleResult();
+        String countHql = "SELECT count(u) " +
+                "FROM User u " +
+                "WHERE u.environment.id = :environmentId " +
+                (StringUtils.isBlank(search) ? "" : "AND u.username LIKE :search ") +
+                "AND u.status != :trash";
+        Query countQuery = entityManager.createQuery(countHql);
+        countQuery.setParameter("environmentId", environment.getId());
+        if (!StringUtils.isBlank(search)) {
+            countQuery.setParameter("search", "%" + search + "%");
+        }
+        countQuery.setParameter("trash", AMEEStatus.TRASH);
+        countQuery.setHint("org.hibernate.cacheable", true);
+        countQuery.setHint("org.hibernate.cacheRegion", CACHE_REGION);
+        Long count = (Long) countQuery.getSingleResult();
         // tell pager how many objects there are and give it a chance to select the requested page again
         pager.setItems(count);
         pager.goRequestedPage();
         // now get the objects for the current page
-        List<User> users = entityManager.createQuery(
-                "SELECT u " +
-                        "FROM User u " +
-                        "WHERE u.environment.id = :environmentId " +
-                        "AND u.status != :trash " +
-                        "ORDER BY u.username")
-                .setParameter("environmentId", environment.getId())
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .setMaxResults(pager.getItemsPerPage())
-                .setFirstResult((int) pager.getStart())
-                .getResultList();
+        String hql = "SELECT u " +
+                "FROM User u " +
+                "WHERE u.environment.id = :environmentId " +
+                (StringUtils.isBlank(search) ? "" : "AND u.username LIKE :search ") +
+                "AND u.status != :trash " +
+                "ORDER BY u.username";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("environmentId", environment.getId());
+        if (!StringUtils.isBlank(search)) {
+            query.setParameter("search", "%" + search + "%");
+        }
+        query.setParameter("trash", AMEEStatus.TRASH);
+        query.setHint("org.hibernate.cacheable", true);
+        query.setHint("org.hibernate.cacheRegion", CACHE_REGION);
+        query.setMaxResults(pager.getItemsPerPage());
+        query.setFirstResult((int) pager.getStart());
+        List<User> users = query.getResultList();
         // update the pager
         pager.setItemsFound(users.size());
         // all done, return results

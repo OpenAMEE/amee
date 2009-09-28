@@ -23,6 +23,9 @@ package com.amee.domain.auth;
 
 import com.amee.domain.AMEEStatus;
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONArray;
 
 import java.io.Serializable;
 
@@ -90,7 +93,7 @@ public class PermissionEntry implements Serializable {
      * @param value for new PermissionEntry
      * @param allow state to set, true or false
      */
-    public PermissionEntry(String value, Boolean allow) {
+    public PermissionEntry(String value, boolean allow) {
         this(value);
         setAllow(allow);
     }
@@ -102,7 +105,7 @@ public class PermissionEntry implements Serializable {
      * @param allow  state to set, true or false
      * @param status for new PermissionEntity
      */
-    public PermissionEntry(String value, Boolean allow, AMEEStatus status) {
+    public PermissionEntry(String value, boolean allow, AMEEStatus status) {
         this(value);
         setAllow(allow);
         setStatus(status);
@@ -158,6 +161,14 @@ public class PermissionEntry implements Serializable {
         return hash;
     }
 
+    public JSONObject getJSONObject() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("value", getValue());
+        obj.put("status", getStatus().getName());
+        obj.put("allow", getAllow());
+        return obj;
+    }
+
     /**
      * Get the value of a PermissionEntry.
      *
@@ -190,7 +201,7 @@ public class PermissionEntry implements Serializable {
         return allow;
     }
 
-    private void setAllow(Boolean allow) {
+    private void setAllow(boolean allow) {
         this.allow = allow;
     }
 

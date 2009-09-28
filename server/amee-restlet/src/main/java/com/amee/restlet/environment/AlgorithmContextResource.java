@@ -61,7 +61,7 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
-        definitionBrowser.setAlgorithmContextUid(request.getAttributes().get("algorithmContentUid").toString());
+        definitionBrowser.setAlgorithmContextUid(request.getAttributes().get("algorithmContextUid").toString());
     }
 
     @Override
@@ -74,9 +74,9 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getActiveEnvironment());
         entities.add(definitionBrowser.getEnvironment());
-        entities.add(definitionBrowser.getItemDefinition());
-        entities.add(definitionBrowser.getAlgorithm());
+        entities.add(definitionBrowser.getAlgorithmContext());
         return entities;
     }
 
@@ -126,8 +126,7 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
     @Override
     public void doRemove() {
         log.debug("doRemove");
-        AlgorithmContext algorithmContext = definitionBrowser.getAlgorithmContext();
-        definitionService.remove(algorithmContext);
+        definitionService.remove(definitionBrowser.getAlgorithmContext());
         success();
     }
 }

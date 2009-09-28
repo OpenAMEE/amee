@@ -5,18 +5,34 @@
 <#assign supportDetails = false>
 <#assign footerCopy = "">
 
-<#function canView entity>
-    <#return authorizationContext.isAuthorized(entity, PermissionEntry.VIEW)>
+<#function canView>
+    <#return authorizationService.isAuthorized(authorizationContext, PermissionEntry.VIEW)>
 </#function>
 
-<#function canCreate entity>
-    <#return authorizationContext.isAuthorized(entity, PermissionEntry.CREATE)>
+<#function canViewEntity entity>
+    <#return authorizationService.isAuthorized(authorizationContext, entity, PermissionEntry.VIEW)>
 </#function>
 
-<#function canModify entity>
-    <#return authorizationContext.isAuthorized(entity, PermissionEntry.MODIFY)>
+<#function canCreate>
+    <#return authorizationService.isAuthorized(authorizationContext, PermissionEntry.CREATE)>
 </#function>
 
-<#function canDelete entity>
-    <#return authorizationContext.isAuthorized(entity, PermissionEntry.DELETE)>
+<#function canCreateEntity entity>
+    <#return authorizationService.isAuthorized(authorizationContext, entity, PermissionEntry.CREATE)>
+</#function>
+
+<#function canModify>
+    <#return authorizationService.isAuthorized(authorizationContext, PermissionEntry.MODIFY)>
+</#function>
+
+<#function canModifyEntity entity>
+    <#return authorizationService.isAuthorized(authorizationContext, entity, PermissionEntry.MODIFY)>
+</#function>
+
+<#function canDelete>
+    <#return authorizationService.isAuthorized(authorizationContext, PermissionEntry.DELETE)>
+</#function>
+
+<#function canDeleteEntity entity>
+    <#return authorizationService.isAuthorized(authorizationContext, entity, PermissionEntry.DELETE)>
 </#function>

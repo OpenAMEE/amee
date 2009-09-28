@@ -48,8 +48,6 @@ import java.util.Map;
 @Scope("prototype")
 public class DataItemLookupResource extends AuthorizeResource implements Serializable {
 
-    private final Log log = LogFactory.getLog(getClass());
-
     @Autowired
     private DataService dataService;
 
@@ -77,7 +75,7 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(getActiveEnvironment());
         if (dataItem != null) {
-            entities.add(dataItem);
+            entities.addAll(dataItem.getHierarchy());
         }
         return entities;
     }
