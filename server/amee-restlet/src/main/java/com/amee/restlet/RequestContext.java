@@ -33,6 +33,7 @@ import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
 import org.restlet.data.Parameter;
 import org.restlet.data.Request;
+import org.restlet.data.Status;
 
 import java.util.Iterator;
 
@@ -58,6 +59,7 @@ public class RequestContext {
     private String label = "";
     private String type = "";
     private long start = 0L;
+    private int status = 200;
 
     public RequestContext() {
         this.start = System.currentTimeMillis();
@@ -140,6 +142,10 @@ public class RequestContext {
             this.error = error;    
     }
 
+    public void setStatus(Status status) {
+        this.status = status.getCode();
+    }
+
     public void setForm(Form form) {
         this.form = getParameters(form);
     }
@@ -167,6 +173,7 @@ public class RequestContext {
             sb.append(form + "|");
             sb.append(error + "|");
             sb.append(method + "|");
+            sb.append(status + "|");
             sb.append(System.currentTimeMillis() - start);
         return sb.toString();
     }
