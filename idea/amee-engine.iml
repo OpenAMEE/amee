@@ -111,8 +111,6 @@
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.fileupload:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: tanukisoft:wrapper:3.2.3" level="project" />
     <orderEntry type="library" exported="" name="Maven: commons-cli:commons-cli:1.1" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty:6.1.15" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty-util:6.1.15" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-agent:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-aspects:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.aspectj:aspectjrt:1.6.1" level="project" />
@@ -129,13 +127,14 @@
     <orderEntry type="library" exported="" name="Maven: asm:asm:3.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: mysql:mysql-connector-java:5.1.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty-ajp:6.1.15" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty:6.1.15" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty-util:6.1.15" level="project" />
     <orderEntry type="library" exported="" name="Maven: com.noelios.restlet:com.noelios.restlet.ext.jetty:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty-sslengine:6.1.11" level="project" />
     <orderEntry type="library" exported="" name="Maven: log4jdbc:log4jdbc:4-1.2alpha2" level="project" />
     <orderEntry type="library" exported="" name="Maven: quartz:quartz:1.5.2" level="project" />
     <orderEntry type="library" exported="" name="Maven: javax.mail:mail:1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: javax.activation:activation:1.1" level="project" />
-    <orderEntry type="module" module-name="amee-gdata" />
   </component>
 </module>
 
