@@ -47,6 +47,20 @@ public class PermissionServiceDAOImpl implements PermissionServiceDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
+    public Permission getPermissionByUid(String uid) {
+        Session session = (Session) entityManager.getDelegate();
+        Criteria criteria = session.createCriteria(Permission.class);
+        criteria.add(Restrictions.naturalId().set("uid", uid));
+        criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
+        criteria.setCacheable(true);
+        criteria.setCacheRegion(CACHE_REGION);
+        return (Permission) criteria.uniqueResult();
+    }
+
+    public void remove(Permission permission) {
+        permission.setStatus(AMEEStatus.TRASH);
+    }
+
     @SuppressWarnings(value = "unchecked")
     public List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
         Session session = (Session) entityManager.getDelegate();

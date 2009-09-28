@@ -37,7 +37,7 @@
 </#if>
 
 <#if activeUser?? && authorizationContext?? && authorizationContext.hasBeenChecked()>
-    <h2>Permissions</h2>
+    <h2>Your Permissions</h2>
     <table>
         <#list authorizationContext.principals as p>
             <tr>
