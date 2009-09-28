@@ -20,7 +20,6 @@
 		description="Clean the deployment lib and target directories.">
 		<!-- Clean the amee target dirs. -->
 		<exec executable="mvn" dir="server" failonerror="true">
-			<arg value="-o"/>
 			<arg value="clean"/>
 		</exec>
 		<!-- Clean the amee deployment lib dir. -->
@@ -32,7 +31,6 @@
 	<target name="package" 
 		description="Run the mvn package goal.">
 		<exec executable="mvn" dir="server" failonerror="true">
-			<arg value="-o"/>
 			<arg value="package"/>
 		</exec>
 	</target>
