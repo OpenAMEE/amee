@@ -42,6 +42,7 @@ public class EnvironmentResource extends AuthorizeResource {
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getActiveEnvironment());
         entities.add(environmentBrowser.getEnvironment());
         return entities;
     }

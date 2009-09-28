@@ -173,10 +173,12 @@ var ApiService = Class.create({
         var url = window.location.href;
         if (params) {
             params = params.toQueryParams();
-            url = url + '?' + Object.toQueryString(params)   
+        } else {
+            params =  new Hash();
         }
-        new Ajax.Request(url, {
-            method: 'get',
+        params.set('method', 'get');
+        new Ajax.Request(url + '?' + Object.toQueryString(params), {
+            method: 'post',
             requestHeaders: ['Accept', 'application/json'],
             onSuccess: this.loadSuccess.bind(this),
             onFailure: this.loadFailure.bind(this)});
@@ -368,12 +370,10 @@ var ApiService = Class.create({
     getActionsTableData: function(params) {
         params.deleteable = params.deleteable || false;
         var actions = new Element('td');
-        if (params.actions.isAllowView()) {
-            var path = params.path || params.uid;
-            actions.insert(new Element('a', {href : this.getUrl(path)})
-                    .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
-        }
-        if (params.deleteable && params.actions.isAllowDelete()) {
+        var path = params.path || params.uid;
+        actions.insert(new Element('a', {href : this.getUrl(path)})
+                .insert(new Element('img', {src : '/images/icons/page_edit.png', title : 'Edit', alt : 'Edit', border : 0 })));
+        if (AUTHORIZATION_CONTEXT.isAllowDelete() && params.deleteable) {
             var methodParams = '"' + params.uid + '", "' + this.getUrl(params.uid) + '"';
             var link = new Element('a', {
                 onClick: params.method + '(' + methodParams + ') ; return false;',
@@ -402,76 +402,39 @@ var ApiService = Class.create({
     }
 });
 
-// Actions
-var Actions = Class.create({
-    initialize: function(actions) {
-        Object.extend(this, actions);
+// Authorization Context
+var AuthorizationContext = Class.create({
+    initialize: function(params) {
+        this.entries = params.entries || [];
+    },
+    isOwn: function() {
+        return this.hasAllowEntryForValue('o');
     },
     isAllowView: function() {
-        return this.allowView;
+        return this.isOwn() || this.hasAllowEntryForValue('v');
     },
     isAllowCreate: function() {
-        return this.allowCreate;
+        return this.isOwn() || this.hasAllowEntryForValue('c');
+    },
+    isAllowCreateProfile: function() {
+        return this.hasAllowEntryForValue('c.pr');
     },
     isAllowModify: function() {
-        return this.allowModify;
+        return this.isOwn() || this.hasAllowEntryForValue('m');
     },
     isAllowDelete: function() {
-        return this.allowDelete;
+        return this.isOwn() || this.hasAllowEntryForValue('d');
     },
-    isAllowList: function() {
-        return this.allowList;
-    }
-});
-
-// Actions Resource
-var ActionsResource = Class.create({
-    initialize: function(params) {
-        this.actions = new Hash();
-        this.path = params.path;
-    },
-    start: function() {
-        //if (this.path) {
-        //    this.load();
-        //}
-        this.loaded = true;
-        this.available = true;
-        this.notify('loaded', this);
-    },
-    load: function() {
-        new Ajax.Request(this.path, {
-            method: 'get',
-            requestHeaders: ['Accept', 'application/json'],
-            onSuccess: this.loadSuccess.bind(this),
-            onFailure: this.loadFailure.bind(this)});
-    },
-    loadSuccess: function(response) {
-        var resource = response.responseJSON;
-        resource = new Hash(resource);
-        resource.keys().each(function(key) {
-            this.actions.set(key, new Actions(resource.get(key)));
-        }.bind(this));
-        this.loaded = true;
-        this.available = true;
-        this.notify('loaded', this);
-    },
-    loadFailure: function() {
-        this.loaded = true;
-        this.available = false;
-        this.notify('loaded', this);
-    },
-    getActions: function(name) {
-        // return this.actions.get(name);
-        return new Actions({
-            allowView: true,
-            allowCreate: true,
-            allowModify: true,
-            allowList: true,
-            allowDelete: true
+    hasAllowEntryForValue: function(value) {
+        var result = false;
+        this.entries.each(function(entry) {
+            if ((entry.value === value) && entry.allow) {
+                result = true;
+            }
         });
+        return result;
     }
 });
-Object.Event.extend(ActionsResource);
 
 // Mock DOM Resource
 var MockDomResource = Class.create({

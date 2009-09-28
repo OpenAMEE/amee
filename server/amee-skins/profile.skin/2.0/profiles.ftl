@@ -6,6 +6,8 @@
 
 <script type="text/javascript">
 
+    var AUTHORIZATION_CONTEXT = new AuthorizationContext(${authorizationContext.getJSONObject()});
+
     function deleteProfile(profileUid) {
         resourceUrl = '/profiles/' + profileUid + '?method=delete';
         resourceElem = $('Elem_' + profileUid);
@@ -16,7 +18,6 @@
 
     // create resource objects
     var profile = new Profile();
-    var PROFILE_ACTIONS = new ActionsResource({path: '/profiles/actions'});
     var profilesApiService = new ProfilesApiService({
         heading: "Profiles",
         headingElementName: "apiHeading",
@@ -27,7 +28,6 @@
 
     // use resource loader to load resources and notify on loaded
     var resourceLoader = new ResourceLoader();
-    resourceLoader.addResource(PROFILE_ACTIONS);
     resourceLoader.observe('loaded', function() {
         profilesApiService.start();
     });

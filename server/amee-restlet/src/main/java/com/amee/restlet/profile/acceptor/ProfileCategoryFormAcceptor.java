@@ -2,8 +2,11 @@ package com.amee.restlet.profile.acceptor;
 
 import com.amee.calculation.service.CalculationService;
 import com.amee.core.CO2AmountUnit;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.StartEndDate;
+import com.amee.domain.auth.AccessSpecification;
+import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.ProfileItem;
@@ -11,6 +14,8 @@ import com.amee.domain.profile.ValidFromDate;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.utils.APIException;
 import com.amee.restlet.utils.APIFault;
+import com.amee.service.auth.AuthorizationContext;
+import com.amee.service.auth.AuthorizationService;
 import com.amee.service.data.DataService;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
@@ -48,6 +53,9 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
+    private AuthorizationService authorizationService;
+
+    @Autowired
     private ProfileService profileService;
 
     @Autowired
@@ -65,6 +73,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
         DataItem dataItem;
         ProfileItem profileItem = null;
         String uid;
+        AuthorizationContext authorizationContext;
 
         if (resource.getRequest().getMethod().equals(Method.POST)) {
             // new ProfileItem
@@ -72,9 +81,16 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             if (uid != null) {
                 dataItem = dataService.getDataItem(resource.getActiveEnvironment(), uid);
                 if (dataItem != null) {
-                    // create new ProfileItem
-                    profileItem = new ProfileItem(resource.getProfile(), dataItem);
-                    profileItem = acceptProfileItem(resource, form, profileItem);
+                    // Is authorized for the DataItem?
+                    authorizationContext = getAuthorizationContext(resource, dataItem);
+                    if (authorizationService.isAuthorized(authorizationContext)) {
+                        // create new ProfileItem
+                        profileItem = new ProfileItem(resource.getProfile(), dataItem);
+                        profileItem = acceptProfileItem(resource, form, profileItem);
+                    } else {
+                        log.warn("accept() - Not authorized to access DataItem");
+                        throw new APIException(APIFault.NOT_AUTHORIZED_FOR_INDIRECT_ACCESS);
+                    }
                 } else {
                     log.warn("accept() - Data Item not found");
                     throw new APIException(APIFault.ENTITY_NOT_FOUND);
@@ -103,6 +119,15 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
 
         profileItems.add(profileItem);
         return profileItems;
+    }
+
+    private AuthorizationContext getAuthorizationContext(ProfileCategoryResource resource, DataItem dataItem) {
+        AuthorizationContext authorizationContext = new AuthorizationContext();
+        authorizationContext.addPrincipals(resource.getPrincipals());
+        for (AMEEEntity entity : dataItem.getHierarchy()) {
+            authorizationContext.addAccessSpecification(new AccessSpecification(entity, PermissionEntry.VIEW));
+        }
+        return authorizationContext;
     }
 
     // Note, this can be called by both POSTs and PUTs

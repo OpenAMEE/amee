@@ -1,8 +1,8 @@
 package com.amee.restlet.data.builder;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.Pager;
 import com.amee.domain.ObjectType;
+import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.LocaleName;
@@ -69,9 +69,6 @@ public class DataCategoryResourceBuilder {
             // list child Data Categories and child Data Items
             JSONObject children = new JSONObject();
 
-            // addItemValue Data Categories via pathItem to children
-            JSONArray dataCategories = new JSONArray();
-
             // If the DC is a symlink, use the target PathItem
             PathItem pathItem = resource.getPathItem();
             if (resource.getDataCategory().getAliasedCategory() != null) {
@@ -79,9 +76,9 @@ public class DataCategoryResourceBuilder {
                 pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
             }
 
+            // add Data Categories via pathItem to children
+            JSONArray dataCategories = new JSONArray();
             for (PathItem pi : pathItem.getChildrenByType(ObjectType.DC.getName())) {
-                // TODO: PERMISSIONS
-                DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
                 dataCategories.put(pi.getJSONObject());
             }
             children.put("dataCategories", dataCategories);
@@ -111,7 +108,6 @@ public class DataCategoryResourceBuilder {
                 JSONArray dataCategories = new JSONArray();
                 obj.put("dataCategories", dataCategories);
                 for (DataCategory dc : resource.getDataCategories()) {
-                    // TODO: PERMISSIONS
                     dataCategories.put(dc.getJSONObject(false));
                 }
             }
@@ -145,9 +141,6 @@ public class DataCategoryResourceBuilder {
             Element childrenElement = document.createElement("Children");
             element.appendChild(childrenElement);
 
-            // addItemValue Data Categories
-            Element dataCategoriesElement = document.createElement("DataCategories");
-
             // If the DC is a symlink, use the target PathItem
             PathItem pathItem = resource.getPathItem();
             if (resource.getDataCategory().getAliasedCategory() != null) {
@@ -155,12 +148,13 @@ public class DataCategoryResourceBuilder {
                 pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
             }
 
+            // addItemValue Data Categories
+            Element dataCategoriesElement = document.createElement("DataCategories");
             for (PathItem pi : pathItem.getChildrenByType(ObjectType.DC.getName())) {
-                // TODO: PERMISSIONS
-                DataCategory child = dataService.getDataCategoryByUid(pi.getUid());
                 dataCategoriesElement.appendChild(pi.getElement(document));
             }
             childrenElement.appendChild(dataCategoriesElement);
+
             // list child Data Items via sheet
             Sheet sheet = dataService.getSheet(resource.getDataBrowser());
             if (sheet != null) {
@@ -180,7 +174,6 @@ public class DataCategoryResourceBuilder {
                 Element dataItemsElement = document.createElement("DataCategories");
                 element.appendChild(dataItemsElement);
                 for (DataCategory dc : resource.getDataCategories()) {
-                    // TODO: PERMISSIONS
                     dataItemsElement.appendChild(dc.getElement(document, false));
                 }
             }

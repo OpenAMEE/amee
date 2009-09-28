@@ -103,16 +103,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
     @Override
     public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getDataItem());
-        DataCategory dc = getDataCategory();
-        while (dc != null) {
-            entities.add(dc);
-            dc = dc.getDataCategory();
-        }
-        entities.add(getActiveEnvironment());
-        Collections.reverse(entities);
-        return entities;
+        return getDataItem().getHierarchy();
     }
 
     @Override

@@ -7,10 +7,10 @@
 
 <script type='text/javascript'>
 
-    // create resource objects
-    var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
-    var ITEM_VALUE_DEFINITIONS = new ItemValueDefinitionsResource('${dataItem.itemDefinition.uid}');
+    var AUTHORIZATION_CONTEXT = new AuthorizationContext(${authorizationContext.getJSONObject()});
 
+    // create resource objects
+    var ITEM_VALUE_DEFINITIONS = new ItemValueDefinitionsResource('${dataItem.itemDefinition.uid}');
     var dataItemApiService = new DataItemApiService({
         heading : "Item Values",
         headingElementName : "apiHeading",
@@ -24,7 +24,6 @@
 
     // use resource loader to load resources and notify on loaded
     var resourceLoader = new ResourceLoader();
-    resourceLoader.addResource(DATA_ACTIONS);
     resourceLoader.addResource(ITEM_VALUE_DEFINITIONS);
     resourceLoader.observe('loaded', function() {
         dataItemApiService.start();

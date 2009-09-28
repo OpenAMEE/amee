@@ -21,8 +21,6 @@ package com.amee.service.data;
 
 public class DataConstants {
 
-    public final static String VIEW_CARBON = "amee.ftl";
-    public final static String VIEW_DATA_SHEET = "dataSheet.ftl";
     public final static String VIEW_DATA_CATEGORY = "dataCategory.ftl";
     public final static String VIEW_ALGORITHMS = "algorithms.ftl";
     public final static String VIEW_CARBON_ALGORITHM = "algorithm.ftl";

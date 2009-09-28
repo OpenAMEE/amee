@@ -22,12 +22,11 @@
 package com.amee.service.auth;
 
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.PermissionEntry;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,15 +39,8 @@ import java.util.Set;
  * contains three main collections; a list of 'principals', a list of 'entities' and a set of
  * PermissionEntries. These collections are taken into consideration when deciding if a
  * request should be authorized.
- * <p/>
- * AuthorizationContext is a Spring bean in the prototype scope and is not considered thread safe.
  */
-@Component
-@Scope("prototype")
 public class AuthorizationContext implements Serializable {
-
-    @Autowired
-    protected AuthorizationService authorizationService;
 
     /**
      * A list of principals which may or may not be authorized for the entities.
@@ -72,6 +64,11 @@ public class AuthorizationContext implements Serializable {
      * Local cache for the result of AuthorizationService.isAuthorized().
      */
     private Boolean authorized = null;
+
+    /**
+     * Indicates if a User that is a super-user is one of the principals.
+     */
+    private boolean superUser = false;
 
     /**
      * Default constructor.
@@ -132,48 +129,14 @@ public class AuthorizationContext implements Serializable {
         entries.clear();
     }
 
-    /**
-     * Returns true of the state of the AuthorizationContext should be considered authorized. Internally uses
-     * AuthorizationService.isAuthorized and caches the result.
-     *
-     * @return true if authorize result is allow, otherwise false if result is deny
-     */
-    public boolean isAuthorized() {
-        if (authorized == null) {
-            authorized = authorizationService.isAuthorized(this);
+    public JSONObject getJSONObject() throws JSONException {
+        JSONObject obj = new JSONObject();
+        JSONArray entries = new JSONArray();
+        for (PermissionEntry entry : getEntries()) {
+            entries.put(entry.getJSONObject());
         }
-        return authorized;
-    }
-
-    /**
-     * Returns true if the currently active principles have the requested access, via entry, to the
-     * supplied entity. If the entity has already been considered for authorization then the cached
-     * AccessSpecification is re-used. If the entity has not been considered yet then a fresh authorization
-     * check is made, with the assumption that the entity is a direct child of the last entity declared in
-     * accessSpecifications.
-     *
-     * @param entityReference to authorize access for
-     * @param entry           specifying access requested
-     * @return true if authorize result is allow, otherwise false if result is deny
-     */
-    public boolean isAuthorized(IAMEEEntityReference entityReference, PermissionEntry entry) {
-        if (entityReference.getAccessSpecification() != null) {
-            return entityReference.getAccessSpecification().getActual().contains(entry);
-        } else {
-            return isAuthorized(new AccessSpecification(entityReference, entry));
-        }
-    }
-
-    /**
-     * Returns true if the currently active principles have access to the entity with the PermissionEntry in
-     * the supplied AccessSpecification, with the assumption that the entity is a direct child of the last
-     * entity declared in accessSpecifications.
-     *
-     * @param accessSpecification desired AccessSpecification
-     * @return true if authorize result is allow, otherwise false if result is deny
-     */
-    public boolean isAuthorized(AccessSpecification accessSpecification) {
-        return authorizationService.isAuthorized(this, accessSpecification);
+        obj.put("entries", entries);
+        return obj;
     }
 
     /**
@@ -195,11 +158,69 @@ public class AuthorizationContext implements Serializable {
     }
 
     /**
+     * Returns the last AccessSpecifications from the accessSpecifications collection.
+     *
+     * @return the last AccessSpecifications or null
+     */
+    public AccessSpecification getLastAccessSpecifications() {
+        if (!accessSpecifications.isEmpty()) {
+            return accessSpecifications.get(accessSpecifications.size() - 1);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Returns the entries set;
      *
      * @return entries set
      */
     public Set<PermissionEntry> getEntries() {
         return entries;
+    }
+
+    /**
+     * Returns true if this AuthorizationContext has been checked.
+     *
+     * @return true if this AuthorizationContext has been checked
+     */
+    public boolean hasBeenChecked() {
+        return (authorized != null);
+    }
+
+    /**
+     * Returns true if this AuthorizationContext is authorized.
+     *
+     * @return true if authorize result is allow, otherwise false if result is deny
+     */
+    public boolean isAuthorized() {
+        return hasBeenChecked() && authorized;
+    }
+
+    /**
+     * Set the authorized flag.
+     *
+     * @param authorized value to set
+     */
+    public void setAuthorized(boolean authorized) {
+        this.authorized = authorized;
+    }
+
+    /**
+     * Returns true if one of the priniples was a super-user.
+     *
+     * @return true if one of the priniples was a super-user
+     */
+    public boolean isSuperUser() {
+        return superUser;
+    }
+
+    /**
+     * Sets the super-user flag.
+     *
+     * @param superUser new value for the super-user flag
+     */
+    public void setSuperUser(Boolean superUser) {
+        this.superUser = superUser;
     }
 }

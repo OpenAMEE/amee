@@ -85,6 +85,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        entities.add(getActiveEnvironment());
         entities.add(definitionBrowser.getEnvironment());
         entities.add(definitionBrowser.getItemDefinition());
         entities.add(definitionBrowser.getAlgorithm());
@@ -216,12 +217,13 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
             algorithm.setContent(form.getFirstValue("content"));
         }
         if (names.contains("algorithmContextUid")) {
-            String algorithmCxtUid = form.getFirstValue("algorithmContextUid");
-            if (StringUtils.isBlank(algorithmCxtUid)) {
+            String algorithmContextUid = form.getFirstValue("algorithmContextUid");
+            if (StringUtils.isBlank(algorithmContextUid)) {
                 algorithm.setAlgorithmContext(null);
             } else {
-                definitionBrowser.setAlgorithmContextUid(algorithmCxtUid);
-                algorithm.setAlgorithmContext(definitionBrowser.getAlgorithmContext());
+                algorithm.setAlgorithmContext(
+                        definitionService.getAlgorithmContextByUid(
+                                definitionBrowser.getEnvironment(), algorithmContextUid));
             }
         }
         success();

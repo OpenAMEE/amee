@@ -6,6 +6,8 @@
 
 <script type="text/javascript">
 
+    var AUTHORIZATION_CONTEXT = new AuthorizationContext(${authorizationContext.getJSONObject()});
+
     function deleteDataCategory(dataCategoryUid, dataCategoryPath) {
         resourceUrl = dataCategoryPath + '?method=delete';
         resourceElem = $('Elem_' + dataCategoryUid);
@@ -23,8 +25,6 @@
     }
 
     // create resource objects
-    var DATA_ACTIONS = new ActionsResource({path: '/data/actions'});
-    var DEFINITION_ACTIONS = new ActionsResource({path: '/definitions/actions'});
     var ITEM_DEFINITIONS = new ItemDefinitionsResource();
     var dataCategoryApiService = new DataCategoryApiService({
         heading : "Data Items",
@@ -44,8 +44,6 @@
 
     // use resource loader to load resources and notify on loaded
     var resourceLoader = new ResourceLoader();
-    resourceLoader.addResource(DATA_ACTIONS);
-    resourceLoader.addResource(DEFINITION_ACTIONS);
     resourceLoader.addResource(ITEM_DEFINITIONS);
     resourceLoader.observe('loaded', function() {
         dataCategoryApiService.start();

@@ -7,13 +7,13 @@
 
 <script type='text/javascript'>
 
+    var AUTHORIZATION_CONTEXT = new AuthorizationContext(${authorizationContext.getJSONObject()});
+
     // create resource objects
-    var PROFILE_ACTIONS = new ActionsResource({path: '/profiles/actions'});
     var profileItemApiService = new ProfileItemApiService();
 
     // use resource loader to load resources and notify on loaded
     var resourceLoader = new ResourceLoader();
-    resourceLoader.addResource(PROFILE_ACTIONS);
     resourceLoader.observe('loaded', function() {
         profileItemApiService.start();
     });

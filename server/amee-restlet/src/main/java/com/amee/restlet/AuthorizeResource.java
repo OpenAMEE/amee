@@ -43,9 +43,11 @@ import java.util.Map;
 public abstract class AuthorizeResource extends BaseResource {
 
     @Autowired
-    protected GroupService groupService;
+    protected AuthorizationService authorizationService;
 
     @Autowired
+    protected GroupService groupService;
+
     protected AuthorizationContext authorizationContext;
 
     /**
@@ -57,6 +59,7 @@ public abstract class AuthorizeResource extends BaseResource {
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("authorizationContext", authorizationContext);
+        values.put("authorizationService", authorizationService);
         return values;
     }
 
@@ -89,7 +92,7 @@ public abstract class AuthorizeResource extends BaseResource {
      */
     public List<AccessSpecification> getGetAccessSpecifications() {
         List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
-        for (AMEEEntity entity : getEntities()) {
+        for (AMEEEntity entity : getDistinctEntities()) {
             accessSpecifications.add(new AccessSpecification(entity, PermissionEntry.VIEW));
         }
         return accessSpecifications;
@@ -247,9 +250,10 @@ public abstract class AuthorizeResource extends BaseResource {
      * @return true if the request is authorized, otherwise false
      */
     public boolean isAuthorized(List<AccessSpecification> accessSpecifications) {
+        authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipals(getPrincipals());
         authorizationContext.addAccessSpecifications(accessSpecifications);
-        return authorizationContext.isAuthorized();
+        return authorizationService.isAuthorized(authorizationContext);
     }
 
     /**
@@ -273,6 +277,22 @@ public abstract class AuthorizeResource extends BaseResource {
      */
     public abstract List<AMEEEntity> getEntities();
 
+
+    /**
+     * Returns a de-duped version of the list from getEntities().
+     *
+     * @return list of entites required for authorization
+     */
+    public List<AMEEEntity> getDistinctEntities() {
+        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+        for (AMEEEntity entity : getEntities()) {
+            if (!entities.contains(entity)) {
+                entities.add(entity);
+            }
+        }
+        return entities;
+    }
+
     /**
      * Updates the last AccessSpecification in the supplied list of AccessSpecifications with the PermissionEntry.
      *
@@ -285,5 +305,9 @@ public abstract class AuthorizeResource extends BaseResource {
             specifications.get(specifications.size() - 1).getDesired().add(entry);
         }
         return specifications;
+    }
+
+    public AuthorizationContext getAuthorizationContext() {
+        return authorizationContext;
     }
 }
