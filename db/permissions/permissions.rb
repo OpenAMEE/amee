@@ -208,11 +208,11 @@ class String
 end
 
 # Run the migrations
-#run_sql("before_profile_migration.sql")
-#profile_migration
+run_sql("before_profile_migration.sql")
+profile_migration
 #run_sql("after_profile_migration.sql")
-#run_sql("alter_permission_table.sql")
-#run_sql("create_group_principal_table.sql")
-#group_user_migration
-#run_sql("create_permissions.sql")
+run_sql("alter_permission_table.sql")
+run_sql("create_group_principal_table.sql")
+group_user_migration
+run_sql("create_permissions.sql")
 #run_sql("remove_redundant_tables.sql")

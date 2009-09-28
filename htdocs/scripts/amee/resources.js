@@ -24,7 +24,7 @@ var ModalHelper = Class.create({
                 height: 120,
                 afterOpen: this.afterOpen.bind(this)
             });
-            this.modal.container.insert(this.getModelElement());
+            this.modal.container.insert(this.getModalElement());
         }
         return this.modal;
     },
@@ -48,7 +48,7 @@ var ModalHelper = Class.create({
         }
         return false;
     },
-    getModelElement: function() {
+    getModalElement: function() {
         var element = new Element('div').addClassName("loginModalHead clearfix");
         var outerDiv = new Element('div').addClassName("loginOuterDiv")
                 .insert(new Element('h2').update(this.title))

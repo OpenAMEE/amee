@@ -174,7 +174,7 @@ var ApiService = Class.create({
         if (params) {
             params = params.toQueryParams();
         } else {
-            params =  new Hash();
+            params = new Hash();
         }
         params.set('method', 'get');
         new Ajax.Request(url + '?' + Object.toQueryString(params), {
@@ -491,3 +491,183 @@ var ResourceLoader = Class.create({
     }
 });
 Object.Event.extend(ResourceLoader);
+
+// Permission
+var Permission = Class.create({
+    initialize: function(permission) {
+        Object.extend(this, permission);
+    }
+});
+
+// Permissions Resource
+var PermissionsResource = Class.create({
+    initialize: function(params) {
+        this.permissions = [];
+        this.path = '/permissions';
+        this.entityType = params.entityType || '';
+        this.entityUid = params.entityUid || '';
+    },
+    start: function() {
+        this.load();
+    },
+    load: function() {
+        this.permissions = [];
+        var params = new Hash();
+        params.set('method', 'get');
+        params.set('entityType', this.entityType);
+        params.set('entityUid', this.entityUid);
+        new Ajax.Request(this.path + '?' + Object.toQueryString(params), {
+            method: 'post',
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.loadSuccess.bind(this),
+            onFailure: this.loadFailure.bind(this)});
+    },
+    loadSuccess: function(response) {
+        var resource = response.responseJSON;
+        resource.permissions.each(function(permission) {
+            this.permissions.push(new Permission(permission));
+        }.bind(this));
+        this.loaded = true;
+        this.available = true;
+        this.notify('loaded', this);
+    },
+    loadFailure: function() {
+        this.loaded = true;
+        this.available = false;
+        this.notify('loaded', this);
+    },
+    getPermissions: function() {
+        return this.permissions;
+    }
+});
+Object.Event.extend(PermissionsResource);
+
+// Group
+var Group = Class.create({
+    initialize: function(group) {
+        Object.extend(this, group);
+    }
+});
+
+// Groups Resource
+var GroupsResource = Class.create({
+    initialize: function(params) {
+        this.groups = [];
+        this.path = '/groups';
+        this.element = $('groupsDiv');
+    },
+    start: function() {
+        this.load();
+    },
+    load: function() {
+        this.groups = [];
+        var params = new Hash();
+        params.set('method', 'get');
+        new Ajax.Request(this.path + '?' + Object.toQueryString(params), {
+            method: 'post',
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.loadSuccess.bind(this),
+            onFailure: this.loadFailure.bind(this)});
+    },
+    loadSuccess: function(response) {
+        var resource = response.responseJSON;
+        resource.groups.each(function(group) {
+            this.groups.push(new Group(group));
+        }.bind(this));
+        this.loaded = true;
+        this.available = true;
+        this.notify('loaded', this);
+        this.render();
+    },
+    loadFailure: function() {
+        this.loaded = true;
+        this.available = false;
+        this.notify('loaded', this);
+    },
+    render: function() {
+        var groupElem;
+        this.groups.each(function(group) {
+            groupElem = new Element('div');
+            groupElem.appendChild(document.createTextNode(group.name));
+            this.element.appendChild(groupElem);
+        }.bind(this));
+    },
+    getGroups: function() {
+        return this.groups;
+    }
+});
+Object.Event.extend(GroupsResource);
+
+// Permissions Editor
+var PermissionsEditor = Class.create({
+    initialize: function(params) {
+        this.entityUid = params.entityUid || '';
+        this.entityType = params.entityType || '';
+        this.container = null;
+        this.content = null;
+        this.groups = null;
+        this.users = null;
+        this.tabs = null;
+        this.control = null;
+        this.render();
+        var permissionsResource = new PermissionsResource({entityType: this.entityType, entityUid: this.entityUid});
+        permissionsResource.start();
+        var groupsResource = new GroupsResource();
+        groupsResource.start();
+    },
+    render: function() {
+        this.renderContent();
+        this.renderContainer();
+        this.renderModal();
+        new Control.Tabs(this.tabs);
+        this.control.open();
+    },
+    renderContent: function() {
+        // Content Box
+        this.content = new Element('div', {id: 'content'});
+        // Tab Bar
+        this.tabs = new Element('ul').addClassName('tabs');
+        this.tabs.insert(new Element('li').addClassName('tab').insert(new Element('a', {href: '#groups'}).insert('Groups')));
+        this.tabs.insert(new Element('li').addClassName('tab').insert(new Element('a', {href: '#users'}).insert('Users')));
+        this.content.insert(this.tabs);
+        // Users & Groups Tabs
+        this.groups = new Element('div', {id: 'groups'}).insert('Groups XXX').insert('<br>').insert('<br>').insert('<br>');
+        this.users = new Element('div', {id: 'users'}).insert('Users XXX').insert('<br>').insert('<br>').insert('<br>');
+        this.content.insert(this.groups);
+        this.content.insert(this.users);
+    },
+    renderContainer: function() {
+        this.container = new Element('div').addClassName("permissionsModalHead clearfix");
+        // Outer Box
+        var outer = new Element('div').addClassName("permissionsOuterDiv")
+                .insert(new Element('h2').update("Permissions Editor"));
+        // Inner Box
+        var inner = new Element('div').addClassName("permissionsInnerDiv clearfix");
+        inner.insert(this.content);
+        outer.insert(inner);
+        // Buttons Box
+        var buttonsOuter = new Element('div').addClassName("permissionsButtonsOuter clearfix");
+        var buttonsInner = new Element('div');
+        var doneButton = new Element('button').update("Done");
+        doneButton.observe("click", this.onDone.bindAsEventListener(this));
+        buttonsInner.insert(doneButton);
+        buttonsOuter.insert(buttonsInner);
+        outer.insert(buttonsOuter);
+        this.container.insert(outer);
+    },
+    renderModal: function() {
+        this.control = new Control.Modal(false, {
+            width: 420,
+            height: 120,
+            afterOpen: this.afterOpen.bind(this)});
+        this.control.container.insert(this.container);
+    },
+    afterOpen: function() {
+    },
+    onDone: function(event) {
+        event.stop();
+        this.control.close();
+        this.control = null;
+        return false;
+    }
+});

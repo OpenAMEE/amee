@@ -71,6 +71,16 @@
     <!-- **** AMEE - Entities **** -->
 
     <!-- APIVersion -->
+    <cache name="com.amee.domain.data.LocaleName"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
+    <!-- APIVersion -->
     <cache name="com.amee.domain.APIVersion"
            maxElementsInMemory="40"
            eternal="false"
@@ -206,7 +216,7 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
     <cache name="com.amee.domain.data.ItemValueDefinition.localeNames"
-           maxElementsInMemory="200"
+           maxElementsInMemory="1000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"

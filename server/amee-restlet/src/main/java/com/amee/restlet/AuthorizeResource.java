@@ -51,6 +51,11 @@ public abstract class AuthorizeResource extends BaseResource {
     protected AuthorizationContext authorizationContext;
 
     /**
+     * Flag indicating if as super-user is required?
+     */
+    private boolean requireSuperUser = false;
+
+    /**
      * Ensure AuthorizationContext instance is always avilable to templates.
      *
      * @return the template map
@@ -253,7 +258,11 @@ public abstract class AuthorizeResource extends BaseResource {
         authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipals(getPrincipals());
         authorizationContext.addAccessSpecifications(accessSpecifications);
-        return authorizationService.isAuthorized(authorizationContext);
+        boolean authorized = authorizationService.isAuthorized(authorizationContext);
+        if (authorized && isRequireSuperUser() && !authorizationContext.isSuperUser()) {
+            authorized = false;
+        }
+        return authorized;
     }
 
     /**
@@ -276,7 +285,6 @@ public abstract class AuthorizeResource extends BaseResource {
      * @return list of entites required for authorization
      */
     public abstract List<AMEEEntity> getEntities();
-
 
     /**
      * Returns a de-duped version of the list from getEntities().
@@ -309,5 +317,13 @@ public abstract class AuthorizeResource extends BaseResource {
 
     public AuthorizationContext getAuthorizationContext() {
         return authorizationContext;
+    }
+
+    public boolean isRequireSuperUser() {
+        return requireSuperUser;
+    }
+
+    public void setRequireSuperUser(boolean requireSuperUser) {
+        this.requireSuperUser = requireSuperUser;
     }
 }

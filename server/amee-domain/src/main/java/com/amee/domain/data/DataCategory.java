@@ -270,7 +270,7 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     @Override
     public boolean isTrash() {
         try {
-            return status.equals(AMEEStatus.TRASH) || (getItemDefinition() != null && getItemDefinition().isTrash());
+            return status.equals(AMEEStatus.TRASH) || ((getItemDefinition() != null) && getItemDefinition().isTrash());
         } catch (Exception ex) {
             log.error("isTrash() - DataCategory " + getId() + ": " + ex.getMessage());
             return true;
@@ -296,5 +296,4 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
             alias.setStatus(status);
         }
     }
-
 }
