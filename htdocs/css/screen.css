@@ -342,7 +342,17 @@ img {border: 0px;}
     background-color: #ddd
 }
 
-.permission_entries_select_container {  
+.permissionsFormLeft {
+    float: left;
+    width: 150px;
+    padding: 5px;
+}
+
+.permissionsFormRight {
+    padding: 5px;
+}
+
+.permission_entries_select_container {
     position:relative;
 }
 

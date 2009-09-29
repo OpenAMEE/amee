@@ -115,19 +115,19 @@ public class ServiceData {
 
     private void initPermissions() {
         // Standard group members can view root data category.
-        PERMISSION_1 = new Permission(GROUP_STANDARD, DC_ROOT, PermissionEntry.VIEW);
+        PERMISSION_1 = new Permission(null, GROUP_STANDARD, DC_ROOT, PermissionEntry.VIEW);
         setId(PERMISSION_1);
         addPermissionToPrincipal(GROUP_STANDARD, PERMISSION_1);
         // Standard group members can not view premium data category.
-        PERMISSION_2 = new Permission(GROUP_STANDARD, DC_PREMIUM, PermissionEntry.VIEW_DENY);
+        PERMISSION_2 = new Permission(null, GROUP_STANDARD, DC_PREMIUM, PermissionEntry.VIEW_DENY);
         setId(PERMISSION_2);
         addPermissionToPrincipal(GROUP_STANDARD, PERMISSION_2);
         // Premium group members own premium data category.
-        PERMISSION_3 = new Permission(GROUP_PREMIUM, DC_PREMIUM, PermissionEntry.OWN);
+        PERMISSION_3 = new Permission(null, GROUP_PREMIUM, DC_PREMIUM, PermissionEntry.OWN);
         setId(PERMISSION_3);
         addPermissionToPrincipal(GROUP_PREMIUM, PERMISSION_3);
         // User can view deprecated data category.
-        PERMISSION_4 = new Permission(USER_STANDARD, DC_DEPRECATED, new PermissionEntry("v", true, AMEEStatus.DEPRECATED));
+        PERMISSION_4 = new Permission(null, USER_STANDARD, DC_DEPRECATED, new PermissionEntry("v", true, AMEEStatus.DEPRECATED));
         setId(PERMISSION_4);
         addPermissionToPrincipal(USER_STANDARD, PERMISSION_4);
 

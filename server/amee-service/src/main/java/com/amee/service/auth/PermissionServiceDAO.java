@@ -31,6 +31,8 @@ public interface PermissionServiceDAO {
 
     Permission getPermissionByUid(String uid);
 
+    void persist(Permission permission);
+
     void remove(Permission permission);
 
     List<Permission> getPermissionsForEntity(IAMEEEntityReference entity);
