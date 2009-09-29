@@ -147,13 +147,17 @@ public class PermissionsResource extends AuthorizeResource {
         }
 
         // Parse allow entries.
-        for (String s : allowEntries.split(",")) {
-            entries.add(new PermissionEntry(s));
+        if (!StringUtils.isBlank(allowEntries)) {
+            for (String s : allowEntries.split(",")) {
+                entries.add(new PermissionEntry(s));
+            }
         }
 
         // Parse deny entries.
-        for (String s : allowEntries.split(",")) {
-            entries.add(new PermissionEntry(s, false));
+        if (!StringUtils.isBlank(denyEntries)) {
+            for (String s : denyEntries.split(",")) {
+                entries.add(new PermissionEntry(s, false));
+            }
         }
 
         // Update entity references to include entity IDs.

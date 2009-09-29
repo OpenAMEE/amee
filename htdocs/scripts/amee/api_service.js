@@ -771,10 +771,9 @@ var PermissionsForm = Class.create({
         this.form.insert(right);
 
         // Principal search.
-        left.insert('Search: ');
         this.principalSearch = new Element('input', {type: 'text', size: 10});
         left.insert(this.principalSearch);
-        var searchButton = new Element('input', {type: 'button', value: 'Go!'});
+        var searchButton = new Element('input', {type: 'button', value: 'Search'});
         Event.observe(searchButton, "click", this.onPrincipalSearch.bind(this));
         left.insert(searchButton);
         left.insert(new Element('br'));
@@ -858,6 +857,7 @@ var PermissionsForm = Class.create({
         // Create and populate container.
         var container = new Element('div').addClassName('permission_entries_select_container');
         container.insert(entrySelect);
+        container.insert('&nbsp;');
         container.insert(moreLink);
         container.insert(moreEntriesContainer);
         container.insert(new Element('br'));
@@ -868,6 +868,7 @@ var PermissionsForm = Class.create({
     getEntriesSelect: function(id) {
         Log.debug('PermissionsForm.getEntriesSelect()');
         var e = new Element('select', {id: id});
+        e.insert(new Element('option', {value: ''}).update('(None)'));
         this.entries.each(function(entry) {
             e.insert(this.getEntryOption(entry));
         }.bind(this));
