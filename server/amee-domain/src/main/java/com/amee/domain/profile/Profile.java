@@ -115,7 +115,7 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
      * @param permissions the Permissions List to modify
      */
     protected void addBuiltInPermissions(List<Permission> permissions) {
-        permissions.add(new Permission(getUser(), this, PermissionEntry.OWN));
+        permissions.add(new Permission(getEnvironment(), getUser(), this, PermissionEntry.OWN));
     }
 
     public User getUser() {

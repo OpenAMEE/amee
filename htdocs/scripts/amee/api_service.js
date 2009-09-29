@@ -311,18 +311,18 @@ var ApiService = Class.create({
                 // set section details
                 var pElement = new Element('p', {id : this.dataContentElementName});
 
-                pElement.insert(document.createTextNode("Name: " + dataCategory.name));
+                pElement.insert("Name: " + dataCategory.name);
                 if (dataCategory.path) {
                     pElement.insert(new Element("br"));
-                    pElement.insert(document.createTextNode("Path: " + dataCategory.path));
+                    pElement.insert("Path: " + dataCategory.path);
                 }
 
                 pElement.insert(new Element("br"));
-                pElement.insert(document.createTextNode("Full Path: " + window.location.pathname));
+                pElement.insert("Full Path: " + window.location.pathname);
 
                 if (dataCategory.itemDefinition) {
                     pElement.insert(new Element("br"));
-                    pElement.insert(document.createTextNode("Item Definition: " + dataCategory.itemDefinition.name));
+                    pElement.insert("Item Definition: " + dataCategory.itemDefinition.name);
                 }
 
                 if (json.environment || dataCategory.environment) {
@@ -333,17 +333,17 @@ var ApiService = Class.create({
                         env = dataCategory.environment;
                     }
                     pElement.insert(new Element("br"));
-                    pElement.insert(document.createTextNode("Environment: " + env.name));
+                    pElement.insert("Environment: " + env.name);
                 }
 
                 pElement.insert(new Element("br"));
-                pElement.insert(document.createTextNode("Data Category UID: " + dataCategory.uid));
+                pElement.insert("Data Category UID: " + dataCategory.uid);
 
                 pElement.insert(new Element("br"));
-                pElement.insert(document.createTextNode("Created: " + dataCategory.created));
+                pElement.insert("Created: " + dataCategory.created);
 
                 pElement.insert(new Element("br"));
-                pElement.insert(document.createTextNode("Modifed: " + dataCategory.modified));
+                pElement.insert("Modifed: " + dataCategory.modified);
 
                 this.dataContentElement.replace(pElement);
             }
@@ -513,16 +513,16 @@ var CollectionResource = Class.create({
     load: function() {
         Log.debug('CollectionResource.load()');
         this.items = [];
-        new Ajax.Request(this.path + '?' + Object.toQueryString(this.getParams()), {
+        var params = this.getLoadParams();
+        params.set('method', 'get');
+        new Ajax.Request(this.path + '?' + Object.toQueryString(params), {
             method: 'post',
             requestHeaders: ['Accept', 'application/json'],
             onSuccess: this.loadSuccess.bind(this),
             onFailure: this.loadFailure.bind(this)});
     },
-    getParams: function() {
-        var params = new Hash();
-        params.set('method', 'get');
-        return params;
+    getLoadParams: function() {
+        return new Hash();
     },
     loadSuccess: function(response) {
         Log.debug('CollectionResource.loadSuccess()');
@@ -545,6 +545,19 @@ var CollectionResource = Class.create({
     },
     getItem: function(item) {
         return new CollectionItem(item);
+    },
+    create: function(params) {
+        new Ajax.Request(this.path + '?' + Object.toQueryString(this.getLoadParams()), {
+            method: 'post',
+            parameters: params,
+            requestHeaders: ['Accept', 'application/json'],
+            onSuccess: this.createSuccess.bind(this),
+            onFailure: this.createFailure.bind(this)});
+    },
+    createSuccess: function(response) {
+        this.notify('created', this);
+    },
+    createFailure: function(response) {
     }
 });
 
@@ -558,7 +571,7 @@ var PermissionsResource = Class.create(CollectionResource, {
         this.entityUid = params.entityUid || '';
         $super(params);
     },
-    getParams: function($super) {
+    getLoadParams: function($super) {
         var params = $super();
         params.set('entityType', this.entityType);
         params.set('entityUid', this.entityUid);
@@ -692,6 +705,7 @@ var PermissionsEditor = Class.create({
         // Create permissions form.
         if (!this.groupPermissionsForm) {
             var groupPermissionsForm = new PermissionsForm({
+                permissionsResource: this.permissionsResource,
                 entityUid: this.entityUid,
                 entityType: this.entityType,
                 principalType: 'GRP',
@@ -715,9 +729,10 @@ var PermissionsEditor = Class.create({
 });
 Object.Event.extend(PermissionsEditor);
 
-// Permissions Form
+// PermissionsForm
 var PermissionsForm = Class.create({
     initialize: function(params) {
+        this.permissionsResource = params.permissionsResource;
         this.entityUid = params.entityUid;
         this.entityType = params.entityType;
         this.principalType = params.principalType;
@@ -742,40 +757,59 @@ var PermissionsForm = Class.create({
 
         // The form.
         this.form = new Element('form', {action: '/permissions'});
-        Event.observe(this.form, "submit", this.create.bind(this));
+        Event.observe(this.form, "submit", this.onCreatePermission.bind(this));
 
         // Some hiddens.
         this.form.insert(new Element('input', {type: 'hidden', name: 'entityUid', value: this.entityUid}));
         this.form.insert(new Element('input', {type: 'hidden', name: 'entityType', value: this.entityType}));
         this.form.insert(new Element('input', {type: 'hidden', name: 'principalType', value: this.principalType}));
 
+        // Left & right side.
+        var left = new Element('div').addClassName('permissionsFormLeft');
+        var right = new Element('div').addClassName('permissionsFormRight');
+        this.form.insert(left);
+        this.form.insert(right);
+
+        // Principal search.
+        left.insert('Search: ');
+        this.principalSearch = new Element('input', {type: 'text', size: 10});
+        left.insert(this.principalSearch);
+        var searchButton = new Element('input', {type: 'button', value: 'Go!'});
+        Event.observe(searchButton, "click", this.onPrincipalSearch.bind(this));
+        left.insert(searchButton);
+        left.insert(new Element('br'));
+
         // Principal select.
         this.principalSelect = new Element('select', {
             name: 'principalUid',
             multiple: 'multiple',
             size: 5});
-        this.form.insert(this.principalSelect);
-        this.form.insert(new Element('br'));
+        left.insert(this.principalSelect);
 
-        // ALLOW entries.
-        this.renderEntriesSelector(this.form);
+        // Allow permission entries.
+        right.insert('Allow: ');
+        this.renderEntriesSelector(right, 'selectAllowEntries');
+        right.insert(new Element('br'));
 
-        // TODO: DENY entries.
+        // Deny permission entries.
+        right.insert('Deny: ');
+        this.renderEntriesSelector(right, 'selectDenyEntries');
+        right.insert(new Element('br'));
 
         // Create button.
         var create = new Element('input', {type: 'button', value: 'Create'});
-        Event.observe(create, "click", this.create.bind(this));
-        this.form.insert(create);
+        Event.observe(create, "click", this.onCreatePermission.bind(this));
+        right.insert(create);
 
         // Add form to container.
         this.container.insert(this.form);
     },
-    renderEntriesSelector: function(parent) {
+    renderEntriesSelector: function(parent, id) {
 
         Log.debug('PermissionsForm.renderEntriesSelector()');
 
         // Entries selection.
-        var entrySelect = this.getEntriesSelect('allowEntries');
+        var entrySelect = this.getEntriesSelect(id);
         var moreEntriesContainer = this.getMoreEntriesContainer('allowEntriesMore');
         var selectMultiple = new Control.SelectMultiple(entrySelect, moreEntriesContainer, {
             checkboxSelector: 'table.select_multiple_table tr td input[type=checkbox]',
@@ -879,9 +913,21 @@ var PermissionsForm = Class.create({
             this.principalSelect.insert(new Element('option', {value: principal.uid}).update(principal.label));
         }
     },
-    create: function(event) {
+    onPrincipalSearch: function(event) {
         event.stop();
-        alert('Wooh!');
+        alert('Search!');
+        return false;
+    },
+    onCreatePermission: function(event) {
+        Log.debug('PermissionsForm.onCreatePermission()');
+        event.stop();
+        var params = new Hash();
+        params.set('allowEntries', $('selectAllowEntries').value);
+        params.set('denyEntries', $('selectDenyEntries').value);
+        params.set('principalUid', this.principalSelect.value);
+        params.set('principalType', this.principalType);
+        this.permissionsResource.create(params);
+        Log.debug('PermissionsForm.onCreatePermission() done');
         return false;
     }
 });

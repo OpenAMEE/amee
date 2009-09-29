@@ -41,6 +41,10 @@ public class PermissionServiceDAOMock implements PermissionServiceDAO {
         throw new UnsupportedOperationException();
     }
 
+    public void persist(Permission permission) {
+        throw new UnsupportedOperationException();
+    }
+
     public void remove(Permission permission) {
         throw new UnsupportedOperationException();
     }

@@ -23,9 +23,14 @@ package com.amee.restlet.permissions;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEEntityReference;
+import com.amee.domain.ObjectType;
+import com.amee.domain.UidGen;
 import com.amee.domain.auth.Permission;
+import com.amee.domain.auth.PermissionEntry;
 import com.amee.restlet.AuthorizeResource;
+import com.amee.restlet.utils.APIFault;
 import com.amee.service.auth.PermissionService;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,6 +95,74 @@ public class PermissionsResource extends AuthorizeResource {
 
     @Override
     public void doAccept(Representation entity) {
+
+        Form form = getForm();
+        String allowEntries = form.getFirstValue("allowEntries", "");
+        String denyEntries = form.getFirstValue("denyEntries", "");
+        String principalUid = form.getFirstValue("principalUid", "");
+        String principalTypeStr = form.getFirstValue("principalType", "");
+        ObjectType principalType;
+        AMEEEntityReference principalReference;
+        List<PermissionEntry> entries = new ArrayList<PermissionEntry>();
+
+        // Must have some entries.
+        if (StringUtils.isBlank(allowEntries) && StringUtils.isBlank(denyEntries)) {
+            badRequest(APIFault.MISSING_PARAMETERS);
+            return;
+        }
+
+        // Must have principalUid and principalType.
+        if (StringUtils.isBlank(principalUid) || StringUtils.isBlank(principalTypeStr)) {
+            badRequest(APIFault.MISSING_PARAMETERS);
+            return;
+        }
+
+        // must have valid principalUid parameter
+        if (!UidGen.isValid(principalUid)) {
+            badRequest(APIFault.INVALID_PARAMETERS);
+            return;
+        }
+
+        // Must have valid principalType parameter.
+        try {
+            principalType = ObjectType.valueOf(principalTypeStr);
+        } catch (IllegalArgumentException e) {
+            badRequest(APIFault.INVALID_PARAMETERS);
+            return;
+        }
+
+        // Create principal reference.
+        principalReference = new AMEEEntityReference(principalType, principalUid);
+
+        // Must have valid principal to entity combination.
+        if (!permissionService.isValidPrincipalToEntity(principalReference, this.entityReference)) {
+            badRequest(APIFault.INVALID_PARAMETERS);
+            return;
+        }
+
+        // The entities must exist.
+        if ((permissionService.getEntity(principalReference) == null) || (permissionService.getEntity(entityReference) == null)) {
+            badRequest(APIFault.INVALID_PARAMETERS);
+            return;
+        }
+
+        // Parse allow entries.
+        for (String s : allowEntries.split(",")) {
+            entries.add(new PermissionEntry(s));
+        }
+
+        // Parse deny entries.
+        for (String s : allowEntries.split(",")) {
+            entries.add(new PermissionEntry(s, false));
+        }
+
+        // Update entity references to include entity IDs.
+        // TODO: This is a hack. Should try to make this automatic instead.
+        principalReference.setEntityId(principalReference.getEntity().getId());
+        entityReference.setEntityId(entityReference.getEntity().getId());
+
+        // Create Permission.
+        permissionService.persist(new Permission(getActiveEnvironment(), principalReference, entityReference, entries));
     }
 
     public AMEEEntityReference getEntityReference(Request request) {

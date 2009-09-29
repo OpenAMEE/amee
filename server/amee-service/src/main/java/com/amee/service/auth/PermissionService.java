@@ -81,10 +81,13 @@ public class PermissionService {
         return dao.getPermissionByUid(uid);
     }
 
+    public void persist(Permission permission) {
+        dao.persist(permission);
+    }
+
     public void remove(Permission permission) {
         dao.remove(permission);
     }
-
     public List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
         if ((entity == null) || !isValidEntity(entity)) {
             throw new IllegalArgumentException();

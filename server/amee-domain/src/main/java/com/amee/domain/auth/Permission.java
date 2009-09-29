@@ -1,6 +1,7 @@
 package com.amee.domain.auth;
 
 import com.amee.domain.*;
+import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Collection;
 
 /**
  * Permission represents the permissions (rights) that a 'principal' has over an 'entity'.
@@ -78,11 +80,25 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         super();
     }
 
-    public Permission(IAMEEEntityReference principal, IAMEEEntityReference entity, PermissionEntry entry) {
+    public Permission(Environment environment) {
         this();
+        setEnvironment(environment);
+    }
+
+    public Permission(Environment environment, IAMEEEntityReference principal, IAMEEEntityReference entity) {
+        this(environment);
         setPrincipalReference(new AMEEEntityReference(principal));
         setEntityReference(new AMEEEntityReference(entity));
+    }
+
+    public Permission(Environment environment, IAMEEEntityReference principal, IAMEEEntityReference entity, PermissionEntry entry) {
+        this(environment, principal, entity);
         addEntry(entry);
+    }
+
+    public Permission(Environment environment, IAMEEEntityReference principal, IAMEEEntityReference entity, Collection<PermissionEntry> entries) {
+        this(environment, principal, entity);
+        addEntries(entries);
     }
 
     public String toString() {
@@ -201,6 +217,21 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         getEntries();
         // add the entry to entrySet
         entrySet.add(entry);
+        // update the entries string
+        updateEntriesJSONObject();
+    }
+
+    /**
+     * Add PermissionEntries to the entries. Will internally make sure the entries
+     * set and string are updated.
+     *
+     * @param entries to add
+     */
+    public void addEntries(Collection<PermissionEntry> entries) {
+        // make sure entrySet is exists
+        getEntries();
+        // add the entries to entrySet
+        entrySet.addAll(entries);
         // update the entries string
         updateEntriesJSONObject();
     }

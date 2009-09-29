@@ -57,6 +57,10 @@ public class PermissionServiceDAOImpl implements PermissionServiceDAO {
         return (Permission) criteria.uniqueResult();
     }
 
+    public void persist(Permission permission) {
+        entityManager.persist(permission);
+    }
+
     public void remove(Permission permission) {
         permission.setStatus(AMEEStatus.TRASH);
     }
