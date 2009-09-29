@@ -311,18 +311,18 @@ var ApiService = Class.create({
                 // set section details
                 var pElement = new Element('p', {id : this.dataContentElementName});
 
-                pElement.appendChild(document.createTextNode("Name: " + dataCategory.name));
+                pElement.insert(document.createTextNode("Name: " + dataCategory.name));
                 if (dataCategory.path) {
                     pElement.insert(new Element("br"));
-                    pElement.appendChild(document.createTextNode("Path: " + dataCategory.path));
+                    pElement.insert(document.createTextNode("Path: " + dataCategory.path));
                 }
 
                 pElement.insert(new Element("br"));
-                pElement.appendChild(document.createTextNode("Full Path: " + window.location.pathname));
+                pElement.insert(document.createTextNode("Full Path: " + window.location.pathname));
 
                 if (dataCategory.itemDefinition) {
                     pElement.insert(new Element("br"));
-                    pElement.appendChild(document.createTextNode("Item Definition: " + dataCategory.itemDefinition.name));
+                    pElement.insert(document.createTextNode("Item Definition: " + dataCategory.itemDefinition.name));
                 }
 
                 if (json.environment || dataCategory.environment) {
@@ -333,17 +333,17 @@ var ApiService = Class.create({
                         env = dataCategory.environment;
                     }
                     pElement.insert(new Element("br"));
-                    pElement.appendChild(document.createTextNode("Environment: " + env.name));
+                    pElement.insert(document.createTextNode("Environment: " + env.name));
                 }
 
                 pElement.insert(new Element("br"));
-                pElement.appendChild(document.createTextNode("Data Category UID: " + dataCategory.uid));
+                pElement.insert(document.createTextNode("Data Category UID: " + dataCategory.uid));
 
                 pElement.insert(new Element("br"));
-                pElement.appendChild(document.createTextNode("Created: " + dataCategory.created));
+                pElement.insert(document.createTextNode("Created: " + dataCategory.created));
 
                 pElement.insert(new Element("br"));
-                pElement.appendChild(document.createTextNode("Modifed: " + dataCategory.modified));
+                pElement.insert(document.createTextNode("Modifed: " + dataCategory.modified));
 
                 this.dataContentElement.replace(pElement);
             }
@@ -459,10 +459,10 @@ var ResourceLoader = Class.create({
     initialize: function(params) {
         params = params || {};
         this.resources = [];
-        this.observeDom = params.observeDom || true;
+        this.ignoreDomLoaded = params.ignoreDomLoaded || false;
     },
     start: function() {
-        if (this.observeDom) {
+        if (!this.ignoreDomLoaded) {
             this.addResource(new MockDomResource());
         }
         this.resources.each(function(resource) {
@@ -483,6 +483,7 @@ var ResourceLoader = Class.create({
             }
         });
         if (loaded) {
+            Log.debug('ResourceLoader.checkLoadStatus() Loaded!');
             this.notify('loaded', this);
         }
     },
@@ -492,182 +493,395 @@ var ResourceLoader = Class.create({
 });
 Object.Event.extend(ResourceLoader);
 
-// Permission
-var Permission = Class.create({
-    initialize: function(permission) {
-        Object.extend(this, permission);
+// CollectionItem
+var CollectionItem = Class.create({
+    initialize: function(item) {
+        Object.extend(this, item);
     }
 });
 
-// Permissions Resource
-var PermissionsResource = Class.create({
+// CollectionResource
+var CollectionResource = Class.create({
     initialize: function(params) {
-        this.permissions = [];
-        this.path = '/permissions';
-        this.entityType = params.entityType || '';
-        this.entityUid = params.entityUid || '';
+        this.items = [];
+        this.path = params.path;
+        this.node = params.node;
     },
     start: function() {
         this.load();
     },
     load: function() {
-        this.permissions = [];
-        var params = new Hash();
-        params.set('method', 'get');
-        params.set('entityType', this.entityType);
-        params.set('entityUid', this.entityUid);
-        new Ajax.Request(this.path + '?' + Object.toQueryString(params), {
+        Log.debug('CollectionResource.load()');
+        this.items = [];
+        new Ajax.Request(this.path + '?' + Object.toQueryString(this.getParams()), {
             method: 'post',
             requestHeaders: ['Accept', 'application/json'],
             onSuccess: this.loadSuccess.bind(this),
             onFailure: this.loadFailure.bind(this)});
     },
+    getParams: function() {
+        var params = new Hash();
+        params.set('method', 'get');
+        return params;
+    },
     loadSuccess: function(response) {
+        Log.debug('CollectionResource.loadSuccess()');
         var resource = response.responseJSON;
-        resource.permissions.each(function(permission) {
-            this.permissions.push(new Permission(permission));
+        resource[this.node].each(function(item) {
+            this.items.push(this.getItem(item));
         }.bind(this));
         this.loaded = true;
         this.available = true;
         this.notify('loaded', this);
     },
     loadFailure: function() {
+        Log.warn('CollectionResource.loadFailure()');
         this.loaded = true;
         this.available = false;
         this.notify('loaded', this);
     },
-    getPermissions: function() {
-        return this.permissions;
+    getItems: function() {
+        return this.items;
+    },
+    getItem: function(item) {
+        return new CollectionItem(item);
+    }
+});
+
+// PermissionsResource
+var PermissionsResource = Class.create(CollectionResource, {
+    initialize: function($super, params) {
+        params = params || {};
+        params.path = '/permissions';
+        params.node = 'permissions';
+        this.entityType = params.entityType || '';
+        this.entityUid = params.entityUid || '';
+        $super(params);
+    },
+    getParams: function($super) {
+        var params = $super();
+        params.set('entityType', this.entityType);
+        params.set('entityUid', this.entityUid);
+        return params;
     }
 });
 Object.Event.extend(PermissionsResource);
 
-// Group
-var Group = Class.create({
-    initialize: function(group) {
-        Object.extend(this, group);
-    }
-});
-
-// Groups Resource
-var GroupsResource = Class.create({
-    initialize: function(params) {
-        this.groups = [];
-        this.path = '/groups';
-        this.element = $('groupsDiv');
-    },
-    start: function() {
-        this.load();
-    },
-    load: function() {
-        this.groups = [];
-        var params = new Hash();
-        params.set('method', 'get');
-        new Ajax.Request(this.path + '?' + Object.toQueryString(params), {
-            method: 'post',
-            requestHeaders: ['Accept', 'application/json'],
-            onSuccess: this.loadSuccess.bind(this),
-            onFailure: this.loadFailure.bind(this)});
-    },
-    loadSuccess: function(response) {
-        var resource = response.responseJSON;
-        resource.groups.each(function(group) {
-            this.groups.push(new Group(group));
-        }.bind(this));
-        this.loaded = true;
-        this.available = true;
-        this.notify('loaded', this);
-        this.render();
-    },
-    loadFailure: function() {
-        this.loaded = true;
-        this.available = false;
-        this.notify('loaded', this);
-    },
-    render: function() {
-        var groupElem;
-        this.groups.each(function(group) {
-            groupElem = new Element('div');
-            groupElem.appendChild(document.createTextNode(group.name));
-            this.element.appendChild(groupElem);
-        }.bind(this));
-    },
-    getGroups: function() {
-        return this.groups;
+// GroupsResource
+var GroupsResource = Class.create(CollectionResource, {
+    initialize: function($super, params) {
+        params = params || {};
+        params.path = '/groups';
+        params.node = 'groups';
+        $super(params);
     }
 });
 Object.Event.extend(GroupsResource);
 
 // Permissions Editor
 var PermissionsEditor = Class.create({
-    initialize: function(params) {
-        this.entityUid = params.entityUid || '';
-        this.entityType = params.entityType || '';
+    initialize: function() {
+        this.entityUid = null;
+        this.entityType = null;
         this.container = null;
         this.content = null;
-        this.groups = null;
-        this.users = null;
+        this.groupsTab = null;
+        this.usersTab = null;
         this.tabs = null;
         this.control = null;
+        this.permissionsResource = null;
+        this.groupsResource = null;
+        this.groupPermissionsForm = null;
+        this.usersResource = null;
+    },
+    open: function(params) {
+        this.entityUid = params.entityUid || '';
+        this.entityType = params.entityType || '';
+        this.permissionsResource = null;
         this.render();
-        var permissionsResource = new PermissionsResource({entityType: this.entityType, entityUid: this.entityUid});
-        permissionsResource.start();
-        var groupsResource = new GroupsResource();
-        groupsResource.start();
+        this.control.open();
     },
     render: function() {
         this.renderContent();
         this.renderContainer();
         this.renderModal();
-        new Control.Tabs(this.tabs);
-        this.control.open();
     },
     renderContent: function() {
-        // Content Box
-        this.content = new Element('div', {id: 'content'});
-        // Tab Bar
-        this.tabs = new Element('ul').addClassName('tabs');
-        this.tabs.insert(new Element('li').addClassName('tab').insert(new Element('a', {href: '#groups'}).insert('Groups')));
-        this.tabs.insert(new Element('li').addClassName('tab').insert(new Element('a', {href: '#users'}).insert('Users')));
-        this.content.insert(this.tabs);
-        // Users & Groups Tabs
-        this.groups = new Element('div', {id: 'groups'}).insert('Groups XXX').insert('<br>').insert('<br>').insert('<br>');
-        this.users = new Element('div', {id: 'users'}).insert('Users XXX').insert('<br>').insert('<br>').insert('<br>');
-        this.content.insert(this.groups);
-        this.content.insert(this.users);
+        if (!this.content) {
+            // Content Box
+            this.content = new Element('div').addClassName("permissionsContent");
+            // Tab Bar
+            this.tabs = new Element('ul').addClassName('tabs');
+            this.tabs.insert(new Element('li').addClassName('tab').insert(new Element('a', {href: '#groups'}).insert('Groups')));
+            this.tabs.insert(new Element('li').addClassName('tab').insert(new Element('a', {href: '#users'}).insert('Users')));
+            this.content.insert(this.tabs);
+            // Users & Groups Tabs
+            this.groupsTab = new Element('div', {id: 'groups'});
+            this.usersTab = new Element('div', {id: 'users'});
+            this.content.insert(this.groupsTab);
+            this.content.insert(this.usersTab);
+        }
     },
     renderContainer: function() {
-        this.container = new Element('div').addClassName("permissionsModalHead clearfix");
-        // Outer Box
-        var outer = new Element('div').addClassName("permissionsOuterDiv")
-                .insert(new Element('h2').update("Permissions Editor"));
-        // Inner Box
-        var inner = new Element('div').addClassName("permissionsInnerDiv clearfix");
-        inner.insert(this.content);
-        outer.insert(inner);
-        // Buttons Box
-        var buttonsOuter = new Element('div').addClassName("permissionsButtonsOuter clearfix");
-        var buttonsInner = new Element('div');
-        var doneButton = new Element('button').update("Done");
-        doneButton.observe("click", this.onDone.bindAsEventListener(this));
-        buttonsInner.insert(doneButton);
-        buttonsOuter.insert(buttonsInner);
-        outer.insert(buttonsOuter);
-        this.container.insert(outer);
+        if (!this.container) {
+            this.container = new Element('div').addClassName("permissionsModalHead clearfix");
+            // Outer Box
+            var outer = new Element('div').addClassName("permissionsOuterDiv")
+                    .insert(new Element('h2').update("Permissions Editor"));
+            // Inner Box
+            var inner = new Element('div').addClassName("permissionsInnerDiv clearfix");
+            inner.insert(this.content);
+            outer.insert(inner);
+            // Buttons Box
+            var buttonsOuter = new Element('div').addClassName("permissionsButtonsOuter clearfix");
+            var buttonsInner = new Element('div');
+            var doneButton = new Element('button').update("Done");
+            doneButton.observe("click", this.onDone.bindAsEventListener(this));
+            buttonsInner.insert(doneButton);
+            buttonsOuter.insert(buttonsInner);
+            outer.insert(buttonsOuter);
+            this.container.insert(outer);
+        }
     },
     renderModal: function() {
-        this.control = new Control.Modal(false, {
-            width: 420,
-            height: 120,
-            afterOpen: this.afterOpen.bind(this)});
-        this.control.container.insert(this.container);
+        if (!this.control) {
+            this.control = new Control.Modal(false, {
+                width: 420,
+                height: 120,
+                afterOpen: this.afterOpen.bind(this)});
+            this.control.container.insert(this.container);
+            new Control.Tabs(this.tabs);
+        }
     },
     afterOpen: function() {
+        Log.debug('PermissionsEditor.afterOpen()');
+        // Use ResourceLoader to observe loading of required Resources.
+        var resourceLoader = new ResourceLoader({ignoreDomLoaded: true});
+        resourceLoader.observe('loaded', this.loaded.bind(this));
+        // Add PermissionsResource.
+        if (!this.permissionsResource) {
+            this.permissionsResource = new PermissionsResource({entityType: this.entityType, entityUid: this.entityUid});
+            this.permissionsResource.observe('loaded', this.renderPermissions.bind(this));
+            resourceLoader.addResource(this.permissionsResource);
+        }
+        // Add GroupsResource.
+        if (!this.groupsResource) {
+            this.groupsResource = new GroupsResource();
+            this.groupsResource.observe('loaded', this.renderGroups.bind(this));
+            resourceLoader.addResource(this.groupsResource);
+        }
+        // Add UsersResource.
+        //if (!this.usersResource) {
+        //    this.usersResource = new CollectionResource({path: '/users'});
+        //    this.usersResource.observe('loaded', this.renderUsers.bind(this));
+        //    resourceLoader.addResource(this.usersResource);
+        // }
+        // Load everything!
+        resourceLoader.start();
+    },
+    loaded: function() {
+        Log.debug('PermissionsEditor.loaded()');
+    },
+    renderPermissions: function() {
+        Log.debug('PermissionsEditor.renderPermissions()');
+    },
+    renderGroups: function() {
+        Log.debug('PermissionsEditor.renderGroups()');
+        // Blank out groups tab.
+        this.groupsTab.update();
+        // Create permissions form.
+        if (!this.groupPermissionsForm) {
+            var groupPermissionsForm = new PermissionsForm({
+                entityUid: this.entityUid,
+                entityType: this.entityType,
+                principalType: 'GRP',
+                container: this.groupsTab});
+            groupPermissionsForm.render();
+        }
+        groupPermissionsForm.reset();
+        // Populate permissions form.
+        this.groupsResource.getItems().each(function(group) {
+            group.label = group.name;
+            groupPermissionsForm.addPrincipal(group);
+        }.bind(this));
+    },
+    renderUsers: function() {
     },
     onDone: function(event) {
         event.stop();
         this.control.close();
-        this.control = null;
+        return false;
+    }
+});
+Object.Event.extend(PermissionsEditor);
+
+// Permissions Form
+var PermissionsForm = Class.create({
+    initialize: function(params) {
+        this.entityUid = params.entityUid;
+        this.entityType = params.entityType;
+        this.principalType = params.principalType;
+        this.container = params.container;
+        this.form = null;
+        this.principalSelect = null;
+        this.entries = new Array(
+        {code: 'o', label: 'Own', odd: true},
+        {code: 'v', label: 'View', odd: false},
+        {code: 'c', label: 'Create', odd: true},
+        {code: 'm', label: 'Modify', odd: false},
+        {code: 'd', label: 'Delete', odd: true});
+    },
+    reset: function() {
+        if (this.principalSelect) {
+            this.principalSelect.update();
+        }
+    },
+    render: function() {
+
+        Log.debug('PermissionsForm.render()');
+
+        // The form.
+        this.form = new Element('form', {action: '/permissions'});
+        Event.observe(this.form, "submit", this.create.bind(this));
+
+        // Some hiddens.
+        this.form.insert(new Element('input', {type: 'hidden', name: 'entityUid', value: this.entityUid}));
+        this.form.insert(new Element('input', {type: 'hidden', name: 'entityType', value: this.entityType}));
+        this.form.insert(new Element('input', {type: 'hidden', name: 'principalType', value: this.principalType}));
+
+        // Principal select.
+        this.principalSelect = new Element('select', {
+            name: 'principalUid',
+            multiple: 'multiple',
+            size: 5});
+        this.form.insert(this.principalSelect);
+        this.form.insert(new Element('br'));
+
+        // ALLOW entries.
+        this.renderEntriesSelector(this.form);
+
+        // TODO: DENY entries.
+
+        // Create button.
+        var create = new Element('input', {type: 'button', value: 'Create'});
+        Event.observe(create, "click", this.create.bind(this));
+        this.form.insert(create);
+
+        // Add form to container.
+        this.container.insert(this.form);
+    },
+    renderEntriesSelector: function(parent) {
+
+        Log.debug('PermissionsForm.renderEntriesSelector()');
+
+        // Entries selection.
+        var entrySelect = this.getEntriesSelect('allowEntries');
+        var moreEntriesContainer = this.getMoreEntriesContainer('allowEntriesMore');
+        var selectMultiple = new Control.SelectMultiple(entrySelect, moreEntriesContainer, {
+            checkboxSelector: 'table.select_multiple_table tr td input[type=checkbox]',
+            nameSelector: 'table.select_multiple_table tr td.select_multiple_name',
+            afterChange: function() {
+                if (selectMultiple && selectMultiple.setSelectedRows)
+                    selectMultiple.setSelectedRows();
+            }
+        });
+
+        // Activate check boxes.
+        selectMultiple.setSelectedRows = function() {
+            this.checkboxes.each(function(checkbox) {
+                var tr = $(checkbox.parentNode.parentNode);
+                tr.removeClassName('selected');
+                if (checkbox.checked)
+                    tr.addClassName('selected');
+            });
+        }.bind(selectMultiple);
+        selectMultiple.checkboxes.each(function(checkbox) {
+            $(checkbox).observe('click', selectMultiple.setSelectedRows);
+        });
+        selectMultiple.setSelectedRows();
+
+        // More link.
+        var moreLink = new Element('a', {href: '', id: 'allowEntriesMoreOpen'}).update('More');
+        moreLink.observe('click', function(event) {
+            $(this.select).style.visibility = 'hidden';
+            new Effect.BlindDown(this.container, {
+                duration: 0.3
+            });
+            Event.stop(event);
+            return false;
+        }.bindAsEventListener(selectMultiple));
+
+        // Active close button.
+        moreEntriesContainer.closeButton.observe('click', function(event) {
+            $(this.select).style.visibility = 'visible';
+            new Effect.BlindUp(this.container, {
+                duration: 0.3
+            });
+            Event.stop(event);
+            return false;
+        }.bindAsEventListener(selectMultiple));
+
+        // Create and populate container.
+        var container = new Element('div').addClassName('permission_entries_select_container');
+        container.insert(entrySelect);
+        container.insert(moreLink);
+        container.insert(moreEntriesContainer);
+        container.insert(new Element('br'));
+
+        // Add container to parent.
+        parent.insert(container);
+    },
+    getEntriesSelect: function(id) {
+        Log.debug('PermissionsForm.getEntriesSelect()');
+        var e = new Element('select', {id: id});
+        this.entries.each(function(entry) {
+            e.insert(this.getEntryOption(entry));
+        }.bind(this));
+        return e;
+    },
+    getEntryOption: function(entry) {
+        return new Element('option', {value: entry.code}).update(entry.label);
+    },
+    getMoreEntriesContainer: function(id) {
+
+        Log.debug('PermissionsForm.getMoreEntriesContainer()');
+
+        // Table body.
+        var body = new Element('tbody');
+        this.entries.each(function(entry) {
+            body.insert(this.getMoreEntryRow(entry));
+        }.bind(this));
+
+        // Table.
+        var table = new Element('table', {cellspacing: 0, cellpadding: 0, width: '100%'}).addClassName('select_multiple_table');
+        table.insert(body);
+
+        // Container, title, button.
+        var e = new Element('div', {id: id, style: 'display:none;'}).addClassName('select_multiple_container');
+        e.insert(new Element('div').addClassName('select_multiple_header').update('Select Multiple Entries'));
+        e.insert(table);
+        var closeButton = new Element('input', {type: 'button', value: 'Done'});
+        e.insert(new Element('div').addClassName('select_multiple_submit').insert(closeButton));
+        e.closeButton = closeButton;
+
+        return e;
+    },
+    getMoreEntryRow: function(entry) {
+        Log.debug('PermissionsForm.getMoreEntryRow()');
+        var row = new Element('tr').addClassName(entry.odd ? 'odd' : 'even');
+        row.insert(new Element('td').addClassName('select_multiple_name').update(entry.label));
+        row.insert(new Element('td').addClassName('select_multiple_checkbox')
+                .update(new Element('input', {type: 'checkbox', value: entry.code})));
+        return row;
+    },
+    addPrincipal: function(principal) {
+        if (principal.uid && principal.label) {
+            this.principalSelect.insert(new Element('option', {value: principal.uid}).update(principal.label));
+        }
+    },
+    create: function(event) {
+        event.stop();
+        alert('Wooh!');
         return false;
     }
 });
