@@ -16,6 +16,7 @@
 <script src="/scripts/control/livepipe.js" type="text/javascript"></script>
 <script src="/scripts/control/window.js" type="text/javascript"></script>
 <script src="/scripts/control/tabs.js" type="text/javascript"></script>
+<script src="/scripts/control/selectmultiple.js" type="text/javascript"></script>
 <script src="/scripts/amee/resources.js" type="text/javascript"></script>
 
 <style type="text/css" media="screen">

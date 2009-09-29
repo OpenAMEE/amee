@@ -12,8 +12,10 @@
 
 <script type="text/javascript">
 
+    var PERMISSIONS_EDITOR = new PermissionsEditor();
+
     function openPermissionEditor(dataCategoryUid) {
-        new PermissionsEditor({entityUid: dataCategoryUid, entityType: 'DC'});
+        PERMISSIONS_EDITOR.open({entityUid: dataCategoryUid, entityType: 'DC'});
     }
 
     function deleteDataCategory(dataCategoryUid, dataCategoryPath) {
