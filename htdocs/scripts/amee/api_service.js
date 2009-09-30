@@ -674,13 +674,11 @@ var PermissionsEditor = Class.create({
         // Add PermissionsResource.
         if (!this.permissionsResource) {
             this.permissionsResource = new PermissionsResource({entityType: this.entityType, entityUid: this.entityUid});
-            this.permissionsResource.observe('loaded', this.renderPermissions.bind(this));
             resourceLoader.addResource(this.permissionsResource);
         }
         // Add GroupsResource.
         if (!this.groupsResource) {
             this.groupsResource = new GroupsResource();
-            this.groupsResource.observe('loaded', this.renderGroups.bind(this));
             resourceLoader.addResource(this.groupsResource);
         }
         // Add UsersResource.
@@ -694,9 +692,15 @@ var PermissionsEditor = Class.create({
     },
     loaded: function() {
         Log.debug('PermissionsEditor.loaded()');
+        this.renderPermissions();
+        this.renderGroups();
     },
     renderPermissions: function() {
         Log.debug('PermissionsEditor.renderPermissions()');
+        // Populate permissions list.
+        this.permissionsResource.getItems().each(function(permission) {
+            
+        }.bind(this));
     },
     renderGroups: function() {
         Log.debug('PermissionsEditor.renderGroups()');
@@ -773,9 +777,11 @@ var PermissionsForm = Class.create({
         // Principal search.
         this.principalSearch = new Element('input', {type: 'text', size: 10});
         left.insert(this.principalSearch);
+        left.insert('&nbsp;');
         var searchButton = new Element('input', {type: 'button', value: 'Search'});
         Event.observe(searchButton, "click", this.onPrincipalSearch.bind(this));
         left.insert(searchButton);
+        left.insert(new Element('br'));
         left.insert(new Element('br'));
 
         // Principal select.
@@ -786,13 +792,17 @@ var PermissionsForm = Class.create({
         left.insert(this.principalSelect);
 
         // Allow permission entries.
-        right.insert('Allow: ');
-        this.renderEntriesSelector(right, 'selectAllowEntries');
+        var allowBox = new Element('div');
+        allowBox.insert('Allow: ');
+        this.renderEntriesSelector(allowBox, 'selectAllowEntries');
+        right.insert(allowBox);
         right.insert(new Element('br'));
 
         // Deny permission entries.
-        right.insert('Deny: ');
-        this.renderEntriesSelector(right, 'selectDenyEntries');
+        var denyBox = new Element('div');
+        denyBox.insert('Deny: ');
+        this.renderEntriesSelector(denyBox, 'selectDenyEntries');
+        right.insert(denyBox);
         right.insert(new Element('br'));
 
         // Create button.
@@ -860,7 +870,6 @@ var PermissionsForm = Class.create({
         container.insert('&nbsp;');
         container.insert(moreLink);
         container.insert(moreEntriesContainer);
-        container.insert(new Element('br'));
 
         // Add container to parent.
         parent.insert(container);
