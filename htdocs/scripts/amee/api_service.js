@@ -503,7 +503,7 @@ var CollectionItem = Class.create({
 // CollectionResource
 var CollectionResource = Class.create({
     initialize: function(params) {
-        this.items = [];
+        this.items = null;
         this.path = params.path;
         this.node = params.node;
     },
@@ -591,7 +591,18 @@ var GroupsResource = Class.create(CollectionResource, {
 });
 Object.Event.extend(GroupsResource);
 
-// Permissions Editor
+// UsersResource
+var UsersResource = Class.create(CollectionResource, {
+    initialize: function($super, params) {
+        params = params || {};
+        params.path = '/users';
+        params.node = 'users';
+        $super(params);
+    }
+});
+Object.Event.extend(UsersResource);
+
+// PermissionsEditor
 var PermissionsEditor = Class.create({
     initialize: function() {
         this.entityUid = null;
@@ -603,36 +614,46 @@ var PermissionsEditor = Class.create({
         this.tabs = null;
         this.control = null;
         this.permissionsResource = null;
-        this.groupsResource = null;
-        this.groupPermissionsForm = null;
-        this.usersResource = null;
     },
     open: function(params) {
         this.entityUid = params.entityUid || '';
         this.entityType = params.entityType || '';
-        this.permissionsResource = null;
+        this.permissionsResource = new PermissionsResource({entityType: this.entityType, entityUid: this.entityUid});
         this.render();
         this.control.open();
     },
     render: function() {
-        this.renderContent();
+        this.renderTabs();
         this.renderContainer();
         this.renderModal();
     },
-    renderContent: function() {
+    renderTabs: function() {
         if (!this.content) {
             // Content Box
             this.content = new Element('div').addClassName("permissionsContent");
             // Tab Bar
             this.tabs = new Element('ul').addClassName('tabs');
-            this.tabs.insert(new Element('li').addClassName('tab').insert(new Element('a', {href: '#groups'}).insert('Groups')));
-            this.tabs.insert(new Element('li').addClassName('tab').insert(new Element('a', {href: '#users'}).insert('Users')));
             this.content.insert(this.tabs);
-            // Users & Groups Tabs
-            this.groupsTab = new Element('div', {id: 'groups'});
-            this.usersTab = new Element('div', {id: 'users'});
-            this.content.insert(this.groupsTab);
-            this.content.insert(this.usersTab);
+            // Groups tab.
+            this.groupsTab = new PrincipalsTab({
+                permissionsEditor: this,
+                id: 'groups',
+                title: 'Groups',
+                principalType: 'GRP',
+                principalsResource: new GroupsResource()});
+            // Users tab.
+            this.usersTab = new PrincipalsTab({
+                permissionsEditor: this,
+                id: 'users',
+                title: 'Users',
+                principalType: 'USR',
+                principalsResource: new UsersResource()});
+            // Add tabs.
+            this.tabs.insert(this.groupsTab.getTab());
+            this.tabs.insert(this.usersTab.getTab());
+            // Add tabs content.
+            this.content.insert(this.groupsTab.getTabContent());
+            this.content.insert(this.usersTab.getTabContent());
         }
     },
     renderContainer: function() {
@@ -671,59 +692,21 @@ var PermissionsEditor = Class.create({
         // Use ResourceLoader to observe loading of required Resources.
         var resourceLoader = new ResourceLoader({ignoreDomLoaded: true});
         resourceLoader.observe('loaded', this.loaded.bind(this));
-        // Add PermissionsResource.
-        if (!this.permissionsResource) {
-            this.permissionsResource = new PermissionsResource({entityType: this.entityType, entityUid: this.entityUid});
+        // Handle PermissionsResource.
+        if (!this.permissionsResource.getItems()) {
             resourceLoader.addResource(this.permissionsResource);
         }
-        // Add GroupsResource.
-        if (!this.groupsResource) {
-            this.groupsResource = new GroupsResource();
-            resourceLoader.addResource(this.groupsResource);
-        }
-        // Add UsersResource.
-        //if (!this.usersResource) {
-        //    this.usersResource = new CollectionResource({path: '/users'});
-        //    this.usersResource.observe('loaded', this.renderUsers.bind(this));
-        //    resourceLoader.addResource(this.usersResource);
-        // }
-        // Load everything!
+        // Handle Groups.
+        this.groupsTab.afterOpen(resourceLoader);
+        // Handle Users.
+        this.usersTab.afterOpen(resourceLoader);
+        // Start Resources.
         resourceLoader.start();
     },
     loaded: function() {
         Log.debug('PermissionsEditor.loaded()');
-        this.renderPermissions();
-        this.renderGroups();
-    },
-    renderPermissions: function() {
-        Log.debug('PermissionsEditor.renderPermissions()');
-        // Populate permissions list.
-        this.permissionsResource.getItems().each(function(permission) {
-            
-        }.bind(this));
-    },
-    renderGroups: function() {
-        Log.debug('PermissionsEditor.renderGroups()');
-        // Blank out groups tab.
-        this.groupsTab.update();
-        // Create permissions form.
-        if (!this.groupPermissionsForm) {
-            var groupPermissionsForm = new PermissionsForm({
-                permissionsResource: this.permissionsResource,
-                entityUid: this.entityUid,
-                entityType: this.entityType,
-                principalType: 'GRP',
-                container: this.groupsTab});
-            groupPermissionsForm.render();
-        }
-        groupPermissionsForm.reset();
-        // Populate permissions form.
-        this.groupsResource.getItems().each(function(group) {
-            group.label = group.name;
-            groupPermissionsForm.addPrincipal(group);
-        }.bind(this));
-    },
-    renderUsers: function() {
+        this.groupsTab.render();
+        this.usersTab.render();
     },
     onDone: function(event) {
         event.stop();
@@ -733,16 +716,95 @@ var PermissionsEditor = Class.create({
 });
 Object.Event.extend(PermissionsEditor);
 
+// PrincipalsTab
+var PrincipalsTab = Class.create({
+    initialize: function(params) {
+        this.permissionsEditor = params.permissionsEditor;
+        this.id = params.id;
+        this.title = params.title;
+        this.principalType = params.principalType;
+        this.principalsResource = params.principalsResource;
+        this.tab = this.getTab();
+        this.tabContent = this.getTabContent();
+        this.form = null;
+    },
+    afterOpen: function(resourceLoader) {
+        if (!this.principalsResource.getItems()) {
+            resourceLoader.addResource(this.principalsResource);
+        }
+    },
+    render: function() {
+        // this.renderPermissions();
+        this.renderTabContent();
+    },
+    renderTabContent: function() {
+        Log.debug('PrincipalsTab.renderTabContent()');
+        // Create permissions form.
+        if (!this.form) {
+            this.form = new PermissionsForm({
+                permissionsEditor: this.permissionsEditor,
+                principalType: this.principalType,
+                parent: this.tabContent});
+            this.form.render();
+            // Populate principals list.
+            if (this.principalsResource.getItems()) {
+                this.principalsResource.getItems().each(function(principal) {
+                    this.form.addPrincipal(principal);
+                }.bind(this));
+            }
+        }
+    },
+    renderPermissions: function() {
+
+        Log.debug('PrincipalsTab.renderPermissions()');
+
+        var row;
+
+        // Table body.
+        var tBody = new Element('tbody');
+
+        // Permission entry rows.
+        this.permissionsResource.getItems().each(function(permission) {
+            row = new Element('tr');
+            row.insert(new Element('td').update(permission.uid));
+            row.insert(new Element('td')
+                    .update('hello'));
+            tBody.insert(row);
+        }.bind(this));
+
+        // Permissions table.
+        var table = new Element('table');
+        table.insert(tBody);
+
+        // Box.
+        var box = new Element('div');
+        box.insert(table);
+    },
+    getTab: function() {
+        if (!this.tab) {
+            this.tab = new Element('li').addClassName('tab').insert(new Element('a', {href: '#' + this.id}).insert(this.title));
+        }
+        return this.tab;
+    },
+    getTabContent: function() {
+        if (!this.tabContent) {
+            this.tabContent = new Element('div', {id: this.id});
+        }
+        return this.tabContent;
+    }
+});
+
 // PermissionsForm
 var PermissionsForm = Class.create({
     initialize: function(params) {
+        this.permissionsEditor = params.permissionsEditor;
         this.permissionsResource = params.permissionsResource;
-        this.entityUid = params.entityUid;
-        this.entityType = params.entityType;
         this.principalType = params.principalType;
-        this.container = params.container;
+        this.parent = params.parent;
         this.form = null;
         this.principalSelect = null;
+        this.allowSelector = null;
+        this.denySelector = null;
         this.entries = new Array(
         {code: 'o', label: 'Own', odd: true},
         {code: 'v', label: 'View', odd: false},
@@ -759,68 +821,112 @@ var PermissionsForm = Class.create({
 
         Log.debug('PermissionsForm.render()');
 
-        // The form.
-        this.form = new Element('form', {action: '/permissions'});
-        Event.observe(this.form, "submit", this.onCreatePermission.bind(this));
+        // Only render form once.
+        if (!this.form) {
 
-        // Some hiddens.
-        this.form.insert(new Element('input', {type: 'hidden', name: 'entityUid', value: this.entityUid}));
-        this.form.insert(new Element('input', {type: 'hidden', name: 'entityType', value: this.entityType}));
-        this.form.insert(new Element('input', {type: 'hidden', name: 'principalType', value: this.principalType}));
+            // The form.
+            this.form = new Element('form', {action: '/permissions'});
+            Event.observe(this.form, "submit", this.onCreatePermission.bind(this));
 
-        // Left & right side.
-        var left = new Element('div').addClassName('permissionsFormLeft');
-        var right = new Element('div').addClassName('permissionsFormRight');
-        this.form.insert(left);
-        this.form.insert(right);
+            // Left & right side.
+            var left = new Element('div').addClassName('permissionsFormLeft');
+            var right = new Element('div').addClassName('permissionsFormRight');
+            this.form.insert(left);
+            this.form.insert(right);
 
-        // Principal search.
-        this.principalSearch = new Element('input', {type: 'text', size: 10});
-        left.insert(this.principalSearch);
-        left.insert('&nbsp;');
-        var searchButton = new Element('input', {type: 'button', value: 'Search'});
-        Event.observe(searchButton, "click", this.onPrincipalSearch.bind(this));
-        left.insert(searchButton);
-        left.insert(new Element('br'));
-        left.insert(new Element('br'));
+            // Principal search.
+            this.principalSearch = new Element('input', {type: 'text', size: 10});
+            left.insert(this.principalSearch);
+            left.insert('&nbsp;');
+            var searchButton = new Element('input', {type: 'button', value: 'Search'});
+            Event.observe(searchButton, "click", this.onPrincipalSearch.bind(this));
+            left.insert(searchButton);
+            left.insert(new Element('br'));
+            left.insert(new Element('br'));
 
-        // Principal select.
-        this.principalSelect = new Element('select', {
-            name: 'principalUid',
-            multiple: 'multiple',
-            size: 5});
-        left.insert(this.principalSelect);
+            // Principal select.
+            this.principalSelect = new Element('select', {
+                name: 'principalUid',
+                multiple: 'multiple',
+                size: 5});
+            left.insert(this.principalSelect);
 
-        // Allow permission entries.
-        var allowBox = new Element('div');
-        allowBox.insert('Allow: ');
-        this.renderEntriesSelector(allowBox, 'selectAllowEntries');
-        right.insert(allowBox);
-        right.insert(new Element('br'));
+            // Allow permission entries.
+            var allowBox = new Element('div');
+            allowBox.insert('Allow: ');
+            this.allowSelector = new PermissionEntrySelector({entries: this.entries});
+            right.insert(this.allowSelector.getElement());
+            right.insert(allowBox);
+            right.insert(new Element('br'));
 
-        // Deny permission entries.
-        var denyBox = new Element('div');
-        denyBox.insert('Deny: ');
-        this.renderEntriesSelector(denyBox, 'selectDenyEntries');
-        right.insert(denyBox);
-        right.insert(new Element('br'));
+            // Deny permission entries.
+            var denyBox = new Element('div');
+            denyBox.insert('Deny: ');
+            this.denySelector = new PermissionEntrySelector({entries: this.entries});
+            right.insert(this.denySelector.getElement());
+            right.insert(denyBox);
+            right.insert(new Element('br'));
 
-        // Create button.
-        var create = new Element('input', {type: 'button', value: 'Create'});
-        Event.observe(create, "click", this.onCreatePermission.bind(this));
-        right.insert(create);
+            // Create button.
+            var create = new Element('input', {type: 'button', value: 'Create'});
+            Event.observe(create, "click", this.onCreatePermission.bind(this));
+            right.insert(create);
 
-        // Add form to container.
-        this.container.insert(this.form);
+            // Add form to container.
+            this.parent.insert(this.form);
+        }
     },
-    renderEntriesSelector: function(parent, id) {
+    addPrincipal: function(principal) {
+        if (!principal.label) {
+            principal.label = principal.name;
+        }
+        if (principal.uid && principal.label) {
+            this.principalSelect.insert(new Element('option', {value: principal.uid}).update(principal.label));
+        }
+    },
+    onPrincipalSearch: function(event) {
+        event.stop();
+        alert('Search!');
+        return false;
+    },
+    onCreatePermission: function(event) {
+        Log.debug('PermissionsForm.onCreatePermission()');
+        event.stop();
+        var params = new Hash();
+        params.set('allowEntries', this.allowSelector.getSelect().value);
+        params.set('denyEntries', this.denySelector.getSelect().value);
+        params.set('principalUid', this.principalSelect.value);
+        params.set('principalType', this.principalType);
+        this.permissionsEditor.permissionsResource.create(params);
+        Log.debug('PermissionsForm.onCreatePermission() done');
+        return false;
+    }
+});
 
-        Log.debug('PermissionsForm.renderEntriesSelector()');
+// PermissionsForm
+var PermissionEntrySelector = Class.create({
+    initialize: function(params) {
+        this.entries = params.entries;
+        this.element = null;
+        this.select = null;
+        this.render();
+    },
+    getElement: function() {
+        return this.element;
+    },
+    getSelect: function() {
+        return this.select;
+    },
+    render: function() {
 
-        // Entries selection.
-        var entrySelect = this.getEntriesSelect(id);
-        var moreEntriesContainer = this.getMoreEntriesContainer('allowEntriesMore');
-        var selectMultiple = new Control.SelectMultiple(entrySelect, moreEntriesContainer, {
+        Log.debug('PermissionEntrySelector.render()');
+
+        // Main select control.
+        this.renderSelect();
+
+        // More entries selector.
+        var moreEntriesContainer = this.getMoreEntriesContainer();
+        var selectMultiple = new Control.SelectMultiple(this.select, moreEntriesContainer, {
             checkboxSelector: 'table.select_multiple_table tr td input[type=checkbox]',
             nameSelector: 'table.select_multiple_table tr td.select_multiple_name',
             afterChange: function() {
@@ -844,9 +950,9 @@ var PermissionsForm = Class.create({
         selectMultiple.setSelectedRows();
 
         // More link.
-        var moreLink = new Element('a', {href: '', id: 'allowEntriesMoreOpen'}).update('More');
+        var moreLink = new Element('a', {href: ''}).update('More');
         moreLink.observe('click', function(event) {
-            $(this.select).style.visibility = 'hidden';
+            this.select.style.visibility = 'hidden';
             new Effect.BlindDown(this.container, {
                 duration: 0.3
             });
@@ -856,7 +962,7 @@ var PermissionsForm = Class.create({
 
         // Active close button.
         moreEntriesContainer.closeButton.observe('click', function(event) {
-            $(this.select).style.visibility = 'visible';
+            this.select.style.visibility = 'visible';
             new Effect.BlindUp(this.container, {
                 duration: 0.3
             });
@@ -865,30 +971,27 @@ var PermissionsForm = Class.create({
         }.bindAsEventListener(selectMultiple));
 
         // Create and populate container.
-        var container = new Element('div').addClassName('permission_entries_select_container');
-        container.insert(entrySelect);
-        container.insert('&nbsp;');
-        container.insert(moreLink);
-        container.insert(moreEntriesContainer);
-
-        // Add container to parent.
-        parent.insert(container);
+        this.element = new Element('div').addClassName('permission_entries_select_container');
+        this.element.insert(this.select);
+        this.element.insert('&nbsp;');
+        this.element.insert(moreLink);
+        this.element.insert(moreEntriesContainer);
     },
-    getEntriesSelect: function(id) {
-        Log.debug('PermissionsForm.getEntriesSelect()');
-        var e = new Element('select', {id: id});
-        e.insert(new Element('option', {value: ''}).update('(None)'));
+    renderSelect: function() {
+        Log.debug('PermissionEntrySelector.renderSelect()');
+        this.select = new Element('select');
+        this.select.insert(new Element('option', {value: ''}).update('(None)'));
         this.entries.each(function(entry) {
-            e.insert(this.getEntryOption(entry));
+            this.select.insert(this.getEntryOption(entry));
         }.bind(this));
-        return e;
+        return this.select;
     },
     getEntryOption: function(entry) {
         return new Element('option', {value: entry.code}).update(entry.label);
     },
-    getMoreEntriesContainer: function(id) {
+    getMoreEntriesContainer: function() {
 
-        Log.debug('PermissionsForm.getMoreEntriesContainer()');
+        Log.debug('PermissionEntrySelector.getMoreEntriesContainer()');
 
         // Table body.
         var body = new Element('tbody');
@@ -901,7 +1004,7 @@ var PermissionsForm = Class.create({
         table.insert(body);
 
         // Container, title, button.
-        var e = new Element('div', {id: id, style: 'display:none;'}).addClassName('select_multiple_container');
+        var e = new Element('div', {style: 'display:none;'}).addClassName('select_multiple_container');
         e.insert(new Element('div').addClassName('select_multiple_header').update('Select Multiple Entries'));
         e.insert(table);
         var closeButton = new Element('input', {type: 'button', value: 'Done'});
@@ -911,33 +1014,12 @@ var PermissionsForm = Class.create({
         return e;
     },
     getMoreEntryRow: function(entry) {
-        Log.debug('PermissionsForm.getMoreEntryRow()');
+        Log.debug('PermissionEntrySelector.getMoreEntryRow()');
         var row = new Element('tr').addClassName(entry.odd ? 'odd' : 'even');
         row.insert(new Element('td').addClassName('select_multiple_name').update(entry.label));
         row.insert(new Element('td').addClassName('select_multiple_checkbox')
                 .update(new Element('input', {type: 'checkbox', value: entry.code})));
         return row;
-    },
-    addPrincipal: function(principal) {
-        if (principal.uid && principal.label) {
-            this.principalSelect.insert(new Element('option', {value: principal.uid}).update(principal.label));
-        }
-    },
-    onPrincipalSearch: function(event) {
-        event.stop();
-        alert('Search!');
-        return false;
-    },
-    onCreatePermission: function(event) {
-        Log.debug('PermissionsForm.onCreatePermission()');
-        event.stop();
-        var params = new Hash();
-        params.set('allowEntries', $('selectAllowEntries').value);
-        params.set('denyEntries', $('selectDenyEntries').value);
-        params.set('principalUid', this.principalSelect.value);
-        params.set('principalType', this.principalType);
-        this.permissionsResource.create(params);
-        Log.debug('PermissionsForm.onCreatePermission() done');
-        return false;
     }
 });
+
