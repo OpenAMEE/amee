@@ -22,10 +22,13 @@
 package com.amee.domain.auth;
 
 import com.amee.domain.AMEEStatus;
+import com.amee.core.APIUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.json.JSONException;
 import org.json.JSONArray;
+import org.w3c.dom.Element;
+import org.w3c.dom.Document;
 
 import java.io.Serializable;
 
@@ -167,6 +170,14 @@ public class PermissionEntry implements Serializable {
         obj.put("status", getStatus().getName());
         obj.put("allow", getAllow());
         return obj;
+    }
+
+    public Element getElement(Document document) {
+        Element element = document.createElement("PermissionEntry");
+        element.appendChild(APIUtils.getElement(document, "Value", getValue()));
+        element.appendChild(APIUtils.getElement(document, "Status", getStatus().getName()));
+        element.appendChild(APIUtils.getElement(document, "Allow", getAllow().toString()));
+        return element;
     }
 
     /**

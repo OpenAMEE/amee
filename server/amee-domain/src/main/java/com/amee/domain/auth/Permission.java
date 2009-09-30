@@ -11,10 +11,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Collection;
 
 /**
  * Permission represents the permissions (rights) that a 'principal' has over an 'entity'.
@@ -113,20 +113,42 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public JSONObject getJSONObject() throws JSONException {
+        return getJSONObject(false);
+    }
+
+    public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
-        obj.put("created", getCreated());
-        obj.put("modified", getModified());
-        obj.put("environmentUid", getEnvironment().getUid());
+        JSONArray entriesArr = new JSONArray();
+        for (PermissionEntry pe : this.getEntries()) {
+            entriesArr.put(pe.getJSONObject());
+        }
+        obj.put("entries", entriesArr);
+        if (detailed) {
+            obj.put("created", getCreated());
+            obj.put("modified", getModified());
+            obj.put("environmentUid", getEnvironment().getUid());
+        }
         return obj;
     }
 
     public Element getElement(Document document) {
+        return getElement(document, false);
+    }
+
+    public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("Permission");
         element.setAttribute("uid", getUid());
-        element.setAttribute("created", getCreated().toString());
-        element.setAttribute("modified", getModified().toString());
-        element.appendChild(getEnvironment().getIdentityElement(document));
+        Element entriesElement = document.createElement("Entries");
+        for (PermissionEntry pe : this.getEntries()) {
+            entriesElement.appendChild(pe.getElement(document));
+        }
+        element.appendChild(entriesElement);
+        if (detailed) {
+            element.setAttribute("created", getCreated().toString());
+            element.setAttribute("modified", getModified().toString());
+            element.appendChild(getEnvironment().getIdentityElement(document));
+        }
         return element;
     }
 
