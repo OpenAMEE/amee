@@ -73,6 +73,7 @@
                     <option value="${u.uid}">${u.username}</option>
                 </#list>
             </select><br/>
+            Groups: <input name='groups' type='text' size='60'/> (comma separated list of case-sensitive group names)<br/> 
             Name: <input name='name' type='text' size='60'/><br/>
             Username: <input name='username' type='text' size='30'/><br/>
             Password: <input name='password' type='password' size='30'/><br/>
