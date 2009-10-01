@@ -67,17 +67,16 @@
     <p>
 
         <form action='/environments/${environment.uid}/users' method='POST' enctype='application/x-www-form-urlencoded'>
-            Clone from: <select name="cloneUserUid">
-                <option value="">(New User)</option>
+            Groups: clone from <select name="cloneUserUid">
+                <option value="">(Select User)</option>
                 <#list users as u>
                     <option value="${u.uid}">${u.username}</option>
                 </#list>
-            </select><br/>
-            Groups: <input name='groups' type='text' size='60'/> (comma separated list of case-sensitive group names)<br/> 
+            </select> OR enter groups <input name='groups' type='text' size='10'/> (comma separated case-sensitive names).<br/>
             Name: <input name='name' type='text' size='60'/><br/>
             Username: <input name='username' type='text' size='30'/><br/>
             Password: <input name='password' type='password' size='30'/><br/>
-            Email: <input name='email' type='text' size='60'/><br/><br/>
+            Email: <input name='email' type='text' size='60'/><br/>
             API Version: <select name='apiVersion'> <br/>
             <#list apiVersions as apiVersion>
                 <option value='${apiVersion.version}'>${apiVersion.version}</option>
