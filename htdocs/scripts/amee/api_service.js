@@ -173,9 +173,8 @@ var ApiService = Class.create({
         var url = window.location.href;
         if (params) {
             params = params.toQueryParams();
-        } else {
-            params = new Hash();
         }
+        params = new Hash(params);
         params.set('method', 'get');
         new Ajax.Request(url + '?' + Object.toQueryString(params), {
             method: 'post',
@@ -684,7 +683,13 @@ var PermissionsEditor = Class.create({
                 height: 120,
                 afterOpen: this.afterOpen.bind(this)});
             this.control.container.insert(this.container);
-            new Control.Tabs(this.tabs);
+            new Control.Tabs(this.tabs, {afterChange: this.afterTabChange.bind(this)});
+        }
+    },
+    afterTabChange: function(container) {
+        if (container.tab && container.tab.scrollBar) {
+            Log.debug('PermissionsEditor.afterTabChange()');
+            container.tab.scrollBar.recalculateLayout();
         }
     },
     afterOpen: function() {
@@ -706,7 +711,9 @@ var PermissionsEditor = Class.create({
     loaded: function() {
         Log.debug('PermissionsEditor.loaded()');
         this.groupsTab.render();
+        this.groupsTab.scrollBar = new Control.ScrollBar(this.groupsTab.scrollBarContent, this.groupsTab.scrollBarTrack);
         this.usersTab.render();
+        this.usersTab.scrollBar = new Control.ScrollBar(this.usersTab.scrollBarContent, this.usersTab.scrollBarTrack);
     },
     onDone: function(event) {
         event.stop();
@@ -727,6 +734,7 @@ var PrincipalsTab = Class.create({
         this.tab = this.getTab();
         this.tabContent = this.getTabContent();
         this.form = null;
+        this.scrollBar = null;
     },
     afterOpen: function(resourceLoader) {
         if (!this.principalsResource.getItems()) {
@@ -734,17 +742,53 @@ var PrincipalsTab = Class.create({
         }
     },
     render: function() {
-        // this.renderPermissions();
-        this.renderTabContent();
+        this.renderPermissionsBox();
+        this.renderPermissionEntries();
+        this.renderPermissionsForm();
     },
-    renderTabContent: function() {
-        Log.debug('PrincipalsTab.renderTabContent()');
-        // Create permissions form.
+    renderPermissionsBox: function() {
+        if (!this.permissionsTableBody) {
+            // Create table.
+            this.permissionsTableBody = new Element('tbody');
+            var table = new Element('table', {cellspacing: 0, cellpadding: 0, width: '100%'});
+            table.insert(this.permissionsTableBody);
+            // Create scroll box.
+            this.tabContent.insert(this.getElementInScrollBar(table));
+        }
+    },
+    getElementInScrollBar: function(element) {
+        // Create scroll bar content.
+        this.scrollBarContent = new Element('div').addClassName('scrollbar_content');
+        this.scrollBarContent.insert(element);
+        // Create scroll bar track.
+        this.scrollBarTrack = new Element('div').addClassName('scrollbar_track');
+        var scrollBarHandle = new Element('div').addClassName('scrollbar_handle');
+        this.scrollBarTrack.insert(scrollBarHandle);
+        // Create scroll bar container.
+        var scrollBarContainer = new Element('div').addClassName('scrollbar_container');
+        scrollBarContainer.insert(this.scrollBarTrack);
+        scrollBarContainer.insert(this.scrollBarContent);
+        // Return the container which ultimately wraps the element.
+        return scrollBarContainer;
+    },
+    renderPermissionEntries: function() {
+        var row;
+        this.permissionsTableBody.update();
+        this.permissionsEditor.permissionsResource.getItems().each(function(permission) {
+            row = new Element('tr');
+            row.insert(new Element('td').update(permission.uid));
+            row.insert(new Element('td')
+                    .update('hello'));
+            this.permissionsTableBody.insert(row);
+        }.bind(this));
+    },
+    renderPermissionsForm: function() {
+        Log.debug('PrincipalsTab.renderPermissionsForm()');
         if (!this.form) {
+            // Create permissions form.
             this.form = new PermissionsForm({
                 permissionsEditor: this.permissionsEditor,
-                principalType: this.principalType,
-                parent: this.tabContent});
+                principalType: this.principalType});
             this.form.render();
             // Populate principals list.
             if (this.principalsResource.getItems()) {
@@ -752,33 +796,9 @@ var PrincipalsTab = Class.create({
                     this.form.addPrincipal(principal);
                 }.bind(this));
             }
+            // Add form element.
+            this.tabContent.insert(this.form.getElement());
         }
-    },
-    renderPermissions: function() {
-
-        Log.debug('PrincipalsTab.renderPermissions()');
-
-        var row;
-
-        // Table body.
-        var tBody = new Element('tbody');
-
-        // Permission entry rows.
-        this.permissionsResource.getItems().each(function(permission) {
-            row = new Element('tr');
-            row.insert(new Element('td').update(permission.uid));
-            row.insert(new Element('td')
-                    .update('hello'));
-            tBody.insert(row);
-        }.bind(this));
-
-        // Permissions table.
-        var table = new Element('table');
-        table.insert(tBody);
-
-        // Box.
-        var box = new Element('div');
-        box.insert(table);
     },
     getTab: function() {
         if (!this.tab) {
@@ -789,6 +809,7 @@ var PrincipalsTab = Class.create({
     getTabContent: function() {
         if (!this.tabContent) {
             this.tabContent = new Element('div', {id: this.id});
+            this.tabContent.tab = this;
         }
         return this.tabContent;
     }
@@ -800,8 +821,7 @@ var PermissionsForm = Class.create({
         this.permissionsEditor = params.permissionsEditor;
         this.permissionsResource = params.permissionsResource;
         this.principalType = params.principalType;
-        this.parent = params.parent;
-        this.form = null;
+        this.element = null;
         this.principalSelect = null;
         this.allowSelector = null;
         this.denySelector = null;
@@ -822,17 +842,17 @@ var PermissionsForm = Class.create({
         Log.debug('PermissionsForm.render()');
 
         // Only render form once.
-        if (!this.form) {
+        if (!this.element) {
 
             // The form.
-            this.form = new Element('form', {action: '/permissions'});
-            Event.observe(this.form, "submit", this.onCreatePermission.bind(this));
+            this.element = new Element('form', {action: '/permissions'});
+            Event.observe(this.element, "submit", this.onCreatePermission.bind(this));
 
             // Left & right side.
             var left = new Element('div').addClassName('permissionsFormLeft');
             var right = new Element('div').addClassName('permissionsFormRight');
-            this.form.insert(left);
-            this.form.insert(right);
+            this.element.insert(left);
+            this.element.insert(right);
 
             // Principal search.
             this.principalSearch = new Element('input', {type: 'text', size: 10});
@@ -871,9 +891,6 @@ var PermissionsForm = Class.create({
             var create = new Element('input', {type: 'button', value: 'Create'});
             Event.observe(create, "click", this.onCreatePermission.bind(this));
             right.insert(create);
-
-            // Add form to container.
-            this.parent.insert(this.form);
         }
     },
     addPrincipal: function(principal) {
@@ -900,22 +917,19 @@ var PermissionsForm = Class.create({
         this.permissionsEditor.permissionsResource.create(params);
         Log.debug('PermissionsForm.onCreatePermission() done');
         return false;
+    },
+    getElement: function() {
+        return this.element;
     }
 });
 
-// PermissionsForm
+// PermissionEntrySelector
 var PermissionEntrySelector = Class.create({
     initialize: function(params) {
         this.entries = params.entries;
         this.element = null;
         this.select = null;
         this.render();
-    },
-    getElement: function() {
-        return this.element;
-    },
-    getSelect: function() {
-        return this.select;
     },
     render: function() {
 
@@ -1020,6 +1034,12 @@ var PermissionEntrySelector = Class.create({
         row.insert(new Element('td').addClassName('select_multiple_checkbox')
                 .update(new Element('input', {type: 'checkbox', value: entry.code})));
         return row;
+    },
+    getElement: function() {
+        return this.element;
+    },
+    getSelect: function() {
+        return this.select;
     }
 });
 
