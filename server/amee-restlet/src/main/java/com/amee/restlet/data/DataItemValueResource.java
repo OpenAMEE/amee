@@ -257,7 +257,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
             Date startDate = new StartEndDate(form.getFirstValue("startDate"));
 
-            // Can't ammend the startDate of the first ItemValue in a history (startDate == DI.startDate)
+            // Can't amend the startDate of the first ItemValue in a history (startDate == DI.startDate)
             if (itemValue.getStartDate().equals(getDataItem().getStartDate())) {
                 log.error("acceptRepresentation() - badRequest: trying to update the startDate of the first DIV in a history.");
                 badRequest(APIFault.INVALID_RESOURCE_MODIFICATION);
