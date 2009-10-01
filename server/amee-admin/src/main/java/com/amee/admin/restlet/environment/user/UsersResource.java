@@ -183,7 +183,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                             groupNames = form.getFirstValue("groups");
                             for (String groupName : groupNames.split(",")) {
                                 groupName = groupName.trim();
-                                group = groupService.getGroupByName(getActiveEnvironment(), groupName);
+                                group = groupService.getGroupByName(environmentBrowser.getEnvironment(), groupName);
                                 if (group != null) {
                                     newGroupPrincipal = new GroupPrincipal(group, newUser);
                                     groupService.save(newGroupPrincipal);
