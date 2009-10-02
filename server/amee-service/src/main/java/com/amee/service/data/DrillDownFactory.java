@@ -89,9 +89,11 @@ public class DrillDownFactory implements CacheableFactory {
             keyBuilder.append("DrillDown_");
             keyBuilder.append(dataCategory.getUid());
             for (Choice selection : selections) {
+                keyBuilder.append("_SL_");
                 if (StringUtils.isNotBlank(selection.getValue())) {
-                    keyBuilder.append("_SL_");
                     keyBuilder.append(selection.getValue().hashCode());
+                } else {
+                    keyBuilder.append("BLANK");
                 }
             }
             if (startDate != null) {

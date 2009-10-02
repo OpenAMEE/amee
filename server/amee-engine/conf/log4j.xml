@@ -69,7 +69,7 @@
     <!-- ############### AMEE ################### -->
 
     <category name="com.amee">
-        <priority value="DEBUG"/>
+        <priority value="INFO"/>
     </category>
 
 
@@ -107,7 +107,7 @@
         <priority value="INFO"/>
         <!--<appender-ref ref="FILE"/>-->
         <appender-ref ref="CONSOLE"/>
-        <!--<appender-ref ref="EMAIL"/>-->
+        <appender-ref ref="EMAIL"/>
     </root>
 
 

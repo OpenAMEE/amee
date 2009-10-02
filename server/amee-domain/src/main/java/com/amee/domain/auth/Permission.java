@@ -1,6 +1,7 @@
 package com.amee.domain.auth;
 
 import com.amee.domain.*;
+import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
@@ -10,6 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -78,11 +80,25 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         super();
     }
 
-    public Permission(IAMEEEntityReference principal, IAMEEEntityReference entity, PermissionEntry entry) {
+    public Permission(Environment environment) {
         this();
+        setEnvironment(environment);
+    }
+
+    public Permission(Environment environment, IAMEEEntityReference principal, IAMEEEntityReference entity) {
+        this(environment);
         setPrincipalReference(new AMEEEntityReference(principal));
         setEntityReference(new AMEEEntityReference(entity));
+    }
+
+    public Permission(Environment environment, IAMEEEntityReference principal, IAMEEEntityReference entity, PermissionEntry entry) {
+        this(environment, principal, entity);
         addEntry(entry);
+    }
+
+    public Permission(Environment environment, IAMEEEntityReference principal, IAMEEEntityReference entity, Collection<PermissionEntry> entries) {
+        this(environment, principal, entity);
+        addEntries(entries);
     }
 
     public String toString() {
@@ -97,20 +113,42 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public JSONObject getJSONObject() throws JSONException {
+        return getJSONObject(false);
+    }
+
+    public JSONObject getJSONObject(boolean detailed) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
-        obj.put("created", getCreated());
-        obj.put("modified", getModified());
-        obj.put("environmentUid", getEnvironment().getUid());
+        JSONArray entriesArr = new JSONArray();
+        for (PermissionEntry pe : this.getEntries()) {
+            entriesArr.put(pe.getJSONObject());
+        }
+        obj.put("entries", entriesArr);
+        if (detailed) {
+            obj.put("created", getCreated());
+            obj.put("modified", getModified());
+            obj.put("environmentUid", getEnvironment().getUid());
+        }
         return obj;
     }
 
     public Element getElement(Document document) {
+        return getElement(document, false);
+    }
+
+    public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("Permission");
         element.setAttribute("uid", getUid());
-        element.setAttribute("created", getCreated().toString());
-        element.setAttribute("modified", getModified().toString());
-        element.appendChild(getEnvironment().getIdentityElement(document));
+        Element entriesElement = document.createElement("Entries");
+        for (PermissionEntry pe : this.getEntries()) {
+            entriesElement.appendChild(pe.getElement(document));
+        }
+        element.appendChild(entriesElement);
+        if (detailed) {
+            element.setAttribute("created", getCreated().toString());
+            element.setAttribute("modified", getModified().toString());
+            element.appendChild(getEnvironment().getIdentityElement(document));
+        }
         return element;
     }
 
@@ -201,6 +239,21 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         getEntries();
         // add the entry to entrySet
         entrySet.add(entry);
+        // update the entries string
+        updateEntriesJSONObject();
+    }
+
+    /**
+     * Add PermissionEntries to the entries. Will internally make sure the entries
+     * set and string are updated.
+     *
+     * @param entries to add
+     */
+    public void addEntries(Collection<PermissionEntry> entries) {
+        // make sure entrySet is exists
+        getEntries();
+        // add the entries to entrySet
+        entrySet.addAll(entries);
         // update the entries string
         updateEntriesJSONObject();
     }

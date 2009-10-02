@@ -108,6 +108,16 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
     }
 
     /**
+     * Construct an AMEEEntityReference based on the supplied ObjectType and UID.
+     *
+     * @param entityType for new instance
+     * @param uid        for new instance
+     */
+    public AMEEEntityReference(String entityType, String uid) {
+        this(ObjectType.valueOf(entityType), uid);
+    }
+
+    /**
      * Factory method for creating a new AMEEEntityReference instance. Useful in templates.
      *
      * @param entityType for new instance
