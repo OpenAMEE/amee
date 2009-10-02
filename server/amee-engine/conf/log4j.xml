@@ -14,7 +14,7 @@
         <param name="BufferSize" value="512" />
         <param name="SMTPHost" value="localhost" />
         <param name="From" value="amee@${host.name}" />
-        <param name="To" value="steve@amee.com" />
+        <param name="To" value="steve@amee.cc" />
         <param name="Subject" value="AMEE Service Message" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c{6}] %m%n"/>
