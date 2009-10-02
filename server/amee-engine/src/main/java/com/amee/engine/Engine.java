@@ -82,9 +82,12 @@ public class Engine implements WrapperListener, Serializable {
             // get things going
             container.start();
 
-            //org.mortbay.jetty.Server server = (org.mortbay.jetty.Server) springContext.getBean("server");
-            //server.start();
-            //server.join();
+            String startServletContext = System.getenv("startServletContext");
+            if (Boolean.parseBoolean(startServletContext)) {
+                org.mortbay.jetty.Server server = (org.mortbay.jetty.Server) springContext.getBean("server");
+                server.start();
+                server.join();
+            }
 
             log.debug("...Engine started.");
         } catch (Exception e) {
@@ -122,6 +125,7 @@ public class Engine implements WrapperListener, Serializable {
         if (line.hasOption(serverNameOpt.getOpt())) {
             serverName = line.getOptionValue(serverNameOpt.getOpt());
         }
+
     }
 
     protected void onStart() {
