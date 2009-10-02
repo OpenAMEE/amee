@@ -1,6 +1,13 @@
+# JAVA_HOME
+set.default.JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
+set.JDK_HOME=%JAVA_HOME%
+
+# Servername
+set.default.SERVER_NAME=localhost
+
 # Application parameters
 wrapper.app.parameter.1=-serverName
-wrapper.app.parameter.2=development
+wrapper.app.parameter.2=%SERVER_NAME%
 
 # Extra java parameters
 wrapper.java.additional.15=-Xdebug
@@ -9,17 +16,15 @@ wrapper.java.additional.17=-Dcom.sun.management.jmxremote.port=9988
 wrapper.java.additional.18=-Dcom.sun.management.jmxremote.authenticate=false
 wrapper.java.additional.19=-Dcom.sun.management.jmxremote.ssl=false
 
-# Database settings
-# set.DB_DRIVER=net.sf.log4jdbc.DriverSpy
-# set.DB_URL_PREFIX=jdbc:log4jdbc
 set.DB_USERNAME=amee
 set.DB_PSWD=amee
 set.DB_HOST=localhost
-set.DB_NAME=amee_stage
+set.DB_NAME=amee_stage_2_5
+set.DB_DRIVER=net.sf.log4jdbc.DriverSpy
+set.DB_URL_PREFIX=jdbc:log4jdbc
 
 # Host names
-set.HOST_NAME=local.stage.co2.dgen.net
-set.HOST_NAME.ADMIN=local.admin.stage.co2.dgen.net
+set.HOST_NAME=local.stage.co2.dgen.net|stage.amee.com
+set.HOST_NAME.ADMIN=local.admin.stage.co2.dgen.net|admin.stage.amee.com
 
-# AJP port
 set.AJP_PORT=8010
