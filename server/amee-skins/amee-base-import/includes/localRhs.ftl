@@ -36,6 +36,36 @@
     </table>
 </#if>
 
+<#if activeUser?? && authorizationContext?? && authorizationContext.hasBeenChecked()>
+    <h2>Your Permissions</h2>
+    <table>
+        <#list authorizationContext.principals as p>
+            <tr>
+                <td>${p.objectType.label}:</td>
+                <#if p.objectType == ObjectType.USR>
+                    <td>${p.username}</td>
+                <#elseif p.objectType == ObjectType.GRP>
+                    <td>${p.name}</td>
+                <#else>
+                    <td>${p}</td>
+                </#if>
+            </tr>
+        </#list>
+        <tr>
+            <td>Permissions:</td>
+            <td>
+                <#if authorizationContext.entries?size != 0>
+                    <#list authorizationContext.entries as e>
+                        ${renderPermissionEntry(e)}<#if e_has_next>, </#if>
+                    </#list>
+                <#else>
+                    (no permission entries)
+                </#if>
+            </td>
+        </tr>
+    </table>
+</#if>
+
 <script type='text/javascript'>
 
     function showApiResult(message) {

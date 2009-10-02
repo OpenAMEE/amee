@@ -1,23 +1,35 @@
 <#include '/dataCommon.ftl'>
 <#include '/includes/before_content.ftl'>
 
+<#if authorizationContext?? && authorizationContext.hasBeenChecked() && authorizationContext.isSuperUser()>
+    <#assign allowPermissionEdit = true>
+<#else>
+    <#assign allowPermissionEdit = false>
+</#if>
+
 <script src="/scripts/amee/api_service.js" type="text/javascript"></script>
 <script src="/scripts/amee/data_service.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 
+    var PERMISSIONS_EDITOR = new PermissionsEditor();
+
+    function openPermissionEditor(dataCategoryUid) {
+        PERMISSIONS_EDITOR.open({entityUid: dataCategoryUid, entityType: 'DC'});
+    }
+
     function deleteDataCategory(dataCategoryUid, dataCategoryPath) {
-        resourceUrl = dataCategoryPath + '?method=delete';
-        resourceElem = $('Elem_' + dataCategoryUid);
-        resourceType = 'Data Category';
+        var resourceUrl = dataCategoryPath + '?method=delete';
+        var resourceElem = $('Elem_' + dataCategoryUid);
+        var resourceType = 'Data Category';
         var deleteResource = new DeleteResource();
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
 
     function deleteDataItem(uid, dataItemPath) {
-        resourceUrl = dataItemPath + '?method=delete';
-        resourceElem = $('Elem_' + uid);
-        resourceType = 'Data Item';
+        var resourceUrl = dataItemPath + '?method=delete';
+        var resourceElem = $('Elem_' + uid);
+        var resourceType = 'Data Item';
         var deleteResource = new DeleteResource();
         deleteResource.deleteResource(resourceUrl, resourceElem, resourceType);
     }
@@ -64,8 +76,9 @@
                 <tr id='Elem_${pi.uid}'>
                     <td>${pi.name}</td>
                     <td>
-                        <#if canViewEntity(pi)><a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
-                        <#if canDeleteEntity(pi)><input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if></#if>
+                        <#if canViewEntity(pi)><a href='${basePath}/${pi.path}'><img src="/images/icons/folder_go.png" title="Go" alt="Go" border="0"/></a>
+                        <#if canDeleteEntity(pi)><input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/folder_delete.png" title="Delete" alt="Delete" border="0"/></#if></#if>
+                        <#if allowPermissionEdit><input type="image" onClick="openPermissionEditor('${pi.uid}'); return false;" src="/images/icons/lock_edit.png" title="Edit Permissions" alt="Edit Permissions" border="0"/></#if>
                     </td>
                 </tr>
             </#list>

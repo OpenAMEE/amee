@@ -37,6 +37,18 @@ public class PermissionServiceDAOMock implements PermissionServiceDAO {
     @Autowired
     protected ServiceData serviceData;
 
+    public Permission getPermissionByUid(String uid) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void persist(Permission permission) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void remove(Permission permission) {
+        throw new UnsupportedOperationException();
+    }
+
     public List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
         throw new UnsupportedOperationException();
     }

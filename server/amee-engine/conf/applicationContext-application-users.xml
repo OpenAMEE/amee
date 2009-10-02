@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+    <bean id="usersApplication" class="com.amee.restlet.AMEEApplication">
+        <property name="root" ref="usersRoot"/>
+        <property name="tunnelService.methodTunnel" value="true"/>
+        <property name="tunnelService.extensionsTunnel" value="true"/>
+        <property name="statusService" ref="engineStatusService"/>
+        <property name="name" value="AMEE Users"/>
+        <property name="allowClientCache" value="true"/>
+    </bean>
+
+    <bean id="usersRoot" class="org.restlet.ext.spring.SpringRouter">
+        <constructor-arg ref="usersApplication"/>
+        <property name="attachments">
+            <map>
+                <entry key="">
+                    <bean class="com.amee.engine.restlet.TransactionFilter">
+                        <constructor-arg index="0" ref="usersApplication"/>
+                        <property name="next">
+                            <bean class="com.amee.restlet.site.SiteFilter">
+                                <constructor-arg index="0" ref="usersApplication"/>
+                                <property name="next">
+                                    <bean class="com.amee.restlet.auth.BasicAuthFilter">
+                                        <constructor-arg index="0" ref="usersApplication"/>
+                                        <property name="next">
+                                            <bean class="com.amee.restlet.auth.AuthFilter">
+                                                <constructor-arg index="0" ref="usersApplication"/>
+                                                <property name="next" ref="usersRouter2"/>
+                                            </bean>
+                                        </property>
+                                    </bean>
+                                </property>
+                            </bean>
+                        </property>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!-- Users -->
+
+    <bean id="usersRouter2" class="org.restlet.ext.spring.SpringRouter">
+        <constructor-arg ref="usersApplication"/>
+        <property name="defaultMatchingMode" ref="modeEquals"/>
+        <property name="defaultMatchQuery" value="false"/>
+        <property name="attachments">
+            <map>
+                <entry key="">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="usersResource"/>
+                    </bean>
+                </entry>
+                <entry key="/{userUid}">
+                    <bean class="org.restlet.ext.spring.SpringFinder">
+                        <lookup-method name="createResource" bean="userResource"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+</beans>

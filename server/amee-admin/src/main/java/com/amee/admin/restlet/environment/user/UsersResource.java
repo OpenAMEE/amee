@@ -6,6 +6,7 @@ import com.amee.domain.Pager;
 import com.amee.domain.auth.GroupPrincipal;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.UserType;
+import com.amee.domain.auth.Group;
 import com.amee.domain.data.LocaleName;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
@@ -137,6 +138,8 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     @Override
     public void doAccept(Representation entity) {
         User cloneUser;
+        String groupNames;
+        Group group;
         GroupPrincipal newGroupPrincipal;
         Form form = getForm();
         // create new instance if submitted
@@ -162,13 +165,34 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                 newUser.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
                 if (newUser.getAPIVersion() != null) {
                     siteService.save(newUser);
-                    // now clone auth -> group memberships
+                    // We can either 'clone' Group membership from an existing User *OR* join specified Groups.
+                    // Was a clone User supplied?
                     cloneUser = siteService.getUserByUid(
                             environmentBrowser.getEnvironment(), form.getFirstValue("cloneUserUid"));
                     if (cloneUser != null) {
+                        // Clone User was supplied.
+                        // Clone Group memberships.
                         for (GroupPrincipal groupPrincipal : groupService.getGroupPrincipalsForPrincipal(cloneUser)) {
                             newGroupPrincipal = new GroupPrincipal(groupPrincipal.getGroup(), newUser);
                             groupService.save(newGroupPrincipal);
+                        }
+                    } else {
+                        // Clone User was NOT supplied.
+                        // Look for requested Groups to join.
+                        if (form.getNames().contains("groups")) {
+                            groupNames = form.getFirstValue("groups");
+                            for (String groupName : groupNames.split(",")) {
+                                groupName = groupName.trim();
+                                group = groupService.getGroupByName(environmentBrowser.getEnvironment(), groupName);
+                                if (group != null) {
+                                    newGroupPrincipal = new GroupPrincipal(group, newUser);
+                                    groupService.save(newGroupPrincipal);
+                                } else {
+                                    log.error("Unable to find requested Group: '" + groupName + "'");
+                                    badRequest(APIFault.INVALID_PARAMETERS);
+                                    newUser = null;
+                                }
+                            }
                         }
                     }
                 } else {

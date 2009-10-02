@@ -29,6 +29,12 @@ import java.util.List;
 
 public interface PermissionServiceDAO {
 
+    Permission getPermissionByUid(String uid);
+
+    void persist(Permission permission);
+
+    void remove(Permission permission);
+
     List<Permission> getPermissionsForEntity(IAMEEEntityReference entity);
 
     List<Permission> getPermissionsForPrincipal(IAMEEEntityReference principal, Class entityClass);
