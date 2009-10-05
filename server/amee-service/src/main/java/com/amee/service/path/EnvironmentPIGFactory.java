@@ -102,6 +102,7 @@ public class EnvironmentPIGFactory implements CacheableFactory {
                 parentPathItem.add(new PathItem(dataCategory));
             } else {
                 log.warn("addDataCategories() Parent PathItem not found.");
+                iterator.remove();
             }
         }
     }
