@@ -25,13 +25,16 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.service.data.DataService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 public class EnvironmentPIGFactory implements CacheableFactory {
+
+    private final Log log = LogFactory.getLog(getClass());
 
     private DataService dataService;
     private Environment environment;
@@ -47,14 +50,18 @@ public class EnvironmentPIGFactory implements CacheableFactory {
     }
 
     public Object create() {
+        log.debug("create()");
         PathItemGroup pathItemGroup = null;
         List<DataCategory> dataCategories = dataService.getDataCategories(environment);
         DataCategory rootDataCategory = findRootDataCategory(dataCategories);
         if (rootDataCategory != null) {
             pathItemGroup = new PathItemGroup(new PathItem(rootDataCategory));
             while (!dataCategories.isEmpty()) {
+                log.debug("create() - dataCategories.size: " + dataCategories.size());
                 addDataCategories(pathItemGroup, dataCategories);
             }
+        } else {
+            log.error("create() - Root DataCategory not found.");
         }
         return pathItemGroup;
     }
@@ -67,6 +74,7 @@ public class EnvironmentPIGFactory implements CacheableFactory {
         return "EnvironmentPIGs";
     }
 
+    // TODO: Why not just use a for loop, not an Iterator?
     private DataCategory findRootDataCategory(List<DataCategory> dataCategories) {
         Iterator<DataCategory> iterator = dataCategories.iterator();
         while (iterator.hasNext()) {
@@ -80,15 +88,20 @@ public class EnvironmentPIGFactory implements CacheableFactory {
     }
 
     private void addDataCategories(PathItemGroup pathItemGroup, List<DataCategory> dataCategories) {
-        PathItem pathItem;
+        log.debug("addDataCategories()");
+        PathItem parentPathItem;
         Map<String, PathItem> pathItems = pathItemGroup.getPathItems();
         Iterator<DataCategory> iterator = dataCategories.iterator();
         while (iterator.hasNext()) {
             DataCategory dataCategory = iterator.next();
-            pathItem = pathItems.get(dataCategory.getDataCategory().getUid());
-            if (pathItem != null) {
+            log.debug("addDataCategories() Looking up parent PathItem for DC '" + dataCategory.getPath() + "' with UID '" + dataCategory.getUid() + "'");
+            parentPathItem = pathItems.get(dataCategory.getDataCategory().getUid());
+            if (parentPathItem != null) {
+                log.debug("addDataCategories() Adding new child PathItem.");
                 iterator.remove();
-                pathItem.add(new PathItem(dataCategory));
+                parentPathItem.add(new PathItem(dataCategory));
+            } else {
+                log.warn("addDataCategories() Parent PathItem not found.");
             }
         }
     }
