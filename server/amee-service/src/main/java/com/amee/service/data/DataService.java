@@ -35,7 +35,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Primary service interface to Data Resources.
@@ -63,7 +66,7 @@ public class DataService extends BaseService {
     // DataCategories
 
     public DataCategory getDataCategoryByUid(String uid) {
-        DataCategory dataCategory =  dao.getDataCategoryByUid(uid);
+        DataCategory dataCategory = dao.getDataCategoryByUid(uid);
         if (dataCategory != null && !dataCategory.isTrash()) {
             return dataCategory;
         } else {
@@ -73,9 +76,9 @@ public class DataService extends BaseService {
 
     public List<DataCategory> getDataCategories(Environment environment) {
         List<DataCategory> activeCategories = new ArrayList<DataCategory>();
-        for(DataCategory dataCategory : dao.getDataCategories(environment)) {
+        for (DataCategory dataCategory : dao.getDataCategories(environment)) {
             if (dataCategory != null && !dataCategory.isTrash()) {
-                activeCategories.add(dataCategory);     
+                activeCategories.add(dataCategory);
             }
         }
         return activeCategories;
@@ -151,7 +154,7 @@ public class DataService extends BaseService {
             if (!dataItem.isTrash()) {
                 checkDataItem(dataItem);
                 activeDataItems.add(dataItem);
-            }        
+            }
         }
         return activeDataItems;
     }
@@ -212,11 +215,11 @@ public class DataService extends BaseService {
     }
 
     public void remove(ItemValue dataItemValue) {
-        dao.remove(dataItemValue);    
+        dao.remove(dataItemValue);
     }
 
     public void remove(LocaleName localeName) {
-        dao.remove(localeName);    
+        dao.remove(localeName);
     }
 
     // Sheets & Choices
