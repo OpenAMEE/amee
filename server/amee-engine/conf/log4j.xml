@@ -72,10 +72,6 @@
         <priority value="INFO"/>
     </category>
 
-    <category name="com.amee.service.path">
-        <priority value="DEBUG"/>
-    </category>
-
     <category name="transactions" additivity="false">
         <priority value="INFO"/>
         <appender-ref ref="ROLLER"/>
