@@ -28,6 +28,7 @@ import com.amee.service.data.DataService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -56,10 +57,8 @@ public class EnvironmentPIGFactory implements CacheableFactory {
         DataCategory rootDataCategory = findRootDataCategory(dataCategories);
         if (rootDataCategory != null) {
             pathItemGroup = new PathItemGroup(new PathItem(rootDataCategory));
-            while (!dataCategories.isEmpty()) {
-                log.debug("create() - dataCategories.size: " + dataCategories.size());
-                addDataCategories(pathItemGroup, dataCategories);
-            }
+            log.debug("create() - dataCategories.size: " + dataCategories.size());
+            addDataCategories(pathItemGroup, dataCategories);
         } else {
             log.error("create() - Root DataCategory not found.");
         }
@@ -88,22 +87,39 @@ public class EnvironmentPIGFactory implements CacheableFactory {
     }
 
     private void addDataCategories(PathItemGroup pathItemGroup, List<DataCategory> dataCategories) {
+
         log.debug("addDataCategories()");
-        PathItem parentPathItem;
-        Map<String, PathItem> pathItems = pathItemGroup.getPathItems();
-        Iterator<DataCategory> iterator = dataCategories.iterator();
-        while (iterator.hasNext()) {
-            DataCategory dataCategory = iterator.next();
-            log.debug("addDataCategories() Looking up parent PathItem for DC '" + dataCategory.getPath() + "' with UID '" + dataCategory.getUid() + "'");
-            parentPathItem = pathItems.get(dataCategory.getDataCategory().getUid());
-            if (parentPathItem != null) {
-                log.debug("addDataCategories() Adding new child PathItem.");
-                iterator.remove();
-                parentPathItem.add(new PathItem(dataCategory));
+
+        PathItem pathItem;
+        Map<String, PathItem> pathItems = new HashMap<String, PathItem>();
+
+        // Add root PathItem.
+        pathItems.put(pathItemGroup.getRootPathItem().getUid(), pathItemGroup.getRootPathItem());
+
+        // Step One - Create all PathItems.
+        for (DataCategory dc : dataCategories) {
+            pathItems.put(dc.getUid(), new PathItem(dc));
+        }
+
+        // Step Two - Bind children & parents.
+        for (DataCategory dataCategory : dataCategories) {
+            // All DataCategories expected to have a parent.
+            if (dataCategory.getDataCategory() != null) {
+                // Find previously created PathItem.
+                pathItem = pathItems.get(dataCategory.getUid());
+                // Bind current PathItem to parent, if possible.
+                if (pathItems.containsKey(dataCategory.getDataCategory().getUid())) {
+                    log.debug("addDataCategories() - Adding DC: " + dataCategory.getUid() + " (" + dataCategory.getDataCategory().getPath() + "/" + dataCategory.getPath() + ")");
+                    pathItems.get(dataCategory.getDataCategory().getUid()).add(pathItem);
+                } else {
+                    log.warn("addDataCategories() - Parent PathItem not found for DC: " + dataCategory.getUid() + " (" + dataCategory.getPath() + ")");
+                }
             } else {
-                log.warn("addDataCategories() Parent PathItem not found.");
-                iterator.remove();
+                log.error("addDataCategories() - Parent not set for DC: " + dataCategory.getUid() + " (" + dataCategory.getPath() + ")");
             }
         }
+
+        // Step Three - Add PathItems to PathItemGroup.
+        pathItemGroup.addAll(pathItems.values());
     }
 }
