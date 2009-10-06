@@ -122,11 +122,13 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         return getFullPath();
     }
 
-    // Used by BasePIGFactory & ProfilePIGFactory.
+    // Used by EnvironmentPIGFactory & ProfilePIGFactory.
     public void add(PathItem child) {
         children.add(child);
         child.setParent(this);
-        getPathItemGroup().add(child);
+        if (getPathItemGroup() != null) {
+            getPathItemGroup().add(child);
+        }
     }
 
     public PathItem findLastPathItem(String path, boolean forProfile) {
