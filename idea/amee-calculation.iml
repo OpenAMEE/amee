@@ -55,6 +55,8 @@
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-orm:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-tx:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-context-support:2.5.6" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-httpclient:commons-httpclient:4.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-httpcore:commons-httpcore:4.0.1" level="project" />
   </component>
 </module>
 
