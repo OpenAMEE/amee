@@ -87,6 +87,8 @@
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-context-support:2.5.6" level="project" />
     <orderEntry type="module" module-name="amee-restlet" exported="" />
     <orderEntry type="module" module-name="amee-calculation" exported="" />
+    <orderEntry type="library" exported="" name="Maven: commons-httpclient:commons-httpclient:4.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-httpcore:commons-httpcore:4.0.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.spring:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-web:2.5.6" level="project" />
@@ -108,7 +110,6 @@
     <orderEntry type="library" exported="" name="Maven: org.codehaus.woodstox:wstx-asl:3.2.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.apache.abdera:abdera-extensions-opensearch:0.4.0-incubating" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.apache.abdera:abdera-client:0.4.0-incubating" level="project" />
-    <orderEntry type="library" exported="" name="Maven: commons-httpclient:commons-httpclient:3.1-rc1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.apache.abdera:abdera-extensions-main:0.4.0-incubating" level="project" />
     <orderEntry type="module" module-name="amee-admin" exported="" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.fileupload:1.1.4" level="project" />
