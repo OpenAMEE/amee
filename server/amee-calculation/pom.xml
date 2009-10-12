@@ -29,5 +29,15 @@
             <artifactId>joda-time</artifactId>
             <version>${joda-time.version}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpcore</groupId>
+            <artifactId>commons-httpcore</artifactId>
+            <version>4.0.1</version>
+        </dependency>
     </dependencies>
 </project>
