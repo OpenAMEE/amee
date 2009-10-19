@@ -1,7 +1,3 @@
-# Application parameters
-wrapper.app.parameter.1=-serverName
-wrapper.app.parameter.2=development
-
 # Extra java parameters
 wrapper.java.additional.16=-Xdebug
 wrapper.java.additional.17=-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
@@ -9,13 +5,16 @@ wrapper.java.additional.18=-Dcom.sun.management.jmxremote.port=9988
 wrapper.java.additional.19=-Dcom.sun.management.jmxremote.authenticate=false
 wrapper.java.additional.20=-Dcom.sun.management.jmxremote.ssl=false
 
+# Servername
+set.SERVER_NAME=local
+
 # Database settings
 # set.DB_DRIVER=net.sf.log4jdbc.DriverSpy
 # set.DB_URL_PREFIX=jdbc:log4jdbc
 set.DB_USERNAME=amee
 set.DB_PSWD=amee
 set.DB_HOST=localhost
-set.DB_NAME=amee_stage
+set.DB_NAME=amee_2_5    
 
 # Host names
 set.HOST_NAME=local.stage.co2.dgen.net
@@ -23,3 +22,9 @@ set.HOST_NAME.ADMIN=local.admin.stage.co2.dgen.net
 
 # AJP port
 set.AJP_PORT=8010
+
+# Train route service
+set.TRAIN_ROUTE_SERVICE_URI=http://railservice.amee.com/route_finder/route_service.php
+
+# Start the servlet context 
+set.START_SERVLET_CONTEXT=true

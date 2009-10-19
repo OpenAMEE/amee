@@ -79,6 +79,11 @@ namespace :install do
     puts "Creating new deployment db directory #{package_dir}/db"
     FileUtils.mkdir_p("#{package_dir}/db")
     FileUtils.cp_r "#{src_dir}/db/.","#{package_dir}/db"
+
+    # Create webapps
+    puts "Creating new deployment webapps directory #{package_dir}/webapps"
+    FileUtils.mkdir_p("#{package_dir}/webapps")
+    FileUtils.cp_r "#{src_dir}/webapps/.","#{package_dir}/webapps"
     
   end
 
