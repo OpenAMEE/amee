@@ -8,6 +8,7 @@
 		<property name="amee.current.lib" value="${amee.current}/lib" 
 			description="The location of the AMEE libs and dependencies."/>		
 		<property name="amee.current.bin" value="${amee.current}/bin" description="The location of the AMEE start scripts."/>		
+		<property name="amee.shared.lib" value="${amee.home}/shared" description="The location of the AMEE shared config."/>		
 	</target>
 
 	<target name="rebuild" depends="clean, package" 
@@ -39,11 +40,25 @@
 			
 	<target name="copy-amee-libs" depends="init" 
 		description="Copy the AMEE libs to the deployment lib folder.">
-	  <copy todir="${amee.current.lib}" flatten="true">
+	  	<copy todir="${amee.current.lib}" flatten="true">
 	    <fileset dir="server">
 	      <include name="**/amee-*.jar"/>
 	    </fileset>
 	  </copy>
+	</target>
+
+	<target name="copy-wrapper" depends="init" 
+		description="Copy the AMEE local wrapper.conf to the deployment folder.">
+		<copy tofile="${amee.shared.lib}/wrapper.conf" file="server/amee-engine/conf/wrapper.conf.local"/>
+	</target>
+
+	<target name="copy-webapps" depends="init" 
+		description="Copy the AMEE webapp to the deployment folder.">
+	  	<copy todir="${amee.current}">
+			<fileset dir=".">
+				<include name="webapps/"/>
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="copy-dependency-libs" depends="init" 
@@ -72,7 +87,7 @@
 			
 	<target name="run" depends="make, copy-amee-libs, start" description="Make and run AMEE."/>
 
-	<target name="clean-run" depends="rebuild, copy-dependency-libs, copy-amee-libs, start" 
+	<target name="clean-run" depends="rebuild, copy-wrapper, copy-webapps, copy-dependency-libs, copy-amee-libs, start" 
 		description="Rebuild and run AMEE."/>
 				
 </project>
