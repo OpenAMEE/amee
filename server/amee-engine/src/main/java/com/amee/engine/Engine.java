@@ -55,6 +55,7 @@ public class Engine implements WrapperListener, Serializable {
                 "applicationContext-container.xml",
                 "applicationContext-application-*.xml",
                 "applicationContext-skins.xml",
+                "applicationContext-algorithmServices.xml",
                 "applicationContext-servlets.xml"});
 
         // obtain the Restlet container
@@ -82,7 +83,7 @@ public class Engine implements WrapperListener, Serializable {
             // get things going
             container.start();
 
-            String startServletContext = System.getenv("startServletContext");
+            String startServletContext = System.getenv("START_SERVLET_CONTEXT");
             if (Boolean.parseBoolean(startServletContext)) {
                 org.mortbay.jetty.Server server = (org.mortbay.jetty.Server) springContext.getBean("server");
                 server.start();
