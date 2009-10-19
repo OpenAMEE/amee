@@ -23,6 +23,7 @@
           <file>file://$MODULE_DIR$/../server/amee-engine/conf/applicationContext-application-permissions.xml</file>
           <file>file://$MODULE_DIR$/../server/amee-engine/conf/applicationContext-application-groups.xml</file>
           <file>file://$MODULE_DIR$/../server/amee-engine/conf/applicationContext-application-users.xml</file>
+          <file>file://$MODULE_DIR$/../server/amee-engine/conf/applicationContext-algorithmServices.xml</file>
         </fileset>
       </configuration>
     </facet>
@@ -139,6 +140,7 @@
     <orderEntry type="library" exported="" name="Maven: quartz:quartz:1.5.2" level="project" />
     <orderEntry type="library" exported="" name="Maven: javax.mail:mail:1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: javax.activation:activation:1.1" level="project" />
+    <orderEntry type="module" module-name="amee-gdata" />
   </component>
 </module>
 
