@@ -5,6 +5,7 @@
 
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
 
+<!--
 	<servlet>
 		<servlet-name>pquery</servlet-name>
 		<jsp-file>/pquery.jsp</jsp-file>
@@ -24,12 +25,13 @@
 		<servlet-name>dtable</servlet-name>
 		<servlet-class>com.amee.googleds.DataCategoryServlet</servlet-class>
 	</servlet>
+-->
 
 	<servlet>
 		<servlet-name>log4j</servlet-name>
-		<servlet-class>com.amee.googleds.Log4jConfigurationServlet</servlet-class>
+		<servlet-class>com.amee.engine.Log4jConfigurationServlet</servlet-class>
 	</servlet>
-
+<!--
     <servlet-mapping>
          <servlet-name>ptable</servlet-name>
          <url-pattern>/ptable/*</url-pattern>
@@ -49,10 +51,10 @@
 		<servlet-name>dquery</servlet-name>
 		<url-pattern>/data/*</url-pattern>
 	</servlet-mapping>		
-
+-->
     <servlet-mapping>
         <servlet-name>log4j</servlet-name>
-        <url-pattern>/log4j</url-pattern>
+        <url-pattern>/log4am33</url-pattern>
     </servlet-mapping>
 
 </web-app>
