@@ -3,6 +3,8 @@ package com.amee.restlet.auth;
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
+import com.amee.domain.data.LocaleName;
+import com.amee.domain.LocaleHolder;
 import com.amee.service.auth.AuthenticationService;
 import org.restlet.Application;
 import org.restlet.Guard;
@@ -10,6 +12,7 @@ import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Basic Authentication Filter.
@@ -60,6 +63,14 @@ public class BasicAuthFilter extends Guard {
         User activeUser = authenticationService.authenticate(sampleUser);
         request.getAttributes().put("activeUser", activeUser);
         ThreadBeanHolder.set("activeUser", activeUser);
+
+        // Set user or request locale information into the thread
+        String locale = request.getResourceRef().getQueryAsForm().getFirstValue("locale");
+        if (StringUtils.isBlank(locale) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+            locale = activeUser.getLocale();
+        }
+        LocaleHolder.set(LocaleHolder.KEY, locale);
+
         return activeUser != null;
     }
 }

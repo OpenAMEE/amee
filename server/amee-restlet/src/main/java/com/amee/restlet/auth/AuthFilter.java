@@ -51,7 +51,7 @@ public class AuthFilter extends BaseAuthFilter {
             if (StringUtils.isBlank(locale) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
                 locale = activeUser.getLocale();
             }
-            LocaleHolder.set("locale", locale);
+            LocaleHolder.set(LocaleHolder.KEY, locale);
 
             result = accept(request, response, authToken);
         } else {
