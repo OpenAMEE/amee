@@ -29,7 +29,7 @@ import com.amee.domain.data.LocaleName;
  */
 public class LocaleHolder extends ThreadBeanHolder {
 
-    private static final String KEY = "locale";
+    public static final String KEY = "locale";
 
     /**
      * Does the current request thread have the default locale.
