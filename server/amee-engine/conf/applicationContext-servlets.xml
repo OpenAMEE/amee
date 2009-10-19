@@ -42,7 +42,7 @@
 
     <bean id="webAppDeployer" class="org.mortbay.jetty.deployer.WebAppDeployer">
         <property name="contexts" ref="contextHandlerCollection"/>
-        <property name="webAppDir" value="../../webapps"/>
+        <property name="webAppDir" value="/var/www/apps/amee/current/webapps"/>
         <property name="defaultsDescriptor" value="webdefault.xml"/>
     </bean>
 
