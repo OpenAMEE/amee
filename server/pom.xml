@@ -32,8 +32,8 @@
         <module>amee-calculation</module>
         <module>amee-core</module>
         <module>amee-domain</module>
-        <module>amee-engine</module>
         <module>amee-restlet</module>
+        <module>amee-engine</module>
         <module>amee-service</module>
         <module>amee-gdata</module>
     </modules>
