@@ -58,7 +58,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OrderBy("startDate DESC")
     private List<ItemValue> itemValues = new ArrayList<ItemValue>();
 
     @Column(name = "NAME", length = NAME_SIZE, nullable = false)
