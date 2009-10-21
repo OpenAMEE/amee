@@ -42,6 +42,12 @@ public class PathItemGroup implements Serializable {
         pathItem.setPathItemGroup(this);
     }
 
+    public void addAll(Collection<PathItem> pathItems) {
+        for (PathItem pathItem : pathItems) {
+            add(pathItem);
+        }
+    }
+
     // Used by DataFinder.
     public PathItem findByPath(String path, boolean forProfile) {
         return findBySegments(new ArrayList<String>(Arrays.asList(path.split("/"))), forProfile);
