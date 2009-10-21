@@ -38,10 +38,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Encapsulates all persistence operations for Profiles and Profile Items.
@@ -225,8 +222,7 @@ public class ProfileServiceDAO implements Serializable {
                         "WHERE pi.dataCategory.id = :dataCategoryId " +
                         "AND pi.profile.id = :profileId " +
                         "AND pi.startDate < :profileDate " +
-                        "AND pi.status != :trash " +
-                        "ORDER BY pi.name, pi.dataItem.name, pi.startDate DESC")
+                        "AND pi.status != :trash ")
                 .setParameter("dataCategoryId", dataCategory.getId())
                 .setParameter("profileId", profile.getId())
                 .setParameter("profileDate", profileDate)
@@ -234,6 +230,20 @@ public class ProfileServiceDAO implements Serializable {
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
+
+
+        // Order the returned collection by pi.name, di.name and pi.startDate DESC
+        Collections.sort(profileItems, new Comparator<ProfileItem>() {
+            public int compare(ProfileItem p1, ProfileItem p2) {
+                int nd = p1.getName().compareTo(p2.getName());
+                int dnd = p1.getDataItem().getName().compareTo(p2.getDataItem().getName());
+                int sdd = p2.getStartDate().compareTo(p1.getStartDate());
+                if (nd != 0) return nd;
+                if (dnd != 0) return dnd;
+                if (sdd != 0) return sdd;
+                return 0;
+            }
+        });
 
         if (log.isDebugEnabled()) {
             log.debug("getProfileItems() done (" + profileItems.size() + ")");
