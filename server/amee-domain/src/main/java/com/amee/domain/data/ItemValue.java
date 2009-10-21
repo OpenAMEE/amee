@@ -71,7 +71,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
     @Index(name = "END_DATE_IND")
     protected Date endDate;
 
-    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @MapKey(name = "locale")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Map<String, LocaleName> localeValues = new HashMap<String, LocaleName>();
@@ -216,10 +216,10 @@ public class ItemValue extends AMEEEntity implements Pathable {
     }
 
     public String getValue() {
-        if (getItemValueDefinition().isText()) {
-            String localeName = getLocaleValue();
-            if (localeName != null) {
-                return localeName;
+        if (getItemValueDefinition().isText() && !LocaleHolder.isDefaultLocale()) {
+            String localeValue = getLocaleValue();
+            if (localeValue != null) {
+                return localeValue;
             }
         }
         return value;
