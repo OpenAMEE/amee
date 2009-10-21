@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="serviceFinder" class="com.amee.calculation.service.ServiceFinder" scope="prototype">
+        <constructor-arg>
+            <map>
+                <entry value-ref="trainRouteFinderService" key="train-route-finder-service"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="trainRouteFinderService" class="com.amee.calculation.service.TrainRouteFinderService" scope="prototype">
+        <constructor-arg>
+            <value>${TRAIN_ROUTE_SERVICE_URI}</value>
+        </constructor-arg>
+    </bean>
+
+</beans>
+    
