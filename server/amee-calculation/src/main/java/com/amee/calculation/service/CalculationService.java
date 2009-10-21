@@ -40,6 +40,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.script.ScriptException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -127,11 +128,18 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
             log.debug("calculate() - input values: " + values);
             log.debug("calculate() - starting calculation");
         }
-        // TODO: Remove Exception catch once we have resolved algo handling on undef values.
+
         try {
             amount = new CO2Amount(algorithmService.evaluate(algorithm, values));
-        } catch (Exception e) {
-            log.warn("calculate() - caught Exception: " + e.getMessage());
+        } catch (ScriptException e) {
+
+            // This is less than desirable but allows us to bubble up parameter missing or format exceptions
+            // from the algos (the only place where these validations can be performed.
+            Throwable t = e.getCause();
+            if (t != null && t.getCause() != null && t.getCause() instanceof IllegalArgumentException) {
+                throw (RuntimeException) t.getCause();    
+            }
+
             amount = new CO2Amount(Decimal.BIG_DECIMAL_ZERO);
         }
         if (log.isDebugEnabled()) {
@@ -177,6 +185,11 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         profileFinder.setProfileItem(profileItem);
         profileFinder.setDataFinder(dataFinder);
 
+        ServiceFinder serviceFinder = (ServiceFinder) beanFactory.getBean("serviceFinder");
+        serviceFinder.setValues(values);
+        serviceFinder.setProfileFinder(profileFinder);
+
+        values.put("serviceFinder", serviceFinder);
         values.put("dataFinder", dataFinder);
         values.put("profileFinder", profileFinder);
     }
@@ -200,6 +213,11 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
         profileFinder.setDataFinder(dataFinder);
 
+        ServiceFinder serviceFinder = (ServiceFinder) beanFactory.getBean("serviceFinder");
+        serviceFinder.setValues(returnValues);
+        serviceFinder.setProfileFinder(profileFinder);
+
+        returnValues.put("serviceFinder", serviceFinder);
         returnValues.put("dataFinder", dataFinder);
         returnValues.put("profileFinder", profileFinder);
 
