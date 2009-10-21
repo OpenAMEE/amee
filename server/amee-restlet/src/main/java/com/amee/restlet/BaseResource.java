@@ -74,6 +74,45 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
     }
 
     @Override
+    public void handlePut() {
+        try {
+            super.handlePut();
+        } catch (IllegalArgumentException iae) {
+            log.warn("handlePut() " + iae.getMessage());
+            badRequest(APIFault.INVALID_PARAMETERS, iae.getMessage());
+        } catch (RuntimeException ex) {
+            log.error("handlePut() " + ex.getMessage());
+            error();
+        }
+    }
+
+    @Override
+    public void handlePost() {
+        try {
+            super.handlePost();
+        } catch (IllegalArgumentException iae) {
+            log.warn("handlePost() " + iae.getMessage());
+            badRequest(APIFault.INVALID_PARAMETERS, iae.getMessage());
+        } catch (RuntimeException ex) {
+            log.error("handlePost() " + ex.getMessage());
+            error();
+        }
+    }
+
+    @Override
+    public void handleGet() {
+        try {
+            super.handleGet();
+        } catch (IllegalArgumentException iae) {
+            log.warn("handleGet() " + iae.getMessage());
+            badRequest(APIFault.INVALID_PARAMETERS, iae.getMessage());
+        } catch (RuntimeException ex) {
+            log.error("handleGet() " + ex.getMessage());
+            error();
+        }
+    }
+
+    @Override
     public Representation represent(Variant variant) throws ResourceException {
 
         if (log.isDebugEnabled()) {
@@ -362,6 +401,10 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         status(Status.CLIENT_ERROR_CONFLICT, fault);
     }
 
+    public void badRequest(APIFault fault, String detail) {
+        status(Status.CLIENT_ERROR_BAD_REQUEST, fault, detail);
+    }
+
     public void badRequest(APIFault fault) {
         status(Status.CLIENT_ERROR_BAD_REQUEST, fault);
     }
@@ -378,16 +421,27 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         getResponse().setStatus(Status.CLIENT_ERROR_GONE, "The requested resource has been deprecated by " + deprecator);
     }
 
-    private void status(Status status, APIFault fault) {
+    private void status(Status status, APIFault fault, String message) {
         log.warn("status() - status code " + status + " message: " + ((fault != null) ? fault.toString() : ""));
-        RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+
+        String faultStr = "";
+
         if (fault != null) {
-            ctx.setError(fault.toString());
-            getResponse().setStatus(status, fault.toString());
-        } else {
-            getResponse().setStatus(status);
+            faultStr = fault.toString();
         }
+
+        if (message != null) {
+            faultStr = faultStr + " " + message;
+        }
+
+        RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+        ctx.setError(faultStr);
+        getResponse().setStatus(status, faultStr);
         log.warn(ctx.toString());
+    }
+
+    private void status(Status status, APIFault fault) {
+        status(status, fault, null);
     }
 
     public Form getForm() {
