@@ -25,13 +25,17 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.service.data.DataService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 public class EnvironmentPIGFactory implements CacheableFactory {
+
+    private final Log log = LogFactory.getLog(getClass());
 
     private DataService dataService;
     private Environment environment;
@@ -47,14 +51,16 @@ public class EnvironmentPIGFactory implements CacheableFactory {
     }
 
     public Object create() {
+        log.debug("create()");
         PathItemGroup pathItemGroup = null;
         List<DataCategory> dataCategories = dataService.getDataCategories(environment);
         DataCategory rootDataCategory = findRootDataCategory(dataCategories);
         if (rootDataCategory != null) {
             pathItemGroup = new PathItemGroup(new PathItem(rootDataCategory));
-            while (!dataCategories.isEmpty()) {
-                addDataCategories(pathItemGroup, dataCategories);
-            }
+            log.debug("create() - dataCategories.size: " + dataCategories.size());
+            addDataCategories(pathItemGroup, dataCategories);
+        } else {
+            log.error("create() - Root DataCategory not found.");
         }
         return pathItemGroup;
     }
@@ -67,6 +73,7 @@ public class EnvironmentPIGFactory implements CacheableFactory {
         return "EnvironmentPIGs";
     }
 
+    // TODO: Why not just use a for loop, not an Iterator?
     private DataCategory findRootDataCategory(List<DataCategory> dataCategories) {
         Iterator<DataCategory> iterator = dataCategories.iterator();
         while (iterator.hasNext()) {
@@ -80,16 +87,49 @@ public class EnvironmentPIGFactory implements CacheableFactory {
     }
 
     private void addDataCategories(PathItemGroup pathItemGroup, List<DataCategory> dataCategories) {
+
+        log.debug("addDataCategories()");
+
         PathItem pathItem;
-        Map<String, PathItem> pathItems = pathItemGroup.getPathItems();
-        Iterator<DataCategory> iterator = dataCategories.iterator();
-        while (iterator.hasNext()) {
-            DataCategory dataCategory = iterator.next();
-            pathItem = pathItems.get(dataCategory.getDataCategory().getUid());
-            if (pathItem != null) {
-                iterator.remove();
-                pathItem.add(new PathItem(dataCategory));
+        Map<String, PathItem> pathItems = new HashMap<String, PathItem>();
+
+        // Add root PathItem.
+        pathItems.put(pathItemGroup.getRootPathItem().getUid(), pathItemGroup.getRootPathItem());
+
+        // Step One - Create all PathItems.
+        for (DataCategory dataCategory : dataCategories) {
+            // All DataCategories expected to have a parent.
+            if (dataCategory.getDataCategory() != null) {
+                pathItems.put(dataCategory.getUid(), new PathItem(dataCategory));
+            } else {
+                log.warn("addDataCategories() - Parent not set for DC: " + dataCategory.getUid() + " (" + dataCategory.getPath() + ")");
             }
+        }
+
+        // Step Two - Bind children & parents.
+        for (DataCategory dataCategory : dataCategories) {
+            // Find previously created PathItem.
+            pathItem = pathItems.get(dataCategory.getUid());
+            // Bind current PathItem to parent, if possible.
+            if (pathItems.containsKey(dataCategory.getDataCategory().getUid())) {
+                log.debug("addDataCategories() - Adding DC: " + dataCategory.getUid() + " (" + dataCategory.getDataCategory().getPath() + "/" + dataCategory.getPath() + ")");
+                // Add child PI to parent PI.
+                pathItems.get(dataCategory.getDataCategory().getUid()).add(pathItem);
+            } else {
+                log.warn("addDataCategories() - Parent PathItem not found for DC: " + dataCategory.getUid() + " (" + dataCategory.getPath() + ")");
+                // Remove orphaned PIs.
+                removeAll(pathItems, pathItem);
+            }
+        }
+
+        // Step Three - Add PathItems to PathItemGroup.
+        pathItemGroup.addAll(pathItems.values());
+    }
+
+    private static void removeAll(Map<String, PathItem> pathItems, PathItem pathItem) {
+        pathItems.remove(pathItem.getUid());
+        for (PathItem pi : pathItem.getChildren()) {
+            pathItems.remove(pi.getUid());
         }
     }
 }

@@ -196,7 +196,6 @@ public class ProfileServiceDAO implements Serializable {
         return count;
     }
 
-
     @SuppressWarnings(value = "unchecked")
     protected List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, Date profileDate) {
 
