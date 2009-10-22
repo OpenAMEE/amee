@@ -19,7 +19,8 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.calculation.service.CalculationService;
+import com.amee.calculation.service.AlgorithmService;
+import com.amee.core.CO2Amount;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.algorithm.Algorithm;
@@ -45,12 +46,17 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.script.ScriptException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 @Scope("prototype")
@@ -65,7 +71,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
     private DefinitionBrowser definitionBrowser;
 
     @Autowired
-    private CalculationService calculator;
+    private AlgorithmService algorithmService;
 
     private AlgorithmTestWrapper algorithmTestWrapper = null;
 
@@ -159,45 +165,44 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
         // apply calculation
         try {
             algorithmTestWrapper.setAmount(
-                    calculator.calculate(
+                    new CO2Amount(algorithmService.evaluate(
                             algorithmTestWrapper.getMockAlgorithm(),
-                            algorithmTestWrapper.getValuesMap()).getValue());
-            // TODO: see if we can re-implement this
-//        } catch (RhinoException e) {
-//            StringBuffer testAlgorithmError = new StringBuffer();
-//            testAlgorithmError.append("Error on line")
-//                    .append("'").append(e.lineNumber()).append("'");
-//            if (!StringUtils.isBlank(e.lineSource())) {
-//                testAlgorithmError.append("\nLine Source: ").append(e.lineSource());
-//            }
-//            testAlgorithmError.append("\nError: ").append(e.getMessage());
-//            if (!StringUtils.isBlank(e.getScriptStackTrace())) {
-//                testAlgorithmError.append("\nScript StackTrace: ").append(e.getScriptStackTrace());
-//            }
-//            algorithmTestWrapper.setError(testAlgorithmError);
+                            algorithmTestWrapper.getValuesMap())).getValue());
         } catch (Exception e) {
 
-            StringWriter writer = null;
-            PrintWriter printWriter = null;
+            if ((e.getCause() != null) && (e.getCause() instanceof ScriptException)) {
 
-            try {
-                writer = new StringWriter();
-                printWriter = new PrintWriter(writer);
-                e.printStackTrace(printWriter);
+                // Handle ScriptException.
 
-                StringBuffer testAlgorithmError = new StringBuffer();
-                testAlgorithmError.append("Processing Error ")
-                        .append(writer.toString());
-                algorithmTestWrapper.setError(testAlgorithmError);
-            } finally {
-                if (printWriter != null) {
-                    printWriter.close();
-                }
-                if (writer != null) {
-                    try {
-                        writer.close();
-                    } catch (IOException e1) {
-                        // consume
+                ScriptException sc = (ScriptException) e.getCause();
+                algorithmTestWrapper.setError(new StringBuffer(sc.getMessage()));
+
+            } else {
+
+                // Handle Generic Exception.
+
+                StringWriter writer = null;
+                PrintWriter printWriter = null;
+
+                try {
+                    writer = new StringWriter();
+                    printWriter = new PrintWriter(writer);
+                    e.printStackTrace(printWriter);
+
+                    StringBuffer testAlgorithmError = new StringBuffer();
+                    testAlgorithmError.append("Processing Error ")
+                            .append(writer.toString());
+                    algorithmTestWrapper.setError(testAlgorithmError);
+                } finally {
+                    if (printWriter != null) {
+                        printWriter.close();
+                    }
+                    if (writer != null) {
+                        try {
+                            writer.close();
+                        } catch (IOException e1) {
+                            // consume
+                        }
                     }
                 }
             }
