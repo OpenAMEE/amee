@@ -123,8 +123,8 @@ public class InternalValueTest {
         vd.setValueType(ValueType.DECIMAL);
         ivd.setValueDefinition(vd);
         ItemValue iv = new ItemValue();
-        iv.setValue(start.getTime() + "");
         iv.setItemValueDefinition(ivd);
+        iv.setValue(start.getTime() + "");
         iv.setStartDate(start);
         return iv;
     }
