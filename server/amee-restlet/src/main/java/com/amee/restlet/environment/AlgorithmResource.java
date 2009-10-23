@@ -47,16 +47,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.script.ScriptException;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Scope("prototype")
@@ -168,44 +161,8 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
                     new CO2Amount(algorithmService.evaluate(
                             algorithmTestWrapper.getMockAlgorithm(),
                             algorithmTestWrapper.getValuesMap())).getValue());
-        } catch (Exception e) {
-
-            if ((e.getCause() != null) && (e.getCause() instanceof ScriptException)) {
-
-                // Handle ScriptException.
-
-                ScriptException sc = (ScriptException) e.getCause();
-                algorithmTestWrapper.setError(new StringBuffer(sc.getMessage()));
-
-            } else {
-
-                // Handle Generic Exception.
-
-                StringWriter writer = null;
-                PrintWriter printWriter = null;
-
-                try {
-                    writer = new StringWriter();
-                    printWriter = new PrintWriter(writer);
-                    e.printStackTrace(printWriter);
-
-                    StringBuffer testAlgorithmError = new StringBuffer();
-                    testAlgorithmError.append("Processing Error ")
-                            .append(writer.toString());
-                    algorithmTestWrapper.setError(testAlgorithmError);
-                } finally {
-                    if (printWriter != null) {
-                        printWriter.close();
-                    }
-                    if (writer != null) {
-                        try {
-                            writer.close();
-                        } catch (IOException e1) {
-                            // consume
-                        }
-                    }
-                }
-            }
+        } catch (ScriptException sc) {
+            algorithmTestWrapper.setError(new StringBuffer(sc.getMessage()));
         }
     }
 
