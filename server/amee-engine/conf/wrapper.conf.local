@@ -19,7 +19,7 @@ wrapper.java.additional.20=-Dcom.sun.management.jmxremote.ssl=false
 set.DB_USERNAME=amee
 set.DB_PSWD=amee
 set.DB_HOST=localhost
-set.DB_NAME=amee_stage_2_5
+set.DB_NAME=amee_2_5
 set.DB_DRIVER=net.sf.log4jdbc.DriverSpy
 set.DB_URL_PREFIX=jdbc:log4jdbc
 
