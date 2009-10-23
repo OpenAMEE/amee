@@ -24,6 +24,8 @@ import com.amee.domain.*;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -40,6 +42,9 @@ import java.util.*;
 @Table(name = "ITEM_VALUE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemValue extends AMEEEntity implements Pathable {
+
+    @Transient
+    private final Log log = LogFactory.getLog(getClass());
 
     // 32767 because this is bigger than 255, smaller than 65535 and fits into an exact number of bits
     public final static int VALUE_SIZE = 32767;
@@ -232,6 +237,16 @@ public class ItemValue extends AMEEEntity implements Pathable {
         if (value.length() > VALUE_SIZE) {
             value = value.substring(0, VALUE_SIZE - 1);
         }
+
+        // Ensure numerics are a valid format
+        if (getItemValueDefinition().isDecimal() && !value.isEmpty()) {
+            try {
+                Double.parseDouble(value);
+            } catch (NumberFormatException nfe) {
+                log.warn("setValue() - Invalid number format:" + value);
+                throw new IllegalArgumentException("Invalid number format: " + value);
+            }
+        }
         this.value = value;
     }
 
@@ -315,8 +330,8 @@ public class ItemValue extends AMEEEntity implements Pathable {
     public ItemValue getCopy() {
         ItemValue clone = new ItemValue();
         clone.setUid(getUid());
-        clone.setValue(getValue());
         clone.setItemValueDefinition(getItemValueDefinition());
+        clone.setValue(getValue());
         clone.setItem(getItem());
         clone.setStartDate(getStartDate());
         clone.setEndDate(getEndDate());
