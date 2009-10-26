@@ -89,9 +89,6 @@
 
 	<target name="clean-run" depends="rebuild, copy-wrapper, copy-webapps, copy-dependency-libs, copy-amee-libs, start" 
 		description="Rebuild and run AMEE."/>
-
-	<target name="clean-run" depends="clean-deploy, start" 
-		description="Rebuild AMEE."/>
 				
 </project>
 
