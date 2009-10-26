@@ -82,7 +82,7 @@ public class AlgorithmService {
     }
 
     private CompiledScript getCompiledScript(Algorithm algorithm) {
-        CompiledScript compiledScript = (CompiledScript) ThreadBeanHolder.get("algorithm" + algorithm.getUid());
+        CompiledScript compiledScript = (CompiledScript) ThreadBeanHolder.get("algorithm-" + algorithm.getUid());
         if (compiledScript == null) {
             try {
                 compiledScript = ((Compilable) engine).compile(algorithm.getContent());
