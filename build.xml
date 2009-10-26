@@ -14,7 +14,7 @@
 	<target name="rebuild" depends="clean, package" 
 		description="Perform a clean build from src."/>
 
-	<target name="make" depends="package" 
+	<target name="build" depends="package" 
 		description="Perform an incremental build from src."/>
 	
 	<target name="clean" depends="init" 
@@ -85,10 +85,13 @@
 		</exec>
 	</target>
 			
-	<target name="run" depends="make, copy-amee-libs, start" description="Make and run AMEE."/>
+	<target name="run" depends="build, copy-amee-libs, start" description="Make and run AMEE."/>
 
-	<target name="clean-run" depends="rebuild, copy-wrapper, copy-webapps, copy-dependency-libs, copy-amee-libs, start" 
-		description="Rebuild and run AMEE."/>
+   <target name="clean-deploy" depends="rebuild, copy-wrapper, copy-webapps, copy-dependency-libs, copy-amee-libs"
+		description="Rebuild and deploy AMEE"/>
+
+	<target name="clean-run" depends="clean-deploy, stop, start" 
+		description="Rebuild and restart AMEE."/>
 				
 </project>
 
