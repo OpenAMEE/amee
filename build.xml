@@ -87,10 +87,10 @@
 			
 	<target name="run" depends="build, copy-amee-libs, start" description="Make and run AMEE."/>
 
-   <target name="clean-deploy" depends="rebuild, copy-wrapper, copy-webapps, copy-dependency-libs, copy-amee-libs"
+   <target name="clean-deploy" depends="rebuild, copy-webapps, copy-dependency-libs, copy-amee-libs"
 		description="Rebuild and deploy AMEE"/>
 
-	<target name="clean-run" depends="clean-deploy, stop, start" 
+	<target name="clean-run" depends="copy-wrapper, clean-deploy, stop, start" 
 		description="Rebuild and restart AMEE."/>
 				
 </project>
