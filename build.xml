@@ -49,14 +49,14 @@
 
 	<target name="copy-conf" depends="init" 
 		description="Copy the AMEE engine conf to the deployment folder.">
-		<copy todir="${amee.current}/conf">
+		<copy todir="${amee.current}/conf" overwrite="true">
 			<fileset dir="server/amee-engine/conf"/>
 		</copy>
 	</target>
 	
 	<target name="copy-wrapper" depends="init" 
 		description="Copy the AMEE local wrapper.conf to the deployment folder.">
-		<copy tofile="${amee.shared.lib}/wrapper.conf" file="server/amee-engine/conf/wrapper.conf.local"/>
+		<copy tofile="${amee.shared.lib}/wrapper.conf" file="server/amee-engine/conf/wrapper.conf.local" overwrite="true"/>
 	</target>
 
 	<target name="copy-webapps" depends="init" 
@@ -88,7 +88,7 @@
 	<target name="stop" depends="init" description="Stop AMEE.">
 		<exec executable="amee" dir="${amee.current.bin}" failonerror="true">
 			<env key="RUN_AS_USER" value="${env.USER}"/>
-			<arg value="stop"/>
+			<arg value="stop"/>/
 		</exec>
 	</target>
 			
