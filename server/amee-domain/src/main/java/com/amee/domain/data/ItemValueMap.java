@@ -21,6 +21,9 @@
  */
 package com.amee.domain.data;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.*;
 
 /**
@@ -32,6 +35,8 @@ import java.util.*;
  */
 @SuppressWarnings("unchecked")
 public class ItemValueMap extends HashMap {
+
+    Log log = LogFactory.getLog(getClass());
 
     /**
      * Get the head {@link ItemValue} in the historical sequence.
@@ -69,6 +74,15 @@ public class ItemValueMap extends HashMap {
      * @return the List of {@link ItemValue}. Will be empty is there exists no {@link ItemValue}s with this path.
      */
     public List<ItemValue> getAll(String path) {
+        if (log.isDebugEnabled()) {
+            ArrayList<ItemValue> v = new ArrayList((TreeSet<ItemValue>) super.get(path));
+            String[] a = new String[v.size()];
+            for(int i = 0; i < a.length; i++) {
+                a[i] = v.get(i).getStartDate() + " : " + v.get(i).getValue();
+            }
+            log.debug("getAll() - all ItemValue for path " + path + " => " + Arrays.toString(a));
+
+        }
         return new ArrayList((TreeSet<ItemValue>) super.get(path));
     }
 
@@ -85,6 +99,9 @@ public class ItemValueMap extends HashMap {
         if (series != null) {
             itemValue = find(series, startDate);
         }
+        if (log.isDebugEnabled())
+            log.debug("get() - ItemValue for path " + path + " => " +
+                    itemValue.getStartDate() + " : " + itemValue.getValue());
         return itemValue;
     }
 
