@@ -27,6 +27,9 @@ import com.amee.domain.StartEndDate;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+import org.apache.log4j.Logger;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -45,6 +48,9 @@ import java.util.*;
 @DiscriminatorColumn(name = "TYPE", length = 3)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
+
+    @Transient
+    private final Log log = LogFactory.getLog(getClass());
 
     public final static int NAME_SIZE = 255;
 
@@ -300,6 +306,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
         if (!usableSet.isEmpty()) {
             values.put(ivd, new InternalValue(usableSet, getEffectiveStartDate(), getEffectiveEndDate()));
+            log.debug("appendTimeSeriesItemValue() - added timeseries value " + ivd.getPath());
         }
     }
 
@@ -307,6 +314,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     private void appendSingleValuedItemValue(Map<ItemValueDefinition, InternalValue> values, ItemValue itemValue) {
         if (itemValue.isUsableValue()) {
             values.put(itemValue.getItemValueDefinition(), new InternalValue(itemValue));
+            log.debug("appendSingleValuedItemValue() - added single value " + itemValue.getPath());
         }
     }
 
