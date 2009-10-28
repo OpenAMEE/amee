@@ -98,10 +98,10 @@ public class ItemValueMap extends HashMap {
         Set<ItemValue> series = (TreeSet<ItemValue>) super.get(path);
         if (series != null) {
             itemValue = find(series, startDate);
+            if (log.isDebugEnabled())
+                log.debug("get() - ItemValue for path " + path + " => " +
+                        itemValue.getStartDate() + " : " + itemValue.getValue());
         }
-        if (log.isDebugEnabled())
-            log.debug("get() - ItemValue for path " + path + " => " +
-                    itemValue.getStartDate() + " : " + itemValue.getValue());
         return itemValue;
     }
 
