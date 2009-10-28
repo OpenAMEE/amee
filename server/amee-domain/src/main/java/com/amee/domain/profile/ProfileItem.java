@@ -105,6 +105,9 @@ public class ProfileItem extends Item {
         profileItem.setModified(getModified());
         profileItem.setUid(getUid());
         profileItem.setId(getId());
+        for (ItemValue iv : getItemValues()) {
+            profileItem.addItemValue(iv.getCopy());
+        }
         return profileItem;
     }
 
