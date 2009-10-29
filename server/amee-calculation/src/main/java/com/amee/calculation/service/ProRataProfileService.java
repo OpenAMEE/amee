@@ -121,7 +121,16 @@ public class ProRataProfileService {
                 // The ProfileItem has no perTime ItemValues and is bounded. In this case, the CO2 value is multiplied by
                 // the (intersection/item duration) ratio.
 
+                //TODO - make Item a deep copy (and so inc. ItemValues). Will need to implement equals() in ItemValue
+                //TODO - such that overwriting in the ItemValue collection is handled correctly.
+
                 ProfileItem pic = pi.getCopy();
+
+                //Copy in the ItemValues - needed for later representation generation.
+                for (ItemValue iv : pi.getItemValues()) {
+                    pic.addItemValue(iv.getCopy());
+                }
+
                 BigDecimal event = new BigDecimal(getIntervalInMillis(pic.getStartDate(), pic.getEndDate()));
                 BigDecimal eventIntersectRatio = new BigDecimal(intersect.toDurationMillis()).divide(event, Decimal.CONTEXT);
                 BigDecimal proratedAmount = pic.getAmount().getValue().multiply(eventIntersectRatio, Decimal.CONTEXT);

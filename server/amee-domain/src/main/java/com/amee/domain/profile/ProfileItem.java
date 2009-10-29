@@ -96,6 +96,7 @@ public class ProfileItem extends Item {
     }
 
     public ProfileItem getCopy() {
+        log.debug("getCopy()");
         ProfileItem profileItem = new ProfileItem(getProfile(), getDataCategory(), getDataItem());
         profileItem.setStartDate(getStartDate());
         profileItem.setEndDate(getEndDate());
@@ -105,9 +106,6 @@ public class ProfileItem extends Item {
         profileItem.setModified(getModified());
         profileItem.setUid(getUid());
         profileItem.setId(getId());
-        for (ItemValue iv : getItemValues()) {
-            profileItem.addItemValue(iv.getCopy());
-        }
         return profileItem;
     }
 
