@@ -73,16 +73,20 @@ public class ItemValueMap extends HashMap {
      * @param path - the {@link ItemValue} path.
      * @return the List of {@link ItemValue}. Will be empty is there exists no {@link ItemValue}s with this path.
      */
+
     public List<ItemValue> getAll(String path) {
+/*
         if (log.isDebugEnabled()) {
             ArrayList<ItemValue> v = new ArrayList((TreeSet<ItemValue>) super.get(path));
             String[] a = new String[v.size()];
+            String name = v.get(0).getItem().getDisplayName();
             for(int i = 0; i < a.length; i++) {
                 a[i] = v.get(i).getStartDate() + " : " + v.get(i).getValue();
             }
-            log.debug("getAll() - all ItemValue for path " + path + " => " + Arrays.toString(a));
+            log.debug("getAll() - Item: " + name + " - all ItemValues for path: " + path + " => " + Arrays.toString(a));
 
         }
+*/
         return new ArrayList((TreeSet<ItemValue>) super.get(path));
     }
 
@@ -98,9 +102,9 @@ public class ItemValueMap extends HashMap {
         Set<ItemValue> series = (TreeSet<ItemValue>) super.get(path);
         if (series != null) {
             itemValue = find(series, startDate);
-            if (log.isDebugEnabled())
-                log.debug("get() - ItemValue for path " + path + " => " +
-                        itemValue.getStartDate() + " : " + itemValue.getValue());
+            //if (log.isDebugEnabled())
+            //    log.debug("get() - Item: " + itemValue.getItem().getDisplayName() + " - ItemValue for path: " + path + " => " +
+            //            itemValue.getStartDate() + " : " + itemValue.getValue());
         }
         return itemValue;
     }

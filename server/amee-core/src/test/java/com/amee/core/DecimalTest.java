@@ -148,7 +148,7 @@ public class DecimalTest {
         // Divide a series and a primitive
         test = lhs.divide(rhf);
 
-        print(test, actual);
+        //print(test, actual);
         assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
 
     }
