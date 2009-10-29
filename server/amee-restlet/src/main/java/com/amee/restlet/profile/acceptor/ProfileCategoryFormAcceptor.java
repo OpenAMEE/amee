@@ -190,9 +190,9 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                     // Find the matching active ItemValue for the prevailing datetime context.
                     ItemValue itemValue = profileItem.getItemValue(name);
                     if (itemValue != null) {
-                        log.debug("acceptProfileItem() - setting itemValue " + itemValue.getPath() +
-                                " :  " + itemValue.getValue());
                         itemValue.setValue(form.getFirstValue(name));
+                        log.debug("acceptProfileItem() - set itemValue " + itemValue.getPath() +
+                                " :  " + itemValue.getValue());
                         if (resource.getAPIVersion().isNotVersionOne()) {
                             if (itemValue.hasUnit() && form.getNames().contains(name + "Unit")) {
                                 itemValue.setUnit(form.getFirstValue(name + "Unit"));
