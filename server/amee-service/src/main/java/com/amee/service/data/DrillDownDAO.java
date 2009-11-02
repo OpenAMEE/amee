@@ -484,7 +484,7 @@ class DrillDownDAO implements Serializable {
         // set parameters
         query.setInteger("trash", AMEEStatus.TRASH.ordinal());
         query.setLong("dataCategoryId", dataCategoryId);
-        query.setLong("itemDefinitionId", itemDefinitionId);
+        //query.setLong("itemDefinitionId", itemDefinitionId);
         query.setLong("itemValueDefinitionId", itemValueDefinitionId);
         query.setString("value", value);
 
@@ -518,7 +518,7 @@ class DrillDownDAO implements Serializable {
         query.setInteger("trash", AMEEStatus.TRASH.ordinal());
         query.setLong("dataCategoryId", dataCategoryId);
         query.setLong("itemValueDefinitionId", itemValueDefinitionId);
-        query.setLong("itemDefinitionId", itemDefinitionId);
+        //query.setLong("itemDefinitionId", itemDefinitionId);
         query.setString("value", value);
         query.setString("locale", LocaleHolder.getLocale());
 
