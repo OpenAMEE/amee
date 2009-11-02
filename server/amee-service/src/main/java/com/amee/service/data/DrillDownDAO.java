@@ -469,7 +469,7 @@ class DrillDownDAO implements Serializable {
         sql.append("AND i.STATUS != :trash ");
         sql.append("AND i.TYPE = 'DI' ");
         sql.append("AND i.DATA_CATEGORY_ID = :dataCategoryId ");
-        sql.append("AND i.ITEM_DEFINITION_ID = :itemDefinitionId ");
+        //sql.append("AND i.ITEM_DEFINITION_ID = :itemDefinitionId ");
         sql.append("AND iv.ITEM_VALUE_DEFINITION_ID = :itemValueDefinitionId ");
         sql.append("AND iv.VALUE = :value");
 
@@ -503,7 +503,7 @@ class DrillDownDAO implements Serializable {
         sql.append("AND i.STATUS != :trash ");
         sql.append("AND i.TYPE = 'DI' ");
         sql.append("AND i.DATA_CATEGORY_ID = :dataCategoryId ");
-        sql.append("AND i.ITEM_DEFINITION_ID = :itemDefinitionId ");
+        //sql.append("AND i.ITEM_DEFINITION_ID = :itemDefinitionId ");
         sql.append("AND iv.ITEM_VALUE_DEFINITION_ID = :itemValueDefinitionId ");
         sql.append("AND ln.ENTITY_TYPE='IV' AND ln.ENTITY_ID = iv.ID AND LOCALE = :locale AND ln.NAME = :value");
 
