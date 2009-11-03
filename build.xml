@@ -47,13 +47,6 @@
 	  </copy>
 	</target>
 
-	<target name="copy-conf" depends="init" 
-		description="Copy the AMEE engine conf to the deployment folder.">
-		<copy todir="${amee.current}/conf" overwrite="true">
-			<fileset dir="server/amee-engine/conf"/>
-		</copy>
-	</target>
-	
 	<target name="copy-wrapper" depends="init" 
 		description="Copy the AMEE local wrapper.conf to the deployment folder.">
 		<copy tofile="${amee.shared.lib}/wrapper.conf" file="server/amee-engine/conf/wrapper.conf.local" overwrite="true"/>
@@ -94,7 +87,7 @@
 			
 	<target name="run" depends="build, copy-amee-libs, start" description="Make and run AMEE."/>
 
-   <target name="clean-deploy" depends="rebuild, copy-conf, copy-webapps, copy-dependency-libs, copy-amee-libs"
+   <target name="clean-deploy" depends="rebuild, copy-webapps, copy-dependency-libs, copy-amee-libs"
 		description="Rebuild and deploy AMEE"/>
 
 	<target name="clean-run" depends="copy-wrapper, clean-deploy, stop, start" 
