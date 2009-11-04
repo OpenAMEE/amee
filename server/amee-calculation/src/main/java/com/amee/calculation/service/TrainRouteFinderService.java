@@ -140,7 +140,7 @@ class TrainRouteFinderService implements Service {
             throw new IllegalArgumentException("Unable to generate a valid route for station1=" + station1 +
                     " and station2=" + station2);
         } catch (Exception e) {
-            log.error("invoke() - " + e.getClass() + ": " + e.getMessage());
+            log.error("invoke()", e);
             // Removed reset of setLegDetail - as a performance tuning we are
             // not returning leg details from train route api for the moment - SM (10/2009)
             // setLegDetail(null);
