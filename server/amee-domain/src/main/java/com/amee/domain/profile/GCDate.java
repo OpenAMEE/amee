@@ -26,7 +26,7 @@ import java.util.Date;
 public abstract class GCDate extends java.util.Date {
 
     protected String dateStr;
-
+    
     public GCDate(long time) {
         setTime(time);
         setDefaultDateStr();
