@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/amee-admin.iml" filepath="$PROJECT_DIR$/amee-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-calculation.iml" filepath="$PROJECT_DIR$/amee-calculation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-core.iml" filepath="$PROJECT_DIR$/amee-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-db.iml" filepath="$PROJECT_DIR$/amee-db.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-deploy.iml" filepath="$PROJECT_DIR$/amee-deploy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-domain.iml" filepath="$PROJECT_DIR$/amee-domain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-engine.iml" filepath="$PROJECT_DIR$/amee-engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-gdata.iml" filepath="$PROJECT_DIR$/amee-gdata.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-htdocs.iml" filepath="$PROJECT_DIR$/amee-htdocs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-restlet.iml" filepath="$PROJECT_DIR$/amee-restlet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-scripts.iml" filepath="$PROJECT_DIR$/amee-scripts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-service.iml" filepath="$PROJECT_DIR$/amee-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/amee-webapps.iml" filepath="$PROJECT_DIR$/amee-webapps.iml" />
+      <module fileurl="file://$PROJECT_DIR$/server.iml" filepath="$PROJECT_DIR$/server.iml" />
+    </modules>
+  </component>
+</project>
+
