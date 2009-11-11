@@ -1,6 +1,7 @@
 package com.amee.domain.profile;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -27,7 +28,7 @@ import java.util.Calendar;
  */
 public class ValidFromDate extends GCDate {
 
-    private static DateTimeFormatter FMT = DateTimeFormat.forPattern("yyyyMMdd");
+    private static DateTimeFormatter FMT = DateTimeFormat.forPattern("yyyyMMdd").withZone(DateTimeZone.UTC);
 
     public ValidFromDate(String validFrom) {
         super(validFrom);
