@@ -2,6 +2,7 @@ package com.amee.domain;
 
 import com.amee.domain.profile.GCDate;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -30,7 +31,9 @@ import java.util.Date;
  */
 public class StartEndDate extends GCDate {
 
-    private static final DateTimeFormatter FMT = ISODateTimeFormat.dateTimeNoMillis();
+    private static final DateTimeFormatter FMT = ISODateTimeFormat.dateTimeNoMillis().withOffsetParsed();
+
+    private int offset = 1;
 
     public StartEndDate() {
         this(new Date());
@@ -47,14 +50,25 @@ public class StartEndDate extends GCDate {
     protected long parseStr(String dateStr) {
         try {
             // Seconds are ignored and are not significant in this version of AMEE.
-            return FMT.parseDateTime(dateStr).secondOfMinute().withMinimumValue().getMillis();
+            DateTime dt = FMT.parseDateTime(dateStr);
+            this.offset = dt.getZone().toTimeZone().getRawOffset();
+            return dt.secondOfMinute().withMinimumValue().getMillis();
         } catch (IllegalArgumentException e) {
             throw e;
         }
     }
 
+    /**
+     * Returns the amount of time in milliseconds to add to UTC to get standard time in this time zone.
+     * 
+     * @return the amount of raw offset time in milliseconds to add to UTC.
+     */
+    public int getRawOffset() {
+        return offset;
+    }
+
     protected void setDefaultDateStr() {
-        this.dateStr = FMT.print(getTime());
+        this.dateStr = FMT.withZone(DateTimeZone.forOffsetMillis(offset)).print(getTime());
     }
 
     protected long defaultDate() {
