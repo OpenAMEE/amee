@@ -43,7 +43,7 @@ public class AlgorithmService {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    // The ScriptEngine for the Javscript context.
+    // The ScriptEngine for the JavaScript context.
     private final ScriptEngine engine = new ScriptEngineManager().getEngineByName("js");
 
     // Default Algorithm name to use in calculations
@@ -80,7 +80,7 @@ public class AlgorithmService {
             if (result != null) {
                 return result.toString();
             } else {
-                throw new RuntimeException("Result from CompiledScript.eval() was null. Algorithm UID is: " + algorithm.getUid());
+                throw new RuntimeException("evaluate() - Result from CompiledScript.eval() was null. Algorithm UID is '" + algorithm.getUid() + "'");
             }
         } finally {
             ameeStatistics.addToThreadCalculationDuration(System.nanoTime() - startTime);
