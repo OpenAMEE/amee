@@ -1,15 +1,21 @@
 package com.amee.calculation.service;
 
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.data.ItemDefinition;
-import com.amee.core.ThreadBeanHolder;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.script.*;
+import javax.script.Bindings;
+import javax.script.Compilable;
+import javax.script.CompiledScript;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.util.Map;
 
 /**
@@ -56,7 +62,6 @@ public class AlgorithmService {
         return itemDefinition.getAlgorithm(DEFAULT);
     }
 
-
     /**
      * Evaluate an Algorithm.
      *
@@ -71,7 +76,12 @@ public class AlgorithmService {
             Bindings bindings = createBindings();
             bindings.putAll(values);
             bindings.put("logger", log);
-            return getCompiledScript(algorithm).eval(bindings).toString();
+            Object result = getCompiledScript(algorithm).eval(bindings);
+            if (result != null) {
+                return result.toString();
+            } else {
+                throw new RuntimeException("Result from CompiledScript.eval() was null. Algorithm UID is: " + algorithm.getUid());
+            }
         } finally {
             ameeStatistics.addToThreadCalculationDuration(System.nanoTime() - startTime);
         }
@@ -81,17 +91,27 @@ public class AlgorithmService {
         return engine.createBindings();
     }
 
-    private CompiledScript getCompiledScript(Algorithm algorithm) {
+    /**
+     * Return a CompiledScript based on the content of the Algorithm. Will throw a RuntimeException if
+     * the Algorithm content is blank or if the CompiledScript is null. Will cache the CompiledScript
+     * in the thread.
+     *
+     * @param algorithm to create CompiledScript from
+     * @return the CompiledScript
+     * @throws ScriptException
+     */
+    private CompiledScript getCompiledScript(Algorithm algorithm) throws ScriptException {
         CompiledScript compiledScript = (CompiledScript) ThreadBeanHolder.get("algorithm-" + algorithm.getUid());
         if (compiledScript == null) {
-            try {
-                compiledScript = ((Compilable) engine).compile(algorithm.getContent());
-            } catch (ScriptException e) {
-                throw new RuntimeException(e);
+            if (StringUtils.isBlank(algorithm.getContent())) {
+                throw new RuntimeException("Algorithm content is null. Algorithm UID is: " + algorithm.getUid());
             }
-            ThreadBeanHolder.set("algorithm-"+algorithm.getUid(), compiledScript);
+            compiledScript = ((Compilable) engine).compile(algorithm.getContent());
+            if (compiledScript == null) {
+                throw new RuntimeException("CompiledScript is null. Algorithm UID is: " + algorithm.getUid());
+            }
+            ThreadBeanHolder.set("algorithm-" + algorithm.getUid(), compiledScript);
         }
         return compiledScript;
     }
-
 }
