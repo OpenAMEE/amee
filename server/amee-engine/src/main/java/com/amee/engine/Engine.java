@@ -14,6 +14,7 @@ import org.tanukisoftware.wrapper.WrapperListener;
 import org.tanukisoftware.wrapper.WrapperManager;
 
 import java.io.Serializable;
+import java.util.TimeZone;
 
 public class Engine implements WrapperListener, Serializable {
 
@@ -43,6 +44,8 @@ public class Engine implements WrapperListener, Serializable {
 
     public Integer start(String[] args) {
 
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+        
         parseOptions(args);
 
         log.debug("Starting Engine...");
