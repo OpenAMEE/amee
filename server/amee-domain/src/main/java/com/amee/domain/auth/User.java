@@ -48,6 +48,8 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
     public final static int NAME_SIZE = 100;
     public final static int EMAIL_SIZE = 255;
 
+    // TODO: This column name should be USER_TYPE_ID.
+    // TODO: See: http://my.amee.com/developers/ticket/827
     @Column(name = "USER_TYPE")
     private UserType type = UserType.STANDARD;
 
