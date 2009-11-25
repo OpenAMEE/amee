@@ -118,7 +118,7 @@ class TrainRouteFinderService implements Service {
             q.append(" to ");
             q.append(station2);
             url.append(URLEncoder.encode(q.toString(), "UTF-8"));
-            url.append("&s=JSON&gp=0&gs=0");
+            url.append("&s=JSON&gp=0&gs=0&gd=1");
 
             // Make the request
             DefaultHttpClient httpclient = new DefaultHttpClient();
