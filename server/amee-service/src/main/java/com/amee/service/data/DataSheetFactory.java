@@ -35,15 +35,17 @@ public class DataSheetFactory implements CacheableFactory {
 
     private DataService dataService;
     private DataBrowser dataBrowser;
+    private String cacheName;
 
     private DataSheetFactory() {
         super();
     }
 
-    public DataSheetFactory(DataService dataService, DataBrowser dataBrowser) {
+    public DataSheetFactory(DataService dataService, DataBrowser dataBrowser, String cacheName) {
         this();
         this.dataService = dataService;
         this.dataBrowser = dataBrowser;
+        this.cacheName = cacheName;
     }
 
     public Object create() {
@@ -134,6 +136,6 @@ public class DataSheetFactory implements CacheableFactory {
     }
 
     public String getCacheName() {
-        return "DataSheets";
+        return cacheName;
     }
 }
