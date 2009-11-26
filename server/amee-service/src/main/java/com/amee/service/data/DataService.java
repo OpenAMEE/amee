@@ -74,6 +74,7 @@ public class DataService extends BaseService {
         }
     }
 
+    // TODO: Populating activeCategories seems redundant. Doesn't dao.getDataCategories only return actives?
     public List<DataCategory> getDataCategories(Environment environment) {
         List<DataCategory> activeCategories = new ArrayList<DataCategory>();
         for (DataCategory dataCategory : dao.getDataCategories(environment)) {
