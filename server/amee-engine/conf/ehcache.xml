@@ -290,11 +290,17 @@
 
     <!-- Data Sheets -->
     <cache name="DataSheets"
-           maxElementsInMemory="60"
+           maxElementsInMemory="120"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="172800"
            timeToLiveSeconds="345600"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+    <cache name="DataSheetsEternal"
+           maxElementsInMemory="60"
+           eternal="true"
+           overflowToDisk="false"
            memoryStoreEvictionPolicy="LFU">
     </cache>
 

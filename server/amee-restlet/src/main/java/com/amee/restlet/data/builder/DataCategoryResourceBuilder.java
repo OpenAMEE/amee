@@ -69,12 +69,8 @@ public class DataCategoryResourceBuilder {
             // list child Data Categories and child Data Items
             JSONObject children = new JSONObject();
 
-            // If the DC is a symlink, use the target PathItem
-            PathItem pathItem = resource.getPathItem();
-            if (resource.getDataCategory().getAliasedCategory() != null) {
-                PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getActiveEnvironment());
-                pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
-            }
+            // Get PathItem.
+            PathItem pathItem = getPathItem(resource);
 
             // add Data Categories via pathItem to children
             JSONArray dataCategories = new JSONArray();
@@ -84,7 +80,7 @@ public class DataCategoryResourceBuilder {
             children.put("dataCategories", dataCategories);
 
             // addItemValue Sheet containing Data Items
-            Sheet sheet = dataService.getSheet(resource.getDataBrowser());
+            Sheet sheet = dataService.getSheet(resource.getDataBrowser(), pathItem.getFullPath());
             if (sheet != null) {
                 Pager pager = resource.getPager(resource.getItemsPerPage());
                 sheet = Sheet.getCopy(sheet, pager);
@@ -141,12 +137,8 @@ public class DataCategoryResourceBuilder {
             Element childrenElement = document.createElement("Children");
             element.appendChild(childrenElement);
 
-            // If the DC is a symlink, use the target PathItem
-            PathItem pathItem = resource.getPathItem();
-            if (resource.getDataCategory().getAliasedCategory() != null) {
-                PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getActiveEnvironment());
-                pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
-            }
+            // Get PathItem.
+            PathItem pathItem = getPathItem(resource);
 
             // addItemValue Data Categories
             Element dataCategoriesElement = document.createElement("DataCategories");
@@ -156,7 +148,7 @@ public class DataCategoryResourceBuilder {
             childrenElement.appendChild(dataCategoriesElement);
 
             // list child Data Items via sheet
-            Sheet sheet = dataService.getSheet(resource.getDataBrowser());
+            Sheet sheet = dataService.getSheet(resource.getDataBrowser(), pathItem.getFullPath());
             if (sheet != null) {
                 Pager pager = resource.getPager(resource.getItemsPerPage());
                 sheet = Sheet.getCopy(sheet, pager);
@@ -195,7 +187,8 @@ public class DataCategoryResourceBuilder {
 
     public Map<String, Object> getTemplateValues(DataCategoryResource resource) {
         DataCategory dataCategory = resource.getDataCategory();
-        Sheet sheet = dataService.getSheet(resource.getDataBrowser());
+        PathItem pathItem = getPathItem(resource);
+        Sheet sheet = dataService.getSheet(resource.getDataBrowser(), pathItem.getFullPath());
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("browser", resource.getDataBrowser());
         values.put("dataCategory", dataCategory);
@@ -211,19 +204,23 @@ public class DataCategoryResourceBuilder {
             values.put("sheet", sheet);
             values.put("pager", pager);
         }
-
-        // If the DC is a symlink, use the target PathItem
-        PathItem pathItem = resource.getPathItem();
-        values.put("fullPath", "/data" + pathItem.getFullPath());
-        if (resource.getDataCategory().getAliasedCategory() != null) {
-            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getActiveEnvironment());
-            pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
-            values.put("pathItem", pathItem);
-        }
+        values.put("pathItem", pathItem);
+        // Ensure fullPath value comes from current pathItem and not symlink target pathItem.
+        values.put("fullPath", "/data" + resource.getPathItem());
         return values;
     }
 
     public org.apache.abdera.model.Element getAtomElement() {
         return null;
+    }
+
+    private PathItem getPathItem(DataCategoryResource resource) {
+        // If the DC is a symlink, use the target PathItem
+        PathItem pathItem = resource.getPathItem();
+        if (resource.getDataCategory().getAliasedCategory() != null) {
+            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getActiveEnvironment());
+            pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
+        }
+        return pathItem;
     }
 }

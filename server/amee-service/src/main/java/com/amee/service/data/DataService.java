@@ -200,9 +200,7 @@ public class DataService extends BaseService {
             }
 
             // clear caches
-            drillDownService.clearDrillDownCache();
-            pathItemService.removePathItemGroup(dataItem.getEnvironment());
-            dataSheetService.removeSheet(dataItem.getDataCategory());
+            clearCaches(dataItem.getDataCategory());
         }
     }
 
@@ -225,8 +223,8 @@ public class DataService extends BaseService {
 
     // Sheets & Choices
 
-    public Sheet getSheet(DataBrowser browser) {
-        return dataSheetService.getSheet(browser);
+    public Sheet getSheet(DataBrowser browser, String fullPath) {
+        return dataSheetService.getSheet(browser, fullPath);
     }
 
     @SuppressWarnings(value = "unchecked")
