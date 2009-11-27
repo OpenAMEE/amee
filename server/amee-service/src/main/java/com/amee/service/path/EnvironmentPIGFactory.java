@@ -73,7 +73,13 @@ public class EnvironmentPIGFactory implements CacheableFactory {
         return "EnvironmentPIGs";
     }
 
-    // TODO: Why not just use a for loop, not an Iterator?
+    /**
+     * Finds the 'root' DataCategory in the supplied dataCategories List, removes it from the List and
+     * returns it. The root DataCategory is the first one found without a parent DataCategory.
+     *
+     * @param dataCategories list to search
+     * @return the root DataCategory
+     */
     private DataCategory findRootDataCategory(List<DataCategory> dataCategories) {
         Iterator<DataCategory> iterator = dataCategories.iterator();
         while (iterator.hasNext()) {

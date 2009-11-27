@@ -268,12 +268,10 @@ public class AMEEEntityReference implements IAMEEEntityReference, Serializable {
         this.accessSpecification = accessSpecification;
     }
 
-    @Override
     public AMEEEntity getEntity() {
         return entity;
     }
 
-    @Override
     public void setEntity(AMEEEntity entity) {
         this.entity = entity;
     }

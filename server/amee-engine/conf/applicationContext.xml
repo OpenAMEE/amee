@@ -82,4 +82,21 @@
     </bean>
     <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
 
+    <!-- DataSheetService -->
+    <!-- The eternalPaths below should be kept in sync with those in /bin/warm-up-eternal-categories.sh -->
+    <bean id="dataSheetService" class="com.amee.service.data.DataSheetService">
+        <property name="eternalPaths">
+            <set>
+                <value>/home/heating</value>
+                <value>/home/heating/us</value>
+                <value>/transport/plane/generic/airports/all/countries</value>
+                <value>/transport/car/specific</value>
+                <value>/transport/car/specific/us</value>
+                <value>/transport/car/specific/uk</value>
+                <value>/transport/plane/generic/airports/all/codes</value>
+                <value>/business/energy/stationaryCombustion</value>
+            </set>
+        </property>
+    </bean>
+
 </beans>
