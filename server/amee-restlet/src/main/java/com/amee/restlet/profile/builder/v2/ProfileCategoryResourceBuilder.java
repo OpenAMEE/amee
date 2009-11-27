@@ -89,23 +89,23 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         } else {
 
-            // addItemValue objects
+            // add objects
             obj.put("path", resource.getPathItem().getFullPath());
 
-            // addItemValue relevant Profile info depending on whether we are at root
+            // add relevant Profile info depending on whether we are at root
             if (resource.hasParent()) {
                 obj.put("profile", resource.getProfile().getIdentityJSONObject());
             } else {
                 obj.put("profile", resource.getProfile().getJSONObject());
             }
 
-            // addItemValue environment
+            // add environment
             obj.put("environment", resource.getActiveEnvironment().getJSONObject(true));
 
-            // addItemValue Data Category
+            // add Data Category
             obj.put("dataCategory", resource.getDataCategory().getJSONObject(true));
 
-            // addItemValue Data Categories via pathItem to children
+            // add Data Categories via pathItem to children
             JSONArray dataCategories = new JSONArray();
             for (PathItem pi : resource.getChildrenByType(ObjectType.DC.getName())) {
                 dataCategories.put(pi.getJSONObject());
@@ -129,7 +129,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
                     obj.put("pager", pager.getJSONObject());
                 }
 
-                // addItemValue CO2 amount
+                // add CO2 amount
                 JSONObject totalAmount = new JSONObject();
                 totalAmount.put("value", getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit()).toString());
                 totalAmount.put("unit", resource.getProfileBrowser().getCo2AmountUnit());
@@ -167,20 +167,20 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
             element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
 
-            // addItemValue relevant Profile info depending on whether we are at root
+            // add relevant Profile info depending on whether we are at root
             if (resource.hasParent()) {
                 element.appendChild(resource.getProfile().getIdentityElement(document));
             } else {
                 element.appendChild(resource.getProfile().getElement(document));
             }
 
-            // addItemValue environment
+            // add environment
             element.appendChild(resource.getActiveEnvironment().getElement(document, true));
 
-            // addItemValue DataCategory
+            // add DataCategory
             element.appendChild(resource.getDataCategory().getIdentityElement(document));
 
-            // addItemValue Data Categories via pathItem to children
+            // add Data Categories via pathItem to children
             Element dataCategoriesElement = document.createElement("ProfileCategories");
             for (PathItem dc : resource.getChildrenByType(ObjectType.DC.getName())) {
                 dataCategoriesElement.appendChild(dc.getElement(document));
@@ -205,7 +205,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
                     element.appendChild(pager.getElement(document));
                 }
 
-                // addItemValue CO2 amount
+                // add CO2 amount
                 Element totalAmount = APIUtils.getElement(document,
                         "TotalAmount",
                         getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit()).toString());
@@ -355,7 +355,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             FeedPagingHelper.setLast(feed, feed.getBaseUri() + "?page=" + pager.getLastPage());
         }
 
-        // If the GET contained query (search) parameters, addItemValue OpenSearch elements describing the query and the results.
+        // If the GET contained query (search) parameters, add OpenSearch elements describing the query and the results.
         if (resource.getProfileBrowser().isQuery()) {
 
             if (numOfProfileItems > pager.getItemsPerPage()) {

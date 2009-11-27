@@ -234,7 +234,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     /**
-     * Attempt to match an {@link ItemValue} belonging to this Item using some identifier. The identifer may be a path
+     * Attempt to match an {@link ItemValue} belonging to this Item using some identifier. The identifier may be a path
      * or UID.
      *
      * @param identifier - a value to be compared to the path and then the uid of the {@link ItemValue}s belonging

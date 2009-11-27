@@ -107,7 +107,7 @@ public class DataSheetFactory implements CacheableFactory {
                     } else if ("endDate".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, dataItem.getEndDate(), ValueType.DATE);
                     } else {
-                        // addItemValue empty cell
+                        // add empty cell
                         new Cell(column, row);
                     }
                 }

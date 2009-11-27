@@ -108,7 +108,6 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         return APIUtils.getIdentityElement(document, this);
     }
 
-
     /**
      * Add 'built-in' Permission to this Profile, such that the associated User owns the Profile.
      *
