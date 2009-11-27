@@ -33,7 +33,6 @@ import org.hibernate.FetchMode;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Service;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -247,7 +246,7 @@ public class DataServiceDAO implements Serializable {
     }
 
     protected void remove(Collection<LocaleName> localeNames) {
-        for(LocaleName localeName : localeNames) {
+        for (LocaleName localeName : localeNames) {
             remove(localeName);
         }
     }
@@ -255,5 +254,4 @@ public class DataServiceDAO implements Serializable {
     protected void remove(LocaleName localeName) {
         localeName.setStatus(AMEEStatus.TRASH);
     }
-
 }

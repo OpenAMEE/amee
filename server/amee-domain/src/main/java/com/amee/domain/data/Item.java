@@ -27,9 +27,8 @@ import com.amee.domain.StartEndDate;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -39,8 +38,25 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Entity
 @Inheritance
@@ -155,12 +171,10 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public String getDisplayPath() {
         if (getPath().length() > 0) {
             return getPath();
@@ -169,7 +183,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
-    @Override
     public String getDisplayName() {
         if (getName().length() > 0) {
             return getName();
@@ -269,7 +282,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      */
     private ItemValue getByUid(final String uid) {
         return (ItemValue) CollectionUtils.find(getActiveItemValues(), new Predicate() {
-            @Override
             public boolean evaluate(Object o) {
                 ItemValue iv = (ItemValue) o;
                 return iv.getUid().equals(uid);
@@ -456,7 +468,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
  * {@see ItemValue#isUsableValue()}
  */
 class UsableValuePredicate implements Predicate {
-    @Override
     public boolean evaluate(Object o) {
         return ((ItemValue) o).isUsableValue();
     }
@@ -473,7 +484,6 @@ class CurrentItemValuePredicate implements Predicate {
         this.itemValues = itemValues;
     }
 
-    @Override
     public boolean evaluate(Object o) {
         ItemValue iv = (ItemValue) o;
         StartEndDate startDate = iv.getStartDate();

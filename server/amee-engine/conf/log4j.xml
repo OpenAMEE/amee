@@ -5,19 +5,21 @@
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c{6}] %m%n"/>
+            <param name="ConversionPattern"
+                   value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c{6}] %m%n"/>
         </layout>
     </appender>
 
     <!-- Declare the SMTPAppender -->
-    <appender name="EMAIL"  class="org.apache.log4j.net.SMTPAppender">
-        <param name="BufferSize" value="512" />
-        <param name="SMTPHost" value="localhost" />
-        <param name="From" value="amee@${host.name}" />
-        <param name="To" value="tech@amee.cc" />
-        <param name="Subject" value="AMEE Service Message" />
+    <appender name="EMAIL" class="org.apache.log4j.net.SMTPAppender">
+        <param name="BufferSize" value="512"/>
+        <param name="SMTPHost" value="localhost"/>
+        <param name="From" value="amee@${host.name}"/>
+        <param name="To" value="tech@amee.cc"/>
+        <param name="Subject" value="AMEE Service Message"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c{6}] %m%n"/>
+            <param name="ConversionPattern"
+                   value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c{6}] %m%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="ERROR "/>
@@ -26,7 +28,7 @@
     </appender>
 
     <appender name="ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="/var/www/apps/amee/shared/log/transactions.log" />
+        <param name="File" value="/var/www/apps/amee/shared/log/transactions.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <param name="Append" value="true"/>
         <param name="Threshold" value="INFO"/>
@@ -35,36 +37,38 @@
         </layout>
     </appender>
 
-
     <!-- ############### Hibernate ################# -->
 
-    <!--category name="org.hibernate">
-        <priority value="INFO"/>
-    </category-->
-    <!--category name="org.hibernate.SQL">
-        <priority value="TRACE"/>
-    </category-->
-    <!--category name="org.hibernate.type">
-        <priority value="TRACE"/>
-    </category-->
-    <!--category name="org.hibernate.loader">
-        <priority value="TRACE"/>
-    </category-->
-    <!--category name="org.hibernate.cache">
-        <priority value="TRACE"/>
-    </category-->
+    <!--<category name="org.hibernate">-->
+    <!--<priority value="INFO"/>-->
+    <!--</category>-->
+    <!--<category name="org.hibernate.SQL">-->
+    <!--<priority value="TRACE"/>-->
+    <!--</category>-->
+    <!--<category name="org.hibernate.jdbc">-->
+    <!--<priority value="TRACE"/>-->
+    <!--</category>-->
+    <!--<category name="org.hibernate.type">-->
+    <!--<priority value="TRACE"/>-->
+    <!--</category>-->
+    <!--<category name="org.hibernate.loader">-->
+    <!--<priority value="TRACE"/>-->
+    <!--</category>-->
+    <!--<category name="org.hibernate.cache">-->
+    <!--<priority value="TRACE"/>-->
+    <!--</category>-->
 
     <!-- ############### Spring ################# -->
 
-    <!--category name="org.springframework">
-        <priority value="DEBUG"/>
-    </category-->
+    <!--<category name="org.springframework">-->
+    <!--<priority value="DEBUG"/>-->
+    <!--</category>-->
 
     <!-- ############### Restlet ################# -->
 
-    <!--category name="org.restlet">
-        <priority value="DEBUG"/>
-    </category-->
+    <!--<category name="org.restlet">-->
+    <!--<priority value="DEBUG"/>-->
+    <!--</category>-->
 
     <!-- ############### AMEE ################### -->
 
