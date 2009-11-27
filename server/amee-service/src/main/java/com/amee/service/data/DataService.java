@@ -74,6 +74,7 @@ public class DataService extends BaseService {
         }
     }
 
+    // TODO: Populating activeCategories seems redundant. Doesn't dao.getDataCategories only return actives?
     public List<DataCategory> getDataCategories(Environment environment) {
         List<DataCategory> activeCategories = new ArrayList<DataCategory>();
         for (DataCategory dataCategory : dao.getDataCategories(environment)) {
@@ -199,9 +200,7 @@ public class DataService extends BaseService {
             }
 
             // clear caches
-            drillDownService.clearDrillDownCache();
-            pathItemService.removePathItemGroup(dataItem.getEnvironment());
-            dataSheetService.removeSheet(dataItem.getDataCategory());
+            clearCaches(dataItem.getDataCategory());
         }
     }
 
@@ -224,8 +223,8 @@ public class DataService extends BaseService {
 
     // Sheets & Choices
 
-    public Sheet getSheet(DataBrowser browser) {
-        return dataSheetService.getSheet(browser);
+    public Sheet getSheet(DataBrowser browser, String fullPath) {
+        return dataSheetService.getSheet(browser, fullPath);
     }
 
     @SuppressWarnings(value = "unchecked")

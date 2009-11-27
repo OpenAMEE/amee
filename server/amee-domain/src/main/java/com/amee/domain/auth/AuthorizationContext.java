@@ -19,11 +19,9 @@
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-package com.amee.service.auth;
+package com.amee.domain.auth;
 
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.auth.AccessSpecification;
-import com.amee.domain.auth.PermissionEntry;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

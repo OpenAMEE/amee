@@ -57,7 +57,7 @@ public class PermissionServiceDAOMock implements PermissionServiceDAO {
         throw new UnsupportedOperationException();
     }
 
-    public List<Permission> getPermissionsForPrincipalAndEntity(IAMEEEntityReference principal, IAMEEEntityReference entity) {
+    public List<Permission> getPermissionsForEntity(IAMEEEntityReference principal, IAMEEEntityReference entity) {
         List<Permission> permissions = new ArrayList<Permission>();
         if (serviceData.PRINCIPAL_TO_PERMISSIONS.containsKey(principal)) {
             for (Permission permission : serviceData.PRINCIPAL_TO_PERMISSIONS.get(principal)) {
