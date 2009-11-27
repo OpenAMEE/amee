@@ -63,7 +63,7 @@ public class DataCategoryResourceBuilder {
 
         if (resource.isGet()) {
 
-            // addItemValue DataCategory
+            // add DataCategory
             obj.put("dataCategory", resource.getDataCategory().getJSONObject(true));
 
             // list child Data Categories and child Data Items
@@ -83,7 +83,7 @@ public class DataCategoryResourceBuilder {
             }
             children.put("dataCategories", dataCategories);
 
-            // addItemValue Sheet containing Data Items
+            // add Sheet containing Data Items
             Sheet sheet = dataService.getSheet(resource.getDataBrowser());
             if (sheet != null) {
                 Pager pager = resource.getPager(resource.getItemsPerPage());
@@ -96,7 +96,7 @@ public class DataCategoryResourceBuilder {
                 children.put("pager", new JSONObject());
             }
 
-            // addItemValue children
+            // add children
             obj.put("children", children);
 
         } else if (resource.isPostOrPut()) {
@@ -134,7 +134,7 @@ public class DataCategoryResourceBuilder {
 
         if (resource.isGet()) {
 
-            // addItemValue DataCategory
+            // add DataCategory
             element.appendChild(resource.getDataCategory().getElement(document, true));
 
             // list child Data Categories and child Data Items
@@ -148,7 +148,7 @@ public class DataCategoryResourceBuilder {
                 pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
             }
 
-            // addItemValue Data Categories
+            // add Data Categories
             Element dataCategoriesElement = document.createElement("DataCategories");
             for (PathItem pi : pathItem.getChildrenByType(ObjectType.DC.getName())) {
                 dataCategoriesElement.appendChild(pi.getElement(document));

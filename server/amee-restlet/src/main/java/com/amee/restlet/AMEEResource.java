@@ -161,7 +161,7 @@ public abstract class AMEEResource extends AuthorizeResource {
         // flag to ensure we only do the fetching work once
         final ThreadLocal<Boolean> fetched = new ThreadLocal<Boolean>();
 
-        // No need to use JsonRepresentation directly as it doesn't addItemValue much beyond StringRepresentation
+        // No need to use JsonRepresentation directly as it doesn't add much beyond StringRepresentation
         return new StringRepresentation(null, MediaType.APPLICATION_JSON) {
 
             @Override

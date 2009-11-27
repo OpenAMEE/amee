@@ -55,14 +55,14 @@ public class FreeMarkerConfigurationFactory implements CacheableFactory {
         String path;
         List<TemplateLoader> loaders = new ArrayList<TemplateLoader>();
 
-        // addItemValue loader for this skin if possible
+        // add loader for this skin if possible
         if (skin.getPath().length() > 0) {
 
             // work out path and get directory for this Skin
             path = System.getProperty("amee.SkinRoot", "/var/www/amee/skins") + "/" + skin.getPath();
             file = new File(path);
 
-            // addItemValue loader for this Skin
+            // add loader for this Skin
             if (file.exists() && file.isDirectory()) {
                 try {
                     loaders.add(new FileTemplateLoader(file));
@@ -72,12 +72,12 @@ public class FreeMarkerConfigurationFactory implements CacheableFactory {
             }
         }
 
-        // addItemValue loader for parent Skin if present
+        // add loader for parent Skin if present
         if (skin.getParent() != null) {
             loaders.add(getFreeMarkerTemplateLoader(skin.getParent()));
         }
 
-        // addItemValue loader for import Skins if present
+        // add loader for import Skins if present
         for (Skin s : skin.getImportedSkins()) {
             loaders.add(getFreeMarkerTemplateLoader(s));
         }

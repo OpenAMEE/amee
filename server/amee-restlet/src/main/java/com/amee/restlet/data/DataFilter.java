@@ -23,9 +23,7 @@ import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.restlet.RewriteFilter;
-import com.amee.restlet.RequestContext;
 import com.amee.service.path.PathItemService;
-import com.amee.core.ThreadBeanHolder;
 import org.apache.commons.lang.StringUtils;
 import org.restlet.Application;
 import org.restlet.data.Reference;
@@ -52,15 +50,14 @@ public class DataFilter extends RewriteFilter {
         List<String> segments = reference.getSegments();
         removeEmptySegmentAtEnd(segments);
         if (!skipRewrite(segments) && segments.get(0).equals("data")) {
-             // remove '/data'
+            // remove '/data'
             segments.remove(0);
             // handle suffixes
             String suffix = handleSuffix(segments);
-
+            // create PathItemGroup for the active Environment
             Environment environment = (Environment) request.getAttributes().get("activeEnvironment");
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
-
-            // check for flat or heirachical path
+            // check for flat or hierarchical path
             if (!segments.isEmpty() && StringUtils.equals(segments.get(0), "categories")) {
                 PathItem pathItem;
                 if (segments.size() == 1) {

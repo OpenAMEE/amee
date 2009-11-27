@@ -35,6 +35,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
+/**
+ * An abstract base class for all Resource implementations in this application.
+ */
 public abstract class BaseResource extends Resource implements BeanFactoryAware {
 
     protected final Log log = LogFactory.getLog(getClass());
@@ -51,6 +54,16 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         setModifiable(isAvailable());
     }
 
+    /**
+     * Initialises the Resource by setting up the required Variants. For standard web browsers we only
+     * configure for TEXT_HTML, for other web clients we support APPLICATION_XML and APPLICATION_JSON.
+     *
+     * Most sub-classes will override this to do their own initialisation and most likly call this super method.
+     *
+     * @param context Restlet Context
+     * @param request Restlet Request
+     * @param response Restlet Response
+     */
     public void initialise(Context context, Request request, Response response) {
         log.debug("initialise() " + request.getResourceRef().toString());
         List<Variant> variants = super.getVariants();
@@ -73,6 +86,9 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         return true;
     }
 
+    /**
+     * Overrides Resource.handlePut() to provide nicer error handling.
+     */
     @Override
     public void handlePut() {
         try {
@@ -86,6 +102,9 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         }
     }
 
+    /**
+     * Overrides Resource.handlePost() to provide nicer error handling.
+     */
     @Override
     public void handlePost() {
         try {
@@ -99,6 +118,9 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         }
     }
 
+    /**
+     * Overrides Resource.handleGet() to provide nicer error handling.
+     */
     @Override
     public void handleGet() {
         try {

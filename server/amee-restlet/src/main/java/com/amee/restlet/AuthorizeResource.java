@@ -56,7 +56,7 @@ public abstract class AuthorizeResource extends BaseResource {
     private boolean requireSuperUser = false;
 
     /**
-     * Ensure AuthorizationContext instance is always avilable to templates.
+     * Ensure AuthorizationContext instance is always available to templates.
      *
      * @return the template map
      */
