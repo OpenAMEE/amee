@@ -17,6 +17,14 @@ wrapper.java.additional.19=-Dcom.sun.management.jmxremote.authenticate=false
 wrapper.java.additional.20=-Dcom.sun.management.jmxremote.ssl=false
 wrapper.java.additional.21=-XX:+PrintGCDetails
 
+# TODO: Extra Java Parameters to consider
+#wrapper.java.additional.5=-XX:PermSize=64m
+#wrapper.java.additional.6=-XX:MaxPermSize=64m
+#wrapper.java.additional.7=-XX:+DisableExplicitGC
+#wrapper.java.additional.8=-XX:+UseParNewGC
+#wrapper.java.additional.9=-XX:+CMSParallelRemarkEnabled
+#wrapper.java.additional.10=-XX:+UseConcMarkSweepGC
+
 # Database
 set.DB_USERNAME=amee
 set.DB_PSWD=amee
