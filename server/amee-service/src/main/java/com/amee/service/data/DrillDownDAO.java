@@ -37,7 +37,12 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Uses native SQL to perform a 'drill down' into DataItem values.
@@ -406,7 +411,6 @@ class DrillDownDAO implements Serializable {
             if (itemValueDefinition != null) {
                 dataItemIds = getDataItemIds(
                         dataCategory.getId(),
-                        dataCategory.getItemDefinition().getId(),
                         itemValueDefinition.getId(),
                         startDate,
                         endDate,
@@ -429,7 +433,6 @@ class DrillDownDAO implements Serializable {
     @SuppressWarnings(value = "unchecked")
     private Collection<Long> getDataItemIds(
             Long dataCategoryId,
-            Long itemDefinitionId,
             Long itemValueDefinition,
             Date startDate,
             Date endDate,
@@ -439,9 +442,9 @@ class DrillDownDAO implements Serializable {
         Set<Long> dataItemIds;
 
         if (LocaleHolder.isDefaultLocale()) {
-            results = getDataItemIdsUsingValue(dataCategoryId, itemDefinitionId, itemValueDefinition, value);
+            results = getDataItemIdsUsingValue(dataCategoryId, itemValueDefinition, value);
         } else {
-            results = getDataItemIdsUsingLocaleNames(dataCategoryId, itemDefinitionId, itemValueDefinition, value);
+            results = getDataItemIdsUsingLocaleNames(dataCategoryId, itemValueDefinition, value);
         }
 
         log.debug("getDataItemIds() results: " + results.size());
@@ -450,7 +453,7 @@ class DrillDownDAO implements Serializable {
         dataItemIds = new HashSet<Long>();
         for (Object[] row : results) {
             if (isWithinTimeFrame(startDate, endDate, (Date) row[1], (Date) row[2])) {
-                    dataItemIds.add((Long) row[0]);
+                dataItemIds.add((Long) row[0]);
             }
         }
 
@@ -458,8 +461,10 @@ class DrillDownDAO implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Object[]> getDataItemIdsUsingValue(Long dataCategoryId, Long itemDefinitionId,
-            Long itemValueDefinitionId, String value) {
+    private List<Object[]> getDataItemIdsUsingValue(
+            Long dataCategoryId,
+            Long itemValueDefinitionId,
+            String value) {
 
         // create SQL
         StringBuilder sql = new StringBuilder();
@@ -469,10 +474,8 @@ class DrillDownDAO implements Serializable {
         sql.append("AND i.STATUS != :trash ");
         sql.append("AND i.TYPE = 'DI' ");
         sql.append("AND i.DATA_CATEGORY_ID = :dataCategoryId ");
-        //sql.append("AND i.ITEM_DEFINITION_ID = :itemDefinitionId ");
         sql.append("AND iv.ITEM_VALUE_DEFINITION_ID = :itemValueDefinitionId ");
         sql.append("AND iv.VALUE = :value");
-
 
         // create query
         Session session = (Session) entityManager.getDelegate();
@@ -484,7 +487,6 @@ class DrillDownDAO implements Serializable {
         // set parameters
         query.setInteger("trash", AMEEStatus.TRASH.ordinal());
         query.setLong("dataCategoryId", dataCategoryId);
-        //query.setLong("itemDefinitionId", itemDefinitionId);
         query.setLong("itemValueDefinitionId", itemValueDefinitionId);
         query.setString("value", value);
 
@@ -493,8 +495,10 @@ class DrillDownDAO implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Object[]> getDataItemIdsUsingLocaleNames(Long dataCategoryId, Long itemDefinitionId,
-            Long itemValueDefinitionId, String value) {
+    private List<Object[]> getDataItemIdsUsingLocaleNames(
+            Long dataCategoryId,
+            Long itemValueDefinitionId,
+            String value) {
 
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT i.ID ID, i.START_DATE START_DATE, i.END_DATE END_DATE ");
@@ -503,7 +507,6 @@ class DrillDownDAO implements Serializable {
         sql.append("AND i.STATUS != :trash ");
         sql.append("AND i.TYPE = 'DI' ");
         sql.append("AND i.DATA_CATEGORY_ID = :dataCategoryId ");
-        //sql.append("AND i.ITEM_DEFINITION_ID = :itemDefinitionId ");
         sql.append("AND iv.ITEM_VALUE_DEFINITION_ID = :itemValueDefinitionId ");
         sql.append("AND ln.ENTITY_TYPE='IV' AND ln.ENTITY_ID = iv.ID AND LOCALE = :locale AND ln.NAME = :value");
 
@@ -518,7 +521,6 @@ class DrillDownDAO implements Serializable {
         query.setInteger("trash", AMEEStatus.TRASH.ordinal());
         query.setLong("dataCategoryId", dataCategoryId);
         query.setLong("itemValueDefinitionId", itemValueDefinitionId);
-        //query.setLong("itemDefinitionId", itemDefinitionId);
         query.setString("value", value);
         query.setString("locale", LocaleHolder.getLocale());
 
@@ -526,7 +528,7 @@ class DrillDownDAO implements Serializable {
         List results = (List<Object[]>) query.list();
         // There are no locale specific values for this locale, so get by default value instead.
         if (results.isEmpty()) {
-            results = getDataItemIdsUsingValue(dataCategoryId, itemDefinitionId, itemValueDefinitionId, value);
+            results = getDataItemIdsUsingValue(dataCategoryId, itemValueDefinitionId, value);
         }
         return results;
     }

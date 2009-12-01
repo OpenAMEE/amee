@@ -14,7 +14,7 @@
 # These settings can be modified to fit the needs of your application
 
 # Application
-APP_NAME="amee"
+APP_NAME=${AMEE_APP_NAME:-amee}
 APP_LONG_NAME="AMEE"
 
 # Wrapper
