@@ -12,3 +12,4 @@ jmeter/results
 jmeter/jchav
 jmeter/*.properties
 idea9/.idea/workspace.xml
+mkmf.log

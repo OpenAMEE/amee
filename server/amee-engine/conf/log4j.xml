@@ -28,7 +28,7 @@
     </appender>
 
     <appender name="ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="/var/www/apps/amee/shared/log/transactions.log"/>
+        <param name="File" value="/var/www/apps/amee/${app.instance}/log/transactions.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <param name="Append" value="true"/>
         <param name="Threshold" value="INFO"/>
