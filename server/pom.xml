@@ -175,9 +175,9 @@
         </dependency>
     </dependencies>
     <scm>
-        <connection>scm:git:ssh://github.com:sambogoat/amee.git</connection>
-        <developerConnection>scm:git:ssh://github.com:sambogoat/amee.git</developerConnection>
-        <url>https://github.com/sambogoat/amee/tree/master</url>
+        <connection>scm:git:ssh://github.com:catditch/amee.git</connection>
+        <developerConnection>scm:git:ssh://github.com:catditch/amee.git</developerConnection>
+        <url>https://github.com/catditch/amee/tree/master</url>
     </scm>
     <reporting>
         <plugins>

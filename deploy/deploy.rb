@@ -8,7 +8,7 @@ default_run_options[:pty] = true
 set :application, "amee"
 
 # Where Capistrano should get the deployable artifacts
-set :repository,  "git@github.com:sambogoat/amee.deploy.git"
+set :repository,  "git@github.com:catditch/amee.deploy.git"
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
