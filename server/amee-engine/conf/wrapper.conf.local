@@ -5,7 +5,7 @@ set.JDK_HOME=%JAVA_HOME%
 # SERVER_NAME
 set.default.SERVER_NAME=localhost
 
-# Application parameters
+# Application Parameters
 wrapper.app.parameter.1=-serverName
 wrapper.app.parameter.2=%SERVER_NAME%
 
