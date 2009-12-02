@@ -17,7 +17,7 @@ wrapper.java.additional.20=-Dcom.sun.management.jmxremote.authenticate=false
 wrapper.java.additional.21=-Dcom.sun.management.jmxremote.ssl=false
 wrapper.java.additional.22=-XX:+PrintGCDetails
 
-# TODO: Extra Java Parameters to consider
+# TODO: Extra Java Parameters to consider.
 #wrapper.java.additional.5=-XX:PermSize=64m
 #wrapper.java.additional.6=-XX:MaxPermSize=64m
 #wrapper.java.additional.7=-XX:+DisableExplicitGC
