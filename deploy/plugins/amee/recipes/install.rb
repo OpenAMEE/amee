@@ -14,7 +14,7 @@ namespace :install do
     
     # Check package directory has been checked-out from Git repository
     if !File.directory?(package_dir)
-      puts "ERROR: Abandoning install - #{package_dir} does not exist. Please clone the deployment Git respository before continuing."
+      puts "ERROR: Abandoning install - #{package_dir} does not exist. Please clone the deployment Git repository before continuing."
       exit
     end
     

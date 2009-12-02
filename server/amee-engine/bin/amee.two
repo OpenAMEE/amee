@@ -1,0 +1,3 @@
+#! /bin/sh
+export AMEE_APP_INSTANCE=instance-two
+. /var/www/apps/amee/current/bin/amee
