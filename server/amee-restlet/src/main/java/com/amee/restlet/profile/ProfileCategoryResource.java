@@ -86,7 +86,6 @@ public class ProfileCategoryResource extends BaseProfileResource {
         if (getDataCategory() != null) {
             ((RequestContext) ThreadBeanHolder.get("ctx")).setCategory(getDataCategory());
         }
-        setPage(request);
         setBuilderStrategy();
         recurse = request.getResourceRef().getQueryAsForm().getFirstValue("recurse", "false").equals("true");
     }

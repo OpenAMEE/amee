@@ -44,9 +44,6 @@ import java.util.*;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
 
-    @Transient
-    public final Log log = LogFactory.getLog(getClass());
-
     public final static int NAME_SIZE = 255;
     public final static int PATH_SIZE = 255;
 
@@ -201,12 +198,10 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         return getElement(document, false);
     }
 
-    @Override
     public String getDisplayPath() {
         return getPath();
     }
 
-    @Override
     public String getDisplayName() {
         if (getName().length() > 0) {
             return getName();
@@ -233,7 +228,6 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         this.itemDefinition = itemDefinition;
     }
 
-    @Override
     public String getName() {
         String localeName = getLocaleName();
         if (localeName != null) {
@@ -250,7 +244,6 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         this.name = name;
     }
 
-    @Override
     public String getPath() {
         return path;
     }
@@ -262,7 +255,6 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         this.path = path;
     }
 
-    @Override
     public ObjectType getObjectType() {
         return ObjectType.DC;
     }

@@ -24,14 +24,19 @@ package com.amee.domain.data;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A Map of {@link ItemValue} instances.
- *
+ * <p/>
  * The keys will be the {@link ItemValue} paths. The entries will be a Set of {@link ItemValue} instances. The Set will
  * consist of a single entry for single-valued {@link ItemValue} histories.
- *
  */
 @SuppressWarnings("unchecked")
 public class ItemValueMap extends HashMap {
@@ -61,8 +66,8 @@ public class ItemValueMap extends HashMap {
      */
     public List<ItemValue> getAll(Date startDate) {
         List<ItemValue> itemValues = new ArrayList();
-        for(Object path : super.keySet()) {
-            itemValues.add(get((String)path, startDate));
+        for (Object path : super.keySet()) {
+            itemValues.add(get((String) path, startDate));
         }
         return itemValues;
     }
@@ -93,7 +98,7 @@ public class ItemValueMap extends HashMap {
     /**
      * Get the active {@link ItemValue} at the passed start Date.
      *
-     * @param path - the {@link ItemValue} path.
+     * @param path      - the {@link ItemValue} path.
      * @param startDate - the active {@link ItemValue} will be that starting immediately prior-to or on this date.
      * @return the active {@link ItemValue} at the passed start Date.
      */
@@ -112,11 +117,9 @@ public class ItemValueMap extends HashMap {
     public void put(String path, ItemValue itemValue) {
         if (!containsKey(path)) {
             super.put(path, new TreeSet<ItemValue>(new Comparator<ItemValue>() {
-                @Override
                 public int compare(ItemValue iv1, ItemValue iv2) {
                     return iv2.getStartDate().compareTo(iv1.getStartDate());
                 }
-
             }));
         }
 

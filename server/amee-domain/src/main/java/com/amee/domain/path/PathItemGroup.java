@@ -78,11 +78,6 @@ public class PathItemGroup implements Serializable {
         return pathItems.get(uid);
     }
 
-    // Used by BasePIGFactory & ProfilePIGFactory.
-    public Map<String, PathItem> getPathItems() {
-        return pathItems;
-    }
-
     // Used by DataFilter.
     public PathItem getRootPathItem() {
         return rootPathItem;

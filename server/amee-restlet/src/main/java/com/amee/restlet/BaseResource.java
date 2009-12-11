@@ -1,7 +1,12 @@
 package com.amee.restlet;
 
 import com.amee.core.ThreadBeanHolder;
-import com.amee.domain.*;
+import com.amee.domain.AMEEEntityReference;
+import com.amee.domain.AMEEStatus;
+import com.amee.domain.APIVersion;
+import com.amee.domain.ObjectType;
+import com.amee.domain.Pager;
+import com.amee.domain.PagerSetType;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
@@ -21,19 +26,36 @@ import org.apache.xerces.dom.DocumentImpl;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
-import org.restlet.data.*;
+import org.restlet.data.CharacterSet;
+import org.restlet.data.Form;
+import org.restlet.data.MediaType;
+import org.restlet.data.Method;
+import org.restlet.data.Reference;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
+import org.restlet.data.Status;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.ext.json.JsonRepresentation;
-import org.restlet.resource.*;
+import org.restlet.resource.DomRepresentation;
+import org.restlet.resource.Representation;
+import org.restlet.resource.Resource;
+import org.restlet.resource.ResourceException;
+import org.restlet.resource.Variant;
+import org.restlet.resource.WriterRepresentation;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An abstract base class for all Resource implementations in this application.
@@ -43,7 +65,8 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
     protected final Log log = LogFactory.getLog(getClass());
 
     private Form form;
-    private int page = 1;
+    private int page = -1;
+    private int itemsPerPage = -1;
     private PagerSetType pagerSetType = PagerSetType.ALL;
     protected BeanFactory beanFactory;
 
@@ -57,11 +80,11 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
     /**
      * Initialises the Resource by setting up the required Variants. For standard web browsers we only
      * configure for TEXT_HTML, for other web clients we support APPLICATION_XML and APPLICATION_JSON.
-     *
+     * <p/>
      * Most sub-classes will override this to do their own initialisation and most likly call this super method.
      *
-     * @param context Restlet Context
-     * @param request Restlet Request
+     * @param context  Restlet Context
+     * @param request  Restlet Request
      * @param response Restlet Response
      */
     public void initialise(Context context, Request request, Response response) {
@@ -293,18 +316,6 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
     }
 
-    public int getItemsPerPage() {
-        int itemsPerPage = getActiveEnvironment().getItemsPerPage();
-        String itemsPerPageStr = getRequest().getResourceRef().getQueryAsForm().getFirstValue("itemsPerPage");
-        if (itemsPerPageStr == null) {
-            itemsPerPageStr = HeaderUtils.getHeaderFirstValue("ItemsPerPage", getRequest());
-        }
-        if (itemsPerPageStr != null) {
-            itemsPerPage = Integer.parseInt(itemsPerPageStr);
-        }
-        return itemsPerPage;
-    }
-
     /**
      * Get the current active Environment.
      *
@@ -341,17 +352,6 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         return getActiveUser().getAPIVersion();
     }
 
-    public void setPage(Request request) {
-        String pageStr = request.getResourceRef().getQueryAsForm().getFirstValue("page");
-        if (pageStr != null) {
-            try {
-                setPage(Integer.decode(pageStr));
-            } catch (NumberFormatException e) {
-                // swallow
-            }
-        }
-    }
-
     public void setPagerSetType(Request request) {
         String pagerSetTypeStr = request.getResourceRef().getQueryAsForm().getFirstValue("pagerSetType");
         if (pagerSetTypeStr != null) {
@@ -369,23 +369,75 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
     }
 
     public Pager getPager() {
-        Pager pager = new Pager(0, 0, getPage());
+        Pager pager = new Pager(0, getItemsPerPage(), getPage());
         pager.setPagerSetType(pagerSetType);
         return pager;
     }
 
-    public Pager getPager(int itemsPerPage) {
-        Pager pager = new Pager(0, itemsPerPage, getPage());
-        pager.setPagerSetType(pagerSetType);
-        return pager;
-    }
-
+    /**
+     * Returns the page number to use with the Pager.
+     *
+     * Will first attempt to get the explicit page number from a 'page' query parameter or 'Page' request header.
+     *
+     * Secondly, will attempt to calculate the page from a 'start' query parameter or 'Start' request
+     * header. The 'start' value is a zero-based index of an item in the result set. Based on the 'start' value a
+     * page number will be calculated such that the page contains the item with the index of 'start'. 
+     *
+     * @return the page number
+     */
     public int getPage() {
+        // First, try 'page' parameter or 'Page' header.
+        if (page < 1) {
+            page = getParameterOrHeaderValue("page");
+        }
+        // Second, try 'start' parameter or 'Start' header.
+        if (page < 1) {
+            int start = getParameterOrHeaderValue("start");
+            if (start > 0) {
+                start = start + 1;
+                page = (start / getItemsPerPage()) + ((start % getItemsPerPage()) == 0 ? 0 : 1);
+            }
+        }
+        // Third, default to page 1.
+        if (page < 1) {
+            page = 1;
+        }
         return page;
     }
 
-    public void setPage(int page) {
-        this.page = page;
+    public int getItemsPerPage() {
+        // First, try 'itemsPerPage' parameter or 'ItemsPerPage' header.
+        if (itemsPerPage < 1) {
+            itemsPerPage = getParameterOrHeaderValue("itemsPerPage");
+        }
+        // Second, default to Environment.
+        if (itemsPerPage < 1) {
+            itemsPerPage = getActiveEnvironment().getItemsPerPage();
+        }
+        return itemsPerPage;
+    }
+
+    /**
+     * Gets a named int value from either the query parameters or the request headers. The query parameter is
+     * given priority. The supplied name is capitalised when fetching the header value.
+     *
+     * @param name parameter or header value name
+     * @return fetched value or -1 if no value was found
+     */
+    public int getParameterOrHeaderValue(String name) {
+        int value = -1;
+        String valueStr = getRequest().getResourceRef().getQueryAsForm().getFirstValue(name);
+        if (valueStr == null) {
+            valueStr = HeaderUtils.getHeaderFirstValue(StringUtils.capitalize(name), getRequest());
+        }
+        if (valueStr != null) {
+            try {
+                value = Integer.parseInt(valueStr);
+            } catch (NumberFormatException e) {
+                // swallow
+            }
+        }
+        return value;
     }
 
     public void success() {

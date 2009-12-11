@@ -1,0 +1,28 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="/ext/resources/css/ext-all.css">
+    <script type="text/javascript" src="/scripts/ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="/scripts/ext/ext-all-debug.js"></script>
+    <script type="text/javascript" src="/ui/scripts/amee-application.js"></script>
+    <script type="text/javascript" src="/ui/scripts/amee-permissions.js"></script>
+    <title id="page-title">AMEE Platform</title>
+    <style type="text/css">
+        .x-tree-node-leaf .x-tree-node-icon{
+            background-image: url('/scripts/ext/resources/images/default/tree/folder.gif') !important;
+            background-repeat: no-repeat;
+        }
+    </style>
+    <script type="text/javascript">
+        Ext.BLANK_IMAGE_URL = '/ext/resources/images/default/s.gif';
+        Ext.onReady(function() {
+            Ext.QuickTips.init();
+            (new AMEEApplication()).start();
+        });
+    </script>
+</head>
+
+<body></body>
+
+</html>

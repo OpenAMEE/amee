@@ -25,9 +25,7 @@ import com.amee.core.DataSeries;
 import com.amee.core.ValueType;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
-import static junit.framework.Assert.assertTrue;
 import org.joda.time.DateTime;
-import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class InternalValueTest {
 
@@ -69,9 +70,9 @@ public class InternalValueTest {
         DataSeries filteredValues = (DataSeries) internal.getValue();
         Collection<DateTime> filteredDates = filteredValues.getDateTimePoints();
 
-        assertTrue("Should contain expected ItemValues",filteredDates.contains(two));
-        assertTrue("Should not contain filtered ItemValues",filteredDates.contains(one));
-        assertTrue("Should not contain filtered ItemValues",filteredDates.contains(three));
+        assertTrue("Should contain expected ItemValues", filteredDates.contains(two));
+        assertTrue("Should not contain filtered ItemValues", filteredDates.contains(one));
+        assertTrue("Should not contain filtered ItemValues", filteredDates.contains(three));
     }
 
     @Test
@@ -92,9 +93,9 @@ public class InternalValueTest {
         DataSeries filteredValues = (DataSeries) internal.getValue();
         Collection<DateTime> filteredDates = filteredValues.getDateTimePoints();
 
-        assertTrue("Should contain expected ItemValues",filteredDates.contains(two));
-        assertTrue("Should not contain filtered ItemValues",filteredDates.contains(one));
-        assertFalse("Should not contain filtered ItemValues",filteredDates.contains(three));
+        assertTrue("Should contain expected ItemValues", filteredDates.contains(two));
+        assertTrue("Should not contain filtered ItemValues", filteredDates.contains(one));
+        assertFalse("Should not contain filtered ItemValues", filteredDates.contains(three));
     }
 
     @Test
@@ -112,9 +113,9 @@ public class InternalValueTest {
         DataSeries filteredValues = (DataSeries) internal.getValue();
         Collection<DateTime> filteredDates = filteredValues.getDateTimePoints();
 
-        assertTrue("Should contain expected ItemValues",filteredDates.contains(two));
-        assertTrue("Should not contain filtered ItemValues",filteredDates.contains(three));
-        assertFalse("Should not contain filtered ItemValues",filteredDates.contains(one));
+        assertTrue("Should contain expected ItemValues", filteredDates.contains(two));
+        assertTrue("Should not contain filtered ItemValues", filteredDates.contains(three));
+        assertFalse("Should not contain filtered ItemValues", filteredDates.contains(one));
     }
 
     private ItemValue createItemValue(Date start) {

@@ -8,7 +8,9 @@ import com.amee.domain.data.DataItem;
 import com.amee.domain.data.LocaleName;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
+import com.amee.domain.sheet.Column;
 import com.amee.domain.sheet.Sheet;
+import com.amee.domain.sheet.SortOrder;
 import com.amee.restlet.data.DataCategoryResource;
 import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionService;
@@ -82,7 +84,22 @@ public class DataCategoryResourceBuilder {
             // addItemValue Sheet containing Data Items
             Sheet sheet = dataService.getSheet(resource.getDataBrowser(), pathItem.getFullPath());
             if (sheet != null) {
-                Pager pager = resource.getPager(resource.getItemsPerPage());
+                String sortBy = resource.getRequest().getResourceRef().getQueryAsForm().getFirstValue("sortBy");
+                if (sortBy != null) {
+                    Column c = sheet.getColumn(sortBy);
+                    if (c != null) {
+                        try {
+                            c.setSortOrder(SortOrder.valueOf(resource.getRequest().getResourceRef().getQueryAsForm().getFirstValue("sortOrder")));
+                        } catch (IllegalArgumentException e) {
+                            // swallow
+                        }
+                        sheet = Sheet.getCopy(sheet);
+                        sheet.getSortBy().getChoices().clear();
+                        sheet.addSortBy(sortBy);
+                        sheet.sortRows();
+                    }
+                }
+                Pager pager = resource.getPager();
                 sheet = Sheet.getCopy(sheet, pager);
                 pager.setCurrentPage(resource.getPage());
                 children.put("dataItems", sheet.getJSONObject());
@@ -150,7 +167,7 @@ public class DataCategoryResourceBuilder {
             // list child Data Items via sheet
             Sheet sheet = dataService.getSheet(resource.getDataBrowser(), pathItem.getFullPath());
             if (sheet != null) {
-                Pager pager = resource.getPager(resource.getItemsPerPage());
+                Pager pager = resource.getPager();
                 sheet = Sheet.getCopy(sheet, pager);
                 pager.setCurrentPage(resource.getPage());
                 childrenElement.appendChild(sheet.getElement(document, false));
@@ -198,7 +215,7 @@ public class DataCategoryResourceBuilder {
         values.put("node", dataCategory);
         values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
         if (sheet != null) {
-            Pager pager = resource.getPager(resource.getItemsPerPage());
+            Pager pager = resource.getPager();
             sheet = Sheet.getCopy(sheet, pager);
             pager.setCurrentPage(resource.getPage());
             values.put("sheet", sheet);

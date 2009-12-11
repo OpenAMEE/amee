@@ -19,13 +19,19 @@
  */
 package com.amee.domain.data;
 
-import com.amee.core.*;
-import com.amee.domain.*;
+import com.amee.core.APIUtils;
+import com.amee.core.DecimalCompoundUnit;
+import com.amee.core.DecimalPerUnit;
+import com.amee.core.DecimalUnit;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEStatus;
+import com.amee.domain.Builder;
+import com.amee.domain.LocaleHolder;
+import com.amee.domain.ObjectType;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -34,17 +40,27 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Entity
 @Table(name = "ITEM_VALUE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ItemValue extends AMEEEntity implements Pathable {
-
-    @Transient
-    private final Log log = LogFactory.getLog(getClass());
 
     // 32767 because this is bigger than 255, smaller than 65535 and fits into an exact number of bits
     public final static int VALUE_SIZE = 32767;
@@ -84,12 +100,12 @@ public class ItemValue extends AMEEEntity implements Pathable {
     /**
      * Get the collection of locale specific values for this ItemValue.
      *
-     * @return the collection of locale specific values. The collection will be empty 
-     * if no locale specific values exist.
+     * @return the collection of locale specific values. The collection will be empty
+     *         if no locale specific values exist.
      */
     public Map<String, LocaleName> getLocaleValues() {
         Map<String, LocaleName> activeLocaleValues = new TreeMap<String, LocaleName>();
-        for (String locale: localeValues.keySet()) {
+        for (String locale : localeValues.keySet()) {
             LocaleName value = localeValues.get(locale);
             if (!value.isTrash()) {
                 activeLocaleValues.put(locale, value);
@@ -124,7 +140,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
     public ItemValue() {
         super();
     }
-    
+
     public ItemValue(ItemValueDefinition itemValueDefinition, Item item, String value) {
         this();
         setItemValueDefinition(itemValueDefinition);
@@ -184,7 +200,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
     public Environment getEnvironment() {
         return getItem().getEnvironment();
     }
-    
+
     public String getName() {
         return getItemValueDefinition().getName();
     }
@@ -331,13 +347,15 @@ public class ItemValue extends AMEEEntity implements Pathable {
         clone.setItem(getItem());
         clone.setStartDate(getStartDate());
         clone.setEndDate(getEndDate());
-        if (hasUnit())
+        if (hasUnit()) {
             clone.setUnit(getUnit().toString());
-        if (hasPerUnit())
+        }
+        if (hasPerUnit()) {
             clone.setPerUnit(getPerUnit().toString());
+        }
         return clone;
     }
-    
+
     @Override
     public boolean isTrash() {
         return status.equals(AMEEStatus.TRASH) || getItem().isTrash() || getItemValueDefinition().isTrash();
