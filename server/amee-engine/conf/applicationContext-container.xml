@@ -52,6 +52,7 @@
                 <!--<entry key="/permissions" value-ref="permissionsApplication"/>-->
                 <!--<entry key="/groups" value-ref="groupsApplication"/>-->
                 <!--<entry key="/users" value-ref="usersApplication"/>-->
+                <!--<entry key="/ria" value-ref="riaApplication"/>-->
                 <entry key="/data" value-ref="dataApplication"/>
                 <entry key="/profiles" value-ref="profilesApplication"/>
             </map>
@@ -67,10 +68,10 @@
             <map>
                 <entry key-ref="defaultApplication" value="client-default"/>
                 <entry key-ref="authApplication" value="auth.client.skin"/>
+                <entry key-ref="definitionsApplication" value="definitions.skin"/>
                 <!--<entry key-ref="permissionsApplication" value="permissions.skin"/>-->
                 <!--<entry key-ref="groupsApplication" value="groups.skin"/>-->
                 <!--<entry key-ref="usersApplication" value="users.skin"/>-->
-                <entry key-ref="definitionsApplication" value="definitions.skin"/>
                 <entry key-ref="dataApplication" value="data.skin"/>
                 <entry key-ref="profilesApplication" value="profile.skin"/>
             </map>

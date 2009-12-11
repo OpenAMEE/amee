@@ -84,7 +84,6 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         if (getDataCategory() != null) {
             ((RequestContext) ThreadBeanHolder.get("ctx")).setCategory(getDataCategory());
         }
-        setPage(request);
     }
 
     @Override

@@ -66,7 +66,6 @@ public class ItemDefinitionsResource extends AuthorizeResource implements Serial
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
-        setPage(request);
     }
 
     @Override
@@ -89,7 +88,7 @@ public class ItemDefinitionsResource extends AuthorizeResource implements Serial
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(getItemsPerPage());
+        Pager pager = getPager();
         Environment environment = definitionBrowser.getEnvironment();
         List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(environment, pager);
         pager.setCurrentPage(getPage());
@@ -105,7 +104,7 @@ public class ItemDefinitionsResource extends AuthorizeResource implements Serial
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(getItemsPerPage());
+            Pager pager = getPager();
             Environment environment = definitionBrowser.getEnvironment();
             List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(environment, pager);
             pager.setCurrentPage(getPage());
@@ -125,7 +124,7 @@ public class ItemDefinitionsResource extends AuthorizeResource implements Serial
     public Element getElement(Document document) {
         Element element = document.createElement("ItemDefinitionsResource");
         if (isGet()) {
-            Pager pager = getPager(getItemsPerPage());
+            Pager pager = getPager();
             Environment environment = definitionBrowser.getEnvironment();
             List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(environment, pager);
             pager.setCurrentPage(getPage());

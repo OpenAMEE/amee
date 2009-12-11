@@ -78,9 +78,9 @@
             Password: <input name='password' type='password' size='30'/><br/>
             Email: <input name='email' type='text' size='60'/><br/>
             API Version: <select name='apiVersion'> <br/>
-            <#list apiVersions as apiVersion>
-                <option value='${apiVersion.version}'>${apiVersion.version}</option>
-            </#list>
+                <#list apiVersions as apiVersion>
+                    <option value='${apiVersion.version}'>${apiVersion.version}</option>
+                </#list>
             </select><br/>
             Locale: <select name='locale'> <br/>
                 <option value='en_GB'>en_GB</option>

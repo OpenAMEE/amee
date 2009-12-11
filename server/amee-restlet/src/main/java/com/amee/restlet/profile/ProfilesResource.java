@@ -54,8 +54,6 @@ import java.util.*;
 @Scope("prototype")
 public class ProfilesResource extends AMEEResource implements Serializable {
 
-    private final Log log = LogFactory.getLog(getClass());
-
     @Autowired
     private ProfileService profileService;
 
@@ -66,12 +64,6 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     private AMEEStatistics ameeStatistics;
 
     private Profile newProfile = null;
-
-    @Override
-    public void initialise(Context context, Request request, Response response) {
-        super.initialise(context, request, response);
-        setPage(request);
-    }
 
     @Override
     public List<AMEEEntity> getEntities() {
@@ -87,7 +79,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(getItemsPerPage());
+        Pager pager = getPager();
         List<Profile> profiles = profileService.getProfiles(getActiveUser(), pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -101,7 +93,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(getItemsPerPage());
+            Pager pager = getPager();
             List<Profile> profiles = profileService.getProfiles(getActiveUser(), pager);
             pager.setCurrentPage(getPage());
             JSONArray profilesJSONArray = new JSONArray();
@@ -120,7 +112,7 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ProfilesResource");
         if (isGet()) {
-            Pager pager = getPager(getItemsPerPage());
+            Pager pager = getPager();
             List<Profile> profiles = profileService.getProfiles(getActiveUser(), pager);
             pager.setCurrentPage(getPage());
             Element profilesElement = document.createElement("Profiles");

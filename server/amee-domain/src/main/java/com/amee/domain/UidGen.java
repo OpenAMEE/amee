@@ -2,10 +2,9 @@ package com.amee.domain;
 
 import java.util.Random;
 
-// TODO: code read this
-// TODO: These have a probability of 3.55271368 ? 10^-15 of not being unique :)
-
-// TODO: test harness or main method tester
+/**
+ * These have a probability of 3.55271368 ? 10^-15 of not being unique :)
+ */
 public class UidGen {
 
     public final static String SEPARATOR = "";

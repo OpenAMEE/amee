@@ -65,9 +65,6 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
-    @Transient
-    private final Log log = LogFactory.getLog(getClass());
-
     public final static int NAME_SIZE = 255;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

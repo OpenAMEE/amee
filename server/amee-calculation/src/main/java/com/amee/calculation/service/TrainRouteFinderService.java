@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -43,7 +44,6 @@ import java.util.Map;
 
 /**
  * A service providing access to the Train Route-finder API.
- *
  */
 class TrainRouteFinderService implements Service {
 
@@ -54,6 +54,7 @@ class TrainRouteFinderService implements Service {
     private static final int API_TIMEOUT = 5000;
     private static final int API_RETRIES = 5;
     private static final HttpParams httpParams = new BasicHttpParams();
+
     static {
         httpParams.setParameter(CoreConnectionPNames.SO_TIMEOUT, API_TIMEOUT);
     }
@@ -65,6 +66,7 @@ class TrainRouteFinderService implements Service {
     // Custom retry handler configured with the defined tolerances.
     private static HttpRequestRetryHandler retryHandler = new HttpRequestRetryHandler() {
         private final Log log = LogFactory.getLog(getClass());
+
         public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
             log.warn("retryRequest - " + exception.getMessage() + ", executionCount: " + executionCount);
             if (executionCount >= API_RETRIES) {
@@ -82,20 +84,19 @@ class TrainRouteFinderService implements Service {
 
     /**
      * Invoke the Train Route-finder service API.
-     *
+     * <p/>
      * Note: if station1 or station2 are null or empty, a value (distance) of 0.0 is returned.
      * Ideally, i'd like to throw an IllegalArgumentException on empty strings, however i can't enforce these
      * validations as PI creation without required values is the normal use-case via the web UI and is
      * certainly not mandated in the API docs.
      * Example:
-     *      {@code throw new IllegalArgumentException("Invalid station: station1=" + station1 + ", station2=" + station2);}
+     * {@code throw new IllegalArgumentException("Invalid station: station1=" + station1 + ", station2=" + station2);}
      *
      * @return the total distance in metres returned for a given route. The start and end points of the route
-     * are defined by the station1 and station2 parameters respectively.
-     *
+     *         are defined by the station1 and station2 parameters respectively.
      * @throws IllegalArgumentException - thrown if the values of station1 or station2 do not produce a valid route.
-     * @throws CalculationException - thrown if the call to the train route-finder API failed or returned an un-parsable
-     * response
+     * @throws CalculationException     - thrown if the call to the train route-finder API failed or returned an un-parsable
+     *                                  response
      */
     public String invoke() throws IllegalArgumentException, CalculationException {
 
@@ -133,20 +134,38 @@ class TrainRouteFinderService implements Service {
             String jsonString = EntityUtils.toString(entity);
             int start = jsonString.indexOf("{");
             int end = jsonString.lastIndexOf("}");
-            jsonString = jsonString.substring(start,end+1);
+            jsonString = jsonString.substring(start, end + 1);
             String totalDistance = parseResponse(jsonString);
             log.debug("invoke() - calculated distance(m) " + totalDistance + " from " + station1 + " to " + station2);
             return totalDistance;
         } catch (IllegalArgumentException iae) {
             throw new IllegalArgumentException("Unable to generate a valid route for station1=" + station1 +
                     " and station2=" + station2);
-        } catch (Exception e) {
-            log.error("invoke()", e);
-            // Removed reset of setLegDetail - as a performance tuning we are
-            // not returning leg details from train route api for the moment - SM (10/2009)
-            // setLegDetail(null);
+        } catch (IOException e) {
+            handleInvokeException(e);
+            throw new CalculationException(e.getMessage());
+        } catch (ParseException e) {
+            handleInvokeException(e);
+            throw new CalculationException(e.getMessage());
+        } catch (JSONException e) {
+            handleInvokeException(e);
+            throw new CalculationException(e.getMessage());
+        } catch (CalculationException e) {
+            handleInvokeException(e);
             throw new CalculationException(e.getMessage());
         }
+    }
+
+    /**
+     * Handling for Exceptions caught by invoke.
+     *
+     * @param e Exception
+     */
+    private void handleInvokeException(Exception e) {
+        log.warn("invoke()", e);
+        // Removed reset of setLegDetail - as a performance tuning we are
+        // not returning leg details from train route api for the moment - SM (10/2009)
+        // setLegDetail(null);
     }
 
     // Parse the JSON string response returned from the API call
@@ -157,7 +176,7 @@ class TrainRouteFinderService implements Service {
         int errorCode = json.getInt("error");
         String errorString = json.getString("error_str");
         if (errorCode != 200) {
-            // These are Google Maps API errror codes. Assuming that root cause is invalid parameters
+            // These are Google Maps API error codes. Assuming that root cause is invalid parameters.
             if (errorCode > 600) {
                 log.warn("parseResponse() - Error status returned by Train Route API: " + errorString);
                 throw new IllegalArgumentException();
@@ -167,7 +186,7 @@ class TrainRouteFinderService implements Service {
         }
 
         JSONObject route = json.getJSONArray("Routes").getJSONObject(0);
-        // Removed setting of setLegDetail - as a performance tuning we are
+        // Removed setting of setLegDetail - as a performance tuning we are.
         // not returning leg details from train route api for the moment - SM (10/2009)
         // setLegDetail(route.getJSONArray("Steps").toString());
         return route.getJSONObject("Distance").getString("meters");
@@ -178,7 +197,7 @@ class TrainRouteFinderService implements Service {
     }
 
     /**
-     * Set the Map of values containing valid values for the parameters "station1" and "station2"
+     * Set the Map of values containing valid values for the parameters "station1" and "station2".
      *
      * @param values - the Map of values, normally those passed to the algorithm calling this service.
      */
@@ -192,7 +211,7 @@ class TrainRouteFinderService implements Service {
      * This will be used to set into the Profile values returned from the Train Service API.
      *
      * @param profileFinder - the {@link com.amee.calculation.service.ProfileFinder}
-     * instance for the calling {@link com.amee.domain.profile.Profile}.
+     *                      instance for the calling {@link com.amee.domain.profile.Profile}.
      */
     public void setProfileFinder(ProfileFinder profileFinder) {
         this.profileFinder = profileFinder;

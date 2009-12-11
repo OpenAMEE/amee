@@ -39,9 +39,6 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class User extends AMEEEnvironmentEntity implements Comparable {
 
-    @Transient
-    private final Log log = LogFactory.getLog(getClass());
-
     public final static int USERNAME_SIZE = 20;
     public final static int PASSWORD_SIZE = 40;
     public final static int PASSWORD_CLEAR_SIZE = 40;
@@ -293,7 +290,6 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         }
     }
 
-    @Override
     public ObjectType getObjectType() {
         return ObjectType.USR;
     }

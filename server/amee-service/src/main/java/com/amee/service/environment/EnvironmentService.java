@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.List;
@@ -183,15 +185,27 @@ public class EnvironmentService implements Serializable {
         return apiVersions;
     }
 
+    /**
+     * Gets an APIVersion based on the supplied version parameter.
+     *
+     * @param version to fetch
+     * @return APIVersion object, or null
+     */
     public APIVersion getAPIVersion(String version) {
-        return (APIVersion) entityManager.createQuery(
-                "FROM APIVersion av " +
-                        "WHERE av.version = :version " +
-                        "AND av.status != :trash")
-                .setParameter("version", version)
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setHint("org.hibernate.cacheable", true)
-                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                .getSingleResult();
+        try {
+            return (APIVersion) entityManager.createQuery(
+                    "FROM APIVersion av " +
+                            "WHERE av.version = :version " +
+                            "AND av.status != :trash")
+                    .setParameter("version", version)
+                    .setParameter("trash", AMEEStatus.TRASH)
+                    .setHint("org.hibernate.cacheable", true)
+                    .setHint("org.hibernate.cacheRegion", CACHE_REGION)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } catch (NonUniqueResultException e) {
+            return null;
+        }
     }
 }

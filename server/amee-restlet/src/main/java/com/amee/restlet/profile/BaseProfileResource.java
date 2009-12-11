@@ -58,11 +58,6 @@ public abstract class BaseProfileResource extends AMEEResource {
                 getProfile().getEnvironment().equals(getActiveEnvironment());
     }
 
-    @Override
-    public Pager getPager() {
-        return getPager(getItemsPerPage());
-    }
-
     public boolean hasParent() {
         return pathItem.getParent() != null;
     }

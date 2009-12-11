@@ -2,13 +2,13 @@
     <#assign supportDetails = true>
 </#if>
 <#if !supportEmail??>
-    <#assign supportEmail = "mailto:support@jellymold.com">
+    <#assign supportEmail = "mailto:help@amee.com">
 </#if>
 <#if !supportText??>
-    <#assign supportText = "Email Jelly Mold support team">
+    <#assign supportText = "Email AMEE Support Team">
 </#if>
 <#if !footerCopy??>
-    <#assign footerCopy = "&copy; 2007 Jelly Mold Solutions Ltd.">
+    <#assign footerCopy = "&copy; 2009 AMEE Ltd.">
 </#if>
 <!-- start footer -->
 <div id="footer" class="noLHN clearfix">

@@ -24,6 +24,8 @@ package com.amee.domain;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.Permission;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Column;
@@ -40,7 +42,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An abstract base class for all persistent entities in AMEE, providing common base properties and
@@ -51,7 +55,18 @@ import java.util.List;
 @MappedSuperclass
 public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, Serializable {
 
+    @Transient
+    protected final Log log = LogFactory.getLog(getClass());
+
+    // The exact size of all UID fields.
     public final static int UID_SIZE = 12;
+
+    // A thread bound Set of UIDs seen by the onCreate method. Used to detect UID duplicates.
+    private final static ThreadLocal<Set<String>> UIDS = new ThreadLocal<Set<String>>() {
+        protected Set<String> initialValue() {
+            return new HashSet<String>();
+        }
+    };
 
     /**
      * The unique ID, within the table, of the entity.
@@ -128,17 +143,34 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
     }
 
     /**
-     * Called by the JPA persistence provider when a persistent entity is created.
+     * Called by the JPA persistence provider when a persistent entity is created. Updates created and
+     * modified with the current time.
      */
     @PrePersist
     public void onCreate() {
+        // Keep track of UIDs used in the current Thread.
+        if (!addUid()) {
+            // UID duplicate detected.
+            throw new RuntimeException("Duplicate UID '" + getUid() + "' detected in class '" + getClass().getSimpleName() + "'.");
+        }
+        // Update created and modified.
         Date now = Calendar.getInstance().getTime();
         setCreated(now);
         setModified(now);
     }
 
     /**
-     * Called by the JPA persistence provider when a persistent entity is updated.
+     * Adds the current uid value to the thread bound Set of UIDs.
+     *
+     * @return true of the UID is not already stored, otherwise false
+     */
+    protected boolean addUid() {
+        return UIDS.get().add(getUid());
+    }
+
+    /**
+     * Called by the JPA persistence provider when a persistent entity is updated. Updates modified with
+     * the current time.
      */
     @PreUpdate
     public void onModify() {

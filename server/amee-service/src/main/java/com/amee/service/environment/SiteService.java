@@ -2,6 +2,7 @@ package com.amee.service.environment;
 
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.Pager;
+import com.amee.domain.UidGen;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
 import org.apache.commons.lang.StringUtils;
@@ -11,7 +12,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class SiteService implements Serializable {
@@ -68,14 +71,29 @@ public class SiteService implements Serializable {
     }
 
     public List<User> getUsers(Environment environment, Pager pager, String search) {
+        // If search is a list of UIDs then switch to UID search instead.
+        Set<String> uids = new HashSet<String>();
+        for (String uid : search.split(",")) {
+            uid = uid.trim();
+            if (UidGen.isValid(uid)) {
+                uids.add(uid);
+            }
+        }
+        if (!uids.isEmpty()) {
+            search = null;
+        }
         // first count all objects
         String countHql = "SELECT count(u) " +
                 "FROM User u " +
                 "WHERE u.environment.id = :environmentId " +
+                (uids.isEmpty() ? "" : "AND u.uid IN (:uids) ") +
                 (StringUtils.isBlank(search) ? "" : "AND u.username LIKE :search ") +
                 "AND u.status != :trash";
         Query countQuery = entityManager.createQuery(countHql);
         countQuery.setParameter("environmentId", environment.getId());
+        if (!uids.isEmpty()) {
+            countQuery.setParameter("uids", uids);
+        }
         if (!StringUtils.isBlank(search)) {
             countQuery.setParameter("search", "%" + search + "%");
         }
@@ -90,11 +108,15 @@ public class SiteService implements Serializable {
         String hql = "SELECT u " +
                 "FROM User u " +
                 "WHERE u.environment.id = :environmentId " +
+                (uids.isEmpty() ? "" : "AND u.uid IN (:uids) ") +
                 (StringUtils.isBlank(search) ? "" : "AND u.username LIKE :search ") +
                 "AND u.status != :trash " +
                 "ORDER BY u.username";
         Query query = entityManager.createQuery(hql);
         query.setParameter("environmentId", environment.getId());
+        if (!uids.isEmpty()) {
+            query.setParameter("uids", uids);
+        }
         if (!StringUtils.isBlank(search)) {
             query.setParameter("search", "%" + search + "%");
         }
