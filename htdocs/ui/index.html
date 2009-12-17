@@ -2,9 +2,14 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" type="text/css" href="/ext/resources/css/ext-all.css">
+    <link rel="stylesheet" type="text/css" href="/scripts/ext/resources/css/ext-all.css">
+    <link rel="stylesheet" type="text/css" href="/scripts/ext/examples/shared/examples.css" />
     <script type="text/javascript" src="/scripts/ext/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="/scripts/ext/ext-all-debug.js"></script>
+    <script type="text/javascript" src="/scripts/ext/examples/ux/MultiSelect.js"></script>
+    <script type="text/javascript" src="/scripts/ext/examples/ux/ItemSelector.js"></script>
+    <script type="text/javascript" src="/scripts/ext/examples/ux/SearchField.js"></script>
+    <script type="text/javascript" src="/scripts/ext/examples/shared/examples.js"></script>
     <script type="text/javascript" src="/ui/scripts/amee-application.js"></script>
     <script type="text/javascript" src="/ui/scripts/amee-permissions.js"></script>
     <title id="page-title">AMEE Platform</title>
@@ -15,7 +20,8 @@
         }
     </style>
     <script type="text/javascript">
-        Ext.BLANK_IMAGE_URL = '/ext/resources/images/default/s.gif';
+        Ext.BLANK_IMAGE_URL = '/scripts/ext/resources/images/default/s.gif';
+        Ext.form.Field.prototype.msgTarget = 'side';
         Ext.onReady(function() {
             Ext.QuickTips.init();
             (new AMEEApplication()).start();

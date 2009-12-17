@@ -352,7 +352,7 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
     },
     load: function(params) {
         this.response = null;
-        params = params || "";
+        params = params || {};
         params['method'] = 'get';
         new Ajax.Request(window.location.href + '?' + Object.toQueryString(params), {
             method: 'post',
@@ -767,10 +767,10 @@ var DrillDown = Class.create({
         //}
     },
     load: function(params) {
-        params = params || {};
         this.response = null;
-        var url = this.fullPath + '/drill';
+        params = params || {};
         params['method'] = 'get';
+        var url = this.fullPath + '/drill';
         url = url + '?' + Object.toQueryString(params);
         new Ajax.Request(url, {
             method: 'post',
