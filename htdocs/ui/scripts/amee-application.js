@@ -69,7 +69,7 @@ var AMEEApplication = Ext.extend(Object, {
                     title: 'Permissions',
                     html: 'N/A',
                     disabled: false,
-                    html: '<div id=\'permissionsDiv\'/>',
+                    html: '<div id=\'permissionsDiv\'></div><div id=\'userSearchDiv\'></div><div id=\'itemselector\' class=\'demo-ct\'></div>',
                     listeners: {
                         activate: this.onPermissionsTabActivate.createDelegate(this),
                         deactivate: this.onPermissionsTabDeactivate.createDelegate(this)

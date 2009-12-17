@@ -53,6 +53,8 @@ var PermissionsPanel = Ext.extend(Ext.util.Observable, {
     },
     onUsersStoreLoad: function() {
         this.getGrid().render('permissionsDiv');
+        this.getUserSearchPanel();
+        this.getForm();
         this.loadMask.hide();
     },
     getStore: function() {
@@ -88,7 +90,7 @@ var PermissionsPanel = Ext.extend(Ext.util.Observable, {
                 store: this.getStore(),
                 columns: this.getGridColumns(),
                 stripeRows: true,
-                height: 320
+                height: 100
             });
         }
         return this.grid;
@@ -112,6 +114,141 @@ var PermissionsPanel = Ext.extend(Ext.util.Observable, {
             renderer: this.renderEntries.createDelegate(this)
         });
         return columns;
+    },
+    getUserSearchPanel: function() {
+        if (!this.userSearchPanel) {
+            this.userSearchPanel = new Ext.grid.GridPanel({
+                applyTo: 'userSearchDiv',
+                title: 'User Search',
+                height: 320,
+                width: 450,
+                stripeRows: true,
+                autoScroll: true,
+                store: this.getUserSearchStore(),
+                columns: [
+                    {
+                        id: 'username',
+                        dataIndex: 'username',
+                        header: 'Username',
+                        sortable: true,
+                        width: 200,
+                    }, {
+                        id: 'name',
+                        dataIndex: 'name',
+                        header: 'Name',
+                        sortable: true,
+                        width: 200,
+                    }
+                ],
+                tbar: [
+                    'Search: ', ' ',
+                    new Ext.ux.form.SearchField({
+                        store: this.getUserSearchStore(),
+                        width: 320,
+                        paramName: 'search'
+                    })
+                ],
+                bbar: new Ext.PagingToolbar({
+                    store: this.getUserSearchStore(),
+                    pageSize: 10,
+                    displayInfo: true,
+                    displayMsg: 'Users {0} - {1} of {2}',
+                    emptyMsg: "No users to display"
+                })
+            });
+        }
+        return this.userSearchPanel;
+    },
+    getUserSearchStore: function() {
+        if (!this.userSearchStore) {
+            this.userSearchStore = new Ext.data.JsonStore({
+                autoDestroy: true,
+                storeId: 'userSearchStore',
+                url: '/users.json',
+                root: 'users',
+                totalProperty: 'pager.items',
+                idProperty: 'uid',
+                fields: ['uid', 'type', 'apiVersion', 'locale', 'username', 'name'],
+                paramNames: {
+                    start: 'start',
+                    limit: 'itemsPerPage',
+                    sort: 'sortBy',
+                    dir: 'sortOrder'
+                },
+                remoteSort: true,
+                restful: true,
+                listeners: {
+                    load: this.onUsersStoreLoad.createDelegate(this)
+                }
+            });
+            this.userSearchStore.load();
+        }
+        return this.userSearchStore;
+    },
+    getForm: function() {
+        if (!this.form) {
+
+
+           var ds = new Ext.data.ArrayStore({
+                data: [
+                    ['o','+OWN'],
+                    ['o','-OWN'],
+                    ['v', '+VIEW'],
+                    ['v', '-VIEW'],
+                    ['c', '+CREATE'],
+                    ['c', '-CREATE'],
+                    ['m', '+MODIFY'],
+                    ['m', '-MODIFY'],
+                    ['d', '+DELETE'],
+                    ['d', '-DELETE'],
+                ],
+                fields: ['value','text'],
+                sortInfo: {
+                    field: 'value',
+                    direction: 'ASC'
+                }
+            });
+
+            this.form = new Ext.form.FormPanel({
+                title: 'Permission Entries',
+                width: 245,
+                bodyStyle: 'padding:10px;',
+                renderTo: 'itemselector',
+                items:[{
+                    xtype: 'itemselector',
+                    name: 'itemselector',
+                    hideLabel: true,
+                    imagePath: '/scripts/ext/examples/ux/images/',
+                    drawUpIcon: false,
+                    drawDownIcon: false,
+                    drawTopIcon: false,
+                    drawBotIcon: false,
+                    multiselects: [{
+                        width: 100,
+                        height: 220,
+                        store: ds,
+                        displayField: 'text',
+                        valueField: 'value'
+                    }, {
+                        width: 100,
+                        height: 220,
+                        store: []
+                    }]
+                }],
+                buttons: [{
+                    text: 'Create',
+                    handler: function(){
+                        if (isForm.getForm().isValid()){
+                            Ext.Msg.alert(
+                                'Submitted Values',
+                                'The following will be sent to the server: <br />' +
+                                    isForm.getForm().getValues(true));
+                        }
+                    }
+                }]
+            });
+        }
+        return this.form
     },
     renderEntries: function(entries) {
         var i;
@@ -161,8 +298,13 @@ var PermissionsPanel = Ext.extend(Ext.util.Observable, {
     },
     destroy: function() {
         this.getGrid().destroy();
+        this.getUserSearchPanel().destroy();
+        this.getForm().destroy();
     }
 });
+
+
+
 
 var XXXUsersResource = Ext.extend(Ext.util.Observable, {
     constructor: function(config) {
