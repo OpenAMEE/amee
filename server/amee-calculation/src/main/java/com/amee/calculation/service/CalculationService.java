@@ -137,7 +137,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
             // from the algos (the only place where these validations can be performed.
             Throwable t = e.getCause();
             if (t != null && t.getCause() != null && t.getCause() instanceof IllegalArgumentException) {
-                throw (RuntimeException) t.getCause();    
+                throw (RuntimeException) t.getCause();
             }
 
             amount = new CO2Amount(Decimal.BIG_DECIMAL_ZERO);

@@ -111,7 +111,7 @@ public class Algorithm extends AbstractAlgorithm {
     public String getFullContent() {
         StringBuffer outContent = new StringBuffer(super.getContent());
         if (getAlgorithmContext() != null) {
-            outContent.insert(0, "\n"); // addItemValue spacer line
+            outContent.insert(0, "\n"); // add spacer line
             outContent.insert(0, getAlgorithmContext().getContent());
         }
         return outContent.toString();

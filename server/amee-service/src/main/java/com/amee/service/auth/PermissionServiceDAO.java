@@ -39,7 +39,7 @@ public interface PermissionServiceDAO {
 
     List<Permission> getPermissionsForPrincipal(IAMEEEntityReference principal, Class entityClass);
 
-    List<Permission> getPermissionsForPrincipalAndEntity(IAMEEEntityReference principal, IAMEEEntityReference entity);
+    List<Permission> getPermissionsForEntity(IAMEEEntityReference principal, IAMEEEntityReference entity);
 
     /**
      * Fetch the entity referenced by the IAMEEEntityReference from the database.

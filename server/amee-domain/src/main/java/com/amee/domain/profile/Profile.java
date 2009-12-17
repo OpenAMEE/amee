@@ -22,9 +22,10 @@ package com.amee.domain.profile;
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.ObjectType;
+import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.Permission;
-import com.amee.domain.auth.User;
 import com.amee.domain.auth.PermissionEntry;
+import com.amee.domain.auth.User;
 import com.amee.domain.path.Pathable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -33,7 +34,13 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -108,14 +115,23 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         return APIUtils.getIdentityElement(document, this);
     }
 
-
     /**
-     * Add 'built-in' Permission to this Profile, such that the associated User owns the Profile.
+     * Add 'built-in' Permission to this Profile, such that the associated User owns the Profile. Will also clear
+     * the current PermissionEntries in the AuthorizationContext so they are are not inherited for Profiles.
      *
-     * @param permissions the Permissions List to modify
+     * @param authorizationContext to consider
+     * @return permissions list
      */
-    protected void addBuiltInPermissions(List<Permission> permissions) {
-        permissions.add(new Permission(getEnvironment(), getUser(), this, PermissionEntry.OWN));
+    public List<Permission> handleAuthorizationContext(AuthorizationContext authorizationContext) {
+        List<Permission> permissions = new ArrayList<Permission>();
+        // Ensure PermissionEntries are not inherited for Profiles.
+        // Access to a Profile is for owner only or other principals that have been granted direct access.
+        authorizationContext.getEntries().clear();
+        // Create Permission stating that this Profile is owned by the associated User, if the User is active.
+        if (authorizationContext.getPrincipals().contains(getUser())) {
+            permissions.add(new Permission(getEnvironment(), getUser(), this, PermissionEntry.OWN));
+        }
+        return permissions;
     }
 
     public User getUser() {
@@ -129,7 +145,6 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         this.user = user;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -141,7 +156,6 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         this.name = name;
     }
 
-    @Override
     public String getPath() {
         return path;
     }
@@ -153,12 +167,10 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         this.path = path;
     }
 
-    @Override
     public ObjectType getObjectType() {
         return ObjectType.PR;
     }
 
-    @Override
     public String getDisplayPath() {
         if (getPath().length() > 0) {
             return getPath();
@@ -167,7 +179,6 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         }
     }
 
-    @Override
     public String getDisplayName() {
         if (getName().length() > 0) {
             return getName();

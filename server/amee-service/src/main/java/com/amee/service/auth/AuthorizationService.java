@@ -24,6 +24,7 @@ package com.amee.service.auth;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
+import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;
@@ -91,7 +92,7 @@ public class AuthorizationService implements Serializable {
         Boolean allow = null;
 
         // Work directly with PermissionEntries for the current principals from the AuthorizationContext.
-        // It's OK to modify the orginal Set at this point.
+        // It's OK to modify the original Set at this point.
         Set<PermissionEntry> principalEntries = authorizationContext.getEntries();
 
         // Super-users can do anything. Stop here.
@@ -273,10 +274,9 @@ public class AuthorizationService implements Serializable {
         if (!accessSpecification.hasActual()) {
 
             // Gather all Permissions for principals for current entity.
-            permissions = new ArrayList<Permission>();
-            for (AMEEEntity principal : authorizationContext.getPrincipals()) {
-                permissions.addAll(permissionService.getPermissionsForPrincipalAndEntity(principal, accessSpecification.getEntityReference()));
-            }
+            permissions = new ArrayList<Permission>(
+                    permissionService.getPermissionsForEntity(
+                            authorizationContext, accessSpecification.getEntityReference()));
 
             // Get list of PermissionEntries for current entity from Permissions.
             entityEntries = getPermissionEntries(permissions);

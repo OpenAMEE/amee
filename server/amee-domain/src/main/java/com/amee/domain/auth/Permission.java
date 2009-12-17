@@ -301,7 +301,6 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         }
     }
 
-    @Override
     public ObjectType getObjectType() {
         return ObjectType.PRM;
     }

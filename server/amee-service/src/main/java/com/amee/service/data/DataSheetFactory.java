@@ -28,25 +28,33 @@ import com.amee.domain.sheet.Cell;
 import com.amee.domain.sheet.Column;
 import com.amee.domain.sheet.Row;
 import com.amee.domain.sheet.Sheet;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
 public class DataSheetFactory implements CacheableFactory {
 
+    private final Log log = LogFactory.getLog(getClass());
+
     private DataService dataService;
     private DataBrowser dataBrowser;
+    private String cacheName;
 
     private DataSheetFactory() {
         super();
     }
 
-    public DataSheetFactory(DataService dataService, DataBrowser dataBrowser) {
+    public DataSheetFactory(DataService dataService, DataBrowser dataBrowser, String cacheName) {
         this();
         this.dataService = dataService;
         this.dataBrowser = dataBrowser;
+        this.cacheName = cacheName;
     }
 
     public Object create() {
+
+        log.debug("create()");
 
         List<Column> columns;
         Row row;
@@ -65,7 +73,9 @@ public class DataSheetFactory implements CacheableFactory {
         itemDefinition = dataCategory.getItemDefinition();
         if (itemDefinition != null) {
 
-            // create sheet and columns     
+            log.debug("create() - Create Sheet and Columns.");
+
+            // create sheet and columns
             sheet = new Sheet();
             sheet.setKey(getKey());
             sheet.setLabel("DataItems");
@@ -81,6 +91,8 @@ public class DataSheetFactory implements CacheableFactory {
             new Column(sheet, "modified", true);
             new Column(sheet, "startDate");
             new Column(sheet, "endDate");
+
+            log.debug("create() - Create Rows and Cells.");
 
             // create rows and cells
             columns = sheet.getColumns();
@@ -107,11 +119,13 @@ public class DataSheetFactory implements CacheableFactory {
                     } else if ("endDate".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, dataItem.getEndDate(), ValueType.DATE);
                     } else {
-                        // addItemValue empty cell
+                        // add empty cell
                         new Cell(column, row);
                     }
                 }
             }
+
+            log.debug("create() - Do sorts.");
 
             // sort columns and rows in sheet
             sheet.setDisplayBy(itemDefinition.getDrillDown());
@@ -119,6 +133,8 @@ public class DataSheetFactory implements CacheableFactory {
             sheet.setSortBy(itemDefinition.getDrillDown());
             sheet.sortRows();
         }
+
+        log.debug("create() - Done.");
 
         return sheet;
     }
@@ -134,6 +150,6 @@ public class DataSheetFactory implements CacheableFactory {
     }
 
     public String getCacheName() {
-        return "DataSheets";
+        return cacheName;
     }
 }

@@ -23,8 +23,7 @@
         <hibernate-core.version>3.3.0.SP1</hibernate-core.version>
         <hibernate-entitymanager.version>3.4.0.GA</hibernate-entitymanager.version>
         <commons-dbcp.version>1.2.2</commons-dbcp.version>
-        <ehcache.version>1.6.0-beta4</ehcache.version>
-        <!--<ehcache.version>1.5.0</ehcache.version>-->
+        <ehcache.version>1.6.2</ehcache.version>
     </properties>
     <!-- AMEE Modules. -->
     <modules>
@@ -176,9 +175,9 @@
         </dependency>
     </dependencies>
     <scm>
-        <connection>scm:git:ssh://github.com:sambogoat/amee.git</connection>
-        <developerConnection>scm:git:ssh://github.com:sambogoat/amee.git</developerConnection>
-        <url>https://github.com/sambogoat/amee/tree/master</url>
+        <connection>scm:git:ssh://github.com:catditch/amee.git</connection>
+        <developerConnection>scm:git:ssh://github.com:catditch/amee.git</developerConnection>
+        <url>https://github.com/catditch/amee/tree/master</url>
     </scm>
     <reporting>
         <plugins>
