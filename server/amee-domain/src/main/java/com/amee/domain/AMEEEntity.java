@@ -21,11 +21,21 @@
  */
 package com.amee.domain;
 
-import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.AccessSpecification;
+import com.amee.domain.auth.AuthorizationContext;
+import com.amee.domain.auth.Permission;
 import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,13 +87,6 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "MODIFIED", nullable = false)
     private Date modified = null;
-
-    /**
-     * A List of transient Permissions. These Permissions can be bound into the model by resources and
-     * services to be used by the authorization decision logic in PermissionService.
-     */
-    @Transient
-    private List<Permission> permissions;
 
     /**
      * A transient AccessSpecification.
@@ -140,6 +143,19 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
     @PreUpdate
     public void onModify() {
         setModified(Calendar.getInstance().getTime());
+    }
+
+    /**
+     * Allows specific entities to interact with an AuthorizationContext and express
+     * permissions that are implicit in the model.
+     * <p/>
+     * This default implementation does nothing and returns an empty list.
+     *
+     * @param authorizationContext to consider
+     * @return permissions list
+     */
+    public List<Permission> handleAuthorizationContext(AuthorizationContext authorizationContext) {
+        return new ArrayList<Permission>();
     }
 
     /**
@@ -305,88 +321,11 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
     }
 
     /**
-     * Fetches the list of Permissions associated with an AMEEEntity instance. If the permissions
-     * property has not yet been set then a new list is assigned and then populated with
-     * Permissions from addBuiltInPermissions (if any).
-     *
-     * @return the list of Permissions
-     */
-    public List<Permission> getPermissions() {
-        if (permissions == null) {
-            permissions = new ArrayList<Permission>();
-            addBuiltInPermissions(permissions);
-        }
-        return permissions;
-    }
-
-    /**
-     * Add 'built-in' Permissions to this Entity. Allows specific entities to express
-     * permissions that are implicit in the model.
-     *
-     * @param permissions the Permissions List to modify
-     */
-    protected void addBuiltInPermissions(List<Permission> permissions) {
-        // do nothing here
-    }
-
-    /**
-     * Returns a list of Permissions associated with the supplied principal.
-     *
-     * @param principal to match against
-     * @return list of matching Permissions
-     */
-    // TODO: Doesn't seem to be required?
-    private List<Permission> getPermissionsForPrincipal(IAMEEEntityReference principal) {
-        List<Permission> permissions = new ArrayList<Permission>();
-        for (Permission permission : getPermissions()) {
-            if (permission.getPrincipalReference().equals(principal)) {
-                permissions.add(permission);
-            }
-        }
-        return permissions;
-    }
-
-    /**
-     * Returns a list of Permissions associated with the supplied entity.
-     *
-     * @param entity to match against
-     * @return list of matching Permissions
-     */
-    // TODO: Doesn't seem to be required?
-    private List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
-        List<Permission> permissions = new ArrayList<Permission>();
-        for (Permission permission : getPermissions()) {
-            if (permission.getEntityReference().equals(entity)) {
-                permissions.add(permission);
-            }
-        }
-        return permissions;
-    }
-
-    /**
-     * Fetch all Permissions that match the supplied principal and entity.
-     *
-     * @param principal to match on
-     * @param entity    to match on
-     * @return list of matching permissions
-     */
-    public List<Permission> getPermissionsForPrincipalAndEntity(IAMEEEntityReference principal, IAMEEEntityReference entity) {
-        List<Permission> permissions = new ArrayList<Permission>();
-        for (Permission permission : getPermissions()) {
-            if (permission.getPrincipalReference().equals(principal) && permission.getEntityReference().equals(entity)) {
-                permissions.add(permission);
-            }
-        }
-        return permissions;
-    }
-
-    /**
      * Returns the transient AccessSpecification for this entity. This will only be present if
      * an AccessSpecification for this entity has been created in the current thread.
      *
      * @return the AccessSpecification for this entity in the current thread
      */
-    @Override
     public AccessSpecification getAccessSpecification() {
         return accessSpecification;
     }
@@ -396,17 +335,14 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
      *
      * @param accessSpecification for this entity
      */
-    @Override
     public void setAccessSpecification(AccessSpecification accessSpecification) {
         this.accessSpecification = accessSpecification;
     }
 
-    @Override
     public AMEEEntity getEntity() {
         return this;
     }
 
-    @Override
     public void setEntity(AMEEEntity entity) {
         // do nothing
     }

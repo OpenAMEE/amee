@@ -22,6 +22,7 @@
 package com.amee.service.auth;
 
 import com.amee.domain.auth.AccessSpecification;
+import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.service.ServiceTest;
 import static junit.framework.Assert.assertFalse;

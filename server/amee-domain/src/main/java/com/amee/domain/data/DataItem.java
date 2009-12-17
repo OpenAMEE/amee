@@ -209,7 +209,6 @@ public class DataItem extends Item {
         }
     }
 
-    @Override
     public String getPath() {
         return path;
     }
@@ -221,7 +220,6 @@ public class DataItem extends Item {
         this.path = path;
     }
 
-    @Override
     public ObjectType getObjectType() {
         return ObjectType.DI;
     }
@@ -230,5 +228,4 @@ public class DataItem extends Item {
     public boolean isTrash() {
         return status.equals(AMEEStatus.TRASH) || getDataCategory().isTrash() || getItemDefinition().isTrash();
     }
-
 }

@@ -189,17 +189,14 @@ public class ItemValue extends AMEEEntity implements Pathable {
         return getItemValueDefinition().getName();
     }
 
-    @Override
     public String getDisplayName() {
         return getName();
     }
 
-    @Override
     public String getPath() {
         return getItemValueDefinition().getPath();
     }
 
-    @Override
     public String getDisplayPath() {
         return getPath();
     }
@@ -270,7 +267,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
         this.endDate = endDate;
     }
 
-    @Override
     public ObjectType getObjectType() {
         return ObjectType.IV;
     }
@@ -346,5 +342,4 @@ public class ItemValue extends AMEEEntity implements Pathable {
     public boolean isTrash() {
         return status.equals(AMEEStatus.TRASH) || getItem().isTrash() || getItemValueDefinition().isTrash();
     }
-
 }

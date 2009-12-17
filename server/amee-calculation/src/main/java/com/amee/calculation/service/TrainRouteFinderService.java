@@ -110,6 +110,7 @@ class TrainRouteFinderService implements Service {
         }
 
         try {
+            // TODO: Move the hard-coded parameters below to wrapper.conf.
             // Generate the query string
             StringBuilder url = new StringBuilder(serviceEndPoint);
             url.append("?q=");

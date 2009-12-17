@@ -117,7 +117,6 @@ public class DataFinder implements Serializable {
         this.endDate = endDate;
     }
 
-
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }

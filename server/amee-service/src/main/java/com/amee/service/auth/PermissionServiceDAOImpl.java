@@ -93,7 +93,7 @@ public class PermissionServiceDAOImpl implements PermissionServiceDAO {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public List<Permission> getPermissionsForPrincipalAndEntity(IAMEEEntityReference principal, IAMEEEntityReference entity) {
+    public List<Permission> getPermissionsForEntity(IAMEEEntityReference principal, IAMEEEntityReference entity) {
         Session session = (Session) entityManager.getDelegate();
         Criteria criteria = session.createCriteria(Permission.class);
         criteria.add(Restrictions.eq("principalReference.entityUid", principal.getEntityUid()));

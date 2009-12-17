@@ -24,12 +24,19 @@ package com.amee.service.auth;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.ObjectType;
+import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class PermissionService {
@@ -88,6 +95,7 @@ public class PermissionService {
     public void remove(Permission permission) {
         dao.remove(permission);
     }
+
     public List<Permission> getPermissionsForEntity(IAMEEEntityReference entity) {
         if ((entity == null) || !isValidEntity(entity)) {
             throw new IllegalArgumentException();
@@ -124,20 +132,30 @@ public class PermissionService {
     }
 
     /**
-     * Fetch a List of all available Permissions matching the supplied principal and entity.
+     * Fetch a List of all available Permissions matching the principals in the authorizationContext and entity.
      *
-     * @param principal       to match on
-     * @param entityReference to match on
+     * @param authorizationContext to get principals to match on
+     * @param entityReference      to match on
      * @return list of matching permissions
      */
-    public List<Permission> getPermissionsForPrincipalAndEntity(AMEEEntity principal, IAMEEEntityReference entityReference) {
-        if ((principal == null) || (entityReference == null) || !isValidPrincipalToEntity(principal, entityReference)) {
-            throw new IllegalArgumentException();
+    public List<Permission> getPermissionsForEntity(AuthorizationContext authorizationContext, IAMEEEntityReference entityReference) {
+        // Parameters must not be null.
+        if ((authorizationContext == null) || (entityReference == null)) {
+            throw new IllegalArgumentException("Either authorizationContext or entityReference is null.");
         }
+        // Check principals are valid.
+        for (IAMEEEntityReference principal : authorizationContext.getPrincipals()) {
+            if (!isValidPrincipalToEntity(principal, entityReference)) {
+                throw new IllegalArgumentException("A principal was not valid for the entity.");
+            }
+        }
+        // Collect permissions for principals and entity.
         AMEEEntity entity = getEntity(entityReference);
         List<Permission> permissions = new ArrayList<Permission>();
-        permissions.addAll(entity.getPermissionsForPrincipalAndEntity(principal, entity));
-        permissions.addAll(dao.getPermissionsForPrincipalAndEntity(principal, entity));
+        permissions.addAll(entity.handleAuthorizationContext(authorizationContext));
+        for (IAMEEEntityReference principal : authorizationContext.getPrincipals()) {
+            permissions.addAll(dao.getPermissionsForEntity(principal, entity));
+        }
         return permissions;
     }
 

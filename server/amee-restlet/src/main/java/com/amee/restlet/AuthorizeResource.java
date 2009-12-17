@@ -23,8 +23,8 @@ package com.amee.restlet;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.auth.AccessSpecification;
+import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.PermissionEntry;
-import com.amee.service.auth.AuthorizationContext;
 import com.amee.service.auth.AuthorizationService;
 import com.amee.service.environment.GroupService;
 import org.restlet.resource.Representation;
@@ -51,12 +51,12 @@ public abstract class AuthorizeResource extends BaseResource {
     protected AuthorizationContext authorizationContext;
 
     /**
-     * Flag indicating if as super-user is required?
+     * Flag indicating if a super-user is required?
      */
     private boolean requireSuperUser = false;
 
     /**
-     * Ensure AuthorizationContext instance is always avilable to templates.
+     * Ensure AuthorizationContext instance is always available to templates.
      *
      * @return the template map
      */
@@ -282,14 +282,14 @@ public abstract class AuthorizeResource extends BaseResource {
      * Returns a list of entities required for authorization for the current resource. The list is
      * in hierarchical order, from general to more specific (e.g., category -> sub-category -> item).
      *
-     * @return list of entites required for authorization
+     * @return list of entities required for authorization
      */
     public abstract List<AMEEEntity> getEntities();
 
     /**
      * Returns a de-duped version of the list from getEntities().
      *
-     * @return list of entites required for authorization
+     * @return list of entities required for authorization
      */
     public List<AMEEEntity> getDistinctEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
