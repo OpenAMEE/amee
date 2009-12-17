@@ -51,10 +51,10 @@ public class DecimalUnit {
         UNIT_FORMAT.label(TERAWATT_HOUR, "TWh");
         UNIT_FORMAT.alias(TERAWATT_HOUR, "TWh");
 
-        // Ensure that "gal" and "oz" are always the US versions.
-        // JScience will bizarely default "gal" and "oz" to UK units for UK Locale.
+        // Ensure that "gal" and "oz" are sensible for AMEE.
+        // JScience will default "gal" and "oz" to UK volume units for UK Locale.
         UNIT_FORMAT.label(NonSI.GALLON_LIQUID_US, "gal");
-        UNIT_FORMAT.label(NonSI.OUNCE_LIQUID_US, "oz");
+        UNIT_FORMAT.label(NonSI.OUNCE, "oz");
     }
 
     public static final DecimalUnit ONE = new DecimalUnit(Unit.ONE);
