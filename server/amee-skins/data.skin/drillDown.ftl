@@ -5,7 +5,7 @@
 
 <#include '/${activeUser.getAPIVersion()}/dataTrail.ftl'>
 
-<#if selections?size gt 0>
+<#if selections?? && selections?size gt 0>
     <h2>Selections</h2>
     <p>
         <table>
