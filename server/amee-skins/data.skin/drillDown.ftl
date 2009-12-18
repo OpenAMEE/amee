@@ -27,6 +27,7 @@
     <#assign choiceUrl = '${basePath}/drill?'>
 </#if>
 
+<#if choices??>
 <h2>Choices for ${choices.name}</h2>
 <p>
     <table>
@@ -48,5 +49,6 @@
         </#list>
     </table>
 </p>
+</#if>
 
 <#include '/includes/after_content.ftl'>
