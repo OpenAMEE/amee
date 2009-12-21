@@ -43,40 +43,67 @@ public class DecimalUnit {
     private final static Unit<? extends Quantity> TERAWATT_HOUR = TERAWATT.times(NonSI.HOUR);
 
     // Define BTUs.
+    // Based on: http://en.wikipedia.org/wiki/British_thermal_unit (21/12/2009)
+    private final static Unit<? extends Quantity> BTU_39F = SI.JOULE.times(1059.67);
+    private final static Unit<? extends Quantity> BTU_MEAN = SI.JOULE.times(1055.87);
     private final static Unit<? extends Quantity> BTU_IT = SI.JOULE.times(1055.05585262);
+    private final static Unit<? extends Quantity> BTU_ISO = SI.JOULE.times(1055.056);
     private final static Unit<? extends Quantity> BTU_59F = SI.JOULE.times(1054.804);
+    private final static Unit<? extends Quantity> BTU_60F = SI.JOULE.times(1054.68);
+    private final static Unit<? extends Quantity> BTU_63F = SI.JOULE.times(1054.6);
+    private final static Unit<? extends Quantity> BTU_THERMOCHEMICAL = SI.JOULE.times(1054.35026444);
 
     // Define THERMs.
-    private final static Unit<? extends Quantity> THERM_EC = BTU_IT.times(100000);
-    private final static Unit<? extends Quantity> THERM_US = BTU_59F.times(100000);
+    private final static Unit<? extends Quantity> THERM_39F = BTU_39F.times(100000);
+    private final static Unit<? extends Quantity> THERM_MEAN = BTU_MEAN.times(100000);
+    private final static Unit<? extends Quantity> THERM_IT = BTU_IT.times(100000);
+    private final static Unit<? extends Quantity> THERM_ISO = BTU_ISO.times(100000);
+    private final static Unit<? extends Quantity> THERM_59F = BTU_59F.times(100000);
+    private final static Unit<? extends Quantity> THERM_60F = BTU_60F.times(100000);
+    private final static Unit<? extends Quantity> THERM_63F = BTU_63F.times(100000);
+    private final static Unit<? extends Quantity> THERM_THERMOCHEMICAL = BTU_THERMOCHEMICAL.times(100000);
 
     {
         // Create usable ASCII representations. JScience will use non-ASCII characters by default.
         UNIT_FORMAT.label(KILOWATT_HOUR, "kWh");
-        UNIT_FORMAT.alias(KILOWATT_HOUR, "kWh");
         UNIT_FORMAT.label(MEGAWATT_HOUR, "MWh");
-        UNIT_FORMAT.alias(MEGAWATT_HOUR, "MWh");
         UNIT_FORMAT.label(GIGAWATT_HOUR, "GWh");
-        UNIT_FORMAT.alias(GIGAWATT_HOUR, "GWh");
         UNIT_FORMAT.label(TERAWATT_HOUR, "TWh");
-        UNIT_FORMAT.alias(TERAWATT_HOUR, "TWh");
-
-        // THERMs.
-        UNIT_FORMAT.label(THERM_EC, "thm_ec");
-        UNIT_FORMAT.alias(THERM_EC, "thm_ec");
-        UNIT_FORMAT.label(THERM_US, "thm_us");
-        UNIT_FORMAT.alias(THERM_US, "thm_us");
 
         // BTUs.
-        UNIT_FORMAT.label(BTU_IT, "btu_it");
-        UNIT_FORMAT.alias(BTU_IT, "btu_it");
-        UNIT_FORMAT.label(BTU_59F, "btu_59f");
-        UNIT_FORMAT.alias(BTU_59F, "btu_59f");
+        UNIT_FORMAT.label(BTU_39F, "BTU_ThirtyNineF");
+        UNIT_FORMAT.label(BTU_MEAN, "BTU_Mean");
+        UNIT_FORMAT.label(BTU_IT, "BTU_IT");
+        UNIT_FORMAT.label(BTU_ISO, "BTU_ISO");
+        UNIT_FORMAT.label(BTU_59F, "BTU_FiftyNineF");
+        UNIT_FORMAT.label(BTU_60F, "BTU_SixtyF");
+        UNIT_FORMAT.label(BTU_63F, "BTU_SixtyThreeF");
+        UNIT_FORMAT.label(BTU_THERMOCHEMICAL, "BTU_Thermochemical");
+
+        // THERMs.
+        UNIT_FORMAT.label(THERM_39F, "thm_ThirtyNineF");
+        UNIT_FORMAT.label(THERM_MEAN, "thm_Mean");
+        UNIT_FORMAT.label(THERM_IT, "thm_IT");
+        UNIT_FORMAT.alias(THERM_IT, "thm_ec");
+        UNIT_FORMAT.label(THERM_ISO, "thm_ISO");
+        UNIT_FORMAT.label(THERM_59F, "thm_FiftyNineF");
+        UNIT_FORMAT.alias(THERM_59F, "thm_us");
+        UNIT_FORMAT.label(THERM_60F, "thm_SixtyF");
+        UNIT_FORMAT.label(THERM_63F, "thm_SixtyThreeF");
+        UNIT_FORMAT.label(THERM_THERMOCHEMICAL, "thm_Thermochemical");
 
         // Ensure that "gal" and "oz" are sensible for AMEE.
-        // JScience will default "gal" and "oz" to UK volume units for UK Locale.
+        // JScience will bizarrely default "gal" and "oz" to UK units for UK Locale.
         UNIT_FORMAT.label(NonSI.GALLON_LIQUID_US, "gal");
         UNIT_FORMAT.label(NonSI.OUNCE, "oz");
+
+        // For GALLON_UK, explicitly declare gal_uk as canonical and gallon_uk as the alias.
+        UNIT_FORMAT.label(NonSI.GALLON_UK, "gal_uk");
+        UNIT_FORMAT.alias(NonSI.GALLON_UK, "gallon_uk");
+
+        // Need to explicitly declare these otherwise we get a parse error.
+        UNIT_FORMAT.label(NonSI.OUNCE_LIQUID_US, "oz_fl");
+        UNIT_FORMAT.label(NonSI.OUNCE_LIQUID_UK, "oz_fl_uk");
     }
 
     public static final DecimalUnit ONE = new DecimalUnit(Unit.ONE);
