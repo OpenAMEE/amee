@@ -5,7 +5,7 @@
 
 <#include '/${activeUser.getAPIVersion()}/dataTrail.ftl'>
 
-<#if selections?size gt 0>
+<#if selections?? && selections?size gt 0>
     <h2>Selections</h2>
     <p>
         <table>
@@ -27,6 +27,7 @@
     <#assign choiceUrl = '${basePath}/drill?'>
 </#if>
 
+<#if choices??>
 <h2>Choices for ${choices.name}</h2>
 <p>
     <table>
@@ -48,5 +49,6 @@
         </#list>
     </table>
 </p>
+</#if>
 
 <#include '/includes/after_content.ftl'>

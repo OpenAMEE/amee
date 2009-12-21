@@ -61,16 +61,17 @@ public class BasicAuthFilter extends Guard {
         sampleUser.setUsername(identifer);
         sampleUser.setPasswordInClear(new String(secret));
         User activeUser = authenticationService.authenticate(sampleUser);
-        request.getAttributes().put("activeUser", activeUser);
-        ThreadBeanHolder.set("activeUser", activeUser);
+        if (activeUser != null) {
+			request.getAttributes().put("activeUser", activeUser);
+	        ThreadBeanHolder.set("activeUser", activeUser);
 
-        // Set user or request locale information into the thread
-        String locale = request.getResourceRef().getQueryAsForm().getFirstValue("locale");
-        if (StringUtils.isBlank(locale) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
-            locale = activeUser.getLocale();
-        }
-        LocaleHolder.set(LocaleHolder.KEY, locale);
-
+	        // Set user or request locale information into the thread
+	        String locale = request.getResourceRef().getQueryAsForm().getFirstValue("locale");
+	        if (StringUtils.isBlank(locale) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+	            locale = activeUser.getLocale();
+	        }
+	        LocaleHolder.set(LocaleHolder.KEY, locale);
+		}
         return activeUser != null;
     }
 }
