@@ -32,14 +32,9 @@ public class Pager implements APIObject, Serializable {
     private PagerSetType pagerSetType;
     private Set<Object> pagerSet;
 
-    public Pager() {
+    private Pager() {
         super();
         reset();
-    }
-
-    public Pager(long items, int itemsPerPage) {
-        this();
-        reset(items, itemsPerPage);
     }
 
     public Pager(long items, int itemsPerPage, int currentPage) {

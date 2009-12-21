@@ -108,7 +108,7 @@ public class ItemValueDefinitionBuilder implements Builder {
                 element.appendChild(itemValueDefinition.getAliasedTo().getIdentityElement(document));
                 element.appendChild(APIUtils.getIdentityElement(document, "AliasedTo", itemValueDefinition.getAliasedTo()));
             } else {
-                element.appendChild(APIUtils.getElement(document, "AliasedTo",""));
+                element.appendChild(APIUtils.getElement(document, "AliasedTo", ""));
             }
             Element apiVersions = document.createElement("APIVersions");
             for (APIVersion v : itemValueDefinition.getAPIVersions()) {
@@ -116,7 +116,7 @@ public class ItemValueDefinitionBuilder implements Builder {
             }
             element.appendChild(apiVersions);
         }
+
         return element;
     }
-
 }

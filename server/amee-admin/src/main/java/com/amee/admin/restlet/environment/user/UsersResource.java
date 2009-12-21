@@ -48,7 +48,6 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
-        setPage(request);
         search = request.getResourceRef().getQueryAsForm().getFirstValue("search");
         if (search == null) {
             search = "";
@@ -75,7 +74,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(getItemsPerPage());
+        Pager pager = getPager();
         List<User> users = siteService.getUsers(environmentBrowser.getEnvironment(), pager, search);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -93,8 +92,8 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(getItemsPerPage());
-            List<User> users = siteService.getUsers(environmentBrowser.getEnvironment(), pager);
+            Pager pager = getPager();
+            List<User> users = siteService.getUsers(environmentBrowser.getEnvironment(), pager, search);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
             JSONArray usersArr = new JSONArray();
@@ -113,8 +112,8 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     public Element getElement(Document document) {
         Element element = document.createElement("UsersResource");
         if (isGet()) {
-            Pager pager = getPager(getItemsPerPage());
-            List<User> users = siteService.getUsers(environmentBrowser.getEnvironment(), pager);
+            Pager pager = getPager();
+            List<User> users = siteService.getUsers(environmentBrowser.getEnvironment(), pager, search);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
             Element usersElement = document.createElement("Users");
@@ -188,7 +187,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                                     newGroupPrincipal = new GroupPrincipal(group, newUser);
                                     groupService.save(newGroupPrincipal);
                                 } else {
-                                    log.error("Unable to find requested Group: '" + groupName + "'");
+                                    log.warn("Unable to find requested Group: '" + groupName + "'");
                                     badRequest(APIFault.INVALID_PARAMETERS);
                                     newUser = null;
                                 }
@@ -196,7 +195,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                         }
                     }
                 } else {
-                    log.error("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
+                    log.warn("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
                     badRequest(APIFault.INVALID_PARAMETERS);
                     newUser = null;
                 }

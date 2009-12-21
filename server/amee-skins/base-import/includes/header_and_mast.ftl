@@ -8,7 +8,7 @@
     <#assign logoUrl = "/">
 </#if>
 <#if !logoTitle??>
-    <#assign logoTitle = "Jelly Mold">
+    <#assign logoTitle = "AMEE">
 </#if>
 <#if !logoImageUrl??>
     <#assign logoImageUrl = "/clients/demo/images/jmLogo.gif">

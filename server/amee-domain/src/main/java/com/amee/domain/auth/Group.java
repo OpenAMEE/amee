@@ -144,7 +144,6 @@ public class Group extends AMEEEnvironmentEntity implements Comparable {
         this.description = description;
     }
 
-    @Override
     public ObjectType getObjectType() {
         return ObjectType.GRP;
     }

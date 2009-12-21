@@ -139,7 +139,7 @@ public class UserResource extends AuthorizeResource {
             if (form.getNames().contains("APIVersion")) {
                 user.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("APIVersion")));
                 if (user.getAPIVersion() == null) {
-                    log.error("Unable to find api version '" + form.getFirstValue("APIVersion") + "'");
+                    log.warn("Unable to find api version '" + form.getFirstValue("APIVersion") + "'");
                     badRequest();
                     return;
                 }

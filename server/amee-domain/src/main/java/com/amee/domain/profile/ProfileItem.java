@@ -9,8 +9,6 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.Item;
 import com.amee.domain.data.ItemValue;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowire;
@@ -19,7 +17,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.annotation.Resource;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 
 /**
@@ -46,9 +50,6 @@ import java.math.BigDecimal;
 @Entity
 @DiscriminatorValue("PI")
 public class ProfileItem extends Item {
-
-    @Transient
-    private final Log log = LogFactory.getLog(getClass());
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "PROFILE_ID")
@@ -109,7 +110,6 @@ public class ProfileItem extends Item {
         return profileItem;
     }
 
-    @Override
     public String getPath() {
         return getUid();
     }
@@ -186,7 +186,6 @@ public class ProfileItem extends Item {
         return builder.getElement(document, b);
     }
 
-    @Override
     public ObjectType getObjectType() {
         return ObjectType.PI;
     }
