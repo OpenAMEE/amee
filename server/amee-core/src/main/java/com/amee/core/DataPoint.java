@@ -157,7 +157,6 @@ public class DataPoint implements Comparable<DataPoint> {
         return new DataPoint(dateTime, decimal.multiply(new Decimal(f)));
     }
 
-    @Override
     public int compareTo(DataPoint that) {
         //Collections of DataPoint values will be ordered by ??
         return getDateTime().compareTo(that.getDateTime());
