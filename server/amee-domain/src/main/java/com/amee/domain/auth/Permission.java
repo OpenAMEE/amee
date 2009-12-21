@@ -41,7 +41,6 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Permission extends AMEEEnvironmentEntity implements Comparable {
 
-    public final static int OBJECT_CLASS_MAX_SIZE = 255;
     public final static int ENTRIES_MAX_SIZE = 1000;
 
     /**
@@ -124,6 +123,8 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
             entriesArr.put(pe.getJSONObject());
         }
         obj.put("entries", entriesArr);
+        obj.put("entity", getEntityReference().getJSONObject());
+        obj.put("principal", getPrincipalReference().getJSONObject());
         if (detailed) {
             obj.put("created", getCreated());
             obj.put("modified", getModified());
@@ -144,6 +145,8 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
             entriesElement.appendChild(pe.getElement(document));
         }
         element.appendChild(entriesElement);
+        element.appendChild(getEntityReference().getElement(document, "Entity"));
+        element.appendChild(getPrincipalReference().getElement(document, "Principal"));
         if (detailed) {
             element.setAttribute("created", getCreated().toString());
             element.setAttribute("modified", getModified().toString());

@@ -198,7 +198,6 @@ public class Environment extends AMEEEntity implements Comparable {
         }
     }
 
-    @Override
     public ObjectType getObjectType() {
         return ObjectType.ENV;
     }

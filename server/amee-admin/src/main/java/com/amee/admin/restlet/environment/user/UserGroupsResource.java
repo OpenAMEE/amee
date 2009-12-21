@@ -39,7 +39,6 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
         super.initialise(context, request, response);
         environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         environmentBrowser.setUserIdentifier(request.getAttributes().get("userUid").toString());
-        setPage(request);
         setPagerSetType(request);
     }
 
@@ -64,7 +63,7 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(getItemsPerPage());
+        Pager pager = getPager();
         List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(environmentBrowser.getUser());
         Map<String, GroupPrincipal> groupPrincipalMap = new HashMap<String, GroupPrincipal>();
         Set<Object> pagerSet = new HashSet<Object>();
@@ -89,7 +88,7 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(getItemsPerPage());
+            Pager pager = getPager();
             List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(environmentBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
             obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
@@ -110,7 +109,7 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
     public Element getElement(Document document) {
         Element element = document.createElement("UserGroupsResource");
         if (isGet()) {
-            Pager pager = getPager(getItemsPerPage());
+            Pager pager = getPager();
             List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(environmentBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
             element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));

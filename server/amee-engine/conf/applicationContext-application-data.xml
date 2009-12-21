@@ -9,8 +9,9 @@
     <bean id="dataApplication" class="com.amee.restlet.AMEEApplication">
         <property name="root" ref="dataRoot"/>
         <property name="tunnelService.methodTunnel" value="true"/>
-        <property name="tunnelService.extensionsTunnel" value="true"/>        
+        <property name="tunnelService.extensionsTunnel" value="true"/>
         <property name="statusService" ref="engineStatusService"/>
+        <property name="rangeService.enabled" value="false"/>
         <property name="name" value="Data Administration"/>
         <property name="allowClientCache" value="true"/>
     </bean>

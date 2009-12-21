@@ -48,7 +48,6 @@ import java.util.List;
 
 @Component
 @Scope("prototype")
-
 public class PermissionsResource extends AuthorizeResource {
 
     @Autowired

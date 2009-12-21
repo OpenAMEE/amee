@@ -16,14 +16,9 @@ namespace :amee do
     stream "tail -f #{current_release}/log/wrapper.log"
   end
    
-  desc "Open log and pid directory persmissions for amee user"
-  task :chmod, roles => :app do
-    sudo "chmod a+w #{shared_path}/log #{shared_path}/pids"
-  end
-
   desc "Create symlink to amee start script"
   task :init_d, roles => :app do
-    sudo "lns -s #{current_path}/bin/amee /etc/init.d/amee && chmod 777 /etc/init.d/amee"
+    sudo "ln -s #{current_path}/bin/amee /etc/init.d/amee && chmod 777 /etc/init.d/amee"
   end
 
   desc "Grep for 40* and 500 status in logs"

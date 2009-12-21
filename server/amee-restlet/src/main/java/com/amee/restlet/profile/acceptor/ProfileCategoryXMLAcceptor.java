@@ -56,7 +56,6 @@ public class ProfileCategoryXMLAcceptor implements IProfileCategoryRepresentatio
         }
     }
 
-    @Override
     public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) throws APIException {
 
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
@@ -74,13 +73,13 @@ public class ProfileCategoryXMLAcceptor implements IProfileCategoryRepresentatio
                         // Get ProfileItem element.
                         List elements = profileItemsElem.elements("ProfileItem");
 
-                        // AMEE 2.0 has a maximum allowed size for batch POSTs and PUTs. If this request execeeds that limit
+                        // AMEE 2.0 has a maximum allowed size for batch POSTs and PUTs. If this request exceeds that limit
                         // do not process the request and return a 400 status
                         if ((elements.size() > MAX_PROFILE_BATCH_SIZE) && (resource.getAPIVersion().isNotVersionOne())) {
                             throw new APIException(APIFault.MAX_BATCH_SIZE_EXCEEDED);
                         }
 
-                        // If the POST inputstream contains more than one entity it is considered a batch request.
+                        // If the POST InputStream contains more than one entity it is considered a batch request.
                         if (elements.size() > 1 && resource.isPost()) {
                             resource.setIsBatchPost(true);
                         }

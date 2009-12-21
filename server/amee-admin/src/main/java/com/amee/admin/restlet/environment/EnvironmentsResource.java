@@ -38,12 +38,6 @@ public class EnvironmentsResource extends AuthorizeResource implements Serializa
     private Environment newEnvironment;
 
     @Override
-    public void initialise(Context context, Request request, Response response) {
-        super.initialise(context, request, response);
-        setPage(request);
-    }
-
-    @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(getActiveEnvironment());
@@ -57,7 +51,7 @@ public class EnvironmentsResource extends AuthorizeResource implements Serializa
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager(getItemsPerPage());
+        Pager pager = getPager();
         List<Environment> environments = environmentService.getEnvironments(pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
@@ -72,7 +66,7 @@ public class EnvironmentsResource extends AuthorizeResource implements Serializa
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager(getItemsPerPage());
+            Pager pager = getPager();
             List<Environment> environments = environmentService.getEnvironments(pager);
             pager.setCurrentPage(getPage());
             JSONArray environmentsArr = new JSONArray();
@@ -91,7 +85,7 @@ public class EnvironmentsResource extends AuthorizeResource implements Serializa
     public Element getElement(Document document) {
         Element element = document.createElement("EnvironmentsResource");
         if (isGet()) {
-            Pager pager = getPager(getItemsPerPage());
+            Pager pager = getPager();
             List<Environment> environments = environmentService.getEnvironments(pager);
             pager.setCurrentPage(getPage());
             Element environmentsElement = document.createElement("Environments");

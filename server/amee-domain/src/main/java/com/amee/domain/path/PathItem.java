@@ -63,7 +63,6 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         setEntity(pathable.getEntity());
     }
 
-    @Override
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("uid", getUid());
@@ -80,7 +79,6 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         return new JSONObject().put("uid", getUid());
     }
 
-    @Override
     public Element getElement(Document document) {
         return getElement(document, getObjectType().getLabel());
     }
@@ -97,7 +95,6 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         return getElement(document);
     }
 
-    @Override
     public Element getIdentityElement(Document document) {
         Element element = document.createElement(getObjectType().getLabel());
         element.setAttribute("uid", getUid());
@@ -292,7 +289,6 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         this.id = id;
     }
 
-    @Override
     public Long getEntityId() {
         return getId();
     }
@@ -305,12 +301,10 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         this.uid = uid;
     }
 
-    @Override
     public String getEntityUid() {
         return getUid();
     }
 
-    @Override
     public ObjectType getObjectType() {
         return objectType;
     }
@@ -372,7 +366,6 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         return children;
     }
 
-    @Override
     public AccessSpecification getAccessSpecification() {
         if (accessSpecification != null) {
             return accessSpecification.get();
@@ -381,13 +374,11 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         }
     }
 
-    @Override
     public void setAccessSpecification(AccessSpecification accessSpecification) {
         this.accessSpecification = new ThreadLocal<AccessSpecification>();
         this.accessSpecification.set(accessSpecification);
     }
 
-    @Override
     public AMEEEntity getEntity() {
         if (entity != null) {
             return entity.get();
@@ -397,7 +388,6 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
 
     }
 
-    @Override
     public void setEntity(AMEEEntity entity) {
         this.entity = new ThreadLocal<AMEEEntity>();
         this.entity.set(entity);

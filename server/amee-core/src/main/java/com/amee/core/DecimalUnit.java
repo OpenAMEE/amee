@@ -31,6 +31,8 @@ import java.text.ParsePosition;
 public class DecimalUnit {
 
     protected final static UnitFormat UNIT_FORMAT = UnitFormat.getInstance();
+
+    // Define various watt based units.
     private final static Unit<Power> KILOWATT = SI.WATT.times(1000);
     private final static Unit<Power> MEGAWATT = KILOWATT.times(1000);
     private final static Unit<Power> GIGAWATT = MEGAWATT.times(1000);
@@ -39,6 +41,14 @@ public class DecimalUnit {
     private final static Unit<? extends Quantity> MEGAWATT_HOUR = MEGAWATT.times(NonSI.HOUR);
     private final static Unit<? extends Quantity> GIGAWATT_HOUR = GIGAWATT.times(NonSI.HOUR);
     private final static Unit<? extends Quantity> TERAWATT_HOUR = TERAWATT.times(NonSI.HOUR);
+
+    // Define BTUs.
+    private final static Unit<? extends Quantity> BTU_IT = SI.JOULE.times(1055.05585262);
+    private final static Unit<? extends Quantity> BTU_59F = SI.JOULE.times(1054.804);
+
+    // Define THERMs.
+    private final static Unit<? extends Quantity> THERM_EC = BTU_IT.times(100000);
+    private final static Unit<? extends Quantity> THERM_US = BTU_59F.times(100000);
 
     {
         // Create usable ASCII representations. JScience will use non-ASCII characters by default.
@@ -50,6 +60,18 @@ public class DecimalUnit {
         UNIT_FORMAT.alias(GIGAWATT_HOUR, "GWh");
         UNIT_FORMAT.label(TERAWATT_HOUR, "TWh");
         UNIT_FORMAT.alias(TERAWATT_HOUR, "TWh");
+
+        // THERMs.
+        UNIT_FORMAT.label(THERM_EC, "thm_ec");
+        UNIT_FORMAT.alias(THERM_EC, "thm_ec");
+        UNIT_FORMAT.label(THERM_US, "thm_us");
+        UNIT_FORMAT.alias(THERM_US, "thm_us");
+
+        // BTUs.
+        UNIT_FORMAT.label(BTU_IT, "btu_it");
+        UNIT_FORMAT.alias(BTU_IT, "btu_it");
+        UNIT_FORMAT.label(BTU_59F, "btu_59f");
+        UNIT_FORMAT.alias(BTU_59F, "btu_59f");
 
         // Ensure that "gal" and "oz" are sensible for AMEE.
         // JScience will default "gal" and "oz" to UK volume units for UK Locale.
