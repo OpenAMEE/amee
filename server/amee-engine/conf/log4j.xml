@@ -11,13 +11,13 @@
         </layout>
     </appender>
 
-    <!-- Declare the 'EMAIL' SMTPAppender. -->
-    <appender name="EMAIL" class="com.amee.engine.PatternSubjectSMTPAppender">
+    <!-- Declare the 'PLATFORM_EMAIL' SMTPAppender. -->
+    <appender name="PLATFORM_EMAIL" class="com.amee.engine.PatternSubjectSMTPAppender">
         <param name="BufferSize" value="512"/>
         <param name="SMTPHost" value="localhost"/>
         <param name="From" value="platform.issues@amee.cc"/>
         <param name="To" value="platform.issues@amee.cc"/>
-        <param name="Subject" value="AMEE Platform Issue - %c - %m"/>
+        <param name="Subject" value="AMEE Platform Issue - %c %m"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
                    value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c] %m%n"/>
@@ -28,9 +28,37 @@
         </filter>
     </appender>
 
-    <!-- Declare the 'ROLLER' DailyRollingFileAppender. -->
-    <appender name="ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
+    <!-- Declare the 'SCIENCE_EMAIL' SMTPAppender. -->
+    <appender name="SCIENCE_EMAIL" class="com.amee.engine.PatternSubjectSMTPAppender">
+        <param name="BufferSize" value="512"/>
+        <param name="SMTPHost" value="localhost"/>
+        <param name="From" value="science.issues@amee.cc"/>
+        <param name="To" value="science.issues@amee.cc"/>
+        <param name="Subject" value="AMEE Science Issue - %m"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="ERROR "/>
+            <param name="LevelMax" value="FATAL"/>
+        </filter>
+    </appender>
+
+    <!-- Declare the 'TRANSACTIONS_ROLLER' DailyRollingFileAppender. -->
+    <appender name="TRANSACTIONS_ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="File" value="/var/www/apps/amee/${app.instance}/log/transactions.log"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="Append" value="true"/>
+        <param name="Threshold" value="INFO"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy:MM:dd:HH:mm:ss:SSS}|%m%n"/>
+        </layout>
+    </appender>
+
+    <!-- Declare the 'SCIENCE_ROLLER' DailyRollingFileAppender. -->
+    <appender name="SCIENCE_ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="/var/www/apps/amee/${app.instance}/log/science.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <param name="Append" value="true"/>
         <param name="Threshold" value="INFO"/>
@@ -80,7 +108,13 @@
 
     <category name="transactions" additivity="false">
         <priority value="INFO"/>
-        <appender-ref ref="ROLLER"/>
+        <appender-ref ref="TRANSACTIONS_ROLLER"/>
+    </category>
+
+    <category name="science" additivity="false">
+        <priority value="INFO"/>
+        <appender-ref ref="SCIENCE_ROLLER"/>
+        <appender-ref ref="SCIENCE_EMAIL"/>
     </category>
 
     <!-- ############### log4jdbc ################### -->
@@ -112,7 +146,7 @@
         <priority value="INFO"/>
         <!--<appender-ref ref="FILE"/>-->
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="EMAIL"/>
+        <appender-ref ref="PLATFORM_EMAIL"/>
     </root>
 
 </log4j:configuration>

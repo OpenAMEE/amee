@@ -61,5 +61,22 @@ public class AlgorithmServiceTest {
         } catch (Throwable t) {
             // swallow
         }
+
+    }
+
+    @Test
+    public void algorithmCanThrowIllegalArgumentException() throws ScriptException {
+        Algorithm algorithm = new Algorithm();
+        algorithm.setContent("throw new java.lang.IllegalArgumentException('Bang!');");
+        Map<String, Object> values = new HashMap<String, Object>();
+        try {
+            algorithmService.evaluate(algorithm, values);
+            fail("Algorithm should throw IllegalArgumentException.");
+        } catch (ScriptException e) {
+            IllegalArgumentException iae = AlgorithmService.getIllegalArgumentException(e);
+            if ((iae == null) || !iae.getMessage().equals("Bang!")) {
+                fail("Algorithm should throw IllegalArgumentException with correct message.");
+            }
+        }
     }
 }
