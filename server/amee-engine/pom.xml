@@ -144,6 +144,11 @@
             <version>${jetty.version}</version>
         </dependency>
         <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
             <groupId>com.noelios.restlet</groupId>
             <artifactId>com.noelios.restlet.ext.jetty</artifactId>
             <version>${restlet.version}</version>
@@ -159,12 +164,6 @@
             <groupId>quartz</groupId>
             <artifactId>quartz</artifactId>
             <version>1.5.2</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

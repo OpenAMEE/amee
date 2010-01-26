@@ -1,6 +1,10 @@
 package com.amee.googleds;
 
-import com.amee.domain.data.*;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.Item;
+import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
@@ -37,7 +41,7 @@ public class DataCategoryServlet extends DataSourceServlet {
         pathItemService = (PathItemService) Engine.getAppContext().getBean("pathItemService");
     }
 
-	public DataTable generateDataTable(Query query, HttpServletRequest request) {
+    public DataTable generateDataTable(Query query, HttpServletRequest request) {
 
         try {
 
@@ -48,9 +52,9 @@ public class DataCategoryServlet extends DataSourceServlet {
 
             List<DataItem> items = getItems(request.getPathInfo());
 
-            for (int i=0; i<items.size(); i++) {
+            for (int i = 0; i < items.size(); i++) {
 
-                if (i==0) {
+                if (i == 0) {
                     addColumnHeadings(items.get(i), table);
                 }
 
@@ -67,11 +71,11 @@ public class DataCategoryServlet extends DataSourceServlet {
             transactionController.end();
         }
 
-	}
+    }
 
-	private void addRow(Item item, DataTable table) throws TypeMismatchException {
+    private void addRow(Item item, DataTable table) throws TypeMismatchException {
 
-		TableRow row = new TableRow();
+        TableRow row = new TableRow();
 
         for (ColumnDescription col : table.getColumnDescriptions()) {
             String value = item.getItemValue(col.getId()).getValue();
@@ -82,14 +86,14 @@ public class DataCategoryServlet extends DataSourceServlet {
             }
         }
         table.addRow(row);
-	}
+    }
 
-	private void addColumnHeadings(Item item, DataTable table) {
+    private void addColumnHeadings(Item item, DataTable table) {
 
-		ArrayList<ColumnDescription> cd = new ArrayList<ColumnDescription>();
+        ArrayList<ColumnDescription> cd = new ArrayList<ColumnDescription>();
 
-		for (ItemValue itemValue : item.getItemValues()) {
-			String name = itemValue.getName();
+        for (ItemValue itemValue : item.getItemValues()) {
+            String name = itemValue.getName();
             String path = itemValue.getPath();
             ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
             ValueType type;
@@ -100,11 +104,11 @@ public class DataCategoryServlet extends DataSourceServlet {
             } else {
                 type = ValueType.TEXT;
             }
- 			cd.add(new ColumnDescription(path, type, name));
-		}
+            cd.add(new ColumnDescription(path, type, name));
+        }
 
-		table.addColumns(cd);
-	}
+        table.addColumns(cd);
+    }
 
     private List<DataItem> getItems(String path) {
 
@@ -128,16 +132,16 @@ public class DataCategoryServlet extends DataSourceServlet {
         }
     }
 
-	/**
-	 * NOTE: By default, this function returns true, which means that cross
-	 * domain requests are rejected. This check is disabled here so examples can
-	 * be used directly from the address bar of the browser. Bear in mind that
-	 * this exposes your data source to xsrf attacks. If the only use of the
-	 * data source url is from your application, that runs on the same domain,
-	 * it is better to remain in restricted mode.
-	 */
-	protected boolean isRestrictedAccessMode() {
-		return false;
-	}
+    /**
+     * NOTE: By default, this function returns true, which means that cross
+     * domain requests are rejected. This check is disabled here so examples can
+     * be used directly from the address bar of the browser. Bear in mind that
+     * this exposes your data source to xsrf attacks. If the only use of the
+     * data source url is from your application, that runs on the same domain,
+     * it is better to remain in restricted mode.
+     */
+    protected boolean isRestrictedAccessMode() {
+        return false;
+    }
 
 }

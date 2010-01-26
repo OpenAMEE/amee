@@ -2,6 +2,7 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
 
+    <!-- Declare the 'CONSOLE' ConsoleAppender. -->
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
@@ -10,16 +11,16 @@
         </layout>
     </appender>
 
-    <!-- Declare the SMTPAppender -->
-    <appender name="EMAIL" class="org.apache.log4j.net.SMTPAppender">
+    <!-- Declare the 'EMAIL' SMTPAppender. -->
+    <appender name="EMAIL" class="com.amee.engine.PatternSubjectSMTPAppender">
         <param name="BufferSize" value="512"/>
         <param name="SMTPHost" value="localhost"/>
-        <param name="From" value="amee@${host.name}"/>
-        <param name="To" value="tech@amee.cc"/>
-        <param name="Subject" value="AMEE Service Message"/>
+        <param name="From" value="platform.issues@amee.cc"/>
+        <param name="To" value="platform.issues@amee.cc"/>
+        <param name="Subject" value="AMEE Platform Issue - %c - %m"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                   value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c{6}] %m%n"/>
+                   value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c] %m%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="ERROR "/>
@@ -27,6 +28,7 @@
         </filter>
     </appender>
 
+    <!-- Declare the 'ROLLER' DailyRollingFileAppender. -->
     <appender name="ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="File" value="/var/www/apps/amee/${app.instance}/log/transactions.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>

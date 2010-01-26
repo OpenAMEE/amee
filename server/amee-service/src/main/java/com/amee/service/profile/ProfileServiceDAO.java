@@ -252,7 +252,11 @@ public class ProfileServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
-    protected List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
+    protected List<ProfileItem> getProfileItems(
+            Profile profile,
+            DataCategory dataCategory,
+            StartEndDate startDate,
+            StartEndDate endDate) {
 
         if ((dataCategory == null) || (dataCategory.getItemDefinition() == null)) {
             return null;

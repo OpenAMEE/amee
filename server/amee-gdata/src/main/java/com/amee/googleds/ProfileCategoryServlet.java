@@ -68,7 +68,7 @@ public class ProfileCategoryServlet extends DataSourceServlet {
         pathItemService = (PathItemService) Engine.getAppContext().getBean("pathItemService");
     }
 
-	public DataTable generateDataTable(Query query, HttpServletRequest request) {
+    public DataTable generateDataTable(Query query, HttpServletRequest request) {
 
         try {
 
@@ -79,9 +79,9 @@ public class ProfileCategoryServlet extends DataSourceServlet {
 
             List<ProfileItem> profileItems = getProfileItems(request.getPathInfo());
 
-            for (int i=0; i<profileItems.size(); i++) {
+            for (int i = 0; i < profileItems.size(); i++) {
 
-                if (i==0) {
+                if (i == 0) {
                     addColumnHeadings(profileItems.get(i), table);
                 }
 
@@ -99,16 +99,16 @@ public class ProfileCategoryServlet extends DataSourceServlet {
             transactionController.end();
         }
 
-	}
+    }
 
-	private void addRow(ProfileItem item, DataTable table) throws TypeMismatchException {
+    private void addRow(ProfileItem item, DataTable table) throws TypeMismatchException {
 
-		TableRow row = new TableRow();
+        TableRow row = new TableRow();
 
         for (ColumnDescription col : table.getColumnDescriptions()) {
             if (col.getId().equals("co2")) {
                 row.addCell(item.getAmount().getValue().floatValue());
-            } else if (col.getId().equals("startDate"))  {
+            } else if (col.getId().equals("startDate")) {
                 DateTimeValue dateTime = getDateTime(item);
                 row.addCell(dateTime);
             } else {
@@ -116,12 +116,12 @@ public class ProfileCategoryServlet extends DataSourceServlet {
                 if (itemValue != null) {
                     addValue(col, row, itemValue);
                 } else {
-                    addValue(col, row, item.getDataItem().getItemValue(col.getId()));    
+                    addValue(col, row, item.getDataItem().getItemValue(col.getId()));
                 }
             }
         }
         table.addRow(row);
-	}
+    }
 
     private void addValue(ColumnDescription col, TableRow row, ItemValue itemValue) {
         if (col.getType().equals(ValueType.NUMBER)) {
@@ -140,16 +140,16 @@ public class ProfileCategoryServlet extends DataSourceServlet {
 
     private void addColumnHeadings(ProfileItem profileItem, DataTable table) {
 
-		ArrayList<ColumnDescription> cd = new ArrayList<ColumnDescription>();
+        ArrayList<ColumnDescription> cd = new ArrayList<ColumnDescription>();
 
-        cd.add(new ColumnDescription("co2",ValueType.NUMBER, "co2"));
-        cd.add(new ColumnDescription("startDate",ValueType.DATETIME, "startDate"));
+        cd.add(new ColumnDescription("co2", ValueType.NUMBER, "co2"));
+        cd.add(new ColumnDescription("startDate", ValueType.DATETIME, "startDate"));
 
         addItemValues(profileItem.getItemValues(), cd);
         addItemValues(profileItem.getDataItem().getItemValues(), cd);
 
         table.addColumns(cd);
-	}
+    }
 
     private void addItemValues(List<ItemValue> itemValues, ArrayList<ColumnDescription> cd) {
         for (ItemValue itemValue : itemValues) {
@@ -190,16 +190,16 @@ public class ProfileCategoryServlet extends DataSourceServlet {
         }
     }
 
-	/**
-	 * NOTE: By default, this function returns true, which means that cross
-	 * domain requests are rejected. This check is disabled here so examples can
-	 * be used directly from the address bar of the browser. Bear in mind that
-	 * this exposes your data source to xsrf attacks. If the only use of the
-	 * data source url is from your application, that runs on the same domain,
-	 * it is better to remain in restricted mode.
-	 */
-	protected boolean isRestrictedAccessMode() {
-		return false;
-	}
+    /**
+     * NOTE: By default, this function returns true, which means that cross
+     * domain requests are rejected. This check is disabled here so examples can
+     * be used directly from the address bar of the browser. Bear in mind that
+     * this exposes your data source to xsrf attacks. If the only use of the
+     * data source url is from your application, that runs on the same domain,
+     * it is better to remain in restricted mode.
+     */
+    protected boolean isRestrictedAccessMode() {
+        return false;
+    }
 
 }
