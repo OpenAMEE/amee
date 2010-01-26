@@ -1,5 +1,6 @@
 package com.amee.restlet;
 
+import com.amee.calculation.service.CalculationException;
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEEntityReference;
 import com.amee.domain.AMEEStatus;
@@ -63,6 +64,7 @@ import java.util.Map;
 public abstract class BaseResource extends Resource implements BeanFactoryAware {
 
     protected final Log log = LogFactory.getLog(getClass());
+    protected final Log scienceLog = LogFactory.getLog("science");
 
     private Form form;
     private int page = -1;
@@ -116,11 +118,14 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
     public void handlePut() {
         try {
             super.handlePut();
-        } catch (IllegalArgumentException iae) {
-            log.warn("handlePut() " + iae.getMessage());
-            badRequest(APIFault.INVALID_PARAMETERS, iae.getMessage());
-        } catch (RuntimeException ex) {
-            log.error("handlePut()", ex);
+        } catch (IllegalArgumentException e) {
+            log.warn("handlePut() " + e.getMessage());
+            badRequest(APIFault.INVALID_PARAMETERS, e.getMessage());
+        } catch (CalculationException e) {
+            scienceLog.error("handlePut() " + e.getMessage());
+            error();
+        } catch (RuntimeException e) {
+            log.error("handlePut()", e);
             error();
         }
     }
@@ -132,11 +137,14 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
     public void handlePost() {
         try {
             super.handlePost();
-        } catch (IllegalArgumentException iae) {
-            log.warn("handlePost() " + iae.getMessage());
-            badRequest(APIFault.INVALID_PARAMETERS, iae.getMessage());
-        } catch (RuntimeException ex) {
-            log.error("handlePost()", ex);
+        } catch (IllegalArgumentException e) {
+            log.warn("handlePost() " + e.getMessage());
+            badRequest(APIFault.INVALID_PARAMETERS, e.getMessage());
+        } catch (CalculationException e) {
+            scienceLog.error("handlePut() " + e.getMessage());
+            error();
+        } catch (RuntimeException e) {
+            log.error("handlePost()", e);
             error();
         }
     }
@@ -148,11 +156,14 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
     public void handleGet() {
         try {
             super.handleGet();
-        } catch (IllegalArgumentException iae) {
-            log.warn("handleGet() " + iae.getMessage());
-            badRequest(APIFault.INVALID_PARAMETERS, iae.getMessage());
-        } catch (RuntimeException ex) {
-            log.error("handleGet()", ex);
+        } catch (IllegalArgumentException e) {
+            log.warn("handleGet() " + e.getMessage());
+            badRequest(APIFault.INVALID_PARAMETERS, e.getMessage());
+        } catch (CalculationException e) {
+            scienceLog.error("handlePut() " + e.getMessage());
+            error();
+        } catch (RuntimeException e) {
+            log.error("handleGet()", e);
             error();
         }
     }
@@ -217,6 +228,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
     }
 
     // TODO: Needs to be replaced by getAtomRepresentation in AMEEResource or be merged.
+
     protected Representation getAtomRepresentation() throws ResourceException {
         final org.apache.abdera.model.Element atomElement = getAtomElement();
         return new WriterRepresentation(MediaType.APPLICATION_ATOM_XML) {
@@ -376,12 +388,12 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
 
     /**
      * Returns the page number to use with the Pager.
-     *
+     * <p/>
      * Will first attempt to get the explicit page number from a 'page' query parameter or 'Page' request header.
-     *
+     * <p/>
      * Secondly, will attempt to calculate the page from a 'start' query parameter or 'Start' request
      * header. The 'start' value is a zero-based index of an item in the result set. Based on the 'start' value a
-     * page number will be calculated such that the page contains the item with the index of 'start'. 
+     * page number will be calculated such that the page contains the item with the index of 'start'.
      *
      * @return the page number
      */

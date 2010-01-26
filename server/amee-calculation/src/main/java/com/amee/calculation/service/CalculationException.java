@@ -23,25 +23,21 @@ package com.amee.calculation.service;
 
 /**
  * A RuntimeException for capturing exceptions arising from algorithm calculations.
- *
  */
 public class CalculationException extends RuntimeException {
 
     private int errorCode = -1;
-    private String errorString = "";
 
-    public CalculationException(int errorCode, String errorString) {
-        this.errorCode = errorCode;
-        this.errorString = errorString;
+    public CalculationException(String message) {
+        super(message);
     }
 
-    public CalculationException(String errorString) {
-        if (errorString == null)
-            return;
-        this.errorString = errorString;
+    public CalculationException(String message, int errorCode) {
+        super(message);
+        this.errorCode = errorCode;
     }
 
     public String getError() {
-        return errorCode + ":" + errorString;
+        return errorCode + ":" + getMessage();
     }
 }

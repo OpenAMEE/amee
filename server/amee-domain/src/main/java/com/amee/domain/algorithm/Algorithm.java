@@ -86,11 +86,11 @@ public class Algorithm extends AbstractAlgorithm {
         return element;
     }
 
-    private ItemDefinition getItemDefinition() {
+    public ItemDefinition getItemDefinition() {
         return itemDefinition;
     }
 
-    private void setItemDefinition(ItemDefinition itemDefinition) {
+    public void setItemDefinition(ItemDefinition itemDefinition) {
         if (itemDefinition == null) return;
         this.itemDefinition = itemDefinition;
     }

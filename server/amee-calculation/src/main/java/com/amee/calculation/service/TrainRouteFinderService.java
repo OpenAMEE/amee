@@ -181,7 +181,7 @@ class TrainRouteFinderService implements Service {
                 log.warn("parseResponse() - Error status returned by Train Route API: " + errorString);
                 throw new IllegalArgumentException();
             } else {
-                throw new CalculationException(errorCode, errorString);
+                throw new CalculationException(errorString, errorCode);
             }
         }
 

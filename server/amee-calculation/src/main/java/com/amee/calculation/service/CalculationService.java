@@ -39,6 +39,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.org.mozilla.javascript.internal.JavaScriptException;
 
 import javax.script.ScriptException;
 import java.io.Serializable;
@@ -49,6 +50,7 @@ import java.util.Map;
 public class CalculationService implements CO2CalculationService, BeanFactoryAware, Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
+    private final Log scienceLog = LogFactory.getLog("science");
 
     @Autowired
     private AlgorithmService algorithmService;
@@ -56,7 +58,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
     @Autowired
     private TransactionController transactionController;
 
-    // Set by Spring context. The BeanFactory used to retreive ProfileFinder and DataFinder instances.
+    // Set by Spring context. The BeanFactory used to retrieve ProfileFinder and DataFinder instances.
     private BeanFactory beanFactory;
 
     /**
@@ -121,7 +123,9 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      * @return the algorithm result as a BigDecimal
      */
     public CO2Amount calculate(Algorithm algorithm, Map<String, Object> values) {
+
         CO2Amount amount;
+
         if (log.isDebugEnabled()) {
             log.debug("calculate()");
             log.debug("calculate() - algorithm uid: " + algorithm.getUid());
@@ -133,23 +137,51 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
             amount = new CO2Amount(algorithmService.evaluate(algorithm, values));
         } catch (ScriptException e) {
 
-            // This is less than desirable but allows us to bubble up parameter missing or format exceptions
-            // from the algos (the only place where these validations can be performed.
-            Throwable t = e.getCause();
-            if (t != null && t.getCause() != null && t.getCause() instanceof IllegalArgumentException) {
-                throw (RuntimeException) t.getCause();
+            // Bubble up parameter missing or format exceptions from the
+            // algorithms (the only place where these validations can be performed.
+            IllegalArgumentException iae = AlgorithmService.getIllegalArgumentException(e);
+            if (iae != null) {
+                throw iae;
             }
 
+            // Throw CalculationException for Exceptions from the JavaScript 'throw' keyword.
+            if ((e.getCause() != null) && e.getCause() instanceof JavaScriptException) {
+                JavaScriptException jse = (JavaScriptException) e.getCause();
+                throw new CalculationException(
+                        "Caught Exception in Algorithm (" +
+                                algorithm.getItemDefinition().getName() +
+                                ", " +
+                                algorithm.getName() +
+                                ", " +
+                                jse.lineNumber() +
+                                ", " +
+                                jse.columnNumber() +
+                                "): " + jse.getValue());
+
+            }
+
+            // Log all other errors to the science log...
+            scienceLog.warn(
+                    "Caught ScriptException in Algorithm (" +
+                            algorithm.getItemDefinition().getName() +
+                            "|" +
+                            algorithm.getName() +
+                            "): " + e.getMessage());
+
+            // ...and return zero by default.
             amount = new CO2Amount(Decimal.BIG_DECIMAL_ZERO);
         }
+
         if (log.isDebugEnabled()) {
             log.debug("calculate() - finished calculation");
             log.debug("calculate() - CO2 Amount: " + amount);
         }
+
         return amount;
     }
 
     // Collect all relevant algorithm input values for a ProfileItem calculation.
+
     private Map<String, Object> getValues(ProfileItem profileItem) {
 
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
@@ -195,6 +227,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
     }
 
     // Collect all relevant algorithm input values for a DataItem + auth Choices calculation.
+
     private Map<String, Object> getValues(DataItem dataItem, Choices userValueChoices, APIVersion version) {
 
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();

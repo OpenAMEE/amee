@@ -28,20 +28,18 @@ import java.util.Map;
  */
 public interface Service {
 
-
     /**
      * Invoke the service.
-     *
+     * <p/>
      * The service will return some string representation of the result and may also set results into the
      * passed-in Map of values and ProfileFinder.
      *
-     * @return the string representation of the sevice result
-     *
+     * @return the string representation of the service result
      */
     String invoke() throws CalculationException;
 
     /**
-     * Set a Map of values which contains parameters required for calling the exeternal API or service.
+     * Set a Map of values which contains parameters required for calling the external API or service.
      *
      * @param values - the Map of values
      */
@@ -53,7 +51,7 @@ public interface Service {
      * This will be used to set into the Profile values returned from the remote service.
      *
      * @param profileFinder - the {@link com.amee.calculation.service.ProfileFinder}
-     * instance for the calling {@link com.amee.domain.profile.Profile}.
+     *                      instance for the calling {@link com.amee.domain.profile.Profile}.
      */
     void setProfileFinder(ProfileFinder profileFinder);
 }
