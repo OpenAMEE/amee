@@ -23,7 +23,7 @@
                    value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c] %m%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
-            <param name="LevelMin" value="ERROR "/>
+            <param name="LevelMin" value="ERROR"/>
             <param name="LevelMax" value="FATAL"/>
         </filter>
     </appender>
@@ -40,7 +40,7 @@
                    value="[%d] [%-5p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] %m%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
-            <param name="LevelMin" value="ERROR "/>
+            <param name="LevelMin" value="ERROR"/>
             <param name="LevelMax" value="FATAL"/>
         </filter>
     </appender>
