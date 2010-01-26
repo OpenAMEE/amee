@@ -109,7 +109,6 @@ public class APIVersion extends AMEEEntity {
         return !this.equals(ONE);
     }
 
-    @Override
     public ObjectType getObjectType() {
         return ObjectType.AV;
     }

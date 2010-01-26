@@ -1,0 +1,6 @@
+These are the Apache config entries 
+
+JkMount /*.gdata worker1
+JkMount /log4am33 worker1
+JKUnMount /*.gdata worker2
+JKUnMount /log4am33 worker

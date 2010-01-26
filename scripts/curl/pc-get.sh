@@ -10,7 +10,8 @@
 #amee_url="profiles/${amee_profile}/home/appliances/computers/generic?profileDate=201004"
 
 #amee_url="profiles/${amee_profile}/transport/car/generic?itemsPerPage=10&startDate=2009-07-10T00:00:00%2B0100"
-amee_url="profiles/${amee_profile}/transport/car/generic?itemsPerPage=10&profileDate=200810"
+#amee_url="profiles/${amee_profile}/transport/car/generic?itemsPerPage=10&profileDate=200810"
+amee_url="profiles/C3AA949EE9A7/home/energy/insulation"
 
 type="xml"
 
