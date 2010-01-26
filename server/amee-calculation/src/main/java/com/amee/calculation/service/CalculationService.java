@@ -164,7 +164,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
             scienceLog.warn(
                     "Caught ScriptException in Algorithm (" +
                             algorithm.getItemDefinition().getName() +
-                            "|" +
+                            ", " +
                             algorithm.getName() +
                             "): " + e.getMessage());
 
