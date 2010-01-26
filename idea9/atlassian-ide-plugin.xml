@@ -1,0 +1,13 @@
+<atlassian-ide-plugin>
+  <project-configuration>
+    <servers>
+      <jira>
+        <server-id>07d8edcf-d394-4856-95e2-8e3b479e6f09</server-id>
+        <name>AMEE JIRA</name>
+        <url>http://jira.amee.com</url>
+        <dontUseBasicAuth>false</dontUseBasicAuth>
+      </jira>
+    </servers>
+    <default-jira-server>07d8edcf-d394-4856-95e2-8e3b479e6f09</default-jira-server>
+  </project-configuration>
+</atlassian-ide-plugin>
