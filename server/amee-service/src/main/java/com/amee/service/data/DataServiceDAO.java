@@ -95,7 +95,9 @@ public class DataServiceDAO implements Serializable {
 
     @SuppressWarnings(value = "unchecked")
     protected void remove(DataCategory dataCategory) {
+
         log.debug("remove: " + dataCategory.getName());
+
         // trash ItemValues for DataItems
         Session session = (Session) entityManager.getDelegate();
         SQLQuery query = session.createSQLQuery(
@@ -122,9 +124,12 @@ public class DataServiceDAO implements Serializable {
         for (DataCategory child : dataCategories) {
             remove(child);
         }
+
+        // trash locale names for this DataCategory
+        remove(dataCategory.getLocaleNames().values());
+
         // trash this DataCategory
         dataCategory.setStatus(AMEEStatus.TRASH);
-        remove(dataCategory.getLocaleNames().values());
     }
 
     // ItemValues

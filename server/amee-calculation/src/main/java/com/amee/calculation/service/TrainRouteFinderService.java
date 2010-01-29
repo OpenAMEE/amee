@@ -138,9 +138,9 @@ class TrainRouteFinderService implements Service {
             String totalDistance = parseResponse(jsonString);
             log.debug("invoke() - calculated distance(m) " + totalDistance + " from " + station1 + " to " + station2);
             return totalDistance;
-        } catch (IllegalArgumentException iae) {
-            throw new IllegalArgumentException("Unable to generate a valid route for station1=" + station1 +
-                    " and station2=" + station2);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    "Unable to generate a valid route for station1=" + station1 + " and station2=" + station2);
         } catch (IOException e) {
             handleInvokeException(e);
             throw new CalculationException(e.getMessage());

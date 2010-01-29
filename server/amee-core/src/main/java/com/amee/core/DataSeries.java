@@ -261,7 +261,6 @@ public class DataSeries {
      */
     public Collection<DateTime> getDateTimePoints() {
         return (Collection<DateTime>) CollectionUtils.collect(dataPoints, new Transformer() {
-            @Override
             public Object transform(Object input) {
                 DataPoint dataPoint = (DataPoint) input;
                 return dataPoint.getDateTime();

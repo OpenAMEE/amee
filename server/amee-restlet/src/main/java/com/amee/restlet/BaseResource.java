@@ -141,7 +141,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
             log.warn("handlePost() " + e.getMessage());
             badRequest(APIFault.INVALID_PARAMETERS, e.getMessage());
         } catch (CalculationException e) {
-            scienceLog.error("handlePut() " + e.getMessage());
+            scienceLog.error("handlePost() " + e.getMessage());
             error();
         } catch (RuntimeException e) {
             log.error("handlePost()", e);
@@ -160,7 +160,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
             log.warn("handleGet() " + e.getMessage());
             badRequest(APIFault.INVALID_PARAMETERS, e.getMessage());
         } catch (CalculationException e) {
-            scienceLog.error("handlePut() " + e.getMessage());
+            scienceLog.error("handleGet() " + e.getMessage());
             error();
         } catch (RuntimeException e) {
             log.error("handleGet()", e);
