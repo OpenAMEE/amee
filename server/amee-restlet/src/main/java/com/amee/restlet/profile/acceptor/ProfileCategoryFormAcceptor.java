@@ -214,8 +214,8 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
                 }
                 // clear caches
                 profileService.clearCaches(resource.getProfile());
-            } catch (IllegalArgumentException ex) {
-                log.warn("accept() - Bad parameter received", ex);
+            } catch (IllegalArgumentException e) {
+                log.warn("accept() - Bad parameter received - " + e.getMessage());
                 throw new APIException(APIFault.INVALID_PARAMETERS);
             }
         } else {

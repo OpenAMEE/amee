@@ -50,7 +50,6 @@ public class ProfileCategoryAtomAcceptor implements IProfileCategoryRepresentati
     ProfileCategoryFormAcceptor formAcceptor;
 
     // TODO - Add Batch processing of entries
-    @Override
     public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) throws APIException {
 
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();

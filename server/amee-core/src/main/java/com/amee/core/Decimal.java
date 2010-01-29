@@ -30,7 +30,7 @@ import java.math.RoundingMode;
 
 /**
  * An AMEE abstraction of a decimal value.
- *
+ * <p/>
  * Provides for basic string-to-decimal validation, unit conversion and scale and precision definitions.
  */
 public class Decimal {
@@ -54,7 +54,7 @@ public class Decimal {
      * A Decimal representing the supplied value and unit.
      *
      * @param decimal - the String representation of the decimal value
-     * @param unit - the unit of the decimal value
+     * @param unit    - the unit of the decimal value
      */
     public Decimal(String decimal, DecimalUnit unit) {
         this(decimal);
@@ -95,12 +95,13 @@ public class Decimal {
     }
 
     // Scale the algorithm result according to the AMEE standard precision and scale.
+
     protected void scale(String decimal) {
         try {
             BigDecimal bd = new BigDecimal(decimal);
             this.decimal = bd.setScale(SCALE, ROUNDING_MODE);
             if (bd.precision() > PRECISION) {
-                log.warn("scale() - precision of: " + this.decimal + " exceeds " + PRECISION);
+                throw new IllegalArgumentException("Precision of '" + this.decimal + "' exceeds '" + PRECISION + "'");
             }
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("The provided string could not be parsed as a decimal: " + decimal);
@@ -112,7 +113,6 @@ public class Decimal {
      *
      * @param targetUnit - the target unit
      * @return the decimal in the target unit
-     *
      * @see DecimalUnit
      */
     @SuppressWarnings("unchecked")
@@ -132,7 +132,6 @@ public class Decimal {
      *
      * @param targetPerUnit - the target perUnit
      * @return the Decimal in the target perUnit
-     *
      * @see DecimalPerUnit
      */
     @SuppressWarnings("unchecked")
@@ -155,7 +154,6 @@ public class Decimal {
     /**
      * @param unit - the unit to compare
      * @return returns true is the supplied DecimalUnit is not considered equal to the unit of the current instance.
-     *
      */
     public boolean hasDifferentUnits(DecimalUnit unit) {
         return !this.unit.equals(unit);
@@ -168,7 +166,7 @@ public class Decimal {
     public DecimalUnit getUnit() {
         return unit;
     }
-    
+
     public String toString() {
         return getValue().toString();
     }
@@ -177,8 +175,8 @@ public class Decimal {
     public boolean equals(Object o) {
         if (!(o instanceof Decimal))
             return false;
-        
-        return getValue().compareTo(((Decimal)o).getValue()) == 0;
+
+        return getValue().compareTo(((Decimal) o).getValue()) == 0;
     }
 
     @Override

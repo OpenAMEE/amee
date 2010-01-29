@@ -57,7 +57,6 @@ public class ProfileCategoryJSONAcceptor implements IProfileCategoryRepresentati
         }
     }
 
-    @Override
     public List<ProfileItem> accept(ProfileCategoryResource resource, Representation entity) throws APIException {
 
         List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
