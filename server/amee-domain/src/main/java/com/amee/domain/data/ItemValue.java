@@ -120,6 +120,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
      * The locale specific value of this ItemValue for the locale of the current thread.
      * If no locale specific value is found, the default value will be returned.
      */
+
     @SuppressWarnings("unchecked")
     private String getLocaleValue() {
         String name = null;
@@ -293,7 +294,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
 
     public void setUnit(String unit) throws IllegalArgumentException {
         if (!itemValueDefinition.isValidUnit(unit)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The unit argument is not valid: " + unit);
         }
         this.unit = unit;
     }
@@ -312,7 +313,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
 
     public void setPerUnit(String perUnit) throws IllegalArgumentException {
         if (!itemValueDefinition.isValidPerUnit(perUnit)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The perUnit argument is not valid: " + perUnit);
         }
         this.perUnit = perUnit;
     }
