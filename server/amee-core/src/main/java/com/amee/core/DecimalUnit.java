@@ -1,5 +1,7 @@
 package com.amee.core;
 
+import org.apache.commons.lang.StringUtils;
+
 import javax.measure.quantity.Power;
 import javax.measure.quantity.Quantity;
 import javax.measure.unit.NonSI;
@@ -122,13 +124,16 @@ public class DecimalUnit {
     }
 
     public boolean isCompatibleWith(String unit) {
-        return this.unit.isCompatible(internalValueOf(unit));
+        return StringUtils.isNotBlank(unit) && this.unit.isCompatible(internalValueOf(unit));
     }
 
     // This is like Unit.valueOf but forces use of UNIT_FORMAT instead.
-    protected static Unit<? extends Quantity> internalValueOf(CharSequence csq) {
+    protected static Unit<? extends Quantity> internalValueOf(CharSequence unit) {
+        if ((unit == null) || (unit.length() == 0)) {
+            throw new IllegalArgumentException("The unit argument is blank.");
+        }
         try {
-            return UNIT_FORMAT.parseProductUnit(csq, new ParsePosition(0));
+            return UNIT_FORMAT.parseProductUnit(unit, new ParsePosition(0));
         } catch (ParseException e) {
             throw new IllegalArgumentException(e);
         }

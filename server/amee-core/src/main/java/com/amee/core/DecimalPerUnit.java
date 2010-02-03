@@ -1,5 +1,6 @@
 package com.amee.core;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.Duration;
 import org.joda.time.format.ISOPeriodFormat;
 
@@ -52,11 +53,11 @@ public class DecimalPerUnit extends DecimalUnit {
     }
 
     public boolean isCompatibleWith(String unit) {
-        return "none".equals(unit) || this.unit.isCompatible(internalValueOf(unit));
+        return StringUtils.isNotBlank(unit) && ("none".equals(unit) || this.unit.isCompatible(internalValueOf(unit)));
     }
 
     public boolean isTime() {
-        return toUnit().getDimension().equals(Dimension.TIME);    
+        return toUnit().getDimension().equals(Dimension.TIME);
     }
 
     public Unit toUnit() {
