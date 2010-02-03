@@ -1,5 +1,7 @@
 package com.amee.domain.profile;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -26,6 +28,8 @@ import java.util.Calendar;
  */
 public class ProfileDate extends GCDate {
 
+    protected final Log log = LogFactory.getLog(getClass());
+
     private static final DateTimeFormatter MONTH_DATE = DateTimeFormat.forPattern("yyyyMM");
 
     public ProfileDate() {
@@ -39,7 +43,11 @@ public class ProfileDate extends GCDate {
     protected long parseStr(String dateStr) {
         try {
             return MONTH_DATE.parseDateTime(dateStr).getMillis();
-        } catch (Exception e) {
+        } catch (UnsupportedOperationException e) {
+            log.warn("parseStr() Caught UnsupportedOperationException for '" + dateStr + "':" + e.getMessage());
+            return defaultDate();
+        } catch (IllegalArgumentException e) {
+            log.warn("parseStr() Caught IllegalArgumentException for '" + dateStr + "': " + e.getMessage());
             return defaultDate();
         }
     }

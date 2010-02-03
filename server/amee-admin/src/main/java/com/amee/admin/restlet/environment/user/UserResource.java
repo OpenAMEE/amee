@@ -3,8 +3,8 @@ package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.LocaleConstants;
 import com.amee.domain.auth.User;
-import com.amee.domain.data.LocaleName;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.EnvironmentService;
@@ -77,7 +77,7 @@ public class UserResource extends AuthorizeResource {
         values.put("environment", environmentBrowser.getEnvironment());
         values.put("user", environmentBrowser.getUser());
         values.put("apiVersions", environmentBrowser.getApiVersions());
-        values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
+        values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         return values;
     }
 
@@ -146,7 +146,7 @@ public class UserResource extends AuthorizeResource {
             }
             if (form.getNames().contains("locale")) {
                 String locale = form.getFirstValue("locale");
-                if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                if (LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                     user.setLocale(locale);
                 }
             }

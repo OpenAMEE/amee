@@ -22,6 +22,7 @@ package com.amee.restlet.environment;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.APIVersion;
+import com.amee.domain.LocaleConstants;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.data.ItemValueDefinitionLocaleName;
 import com.amee.domain.data.LocaleName;
@@ -103,7 +104,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("itemValueDefinition", definitionBrowser.getItemValueDefinition());
         values.put("apiVersions", environmentService.getAPIVersions());
-        values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
+        values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         return values;
     }
 
@@ -135,7 +136,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
                 String locale = name.substring(name.indexOf("_") + 1);
                 String localeNameStr = form.getFirstValue(name);
 
-                if (StringUtils.isBlank(localeNameStr) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                if (StringUtils.isBlank(localeNameStr) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                     badRequest(APIFault.INVALID_PARAMETERS);
                     return;
                 }
@@ -148,7 +149,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
                     }
                 } else {
                     LocaleName localeName =
-                            new ItemValueDefinitionLocaleName(itemValueDefinition, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
+                            new ItemValueDefinitionLocaleName(itemValueDefinition, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeNameStr);
                     itemValueDefinition.addLocaleName(localeName);
                 }
             }

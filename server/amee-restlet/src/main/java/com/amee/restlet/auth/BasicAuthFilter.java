@@ -1,9 +1,9 @@
 package com.amee.restlet.auth;
 
 import com.amee.core.ThreadBeanHolder;
+import com.amee.domain.LocaleConstants;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.data.LocaleName;
 import com.amee.domain.LocaleHolder;
 import com.amee.service.auth.AuthenticationService;
 import org.restlet.Application;
@@ -55,10 +55,10 @@ public class BasicAuthFilter extends Guard {
     }
 
     @Override
-    public boolean checkSecret(Request request, String identifer, char[] secret) {
+    public boolean checkSecret(Request request, String identifier, char[] secret) {
         User sampleUser = new User();
         sampleUser.setEnvironment((Environment) request.getAttributes().get("activeEnvironment"));
-        sampleUser.setUsername(identifer);
+        sampleUser.setUsername(identifier);
         sampleUser.setPasswordInClear(new String(secret));
         User activeUser = authenticationService.authenticate(sampleUser);
         if (activeUser != null) {
@@ -67,7 +67,7 @@ public class BasicAuthFilter extends Guard {
 
 	        // Set user or request locale information into the thread
 	        String locale = request.getResourceRef().getQueryAsForm().getFirstValue("locale");
-	        if (StringUtils.isBlank(locale) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+	        if (StringUtils.isBlank(locale) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
 	            locale = activeUser.getLocale();
 	        }
 	        LocaleHolder.set(LocaleHolder.KEY, locale);

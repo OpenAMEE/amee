@@ -21,6 +21,7 @@ package com.amee.restlet.environment;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.LocaleConstants;
 import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemDefinitionLocaleName;
@@ -97,7 +98,7 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
         values.put("environment", definitionBrowser.getEnvironment());
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("valueDefinitions", valueDefinitions.isEmpty() ? null : valueDefinitions);
-        values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
+        values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         return values;
     }
 
@@ -130,7 +131,7 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
                 String locale = name.substring(name.indexOf("_") + 1);
                 String localeNameStr = form.getFirstValue(name);
 
-                if (StringUtils.isBlank(localeNameStr) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                if (StringUtils.isBlank(localeNameStr) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                     badRequest(APIFault.INVALID_PARAMETERS);
                     return;
                 }
@@ -143,7 +144,7 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
                     }
                 } else {
                     LocaleName localeName =
-                            new ItemDefinitionLocaleName(itemDefinition, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
+                            new ItemDefinitionLocaleName(itemDefinition, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeNameStr);
                     itemDefinition.addLocaleName(localeName);
                 }
             }

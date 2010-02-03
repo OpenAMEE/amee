@@ -1,11 +1,11 @@
 package com.amee.restlet.data.builder;
 
 import com.amee.core.APIUtils;
+import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
-import com.amee.domain.data.LocaleName;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.sheet.Column;
@@ -213,7 +213,7 @@ public class DataCategoryResourceBuilder {
         values.put("user", resource.getActiveUser());
         values.put("itemDefinitions", definitionService.getItemDefinitions(resource.getActiveEnvironment()));
         values.put("node", dataCategory);
-        values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
+        values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         if (sheet != null) {
             Pager pager = resource.getPager();
             sheet = Sheet.getCopy(sheet, pager);

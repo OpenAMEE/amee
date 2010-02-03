@@ -23,6 +23,7 @@ import com.amee.core.APIUtils;
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
 import com.amee.domain.data.*;
 import com.amee.domain.path.PathItem;
@@ -557,7 +558,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 String locale = name.substring(name.indexOf("_") + 1);
                 String localeNameStr = form.getFirstValue(name);
 
-                if (StringUtils.isBlank(localeNameStr) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                if (StringUtils.isBlank(localeNameStr) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                     badRequest(APIFault.INVALID_PARAMETERS);
                     return;
                 }
@@ -570,7 +571,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                     }
                 } else {
                     LocaleName localeName =
-                            new DataCategoryLocaleName(thisDataCategory, LocaleName.AVAILABLE_LOCALES.get(locale), localeNameStr);
+                            new DataCategoryLocaleName(thisDataCategory, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeNameStr);
                     thisDataCategory.addLocaleName(localeName);
                 }
             }

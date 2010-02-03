@@ -3,7 +3,6 @@ package com.amee.admin.restlet.environment.user;
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
 import com.amee.domain.AMEEEntity;
 import com.amee.restlet.AuthorizeResource;
-import com.amee.service.environment.SiteService;
 import com.amee.service.environment.GroupService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,14 +77,14 @@ public class UserGroupResource extends AuthorizeResource {
         return element;
     }
 
-
     @Override
     public boolean allowDelete() {
         return true;
     }
 
     @Override
-    public void removeRepresentations() {
+    public void doRemove() {
+        log.debug("doRemove");
         groupService.remove(environmentBrowser.getGroupPrincipal());
         success();
     }

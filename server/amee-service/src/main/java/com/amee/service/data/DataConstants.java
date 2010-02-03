@@ -23,9 +23,9 @@ public class DataConstants {
 
     public final static String VIEW_DATA_CATEGORY = "dataCategory.ftl";
     public final static String VIEW_ALGORITHMS = "algorithms.ftl";
-    public final static String VIEW_CARBON_ALGORITHM = "algorithm.ftl";
+    public final static String VIEW_ALGORITHM = "algorithm.ftl";
     public final static String VIEW_ALGORITHM_CONTEXTS = "algorithmContexts.ftl";
-    public final static String VIEW_CARBON_ALGORITHM_CONTEXT = "algorithmContext.ftl";
+    public final static String VIEW_ALGORITHM_CONTEXT = "algorithmContext.ftl";
     public final static String VIEW_VALUE_DEFINITIONS = "valueDefinitions.ftl";
     public final static String VIEW_VALUE_DEFINITION = "valueDefinition.ftl";
     public final static String VIEW_ITEM_DEFINITIONS = "itemDefinitions.ftl";
@@ -35,7 +35,5 @@ public class DataConstants {
     public final static String VIEW_ITEM_VALUE_DEFINITION = "itemValueDefinition.ftl";
     public final static String VIEW_DATA_ITEM = "dataItem.ftl";
     public final static String VIEW_DATA_ITEM_LOOKUP = "dataItemLookup.ftl";
-    public final static String VIEW_CARBON_VALUE = "itemValue.ftl";
-    public final static String VIEW_CARBON_TREE_NODE = "carbonDataNode.ftl";
-    public final static String VIEW_LOCALE_NAME = "localeName.ftl";
+    public final static String VIEW_ITEM_VALUE = "itemValue.ftl";
 }

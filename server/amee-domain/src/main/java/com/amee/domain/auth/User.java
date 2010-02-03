@@ -3,25 +3,20 @@ package com.amee.domain.auth;
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIVersion;
+import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;
-import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A User represents a single person or entity who has authenticated access to an Environment.
@@ -69,7 +64,7 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
     private APIVersion apiVersion;
 
     @Column(name = "LOCALE")
-    private String locale = LocaleName.DEFAULT_LOCALE.toString();
+    private String locale = LocaleConstants.DEFAULT_LOCALE.toString();
 
     public User() {
         super();
@@ -284,7 +279,7 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
 
     public String getLocale() {
         if (locale == null) {
-            return LocaleName.DEFAULT_LOCALE.toString();
+            return LocaleConstants.DEFAULT_LOCALE.toString();
         } else {
             return locale;
         }

@@ -82,7 +82,7 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
 
     @Override
     public String getTemplatePath() {
-        return DataConstants.VIEW_CARBON_ALGORITHM_CONTEXT;
+        return DataConstants.VIEW_ALGORITHM_CONTEXT;
     }
 
     @Override

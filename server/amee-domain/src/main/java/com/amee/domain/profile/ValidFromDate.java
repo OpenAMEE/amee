@@ -1,5 +1,7 @@
 package com.amee.domain.profile;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -27,6 +29,8 @@ import java.util.Calendar;
  */
 public class ValidFromDate extends GCDate {
 
+    protected final Log log = LogFactory.getLog(getClass());
+
     private static DateTimeFormatter FMT = DateTimeFormat.forPattern("yyyyMMdd");
 
     public ValidFromDate(String validFrom) {
@@ -37,7 +41,11 @@ public class ValidFromDate extends GCDate {
         try {
             DateTime date = FMT.parseDateTime(dateStr);
             return date.dayOfMonth().withMinimumValue().toDateMidnight().getMillis();
-        } catch (Exception e) {
+        } catch (UnsupportedOperationException e) {
+            log.warn("parseStr() Caught UnsupportedOperationException for '" + dateStr + "':" + e.getMessage());
+            return defaultDate();
+        } catch (IllegalArgumentException e) {
+            log.warn("parseStr() Caught IllegalArgumentException for '" + dateStr + "': " + e.getMessage());
             return defaultDate();
         }
     }

@@ -23,8 +23,13 @@ import com.amee.core.APIUtils;
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.LocaleConstants;
 import com.amee.domain.StartEndDate;
-import com.amee.domain.data.*;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.ItemValueLocaleName;
+import com.amee.domain.data.LocaleName;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.utils.APIFault;
@@ -48,7 +53,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 //TODO - Move to builder model
 @Component
@@ -100,7 +109,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
 
     @Override
     public String getTemplatePath() {
-        return getAPIVersion() + "/" + DataConstants.VIEW_CARBON_VALUE;
+        return getAPIVersion() + "/" + DataConstants.VIEW_ITEM_VALUE;
     }
 
     @Override
@@ -111,7 +120,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         values.put("dataItem", getDataItem());
         values.put("itemValue", this.itemValue);
         values.put("node", this.itemValue);
-        values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
+        values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         return values;
     }
 
@@ -161,8 +170,6 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             return false;
 
         itemValues = (List<ItemValue>) CollectionUtils.select(itemValues, new Predicate() {
-
-            @Override
             public boolean evaluate(Object o) {
                 ItemValue iv = (ItemValue) o;
                 return !iv.isTrash() &&
@@ -235,7 +242,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
                 String locale = name.substring(name.indexOf("_") + 1);
                 String localeValueStr = form.getFirstValue(name);
 
-                if (StringUtils.isBlank(localeValueStr) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                if (StringUtils.isBlank(localeValueStr) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                     badRequest(APIFault.INVALID_PARAMETERS);
                     return;
                 }
@@ -248,7 +255,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
                     }
                 } else {
                     LocaleName localeName =
-                            new ItemValueLocaleName(this.itemValue, LocaleName.AVAILABLE_LOCALES.get(locale), localeValueStr);
+                            new ItemValueLocaleName(this.itemValue, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeValueStr);
                     this.itemValue.addLocaleName(localeName);
                 }
             }

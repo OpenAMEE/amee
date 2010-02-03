@@ -1,9 +1,9 @@
 package com.amee.restlet.auth;
 
 import com.amee.core.ThreadBeanHolder;
+import com.amee.domain.LocaleConstants;
 import com.amee.domain.LocaleHolder;
 import com.amee.domain.auth.User;
-import com.amee.domain.data.LocaleName;
 import com.amee.restlet.RequestContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -48,7 +48,7 @@ public class AuthFilter extends BaseAuthFilter {
 
             // Set user or request locale information into the thread
             String locale = request.getResourceRef().getQueryAsForm().getFirstValue("locale");
-            if (StringUtils.isBlank(locale) || !LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+            if (StringUtils.isBlank(locale) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                 locale = activeUser.getLocale();
             }
             LocaleHolder.set(LocaleHolder.KEY, locale);

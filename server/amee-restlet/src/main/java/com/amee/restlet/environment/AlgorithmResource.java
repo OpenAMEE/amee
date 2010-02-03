@@ -93,7 +93,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
 
     @Override
     public String getTemplatePath() {
-        return DataConstants.VIEW_CARBON_ALGORITHM;
+        return DataConstants.VIEW_ALGORITHM;
     }
 
     @Override
