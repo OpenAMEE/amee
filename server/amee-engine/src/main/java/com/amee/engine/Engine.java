@@ -52,7 +52,7 @@ public class Engine implements WrapperListener, Serializable {
 
         parseOptions(args);
 
-        log.debug("Starting Engine...");
+        log.debug("start() Starting Engine...");
 
         // initialise Spring ApplicationContext
         springContext = new ClassPathXmlApplicationContext(new String[]{
@@ -87,23 +87,30 @@ public class Engine implements WrapperListener, Serializable {
         logService.setLogFormat("[IP:{cia}] [M:{m}] [S:{S}] [PATH:{rp}] [UA:{cig}] [REF:{fp}]");
 
         try {
-            // get things going
+            // Get things going - start the Restlet server.
             container.start();
 
+            // Optionally start the Servlet container.
             String startServletContext = System.getenv("START_SERVLET_CONTEXT");
             if (Boolean.parseBoolean(startServletContext)) {
-                org.mortbay.jetty.Server server = (org.mortbay.jetty.Server) springContext.getBean("server");
+                org.mortbay.jetty.Server server = (org.mortbay.jetty.Server) springContext.getBean("servletServer");
                 server.start();
                 server.join();
             }
 
-            log.debug("...Engine started.");
+            log.debug("start() ...Engine started.");
+
         } catch (Exception e) {
-            log.fatal("caught Exception: " + e);
+
+            // Ouch. This really should not happen.
+            log.fatal("start() Caught Exception: " + e.getMessage(), e);
             e.printStackTrace();
-            return null;
+
+            // A non-null error code to indicate that Wrapper should exit.
+            return 1;
         }
 
+        // A null indicates success and that the Wrapper should stay alive.
         return null;
     }
 
@@ -146,16 +153,16 @@ public class Engine implements WrapperListener, Serializable {
 
     public int stop(int exitCode) {
         try {
-            log.debug("Stopping Engine...");
+            log.debug("stop() Stopping Engine...");
             // shutdown callback
             onShutdown();
             // shutdown Restlet container
             container.stop();
             // clean up cache
             CacheHelper.getInstance().getCacheManager().shutdown();
-            log.debug("...Engine stopped.");
+            log.debug("stop() ...Engine stopped.");
         } catch (Exception e) {
-            log.error("Caught Exception: " + e);
+            log.error("stop() Caught Exception: " + e.getMessage(), e);
         }
         return exitCode;
     }

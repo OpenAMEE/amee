@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="server" class="org.mortbay.jetty.Server" destroy-method="stop">
+    <bean id="servletServer" class="org.mortbay.jetty.Server" destroy-method="stop">
         <property name="threadPool">
             <bean class="org.mortbay.thread.QueuedThreadPool">
                 <property name="maxThreads" value="100" />
@@ -31,7 +31,7 @@
     </bean>
 
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-       <property name="targetObject" ref="server"/>
+       <property name="targetObject" ref="servletServer"/>
        <property name="targetMethod" value="addLifeCycle"/>
        <property name="arguments">
            <list><ref local="webAppDeployer"/></list>

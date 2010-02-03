@@ -46,10 +46,6 @@ import java.util.TreeMap;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class LocaleName extends AMEEEntity {
 
-    // The default {@link Locale} within AMEE.
-    // Typical use would be for initialising a new User locale.
-    public static final Locale DEFAULT_LOCALE = Locale.UK;
-
     // The locale identifier (e.g. Fr or Fr_fr).
     @Column(name = "LOCALE", nullable = false)
     private String locale;
@@ -62,9 +58,6 @@ public class LocaleName extends AMEEEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENTITY_ID", nullable = false)
     private AMEEEntity entity;
-
-    // The static map of available {@link Locale}.
-    public static final Map<String, Locale> AVAILABLE_LOCALES = initLocales();
 
     public LocaleName() {
         super();
@@ -81,15 +74,6 @@ public class LocaleName extends AMEEEntity {
         this.entity = entity;
         this.locale = locale.toString();
         this.name = name;
-    }
-
-    private static Map<String, Locale> initLocales() {
-        Map<String, Locale> localeMap = new TreeMap<String, Locale>();
-        Locale[] locales = Locale.getAvailableLocales();
-        for (Locale l : locales) {
-            localeMap.put(l.toString(), l);
-        }
-        return localeMap;
     }
 
     /**
@@ -119,7 +103,6 @@ public class LocaleName extends AMEEEntity {
         return locale;
     }
 
-    @Override
     public ObjectType getObjectType() {
         return ObjectType.LN;
     }

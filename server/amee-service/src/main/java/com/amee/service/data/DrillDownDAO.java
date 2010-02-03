@@ -30,6 +30,7 @@ import com.amee.domain.sheet.Choice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.stereotype.Service;
@@ -232,8 +233,8 @@ class DrillDownDAO implements Serializable {
             List<String> results = query.list();
             log.debug("getDataItemUIDs() results: " + results.size());
             return results;
-        } catch (Exception e) {
-            log.error("getDataItemUIDs() Caught Exception: " + e.getMessage(), e);
+        } catch (HibernateException e) {
+            log.error("getDataItemUIDs() Caught HibernateException: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -292,6 +293,7 @@ class DrillDownDAO implements Serializable {
         return dataItemUids;
     }
 
+    @SuppressWarnings(value = "unchecked")
     private List<String> getDataItemValues(
             Long itemValueDefinitionId,
             Collection<Long> dataItemIds) {
@@ -328,8 +330,8 @@ class DrillDownDAO implements Serializable {
             List<String> results = query.list();
             log.debug("getDataItemValues() results: " + results.size());
             return results;
-        } catch (Exception e) {
-            log.error("Caught Exception: " + e.getMessage(), e);
+        } catch (HibernateException e) {
+            log.error("getDataItemValues() Caught HibernateException: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -378,8 +380,8 @@ class DrillDownDAO implements Serializable {
             List<String> results = query.list();
             log.debug("getDataItemValues() results: " + results.size());
             return results;
-        } catch (Exception e) {
-            log.error("getDataItemValues() Caught Exception: " + e.getMessage(), e);
+        } catch (HibernateException e) {
+            log.error("getDataItemValues() Caught HibernateException: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }

@@ -22,7 +22,6 @@
 package com.amee.domain;
 
 import com.amee.core.ThreadBeanHolder;
-import com.amee.domain.data.LocaleName;
 
 /**
  * A thread local helper for retrieving the locale string of the request
@@ -40,7 +39,7 @@ public class LocaleHolder extends ThreadBeanHolder {
      */
     public static boolean isDefaultLocale() {
         String locale = (String) get(KEY);
-        return LocaleName.DEFAULT_LOCALE.toString().equals(locale);
+        return LocaleConstants.DEFAULT_LOCALE.toString().equals(locale);
     }
 
     /**

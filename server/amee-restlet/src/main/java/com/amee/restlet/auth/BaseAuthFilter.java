@@ -30,12 +30,7 @@ public class BaseAuthFilter extends BaseFilter {
 
     protected String getAuthToken(Request request) {
         String authToken = null;
-        Cookie cookie = null;
-        try {
-            cookie = request.getCookies().getFirst(AuthenticationService.AUTH_TOKEN);
-        } catch (Exception e) {
-            // swallow
-        }
+        Cookie cookie = request.getCookies().getFirst(AuthenticationService.AUTH_TOKEN);
         if (cookie != null) {
             // first look in cookie
             authToken = cookie.getValue();
@@ -45,7 +40,7 @@ public class BaseAuthFilter extends BaseFilter {
             authToken = HeaderUtils.getHeaderFirstValue(AuthenticationService.AUTH_TOKEN, request);
         }
         if (authToken == null) {
-            //next, look in query string
+            // next, look in query string
             authToken = request.getResourceRef().getQueryAsForm().getFirstValue(AuthenticationService.AUTH_TOKEN);
         }
         return authToken;

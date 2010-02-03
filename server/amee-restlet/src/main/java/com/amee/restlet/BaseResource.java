@@ -168,6 +168,25 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         }
     }
 
+    /**
+     * Overrides Resource.removeRepresentations() to provide nicer error handling.
+     */
+    @Override
+    public void removeRepresentations() throws ResourceException {
+        try {
+            super.removeRepresentations();
+        } catch (IllegalArgumentException e) {
+            log.warn("removeRepresentations() " + e.getMessage());
+            badRequest(APIFault.INVALID_PARAMETERS, e.getMessage());
+        } catch (CalculationException e) {
+            scienceLog.error("removeRepresentations() " + e.getMessage());
+            error();
+        } catch (RuntimeException e) {
+            log.error("removeRepresentations()", e);
+            error();
+        }
+    }
+
     @Override
     public Representation represent(Variant variant) throws ResourceException {
 
@@ -195,6 +214,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
             representation.setExpirationDate(new Date(Calendar.getInstance().getTimeInMillis() - oneDay));
             representation.setModificationDate(Calendar.getInstance().getTime());
         }
+
         return representation;
     }
 

@@ -30,8 +30,6 @@ import javax.persistence.*;
 @MappedSuperclass
 public abstract class AMEEEnvironmentEntity extends AMEEEntity implements EnvironmentObject {
 
-    public final static int UID_SIZE = 12;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ENVIRONMENT_ID")
     private Environment environment;

@@ -2,12 +2,12 @@ package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.EnvironmentBrowser;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.LocaleConstants;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.GroupPrincipal;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.UserType;
 import com.amee.domain.auth.Group;
-import com.amee.domain.data.LocaleName;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.environment.EnvironmentConstants;
@@ -83,7 +83,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
         values.put("users", users);
         values.put("pager", pager);
         values.put("apiVersions", environmentBrowser.getApiVersions());
-        values.put("availableLocales", LocaleName.AVAILABLE_LOCALES.keySet());
+        values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         values.put("search", search);
         return values;
     }
@@ -157,7 +157,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                 }
                 if (form.getNames().contains("locale")) {
                     String locale = form.getFirstValue("locale");
-                    if (LocaleName.AVAILABLE_LOCALES.containsKey(locale)) {
+                    if (LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                         newUser.setLocale(locale);
                     }
                 }

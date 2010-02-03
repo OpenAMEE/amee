@@ -26,8 +26,6 @@ import com.amee.domain.LocaleHolder;
 import com.amee.domain.ObjectType;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -36,8 +34,20 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Entity
 @Table(name = "DATA_CATEGORY")
@@ -98,6 +108,7 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
      * The locale specific name of this DataCategory for the locale of the current thread.
      * If no locale specific name is found, the default name will be returned.
      */
+
     @SuppressWarnings("unchecked")
     private String getLocaleName() {
         String name = null;
@@ -261,12 +272,7 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
 
     @Override
     public boolean isTrash() {
-        try {
-            return status.equals(AMEEStatus.TRASH) || ((getItemDefinition() != null) && getItemDefinition().isTrash());
-        } catch (Exception ex) {
-            log.error("isTrash() - DataCategory " + getId() + ": " + ex.getMessage());
-            return true;
-        }
+        return status.equals(AMEEStatus.TRASH) || ((getItemDefinition() != null) && getItemDefinition().isTrash());
     }
 
     public DataCategory getAliasedCategory() {
