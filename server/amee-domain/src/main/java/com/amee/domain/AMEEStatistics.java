@@ -28,23 +28,53 @@ public class AMEEStatistics {
 
     // Profiles
     private long profileCreateCount;
-    private ThreadLocal<Long> threadProfileCreateCount = new ThreadLocal<Long>();
+    private ThreadLocal<Long> threadProfileCreateCount = new ThreadLocal<Long>() {
+        protected Long initialValue() {
+            return 0L;
+        }
+    };
 
-    // Profile Items
+    // Profile Items - Create
     private long profileItemCreateCount;
-    private ThreadLocal<Long> threadProfileItemCreateCount = new ThreadLocal<Long>();
+    private ThreadLocal<Long> threadProfileItemCreateCount = new ThreadLocal<Long>() {
+        protected Long initialValue() {
+            return 0L;
+        }
+    };
+
+    // Profile Items - Modify
     private long profileItemModifyCount;
-    private ThreadLocal<Long> threadProfileItemModifyCount = new ThreadLocal<Long>();
+    private ThreadLocal<Long> threadProfileItemModifyCount = new ThreadLocal<Long>() {
+        protected Long initialValue() {
+            return 0L;
+        }
+    };
 
-    // Profile Item Values
+    // Profile Item Values - Create
     private long profileItemValueCreateCount;
-    private ThreadLocal<Long> threadProfileItemValueCreateCount = new ThreadLocal<Long>();
-    private long profileItemValueModifyCount;
-    private ThreadLocal<Long> threadProfileItemValueModifyCount = new ThreadLocal<Long>();
+    private ThreadLocal<Long> threadProfileItemValueCreateCount = new ThreadLocal<Long>() {
+        protected Long initialValue() {
+            return 0L;
+        }
+    };
 
-    // Calculations
-    public long calculationDuration; // seconds
-    public ThreadLocal<Long> threadCalculationDuration = new ThreadLocal<Long>(); // nanoseconds
+    // Profile Item Values - Modify
+    private long profileItemValueModifyCount;
+    private ThreadLocal<Long> threadProfileItemValueModifyCount = new ThreadLocal<Long>() {
+        protected Long initialValue() {
+            return 0L;
+        }
+    };
+
+    // Calculations - Seconds
+    private long calculationDuration;
+
+    // Calculations - Nanoseconds
+    private ThreadLocal<Long> threadCalculationDuration = new ThreadLocal<Long>() {
+        protected Long initialValue() {
+            return 0L;
+        }
+    };
 
     // Transactions
     private long transactionCommitCount;
