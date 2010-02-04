@@ -67,7 +67,10 @@ public class Decimal {
      * @param decimal - the String representation of the decimal value
      */
     public Decimal(String decimal) {
-        if (decimal == null) throw new IllegalArgumentException("The String decimal must be non-null");
+
+        if (decimal == null) {
+            throw new IllegalArgumentException("The String decimal must be non-null");
+        }
 
         // Many decimal DataItem values in the DB have values of "-" so we need to handle this here. 
         if (decimal.isEmpty() || decimal.equals("-")) {
@@ -98,11 +101,12 @@ public class Decimal {
 
     protected void scale(String decimal) {
         try {
-            BigDecimal bd = new BigDecimal(decimal);
-            this.decimal = bd.setScale(SCALE, ROUNDING_MODE);
-            if (bd.precision() > PRECISION) {
-                throw new IllegalArgumentException("Precision of '" + this.decimal + "' exceeds '" + PRECISION + "'");
+            BigDecimal unscaled = new BigDecimal(decimal);
+            BigDecimal scaled = unscaled.setScale(SCALE, ROUNDING_MODE);
+            if (scaled.precision() > PRECISION) {
+                throw new IllegalArgumentException("Precision of '" + scaled + "' exceeds '" + PRECISION + "'");
             }
+            this.decimal = scaled;
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("The provided string could not be parsed as a decimal: " + decimal);
         }
