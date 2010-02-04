@@ -245,6 +245,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
     }
 
     public void setValue(String value) {
+
         if (value == null) {
             value = "";
         }
@@ -256,8 +257,8 @@ public class ItemValue extends AMEEEntity implements Pathable {
         if (getItemValueDefinition().isDecimal() && !value.isEmpty()) {
             try {
                 Double.parseDouble(value);
-            } catch (NumberFormatException nfe) {
-                log.warn("setValue() - Invalid number format:" + value);
+            } catch (NumberFormatException e) {
+                log.warn("setValue() - Invalid number format: " + value);
                 throw new IllegalArgumentException("Invalid number format: " + value);
             }
         }

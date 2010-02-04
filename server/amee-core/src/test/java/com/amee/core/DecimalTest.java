@@ -21,13 +21,15 @@
  */
 package com.amee.core;
 
-import static junit.framework.Assert.assertTrue;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 public class DecimalTest {
 
@@ -73,7 +75,7 @@ public class DecimalTest {
         sum.add(new DataPoint(now.plusDays(3), new Decimal("7")));
         actual = new DataSeries(sum);
         test = lhs.plus(rhs);
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
         // Add a series and a single point
         sum = new ArrayList<DataPoint>();
@@ -84,11 +86,11 @@ public class DecimalTest {
         test = lhs.plus(rhp);
 
 
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
         // Add a series and a primitive
         test = lhs.plus(rhf);
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
     }
 
@@ -104,7 +106,7 @@ public class DecimalTest {
         diff.add(new DataPoint(now.plusDays(3), new Decimal("-1")));
         actual = new DataSeries(diff);
         test = lhs.subtract(rhs);
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
 
         diff = new ArrayList<DataPoint>();
@@ -114,11 +116,11 @@ public class DecimalTest {
         actual = new DataSeries(diff);
 
         test = lhs.subtract(rhp);
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
         // Subtract a series and a primitive
         test = lhs.subtract(rhf);
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
     }
 
@@ -134,7 +136,7 @@ public class DecimalTest {
         diff.add(new DataPoint(now.plusDays(3), new Decimal("0.75")));
         actual = new DataSeries(diff);
         test = lhs.divide(rhs);
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
 
         diff = new ArrayList<DataPoint>();
@@ -143,13 +145,13 @@ public class DecimalTest {
         diff.add(new DataPoint(now.plusDays(3), new Decimal("0.75")));
         actual = new DataSeries(diff);
         test = lhs.divide(rhp);
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
         // Divide a series and a primitive
         test = lhs.divide(rhf);
 
         //print(test, actual);
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
     }
 
@@ -165,7 +167,7 @@ public class DecimalTest {
         diff.add(new DataPoint(now.plusDays(3), new Decimal("12")));
         actual = new DataSeries(diff);
         test = lhs.multiply(rhs);
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
 
         diff = new ArrayList<DataPoint>();
@@ -174,11 +176,11 @@ public class DecimalTest {
         diff.add(new DataPoint(now.plusDays(3), new Decimal("16")));
         actual = new DataSeries(diff);
         test = lhs.multiply(rhp);
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
         // Divide a series and a primitive
         test = lhs.multiply(rhf);
-        assertTrue("Integrate should produce the correct value",test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
 
     }
 
@@ -235,17 +237,70 @@ public class DecimalTest {
         assertTrue("Should have correct time window", series.getSeriesTimeInMillis().equals(window));
     }
 
+    @Test
+    public void shouldAllowDecimalUpToLimit() {
+        try {
+            // precision 21, scale 6
+            printWithPrecisionAndScale(new Decimal("123456789012345"));
+            printWithPrecisionAndScale(new Decimal("123456789012345.123456"));
+            printWithPrecisionAndScale(new Decimal("12345678901234.1234567")); // round up .123457
+            printWithPrecisionAndScale(new Decimal("-999999999999999.999999")); // min
+            printWithPrecisionAndScale(new Decimal("999999999999999.999999")); // max
+        } catch (IllegalArgumentException e) {
+            fail("Value should be OK.");
+        }
+    }
+
+    @Test
+    public void shouldNotAllowDecimalOverLimit() {
+        try {
+            // precision 22, scale 6
+            new Decimal("1234567890123456");
+            fail("Value should NOT be OK.");
+        } catch (IllegalArgumentException e) {
+            // swallow
+        }
+        try {
+            // precision 22, scale 6
+            new Decimal("1234567890123456.123456");
+            fail("Value should NOT be OK.");
+        } catch (IllegalArgumentException e) {
+            // swallow
+        }
+        try {
+            // precision 22, scale 6
+            printWithPrecisionAndScale(new Decimal("-9999999999999999.999999")); // min + 1 extra digit on the left
+            fail("Value should NOT be OK.");
+        } catch (IllegalArgumentException e) {
+            // swallow
+        }
+        try {
+            // precision 22, scale 6
+            printWithPrecisionAndScale(new Decimal("9999999999999999.999999")); // max + 1 extra digit on the left
+            fail("Value should NOT be OK.");
+        } catch (IllegalArgumentException e) {
+            // swallow
+        }
+    }
+
+    private void printWithPrecisionAndScale(Decimal decimal) {
+        System.out.println(
+                "decimal: " + decimal.toString() +
+                        " precision: " + decimal.getValue().precision() +
+                        " scale: " + decimal.getValue().scale());
+    }
+
     private void print(DataSeries test, DataSeries actual) {
 
         for (DateTime dt : test.getDateTimePoints()) {
-             DataPoint dp = test.getDataPoint(dt);
-             System.out.println("test: " + dt.toString("yyyy-dd-MM") + " => " + dp.getValue());
+            DataPoint dp = test.getDataPoint(dt);
+            System.out.println("test: " + dt.toString("yyyy-dd-MM") + " => " + dp.getValue());
         }
         System.out.println("test: " + test.integrate());
 
         for (DateTime dt : actual.getDateTimePoints()) {
-             DataPoint dp = actual.getDataPoint(dt);
-             System.out.println("actual: " + dt.toString("yyyy-dd-MM") + " => " + dp.getValue());
+            DataPoint dp = actual.getDataPoint(dt);
+            System.out.println("actual: " + dt.toString("yyyy-dd-MM") + " => " + dp.getValue());
         }
         System.out.println("actual: " + actual.integrate());
 

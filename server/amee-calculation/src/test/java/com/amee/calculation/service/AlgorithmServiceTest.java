@@ -61,7 +61,6 @@ public class AlgorithmServiceTest {
         } catch (Throwable t) {
             // swallow
         }
-
     }
 
     @Test
