@@ -28,7 +28,7 @@ import java.util.Calendar;
  */
 public class ProfileDate extends GCDate {
 
-    protected final Log log = LogFactory.getLog(getClass());
+    private final static Log log = LogFactory.getLog(ProfileDate.class);
 
     private static final DateTimeFormatter MONTH_DATE = DateTimeFormat.forPattern("yyyyMM");
 
@@ -43,11 +43,8 @@ public class ProfileDate extends GCDate {
     protected long parseStr(String dateStr) {
         try {
             return MONTH_DATE.parseDateTime(dateStr).getMillis();
-        } catch (UnsupportedOperationException e) {
-            log.warn("parseStr() Caught UnsupportedOperationException for '" + dateStr + "':" + e.getMessage());
-            return defaultDate();
         } catch (IllegalArgumentException e) {
-            log.warn("parseStr() Caught IllegalArgumentException for '" + dateStr + "': " + e.getMessage());
+            log.warn("parseStr() Caught IllegalArgumentException: " + e.getMessage());
             return defaultDate();
         }
     }
