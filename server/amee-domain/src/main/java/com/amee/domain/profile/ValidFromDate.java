@@ -29,7 +29,7 @@ import java.util.Calendar;
  */
 public class ValidFromDate extends GCDate {
 
-    protected final Log log = LogFactory.getLog(getClass());
+    private final static Log log = LogFactory.getLog(ValidFromDate.class);
 
     private static DateTimeFormatter FMT = DateTimeFormat.forPattern("yyyyMMdd");
 
@@ -41,11 +41,8 @@ public class ValidFromDate extends GCDate {
         try {
             DateTime date = FMT.parseDateTime(dateStr);
             return date.dayOfMonth().withMinimumValue().toDateMidnight().getMillis();
-        } catch (UnsupportedOperationException e) {
-            log.warn("parseStr() Caught UnsupportedOperationException for '" + dateStr + "':" + e.getMessage());
-            return defaultDate();
         } catch (IllegalArgumentException e) {
-            log.warn("parseStr() Caught IllegalArgumentException for '" + dateStr + "': " + e.getMessage());
+            log.warn("parseStr() Caught IllegalArgumentException: " + e.getMessage());
             return defaultDate();
         }
     }
