@@ -25,7 +25,12 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
-import com.amee.domain.data.*;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataCategoryLocaleName;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.LocaleName;
 import com.amee.domain.path.PathItem;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.data.builder.DataCategoryResourceBuilder;
@@ -44,7 +49,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
-import org.restlet.data.*;
+import org.restlet.data.Form;
+import org.restlet.data.MediaType;
+import org.restlet.data.Method;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -54,7 +63,12 @@ import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @Component("dataCategoryResource")
 @Scope("prototype")
@@ -412,13 +426,19 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     // A unique DataCategory is one with a unique path within it's set of un-trashed sibling DataCategories.
+
     private boolean isUnique(DataCategory dataCategory) {
         boolean unique = true;
         for (PathItem sibling : getPathItem().getChildrenByType(ObjectType.DC.getName())) {
             if (sibling.getPath().equals(dataCategory.getPath())) {
-                if (!dataService.getDataCategoryByUid(sibling.getUid()).isTrash()) {
-                    unique = false;
-                    break;
+                DataCategory dc = dataService.getDataCategoryByUid(sibling.getUid());
+                if (dc != null) {
+                    if (!dc.isTrash()) {
+                        unique = false;
+                        break;
+                    }
+                } else {
+                    throw new RuntimeException("DataCategory was unexpectedly null.");
                 }
             }
         }
