@@ -20,10 +20,14 @@
 package com.amee.restlet.data;
 
 import com.amee.calculation.service.CalculationService;
-import com.amee.core.*;
+import com.amee.core.APIUtils;
+import com.amee.core.CO2Amount;
+import com.amee.core.CO2AmountUnit;
+import com.amee.core.DecimalPerUnit;
+import com.amee.core.DecimalUnit;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.StartEndDate;
-import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.sheet.Choice;
@@ -50,7 +54,10 @@ import org.w3c.dom.Element;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 //TODO - move to builder model
 @Component
@@ -222,7 +229,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         }
 
         // Clear caches
-        dataService.clearCaches(getDataItem().getDataCategory());
+        dataService.invalidate(getDataItem().getDataCategory());
 
         // Return successful creation of new DataItemValue.
         successfulPost(getFullPath(), getDataItem().getUid());
@@ -256,7 +263,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         }
 
         // clear caches
-        dataService.clearCaches(dataItem.getDataCategory());
+        dataService.invalidate(dataItem.getDataCategory());
 
         successfulPut(getParentPath() + "/" + dataItem.getResolvedPath());
     }
@@ -265,7 +272,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     public void doRemove() {
         log.debug("doRemove()");
         DataItem dataItem = getDataItem();
-        dataService.clearCaches(dataItem.getDataCategory());
+        dataService.invalidate(dataItem.getDataCategory());
         dataService.remove(dataItem);
         successfulDelete(pathItem.getParent().getFullPath());
     }

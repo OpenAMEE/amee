@@ -15,7 +15,7 @@
 
 # Application
 APP_NAME=${AMEE_APP_NAME:-amee}
-AMEE_APP_INSTANCE=${AMEE_APP_INSTANCE:-shared}
+INSTANCE_NAME=${AMEE_INSTANCE_NAME:-shared}
 APP_LONG_NAME="AMEE"
 
 # Wrapper
@@ -27,7 +27,7 @@ WRAPPER_CONF="../conf/wrapper.conf"
 PRIORITY=
 
 # Location of the pid file.
-PIDDIR="/var/www/apps/amee/${AMEE_APP_INSTANCE}/pids"
+PIDDIR="/var/www/apps/amee/${INSTANCE_NAME}/pids"
 
 # If uncommented, causes the Wrapper to be shutdown using an anchor file.
 #  When launched with the 'start' command, it will also ignore all INT and

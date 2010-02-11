@@ -180,7 +180,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
         if ((dataCategory != null) || (dataItem != null) || !dataCategories.isEmpty() || !dataItems.isEmpty()) {
             // clear caches
-            dataService.clearCaches(thisDataCategory);
+            dataService.invalidate(thisDataCategory);
             if (isPost()) {
                 if (isBatchPost()) {
                     successfulBatchPost();
@@ -597,7 +597,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             }
         }
 
-        dataService.clearCaches(thisDataCategory);
+        dataService.invalidate(thisDataCategory);
         successfulPut(getFullPath());
         dataCategory = thisDataCategory;
     }
@@ -605,7 +605,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     @Override
     public void doRemove() {
         log.debug("doRemove()");
-        dataService.clearCaches(getDataCategory());
+        dataService.invalidate(getDataCategory());
         dataService.remove(getDataCategory());
         successfulDelete(pathItem.getParent().getFullPath());
     }

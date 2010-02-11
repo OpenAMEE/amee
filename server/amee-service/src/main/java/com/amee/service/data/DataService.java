@@ -21,18 +21,26 @@ package com.amee.service.data;
 
 import com.amee.domain.APIVersion;
 import com.amee.domain.UidGen;
-import com.amee.domain.data.*;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.domain.sheet.Sheet;
 import com.amee.service.BaseService;
+import com.amee.service.invalidation.InvalidationMessage;
+import com.amee.service.invalidation.InvalidationService;
 import com.amee.service.path.PathItemService;
 import com.amee.service.transaction.TransactionController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,12 +52,15 @@ import java.util.Set;
  * Primary service interface to Data Resources.
  */
 @Service
-public class DataService extends BaseService {
+public class DataService extends BaseService implements ApplicationListener {
 
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private TransactionController transactionController;
+
+    @Autowired
+    private InvalidationService invalidationService;
 
     @Autowired
     private DataServiceDAO dao;
@@ -63,11 +74,30 @@ public class DataService extends BaseService {
     @Autowired
     private DrillDownService drillDownService;
 
+    // Events
+
+    public void onApplicationEvent(ApplicationEvent event) {
+        if (event instanceof InvalidationMessage) {
+            log.debug("onApplicationEvent() Handling InvalidationMessage.");
+            InvalidationMessage invalidationMessage = (InvalidationMessage) event;
+            if (invalidationMessage.isFromOtherInstance()) {
+                transactionController.begin(false);
+                DataCategory dataCategory = getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
+                clearCaches(dataCategory);
+                transactionController.end();
+            }
+        }
+    }
+
     // DataCategories
 
     public DataCategory getDataCategoryByUid(String uid) {
-        DataCategory dataCategory = dao.getDataCategoryByUid(uid);
-        if (dataCategory != null && !dataCategory.isTrash()) {
+        return getDataCategoryByUid(uid, false);
+    }
+
+    public DataCategory getDataCategoryByUid(String uid, boolean includeTrash) {
+        DataCategory dataCategory = dao.getDataCategoryByUid(uid, includeTrash);
+        if ((dataCategory != null) && (includeTrash || !dataCategory.isTrash())) {
             return dataCategory;
         } else {
             return null;
@@ -75,6 +105,7 @@ public class DataService extends BaseService {
     }
 
     // TODO: Populating activeCategories seems redundant. Doesn't dao.getDataCategories only return actives?
+
     public List<DataCategory> getDataCategories(Environment environment) {
         List<DataCategory> activeCategories = new ArrayList<DataCategory>();
         for (DataCategory dataCategory : dao.getDataCategories(environment)) {
@@ -97,12 +128,24 @@ public class DataService extends BaseService {
     }
 
     /**
+     * Invalidate a DataCategory. This will send an invalidation message via the
+     * InvalidationService and clear the local caches.
+     *
+     * @param dataCategory to invalidate
+     */
+    public void invalidate(DataCategory dataCategory) {
+        log.info("invalidate() dataCategory: " + dataCategory.getUid());
+        invalidationService.add(dataCategory);
+        clearCaches(dataCategory);
+    }
+
+    /**
      * Clears all caches related to the supplied DataCategory.
      *
      * @param dataCategory to clear caches for
      */
     public void clearCaches(DataCategory dataCategory) {
-        log.debug("clearCaches()");
+        log.info("clearCaches() dataCategory: " + dataCategory.getUid());
         drillDownService.clearDrillDownCache();
         pathItemService.removePathItemGroup(dataCategory.getEnvironment());
         dataSheetService.removeSheet(dataCategory);
@@ -200,7 +243,7 @@ public class DataService extends BaseService {
             }
 
             // clear caches
-            clearCaches(dataItem.getDataCategory());
+            invalidate(dataItem.getDataCategory());
         }
     }
 

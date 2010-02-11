@@ -1,6 +1,5 @@
 package com.amee.engine;
 
-import com.amee.domain.cache.CacheHelper;
 import com.amee.service.transaction.TransactionController;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -26,7 +25,8 @@ public class Engine implements WrapperListener, Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
-    protected static ApplicationContext springContext;
+    // TODO: This is only static because the Servlet code needs it. Re-do Servlet code to acquire context differently.
+    protected static ClassPathXmlApplicationContext applicationContext;
     protected TransactionController transactionController;
     protected Component container;
     protected String serverName = "localhost";
@@ -52,37 +52,33 @@ public class Engine implements WrapperListener, Serializable {
 
         parseOptions(args);
 
-        log.debug("start() Starting Engine...");
+        log.info("start() Starting Engine...");
 
-        // initialise Spring ApplicationContext
-        springContext = new ClassPathXmlApplicationContext(new String[]{
+        // Initialise Spring ApplicationContext.
+        applicationContext = new ClassPathXmlApplicationContext(new String[]{
                 "applicationContext.xml",
                 "applicationContext-jmx.xml",
                 "applicationContext-jobs.xml",
                 "applicationContext-container.xml",
                 "applicationContext-application-*.xml",
+                "applicationContext-messaging.xml",
                 "applicationContext-skins.xml",
                 "applicationContext-algorithmServices.xml",
                 "applicationContext-servlets.xml"});
 
-        // obtain the Restlet container
-        container = ((Component) springContext.getBean("ameeContainer"));
+        // Obtain the Restlet container.
+        container = ((Component) applicationContext.getBean("ameeContainer"));
 
-        // initialise TransactionController (for controlling Spring)
-        transactionController = (TransactionController) springContext.getBean("transactionController");
+        // Initialise TransactionController (for controlling Spring).
+        transactionController = (TransactionController) applicationContext.getBean("transactionController");
 
-        // wrap start callback
-        transactionController.begin(true);
-        onStart();
-        transactionController.end();
-
-        // configure Restlet server (ajp, http, etc)
+        // Configure Restlet server (ajp, http, etc).
         // TODO: try and do this in Spring XML config
-        Server ajpServer = ((Server) springContext.getBean("ameeServer"));
+        Server ajpServer = ((Server) applicationContext.getBean("ameeServer"));
         ajpServer.getContext().getAttributes()
                 .put("transactionController", transactionController); // used in TransactionServerConverter
 
-        // configure Restlet logging to log on a single line
+        // Configure Restlet logging to log on a single line.
         LogService logService = container.getLogService();
         logService.setLogFormat("[IP:{cia}] [M:{m}] [S:{S}] [PATH:{rp}] [UA:{cig}] [REF:{fp}]");
 
@@ -93,12 +89,12 @@ public class Engine implements WrapperListener, Serializable {
             // Optionally start the Servlet container.
             String startServletContext = System.getenv("START_SERVLET_CONTEXT");
             if (Boolean.parseBoolean(startServletContext)) {
-                org.mortbay.jetty.Server server = (org.mortbay.jetty.Server) springContext.getBean("servletServer");
+                org.mortbay.jetty.Server server = (org.mortbay.jetty.Server) applicationContext.getBean("servletServer");
                 server.start();
                 server.join();
             }
 
-            log.debug("start() ...Engine started.");
+            log.info("start() ...Engine started.");
 
         } catch (Exception e) {
 
@@ -120,7 +116,7 @@ public class Engine implements WrapperListener, Serializable {
         CommandLineParser parser = new GnuParser();
         Options options = new Options();
 
-        // define serverName option
+        // Define serverName option.
         Option serverNameOpt = OptionBuilder.withArgName("serverName")
                 .hasArg()
                 .withDescription("The server name")
@@ -128,7 +124,7 @@ public class Engine implements WrapperListener, Serializable {
         serverNameOpt.setRequired(true);
         options.addOption(serverNameOpt);
 
-        // parse the options
+        // Parse the options.
         try {
             line = parser.parse(options, args);
         } catch (ParseException exp) {
@@ -136,44 +132,32 @@ public class Engine implements WrapperListener, Serializable {
             System.exit(-1);
         }
 
-        // serverName
+        // Handle serverName.
         if (line.hasOption(serverNameOpt.getOpt())) {
             serverName = line.getOptionValue(serverNameOpt.getOpt());
         }
 
     }
 
-    protected void onStart() {
-        // do nothing
-    }
-
-    protected void onShutdown() {
-        // do nothing
-    }
-
     public int stop(int exitCode) {
+        log.info("stop() Stopping Engine...");
         try {
-            log.debug("stop() Stopping Engine...");
-            // shutdown callback
-            onShutdown();
-            // shutdown Restlet container
+            // Stop Restlet container.
             container.stop();
-            // clean up cache
-            CacheHelper.getInstance().getCacheManager().shutdown();
-            log.debug("stop() ...Engine stopped.");
+            // Stop ApplicationContext.
+            applicationContext.close();
         } catch (Exception e) {
             log.error("stop() Caught Exception: " + e.getMessage(), e);
         }
+        log.info("stop() ...Engine stopped.");
         return exitCode;
     }
 
     public void controlEvent(int event) {
-        log.debug("controlEvent");
-        // do nothing
+        log.info("controlEvent() " + event);
     }
 
-
     public static ApplicationContext getAppContext() {
-        return springContext;
+        return applicationContext;
     }
 }
