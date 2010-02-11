@@ -54,13 +54,15 @@ public class DataServiceDAO implements Serializable {
     // DataCategories
 
     @SuppressWarnings(value = "unchecked")
-    protected DataCategory getDataCategoryByUid(String uid) {
+    protected DataCategory getDataCategoryByUid(String uid, boolean includeTrash) {
         DataCategory dataCategory = null;
         if (!StringUtils.isBlank(uid)) {
             Session session = (Session) entityManager.getDelegate();
             Criteria criteria = session.createCriteria(DataCategory.class);
             criteria.add(Restrictions.naturalId().set("uid", uid.toUpperCase()));
-            criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
+            if (!includeTrash) {
+                criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
+            }
             criteria.setCacheable(true);
             criteria.setCacheRegion(CACHE_REGION);
             List<DataCategory> dataCategories = criteria.list();

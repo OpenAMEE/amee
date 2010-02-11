@@ -7,7 +7,7 @@
         <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                   value="[%d] [%p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c] %m%n"/>
+                   value="[%d] [%p] [%t] [${server.name}] [%X{ipAddress}] [%X{userUid}] [%c] %m%n"/>
         </layout>
     </appender>
 
@@ -20,7 +20,7 @@
         <param name="Subject" value="AMEE Platform Issue - %c %m"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                   value="[%d] [%p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] [%c] %m%n"/>
+                   value="[%d] [%p] [%t] [${server.name}] [%X{ipAddress}] [%X{userUid}] [%c] %m%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="ERROR"/>
@@ -37,7 +37,7 @@
         <param name="Subject" value="AMEE Science Issue - %m"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                   value="[%d] [%p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] %m%n"/>
+                   value="[%d] [%p] [%t] [${server.name}] [%X{ipAddress}] [%X{userUid}] %m%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="ERROR"/>
@@ -47,7 +47,7 @@
 
     <!-- Declare the 'TRANSACTIONS_ROLLER' DailyRollingFileAppender. -->
     <appender name="TRANSACTIONS_ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="/var/www/apps/amee/${app.instance}/log/transactions.log"/>
+        <param name="File" value="/var/www/apps/amee/${instance.name}/log/transactions.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <param name="Append" value="true"/>
         <param name="Threshold" value="INFO"/>
@@ -58,13 +58,13 @@
 
     <!-- Declare the 'SCIENCE_ROLLER' DailyRollingFileAppender. -->
     <appender name="SCIENCE_ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="/var/www/apps/amee/${app.instance}/log/science.log"/>
+        <param name="File" value="/var/www/apps/amee/${instance.name}/log/science.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <param name="Append" value="true"/>
         <param name="Threshold" value="INFO"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                   value="[%d] [%p] [%t] [${host.name}] [%X{ipAddress}] [%X{userUid}] %m%n"/>
+                   value="[%d] [%p] [%t] [${server.name}] [%X{ipAddress}] [%X{userUid}] %m%n"/>
         </layout>
     </appender>
 

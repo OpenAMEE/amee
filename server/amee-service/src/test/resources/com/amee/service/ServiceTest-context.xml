@@ -15,4 +15,8 @@
 
     <bean class="com.amee.service.auth.AuthorizationService"/>
 
+    <bean class="com.amee.service.events.PublisherService"/>
+
+    <bean class="com.amee.service.events.SubscriberService"/>
+
 </beans>

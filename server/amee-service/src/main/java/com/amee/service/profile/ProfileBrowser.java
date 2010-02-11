@@ -22,8 +22,6 @@ package com.amee.service.profile;
 import com.amee.core.CO2AmountUnit;
 import com.amee.domain.profile.ProfileDate;
 import com.amee.service.BaseBrowser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 

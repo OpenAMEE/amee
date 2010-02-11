@@ -281,9 +281,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             this.itemValue.setStartDate(startDate);
         }
 
-        dataService.clearCaches(getDataItem().getDataCategory());
+        dataService.invalidate(getDataItem().getDataCategory());
         successfulPut(getFullPath());
-
     }
 
     @Override
@@ -297,7 +296,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
 
         int remaining = getDataItem().getAllItemValues(itemValueDefinition.getPath()).size();
         if (remaining > 1) {
-            dataService.clearCaches(getDataItem().getDataCategory());
+            dataService.invalidate(getDataItem().getDataCategory());
             dataService.remove(itemValue);
             successfulDelete(pathItem.getParent().getFullPath());
         } else {
