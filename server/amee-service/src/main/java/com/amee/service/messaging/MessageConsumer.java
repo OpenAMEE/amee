@@ -1,9 +1,9 @@
-package com.amee.service.mq;
+package com.amee.service.messaging;
 
-import com.amee.service.mq.amqp.ConsumeConfig;
-import com.amee.service.mq.amqp.ExchangeConfig;
-import com.amee.service.mq.amqp.MessagingConfig;
-import com.amee.service.mq.amqp.QueueConfig;
+import com.amee.service.messaging.config.ConsumeConfig;
+import com.amee.service.messaging.config.ExchangeConfig;
+import com.amee.service.messaging.config.MessagingConfig;
+import com.amee.service.messaging.config.QueueConfig;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;

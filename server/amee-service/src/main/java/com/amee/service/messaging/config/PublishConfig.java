@@ -1,4 +1,4 @@
-package com.amee.service.mq.amqp;
+package com.amee.service.messaging.config;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.MessageProperties;
