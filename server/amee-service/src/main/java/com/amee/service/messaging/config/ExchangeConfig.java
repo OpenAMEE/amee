@@ -1,18 +1,18 @@
-package com.amee.service.mq.amqp;
+package com.amee.service.messaging.config;
 
 import java.io.Serializable;
 import java.util.Map;
 
-public class QueueConfig implements Serializable {
+public class ExchangeConfig implements Serializable {
 
     private String name = "platform";
+    private String type = "direct";
     private boolean passive = false;
     private boolean durable = false;
-    private boolean exclusive = false;
     private boolean autoDelete = false;
     private Map<String, Object> arguments = null;
 
-    public QueueConfig() {
+    public ExchangeConfig() {
         super();
     }
 
@@ -22,6 +22,14 @@ public class QueueConfig implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public boolean isPassive() {
@@ -40,14 +48,6 @@ public class QueueConfig implements Serializable {
         this.durable = durable;
     }
 
-    public boolean isExclusive() {
-        return exclusive;
-    }
-
-    public void setExclusive(boolean exclusive) {
-        this.exclusive = exclusive;
-    }
-
     public boolean isAutoDelete() {
         return autoDelete;
     }
@@ -64,3 +64,4 @@ public class QueueConfig implements Serializable {
         this.arguments = arguments;
     }
 }
+

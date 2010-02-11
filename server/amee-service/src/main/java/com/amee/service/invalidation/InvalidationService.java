@@ -2,9 +2,9 @@ package com.amee.service.invalidation;
 
 import com.amee.domain.AMEEEntityReference;
 import com.amee.domain.IAMEEEntityReference;
-import com.amee.service.mq.MessageService;
-import com.amee.service.mq.amqp.ExchangeConfig;
-import com.amee.service.mq.amqp.PublishConfig;
+import com.amee.service.messaging.MessageService;
+import com.amee.service.messaging.config.ExchangeConfig;
+import com.amee.service.messaging.config.PublishConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

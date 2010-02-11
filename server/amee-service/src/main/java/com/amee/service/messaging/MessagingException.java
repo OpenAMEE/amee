@@ -1,4 +1,4 @@
-package com.amee.service.mq;
+package com.amee.service.messaging;
 
 public class MessagingException extends RuntimeException {
 

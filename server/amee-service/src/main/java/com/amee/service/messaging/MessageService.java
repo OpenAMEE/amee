@@ -1,9 +1,9 @@
-package com.amee.service.mq;
+package com.amee.service.messaging;
 
-import com.amee.service.mq.amqp.ConnectionConfig;
-import com.amee.service.mq.amqp.ExchangeConfig;
-import com.amee.service.mq.amqp.PublishConfig;
-import com.amee.service.mq.amqp.QueueConfig;
+import com.amee.service.messaging.config.ConnectionConfig;
+import com.amee.service.messaging.config.ExchangeConfig;
+import com.amee.service.messaging.config.PublishConfig;
+import com.amee.service.messaging.config.QueueConfig;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
