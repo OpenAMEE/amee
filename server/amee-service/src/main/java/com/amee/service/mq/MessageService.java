@@ -37,8 +37,11 @@ public class MessageService {
             try {
                 connection.close();
             } catch (IOException e) {
-                log.warn("closeChannel() Caught IOException whilst trying to close the connection. Message was: " + e.getMessage());
+                log.warn("stop() Caught IOException whilst trying to close the connection. Message was: " + e.getMessage());
+            } catch (ShutdownSignalException e) {
+                log.warn("stop() Caught ShutdownSignalException whilst trying to close the connection. Message was: " + e.getMessage());
             }
+            connection = null;
         }
     }
 
