@@ -123,7 +123,9 @@ public abstract class MessageConsumer implements Runnable, ApplicationContextAwa
             try {
                 channel.close();
             } catch (IOException e) {
-                log.warn("closeChannel() Caught IOException whilst trying to close the channel. Message was: " + e.getMessage());
+                log.warn("closeAndClear() Caught IOException whilst trying to close the channel. Message was: " + e.getMessage());
+            } catch (ShutdownSignalException e) {
+                log.warn("closeAndClear() Caught ShutdownSignalException whilst trying to close the channel. Message was: " + e.getMessage());
             }
             channel = null;
         }
