@@ -5,7 +5,6 @@ import com.amee.service.messaging.config.ExchangeConfig;
 import com.amee.service.messaging.config.MessagingConfig;
 import com.amee.service.messaging.config.QueueConfig;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,16 +21,15 @@ public abstract class MessageConsumer implements Runnable, ApplicationContextAwa
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private MessageService messageService;
+    protected MessageService messageService;
 
     @Autowired
-    private MessagingConfig messagingConfig;
+    protected MessagingConfig messagingConfig;
 
-    private Channel channel;
-    private QueueingConsumer consumer;
-    private Thread thread;
-    private ApplicationContext applicationContext;
-    private boolean stopping = false;
+    protected Channel channel;
+    protected Thread thread;
+    protected boolean stopping = false;
+    protected ApplicationContext applicationContext;
 
     @PostConstruct
     public synchronized void start() {
@@ -54,15 +52,15 @@ public abstract class MessageConsumer implements Runnable, ApplicationContextAwa
         log.info("run()");
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                log.debug("run() waiting");
+                log.debug("run() Waiting.");
                 // Wait before first-run and subsequent retries.
                 Thread.sleep(messagingConfig.getRunSleep());
-                log.debug("run() starting");
+                log.debug("run() Starting.");
                 // Start the Consumer and handle the deliveries.
-                startConsuming();
-                handleDeliveries();
+                configureChannel();
+                consume();
                 // We got here if there is no channel or this was stopped.
-                log.debug("run() no channel or stopped");
+                log.debug("run() No channel or stopped.");
             } catch (IOException e) {
                 log.warn("run() Caught IOException. We'll try restarting the consumer. Message was: " + e.getMessage());
             } catch (ShutdownSignalException e) {
@@ -75,50 +73,20 @@ public abstract class MessageConsumer implements Runnable, ApplicationContextAwa
         }
     }
 
-    private void startConsuming() throws IOException {
-        log.debug("startConsuming()");
+    protected void configureChannel() throws IOException {
         // Ensure the channel is closed & consumer is cleared before starting.
         closeAndClear();
-        // Try to get a channel.
-        channel = messageService.consume(
+        // Try to get a channel for our configuration.
+        channel = messageService.getChannelAndBind(
                 getExchangeConfig(),
                 getQueueConfig(),
                 getBindingKey());
-        // If we have a channel we're safe to configure the consumer.
-        if (channel != null) {
-            consumer = new QueueingConsumer(channel);
-            channel.basicConsume(
-                    getQueueConfig().getName(),
-                    getConsumeConfig().isNoAck(),
-                    getConsumeConfig().getConsumerTag(),
-                    getConsumeConfig().isNoLocal(),
-                    getConsumeConfig().isExclusive(),
-                    consumer);
-        }
     }
 
-    private void handleDeliveries() throws IOException, InterruptedException {
-        log.debug("handleDeliveries()");
-        if (consumer != null) {
-            while (!stopping) {
-                QueueingConsumer.Delivery delivery = consumer.nextDelivery(messagingConfig.getDeliveryTimeout());
-                if (delivery != null) {
-                    log.debug("handleDeliveries() got delivery");
-                    try {
-                        handleDelivery(delivery);
-                    } catch (MessagingException e) {
-                        log.warn("handleDeliveries() Caught MessagingException: " + e.getMessage());
-                    }
-                    channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
-                }
-            }
-            closeAndClear();
-        }
-    }
+    protected abstract void consume() throws IOException, InterruptedException;
 
-    private synchronized void closeAndClear() {
+    protected synchronized void closeAndClear() {
         log.debug("closeAndClear()");
-        consumer = null;
         if (channel != null) {
             try {
                 channel.close();
@@ -131,19 +99,15 @@ public abstract class MessageConsumer implements Runnable, ApplicationContextAwa
         }
     }
 
-    public abstract void handleDelivery(QueueingConsumer.Delivery delivery);
-
     public abstract ExchangeConfig getExchangeConfig();
 
     public abstract QueueConfig getQueueConfig();
 
-    public abstract ConsumeConfig getConsumeConfig();
+    public ConsumeConfig getConsumeConfig() {
+        throw new UnsupportedOperationException("The getConsumeConfig method needs to be implemented.");
+    }
 
     public abstract String getBindingKey();
-
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
 
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;

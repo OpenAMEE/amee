@@ -50,7 +50,7 @@
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-tx:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-context-support:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: com.rabbitmq:amqp-client:1.7.0" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: commons-io:commons-io:1.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-io:commons-io:1.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:2.5.6" level="project" />
   </component>
