@@ -1,6 +1,6 @@
 package com.amee.service.invalidation;
 
-import com.amee.service.messaging.MessageConsumer;
+import com.amee.service.messaging.TopicMessageConsumer;
 import com.amee.service.messaging.config.ConsumeConfig;
 import com.amee.service.messaging.config.ExchangeConfig;
 import com.amee.service.messaging.config.QueueConfig;
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InvalidationMessageConsumer extends MessageConsumer {
+public class InvalidationMessageConsumer extends TopicMessageConsumer {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -28,9 +28,9 @@ public class InvalidationMessageConsumer extends MessageConsumer {
     @Qualifier("invalidationConsume")
     private ConsumeConfig consumeConfig;
 
-    public void handleDelivery(QueueingConsumer.Delivery delivery) {
+    public void handle(QueueingConsumer.Delivery delivery) {
         log.debug("handleDelivery()");
-        getApplicationContext().publishEvent(new InvalidationMessage(this, new String(delivery.getBody())));
+        applicationContext.publishEvent(new InvalidationMessage(this, new String(delivery.getBody())));
     }
 
     public ExchangeConfig getExchangeConfig() {

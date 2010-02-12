@@ -85,7 +85,7 @@ public class MessageService {
         }
     }
 
-    public Channel consume(
+    public Channel getChannelAndBind(
             ExchangeConfig exchangeConfig,
             QueueConfig queueConfig,
             String bindingKey) throws IOException {
@@ -102,13 +102,7 @@ public class MessageService {
                     exchangeConfig.isAutoDelete(),
                     exchangeConfig.getArguments());
             // Ensure queue is declared.
-            channel.queueDeclare(
-                    queueConfig.getName(),
-                    queueConfig.isPassive(),
-                    queueConfig.isDurable(),
-                    queueConfig.isExclusive(),
-                    queueConfig.isAutoDelete(),
-                    queueConfig.getArguments());
+            queueDeclare(channel, queueConfig);
             // Ensure queue is bound.
             channel.queueBind(
                     queueConfig.getName(),
@@ -117,6 +111,16 @@ public class MessageService {
                     null);
         }
         return channel;
+    }
+
+    public void queueDeclare(Channel channel, QueueConfig queueConfig) throws IOException {
+        channel.queueDeclare(
+                queueConfig.getName(),
+                queueConfig.isPassive(),
+                queueConfig.isDurable(),
+                queueConfig.isExclusive(),
+                queueConfig.isAutoDelete(),
+                queueConfig.getArguments());
     }
 
     public Channel getChannel() throws IOException {

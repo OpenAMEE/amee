@@ -39,7 +39,18 @@
 
     <bean id="invalidationQueue" class="com.amee.service.messaging.config.QueueConfig">
         <property name="name" value="platform.invalidation.${AMEE_SERVER_NAME}.${AMEE_INSTANCE_NAME}"/>
+        <property name="exclusive" value="true"/>
         <property name="autoDelete" value="true"/>
+    </bean>
+
+    <bean id="calculationExchange" class="com.amee.service.messaging.config.ExchangeConfig">
+        <property name="name" value="platform.calculation"/>
+        <property name="type" value="direct"/>
+        <property name="durable" value="true"/>
+    </bean>
+
+    <bean id="calculationQueue" class="com.amee.service.messaging.config.QueueConfig">
+        <property name="name" value="platform.calculation"/>
     </bean>
 
 </beans>

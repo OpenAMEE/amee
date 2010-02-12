@@ -271,15 +271,15 @@ public class DataService extends BaseService implements ApplicationListener {
     }
 
     @SuppressWarnings(value = "unchecked")
-    public Choices getUserValueChoices(DataItem di, APIVersion apiVersion) {
+    public Choices getUserValueChoices(DataItem dataItem, APIVersion apiVersion) {
         List<Choice> userValueChoices = new ArrayList<Choice>();
-        for (ItemValueDefinition ivd : di.getItemDefinition().getItemValueDefinitions()) {
+        for (ItemValueDefinition ivd : dataItem.getItemDefinition().getItemValueDefinitions()) {
             if (ivd.isFromProfile() && ivd.isValidInAPIVersion(apiVersion)) {
                 // start default value with value from ItemValueDefinition
                 String defaultValue = ivd.getValue();
                 // next give DataItem a chance to set the default value, if appropriate
                 if (ivd.isFromData()) {
-                    ItemValue dataItemValue = di.getItemValue(ivd.getPath());
+                    ItemValue dataItemValue = dataItem.getItemValue(ivd.getPath());
                     if ((dataItemValue != null) && (dataItemValue.getValue().length() > 0)) {
                         defaultValue = dataItemValue.getValue();
                     }
