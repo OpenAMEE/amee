@@ -24,6 +24,9 @@ package com.amee.core;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +34,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A class representing a series of {@link DataPoint} values.
+ * A class representing a series of {@link DataPoint} values. Provides various mathematical operations
+ * such as plus, subtract and multiply along with the crucial integrate method.
  */
 public class DataSeries {
 
@@ -55,6 +59,30 @@ public class DataSeries {
      */
     public DataSeries(List<DataPoint> dataPoints) {
         this.dataPoints = new ArrayList<DataPoint>(dataPoints);
+    }
+
+    public String toString() {
+        try {
+            return getJSONObject().toString();
+        } catch (JSONException e) {
+            throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
+        }
+    }
+
+    public JSONObject getJSONObject() throws JSONException {
+        JSONObject obj = new JSONObject();
+        JSONArray arr = new JSONArray();
+        for (DataPoint dataPoint : dataPoints) {
+            arr.put(dataPoint.getJSONArray());
+        }
+        obj.put("dataPoints", arr);
+        if (seriesStartDate != null) {
+            obj.put("seriesStartDate", seriesStartDate.toString());
+        }
+        if (seriesEndDate != null) {
+            obj.put("seriesEndDate", seriesEndDate.toString());
+        }
+        return obj;
     }
 
     protected Decimal getSeriesTimeInMillis() {
@@ -85,7 +113,7 @@ public class DataSeries {
             DataPoint lhs = getDataPoint(dateTimePoint);
             DataPoint rhs = series.getDataPoint(dateTimePoint);
             operation.setOperands(lhs, rhs);
-            combinedSeries.add(operation.operate());
+            combinedSeries.add(new DataPoint(dateTimePoint, operation.operate().getValue()));
         }
         return new DataSeries(combinedSeries);
     }
