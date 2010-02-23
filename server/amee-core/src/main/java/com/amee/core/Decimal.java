@@ -89,27 +89,38 @@ public class Decimal {
     }
 
     private Decimal(BigDecimal decimal) {
-        this.decimal = decimal;
+        scale(decimal);
     }
 
     private Decimal(BigDecimal decimal, DecimalUnit unit) {
-        this.decimal = decimal;
+        this(decimal);
         this.unit = unit;
     }
 
-    // Scale the algorithm result according to the AMEE standard precision and scale.
-
+    /**
+     * Scale the supplied value according to the AMEE standard precision and scale and to store to this Decimal.
+     *
+     * @param decimal value to scale
+     */
     protected void scale(String decimal) {
         try {
-            BigDecimal unscaled = new BigDecimal(decimal);
-            BigDecimal scaled = unscaled.setScale(SCALE, ROUNDING_MODE);
-            if (scaled.precision() > PRECISION) {
-                throw new IllegalArgumentException("Precision of '" + scaled + "' exceeds '" + PRECISION + "'");
-            }
-            this.decimal = scaled;
+            scale(new BigDecimal(decimal));
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("The provided string could not be parsed as a decimal: " + decimal);
         }
+    }
+
+    /**
+     * Scale the supplied value according to the AMEE standard precision and scale and to store to this Decimal.
+     *
+     * @param decimal value to scale
+     */
+    protected void scale(BigDecimal decimal) {
+        BigDecimal scaled = decimal.setScale(SCALE, ROUNDING_MODE);
+        if (scaled.precision() > PRECISION) {
+            throw new IllegalArgumentException("Precision of '" + scaled + "' exceeds '" + PRECISION + "'");
+        }
+        this.decimal = scaled;
     }
 
     /**
