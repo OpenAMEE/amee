@@ -214,5 +214,4 @@ public class Decimal {
     public Decimal multiply(Decimal decimal) {
         return new Decimal(getValue().multiply(decimal.getValue(), CONTEXT));
     }
-
 }

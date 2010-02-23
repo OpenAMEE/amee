@@ -185,6 +185,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
     private Map<String, Object> getValues(ProfileItem profileItem) {
 
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
+        Map<String, Object> returnValues = new HashMap<String, Object>();
 
         // Add ItemDefinition defaults
         APIVersion apiVersion = profileItem.getProfile().getUser().getAPIVersion();
@@ -199,34 +200,43 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         // Add the ProfileItem values
         profileItem.appendInternalValues(values);
 
-        Map<String, Object> returnValues = new HashMap<String, Object>();
+        // Add actual values to returnValues list based on InternalValues in values list.
         for (ItemValueDefinition ivd : values.keySet()) {
             returnValues.put(ivd.getCannonicalPath(), values.get(ivd).getValue());
         }
 
-        initAlgoFinders(profileItem, returnValues);
+        // Initialise finders for algorithm.
+        initFinders(profileItem, returnValues);
 
         return returnValues;
     }
 
-    private void initAlgoFinders(ProfileItem profileItem, Map<String, Object> values) {
+    /**
+     * Add DataFinder, ProfileFinder and ServiceFinder to the algorithm values.
+     *
+     * @param profileItem to be used in finders
+     * @param values      to place finders into
+     */
+    private void initFinders(ProfileItem profileItem, Map<String, Object> values) {
 
+        // Configure and add DataFinder.
         DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
         dataFinder.setEnvironment(profileItem.getEnvironment());
         dataFinder.setStartDate(profileItem.getStartDate());
         dataFinder.setEndDate(profileItem.getEndDate());
+        values.put("dataFinder", dataFinder);
 
+        // Configure and add ProfileFinder.
         ProfileFinder profileFinder = (ProfileFinder) beanFactory.getBean("profileFinder");
         profileFinder.setProfileItem(profileItem);
         profileFinder.setDataFinder(dataFinder);
+        values.put("profileFinder", profileFinder);
 
+        // Configure and add ServiceFinder.
         ServiceFinder serviceFinder = (ServiceFinder) beanFactory.getBean("serviceFinder");
         serviceFinder.setValues(values);
         serviceFinder.setProfileFinder(profileFinder);
-
         values.put("serviceFinder", serviceFinder);
-        values.put("dataFinder", dataFinder);
-        values.put("profileFinder", profileFinder);
     }
 
     // Collect all relevant algorithm input values for a DataItem + auth Choices calculation.

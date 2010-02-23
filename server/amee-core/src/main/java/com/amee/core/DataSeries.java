@@ -61,6 +61,26 @@ public class DataSeries {
         this.dataPoints = new ArrayList<DataPoint>(dataPoints);
     }
 
+    /**
+     * A copy constructor.
+     *
+     * @param dataSeries to copy
+     */
+    protected DataSeries(DataSeries dataSeries) {
+        for (DataPoint dataPoint : dataSeries.dataPoints) {
+            this.addDataPoint(new DataPoint(dataPoint));
+        }
+    }
+
+    /**
+     * Return a copy of this object.
+     *
+     * @return a copy
+     */
+    public DataSeries copy() {
+        return new DataSeries(this);
+    }
+
     public String toString() {
         try {
             return getJSONObject().toString();
@@ -89,11 +109,10 @@ public class DataSeries {
         if (dataPoints.isEmpty()) {
             return Decimal.ZERO;
         }
-
         DateTime first = dataPoints.get(0).getDateTime();
         DateTime last = dataPoints.get(dataPoints.size() - 1).getDateTime();
-        DateTime seriesStart = seriesStartDate != null && seriesStartDate.isAfter(first) ? seriesStartDate : first;
-        DateTime seriesEnd = seriesEndDate != null && last.isAfter(seriesEndDate) ? seriesEndDate : last;
+        DateTime seriesStart = (seriesStartDate != null) && seriesStartDate.isAfter(first) ? seriesStartDate : first;
+        DateTime seriesEnd = (seriesEndDate != null) && last.isAfter(seriesEndDate) ? seriesEndDate : last;
         return new Decimal(seriesEnd.getMillis() - seriesStart.getMillis());
     }
 
@@ -265,20 +284,25 @@ public class DataSeries {
     /**
      * Get the single-valued average of the DataPoints within the DataSeries that occur during the
      * specified query time-period.
+     * <p/>
+     * If there is no time-period (the query time-period is zero) then the result will be zero.
      *
      * @return - the average as a {@link Decimal} value
      */
     public Decimal integrate() {
         Decimal integral = Decimal.ZERO;
-        Collections.sort(dataPoints);
-        for (int i = 0; i < dataPoints.size() - 1; i++) {
-
-            DataPoint current = dataPoints.get(i);
-            DataPoint next = dataPoints.get(i + 1);
-
-            Decimal segmentInMillis = new Decimal(next.getDateTime().getMillis() - current.getDateTime().getMillis());
-            Decimal weightedAverage = current.getValue().multiply(segmentInMillis.divide(getSeriesTimeInMillis()));
-            integral = integral.add(weightedAverage);
+        Decimal seriesTimeInMillis = getSeriesTimeInMillis();
+        if (!seriesTimeInMillis.equals(Decimal.ZERO)) {
+            Collections.sort(dataPoints);
+            for (int i = 0; i < dataPoints.size() - 1; i++) {
+                // Work out segment time series.
+                DataPoint current = dataPoints.get(i);
+                DataPoint next = dataPoints.get(i + 1);
+                Decimal segmentInMillis = new Decimal(next.getDateTime().getMillis() - current.getDateTime().getMillis());
+                // Add weighted Average value.
+                Decimal weightedAverage = current.getValue().multiply(segmentInMillis.divide(seriesTimeInMillis));
+                integral = integral.add(weightedAverage);
+            }
         }
         return integral;
     }
