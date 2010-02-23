@@ -26,6 +26,7 @@ import com.amee.core.DataSeries;
 import com.amee.core.Decimal;
 import com.amee.domain.algorithm.Algorithm;
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +40,40 @@ import java.util.Map;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 
+/**
+ * Implements various Algorithm related test cases.
+ * <p/>
+ * Some test cases are described here: https://docs.google.com/a/amee.cc/Doc?docid=0AVPTOpeCYkq1ZGZxOXE1Y3JfMTFkZDk5eHdjZA&hl=en_GB
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class AlgorithmServiceTest {
 
+    DataSeries seriesA;
+    DataSeries seriesB;
+    DataSeries seriesC;
+
     @Autowired
     private AlgorithmService algorithmService;
+
+    @Before
+    public void init() {
+        // Create DataSeries A.
+        seriesA = new DataSeries();
+        seriesA.addDataPoint(new DataPoint(new DateTime(2010, 1, 1, 0, 0, 0, 0), new Decimal("1")));
+        seriesA.addDataPoint(new DataPoint(new DateTime(2010, 1, 3, 0, 0, 0, 0), new Decimal("0")));
+        seriesA.addDataPoint(new DataPoint(new DateTime(2010, 1, 4, 0, 0, 0, 0), new Decimal("0.5")));
+        // Create DataSeries B.
+        seriesB = new DataSeries();
+        seriesB.addDataPoint(new DataPoint(new DateTime(2010, 1, 1, 0, 0, 0, 0), new Decimal("0")));
+        seriesB.addDataPoint(new DataPoint(new DateTime(2010, 1, 3, 0, 0, 0, 0), new Decimal("1")));
+        seriesB.addDataPoint(new DataPoint(new DateTime(2010, 1, 4, 0, 0, 0, 0), new Decimal("2")));
+        // Create DataSeries C.
+        seriesC = new DataSeries();
+        seriesC.addDataPoint(new DataPoint(new DateTime(2010, 1, 1, 0, 0, 0, 0), new Decimal("0")));
+        seriesC.addDataPoint(new DataPoint(new DateTime(2010, 1, 2, 0, 0, 0, 0), new Decimal("1")));
+        seriesC.addDataPoint(new DataPoint(new DateTime(2010, 1, 4, 0, 0, 0, 0), new Decimal("3")));
+    }
 
     @Test
     public void reallySimpleAlgorithmOK() throws ScriptException {
@@ -103,38 +132,44 @@ public class AlgorithmServiceTest {
     }
 
     /**
-     * Implements test cases described here: https://docs.google.com/a/amee.cc/Doc?docid=0AVPTOpeCYkq1ZGZxOXE1Y3JfMTFkZDk5eHdjZA&hl=en_GB
+     * A by B.
      */
     @Test
-    public void algorithmCanUseDataSeries() {
-        // Create DataSeries A.
-        DataSeries seriesA = new DataSeries();
-        seriesA.addDataPoint(new DataPoint(new DateTime(2010, 1, 1, 0, 0, 0, 0), new Decimal("1")));
-        seriesA.addDataPoint(new DataPoint(new DateTime(2010, 1, 3, 0, 0, 0, 0), new Decimal("0")));
-        seriesA.addDataPoint(new DataPoint(new DateTime(2010, 1, 4, 0, 0, 0, 0), new Decimal("0.5")));
-        // Create DataSeries B.
-        DataSeries seriesB = new DataSeries();
-        seriesB.addDataPoint(new DataPoint(new DateTime(2010, 1, 1, 0, 0, 0, 0), new Decimal("0")));
-        seriesB.addDataPoint(new DataPoint(new DateTime(2010, 1, 3, 0, 0, 0, 0), new Decimal("1")));
-        seriesB.addDataPoint(new DataPoint(new DateTime(2010, 1, 4, 0, 0, 0, 0), new Decimal("2")));
-        // Create DataSeries C.
-        DataSeries seriesC = new DataSeries();
-        seriesC.addDataPoint(new DataPoint(new DateTime(2010, 1, 1, 0, 0, 0, 0), new Decimal("0")));
-        seriesC.addDataPoint(new DataPoint(new DateTime(2010, 1, 2, 0, 0, 0, 0), new Decimal("1")));
-        seriesC.addDataPoint(new DataPoint(new DateTime(2010, 1, 4, 0, 0, 0, 0), new Decimal("3")));
-        // Multiply A by B.
-        String expectedSeriesAMultipliedByB = "{\"dataPoints\":[[\"2010-01-01T00:00:00.000Z\",\"0E-12\"],[\"2010-01-03T00:00:00.000Z\",\"0E-12\"],[\"2010-01-04T00:00:00.000Z\",\"1.000000000000\"]]}";
+    public void shouldMultiplyDataSeriesAAndB() {
+        String expectedSeriesAMultipliedByB = "{\"dataPoints\":[[\"2010-01-01T00:00:00.000Z\",\"0.000000\"],[\"2010-01-03T00:00:00.000Z\",\"0.000000\"],[\"2010-01-04T00:00:00.000Z\",\"1.000000\"]]}";
         DataSeries seriesAMultipliedByB = seriesA.multiply(seriesB);
+        System.out.println(expectedSeriesAMultipliedByB);
+        System.out.println(seriesAMultipliedByB.toString());
         assertTrue("Should be able to multiply two DataSeries objects.", seriesAMultipliedByB.toString().equals(expectedSeriesAMultipliedByB));
-        // Add B to A.
+    }
+
+    /**
+     * Add B to A.
+     */
+    @Test
+    public void shouldAddDataSeriesBToA() {
         String expectedSeriesAPlusB = "{\"dataPoints\":[[\"2010-01-01T00:00:00.000Z\",\"1.000000\"],[\"2010-01-03T00:00:00.000Z\",\"1.000000\"],[\"2010-01-04T00:00:00.000Z\",\"2.500000\"]]}";
         DataSeries seriesAPlusB = seriesA.plus(seriesB);
         assertTrue("Should be able to add together two DataSeries objects.", seriesAPlusB.toString().equals(expectedSeriesAPlusB));
-        // Multiply B by C.
-        String expectedSeriesBMultipliedByC = "{\"dataPoints\":[[\"2010-01-01T00:00:00.000Z\",\"0E-12\"],[\"2010-01-02T00:00:00.000Z\",\"0E-12\"],[\"2010-01-03T00:00:00.000Z\",\"1.000000000000\"],[\"2010-01-04T00:00:00.000Z\",\"6.000000000000\"]]}";
+    }
+
+    /**
+     * Multiply B by C.
+     */
+    @Test
+    public void shouldMultiplyDataSeriesBAndC() {
+        String expectedSeriesBMultipliedByC = "{\"dataPoints\":[[\"2010-01-01T00:00:00.000Z\",\"0.000000\"],[\"2010-01-02T00:00:00.000Z\",\"0.000000\"],[\"2010-01-03T00:00:00.000Z\",\"1.000000\"],[\"2010-01-04T00:00:00.000Z\",\"6.000000\"]]}";
         DataSeries seriesBMultipliedByC = seriesB.multiply(seriesC);
+        System.out.println(expectedSeriesBMultipliedByC);
+        System.out.println(seriesBMultipliedByC.toString());
         assertTrue("Should be able to multiply two DataSeries objects.", seriesBMultipliedByC.toString().equals(expectedSeriesBMultipliedByC));
-        // Add C to B.
+    }
+
+    /**
+     * Add C to B.
+     */
+    @Test
+    public void shouldAddDataSeriesCToB() {
         String expectedSeriesBPlusC = "{\"dataPoints\":[[\"2010-01-01T00:00:00.000Z\",\"0.000000\"],[\"2010-01-02T00:00:00.000Z\",\"1.000000\"],[\"2010-01-03T00:00:00.000Z\",\"2.000000\"],[\"2010-01-04T00:00:00.000Z\",\"5.000000\"]]}";
         DataSeries seriesBPlusC = seriesB.plus(seriesC);
         assertTrue("Should be able to add together two DataSeries objects.", seriesBPlusC.toString().equals(expectedSeriesBPlusC));
