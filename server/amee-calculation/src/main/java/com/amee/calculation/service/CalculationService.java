@@ -185,14 +185,17 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
     private Map<String, Object> getValues(ProfileItem profileItem) {
 
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
+
         // Add ItemDefinition defaults
         APIVersion apiVersion = profileItem.getProfile().getUser().getAPIVersion();
         profileItem.getItemDefinition().appendInternalValues(values, apiVersion);
+
         // Add DataItem values, filtered by start and end dates of the ProfileItem
         DataItem dataItem = profileItem.getDataItem();
         dataItem.setEffectiveStartDate(profileItem.getStartDate());
         dataItem.setEffectiveEndDate(profileItem.getEndDate());
         dataItem.appendInternalValues(values);
+
         // Add the ProfileItem values
         profileItem.appendInternalValues(values);
 
@@ -257,8 +260,11 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         return returnValues;
     }
 
-    private void appendUserValueChoices(ItemDefinition itemDefinition, Choices userValueChoices,
-                                        Map<ItemValueDefinition, InternalValue> values, APIVersion version) {
+    private void appendUserValueChoices(
+            ItemDefinition itemDefinition,
+            Choices userValueChoices,
+            Map<ItemValueDefinition, InternalValue> values,
+            APIVersion version) {
         if (userValueChoices != null) {
             Map<ItemValueDefinition, InternalValue> userChoices = new HashMap<ItemValueDefinition, InternalValue>();
             for (ItemValueDefinition itemValueDefinition : itemDefinition.getItemValueDefinitions()) {

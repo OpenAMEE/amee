@@ -76,7 +76,7 @@ public class ProfileBrowser extends BaseBrowser {
     }
 
     public boolean isProRataRequest() {
-        return getMode() != null && getMode().equals("prorata");
+        return (getMode() != null) && getMode().equals("prorata");
     }
 
     public boolean isSelectByRequest() {

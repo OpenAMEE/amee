@@ -25,7 +25,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.joda.time.DateTime;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A class representing a series of {@link DataPoint} values.
@@ -60,13 +63,14 @@ public class DataSeries {
         }
 
         DateTime first = dataPoints.get(0).getDateTime();
-        DateTime last = dataPoints.get(dataPoints.size() -1).getDateTime();
+        DateTime last = dataPoints.get(dataPoints.size() - 1).getDateTime();
         DateTime seriesStart = seriesStartDate != null && seriesStartDate.isAfter(first) ? seriesStartDate : first;
-        DateTime seriesEnd = seriesEndDate !=null && last.isAfter(seriesEndDate) ? seriesEndDate : last;
+        DateTime seriesEnd = seriesEndDate != null && last.isAfter(seriesEndDate) ? seriesEndDate : last;
         return new Decimal(seriesEnd.getMillis() - seriesStart.getMillis());
     }
 
     // Combine this DataSeries with another DataSeries using the given Operation.
+
     @SuppressWarnings("unchecked")
     private DataSeries combine(DataSeries series, Operation operation) {
 
@@ -77,7 +81,7 @@ public class DataSeries {
         List<DataPoint> combinedSeries = new ArrayList<DataPoint>();
         // For each DateTime point, find the nearest corresponding DataPoint in each series and apply the desired
         // Operation.
-        for(DateTime dateTimePoint : dateTimePoints) {
+        for (DateTime dateTimePoint : dateTimePoints) {
             DataPoint lhs = getDataPoint(dateTimePoint);
             DataPoint rhs = series.getDataPoint(dateTimePoint);
             operation.setOperands(lhs, rhs);
@@ -119,9 +123,8 @@ public class DataSeries {
         for (DataPoint dp : dataPoints) {
             combinedDataPoints.add(dp.plus(f));
         }
-        return new DataSeries(combinedDataPoints); 
+        return new DataSeries(combinedDataPoints);
     }
-
 
     /**
      * Subtract a DataSeries from this DataSeries.
@@ -154,11 +157,11 @@ public class DataSeries {
     public DataSeries subtract(float f) {
         List<DataPoint> combinedDataPoints = new ArrayList<DataPoint>();
         for (DataPoint dp : dataPoints) {
-            combinedDataPoints.add(dp.substract(f));
+            combinedDataPoints.add(dp.subtract(f));
         }
         return new DataSeries(combinedDataPoints);
     }
-    
+
     /**
      * Divide this DataSeries by another DataSeries.
      *
@@ -196,21 +199,21 @@ public class DataSeries {
     }
 
     /**
-      * Multiply this DataSeries by another DataSeries.
-      *
-      * @param series - the DataSeries to multiply this DataSeries
-      * @return a new DataSeries representing the multiplication of the two DataSeries
-      */
+     * Multiply this DataSeries by another DataSeries.
+     *
+     * @param series - the DataSeries to multiply this DataSeries
+     * @return a new DataSeries representing the multiplication of the two DataSeries
+     */
     public DataSeries multiply(DataSeries series) {
         return combine(series, new MultiplyOperation());
     }
 
     /**
-      * Multiply this DataSeries by a DataPoint.
-      *
-      * @param dataPoint - the DataPoint value to multiply this DataPoint
-      * @return a new DataSeries representing the multiplication of the DataSeries and the DataPoint
-      */
+     * Multiply this DataSeries by a DataPoint.
+     *
+     * @param dataPoint - the DataPoint value to multiply this DataPoint
+     * @return a new DataSeries representing the multiplication of the DataSeries and the DataPoint
+     */
     public DataSeries multiply(DataPoint dataPoint) {
         DataSeries series = new DataSeries();
         series.addDataPoint(dataPoint);
@@ -218,11 +221,11 @@ public class DataSeries {
     }
 
     /**
-      * Multiply this DataSeries by a float value.
-      *
-      * @param f - the float value to multiply this DataSeries
-      * @return a new DataSeries representing the multiplication of the DataSeries and the float value
-      */
+     * Multiply this DataSeries by a float value.
+     *
+     * @param f - the float value to multiply this DataSeries
+     * @return a new DataSeries representing the multiplication of the DataSeries and the float value
+     */
     public DataSeries multiply(float f) {
         List<DataPoint> combinedDataPoints = new ArrayList<DataPoint>();
         for (DataPoint dp : dataPoints) {
@@ -240,10 +243,10 @@ public class DataSeries {
     public Decimal integrate() {
         Decimal integral = Decimal.ZERO;
         Collections.sort(dataPoints);
-        for (int i = 0; i < dataPoints.size()-1; i++) {
+        for (int i = 0; i < dataPoints.size() - 1; i++) {
 
             DataPoint current = dataPoints.get(i);
-            DataPoint next = dataPoints.get(i+1);
+            DataPoint next = dataPoints.get(i + 1);
 
             Decimal segmentInMillis = new Decimal(next.getDateTime().getMillis() - current.getDateTime().getMillis());
             Decimal weightedAverage = current.getValue().multiply(segmentInMillis.divide(getSeriesTimeInMillis()));
@@ -252,13 +255,12 @@ public class DataSeries {
         return integral;
     }
 
-
-    @SuppressWarnings("unchecked")
     /**
      * Get the Collection of {@link org.joda.time.DateTime} points in the DataSeries.
      *
      * @return the Collection of {@link org.joda.time.DateTime} points in the DataSeries
      */
+    @SuppressWarnings("unchecked")
     public Collection<DateTime> getDateTimePoints() {
         return (Collection<DateTime>) CollectionUtils.collect(dataPoints, new Transformer() {
             public Object transform(Object input) {
@@ -285,7 +287,6 @@ public class DataSeries {
         }
         return selected;
     }
-
 
     /**
      * Add a {@link DataPoint} to this series.
@@ -317,7 +318,6 @@ public class DataSeries {
             return;
         this.seriesEndDate = seriesEndDate;
     }
-
 }
 
 /**
@@ -345,7 +345,7 @@ class PlusOperation extends Operation {
 
 class SubtractOperation extends Operation {
     public DataPoint operate() {
-        return lhs.substract(rhs);
+        return lhs.subtract(rhs);
     }
 }
 

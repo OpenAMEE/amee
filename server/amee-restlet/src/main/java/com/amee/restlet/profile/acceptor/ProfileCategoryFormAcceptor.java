@@ -160,7 +160,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             // for POSTS and PUTS is not to return a representation.
             resource.setRepresentationRequested(form.getFirstValue("representation", "none"));
 
-            // Set the startDate, endDate and duration.
+            // Set the startDate & endDate, or endDate via duration.
             profileItem.setStartDate(new StartEndDate(form.getFirstValue("startDate")));
             if (form.getNames().contains("endDate") && form.getFirstValue("endDate") != null) {
                 profileItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));

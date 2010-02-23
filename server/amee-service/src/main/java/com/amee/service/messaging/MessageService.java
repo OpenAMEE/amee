@@ -37,9 +37,9 @@ public class MessageService {
             try {
                 connection.close();
             } catch (IOException e) {
-                log.warn("stop() Caught IOException whilst trying to close the connection. Message was: " + e.getMessage());
+                // Swallow.
             } catch (ShutdownSignalException e) {
-                log.warn("stop() Caught ShutdownSignalException whilst trying to close the connection. Message was: " + e.getMessage());
+                // Swallow.
             }
             connection = null;
         }
@@ -56,13 +56,7 @@ public class MessageService {
             Channel channel = getChannel();
             if (channel != null) {
                 // Ensure exchange is declared.
-                channel.exchangeDeclare(
-                        exchangeConfig.getName(),
-                        exchangeConfig.getType(),
-                        exchangeConfig.isPassive(),
-                        exchangeConfig.isDurable(),
-                        exchangeConfig.isAutoDelete(),
-                        exchangeConfig.getArguments());
+                exchangeDeclare(channel, exchangeConfig);
                 // Publish.
                 channel.basicPublish(
                         exchangeConfig.getName(),
@@ -93,24 +87,22 @@ public class MessageService {
         // Try to get a channel.
         Channel channel = getChannel();
         if (channel != null) {
-            // Ensure exchange is declared.
-            channel.exchangeDeclare(
-                    exchangeConfig.getName(),
-                    exchangeConfig.getType(),
-                    exchangeConfig.isPassive(),
-                    exchangeConfig.isDurable(),
-                    exchangeConfig.isAutoDelete(),
-                    exchangeConfig.getArguments());
-            // Ensure queue is declared.
+            // Ensure exchange & queue are declared and queue is bound.
+            exchangeDeclare(channel, exchangeConfig);
             queueDeclare(channel, queueConfig);
-            // Ensure queue is bound.
-            channel.queueBind(
-                    queueConfig.getName(),
-                    exchangeConfig.getName(),
-                    bindingKey,
-                    null);
+            queueBind(channel, queueConfig, exchangeConfig, bindingKey);
         }
         return channel;
+    }
+
+    public void exchangeDeclare(Channel channel, ExchangeConfig exchangeConfig) throws IOException {
+        channel.exchangeDeclare(
+                exchangeConfig.getName(),
+                exchangeConfig.getType(),
+                exchangeConfig.isPassive(),
+                exchangeConfig.isDurable(),
+                exchangeConfig.isAutoDelete(),
+                exchangeConfig.getArguments());
     }
 
     public void queueDeclare(Channel channel, QueueConfig queueConfig) throws IOException {
@@ -121,6 +113,14 @@ public class MessageService {
                 queueConfig.isExclusive(),
                 queueConfig.isAutoDelete(),
                 queueConfig.getArguments());
+    }
+
+    public void queueBind(Channel channel, QueueConfig queueConfig, ExchangeConfig exchangeConfig, String bindingKey) throws IOException {
+        channel.queueBind(
+                queueConfig.getName(),
+                exchangeConfig.getName(),
+                bindingKey,
+                null);
     }
 
     public Channel getChannel() throws IOException {

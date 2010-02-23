@@ -42,5 +42,4 @@ public class BaseBrowser {
     public boolean isQuery() {
         return (startDate != null) || (endDate != null);
     }
-
 }

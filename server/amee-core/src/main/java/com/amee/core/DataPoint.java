@@ -32,9 +32,9 @@ public class DataPoint implements Comparable<DataPoint> {
     private static final DateTime EPOCH = new DateTime(0);
 
     /**
-     * Represents the concept of a zero-valued DataPoint occuring at the EPOCH (<code>DateTime(0)</code>)
+     * Represents the concept of a zero-valued DataPoint occurring at the EPOCH (<code>DateTime(0)</code>)
      */
-    public static final DataPoint NULL = new DataPoint(EPOCH,Decimal.ZERO);
+    public static final DataPoint NULL = new DataPoint(EPOCH, Decimal.ZERO);
 
     private DateTime dateTime;
     private Decimal decimal;
@@ -57,11 +57,10 @@ public class DataPoint implements Comparable<DataPoint> {
         this(EPOCH, decimal);
     }
 
-
     /**
      * Construct a DataPoint with a decimal value occurring at a specific point in time.
      *
-     * @param decimal - the decimal value
+     * @param decimal  - the decimal value
      * @param dateTime - the point in time at which this data point occurs.
      */
     public DataPoint(DateTime dateTime, Decimal decimal) {
@@ -103,7 +102,7 @@ public class DataPoint implements Comparable<DataPoint> {
      * @param point - the DataPoint to subtract
      * @return a new DataPoint representing the subtraction of the DataPoint from this DataPoint
      */
-    public DataPoint substract(DataPoint point) {
+    public DataPoint subtract(DataPoint point) {
         return new DataPoint(dateTime, decimal.subtract(point.getValue()));
     }
 
@@ -113,7 +112,7 @@ public class DataPoint implements Comparable<DataPoint> {
      * @param f - the float to subtract
      * @return a new DataPoint representing the subtraction of the float value from this DataPoint
      */
-    public DataPoint substract(float f) {
+    public DataPoint subtract(float f) {
         return new DataPoint(dateTime, decimal.subtract(new Decimal(f)));
     }
 
@@ -138,11 +137,11 @@ public class DataPoint implements Comparable<DataPoint> {
     }
 
     /**
-      * Multiply this DataPoint by another DataPoint.
-      *
-      * @param point - the DataPoint to multiply this DataPoint
-      * @return a new DataPoint representing the multiplication of the two DataPoints
-      */
+     * Multiply this DataPoint by another DataPoint.
+     *
+     * @param point - the DataPoint to multiply this DataPoint
+     * @return a new DataPoint representing the multiplication of the two DataPoints
+     */
     public DataPoint multiply(DataPoint point) {
         return new DataPoint(dateTime, decimal.multiply(point.getValue()));
     }
@@ -158,7 +157,7 @@ public class DataPoint implements Comparable<DataPoint> {
     }
 
     public int compareTo(DataPoint that) {
-        //Collections of DataPoint values will be ordered by ??
+        // TODO: Collections of DataPoint values will be ordered by what?
         return getDateTime().compareTo(that.getDateTime());
     }
 }

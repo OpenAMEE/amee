@@ -20,24 +20,33 @@
 package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.data.builder.v2.ItemValueBuilder;
-import com.amee.domain.sheet.Choice;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.ObjectType;
+import com.amee.domain.StartEndDate;
+import com.amee.domain.data.builder.v2.ItemValueBuilder;
+import com.amee.domain.sheet.Choice;
 import org.hibernate.annotations.Index;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import java.util.Date;
 
 @Entity
 @DiscriminatorValue("DI")
 public class DataItem extends Item {
 
     public final static int PATH_SIZE = 255;
+
+    // The UNIX time epoch, which is 1970-01-01 00:00:00. See: http://en.wikipedia.org/wiki/Unix_epoch
+    public final static Date EPOCH = new DateTime(0, DateTimeZone.UTC).toDate();
 
     @Column(name = "PATH", length = PATH_SIZE, nullable = true)
     @Index(name = "PATH_IND")
@@ -93,7 +102,7 @@ public class DataItem extends Item {
             element.appendChild(getItemDefinition().getIdentityElement(document));
             element.appendChild(getDataCategory().getIdentityElement(document));
         }
-    }                           
+    }
 
     private void buildElementItemValues(Document document, Element itemValuesElem) {
         for (ItemValue itemValue : getItemValues()) {
@@ -106,7 +115,7 @@ public class DataItem extends Item {
         for (Object o1 : getItemValuesMap().keySet()) {
             String path = (String) o1;
             Element itemValueSeries = document.createElement("ItemValueSeries");
-            itemValueSeries.setAttribute("path",path);
+            itemValueSeries.setAttribute("path", path);
             for (Object o2 : getAllItemValues(path)) {
                 ItemValue itemValue = (ItemValue) o2;
                 itemValue.setBuilder(new ItemValueBuilder(itemValue));
@@ -160,7 +169,7 @@ public class DataItem extends Item {
     /**
      * Get the JSON representation of this DataItem.
      *
-     * @param detailed - true if a detailed representation is required.
+     * @param detailed    - true if a detailed representation is required.
      * @param showHistory - true if the representation should include any historical sequences of {@link ItemValue)s.
      * @return the JSON representation.
      * @throws JSONException
@@ -183,7 +192,7 @@ public class DataItem extends Item {
     /**
      * Get the DOM representation of this DataItem.
      *
-     * @param detailed - true if a detailed representation is required.
+     * @param detailed    - true if a detailed representation is required.
      * @param showHistory - true if the representation should include any historical sequences of {@link ItemValue)s.
      * @return the DOM representation.
      */
@@ -227,5 +236,25 @@ public class DataItem extends Item {
     @Override
     public boolean isTrash() {
         return status.equals(AMEEStatus.TRASH) || getDataCategory().isTrash() || getItemDefinition().isTrash();
+    }
+
+    /**
+     * A DataItem always has the epoch as the startDate.
+     *
+     * @return EPOCH
+     */
+    @Override
+    public StartEndDate getStartDate() {
+        return new StartEndDate(EPOCH);
+    }
+
+    /**
+     * A DataItem never has an endDate.
+     *
+     * @return null
+     */
+    @Override
+    public StartEndDate getEndDate() {
+        return null;
     }
 }

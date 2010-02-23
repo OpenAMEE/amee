@@ -78,7 +78,6 @@ public class ItemValueMap extends HashMap {
      * @param path - the {@link ItemValue} path.
      * @return the List of {@link ItemValue}. Will be empty is there exists no {@link ItemValue}s with this path.
      */
-
     public List<ItemValue> getAll(String path) {
 /*
         if (log.isDebugEnabled()) {
@@ -127,8 +126,14 @@ public class ItemValueMap extends HashMap {
         itemValues.add(itemValue);
     }
 
-    // Find the active ItemValue at startDate.
-    // The active ItemValue is the one occuring at or immediately before startDate.
+    /**
+     * Find the active ItemValue at startDate. The active ItemValue is the one occurring at or
+     * immediately before startDate.
+     *
+     * @param itemValues
+     * @param startDate
+     * @return the discovered ItemValue, or null if not found
+     */
     private ItemValue find(Set<ItemValue> itemValues, Date startDate) {
         ItemValue selected = null;
         for (ItemValue itemValue : itemValues) {
@@ -139,5 +144,4 @@ public class ItemValueMap extends HashMap {
         }
         return selected;
     }
-
 }

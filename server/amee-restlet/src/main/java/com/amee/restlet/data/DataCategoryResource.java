@@ -43,8 +43,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,18 +63,16 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Component("dataCategoryResource")
 @Scope("prototype")
 public class DataCategoryResource extends BaseDataResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    private static final Date EPOCH = new DateTime(0, DateTimeZone.UTC).toDate();
 
     @Autowired
     private DataService dataService;
@@ -178,6 +174,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             }
         }
 
+        // TODO: NPE on dataItem (& dataCategory) is possible here.
         if ((dataCategory != null) || (dataItem != null) || !dataCategories.isEmpty() || !dataItems.isEmpty()) {
             // clear caches
             dataService.invalidate(thisDataCategory);
@@ -467,76 +464,72 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
         thisDataCategory = getDataCategory();
         if (getRequest().getMethod().equals(Method.POST)) {
-            // new DataItem
+            // New DataItem.
             itemDefinition = thisDataCategory.getItemDefinition();
             if (itemDefinition != null) {
+                // Create new DataItem, persist it and populate it.
                 dataItem = new DataItem(thisDataCategory, itemDefinition);
-                dataItem = acceptDataItem(form, dataItem);
+                dataService.persist(dataItem);
+                acceptDataItem(form, dataItem);
             } else {
                 badRequest();
             }
         } else if (getRequest().getMethod().equals(Method.PUT)) {
-            // update DataItem
+            // Update DataItem.
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItem(
-                        getActiveEnvironment(),
-                        uid);
+                dataItem = dataService.getDataItem(getActiveEnvironment(), uid);
                 if (dataItem != null) {
-                    dataItem = acceptDataItem(form, dataItem);
+                    acceptDataItem(form, dataItem);
                 }
             }
         }
         return dataItem;
     }
 
-    protected DataItem acceptDataItem(Form form, DataItem dataItem) {
-        dataItem.setName(form.getFirstValue("name"));
-        dataItem.setPath(form.getFirstValue("path"));
+    /**
+     * Update the DataItem and contained ItemValues based on POST or PUT parameters. ItemValues can be identified
+     * by their ItemValueDefinition path or, for existing DataItems, their specific UID. The 'name' and 'path'
+     * properties of the DataItem can be set / updated.
+     * <p/>
+     * When updating ItemValues using the ItemValueDefinition path the appropriate instance will
+     * be selected based the current time, this will always be the last ItemValue in chronological order. This
+     * is only relevant for non drill-down ItemValues, as only once instance of these is allowed.
+     *
+     * @param form     to handle
+     * @param dataItem to update
+     */
+    protected void acceptDataItem(Form form, DataItem dataItem) {
 
+        Set<String> names = form.getNames();
 
-        // determine startdate for new DataItem
-        /*
-
-        Out-commenting DI startDate/endDate functionality. Pending final approval from AC, this will be 
-        permanently deleted in due course - SM (15/07/09).
-
-        StartEndDate startDate = new StartEndDate(form.getFirstValue("startDate"));
-        dataItem.setStartDate(startDate);
-
-
-        if (form.getNames().contains("endDate")) {
-            dataItem.setEndDate(new StartEndDate(form.getFirstValue("endDate")));
-        } else {
-            if (form.getNames().contains("duration")) {
-                StartEndDate endDate = startDate.plus(form.getFirstValue("duration"));
-                dataItem.setEndDate(endDate);
-            }
+        // Set 'name' value.
+        if (names.contains("name")) {
+            dataItem.setName(form.getFirstValue("name"));
+            names.remove("name");
         }
 
-        if (dataItem.getEndDate() != null && dataItem.getEndDate().before(dataItem.getStartDate())) {
-            badRequest(APIFault.INVALID_DATE_RANGE);
-            return null;
+        // Set 'path' value.
+        if (names.contains("path")) {
+            dataItem.setPath(form.getFirstValue("path"));
+            names.remove("path");
         }
-        */
 
-        // Default the DataItem startDate to the EPOCH
-        dataItem.setStartDate(EPOCH);
-
-        dataService.persist(dataItem);
-
-        // update item values if supplied
+        // Update item values if supplied.
         for (String name : form.getNames()) {
             ItemValue itemValue = dataItem.getItemValue(name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
+            } else {
+                log.warn("acceptDataItem() An ItemValue identifier was specified that does not exist: " + name);
             }
         }
-        return dataItem;
     }
 
     public void acceptFormPut(Form form) {
+
         log.debug("acceptFormPut()");
+
         DataCategory thisDataCategory;
         thisDataCategory = getDataCategory();
         if (form.getNames().contains("name")) {
@@ -610,6 +603,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         successfulDelete(pathItem.getParent().getFullPath());
     }
 
+    // TODO: This is not used in the Java code. Is it used by a template or in a script?
     public DataService getDataService() {
         return dataService;
     }

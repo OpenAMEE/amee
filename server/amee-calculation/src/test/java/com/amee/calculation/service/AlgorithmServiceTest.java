@@ -63,6 +63,25 @@ public class AlgorithmServiceTest {
         }
     }
 
+//    @Test
+//    public void algorithmCanHandleMissingObject() throws ScriptException {
+//        Algorithm algorithm = new Algorithm();
+//        algorithm.setContent("if (testObj) { 1; } else { 0; }");
+//        Map<String, Object> values = new HashMap<String, Object>();
+//        BigDecimal result = new BigDecimal(algorithmService.evaluate(algorithm, values));
+//        assertTrue("Algorithm should detect object is missing.", result.equals(new BigDecimal("0")));
+//    }
+//
+//    @Test
+//    public void algorithmCanHandlePresentObject() throws ScriptException {
+//        Algorithm algorithm = new Algorithm();
+//        algorithm.setContent("if (testObj) { 1; } else { 0; }");
+//        Map<String, Object> values = new HashMap<String, Object>();
+//        values.put("testObj", new Boolean(true));
+//        BigDecimal result = new BigDecimal(algorithmService.evaluate(algorithm, values));
+//        assertTrue("Algorithm should detect object is present.", result.equals(new BigDecimal("1")));
+//    }
+
     @Test
     public void algorithmCanThrowIllegalArgumentException() throws ScriptException {
         Algorithm algorithm = new Algorithm();

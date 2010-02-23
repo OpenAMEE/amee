@@ -30,6 +30,7 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.restlet.RequestContext;
@@ -60,6 +61,7 @@ import java.util.Map;
 import java.util.Set;
 
 //TODO - move to builder model
+
 @Component
 @Scope("prototype")
 public class DataItemResource extends BaseDataResource implements Serializable {
@@ -72,29 +74,47 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Autowired
     private CalculationService calculationService;
 
-    private Form query;
-    private List<Choice> parameters = new ArrayList<Choice>();
+    private String unit;
+    private String perUnit;
+    private List<Choice> parameters;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
+
         super.initialise(context, request, response);
-        query = request.getResourceRef().getQueryAsForm();
+
+        // Obtain DataCategory and DataItem.
         setDataCategory(request.getAttributes().get("categoryUid").toString());
         setDataItemByPathOrUid(request.getAttributes().get("itemPath").toString());
+
+        // Must have a DataItem to do anything here.
         if (getDataItem() != null) {
+
+            // We'll pre-process query parameters here to keep the Data API calculation parameters sane.
+            Form query = request.getResourceRef().getQueryAsForm();
+            unit = query.getFirstValue("returnUnit");
+            perUnit = query.getFirstValue("returnPerUnit");
+
+            // The resource may receive a startDate parameter that sets the current date in an
+            // historical sequence of ItemValues.
+            if (StringUtils.isNotBlank(query.getFirstValue("startDate"))) {
+                getDataItem().setEffectiveStartDate(new StartEndDate(query.getFirstValue("startDate")));
+            }
+
+            // Query parameter names, minus startDate, returnUnit and returnPerUnit.
+            Set<String> names = query.getNames();
+            names.remove("startDate");
+            names.remove("returnUnit");
+            names.remove("returnPerUnit");
+
+            // Pull out any values submitted for Data API calculations.
+            parameters = new ArrayList<Choice>();
+            for (String key : names) {
+                parameters.add(new Choice(key, query.getValues(key)));
+            }
+
+            // Store DataItem in RequestContext for logging.
             ((RequestContext) ThreadBeanHolder.get("ctx")).setDataItem(getDataItem());
-        }
-        Set<String> names = query.getNames();
-
-        // The resource may receive a startDate parameter that sets the current date in an historical sequence of
-        // ItemValues.
-        if (StringUtils.isNotBlank(query.getFirstValue("startDate"))) {
-            getDataItem().setEffectiveStartDate(new StartEndDate(query.getFirstValue("startDate")));
-        }
-
-        // Pull out any values submitted for Data API calculations.
-        for (String key : names) {
-            parameters.add(new Choice(key, query.getValues(key)));
         }
     }
 
@@ -147,8 +167,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         obj.put("userValueChoices", userValueChoices.getJSONObject());
         obj.put("amountPerMonth", amount.convert(kgPerMonth).getValue());
         if (getAPIVersion().isNotVersionOne()) {
-            String unit = query.getFirstValue("returnUnit");
-            String perUnit = query.getFirstValue("returnPerUnit");
             CO2AmountUnit returnUnit = new CO2AmountUnit(unit, perUnit);
             JSONObject amountObj = new JSONObject();
             amountObj.put("value", amount.convert(returnUnit).getValue());
@@ -171,8 +189,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         element.appendChild(userValueChoices.getElement(document));
         element.appendChild(APIUtils.getElement(document, "AmountPerMonth", amount.convert(kgPerMonth).toString()));
         if (getAPIVersion().isNotVersionOne()) {
-            String unit = query.getFirstValue("returnUnit");
-            String perUnit = query.getFirstValue("returnPerUnit");
             CO2AmountUnit returnUnit = new CO2AmountUnit(unit, perUnit);
             Element amountElem = document.createElement("Amount");
             amountElem.setTextContent(amount.convert(returnUnit).toString());
@@ -182,59 +198,78 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         return element;
     }
 
+    /**
+     * Create ItemValues based on POSTed parameters.
+     *
+     * @param entity representation
+     */
     @Override
     public void doAccept(Representation entity) {
 
         log.debug("doAccept()");
 
-        StartEndDate startDate = new StartEndDate(getForm().getFirstValue("startDate"));
+        Set<String> names = getForm().getNames();
 
-        // The submitted startDate must be (i) after or equal to the startDate and (ii) before the endDate of the owning DataItem.
+        // Obtain the startDate.
+        StartEndDate startDate = new StartEndDate(getForm().getFirstValue("startDate"));
+        names.remove("startDate");
+
+        // The submitted startDate must be on or after the epoch.
         if (!getDataItem().isWithinLifeTime(startDate)) {
-            log.error("acceptRepresentation() - badRequest: trying to create a DIV outside the timespan of the owning DI.");
+            log.warn("acceptRepresentation() badRequest - Trying to create a DIV before the epoch.");
             badRequest();
             return;
         }
 
-        Set<String> names = getForm().getNames();
-        names.remove("startDate");
+        // Update named ItemValues.
         for (String name : names) {
-            ItemValue itemValue = getDataItem().getItemValue(name);
-            if (itemValue == null) {
-                // The submitted ItemValueDefinition must be in the owning ItemDefinition
-                log.error("acceptRepresentation() - badRequest: trying to create a DIV with an IVD not belonging to the DI ID.");
+
+            // Fetch the itemValueDefinition.
+            ItemValueDefinition itemValueDefinition = getDataItem().getItemDefinition().getItemValueDefinition(name);
+            if (itemValueDefinition == null) {
+                // The submitted ItemValueDefinition must be in the owning ItemDefinition.
+                log.warn("acceptRepresentation() - badRequest: trying to create a DIV with an IVD not belonging to the DI ID.");
                 badRequest();
                 return;
             }
 
-            // Cannot create new ItemValues for ItemValueDefinitions which are used in the DrillDown for the owning
-            // ItemDefinition
-            if (getDataItem().getItemDefinition().isDrillDownValue(itemValue.getItemValueDefinition())) {
-                log.error("acceptRepresentation() - badRequest: trying to create a DIV that is a DrillDown value.");
+            // Cannot create new ItemValues for ItemValueDefinitions which are used in the DrillDown for
+            // the owning ItemDefinition.
+            if (getDataItem().getItemDefinition().isDrillDownValue(itemValueDefinition)) {
+                log.warn("acceptRepresentation() - badRequest: trying to create a DIV that is a DrillDown value.");
                 badRequest();
                 return;
             }
 
-            // The new DataItemValue must be unique on itemValueDefinitionUid + startDate.
-            if (!getDataItem().isUnique(itemValue.getItemValueDefinition(), startDate)) {
-                log.error("acceptRepresentation() - badRequest: trying to create a DIV with the same IVD and StartDate as an existing DIV.");
+            // The new ItemValue must be unique on itemValueDefinitionUid + startDate.
+            if (!getDataItem().isUnique(itemValueDefinition, startDate)) {
+                log.warn("acceptRepresentation() - badRequest: trying to create a DIV with the same IVD and startDate as an existing DIV.");
                 badRequest();
                 return;
             }
 
-            //Create the new ItemValue entity.
-            ItemValue newDataItemValue = new ItemValue(itemValue.getItemValueDefinition(), getDataItem(), getForm().getFirstValue(name));
+            // Create the new ItemValue entity.
+            ItemValue newDataItemValue = new ItemValue(itemValueDefinition, getDataItem(), getForm().getFirstValue(name));
             newDataItemValue.setStartDate(startDate);
-
         }
 
-        // Clear caches
+        // Clear caches.
         dataService.invalidate(getDataItem().getDataCategory());
 
         // Return successful creation of new DataItemValue.
         successfulPost(getFullPath(), getDataItem().getUid());
     }
 
+    /**
+     * Update the DataItem and contained ItemValues based on PUT parameters. ItemValues can be identified
+     * by their ItemValueDefinition path or their specific UID.
+     *
+     * When updating ItemValues using the ItemValueDefinition path the appropriate instance will
+     * be selected based on the query string startDate parameter. This is only relevant for non drill-down
+     * ItemValues, as only once instance of these is allowed.
+     *
+     * @param entity representation
+     */
     @Override
     public void doStore(Representation entity) {
 
@@ -244,17 +279,19 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         DataItem dataItem = getDataItem();
         Set<String> names = form.getNames();
 
-        // update 'name' value
+        // Update 'name' value.
         if (names.contains("name")) {
             dataItem.setName(form.getFirstValue("name"));
+            names.remove("name");
         }
 
-        // update 'path' value
+        // Update 'path' value.
         if (names.contains("path")) {
             dataItem.setPath(form.getFirstValue("path"));
+            names.remove("path");
         }
 
-        // update ItemValues if supplied
+        // Update named ItemValues.
         for (String name : form.getNames()) {
             ItemValue itemValue = dataItem.getItemValue(name);
             if (itemValue != null) {
@@ -262,9 +299,10 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             }
         }
 
-        // clear caches
+        // Clear caches.
         dataService.invalidate(dataItem.getDataCategory());
 
+        // Return successful update of DataItem.
         successfulPut(getParentPath() + "/" + dataItem.getResolvedPath());
     }
 
