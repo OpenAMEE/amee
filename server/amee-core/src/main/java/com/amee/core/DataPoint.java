@@ -23,6 +23,8 @@
 package com.amee.core;
 
 import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * Represents a single-valued decimal data point at a single instance of time.
@@ -66,6 +68,21 @@ public class DataPoint implements Comparable<DataPoint> {
     public DataPoint(DateTime dateTime, Decimal decimal) {
         this.dateTime = dateTime;
         this.decimal = decimal;
+    }
+
+    public String toString() {
+        try {
+            return getJSONArray().toString();
+        } catch (JSONException e) {
+            throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
+        }
+    }
+
+    public JSONArray getJSONArray() throws JSONException {
+        JSONArray arr = new JSONArray();
+        arr.put((dateTime == null) ? "NULL" : dateTime.toString());
+        arr.put((decimal == null) ? "NaN" : decimal.toString());
+        return arr;
     }
 
     public DateTime getDateTime() {
