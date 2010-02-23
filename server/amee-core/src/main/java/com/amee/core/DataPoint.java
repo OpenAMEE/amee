@@ -70,6 +70,25 @@ public class DataPoint implements Comparable<DataPoint> {
         this.decimal = decimal;
     }
 
+    /**
+     * A copy constructor.
+     *
+     * @param dataPoint to copy
+     */
+    protected DataPoint(DataPoint dataPoint) {
+        dateTime = dataPoint.getDateTime();
+        decimal = dataPoint.getValue();
+    }
+
+    /**
+     * Return a copy of this object.
+     *
+     * @return a copy
+     */
+    public DataPoint copy() {
+        return new DataPoint(this);
+    }
+
     public String toString() {
         try {
             return getJSONArray().toString();

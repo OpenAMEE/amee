@@ -132,7 +132,7 @@ public class AlgorithmServiceTest {
     }
 
     /**
-     * A by B.
+     * Multiply A by B.
      */
     @Test
     public void shouldMultiplyDataSeriesAAndB() {
@@ -173,5 +173,67 @@ public class AlgorithmServiceTest {
         String expectedSeriesBPlusC = "{\"dataPoints\":[[\"2010-01-01T00:00:00.000Z\",\"0.000000\"],[\"2010-01-02T00:00:00.000Z\",\"1.000000\"],[\"2010-01-03T00:00:00.000Z\",\"2.000000\"],[\"2010-01-04T00:00:00.000Z\",\"5.000000\"]]}";
         DataSeries seriesBPlusC = seriesB.plus(seriesC);
         assertTrue("Should be able to add together two DataSeries objects.", seriesBPlusC.toString().equals(expectedSeriesBPlusC));
+    }
+
+    /**
+     * Use a DataSeries in an Algorithm without a startDate and endDate.
+     */
+    @Test
+    public void shouldUseDataSeries() {
+        Algorithm algorithm = new Algorithm();
+        algorithm.setContent("series.integrate();");
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put("series", seriesA.copy());
+        try {
+            String result = algorithmService.evaluate(algorithm, values);
+            assertTrue("Should be able to use DataSeries.integrate() without a startDate and endDate.", result.equals("0.666667"));
+        } catch (ScriptException e) {
+            fail("Caught ScriptException: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Use a DataSeries in an Algorithm with a startDate and endDate.
+     */
+    @Test
+    public void shouldUseDataSeriesWithDateRange() {
+        Algorithm algorithm = new Algorithm();
+        algorithm.setContent("series.integrate();");
+        DataSeries series = seriesA.copy();
+        series.setSeriesStartDate(new DateTime(2010, 1, 2, 0, 0, 0, 0));
+        series.setSeriesEndDate(new DateTime(2010, 1, 5, 0, 0, 0, 0));
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put("series", series);
+        try {
+            String result = algorithmService.evaluate(algorithm, values);
+            assertTrue("Should be able to use DataSeries.integrate() with a startDate and endDate.", result.equals("1.000000"));
+        } catch (ScriptException e) {
+            fail("Caught ScriptException: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Use multiple DataSeries in an Algorithm with a startDate and endDate.
+     */
+    @Test
+    public void shouldUseMultipleDataSeriesWithDateRange() {
+        Algorithm algorithm = new Algorithm();
+        algorithm.setContent(
+                "series = seriesA.plus(seriesB).plus(seriesC);\n" +
+                        "series.setSeriesStartDate(startDate);\n" +
+                        "series.setSeriesEndDate(endDate);\n" +
+                        "series.integrate()");
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put("startDate", new DateTime(2010, 1, 2, 0, 0, 0, 0));
+        values.put("endDate", new DateTime(2010, 1, 5, 0, 0, 0, 0));
+        values.put("seriesA", seriesA.copy());
+        values.put("seriesB", seriesB.copy());
+        values.put("seriesC", seriesB.copy());
+        try {
+            String result = algorithmService.evaluate(algorithm, values);
+            assertTrue("Should be able to use DataSeries.integrate() with a startDate and endDate.", result.equals("2.000000"));
+        } catch (ScriptException e) {
+            fail("Caught ScriptException: " + e.getMessage());
+        }
     }
 }

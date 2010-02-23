@@ -53,7 +53,7 @@ public class DataSeriesTest {
         sum.add(new DataPoint(now.plusDays(3), new Decimal("7")));
         actual = new DataSeries(sum);
         test = lhs.plus(rhs);
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
 
         // Add a series and a single point
         sum = new ArrayList<DataPoint>();
@@ -64,11 +64,11 @@ public class DataSeriesTest {
         test = lhs.plus(rhp);
 
 
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
 
         // Add a series and a primitive
         test = lhs.plus(rhf);
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
 
     }
 
@@ -84,7 +84,7 @@ public class DataSeriesTest {
         diff.add(new DataPoint(now.plusDays(3), new Decimal("-1")));
         actual = new DataSeries(diff);
         test = lhs.subtract(rhs);
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
 
 
         diff = new ArrayList<DataPoint>();
@@ -94,11 +94,11 @@ public class DataSeriesTest {
         actual = new DataSeries(diff);
 
         test = lhs.subtract(rhp);
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
 
         // Subtract a series and a primitive
         test = lhs.subtract(rhf);
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
     }
 
     @Test
@@ -113,8 +113,7 @@ public class DataSeriesTest {
         diff.add(new DataPoint(now.plusDays(3), new Decimal("0.75")));
         actual = new DataSeries(diff);
         test = lhs.divide(rhs);
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
-
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
 
         diff = new ArrayList<DataPoint>();
         diff.add(new DataPoint(now.plusDays(1), new Decimal("0.25")));
@@ -122,13 +121,13 @@ public class DataSeriesTest {
         diff.add(new DataPoint(now.plusDays(3), new Decimal("0.75")));
         actual = new DataSeries(diff);
         test = lhs.divide(rhp);
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
 
         // Divide a series and a primitive
         test = lhs.divide(rhf);
 
         //print(test, actual);
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
     }
 
     @Test
@@ -143,7 +142,7 @@ public class DataSeriesTest {
         diff.add(new DataPoint(now.plusDays(3), new Decimal("12")));
         actual = new DataSeries(diff);
         test = lhs.multiply(rhs);
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
 
 
         diff = new ArrayList<DataPoint>();
@@ -152,11 +151,11 @@ public class DataSeriesTest {
         diff.add(new DataPoint(now.plusDays(3), new Decimal("16")));
         actual = new DataSeries(diff);
         test = lhs.multiply(rhp);
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
 
         // Divide a series and a primitive
         test = lhs.multiply(rhf);
-        assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
+        assertTrue("Integrate should produce the correct value.", test.integrate().equals(actual.integrate()));
     }
 
     @Test
@@ -170,7 +169,8 @@ public class DataSeriesTest {
         series.setSeriesStartDate(now.plusDays(1));
         series.setSeriesEndDate(now.plusDays(3));
         Decimal window = new Decimal(now.plusDays(3).getMillis() - now.plusDays(1).getMillis());
-        assertTrue("Should have correct time window", series.getSeriesTimeInMillis().equals(window));
+        assertTrue("Should have correct time window.", series.getSeriesTimeInMillis().equals(window));
+        assertTrue("Should be able to integrate.", series.integrate() != null);
     }
 
     @Test
@@ -183,7 +183,7 @@ public class DataSeriesTest {
         series.setSeriesStartDate(now.plusDays(1));
         series.setSeriesEndDate(now.plusDays(5));
         Decimal window = new Decimal(now.plusDays(4).getMillis() - now.plusDays(2).getMillis());
-        assertTrue("Should have correct time window", series.getSeriesTimeInMillis().equals(window));
+        assertTrue("Should have correct time window.", series.getSeriesTimeInMillis().equals(window));
     }
 
     @Test
@@ -196,7 +196,8 @@ public class DataSeriesTest {
         DataSeries series = new DataSeries(points);
         series.setSeriesStartDate(now.plusDays(2));
         Decimal window = new Decimal(now.plusDays(4).getMillis() - now.plusDays(2).getMillis());
-        assertTrue("Should have correct time window", series.getSeriesTimeInMillis().equals(window));
+        assertTrue("Should have correct time window.", series.getSeriesTimeInMillis().equals(window));
+        assertTrue("Should be able to integrate.", series.integrate() != null);
     }
 
     @Test
@@ -209,7 +210,40 @@ public class DataSeriesTest {
         DataSeries series = new DataSeries(points);
         series.setSeriesEndDate(now.plusDays(2));
         Decimal window = new Decimal(now.plusDays(2).getMillis() - now.plusDays(1).getMillis());
-        assertTrue("Should have correct time window", series.getSeriesTimeInMillis().equals(window));
+        assertTrue("Should have correct time window.", series.getSeriesTimeInMillis().equals(window));
+        assertTrue("Should be able to integrate.", series.integrate() != null);
+    }
+
+    @Test
+    public void queryWithoutStartOrEndDate() {
+        DateTime start = now.plusDays(1);
+        DateTime end = now.plusDays(4);
+        List<DataPoint> points = new ArrayList<DataPoint>();
+        points.add(new DataPoint(start, new Decimal("2")));
+        points.add(new DataPoint(now.plusDays(2), new Decimal("6")));
+        points.add(new DataPoint(now.plusDays(3), new Decimal("12")));
+        points.add(new DataPoint(end, new Decimal("12")));
+        DataSeries series = new DataSeries(points);
+        Decimal window = new Decimal(end.getMillis() - start.getMillis());
+        assertTrue("Should have correct time window.", series.getSeriesTimeInMillis().equals(window));
+        assertTrue("Should be able to integrate.", series.integrate() != null);
+    }
+
+    @Test
+    public void queryWithInsideStartAndEndDate() {
+        int start = 15;
+        int end = 15;
+        List<DataPoint> points = new ArrayList<DataPoint>();
+        points.add(new DataPoint(now.plusDays(10), new Decimal("2")));
+        points.add(new DataPoint(now.plusDays(20), new Decimal("6")));
+        points.add(new DataPoint(now.plusDays(30), new Decimal("12")));
+        points.add(new DataPoint(now.plusDays(40), new Decimal("12")));
+        DataSeries series = new DataSeries(points);
+        series.setSeriesStartDate(now.plusDays(start));
+        series.setSeriesEndDate(now.plusDays(end));
+        Decimal window = new Decimal(now.plusDays(end).getMillis() - now.plusDays(start).getMillis());
+        assertTrue("Should have correct time window.", series.getSeriesTimeInMillis().equals(window));
+        assertTrue("Should be able to integrate.", series.integrate() != null);
     }
 
     private void print(DataSeries test, DataSeries actual) {
