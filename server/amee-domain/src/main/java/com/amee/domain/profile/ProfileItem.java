@@ -5,10 +5,12 @@ import com.amee.core.Decimal;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.Builder;
 import com.amee.domain.ObjectType;
+import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.Item;
 import com.amee.domain.data.ItemValue;
+import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowire;
@@ -25,6 +27,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * This file is part of AMEE.
@@ -58,6 +62,14 @@ public class ProfileItem extends Item {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "DATA_ITEM_ID")
     private DataItem dataItem;
+
+    @Column(name = "START_DATE")
+    @Index(name = "START_DATE_IND")
+    protected Date startDate = Calendar.getInstance().getTime();
+
+    @Column(name = "END_DATE")
+    @Index(name = "END_DATE_IND")
+    protected Date endDate;
 
     @Column(name = "AMOUNT", precision = Decimal.PRECISION, scale = Decimal.SCALE)
     private BigDecimal persistentAmount = BigDecimal.ZERO;
@@ -132,6 +144,26 @@ public class ProfileItem extends Item {
         }
     }
 
+    public StartEndDate getStartDate() {
+        return new StartEndDate(startDate);
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public StartEndDate getEndDate() {
+        if (endDate != null) {
+            return new StartEndDate(endDate);
+        } else {
+            return null;
+        }
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
     public boolean isEnd() {
         return (endDate != null) && (startDate.compareTo(endDate) == 0);
     }
@@ -200,6 +232,7 @@ public class ProfileItem extends Item {
     }
 
     //TODO - TEMP HACK - will remove as soon we decide how to handle return units in V1 correctly.
+
     public boolean isSingleFlight() {
         for (ItemValue iv : getItemValues()) {
             if ((iv.getName().startsWith("IATA") && iv.getValue().length() > 0) ||

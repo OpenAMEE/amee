@@ -27,7 +27,6 @@ import com.amee.domain.LocaleConstants;
 import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.data.ItemValueLocaleName;
 import com.amee.domain.data.LocaleName;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
@@ -60,6 +59,7 @@ import java.util.List;
 import java.util.Map;
 
 //TODO - Move to builder model
+
 @Component
 @Scope("prototype")
 public class DataItemValueResource extends BaseDataResource implements Serializable {
@@ -85,11 +85,72 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         }
     }
 
+    /**
+     * Returns true if fetched objects for this request are valid.
+     *
+     * @return true if valid, otherwise false
+     */
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                getDataItem() != null &&
+                (getDataItem() != null) &&
                 (isItemValueValid() || isItemValuesValid());
+    }
+
+    /**
+     * Returns true if itemValue is valid. Internally calls isItemValueValid(ItemValue itemValue).
+     * <p/>
+     * An ItemValue is valid if; it is not trashed, it belongs to the current DataItem, it belongs
+     * to the current Environment.
+     *
+     * @return true if the itemValue is valid, otherwise false
+     */
+    private boolean isItemValueValid() {
+        return isItemValueValid(itemValue);
+    }
+
+    /**
+     * Returns true if itemValue is valid.
+     * <p/>
+     * An ItemValue is valid if; it is not trashed, it belongs to the current DataItem, it belongs
+     * to the current Environment.
+     *
+     * @param itemValue to validate
+     * @return true if the itemValue is valid, otherwise false
+     */
+    private boolean isItemValueValid(ItemValue itemValue) {
+        return (itemValue != null) &&
+                !itemValue.isTrash() &&
+                itemValue.getItem().equals(getDataItem()) &&
+                itemValue.getEnvironment().equals(getActiveEnvironment());
+    }
+
+    /**
+     * Returns true if the itemValues list is valid.
+     * <p/>
+     * Each ItemValue is checked with isItemValueValid(ItemValue itemValue).
+     * <p/>
+     * The itemValues list may be modified during a call (invalid items will be removed).
+     *
+     * @return true if the itemValues is valid, otherwise false
+     */
+    @SuppressWarnings(value = "unchecked")
+    private boolean isItemValuesValid() {
+
+        // Must have a list if ItemValues.
+        if (itemValues == null) {
+            return false;
+        }
+
+        // Validate all ItemValues in the itemValues list and remove any invalid items.
+        itemValues = (List<ItemValue>) CollectionUtils.select(itemValues, new Predicate() {
+            public boolean evaluate(Object o) {
+                return isItemValueValid((ItemValue) o);
+            }
+        });
+
+        // The itemValues list is invalid if it is empty.
+        return !itemValues.isEmpty();
     }
 
     @Override
@@ -118,26 +179,27 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
         values.put("dataItem", getDataItem());
-        values.put("itemValue", this.itemValue);
-        values.put("node", this.itemValue);
+        values.put("itemValue", itemValue);
+        values.put("node", itemValue);
         values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         return values;
     }
 
     private void setDataItemValue(Request request) {
 
-        // This could be a path or a uid
-        String itemValueIdentifier = request.getAttributes().get("valuePath").toString();
+        Form query = request.getResourceRef().getQueryAsForm();
 
-        if (itemValueIdentifier.isEmpty() || getDataItem() == null) {
+        // Must have a DataItem.
+        if (getDataItem() == null) {
             return;
         }
 
-        Form query = request.getResourceRef().getQueryAsForm();
+        // Get the ItemValue identifier, which could be a path or a uid.
+        String itemValueIdentifier = request.getAttributes().get("valuePath").toString();
 
-        // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
-        if (StringUtils.isNumeric(query.getFirstValue("valuesPerPage"))) {
-            this.valuesPerPage = Integer.parseInt(query.getFirstValue("valuesPerPage"));
+        // Identifier must not be empty.
+        if (itemValueIdentifier.isEmpty()) {
+            return;
         }
 
         // The resource may receive a startDate parameter that sets the current date in an historical sequence of
@@ -147,46 +209,27 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             startDate = new StartEndDate(query.getFirstValue("startDate"));
         }
 
-        //TODO - Implement paging
-        // Retrieve all itemValues in a historical sequence if mandated in the request (get=all), otherwise retrieve
-        // the closest match
-        if (valuesPerPage > 1) {
-            this.itemValues = getDataItem().getAllItemValues(itemValueIdentifier);
-        } else {
-            this.itemValue = getDataItem().getItemValue(itemValueIdentifier, startDate);
+        // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
+        if (StringUtils.isNumeric(query.getFirstValue("valuesPerPage"))) {
+            valuesPerPage = Integer.parseInt(query.getFirstValue("valuesPerPage"));
         }
-    }
 
-    private boolean isItemValueValid() {
-        return this.itemValue != null &&
-                !this.itemValue.isTrash() &&
-                this.itemValue.getItem().equals(getDataItem()) &&
-                this.itemValue.getEnvironment().equals(getActiveEnvironment());
-    }
-
-    @SuppressWarnings(value = "unchecked")
-    private boolean isItemValuesValid() {
-        if (itemValues == null)
-            return false;
-
-        itemValues = (List<ItemValue>) CollectionUtils.select(itemValues, new Predicate() {
-            public boolean evaluate(Object o) {
-                ItemValue iv = (ItemValue) o;
-                return !iv.isTrash() &&
-                        iv.getItem().equals(getDataItem()) &&
-                        iv.getEnvironment().equals(getActiveEnvironment());
-            }
-        });
-
-        return !itemValues.isEmpty();
+        // TODO: Implement paging.
+        // Retrieve all itemValues in a historical sequence if mandated in the request (get=all), otherwise retrieve
+        // the closest match.
+        if (valuesPerPage > 1) {
+            itemValues = getDataItem().getAllItemValues(itemValueIdentifier);
+        } else {
+            itemValue = getDataItem().getItemValue(itemValueIdentifier, startDate);
+        }
     }
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (itemValue != null) {
-            itemValue.setBuilder(new ItemValueBuilder(this.itemValue));
-            obj.put("itemValue", this.itemValue.getJSONObject());
+            itemValue.setBuilder(new ItemValueBuilder(itemValue));
+            obj.put("itemValue", itemValue.getJSONObject());
         } else {
             JSONArray values = new JSONArray();
             for (ItemValue iv : itemValues) {
@@ -204,8 +247,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     public Element getElement(Document document) {
         Element element = document.createElement("DataItemValueResource");
         if (itemValue != null) {
-            itemValue.setBuilder(new ItemValueBuilder(this.itemValue));
-            element.appendChild(this.itemValue.getElement(document));
+            itemValue.setBuilder(new ItemValueBuilder(itemValue));
+            element.appendChild(itemValue.getElement(document));
         } else {
             Element values = document.createElement("ItemValues");
             for (ItemValue iv : itemValues) {
@@ -225,79 +268,99 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         return false;
     }
 
+    /**
+     * Update an ItemValue based on PUT parameters.
+     *
+     * @param entity representation
+     */
     @Override
     public void doStore(Representation entity) {
 
         log.debug("doStore()");
 
         Form form = getForm();
+
+        // Update the ItemValue value field if parameter is present.
+        // NOTE: This code makes it impossible to set the value to empty or null.
         if (StringUtils.isNotBlank(form.getFirstValue("value"))) {
-            this.itemValue.setValue(form.getFirstValue("value"));
+            itemValue.setValue(form.getFirstValue("value"));
         }
 
         // Parse any submitted locale values
         for (String name : form.getNames()) {
             if (name.startsWith("value_")) {
 
+                // Get the locale name and locale value from parameters.
                 String locale = name.substring(name.indexOf("_") + 1);
                 String localeValueStr = form.getFirstValue(name);
 
+                // Locale value cannot be blank and locale must exist.
                 if (StringUtils.isBlank(localeValueStr) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                     badRequest(APIFault.INVALID_PARAMETERS);
                     return;
                 }
 
-                if (this.itemValue.getLocaleValues().containsKey(locale)) {
-                    LocaleName localeName = this.itemValue.getLocaleValues().get(locale);
+                // Does this locale already have an entry?
+                if (itemValue.getLocaleValues().containsKey(locale)) {
+                    // Update the locale.
+                    LocaleName localeName = itemValue.getLocaleValues().get(locale);
                     localeName.setName(localeValueStr);
+                    // Should we remove this locale?
                     if (form.getNames().contains("remove_value_" + locale)) {
                         localeName.setStatus(AMEEStatus.TRASH);
                     }
                 } else {
+                    // Create a locale entry based on supplied locale name and value.
                     LocaleName localeName =
-                            new ItemValueLocaleName(this.itemValue, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeValueStr);
-                    this.itemValue.addLocaleName(localeName);
+                            new ItemValueLocaleName(itemValue, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeValueStr);
+                    itemValue.addLocaleName(localeName);
                 }
             }
         }
 
+        // Has a startDate parameter been submitted?
         if (StringUtils.isNotBlank(form.getFirstValue("startDate"))) {
+
+            // Parse the startDate parameter into a Date object.
             Date startDate = new StartEndDate(form.getFirstValue("startDate"));
 
             // Can't amend the startDate of the first ItemValue in a history (startDate == DI.startDate)
             if (itemValue.getStartDate().equals(getDataItem().getStartDate())) {
-                log.warn("acceptRepresentation() - badRequest: trying to update the startDate of the first DIV in a history.");
+                log.warn("doStore() badRequest - trying to update the startDate of the first DIV in a history.");
                 badRequest(APIFault.INVALID_RESOURCE_MODIFICATION);
                 return;
             }
 
-            // The submitted startDate must be (i) after or equal to the startDate and (ii) before the endDate of the owning DataItem.
+            // The submitted startDate must be on or after the epoch.
             if (!getDataItem().isWithinLifeTime(startDate)) {
-                log.warn("acceptRepresentation() - badRequest: trying to update a DIV starting after the endDate of the owning DI.");
+                log.warn("doStore() badRequest - Trying to update a DIV to start before the epoch.");
                 badRequest(APIFault.INVALID_DATE_RANGE);
                 return;
             }
 
-            this.itemValue.setStartDate(startDate);
+            // Update the startDate field, the parameter was valid.
+            itemValue.setStartDate(startDate);
         }
 
+        // Always invalidate the DataCategory caches.
         dataService.invalidate(getDataItem().getDataCategory());
+
+        // Update was a success.
         successfulPut(getFullPath());
     }
 
+    /**
+     * DELETEs an ItemValue from the DataItem. An ItemValue can only be removed if there is at least one
+     * equivalent remaining ItemValue. Within a DataItem at least one ItemValue must
+     * exist per ItemValueDefinition for the ItemDefinition.
+     */
     @Override
     public void doRemove() {
-
         log.debug("doRemove()");
-
-        // Only allow delete if there would be at least one DataItemValue for this ItemValueDefinition remaining.
-        ItemValue itemValue = this.itemValue;
-        final ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
-
-        int remaining = getDataItem().getAllItemValues(itemValueDefinition.getPath()).size();
+        int remaining = getDataItem().getAllItemValues(itemValue.getItemValueDefinition().getPath()).size();
         if (remaining > 1) {
-            dataService.invalidate(getDataItem().getDataCategory());
             dataService.remove(itemValue);
+            dataService.invalidate(getDataItem().getDataCategory());
             successfulDelete(pathItem.getParent().getFullPath());
         } else {
             badRequest(APIFault.DELETE_MUST_LEAVE_AT_LEAST_ONE_ITEM_VALUE);

@@ -1,5 +1,6 @@
 package com.amee.service.messaging;
 
+import com.amee.service.messaging.config.ConsumeConfig;
 import com.rabbitmq.client.QueueingConsumer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +39,8 @@ public abstract class TopicMessageConsumer extends MessageConsumer {
             closeAndClear();
         }
     }
+
+    public abstract ConsumeConfig getConsumeConfig();
 
     protected abstract void handle(QueueingConsumer.Delivery delivery);
 }

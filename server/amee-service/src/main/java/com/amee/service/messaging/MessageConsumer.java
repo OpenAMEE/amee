@@ -1,9 +1,9 @@
 package com.amee.service.messaging;
 
-import com.amee.service.messaging.config.ConsumeConfig;
 import com.amee.service.messaging.config.ExchangeConfig;
 import com.amee.service.messaging.config.MessagingConfig;
 import com.amee.service.messaging.config.QueueConfig;
+import com.amee.service.transaction.TransactionController;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ShutdownSignalException;
 import org.apache.commons.logging.Log;
@@ -19,6 +19,9 @@ import java.io.IOException;
 public abstract class MessageConsumer implements Runnable, ApplicationContextAware {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private TransactionController transactionController;
 
     @Autowired
     protected MessageService messageService;
@@ -51,6 +54,7 @@ public abstract class MessageConsumer implements Runnable, ApplicationContextAwa
     public void run() {
         log.info("run()");
         while (!Thread.currentThread().isInterrupted()) {
+            transactionController.begin(false);
             try {
                 log.debug("run() Waiting.");
                 // Wait before first-run and subsequent retries.
@@ -70,6 +74,7 @@ public abstract class MessageConsumer implements Runnable, ApplicationContextAwa
                 closeAndClear();
                 return;
             }
+            transactionController.end();
         }
     }
 
@@ -91,9 +96,9 @@ public abstract class MessageConsumer implements Runnable, ApplicationContextAwa
             try {
                 channel.close();
             } catch (IOException e) {
-                log.warn("closeAndClear() Caught IOException whilst trying to close the channel. Message was: " + e.getMessage());
+                // Swallow.
             } catch (ShutdownSignalException e) {
-                log.warn("closeAndClear() Caught ShutdownSignalException whilst trying to close the channel. Message was: " + e.getMessage());
+                // Swallow.
             }
             channel = null;
         }
@@ -102,10 +107,6 @@ public abstract class MessageConsumer implements Runnable, ApplicationContextAwa
     public abstract ExchangeConfig getExchangeConfig();
 
     public abstract QueueConfig getQueueConfig();
-
-    public ConsumeConfig getConsumeConfig() {
-        throw new UnsupportedOperationException("The getConsumeConfig method needs to be implemented.");
-    }
 
     public abstract String getBindingKey();
 

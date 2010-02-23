@@ -4,8 +4,8 @@ import com.amee.calculation.service.ProRataProfileService;
 import com.amee.core.APIUtils;
 import com.amee.core.CO2AmountUnit;
 import com.amee.core.Decimal;
-import com.amee.domain.Pager;
 import com.amee.domain.ObjectType;
+import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
@@ -15,13 +15,17 @@ import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
 import com.amee.service.path.PathItemService;
-import com.amee.service.profile.OnlyActiveProfileService;
 import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.ProfileService;
 import com.amee.service.profile.SelectByProfileService;
 import org.apache.abdera.ext.history.FeedPagingHelper;
 import org.apache.abdera.ext.opensearch.OpenSearchExtensionFactory;
-import org.apache.abdera.model.*;
+import org.apache.abdera.model.Category;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Feed;
+import org.apache.abdera.model.IRIElement;
+import org.apache.abdera.model.Person;
+import org.apache.abdera.model.Text;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -33,7 +37,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This file is part of AMEE.
@@ -315,6 +323,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
     // Generate the Atom feed in response to a GET request to a ProfileCategory.
     // The request may contains query (search) parameters which may constrain and modify the returned ProfileItems.
+
     private org.apache.abdera.model.Element getAtomElementForGet(ProfileCategoryResource resource) {
 
         log.debug("getAtomElementForGet()");
@@ -444,6 +453,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
     // Generate the Atom feed in reponse to a POST to a ProfileCategory.
     // The feed will contain a single Atom Entry representing the new ProfileItem.
+
     private org.apache.abdera.model.Element getAtomElementForPost(ProfileCategoryResource resource) {
 
         AtomFeed atomFeed = AtomFeed.getInstance();

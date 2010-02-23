@@ -27,11 +27,8 @@ import com.amee.domain.StartEndDate;
 import com.amee.domain.path.Pathable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Index;
 import org.joda.time.Duration;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +47,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -81,14 +77,6 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
     @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
-
-    @Column(name = "START_DATE")
-    @Index(name = "START_DATE_IND")
-    protected Date startDate = Calendar.getInstance().getTime();
-
-    @Column(name = "END_DATE")
-    @Index(name = "END_DATE_IND")
-    protected Date endDate;
 
     @Transient
     private ItemValueMap itemValuesMap;
@@ -306,6 +294,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     // Add an ItemValue timeseries to the InternalValue collection.
+
     @SuppressWarnings("unchecked")
     private void appendTimeSeriesItemValue(Map<ItemValueDefinition, InternalValue> values, List<ItemValue> itemValues) {
         ItemValueDefinition ivd = itemValues.get(0).getItemValueDefinition();
@@ -320,6 +309,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     // Add a single-valued ItemValue to the InternalValue collection.
+
     private void appendSingleValuedItemValue(Map<ItemValueDefinition, InternalValue> values, ItemValue itemValue) {
         if (itemValue.isUsableValue()) {
             values.put(itemValue.getItemValueDefinition(), new InternalValue(itemValue));
@@ -339,33 +329,19 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         this.name = name;
     }
 
-    public StartEndDate getStartDate() {
-        return new StartEndDate(startDate);
-    }
+    /**
+     * An Item must have a startDate.
+     *
+     * @return a StartEndDate
+     */
+    public abstract StartEndDate getStartDate();
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public StartEndDate getEndDate() {
-        if (endDate != null) {
-            return new StartEndDate(endDate);
-        } else {
-            return null;
-        }
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Duration getDuration() {
-        if (endDate != null) {
-            return new Duration(startDate.getTime(), endDate.getTime());
-        } else {
-            return null;
-        }
-    }
+    /**
+     * An Item can have an endDate.
+     *
+     * @return a StartEndDate
+     */
+    public abstract StartEndDate getEndDate();
 
     /**
      * @return returns true if this Item supports CO2 amounts, otherwise false.
@@ -393,8 +369,9 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      *                           before {@link com.amee.domain.data.Item#getStartDate()} this value is ignored.
      */
     public void setEffectiveStartDate(Date effectiveStartDate) {
-        if (effectiveStartDate == null || effectiveStartDate.before(getStartDate()))
+        if ((effectiveStartDate == null) || effectiveStartDate.before(getStartDate())) {
             return;
+        }
         this.effectiveStartDate = effectiveStartDate;
     }
 
@@ -437,6 +414,20 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
             return effectiveEndDate;
         } else {
             return new Date(Long.MAX_VALUE);
+        }
+    }
+
+    /**
+     * Returns a Duration for the Item which is based on the startDate and endDate values. If there is no
+     * endDate then null is returned.
+     *
+     * @return the Duration or null
+     */
+    public Duration getDuration() {
+        if (getEndDate() != null) {
+            return new Duration(getStartDate().getTime(), getEndDate().getTime());
+        } else {
+            return null;
         }
     }
 

@@ -121,7 +121,6 @@ public class DecimalTest {
         // Subtract a series and a primitive
         test = lhs.subtract(rhf);
         assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
-
     }
 
     @Test
@@ -152,7 +151,6 @@ public class DecimalTest {
 
         //print(test, actual);
         assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
-
     }
 
     @Test
@@ -181,7 +179,6 @@ public class DecimalTest {
         // Divide a series and a primitive
         test = lhs.multiply(rhf);
         assertTrue("Integrate should produce the correct value", test.integrate().equals(actual.integrate()));
-
     }
 
     @Test
@@ -303,6 +300,5 @@ public class DecimalTest {
             System.out.println("actual: " + dt.toString("yyyy-dd-MM") + " => " + dp.getValue());
         }
         System.out.println("actual: " + actual.integrate());
-
     }
 }

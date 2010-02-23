@@ -72,8 +72,9 @@ public class SelectByProfileService {
         profileItems = (List) CollectionUtils.select(profileItems, new Predicate() {
             public boolean evaluate(Object o) {
                 ProfileItem pi = (ProfileItem) o;
-                return pi.getEndDate() != null && endDate != null &&
-                        pi.getEndDate().getTime() < endDate.getTime();
+                return (pi.getEndDate() != null) &&
+                        (endDate != null) &&
+                        (pi.getEndDate().getTime() < endDate.getTime());
             }
         });
         return profileItems;

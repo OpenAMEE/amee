@@ -18,18 +18,18 @@ public class TransactionServerConverter extends HttpServerConverter {
     }
 
     public HttpRequest toRequest(HttpServerCall httpCall) {
-        // clear the ThreadBeanHolder at the start of each request
+        // Clear the ThreadBeanHolder at the start of each request.
         ThreadBeanHolder.clear();
-        // pass request through
+        // Pass request through.
         return super.toRequest(httpCall);
     }
 
     public void commit(HttpResponse response) {
-        // commit the response
+        // Commit the response.
         super.commit(response);
-        // end transaction / entity manager
+        // End transaction / entity manager.
         transactionController.afterCommit();
-        // clear the ThreadBeanHolder at the end of each request
+        // Clear the ThreadBeanHolder at the end of each request.
         ThreadBeanHolder.clear();
     }
 }

@@ -79,7 +79,7 @@ public class ProRataProfileService {
                 intersect = intersect.withStartMillis(pi.getStartDate().getTime());
             }
 
-            if (pi.getEndDate() != null && pi.getEndDate().before(intersect.getEnd().toDate())) {
+            if ((pi.getEndDate() != null) && pi.getEndDate().before(intersect.getEnd().toDate())) {
                 intersect = intersect.withEndMillis(pi.getEndDate().getTime());
             }
 

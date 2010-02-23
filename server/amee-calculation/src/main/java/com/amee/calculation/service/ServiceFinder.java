@@ -29,9 +29,7 @@ import java.util.Map;
 public class ServiceFinder {
 
     private Map<String, Service> serviceMap;
-
     private Map<String, Object> values;
-
     private ProfileFinder profileFinder;
 
     public ServiceFinder(Map<String, Service> serviceMap) {

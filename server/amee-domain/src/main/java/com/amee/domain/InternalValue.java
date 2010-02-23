@@ -33,12 +33,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@SuppressWarnings("unchecked")
 /**
  * Provides a wrapper around external representations of values.
- *
- * Decimal values will be converted to AMEE internal units if neccessary. All other value types will be wrapped unchanged.
+ * <p/>
+ * Decimal values will be converted to AMEE internal units if necessary. All other value types will be wrapped unchanged.
  */
+@SuppressWarnings("unchecked")
 public class InternalValue {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -83,14 +83,14 @@ public class InternalValue {
     /**
      * Instantiate an InternalValue representation of the supplied collection of values.
      *
-     * @param values - the List of {@link ItemValue}s representing a sequence of values
+     * @param values    - the List of {@link ItemValue}s representing a sequence of values
      * @param startDate - the start Date to filter the series
-     * @param endDate - the end Date to filter the series
+     * @param endDate   - the end Date to filter the series
      */
     public InternalValue(List<ItemValue> values, Date startDate, Date endDate) {
         if (values.get(0).getItemValueDefinition().isDecimal()) {
             DataSeries ds = new DataSeries();
-            for(ItemValue itemValue : filterItemValues(values, startDate, endDate)) {
+            for (ItemValue itemValue : filterItemValues(values, startDate, endDate)) {
                 ds.addDataPoint(new DataPoint(itemValue.getStartDate().toDateTime(), asInternalDecimal(itemValue)));
             }
             ds.setSeriesStartDate(new DateTime(startDate));
@@ -104,6 +104,7 @@ public class InternalValue {
     // Filter the ItemValue collection by the effective start and end dates of the owning Item.
     // ItemValues are excluded if they start prior to startDate and are not the final value in the sequence.
     // ItemValues are excluded if the start on or after the endDate.
+
     private List<ItemValue> filterItemValues(List<ItemValue> values, Date startDate, Date endDate) {
         List<ItemValue> filteredValues = new ArrayList<ItemValue>();
         for (ItemValue iv : values) {
@@ -138,7 +139,7 @@ public class InternalValue {
         if (decimal.hasDifferentUnits(internalUnit)) {
             if (log.isDebugEnabled()) {
                 log.debug("asInternalDecimal() - path: " + iv.getPath() + " (aliasedTo: " + iv.getItemValueDefinition().getCannonicalPath()
-                    + ") external: " + decimal + " " + decimal.getUnit()
+                        + ") external: " + decimal + " " + decimal.getUnit()
                         + ", internal: " + decimal.convert(internalUnit) + " " + internalUnit);
             }
             decimal = decimal.convert(internalUnit);

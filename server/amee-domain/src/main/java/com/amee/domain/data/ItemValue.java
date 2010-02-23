@@ -88,10 +88,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
     @Index(name = "START_DATE_IND")
     protected Date startDate = Calendar.getInstance().getTime();
 
-    @Column(name = "END_DATE")
-    @Index(name = "END_DATE_IND")
-    protected Date endDate;
-
     @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @MapKey(name = "locale")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -273,18 +269,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
         this.startDate = startDate;
     }
 
-    public StartEndDate getEndDate() {
-        if (endDate != null) {
-            return new StartEndDate(endDate);
-        } else {
-            return null;
-        }
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
     public ObjectType getObjectType() {
         return ObjectType.IV;
     }
@@ -348,7 +332,6 @@ public class ItemValue extends AMEEEntity implements Pathable {
         clone.setValue(getValue());
         clone.setItem(getItem());
         clone.setStartDate(getStartDate());
-        clone.setEndDate(getEndDate());
         if (hasUnit()) {
             clone.setUnit(getUnit().toString());
         }
