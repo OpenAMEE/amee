@@ -156,7 +156,6 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getDataItemValue());
         entities.add(getDataItem());
         DataCategory dc = getDataItem().getDataCategory();
         while (dc != null) {
