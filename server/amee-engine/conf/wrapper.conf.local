@@ -6,9 +6,8 @@ set.JDK_HOME=%JAVA_HOME%
 set.default.AMEE_SERVER_NAME=localhost
 set.default.AMEE_INSTANCE_NAME=shared
 
-# Application Parameters
-wrapper.app.parameter.1=-serverName
-wrapper.app.parameter.2=%AMEE_SERVER_NAME%
+# TIME_ZONE - Leave this blank to use system default.
+set.default.AMEE_TIME_ZONE=UTC
 
 # Extra Java Parameters
 wrapper.java.additional.17=-Xdebug
