@@ -228,7 +228,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             ItemValueDefinition itemValueDefinition = getDataItem().getItemDefinition().getItemValueDefinition(name);
             if (itemValueDefinition == null) {
                 // The submitted ItemValueDefinition must be in the owning ItemDefinition.
-                log.warn("acceptRepresentation() - badRequest: trying to create a DIV with an IVD not belonging to the DI ID.");
+                log.warn("acceptRepresentation() badRequest - Trying to create a DIV with an IVD not belonging to the DI ID.");
                 badRequest();
                 return;
             }
@@ -236,14 +236,14 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             // Cannot create new ItemValues for ItemValueDefinitions which are used in the DrillDown for
             // the owning ItemDefinition.
             if (getDataItem().getItemDefinition().isDrillDownValue(itemValueDefinition)) {
-                log.warn("acceptRepresentation() - badRequest: trying to create a DIV that is a DrillDown value.");
+                log.warn("acceptRepresentation() badRequest - Trying to create a DIV that is a DrillDown value.");
                 badRequest();
                 return;
             }
 
             // The new ItemValue must be unique on itemValueDefinitionUid + startDate.
             if (!getDataItem().isUnique(itemValueDefinition, startDate)) {
-                log.warn("acceptRepresentation() - badRequest: trying to create a DIV with the same IVD and startDate as an existing DIV.");
+                log.warn("acceptRepresentation() badRequest - Trying to create a DIV with the same IVD and startDate as an existing DIV.");
                 badRequest();
                 return;
             }

@@ -157,6 +157,7 @@ public class Engine implements WrapperListener, Serializable {
                 }
             }
         }
+        log.info("parseOptions() Time Zone is: " + TimeZone.getDefault().getDisplayName() + " (" + TimeZone.getDefault().getID() + ")");
     }
 
     public int stop(int exitCode) {
