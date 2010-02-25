@@ -9,6 +9,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Component;
@@ -20,6 +21,7 @@ import org.tanukisoftware.wrapper.WrapperListener;
 import org.tanukisoftware.wrapper.WrapperManager;
 
 import java.io.Serializable;
+import java.util.TimeZone;
 
 public class Engine implements WrapperListener, Serializable {
 
@@ -124,6 +126,14 @@ public class Engine implements WrapperListener, Serializable {
         serverNameOpt.setRequired(true);
         options.addOption(serverNameOpt);
 
+        // Define timeZone option.
+        Option timeZoneOpt = OptionBuilder.withArgName("timeZone")
+                .hasArg()
+                .withDescription("The time zone")
+                .create("timeZone");
+        timeZoneOpt.setRequired(false);
+        options.addOption(timeZoneOpt);
+
         // Parse the options.
         try {
             line = parser.parse(options, args);
@@ -137,6 +147,16 @@ public class Engine implements WrapperListener, Serializable {
             serverName = line.getOptionValue(serverNameOpt.getOpt());
         }
 
+        // Handle timeZone.
+        if (line.hasOption(timeZoneOpt.getOpt())) {
+            String timeZoneStr = line.getOptionValue(timeZoneOpt.getOpt());
+            if (!StringUtils.isBlank(timeZoneStr)) {
+                TimeZone timeZone = TimeZone.getTimeZone(timeZoneStr);
+                if (timeZone != null) {
+                    TimeZone.setDefault(timeZone);
+                }
+            }
+        }
     }
 
     public int stop(int exitCode) {
