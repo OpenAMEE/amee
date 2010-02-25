@@ -30,6 +30,7 @@ import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueLocaleName;
 import com.amee.domain.data.LocaleName;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
+import com.amee.domain.data.builder.v2.ItemValueInListBuilder;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
@@ -232,7 +233,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         } else {
             JSONArray values = new JSONArray();
             for (ItemValue iv : itemValues) {
-                iv.setBuilder(new ItemValueBuilder(iv));
+                iv.setBuilder(new ItemValueInListBuilder(iv));
                 values.put(iv.getJSONObject(false));
             }
             obj.put("itemValues", values);
@@ -251,7 +252,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         } else {
             Element values = document.createElement("ItemValues");
             for (ItemValue iv : itemValues) {
-                iv.setBuilder(new ItemValueBuilder(iv));
+                iv.setBuilder(new ItemValueInListBuilder(iv));
                 values.appendChild(iv.getElement(document, false));
             }
             element.appendChild(values);
