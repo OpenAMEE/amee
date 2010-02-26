@@ -22,6 +22,7 @@ package com.amee.domain.data.builder.v2;
 import com.amee.core.APIUtils;
 import com.amee.domain.Builder;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueDefinition;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -48,6 +49,14 @@ public class ItemValueInListBuilder implements Builder {
         obj.put("unit", itemValue.getUnit());
         obj.put("perUnit", itemValue.getPerUnit());
         obj.put("startDate", itemValue.getStartDate().toString());
+        // Related entities.
+        obj.put("itemValueDefinition", getItemValueDefinitionJSONObject(itemValue.getItemValueDefinition()));
+        return obj;
+    }
+
+    protected JSONObject getItemValueDefinitionJSONObject(ItemValueDefinition itemValueDefinition) throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("valueDefinition", itemValueDefinition.getValueDefinition().getJSONObject());
         return obj;
     }
 
@@ -64,6 +73,14 @@ public class ItemValueInListBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "Unit", itemValue.getUnit().toString()));
         element.appendChild(APIUtils.getElement(document, "PerUnit", itemValue.getPerUnit().toString()));
         element.appendChild(APIUtils.getElement(document, "StartDate", itemValue.getStartDate().toString()));
+        // Related entities.
+        element.appendChild(getItemValueDefinitionElement(document, itemValue.getItemValueDefinition()));
+        return element;
+    }
+
+    protected Element getItemValueDefinitionElement(Document document, ItemValueDefinition itemValueDefinition) {
+        Element element = document.createElement("ItemValueDefinition");
+        element.appendChild(itemValueDefinition.getValueDefinition().getElement(document));
         return element;
     }
 }
