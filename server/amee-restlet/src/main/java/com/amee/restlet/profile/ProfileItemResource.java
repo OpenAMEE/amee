@@ -187,6 +187,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         successfulDelete(pathItem.getParent().getFullPath());
     }
 
+    // TODO: What is this used by? Templates?
     public List<ProfileItem> getProfileItems() {
         return null;
     }

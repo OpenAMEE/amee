@@ -315,6 +315,7 @@ public abstract class AuthorizeResource extends BaseResource {
         return specifications;
     }
 
+    // TODO: What is this used by? Templates?
     public AuthorizationContext getAuthorizationContext() {
         return authorizationContext;
     }
