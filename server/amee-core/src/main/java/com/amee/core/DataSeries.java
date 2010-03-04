@@ -299,7 +299,7 @@ public class DataSeries {
                 DataPoint current = dataPoints.get(i);
                 DataPoint next = dataPoints.get(i + 1);
                 Decimal segmentInMillis = new Decimal(next.getDateTime().getMillis() - current.getDateTime().getMillis());
-                // Add weighted Average value.
+                // Add weighted average value.
                 Decimal weightedAverage = current.getValue().multiply(segmentInMillis.divide(seriesTimeInMillis));
                 integral = integral.add(weightedAverage);
             }
