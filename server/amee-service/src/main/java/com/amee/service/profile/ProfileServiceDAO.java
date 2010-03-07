@@ -30,7 +30,11 @@ import com.amee.domain.profile.ProfileItem;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.*;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +42,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Encapsulates all persistence operations for Profiles and Profile Items.
@@ -296,6 +305,12 @@ public class ProfileServiceDAO implements Serializable {
         // Execute query.
         List<ProfileItem> profileItems = query.getResultList();
 
+        // Set effective start and end dates.
+        for (ProfileItem pi : profileItems) {
+            pi.setEffectiveStartDate(startDate);
+            pi.setEffectiveStartDate(endDate);
+        }
+        
         if (log.isDebugEnabled()) {
             log.debug("getProfileItems() done (" + profileItems.size() + ")");
         }

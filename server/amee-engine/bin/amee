@@ -13,20 +13,20 @@
 #-----------------------------------------------------------------------------
 # These settings can be modified to fit the needs of your application
 
-### BEGIN INIT INFO
-# Provides:          amee
-# Required-Start:    $all
-# Required-Stop:     $all
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start amee service
-# Description:       Enable amee service provided by daemon.
-### END INIT INFO
-
 # Application
 APP_NAME=${AMEE_APP_NAME:-amee}
 INSTANCE_NAME=${AMEE_INSTANCE_NAME:-shared}
 APP_LONG_NAME="AMEE"
+
+### BEGIN INIT INFO
+# Provides:          ${APP_NAME}.${INSTANCE_NAME}
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start ${APP_NAME}.${INSTANCE_NAME} service.
+# Description:       Enable ${APP_NAME}.${INSTANCE_NAME} service provided by daemon.
+### END INIT INFO
 
 # Wrapper
 WRAPPER_CMD="/var/www/apps/amee/current/bin/wrapper"

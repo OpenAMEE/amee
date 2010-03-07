@@ -21,6 +21,7 @@ package com.amee.calculation.service;
 
 import com.amee.core.CO2Amount;
 import com.amee.core.Decimal;
+import com.amee.domain.AMEEStatistics;
 import com.amee.domain.APIVersion;
 import com.amee.domain.InternalValue;
 import com.amee.domain.algorithm.Algorithm;
@@ -57,6 +58,9 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
 
     @Autowired
     private TransactionController transactionController;
+
+    @Autowired
+    private AMEEStatistics ameeStatistics;
 
     // Set by Spring context. The BeanFactory used to retrieve ProfileFinder and DataFinder instances.
     private BeanFactory beanFactory;
@@ -124,14 +128,15 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      */
     public CO2Amount calculate(Algorithm algorithm, Map<String, Object> values) {
 
-        CO2Amount amount;
-
         if (log.isDebugEnabled()) {
             log.debug("calculate()");
             log.debug("calculate() - algorithm uid: " + algorithm.getUid());
             log.debug("calculate() - input values: " + values);
             log.debug("calculate() - starting calculation");
         }
+
+        CO2Amount amount;
+        final long startTime = System.nanoTime();
 
         try {
             amount = new CO2Amount(algorithmService.evaluate(algorithm, values));
@@ -170,6 +175,8 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
 
             // ...and return zero by default.
             amount = new CO2Amount(Decimal.BIG_DECIMAL_ZERO);
+        } finally {
+            ameeStatistics.addToThreadCalculationDuration(System.nanoTime() - startTime);
         }
 
         if (log.isDebugEnabled()) {
@@ -187,17 +194,17 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         Map<ItemValueDefinition, InternalValue> values = new HashMap<ItemValueDefinition, InternalValue>();
         Map<String, Object> returnValues = new HashMap<String, Object>();
 
-        // Add ItemDefinition defaults
+        // Add ItemDefinition defaults.
         APIVersion apiVersion = profileItem.getProfile().getUser().getAPIVersion();
         profileItem.getItemDefinition().appendInternalValues(values, apiVersion);
 
-        // Add DataItem values, filtered by start and end dates of the ProfileItem
+        // Add DataItem values, filtered by start and end dates of the ProfileItem (factoring in the query date range).
         DataItem dataItem = profileItem.getDataItem();
-        dataItem.setEffectiveStartDate(profileItem.getStartDate());
-        dataItem.setEffectiveEndDate(profileItem.getEndDate());
+        dataItem.setEffectiveStartDate(profileItem.getEffectiveStartDate());
+        dataItem.setEffectiveEndDate(profileItem.getEffectiveEndDate());
         dataItem.appendInternalValues(values);
 
-        // Add the ProfileItem values
+        // Add the ProfileItem values.
         profileItem.appendInternalValues(values);
 
         // Add actual values to returnValues list based on InternalValues in values list.

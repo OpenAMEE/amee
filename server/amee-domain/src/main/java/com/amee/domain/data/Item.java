@@ -369,7 +369,8 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      *                           before {@link com.amee.domain.data.Item#getStartDate()} this value is ignored.
      */
     public void setEffectiveStartDate(Date effectiveStartDate) {
-        if ((effectiveStartDate == null) || effectiveStartDate.before(getStartDate())) {
+        if ((effectiveStartDate == null) ||
+                effectiveStartDate.before(getStartDate())) {
             return;
         }
         this.effectiveStartDate = effectiveStartDate;
@@ -381,7 +382,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      * @return - the effective start date. If no date has been explicitly specified, then either
      *         now or the Item startDate is returned, whichever is the later.
      */
-    protected Date getEffectiveStartDate() {
+    public Date getEffectiveStartDate() {
         if (effectiveStartDate != null) {
             return effectiveStartDate;
         } else {
@@ -397,8 +398,8 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      *                         after {@link com.amee.domain.data.Item#getEndDate()} (if set) this value is ignored.
      */
     public void setEffectiveEndDate(Date effectiveEndDate) {
-        if (effectiveEndDate == null ||
-                (getEndDate() != null && effectiveEndDate.after(getEndDate())))
+        if ((effectiveEndDate == null) ||
+                ((getEndDate() != null) && effectiveEndDate.after(getEndDate())))
             return;
         this.effectiveEndDate = effectiveEndDate;
     }
@@ -409,7 +410,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      * @return - the effective end date. If no date has been explicitly specified, then Date(Long.MAX_VALUE)
      *         is returned
      */
-    protected Date getEffectiveEndDate() {
+    public Date getEffectiveEndDate() {
         if (effectiveEndDate != null) {
             return effectiveEndDate;
         } else {

@@ -112,8 +112,8 @@ public class InternalValue {
                 filteredValues.add(iv);
                 if (iv.getStartDate().compareTo(startDate) <= 0) {
                     break;
-                }
             }
+        }
         }
         return filteredValues;
     }
