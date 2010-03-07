@@ -206,7 +206,7 @@ public class AlgorithmServiceTest {
         values.put("series", series);
         try {
             String result = algorithmService.evaluate(algorithm, values);
-            assertTrue("Should be able to use DataSeries.integrate() with a startDate and endDate.", result.equals("1.000000"));
+            assertTrue("Should be able to use DataSeries.integrate() with a startDate and endDate.", result.equals("0.500000"));
         } catch (ScriptException e) {
             fail("Caught ScriptException: " + e.getMessage());
         }
@@ -231,7 +231,7 @@ public class AlgorithmServiceTest {
         values.put("seriesC", seriesB.copy());
         try {
             String result = algorithmService.evaluate(algorithm, values);
-            assertTrue("Should be able to use DataSeries.integrate() with a startDate and endDate.", result.equals("2.000000"));
+            assertTrue("Should be able to use DataSeries.integrate() with a startDate and endDate.", result.equals("1.500000"));
         } catch (ScriptException e) {
             fail("Caught ScriptException: " + e.getMessage());
         }

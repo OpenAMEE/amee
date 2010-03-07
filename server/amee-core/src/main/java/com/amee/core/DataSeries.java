@@ -109,12 +109,12 @@ public class DataSeries {
         if (dataPoints.isEmpty()) {
             return Decimal.ZERO;
         }
-        DateTime first = dataPoints.get(0).getDateTime();
-        DateTime last = dataPoints.get(dataPoints.size() - 1).getDateTime();
+            DateTime first = dataPoints.get(0).getDateTime();
+            DateTime last = dataPoints.get(dataPoints.size() - 1).getDateTime();
         DateTime seriesStart = (seriesStartDate != null) && seriesStartDate.isAfter(first) ? seriesStartDate : first;
         DateTime seriesEnd = (seriesEndDate != null) && last.isAfter(seriesEndDate) ? seriesEndDate : last;
         return new Decimal(seriesEnd.getMillis() - seriesStart.getMillis());
-    }
+        }
 
     // Combine this DataSeries with another DataSeries using the given Operation.
 

@@ -84,6 +84,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
     @Column(name = "PER_UNIT", nullable = true, length = PER_UNIT_SIZE)
     private String perUnit;
 
+    // TODO: Why protected?
     @Column(name = "START_DATE")
     @Index(name = "START_DATE_IND")
     protected Date startDate = Calendar.getInstance().getTime();
@@ -249,7 +250,7 @@ public class ItemValue extends AMEEEntity implements Pathable {
             value = value.substring(0, VALUE_SIZE - 1);
         }
 
-        // Ensure numerics are a valid format
+        // Ensure numerics are a valid format.
         if (getItemValueDefinition().isDecimal() && !value.isEmpty()) {
             try {
                 Double.parseDouble(value);
