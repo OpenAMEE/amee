@@ -48,18 +48,16 @@
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-orm:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-tx:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-context-support:2.5.6" level="project" />
-    <orderEntry type="library" exported="" name="Maven: com.rabbitmq:amqp-client:1.7.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.rabbitmq:amqp-client:1.7.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-cli:commons-cli:1.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: commons-io:commons-io:1.4" level="project" />
     <orderEntry type="module" module-name="amee-restlet" exported="" />
     <orderEntry type="module" module-name="amee-calculation" exported="" />
-    <orderEntry type="library" exported="" name="Maven: commons-httpclient:commons-httpclient:4.0" level="project" />
-    <orderEntry type="library" exported="" name="Maven: commons-httpcore:commons-httpcore:4.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.httpcomponents:httpclient:4.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.httpcomponents:httpcore:4.0.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.spring:1.1.4" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.springframework:spring-web:2.5.6" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.springframework:spring-webmvc:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.freemarker:1.1.4" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.freemarker:freemarker:2.3.15" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.json:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: com.noelios.restlet:com.noelios.restlet:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: xerces:xercesImpl:2.9.1" level="project" />
@@ -75,6 +73,7 @@
     <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: org.codehaus.woodstox:wstx-asl:3.2.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.apache.abdera:abdera-extensions-opensearch:0.4.0-incubating" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.apache.abdera:abdera-client:0.4.0-incubating" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-httpclient:commons-httpclient:3.1-rc1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.apache.abdera:abdera-extensions-main:0.4.0-incubating" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.fileupload:1.1.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.4" level="project" />

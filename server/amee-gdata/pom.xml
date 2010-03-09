@@ -56,18 +56,12 @@
            <scope>runtime</scope>
        </dependency>
        <dependency>
-           <groupId>javax.servlet</groupId>
-           <artifactId>servlet</artifactId>
-           <version>2.5</version>
-           <scope>runtime</scope>
-       </dependency>
-       <dependency>
-           <groupId>google</groupId>
+           <groupId>com.google.visualization</groupId>
            <artifactId>visualization-datasource</artifactId>
-           <version>1.0</version>
+           <version>1.0.2</version>
        </dependency>
        <dependency>
-           <groupId>google</groupId>
+           <groupId>com.google.gdata</groupId>
            <artifactId>gdata-core</artifactId>
            <version>1.0</version>
        </dependency>
@@ -82,9 +76,9 @@
           <version>4.0.1</version>
       </dependency>
        <dependency>
-           <groupId>google</groupId>
-           <artifactId>google-collect</artifactId>
-           <version>1.0-rc1</version>
+           <groupId>com.google.collections</groupId>
+           <artifactId>google-collections</artifactId>
+           <version>1.0-rc5</version>
            <scope>runtime</scope>
        </dependency>
    </dependencies>

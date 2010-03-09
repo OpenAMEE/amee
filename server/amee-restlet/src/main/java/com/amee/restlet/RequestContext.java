@@ -39,7 +39,7 @@ import java.util.Iterator;
 
 /**
  * A simple bean for holding contextual information about the request.
- *
+ * <p/>
  * Its intended use is in debug statements etc.
  */
 public class RequestContext {
@@ -66,10 +66,13 @@ public class RequestContext {
     }
 
     public void setUser(User user) {
-        if (user == null)
-            return;
-        this.username = user.getUsername();
-        this.apiVersion = user.getAPIVersion().toString();
+        if (user != null) {
+            this.username = user.getUsername();
+            this.apiVersion = user.getAPIVersion().toString();
+        } else {
+            this.username = "";
+            this.apiVersion = "";
+        }
     }
 
     public void setProfile(Profile profile) {
@@ -89,14 +92,14 @@ public class RequestContext {
             return "";
 
         StringBuilder sb = new StringBuilder();
-        for (;;) {
+        for (; ;) {
             Parameter p = i.next();
             sb.append(p.getName());
             sb.append("__");
             if (!p.getName().equals("password")) {
                 sb.append(p.getValue());
             } else {
-                sb.append("XXXXXX");        
+                sb.append("XXXXXX");
             }
             if (i.hasNext()) {
                 sb.append(", ");
@@ -104,7 +107,6 @@ public class RequestContext {
                 return sb.toString();
             }
         }
-
     }
 
     public void setCategory(DataCategory category) {
@@ -139,7 +141,7 @@ public class RequestContext {
 
     public void setError(String error) {
         if (StringUtils.isNotBlank(error))
-            this.error = error;    
+            this.error = error;
     }
 
     public void setStatus(Status status) {
@@ -162,19 +164,19 @@ public class RequestContext {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-            sb.append(username + "|");
-            sb.append(apiVersion + "|");
-            sb.append(profileUid + "|");
-            sb.append(categoryUid + "|");
-            sb.append(requestPath + "|");
-            sb.append(type + "|");
-            sb.append(label + "|");
-            sb.append(requestParameters.replace("=","__") + "|");
-            sb.append(form + "|");
-            sb.append(error + "|");
-            sb.append(method + "|");
-            sb.append(status + "|");
-            sb.append(System.currentTimeMillis() - start);
+        sb.append(username + "|");
+        sb.append(apiVersion + "|");
+        sb.append(profileUid + "|");
+        sb.append(categoryUid + "|");
+        sb.append(requestPath + "|");
+        sb.append(type + "|");
+        sb.append(label + "|");
+        sb.append(requestParameters.replace("=", "__") + "|");
+        sb.append(form + "|");
+        sb.append(error + "|");
+        sb.append(method + "|");
+        sb.append(status + "|");
+        sb.append(System.currentTimeMillis() - start);
         return sb.toString();
     }
 }
