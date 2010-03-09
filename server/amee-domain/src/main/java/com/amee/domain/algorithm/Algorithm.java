@@ -20,19 +20,32 @@
 package com.amee.domain.algorithm;
 
 import com.amee.core.APIUtils;
+import com.amee.domain.ObjectType;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.ObjectType;
+import com.amee.platform.science.AlgorithmException;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.script.Compilable;
+import javax.script.CompiledScript;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 @Entity
 @DiscriminatorValue("AL")
-public class Algorithm extends AbstractAlgorithm {
+public class Algorithm extends AbstractAlgorithm implements com.amee.platform.science.Algorithm {
+
+    // Default Algorithm name to use in calculations
+    public final static String DEFAULT = "default";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ITEM_DEFINITION_ID", nullable = true)
@@ -126,4 +139,20 @@ public class Algorithm extends AbstractAlgorithm {
         return "Algorithm_" + getUid();
     }
 
+    public CompiledScript getCompiledScript(ScriptEngine engine) throws ScriptException {
+        if (StringUtils.isBlank(getContent())) {
+            throw new AlgorithmException(
+                    "Algorithm content is null (" + getLabel() + ").");
+        }
+        CompiledScript compiledScript = ((Compilable) engine).compile(getContent());
+        if (compiledScript == null) {
+            throw new AlgorithmException(
+                    "CompiledScript is null (" + getLabel() + ").");
+        }
+        return compiledScript;
+    }
+
+    public String getLabel() {
+        return getItemDefinition() + "/" + getName();
+    }
 }

@@ -22,9 +22,10 @@ package com.amee.domain.data;
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.InternalValue;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.path.Pathable;
+import com.amee.platform.science.ExternalValue;
+import com.amee.platform.science.InternalValue;
+import com.amee.platform.science.StartEndDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.hibernate.annotations.Cache;
@@ -275,9 +276,9 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     /**
-     * Add the Item's {@link ItemValue} collection to the passed {@link com.amee.domain.InternalValue} collection.
+     * Add the Item's {@link ItemValue} collection to the passed {@link com.amee.platform.science.InternalValue} collection.
      *
-     * @param values - the {@link com.amee.domain.InternalValue} collection
+     * @param values - the {@link com.amee.platform.science.InternalValue} collection
      */
     @SuppressWarnings("unchecked")
     public void appendInternalValues(Map<ItemValueDefinition, InternalValue> values) {
@@ -300,7 +301,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         ItemValueDefinition ivd = itemValues.get(0).getItemValueDefinition();
 
         // Add all ItemValues with usable values
-        List<ItemValue> usableSet = (List<ItemValue>) CollectionUtils.select(itemValues, new UsableValuePredicate());
+        List<ExternalValue> usableSet = (List<ExternalValue>) CollectionUtils.select(itemValues, new UsableValuePredicate());
 
         if (!usableSet.isEmpty()) {
             values.put(ivd, new InternalValue(usableSet, getEffectiveStartDate(), getEffectiveEndDate()));

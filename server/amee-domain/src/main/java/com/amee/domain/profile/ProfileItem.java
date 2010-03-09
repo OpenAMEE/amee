@@ -1,15 +1,15 @@
 package com.amee.domain.profile;
 
 import com.amee.core.CO2Amount;
-import com.amee.core.Decimal;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.Builder;
 import com.amee.domain.ObjectType;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.Item;
 import com.amee.domain.data.ItemValue;
+import com.amee.platform.science.Decimal;
+import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;

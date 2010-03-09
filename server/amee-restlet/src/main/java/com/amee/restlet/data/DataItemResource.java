@@ -23,16 +23,16 @@ import com.amee.calculation.service.CalculationService;
 import com.amee.core.APIUtils;
 import com.amee.core.CO2Amount;
 import com.amee.core.CO2AmountUnit;
-import com.amee.core.DecimalPerUnit;
-import com.amee.core.DecimalUnit;
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
+import com.amee.platform.science.DecimalPerUnit;
+import com.amee.platform.science.DecimalUnit;
+import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.RequestContext;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
@@ -263,7 +263,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     /**
      * Update the DataItem and contained ItemValues based on PUT parameters. ItemValues can be identified
      * by their ItemValueDefinition path or their specific UID.
-     *
+     * <p/>
      * When updating ItemValues using the ItemValueDefinition path the appropriate instance will
      * be selected based on the query string startDate parameter. This is only relevant for non drill-down
      * ItemValues, as only once instance of these is allowed.

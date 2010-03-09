@@ -20,10 +20,8 @@
 package com.amee.calculation.service;
 
 import com.amee.core.CO2Amount;
-import com.amee.core.Decimal;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.APIVersion;
-import com.amee.domain.InternalValue;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
@@ -32,6 +30,9 @@ import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.profile.CO2CalculationService;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choices;
+import com.amee.platform.science.AlgorithmRunner;
+import com.amee.platform.science.Decimal;
+import com.amee.platform.science.InternalValue;
 import com.amee.service.transaction.TransactionController;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,13 +55,12 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
     private final Log scienceLog = LogFactory.getLog("science");
 
     @Autowired
-    private AlgorithmService algorithmService;
-
-    @Autowired
     private TransactionController transactionController;
 
     @Autowired
     private AMEEStatistics ameeStatistics;
+
+    private AlgorithmRunner algorithmRunner = new AlgorithmRunner();
 
     // Set by Spring context. The BeanFactory used to retrieve ProfileFinder and DataFinder instances.
     private BeanFactory beanFactory;
@@ -80,7 +80,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
             // Some ProfileItems are from ItemDefinitions which do not have Algorithms and
             // hence do not support calculations.
             if (profileItem.supportsCalculation()) {
-                Algorithm algorithm = algorithmService.getAlgorithm(profileItem.getItemDefinition());
+                Algorithm algorithm = profileItem.getItemDefinition().getAlgorithm(Algorithm.DEFAULT);
                 if (algorithm != null) {
                     Map<String, Object> values = getValues(profileItem);
                     amount = calculate(algorithm, values);
@@ -108,7 +108,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      */
     public CO2Amount calculate(DataItem dataItem, Choices userValueChoices, APIVersion version) {
         CO2Amount amount = CO2Amount.ZERO;
-        Algorithm algorithm = algorithmService.getAlgorithm(dataItem.getItemDefinition());
+        Algorithm algorithm = dataItem.getItemDefinition().getAlgorithm(Algorithm.DEFAULT);
         if (algorithm != null) {
             Map<String, Object> values = getValues(dataItem, userValueChoices, version);
             amount = calculate(algorithm, values);
@@ -139,12 +139,12 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         final long startTime = System.nanoTime();
 
         try {
-            amount = new CO2Amount(algorithmService.evaluate(algorithm, values));
+            amount = new CO2Amount(algorithmRunner.evaluate(algorithm, values));
         } catch (ScriptException e) {
 
             // Bubble up parameter missing or format exceptions from the
             // algorithms (the only place where these validations can be performed.
-            IllegalArgumentException iae = AlgorithmService.getIllegalArgumentException(e);
+            IllegalArgumentException iae = AlgorithmRunner.getIllegalArgumentException(e);
             if (iae != null) {
                 throw iae;
             }
@@ -209,7 +209,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
 
         // Add actual values to returnValues list based on InternalValues in values list.
         for (ItemValueDefinition ivd : values.keySet()) {
-            returnValues.put(ivd.getCannonicalPath(), values.get(ivd).getValue());
+            returnValues.put(ivd.getCanonicalPath(), values.get(ivd).getValue());
         }
 
         // Initialise finders for algorithm.
@@ -257,7 +257,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
 
         Map<String, Object> returnValues = new HashMap<String, Object>();
         for (ItemValueDefinition ivd : values.keySet()) {
-            returnValues.put(ivd.getCannonicalPath(), values.get(ivd).getValue());
+            returnValues.put(ivd.getCanonicalPath(), values.get(ivd).getValue());
         }
 
         DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");

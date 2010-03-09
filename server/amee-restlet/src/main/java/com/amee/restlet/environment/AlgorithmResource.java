@@ -19,14 +19,14 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.calculation.service.AlgorithmService;
 import com.amee.core.CO2Amount;
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choice;
+import com.amee.platform.science.AlgorithmRunner;
+import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
@@ -49,7 +49,11 @@ import org.w3c.dom.Element;
 import javax.script.ScriptException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 @Scope("prototype")
@@ -63,8 +67,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
-    @Autowired
-    private AlgorithmService algorithmService;
+    private AlgorithmRunner algorithmRunner = new AlgorithmRunner();
 
     private AlgorithmTestWrapper algorithmTestWrapper = null;
 
@@ -158,7 +161,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
         // apply calculation
         try {
             algorithmTestWrapper.setAmount(
-                    new CO2Amount(algorithmService.evaluate(
+                    new CO2Amount(algorithmRunner.evaluate(
                             algorithmTestWrapper.getMockAlgorithm(),
                             algorithmTestWrapper.getValuesMap())).getValue());
         } catch (ScriptException sc) {

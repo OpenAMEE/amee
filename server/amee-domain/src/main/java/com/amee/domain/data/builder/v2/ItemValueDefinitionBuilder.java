@@ -47,11 +47,11 @@ public class ItemValueDefinitionBuilder implements Builder {
         obj.put("fromData", itemValueDefinition.isFromData());
         obj.put("drillDown", itemValueDefinition.isDrillDown());
 
-        if (itemValueDefinition.hasUnits()) {
+        if (itemValueDefinition.hasUnit()) {
             obj.put("unit", itemValueDefinition.getUnit());
         }
 
-        if (itemValueDefinition.hasPerUnits()) {
+        if (itemValueDefinition.hasPerUnit()) {
             obj.put("perUnit", itemValueDefinition.getPerUnit());
         }
 
@@ -85,11 +85,11 @@ public class ItemValueDefinitionBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "Name", itemValueDefinition.getName()));
         element.appendChild(itemValueDefinition.getValueDefinition().getElement(document));
 
-        if (itemValueDefinition.hasUnits()) {
+        if (itemValueDefinition.hasUnit()) {
             element.appendChild(APIUtils.getElement(document, "Unit", itemValueDefinition.getUnit().toString()));
         }
 
-        if (itemValueDefinition.hasPerUnits()) {
+        if (itemValueDefinition.hasPerUnit()) {
             element.appendChild(APIUtils.getElement(document, "PerUnit", itemValueDefinition.getPerUnit().toString()));
         }
 

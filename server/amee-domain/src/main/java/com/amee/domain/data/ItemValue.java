@@ -20,17 +20,18 @@
 package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
-import com.amee.core.DecimalCompoundUnit;
-import com.amee.core.DecimalPerUnit;
-import com.amee.core.DecimalUnit;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.Builder;
 import com.amee.domain.LocaleHolder;
 import com.amee.domain.ObjectType;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
+import com.amee.platform.science.DecimalCompoundUnit;
+import com.amee.platform.science.DecimalPerUnit;
+import com.amee.platform.science.DecimalUnit;
+import com.amee.platform.science.ExternalValue;
+import com.amee.platform.science.StartEndDate;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -60,7 +61,7 @@ import java.util.TreeMap;
 @Entity
 @Table(name = "ITEM_VALUE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ItemValue extends AMEEEntity implements Pathable {
+public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
 
     // 32767 because this is bigger than 255, smaller than 65535 and fits into an exact number of bits
     public final static int VALUE_SIZE = 32767;
@@ -84,10 +85,9 @@ public class ItemValue extends AMEEEntity implements Pathable {
     @Column(name = "PER_UNIT", nullable = true, length = PER_UNIT_SIZE)
     private String perUnit;
 
-    // TODO: Why protected?
     @Column(name = "START_DATE")
     @Index(name = "START_DATE_IND")
-    protected Date startDate = Calendar.getInstance().getTime();
+    private Date startDate = Calendar.getInstance().getTime();
 
     @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @MapKey(name = "locale")
@@ -266,6 +266,10 @@ public class ItemValue extends AMEEEntity implements Pathable {
         return new StartEndDate(startDate);
     }
 
+    public boolean isDecimal() {
+        return getItemValueDefinition().isDecimal();
+    }
+
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
@@ -275,11 +279,15 @@ public class ItemValue extends AMEEEntity implements Pathable {
     }
 
     public DecimalUnit getUnit() {
-        return (unit != null) ? DecimalUnit.valueOf(unit) : itemValueDefinition.getUnit();
+        return (unit != null) ? DecimalUnit.valueOf(unit) : getItemValueDefinition().getUnit();
+    }
+
+    public DecimalUnit getCanonicalUnit() {
+        return getItemValueDefinition().getUnit();
     }
 
     public void setUnit(String unit) throws IllegalArgumentException {
-        if (!itemValueDefinition.isValidUnit(unit)) {
+        if (!getItemValueDefinition().isValidUnit(unit)) {
             throw new IllegalArgumentException("The unit argument is not valid: " + unit);
         }
         this.unit = unit;
@@ -293,12 +301,16 @@ public class ItemValue extends AMEEEntity implements Pathable {
                 return DecimalPerUnit.valueOf(perUnit);
             }
         } else {
-            return itemValueDefinition.getPerUnit();
+            return getItemValueDefinition().getPerUnit();
         }
     }
 
+    public DecimalPerUnit getCanonicalPerUnit() {
+        return getItemValueDefinition().getPerUnit();
+    }
+
     public void setPerUnit(String perUnit) throws IllegalArgumentException {
-        if (!itemValueDefinition.isValidPerUnit(perUnit)) {
+        if (!getItemValueDefinition().isValidPerUnit(perUnit)) {
             throw new IllegalArgumentException("The perUnit argument is not valid: " + perUnit);
         }
         this.perUnit = perUnit;
@@ -308,12 +320,16 @@ public class ItemValue extends AMEEEntity implements Pathable {
         return getUnit().with(getPerUnit());
     }
 
+    public DecimalCompoundUnit getCanonicalCompoundUnit() {
+        return getItemValueDefinition().getCanonicalCompoundUnit();
+    }
+
     public boolean hasUnit() {
-        return itemValueDefinition.hasUnits();
+        return getItemValueDefinition().hasUnit();
     }
 
     public boolean hasPerUnit() {
-        return itemValueDefinition.hasPerUnits();
+        return getItemValueDefinition().hasPerUnit();
     }
 
     public boolean hasPerTimeUnit() {
@@ -342,8 +358,21 @@ public class ItemValue extends AMEEEntity implements Pathable {
         return clone;
     }
 
+    public String getLabel() {
+        return getItemValueDefinition().getLabel();
+    }
+
     @Override
     public boolean isTrash() {
         return status.equals(AMEEStatus.TRASH) || getItem().isTrash() || getItemValueDefinition().isTrash();
+    }
+
+    /**
+     * As an ExternalValue, an ItemValue is convertible. It can be converted, at runtime, from one unit to another.
+     *
+     * @return true, always
+     */
+    public boolean isConvertible() {
+        return true;
     }
 }

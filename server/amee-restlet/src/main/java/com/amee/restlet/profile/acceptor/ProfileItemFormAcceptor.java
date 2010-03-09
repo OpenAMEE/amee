@@ -2,10 +2,10 @@ package com.amee.restlet.profile.acceptor;
 
 import com.amee.calculation.service.CalculationService;
 import com.amee.domain.AMEEStatistics;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.ValidFromDate;
+import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.profile.ProfileService;
@@ -116,6 +116,7 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
     }
 
     //TODO - parsing v1 and v2 params - see Acceptors which at least conditionally parse based on APIVersion. Ideal solution should be transparent.
+
     protected void updateProfileItem(ProfileItemResource resource, ProfileItem profileItem, Form form) {
 
         Set<String> names = form.getNames();

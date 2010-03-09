@@ -21,7 +21,6 @@
  */
 package com.amee.googleds;
 
-import com.amee.domain.StartEndDate;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
@@ -31,6 +30,7 @@ import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.engine.Engine;
+import com.amee.platform.science.StartEndDate;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.path.PathItemService;
