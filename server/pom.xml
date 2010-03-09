@@ -24,7 +24,7 @@
         <hibernate-entitymanager.version>3.4.0.GA</hibernate-entitymanager.version>
         <commons-dbcp.version>1.2.2</commons-dbcp.version>
         <ehcache.version>1.6.2</ehcache.version>
-        <rabbitmq.version>1.7.0</rabbitmq.version>
+        <rabbitmq.version>1.7.2</rabbitmq.version>
         <commons-io.version>1.4</commons-io.version>
     </properties>
     <!-- AMEE Modules. -->
@@ -78,39 +78,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!--  Removing until i get this working - 08/07/09 SM
-                    <plugin>
-                        <groupId>org.apache.jmeter</groupId>
-                        <artifactId>maven-jmeter-plugin</artifactId>
-                        <version>1.0</version>
-                        <executions>
-                            <execution>
-                                <id>jmeter-tests</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>jmeter</goal>
-                                </goals>
-                           </execution>
-                        </executions>
-                        <configuration>
-                            <reportDir>${project.build.directory}/jmeter-reports</reportDir>
-                            <jmeterUserProperties>
-                            </jmeterUserProperties>
-                        </configuration>
-                    </plugin>
-            -->
         </plugins>
     </build>
     <!-- Project Dependencies. -->
@@ -176,24 +143,10 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <!-- Version Control. -->
     <scm>
-        <connection>scm:git:ssh://github.com:catditch/amee.git</connection>
-        <developerConnection>scm:git:ssh://github.com:catditch/amee.git</developerConnection>
-        <url>https://github.com/catditch/amee/tree/master</url>
+        <connection>scm:git:ssh://git@github.com/catditch/amee.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/catditch/amee.git</developerConnection>
+        <url>scm:git:ssh://git@github.com/catditch/amee.git</url>
     </scm>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </reporting>
-    <repositories>
-        <repository>
-            <id>maven-restlet</id>
-            <name>Public online Restlet repository</name>
-            <url>http://maven.restlet.org</url>
-        </repository>
-    </repositories>
 </project>

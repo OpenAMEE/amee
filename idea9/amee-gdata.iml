@@ -48,13 +48,14 @@
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-orm:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-tx:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-context-support:2.5.6" level="project" />
-    <orderEntry type="library" exported="" name="Maven: com.rabbitmq:amqp-client:1.7.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.rabbitmq:amqp-client:1.7.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-cli:commons-cli:1.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: commons-io:commons-io:1.4" level="project" />
     <orderEntry type="module" module-name="amee-engine" exported="" />
     <orderEntry type="module" module-name="amee-restlet" exported="" />
     <orderEntry type="module" module-name="amee-calculation" exported="" />
-    <orderEntry type="library" exported="" name="Maven: commons-httpclient:commons-httpclient:4.0" level="project" />
-    <orderEntry type="library" exported="" name="Maven: commons-httpcore:commons-httpcore:4.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.httpcomponents:httpclient:4.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.httpcomponents:httpcore:4.0.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.spring:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-web:2.5.6" level="project" />
@@ -76,11 +77,11 @@
     <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: org.codehaus.woodstox:wstx-asl:3.2.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.apache.abdera:abdera-extensions-opensearch:0.4.0-incubating" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.apache.abdera:abdera-client:0.4.0-incubating" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-httpclient:commons-httpclient:3.1-rc1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.apache.abdera:abdera-extensions-main:0.4.0-incubating" level="project" />
     <orderEntry type="module" module-name="amee-admin" exported="" />
     <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet.ext.fileupload:1.1.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: tanukisoft:wrapper:3.2.3" level="project" />
-    <orderEntry type="library" exported="" name="Maven: commons-cli:commons-cli:1.1" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: org.springframework:spring-agent:2.5.6" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: org.springframework:spring-aspects:2.5.6" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: org.aspectj:aspectjrt:1.6.1" level="project" />
@@ -107,11 +108,11 @@
     <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: jetty:jsp-api:2.1-6.0.2" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: jetty:jsp:2.1-6.0.2" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: javax.servlet:servlet-api:2.5" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: javax.servlet:servlet:2.5" level="project" />
-    <orderEntry type="library" exported="" name="Maven: google:visualization-datasource:1.0" level="project" />
-    <orderEntry type="library" exported="" name="Maven: google:gdata-core:1.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.google.visualization:visualization-datasource:1.0.2" level="project" />
+    <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: com.google.collections:google-collections:1.0-rc5" level="project" />
     <orderEntry type="library" exported="" name="Maven: com.ibm.icu:icu4j:4.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="Maven: google:google-collect:1.0-rc1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: net.sf.opencsv:opencsv:1.8" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.google.gdata:gdata-core:1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:2.5.6" level="project" />
   </component>
