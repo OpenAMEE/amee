@@ -19,10 +19,21 @@
  */
 package com.amee.domain.data;
 
-import com.amee.core.*;
-import com.amee.domain.*;
+import com.amee.core.APIUtils;
+import com.amee.core.ValueType;
+import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.APIVersion;
+import com.amee.domain.Builder;
+import com.amee.domain.LocaleHolder;
+import com.amee.domain.ObjectType;
+import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import com.amee.domain.sheet.Choice;
+import com.amee.platform.science.DecimalCompoundUnit;
+import com.amee.platform.science.DecimalPerUnit;
+import com.amee.platform.science.DecimalUnit;
+import com.amee.platform.science.ExternalValue;
+import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -31,13 +42,30 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ItemValueDefinition extends AMEEEnvironmentEntity {
+public class ItemValueDefinition extends AMEEEnvironmentEntity implements ExternalValue {
 
     public final static int NAME_SIZE = 255;
     public final static int PATH_SIZE = 255;
@@ -112,11 +140,11 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
      * Get the collection of locale specific names for this ItemValueDefinition.
      *
      * @return the collection of locale specific names. The collection will be empty
-     * if no locale specific names exist.
+     *         if no locale specific names exist.
      */
     public Map<String, LocaleName> getLocaleNames() {
         Map<String, LocaleName> activeLocaleNames = new TreeMap<String, LocaleName>();
-        for (String locale: localeNames.keySet()) {
+        for (String locale : localeNames.keySet()) {
             LocaleName name = localeNames.get(locale);
             if (!name.isTrash()) {
                 activeLocaleNames.put(locale, name);
@@ -131,6 +159,7 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
      * The locale specific name of this ItemValueDefinition for the locale of the current thread.
      * If no locale specific name is found, the default name will be returned.
      */
+
     @SuppressWarnings("unchecked")
     private String getLocaleName() {
         String name = null;
@@ -250,6 +279,10 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         return value;
     }
 
+    public String getUsableValue() {
+        return getValue();
+    }
+
     public void setValue(String value) {
         if (value == null) {
             value = "";
@@ -320,15 +353,23 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         return (unit != null) ? DecimalUnit.valueOf(unit) : DecimalUnit.ONE;
     }
 
+    public DecimalUnit getCanonicalUnit() {
+        return getUnit();
+    }
+
     public DecimalPerUnit getPerUnit() {
         return (perUnit != null) ? DecimalPerUnit.valueOf(perUnit) : DecimalPerUnit.ONE;
     }
 
-    public boolean hasUnits() {
+    public DecimalPerUnit getCanonicalPerUnit() {
+        return getPerUnit();
+    }
+
+    public boolean hasUnit() {
         return unit != null;
     }
 
-    public boolean hasPerUnits() {
+    public boolean hasPerUnit() {
         return perUnit != null;
     }
 
@@ -384,7 +425,7 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         return aliases;
     }
 
-    public String getCannonicalPath() {
+    public String getCanonicalPath() {
         if (aliasedTo != null) {
             return aliasedTo.getPath();
         } else {
@@ -392,7 +433,7 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         }
     }
 
-    public String getCannonicalName() {
+    public String getCanonicalName() {
         if (aliasedTo != null) {
             return aliasedTo.getName();
         } else {
@@ -404,9 +445,8 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
      * Does this represent a decimal value.
      *
      * @return true if this value represents a decimal value, otherwise false
-     *
-     * {@see ValueType.DECIMAL}
-     *
+     *         <p/>
+     *         {@see ValueType.DECIMAL}
      */
     public boolean isDecimal() {
         return getValueDefinition().getValueType().equals(ValueType.DECIMAL);
@@ -416,9 +456,8 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
      * Does this represent a text value.
      *
      * @return true if this value represents a text value, otherwise false
-     *
-     * {@see ValueType.TEXT}
-     * 
+     *         <p/>
+     *         {@see ValueType.TEXT}
      */
     public boolean isText() {
         return getValueDefinition().getValueType().equals(ValueType.TEXT);
@@ -428,9 +467,8 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
      * Does this represent a date value.
      *
      * @return true if this value represents a date value, otherwise false
-     *
-     * {@see ValueType.DATE}
-     *
+     *         <p/>
+     *         {@see ValueType.DATE}
      */
     public boolean isDate() {
         return getValueDefinition().getValueType().equals(ValueType.DATE);
@@ -460,4 +498,25 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity {
         this.isForceTimeSeries = isForceTimeSeries;
     }
 
+    public String getLabel() {
+        return getItemDefinition().getName() + "/" + getPath();
+    }
+
+    /**
+     * As an ExternalValue, an ItemValueDefinition never has a startDate.
+     *
+     * @return null, always
+     */
+    public StartEndDate getStartDate() {
+        return null;
+    }
+
+    /**
+     * As an ExternalValue, an ItemValueDefinition is NOT convertible. It cannot be converted, at runtime, from one unit to another.
+     *
+     * @return false, always
+     */
+    public boolean isConvertible() {
+        return false;
+    }
 }

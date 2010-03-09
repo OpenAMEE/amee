@@ -1,12 +1,11 @@
 package com.amee.restlet.profile;
 
-import com.amee.domain.Pager;
-import com.amee.domain.StartEndDate;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileDate;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.ValidFromDate;
+import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataService;
@@ -122,6 +121,7 @@ public abstract class BaseProfileResource extends AMEEResource {
     }
 
     //TODO - Move to filter - validation is not general to all Profile Resources
+
     public APIFault getValidationAPIFault() {
         if (getAPIVersion().isVersionOne()) {
             if (containsCalendarParams()) {

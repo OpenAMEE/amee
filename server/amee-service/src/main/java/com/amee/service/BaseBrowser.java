@@ -1,6 +1,6 @@
 package com.amee.service;
 
-import com.amee.domain.StartEndDate;
+import com.amee.platform.science.StartEndDate;
 
 public class BaseBrowser {
 
@@ -10,7 +10,7 @@ public class BaseBrowser {
     /**
      * Get the query start date.
      *
-     * @return the {@link com.amee.domain.StartEndDate StartEndDate} submitted with the GET request. If no date
+     * @return the {@link com.amee.platform.science.StartEndDate StartEndDate} submitted with the GET request. If no date
      * was submitted, the default date corresponding to the start of the month is returned.
      */
     public StartEndDate getQueryStartDate() {
@@ -26,7 +26,7 @@ public class BaseBrowser {
     /**
      * Get the query end date.
      *
-     * @return the {@link com.amee.domain.StartEndDate StartEndDate} submitted with the GET request. If no date
+     * @return the {@link com.amee.platform.science.StartEndDate StartEndDate} submitted with the GET request. If no date
      * was submitted, then Null is returned.
      */
     public StartEndDate getQueryEndDate() {

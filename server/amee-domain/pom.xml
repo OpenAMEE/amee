@@ -14,13 +14,19 @@
     <name>amee-domain</name>
 
     <dependencies>
-        <!-- Internal Dependencies -->
+        <!-- Internal Dependencies. -->
         <dependency>
             <groupId>com.amee</groupId>
             <artifactId>amee-core</artifactId>
             <version>${amee.version}</version>
         </dependency>
-        <!-- External Dependencies -->
+        <!-- AMEE Dependencies. -->
+        <dependency>
+            <groupId>com.amee.platform</groupId>
+            <artifactId>amee-platform-science</artifactId>
+            <version>${amee-platform-science.version}</version>
+        </dependency>
+        <!-- 3rd Party Dependencies. -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>org.json</artifactId>

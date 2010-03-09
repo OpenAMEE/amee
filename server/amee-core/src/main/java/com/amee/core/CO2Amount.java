@@ -1,5 +1,7 @@
 package com.amee.core;
 
+import com.amee.platform.science.Decimal;
+
 import java.math.BigDecimal;
 
 /**

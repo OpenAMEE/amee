@@ -24,6 +24,7 @@ import com.amee.domain.*;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.Choice;
+import com.amee.platform.science.InternalValue;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;

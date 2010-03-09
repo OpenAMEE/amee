@@ -1,5 +1,8 @@
 package com.amee.core;
 
+import com.amee.platform.science.DecimalCompoundUnit;
+import com.amee.platform.science.DecimalPerUnit;
+import com.amee.platform.science.DecimalUnit;
 import org.apache.commons.lang.StringUtils;
 
 import javax.measure.unit.NonSI;

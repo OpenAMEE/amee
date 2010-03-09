@@ -1,6 +1,7 @@
 package com.amee.restlet.profile.builder.v2;
 
-import com.amee.domain.StartEndDate;
+import com.amee.platform.science.StartEndDate;
+
 
 /**
  * This file is part of AMEE.
@@ -39,7 +40,7 @@ public class HCalendar {
     }
 
     private void addDate(StartEndDate date, String clazz) {
-        builder.append("<abbr class=\""+ clazz +"\" title=\"");
+        builder.append("<abbr class=\"" + clazz + "\" title=\"");
         builder.append(date);
         builder.append("\"> ");
         builder.append(AtomFeed.getInstance().format(date));
