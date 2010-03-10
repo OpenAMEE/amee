@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="Maven: com.amee:amee-admin:2.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../server/amee-admin/pom.xml!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/amee/amee-admin/2.1/amee-admin-2.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../server/amee-admin/pom-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/amee/amee-admin/2.1/amee-admin-2.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../server/amee-admin/pom-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/amee/amee-admin/2.1/amee-admin-2.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
