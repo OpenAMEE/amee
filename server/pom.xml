@@ -27,6 +27,11 @@
         <rabbitmq.version>1.7.2</rabbitmq.version>
         <commons-io.version>1.4</commons-io.version>
         <amee-platform-science.version>1.0.2</amee-platform-science.version>
+        <amee.home>/var/www/apps/amee</amee.home>
+        <amee.current>${amee.home}/current</amee.current>
+        <amee.current.lib>${amee.current}/lib</amee.current.lib>
+        <amee.current.bin>${amee.current}/bin</amee.current.bin>
+        <amee.shared.lib>${amee.home}/shared</amee.shared.lib>
     </properties>
     <!-- AMEE Modules. -->
     <modules>
@@ -34,11 +39,56 @@
         <module>amee-calculation</module>
         <module>amee-core</module>
         <module>amee-domain</module>
-        <module>amee-restlet</module>
         <module>amee-engine</module>
-        <module>amee-service</module>
         <module>amee-gdata</module>
+        <module>amee-restlet</module>
+        <module>amee-service</module>
     </modules>
+    <!-- AMEE Internal Dependencies. -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.amee</groupId>
+                <artifactId>amee-admin</artifactId>
+                <version>${amee.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee</groupId>
+                <artifactId>amee-calculation</artifactId>
+                <version>${amee.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee</groupId>
+                <artifactId>amee-core</artifactId>
+                <version>${amee.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee</groupId>
+                <artifactId>amee-domain</artifactId>
+                <version>${amee.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee</groupId>
+                <artifactId>amee-engine</artifactId>
+                <version>${amee.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee</groupId>
+                <artifactId>amee-gdata</artifactId>
+                <version>${amee.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee</groupId>
+                <artifactId>amee-restlet</artifactId>
+                <version>${amee.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee</groupId>
+                <artifactId>amee-service</artifactId>
+                <version>${amee.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <!-- Build Plugins. -->
     <build>
         <pluginManagement>
@@ -67,7 +117,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
+                        <id>copy-dependencies-local-other</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
@@ -75,6 +125,28 @@
                         <configuration>
                             <excludeGroupIds>com.amee</excludeGroupIds>
                             <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-dependencies-local-amee</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>amee-platform-science</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <stripVersion>true</stripVersion>
+                            <outputDirectory>${amee.current.lib}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

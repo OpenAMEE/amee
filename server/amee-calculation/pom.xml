@@ -16,12 +16,10 @@
         <dependency>
             <groupId>com.amee</groupId>
             <artifactId>amee-domain</artifactId>
-            <version>${amee.version}</version>
         </dependency>
         <dependency>
             <groupId>com.amee</groupId>
             <artifactId>amee-service</artifactId>
-            <version>${amee.version}</version>
         </dependency>
         <!-- External Dependencies. -->
         <dependency>
