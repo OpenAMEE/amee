@@ -143,6 +143,19 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
     }
 
     /**
+     * Copy values from this instance to the supplied instance.
+     *
+     * @param o Object to copy values to
+     */
+    protected void copyTo(AMEEEntity o) {
+        o.id = id;
+        o.uid = uid;
+        o.status = status;
+        o.created = (created != null) ? (Date) created.clone() : null;
+        o.modified = (modified != null) ? (Date) modified.clone() : null;
+    }
+
+    /**
      * Called by the JPA persistence provider when a persistent entity is created. Updates created and
      * modified with the current time.
      */
