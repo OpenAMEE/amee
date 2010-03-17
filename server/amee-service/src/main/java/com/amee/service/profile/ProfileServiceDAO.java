@@ -305,12 +305,6 @@ public class ProfileServiceDAO implements Serializable {
         // Execute query.
         List<ProfileItem> profileItems = query.getResultList();
 
-        // Set effective start and end dates.
-        for (ProfileItem pi : profileItems) {
-            pi.setEffectiveStartDate(startDate);
-            pi.setEffectiveEndDate(endDate);
-        }
-        
         if (log.isDebugEnabled()) {
             log.debug("getProfileItems() done (" + profileItems.size() + ")");
         }
