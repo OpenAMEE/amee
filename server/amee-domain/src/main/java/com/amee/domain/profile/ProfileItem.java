@@ -110,18 +110,26 @@ public class ProfileItem extends Item {
 
     public ProfileItem getCopy() {
         log.debug("getCopy()");
-        ProfileItem profileItem = new ProfileItem(getProfile(), getDataCategory(), getDataItem());
-        profileItem.setStartDate(getStartDate());
-        profileItem.setEndDate(getEndDate());
-        profileItem.setEffectiveStartDate(getEffectiveStartDate());
-        profileItem.setEffectiveEndDate(getEffectiveEndDate());
-        profileItem.setAmount(getAmount());
-        profileItem.setName(getName());
-        profileItem.setCreated(getCreated());
-        profileItem.setModified(getModified());
-        profileItem.setUid(getUid());
-        profileItem.setId(getId());
+        ProfileItem profileItem = new ProfileItem();
+        copyTo(profileItem);
         return profileItem;
+    }
+
+    /**
+     * Copy values from this instance to the supplied instance.
+     *
+     * @param o Object to copy values to
+     */
+    protected void copyTo(ProfileItem o) {
+        super.copyTo(o);
+        o.profile = profile;
+        o.dataItem = dataItem;
+        o.startDate = (startDate != null) ? (Date) startDate.clone() : null;
+        o.endDate = (endDate != null) ? (Date) endDate.clone() : null;
+        o.persistentAmount = persistentAmount;
+        o.amount = amount;
+        o.builder = builder;
+        o.calculationService = calculationService;
     }
 
     public String getPath() {

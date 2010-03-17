@@ -86,10 +86,10 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     private Set<ItemValue> activeItemValues;
 
     @Transient
-    private Date effectiveStartDate;
+    protected Date effectiveStartDate;
 
     @Transient
-    private Date effectiveEndDate;
+    protected Date effectiveEndDate;
 
     public Item() {
         super();
@@ -99,6 +99,22 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
         super(dataCategory.getEnvironment());
         setDataCategory(dataCategory);
         setItemDefinition(itemDefinition);
+    }
+
+    /**
+     * Copy values from this instance to the supplied instance.
+     * <p/>
+     * Does not copy ItemValues.
+     *
+     * @param o Object to copy values to
+     */
+    protected void copyTo(Item o) {
+        super.copyTo(o);
+        o.itemDefinition = itemDefinition;
+        o.dataCategory = dataCategory;
+        o.name = name;
+        o.effectiveStartDate = (effectiveStartDate != null) ? (Date) effectiveStartDate.clone() : null;
+        o.effectiveEndDate = (effectiveEndDate != null) ? (Date) effectiveEndDate.clone() : null;
     }
 
     public void addItemValue(ItemValue itemValue) {

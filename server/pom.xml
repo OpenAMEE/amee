@@ -28,7 +28,7 @@
         <ehcache.version>1.6.2</ehcache.version>
         <rabbitmq.version>1.7.2</rabbitmq.version>
         <commons-io.version>1.4</commons-io.version>
-        <amee-platform-science.version>1.0.3</amee-platform-science.version>
+        <amee-platform-science.version>1.0.4</amee-platform-science.version>
         <amee.home>/var/www/apps/amee</amee.home>
         <amee.current>${amee.home}/current</amee.current>
         <amee.current.lib>${amee.current}/lib</amee.current.lib>

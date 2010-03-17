@@ -43,6 +43,16 @@ public abstract class AMEEEnvironmentEntity extends AMEEEntity implements Enviro
         setEnvironment(environment);
     }
 
+    /**
+     * Copy values from this instance to the supplied instance.
+     *
+     * @param o Object to copy values to
+     */
+    protected void copyTo(AMEEEnvironmentEntity o) {
+        super.copyTo(o);
+        o.environment = environment;
+    }
+
     public Environment getEnvironment() {
         return environment;
     }
