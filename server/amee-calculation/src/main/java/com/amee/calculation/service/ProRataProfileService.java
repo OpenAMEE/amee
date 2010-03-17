@@ -68,8 +68,7 @@ public class ProRataProfileService {
         Interval requestInterval = getInterval(startDate, endDate);
 
         for (ProfileItem pi : profileService.getProfileItems(profile, dataCategory, startDate, endDate)) {
-            pi.setEffectiveStartDate(startDate);
-            pi.setEffectiveEndDate(endDate);
+
             if (log.isDebugEnabled())
                 log.debug("getProfileItems() - ProfileItem: " + pi.getName() + " has un-prorated CO2 Amount: " + pi.getAmount());
 
