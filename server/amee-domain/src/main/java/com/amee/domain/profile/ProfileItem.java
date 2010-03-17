@@ -111,10 +111,10 @@ public class ProfileItem extends Item {
     public ProfileItem getCopy() {
         log.debug("getCopy()");
         ProfileItem profileItem = new ProfileItem(getProfile(), getDataCategory(), getDataItem());
-        profileItem.setEffectiveStartDate(getEffectiveStartDate());
-        profileItem.setEffectiveEndDate(getEffectiveEndDate());
         profileItem.setStartDate(getStartDate());
         profileItem.setEndDate(getEndDate());
+        profileItem.setEffectiveStartDate(getEffectiveStartDate());
+        profileItem.setEffectiveEndDate(getEffectiveEndDate());
         profileItem.setAmount(getAmount());
         profileItem.setName(getName());
         profileItem.setCreated(getCreated());
