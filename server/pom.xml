@@ -2,12 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <!-- Project Metadata. -->
     <groupId>com.amee</groupId>
     <artifactId>server</artifactId>
     <packaging>pom</packaging>
     <version>${amee.version}</version>
     <name>AMEE Platform</name>
+
     <!-- Project Properties. -->
     <!-- Note: Keep restlet, jetty and servlet-api versions in sync. -->
     <!-- Note: Check Restlet release notes and jetty dependencies. -->
@@ -33,7 +35,8 @@
         <amee.current.bin>${amee.current}/bin</amee.current.bin>
         <amee.shared.lib>${amee.home}/shared</amee.shared.lib>
     </properties>
-    <!-- AMEE Modules. -->
+
+    <!-- Modules. -->
     <modules>
         <module>amee-admin</module>
         <module>amee-calculation</module>
@@ -44,7 +47,8 @@
         <module>amee-restlet</module>
         <module>amee-service</module>
     </modules>
-    <!-- AMEE Internal Dependencies. -->
+    
+    <!-- Internal Dependencies. -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -89,8 +93,10 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    
     <!-- Build Plugins. -->
     <build>
+
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -103,7 +109,9 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        
         <plugins>
+
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.5</version>
@@ -112,6 +120,7 @@
                     <destDir>apidocs</destDir>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -151,10 +160,14 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
+        
     </build>
+    
     <!-- Project Dependencies. -->
     <dependencies>
+        
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -186,6 +199,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
         <!-- Explicit dependency & version here to avoid transitive dependency mess -->
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
@@ -202,6 +216,7 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.5.0</version>
         </dependency>
+
         <!-- Test Dependencies. -->
         <dependency>
             <groupId>junit</groupId>
@@ -215,11 +230,14 @@
             <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
+
     <!-- Version Control. -->
     <scm>
         <connection>scm:git:ssh://git@github.com/catditch/amee.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/catditch/amee.git</developerConnection>
         <url>scm:git:ssh://git@github.com/catditch/amee.git</url>
     </scm>
+    
 </project>

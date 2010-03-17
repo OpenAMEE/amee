@@ -45,6 +45,8 @@
     <#assign r = ''>
     <#if pe.allow>
         <#assign r = r + '+'>
+    <#else>
+        <#assign r = r + '-'>
     </#if>
     <#if pe.value == 'o'>
         <#assign r = r + 'OWN'>

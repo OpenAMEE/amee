@@ -308,7 +308,7 @@ public class ProfileServiceDAO implements Serializable {
         // Set effective start and end dates.
         for (ProfileItem pi : profileItems) {
             pi.setEffectiveStartDate(startDate);
-            pi.setEffectiveStartDate(endDate);
+            pi.setEffectiveEndDate(endDate);
         }
         
         if (log.isDebugEnabled()) {

@@ -308,7 +308,7 @@ public class AuthorizationService implements Serializable {
      * Gets a List of PermissionEntries from a Collection of Permissions. The PermissionEntries list contains all
      * the PermissionEntries from within all the Permissions.
      *
-     * @param permissions tp get PermissionEntries from
+     * @param permissions to get PermissionEntries from
      * @return PermissionEntries list
      */
     protected List<PermissionEntry> getPermissionEntries(Collection<Permission> permissions) {
