@@ -380,15 +380,15 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     /**
      * Get the effective start date for {@link ItemValue} look-ups.
      *
-     * @return - the effective start date. If no date has been explicitly specified, then either
-     *         now or the Item startDate is returned, whichever is the later.
+     * @return - the effective start date. If no date has been explicitly specified,
+     * then the Item startDate is returned.
      */
     public Date getEffectiveStartDate() {
         if (effectiveStartDate != null) {
             return effectiveStartDate;
         } else {
-            Date now = new Date();
-            return (getStartDate().before(now) ? now : getStartDate());
+
+            return  getStartDate();
         }
     }
 
@@ -408,14 +408,14 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     /**
      * Get the effective end date for {@link ItemValue} look-ups.
      *
-     * @return - the effective end date. If no date has been explicitly specified, then Date(Long.MAX_VALUE)
-     *         is returned
+     * @return - the effective end date. If no date has been explicitly specified,
+     * then the Item endDate is returned.
      */
     public Date getEffectiveEndDate() {
         if (effectiveEndDate != null) {
             return effectiveEndDate;
         } else {
-            return new Date(Long.MAX_VALUE);
+            return getEndDate();
         }
     }
 
