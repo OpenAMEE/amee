@@ -386,9 +386,8 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      *                           before {@link com.amee.domain.data.Item#getStartDate()} this value is ignored.
      */
     public void setEffectiveStartDate(Date effectiveStartDate) {
-        if ((effectiveStartDate == null) ||
-                effectiveStartDate.before(getStartDate())) {
-            return;
+        if (effectiveStartDate.before(getStartDate())) {
+            this.effectiveStartDate = null;
         }
         this.effectiveStartDate = effectiveStartDate;
     }
@@ -414,9 +413,8 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      *                         after {@link com.amee.domain.data.Item#getEndDate()} (if set) this value is ignored.
      */
     public void setEffectiveEndDate(Date effectiveEndDate) {
-        if ((effectiveEndDate == null) ||
-                ((getEndDate() != null) && effectiveEndDate.after(getEndDate())))
-            return;
+        if ((getEndDate() != null) && effectiveEndDate.after(getEndDate()))
+            this.effectiveEndDate=null;
         this.effectiveEndDate = effectiveEndDate;
     }
 
