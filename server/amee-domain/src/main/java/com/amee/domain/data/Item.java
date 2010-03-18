@@ -86,10 +86,10 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     private Set<ItemValue> activeItemValues;
 
     @Transient
-    protected Date effectiveStartDate;
+    private Date effectiveStartDate;
 
     @Transient
-    protected Date effectiveEndDate;
+    private Date effectiveEndDate;
 
     public Item() {
         super();
@@ -386,10 +386,11 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      *                           before {@link com.amee.domain.data.Item#getStartDate()} this value is ignored.
      */
     public void setEffectiveStartDate(Date effectiveStartDate) {
-        if (effectiveStartDate.before(getStartDate())) {
+        if ((effectiveStartDate != null) && effectiveStartDate.before(getStartDate())) {
             this.effectiveStartDate = null;
+        } else {
+            this.effectiveStartDate = effectiveStartDate;
         }
-        this.effectiveStartDate = effectiveStartDate;
     }
 
     /**
@@ -413,9 +414,11 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
      *                         after {@link com.amee.domain.data.Item#getEndDate()} (if set) this value is ignored.
      */
     public void setEffectiveEndDate(Date effectiveEndDate) {
-        if ((getEndDate() != null) && effectiveEndDate.after(getEndDate()))
-            this.effectiveEndDate=null;
-        this.effectiveEndDate = effectiveEndDate;
+        if ((getEndDate() != null) && (effectiveEndDate != null) && effectiveEndDate.after(getEndDate())) {
+            this.effectiveEndDate = null;
+        } else {
+            this.effectiveEndDate = effectiveEndDate;
+        }
     }
 
     /**
