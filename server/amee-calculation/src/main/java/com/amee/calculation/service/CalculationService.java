@@ -197,7 +197,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         // Add ItemDefinition defaults.
         APIVersion apiVersion = profileItem.getProfile().getUser().getAPIVersion();
         profileItem.getItemDefinition().appendInternalValues(values, apiVersion);
-
+        scienceLog.info("Handling item named"+profileItem.getName());
         // Add DataItem values, filtered by start and end dates of the ProfileItem (factoring in the query date range).
         DataItem dataItem = profileItem.getDataItem();
         dataItem.setEffectiveStartDate(profileItem.getEffectiveStartDate());
