@@ -10,7 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="Maven: com.amee.platform:amee-platform-science:1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.amee.platform:amee-platform-science:1.0.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.json:org.json:2.0" level="project" />
     <orderEntry type="library" exported="" name="Maven: joda-time:joda-time:1.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.jscience:jscience:4.3.1" level="project" />
@@ -26,6 +26,7 @@
     <orderEntry type="library" exported="" name="Maven: antlr:antlr:2.7.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: javax.transaction:jta:1.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.slf4j:slf4j-api:1.5.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: xerces:xercesImpl:2.9.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-core:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-beans:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-context:2.5.6" level="project" />

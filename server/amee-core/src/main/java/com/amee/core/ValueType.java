@@ -13,40 +13,41 @@ import java.util.Map;
 
 public enum ValueType implements Serializable {
 
-    UNSPECIFIED, TEXT, DATE, BOOLEAN, INTEGER, DECIMAL;
+    // The order of these values must not be changed!
+    // Hibernate has mapped them to ordinal values.
+    // Any new values must be appended to the list. 
+    UNSPECIFIED("UNSPECIFIED", "Unspecified"),
+    TEXT("TEXT", "Text"),
+    DATE("DATE", "Date"),
+    BOOLEAN("BOOLEAN", "Boolean"),
+    INTEGER("INTEGER", "Integer"),
+    DECIMAL("DECIMAL", "Decimal");
 
-    private String[] names = {
-            "UNSPECIFIED",
-            "TEXT",
-            "DATE",
-            "BOOLEAN",
-            "INTEGER",
-            "DECIMAL"};
+    ValueType(String name, String label) {
+        this.name = name;
+        this.label = label;
+    }
 
-    private String[] labels = {
-            "Unspecified",
-            "Text",
-            "Date",
-            "Boolean",
-            "Integer",
-            "Decimal"};
+    private final String name;
+    private final String label;
 
+    @Override
     public String toString() {
-        return getName();
+        return name;
     }
 
     public String getName() {
-        return names[this.ordinal()];
+        return name;
     }
 
     public String getLabel() {
-        return labels[this.ordinal()];
+        return label;
     }
 
     public static Map<String, String> getChoices() {
         Map<String, String> choices = new LinkedHashMap<String, String>();
         for (ValueType valueType : ValueType.values()) {
-            choices.put(valueType.getName(), valueType.getLabel());
+            choices.put(valueType.name, valueType.label);
         }
         return choices;
     }
@@ -54,8 +55,8 @@ public enum ValueType implements Serializable {
     public static JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         Map<String, String> choices = ValueType.getChoices();
-        for (String key : choices.keySet()) {
-            obj.put(key, choices.get(key));
+        for (Map.Entry<String, String> e : choices.entrySet()) {
+            obj.put(e.getKey(), e.getValue());
         }
         return obj;
     }
@@ -63,10 +64,11 @@ public enum ValueType implements Serializable {
     public static Element getElement(Document document) {
         Element element = document.createElement("ValueTypes");
         Map<String, String> choices = ValueType.getChoices();
-        for (String name : choices.keySet()) {
+        for (Map.Entry<String, String> e : choices.entrySet()) {
             Element valueTypeElem = document.createElement("ValueType");
-            valueTypeElem.setAttribute("name", name);
-            valueTypeElem.setAttribute("label", choices.get(name));
+            valueTypeElem.setAttribute("name", e.getKey());
+            valueTypeElem.setAttribute("label", e.getValue());
+            element.appendChild(valueTypeElem);
         }
         return element;
     }
