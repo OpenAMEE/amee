@@ -11,36 +11,39 @@ import java.util.Map;
 
 public enum UserType implements Serializable {
 
-    STANDARD, GUEST, ANONYMOUS, SUPER;
+    // The order of these values must not be changed!
+    // Hibernate has mapped them to ordinal values.
+    // Any new values must be appended to the list.
+    STANDARD("STANDARD", "Standard"),
+    GUEST("GUEST", "Guest"),
+    ANONYMOUS("ANONYMOUS", "Anonymous"),
+    SUPER("SUPER", "Super");
 
-    private String[] names = {
-            "STANDARD",
-            "GUEST",
-            "ANONYMOUS",
-            "SUPER"};
+    UserType(String name, String label) {
+        this.name = name;
+        this.label = label;
+    }
 
-    private String[] labels = {
-            "Standard",
-            "Guest",
-            "Anonymous",
-            "Super"};
+    private final String name;
+    private final String label;
 
+    @Override
     public String toString() {
-        return getName();
+        return name;
     }
 
     public String getName() {
-        return names[this.ordinal()];
+        return name;
     }
 
     public String getLabel() {
-        return labels[this.ordinal()];
+        return label;
     }
 
     public static Map<String, String> getChoices() {
         Map<String, String> choices = new LinkedHashMap<String, String>();
         for (UserType userType : UserType.values()) {
-            choices.put(userType.getName(), userType.getLabel());
+            choices.put(userType.name, userType.label);
         }
         return choices;
     }
@@ -48,8 +51,8 @@ public enum UserType implements Serializable {
     public static JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         Map<String, String> choices = UserType.getChoices();
-        for (String key : choices.keySet()) {
-            obj.put(key, choices.get(key));
+        for (Map.Entry<String, String> e : choices.entrySet()) {
+            obj.put(e.getKey(), e.getValue());
         }
         return obj;
     }
@@ -57,10 +60,11 @@ public enum UserType implements Serializable {
     public static Element getElement(Document document) {
         Element container = document.createElement("UserTypes");
         Map<String, String> choices = UserType.getChoices();
-        for (String name : choices.keySet()) {
+        for (Map.Entry<String, String> e : choices.entrySet()) {
             Element item = document.createElement("UserType");
-            item.setAttribute("name", name);
-            item.setAttribute("label", choices.get(name));
+            item.setAttribute("name", e.getKey());
+            item.setAttribute("label", e.getValue());
+            container.appendChild(item);
         }
         return container;
     }
