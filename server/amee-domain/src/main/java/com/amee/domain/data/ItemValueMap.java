@@ -67,7 +67,12 @@ public class ItemValueMap extends HashMap {
     public List<ItemValue> getAll(Date startDate) {
         List<ItemValue> itemValues = new ArrayList();
         for (Object path : super.keySet()) {
-            itemValues.add(get((String) path, startDate));
+            ItemValue itemValue = get((String) path, startDate);
+            if (itemValue != null) {
+                itemValues.add(itemValue);
+            } else {
+                log.warn("getAll() Got null ItemValue: path=" + path + ", startDate=" + startDate);
+            }
         }
         return itemValues;
     }
