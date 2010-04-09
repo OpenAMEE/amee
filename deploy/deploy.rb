@@ -19,7 +19,7 @@ set :deploy_to, "/var/www/apps/#{application}"
 # your SCM below:
 # set :scm, :subversion
 set :scm, :git
-set :scm_command, "/usr/bin/git"
+#set :scm_command, "/usr/bin/git"
 
 # Sudo command on remote machine
 set :sudo, "/usr/bin/sudo"
