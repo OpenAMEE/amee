@@ -2,6 +2,8 @@ package com.amee.domain.profile;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -50,12 +52,8 @@ public class ProfileDate extends GCDate {
     }
 
     protected long defaultDate() {
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        cal.clear();
-        cal.set(year, month, 1);
-        return cal.getTimeInMillis();
+        DateMidnight startOfMonth = new DateMidnight().withDayOfMonth(1);
+        return startOfMonth.getMillis();
     }
 
     public static boolean validate(String dateStr) {

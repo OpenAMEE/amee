@@ -30,24 +30,17 @@ import com.amee.platform.science.StartEndDate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.Hibernate;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
+import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Encapsulates all persistence operations for Profiles and Profile Items.
@@ -217,10 +210,8 @@ public class ProfileServiceDAO implements Serializable {
         }
 
         // need to roll the date forward
-        Calendar profileDateCal = Calendar.getInstance();
-        profileDateCal.setTime(profileDate);
-        profileDateCal.add(Calendar.MONTH, 1);
-        profileDate = profileDateCal.getTime();
+        DateTime nextMonth = new DateTime(profileDate).plus(Period.months(1));
+        profileDate = nextMonth.toDate();
 
         // now get all the Profile Items
         List<ProfileItem> profileItems = entityManager.createQuery(

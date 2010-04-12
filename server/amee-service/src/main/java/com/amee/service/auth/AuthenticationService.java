@@ -1,22 +1,17 @@
 package com.amee.service.auth;
 
-import com.amee.domain.AMEEStatus;
-import com.amee.domain.environment.Environment;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;
+import com.amee.domain.environment.Environment;
 import com.amee.domain.site.ISite;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -40,7 +35,7 @@ public class AuthenticationService implements Serializable {
         boolean remoteAddressCheckPassed = false;
         boolean maxAuthDurationCheckPassed = false;
         boolean maxAuthIdleCheckPassed = false;
-        long now = Calendar.getInstance().getTimeInMillis();
+        long now = System.currentTimeMillis();
         String oldAuthToken;
 
         // has authToken been supplied?
@@ -245,7 +240,7 @@ public class AuthenticationService implements Serializable {
         }
 
         public static String createToken(User user, String remoteAddress) {
-            String now = "" + Calendar.getInstance().getTimeInMillis();
+            String now = "" + System.currentTimeMillis();
             Map<String, String> values = new HashMap<String, String>();
             values.put(ENVIRONMENT_UID, user.getEnvironment().getUid());
             values.put(USER_UID, user.getUid());
@@ -256,7 +251,7 @@ public class AuthenticationService implements Serializable {
         }
 
         public static String touchToken(String token) {
-            String now = "" + Calendar.getInstance().getTimeInMillis();
+            String now = "" + System.currentTimeMillis();
             Map<String, String> values = explodeToken(token);
             values.put(MODIFIED, now);
             return encryptToken(implodeToken(values));

@@ -57,7 +57,4 @@ public abstract class GCDate extends java.util.Date {
         return new DateTime(this.getTime());
     }
 
-    public Date toDate() {
-        return new DateTime(this.getTime()).toDate();
-    }
 }

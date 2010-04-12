@@ -19,15 +19,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.annotation.Resource;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -65,7 +58,7 @@ public class ProfileItem extends Item {
 
     @Column(name = "START_DATE")
     @Index(name = "START_DATE_IND")
-    protected Date startDate = Calendar.getInstance().getTime();
+    protected Date startDate = new Date();
 
     @Column(name = "END_DATE")
     @Index(name = "END_DATE_IND")

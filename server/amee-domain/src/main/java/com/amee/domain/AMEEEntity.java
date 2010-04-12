@@ -28,23 +28,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * An abstract base class for all persistent entities in AMEE, providing common base properties and
@@ -167,7 +153,7 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
             throw new RuntimeException("Duplicate UID '" + getUid() + "' detected in class '" + getClass().getSimpleName() + "'.");
         }
         // Update created and modified.
-        Date now = Calendar.getInstance().getTime();
+        Date now = new Date();
         setCreated(now);
         setModified(now);
     }
@@ -187,7 +173,7 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
      */
     @PreUpdate
     public void onModify() {
-        setModified(Calendar.getInstance().getTime());
+        setModified(new Date());
     }
 
     /**
