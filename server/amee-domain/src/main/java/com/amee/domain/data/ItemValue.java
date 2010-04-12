@@ -20,18 +20,10 @@
 package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.AMEEEntity;
-import com.amee.domain.AMEEStatus;
-import com.amee.domain.Builder;
-import com.amee.domain.LocaleHolder;
-import com.amee.domain.ObjectType;
+import com.amee.domain.*;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
-import com.amee.platform.science.DecimalCompoundUnit;
-import com.amee.platform.science.DecimalPerUnit;
-import com.amee.platform.science.DecimalUnit;
-import com.amee.platform.science.ExternalValue;
-import com.amee.platform.science.StartEndDate;
+import com.amee.platform.science.*;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -41,18 +33,8 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,7 +69,7 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
 
     @Column(name = "START_DATE")
     @Index(name = "START_DATE_IND")
-    private Date startDate = Calendar.getInstance().getTime();
+    private Date startDate = new Date();
 
     @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @MapKey(name = "locale")

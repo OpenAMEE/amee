@@ -2,12 +2,7 @@ package com.amee.restlet;
 
 import com.amee.calculation.service.CalculationException;
 import com.amee.core.ThreadBeanHolder;
-import com.amee.domain.AMEEEntityReference;
-import com.amee.domain.AMEEStatus;
-import com.amee.domain.APIVersion;
-import com.amee.domain.ObjectType;
-import com.amee.domain.Pager;
-import com.amee.domain.PagerSetType;
+import com.amee.domain.*;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
@@ -24,25 +19,15 @@ import freemarker.template.TemplateModelException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.dom.DocumentImpl;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
-import org.restlet.data.CharacterSet;
-import org.restlet.data.Form;
-import org.restlet.data.MediaType;
-import org.restlet.data.Method;
-import org.restlet.data.Reference;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
-import org.restlet.data.Status;
+import org.restlet.data.*;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.ext.json.JsonRepresentation;
-import org.restlet.resource.DomRepresentation;
-import org.restlet.resource.Representation;
-import org.restlet.resource.Resource;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.Variant;
-import org.restlet.resource.WriterRepresentation;
+import org.restlet.resource.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -52,7 +37,6 @@ import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -210,9 +194,9 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         if (representation != null) {
             representation.setCharacterSet(CharacterSet.UTF_8);
             // TODO: need an option for this
-            long oneDay = 1000L * 60L * 60L * 24L;
-            representation.setExpirationDate(new Date(Calendar.getInstance().getTimeInMillis() - oneDay));
-            representation.setModificationDate(Calendar.getInstance().getTime());
+            DateTime expire = new DateTime().minus(Period.days(1));
+            representation.setExpirationDate(expire.toDate());
+            representation.setModificationDate(new Date());
         }
 
         return representation;

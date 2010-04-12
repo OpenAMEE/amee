@@ -8,6 +8,8 @@ import com.amee.service.environment.EnvironmentService;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xerces.dom.DocumentImpl;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -19,7 +21,6 @@ import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +45,6 @@ import java.util.Map;
  * Website http://www.amee.cc
  */
 public abstract class AMEEResource extends AuthorizeResource {
-
-    // TTL for all representations is (Now - ONE_DAY)
-    private static final long ONE_DAY = 1000L * 60L * 60L * 24L;
 
     // Allowed values for the request parameter "representation".
     // The "representation" parameter specifies whether or not a representation is required in the response
@@ -113,8 +111,9 @@ public abstract class AMEEResource extends AuthorizeResource {
 
         if (representation != null) {
             representation.setCharacterSet(CharacterSet.UTF_8);
-            representation.setExpirationDate(new Date(Calendar.getInstance().getTimeInMillis() - ONE_DAY));
-            representation.setModificationDate(Calendar.getInstance().getTime());
+            DateTime expire = new DateTime().minus(Period.days(1));
+            representation.setExpirationDate(expire.toDate());
+            representation.setModificationDate(new Date());
         }
         return representation;
     }

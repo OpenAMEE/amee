@@ -26,8 +26,6 @@ import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.sheet.Choice;
 import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Index;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +44,7 @@ public class DataItem extends Item {
     public final static int PATH_SIZE = 255;
 
     // The UNIX time epoch, which is 1970-01-01 00:00:00. See: http://en.wikipedia.org/wiki/Unix_epoch
-    public final static Date EPOCH = new DateTime(0, DateTimeZone.UTC).toDate();
+    public final static Date EPOCH = new Date();
 
     @Column(name = "PATH", length = PATH_SIZE, nullable = true)
     @Index(name = "PATH_IND")
