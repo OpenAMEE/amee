@@ -17,6 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
+import java.util.TimeZone;
 
 /**
  * A User represents a single person or entity who has authenticated access to an Environment.
@@ -65,6 +66,9 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
 
     @Column(name = "LOCALE")
     private String locale = LocaleConstants.DEFAULT_LOCALE.toString();
+
+    @Column(name = "TIME_ZONE")
+    private TimeZone timeZone = TimeZone.getTimeZone("UTC");
 
     public User() {
         super();
@@ -283,6 +287,14 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         } else {
             return locale;
         }
+    }
+
+    public TimeZone getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
     }
 
     public ObjectType getObjectType() {
