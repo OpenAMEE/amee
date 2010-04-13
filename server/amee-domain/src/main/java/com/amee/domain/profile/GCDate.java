@@ -45,6 +45,15 @@ public abstract class GCDate extends java.util.Date {
         }
     }
 
+    /**
+     * Creates a default date using the given time zone.
+     * @param timezone the time zone to use when calculating the default date.
+     */
+    public GCDate(TimeZone timezone) {
+        setTime(defaultDate(timezone));
+        setDefaultDateStr();
+    }
+
     protected abstract long parseStr(String dateStr);
 
     protected abstract void setDefaultDateStr();

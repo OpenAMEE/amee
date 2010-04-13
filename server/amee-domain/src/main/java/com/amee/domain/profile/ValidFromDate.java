@@ -2,7 +2,9 @@ package com.amee.domain.profile;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -38,23 +40,31 @@ public class ValidFromDate extends GCDate {
         super(validFrom);
     }
 
+    /**
+     * Use the static factory method to get a default value object.
+     * @param timeZone
+     */
+    private ValidFromDate(TimeZone timeZone) {
+        super(timeZone);
+    }
+
+    /**
+     * A static factory method to create a default ValidFromDate
+     * @param timeZone the time zone to use when creating the default date.
+     * @return the default date
+     */
+    public static ValidFromDate getDefaultValidFromDate(TimeZone timeZone) {
+        return new ValidFromDate(timeZone);
+    }
+
     protected long parseStr(String dateStr) {
         try {
             DateTime date = FMT.parseDateTime(dateStr);
             return date.dayOfMonth().withMinimumValue().toDateMidnight().getMillis();
         } catch (IllegalArgumentException e) {
             log.warn("parseStr() Caught IllegalArgumentException: " + e.getMessage());
-            return defaultDate();
+            return defaultDate(TimeZone.getTimeZone("UTC"));
         }
-    }
-
-    protected long defaultDate() {
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        cal.clear();
-        cal.set(year, month, 1);
-        return cal.getTimeInMillis();
     }
 
     protected void setDefaultDateStr() {
@@ -63,7 +73,8 @@ public class ValidFromDate extends GCDate {
 
     @Override
     protected long defaultDate(TimeZone timeZone) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        DateMidnight startOfMonth = new DateMidnight(DateTimeZone.forTimeZone(timeZone)).withDayOfMonth(1);
+        return startOfMonth.getMillis();
     }
 
     public static boolean validate(String dateStr) {
