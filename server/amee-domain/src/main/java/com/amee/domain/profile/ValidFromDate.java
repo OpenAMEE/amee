@@ -7,6 +7,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * This file is part of AMEE.
@@ -58,6 +59,11 @@ public class ValidFromDate extends GCDate {
 
     protected void setDefaultDateStr() {
         this.dateStr = FMT.print(this.getTime());
+    }
+
+    @Override
+    protected long defaultDate(TimeZone timeZone) {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public static boolean validate(String dateStr) {

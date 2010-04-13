@@ -38,8 +38,6 @@ public class DrillDownFactory implements CacheableFactory {
 
     private DrillDownDAO drillDownDao;
     private DataCategory dataCategory;
-    private Date startDate;
-    private Date endDate;
     private List<Choice> selections;
     private List<Choice> drillDownChoices;
     private String key;
@@ -51,15 +49,11 @@ public class DrillDownFactory implements CacheableFactory {
     public DrillDownFactory(
             DrillDownDAO drillDownDao,
             DataCategory dataCategory,
-            Date startDate,
-            Date endDate,
             List<Choice> selections,
             List<Choice> drillDownChoices) {
         this();
         this.drillDownDao = drillDownDao;
         this.dataCategory = dataCategory;
-        this.startDate = startDate;
-        this.endDate = endDate;
         this.selections = selections;
         this.drillDownChoices = drillDownChoices;
     }
@@ -71,15 +65,10 @@ public class DrillDownFactory implements CacheableFactory {
         if (drillDownChoices.size() > 0) {
             // get DataItem value choice list
             return drillDownDao.getDataItemValueChoices(
-                    dataCategory,
-                    drillDownChoices.get(0).getName(), selections, startDate,
-                    endDate);
+                    dataCategory, drillDownChoices.get(0).getName(), selections);
         } else {
             // get DataItem UID choice list
-            return drillDownDao.getDataItemUIDChoices(
-                    dataCategory,
-                    selections, startDate,
-                    endDate);
+            return drillDownDao.getDataItemUIDChoices(dataCategory, selections);
         }
     }
 
@@ -95,14 +84,6 @@ public class DrillDownFactory implements CacheableFactory {
                 } else {
                     keyBuilder.append("BLANK");
                 }
-            }
-            if (startDate != null) {
-                keyBuilder.append("_SD_");
-                keyBuilder.append(startDate.getTime());
-            }
-            if (endDate != null) {
-                keyBuilder.append("_ED_");
-                keyBuilder.append(endDate.getTime());
             }
             keyBuilder.append("__L__");
             keyBuilder.append(LocaleHolder.getLocale());

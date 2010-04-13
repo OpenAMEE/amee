@@ -24,13 +24,11 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
-import com.amee.platform.science.StartEndDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,23 +41,11 @@ public class DrillDownService implements Serializable {
     private CacheHelper cacheHelper = CacheHelper.getInstance();
 
     public Choices getChoices(DataCategory dataCategory, List<Choice> selections) {
-        return getValueChoices(dataCategory, selections, null, null);
-    }
-
-    public Choices getValueChoices(DataCategory dataCategory, List<Choice> selections, Date startDate, Date endDate) {
-
-        ItemDefinition itemDefinition;
-        List<Choice> drillDownChoices = null;
-        String name;
-        List<Choice> values = new ArrayList<Choice>();
-
-        // must have a startDate
-        // default to start of month
-        //TODO - Review with Dig - should this default to getStartOfMonthDate or now?
-        startDate = (startDate != null ? startDate : StartEndDate.getStartOfMonthDate());
 
         // we can do a drill down if an itemDefinition is attached to current dataCategory
-        itemDefinition = dataCategory.getItemDefinition();
+        ItemDefinition itemDefinition = dataCategory.getItemDefinition();
+        List<Choice> drillDownChoices = null;
+        List<Choice> values = new ArrayList<Choice>();
         if (itemDefinition != null) {
 
             // obtain drill down choices
@@ -71,10 +57,11 @@ public class DrillDownService implements Serializable {
             removeDrillDownChoicesThatHaveBeenSelected(drillDownChoices, selections);
 
             // get drill down values
-            values = getDataItemChoices(dataCategory, startDate, endDate, selections, drillDownChoices);
+            values = getDataItemChoices(dataCategory, selections, drillDownChoices);
         }
 
         // work out name
+        String name;
         if ((drillDownChoices != null) && (drillDownChoices.size() > 0)) {
             name = drillDownChoices.get(0).getName();
         } else {
@@ -84,7 +71,7 @@ public class DrillDownService implements Serializable {
         // skip ahead if we only have one value that is not "uid"
         if (!name.equals("uid") && (values.size() == 1)) {
             selections.add(new Choice(name, values.get(0).getValue()));
-            return getValueChoices(dataCategory, selections, startDate, endDate);
+            return getChoices(dataCategory, selections);
         } else {
             // wrap result in Choices object
             return new Choices(name, values);
@@ -96,20 +83,10 @@ public class DrillDownService implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    protected List<Choice> getDataItemChoices(
-            DataCategory dataCategory,
-            Date startDate,
-            Date endDate,
-            List<Choice> selections,
-            List<Choice> drillDownChoices) {
+    protected List<Choice> getDataItemChoices(DataCategory dataCategory,
+        List<Choice> selections, List<Choice> drillDownChoices) {
         return (List<Choice>) cacheHelper.getCacheable(
-                new DrillDownFactory(
-                        drillDownDao,
-                        dataCategory,
-                        startDate,
-                        endDate,
-                        selections,
-                        drillDownChoices));
+                new DrillDownFactory(drillDownDao, dataCategory, selections, drillDownChoices));
     }
 
     protected void matchSelectionOrderToDrillDownChoices(List<Choice> drillDownChoices, List<Choice> selections) {

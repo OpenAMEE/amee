@@ -1,6 +1,9 @@
 package com.amee.service;
 
+import com.amee.domain.auth.User;
 import com.amee.platform.science.StartEndDate;
+
+import java.util.TimeZone;
 
 public class BaseBrowser {
 
@@ -14,13 +17,17 @@ public class BaseBrowser {
      * was submitted, the default date corresponding to the start of the month is returned.
      */
     public StartEndDate getQueryStartDate() {
-        return (startDate != null ? startDate : StartEndDate.getStartOfMonthDate());
+        return startDate;
     }
 
     public void setQueryStartDate(String date) {
         if (date != null) {
             startDate = new StartEndDate(date);
         }
+    }
+
+    public void setDefaultQueryStartDate(TimeZone timeZone) {
+        startDate = StartEndDate.getStartOfMonthDate(timeZone);
     }
 
     /**

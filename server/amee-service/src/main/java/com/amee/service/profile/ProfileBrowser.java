@@ -26,6 +26,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 @Component("profileBrowser")
 @Scope("prototype")
@@ -47,6 +48,10 @@ public class ProfileBrowser extends BaseBrowser {
 
     public void setProfileDate(String profileDate) {
         this.profileDate = new ProfileDate(profileDate);
+    }
+
+    public void setDefaultProfileDate(TimeZone timeZone) {
+        this.profileDate = new ProfileDate(timeZone);
     }
 
     public Date getProfileDate() {
