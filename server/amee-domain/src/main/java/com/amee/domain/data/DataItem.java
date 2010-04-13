@@ -44,7 +44,7 @@ public class DataItem extends Item {
     public final static int PATH_SIZE = 255;
 
     // The UNIX time epoch, which is 1970-01-01 00:00:00. See: http://en.wikipedia.org/wiki/Unix_epoch
-    public final static Date EPOCH = new Date();
+    public final static Date EPOCH = new Date(0);
 
     @Column(name = "PATH", length = PATH_SIZE, nullable = true)
     @Index(name = "PATH_IND")
