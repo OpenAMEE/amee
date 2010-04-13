@@ -22,6 +22,7 @@ package com.amee.restlet.profile;
 import com.amee.core.CO2AmountUnit;
 import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.RequestContext;
@@ -33,6 +34,7 @@ import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileCategoryResourceBuilderFactory;
 import com.amee.restlet.utils.APIException;
 import com.amee.service.profile.ProfileConstants;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -150,9 +152,22 @@ public class ProfileCategoryResource extends BaseProfileResource {
 
         Form form = getRequest().getResourceRef().getQueryAsForm();
         if (getAPIVersion().isVersionOne()) {
-            profileBrowser.setProfileDate(form.getFirstValue("profileDate"));
+
+            String profileDate = form.getFirstValue("profileDate");
+            if (StringUtils.isEmpty(profileDate)) {
+                User currentUser = (User) Request.getCurrent().getAttributes().get("activeUser");
+                profileBrowser.setDefaultProfileDate(currentUser.getTimeZone());
+            } else {
+                profileBrowser.setProfileDate(profileDate);
+            }
         } else {
-            profileBrowser.setQueryStartDate(form.getFirstValue("startDate"));
+            String startDate = form.getFirstValue("startDate");
+            if (StringUtils.isEmpty(startDate)) {
+                User currentUser = (User) Request.getCurrent().getAttributes().get("activeUser");
+                profileBrowser.setDefaultQueryStartDate(currentUser.getTimeZone());
+            } else {
+                profileBrowser.setQueryStartDate(startDate);
+            }
             profileBrowser.setQueryEndDate(form.getFirstValue("endDate"));
             profileBrowser.setDuration(form.getFirstValue("duration"));
             profileBrowser.setSelectBy(form.getFirstValue("selectby"));

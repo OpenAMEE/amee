@@ -21,6 +21,7 @@
  */
 package com.amee.googleds;
 
+import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
@@ -45,6 +46,7 @@ import com.google.visualization.datasource.datatable.value.DateTimeValue;
 import com.google.visualization.datasource.datatable.value.ValueType;
 import com.google.visualization.datasource.query.Query;
 import org.joda.time.DateTime;
+import org.restlet.data.Request;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -184,7 +186,8 @@ public class ProfileCategoryServlet extends DataSourceServlet {
         DataCategory category = dataService.getDataCategoryByUid(pathItem.getUid());
         if (category.getItemDefinition() != null) {
             Profile profile = profileService.getProfile(environment, profileUid);
-            return profileService.getProfileItems(profile, category, StartEndDate.getStartOfMonthDate(), null);
+            User currentUser = (User) Request.getCurrent().getAttributes().get("activeUser");
+            return profileService.getProfileItems(profile, category, StartEndDate.getStartOfMonthDate(currentUser.getTimeZone()), null);
         } else {
             return new ArrayList<ProfileItem>(0);
         }

@@ -4,10 +4,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * This file is part of AMEE.
@@ -38,8 +40,16 @@ public class ProfileDate extends GCDate {
         super(System.currentTimeMillis());
     }
 
+    // Called if profileDate is null (empty)
     public ProfileDate(String profileDate) {
         super(profileDate);
+    }
+
+    // Default time in the given time zone
+    public ProfileDate(TimeZone timeZone) {
+        super(System.currentTimeMillis());
+        setTime(defaultDate(timeZone));
+        setDefaultDateStr();
     }
 
     protected long parseStr(String dateStr) {
@@ -47,12 +57,13 @@ public class ProfileDate extends GCDate {
             return MONTH_DATE.parseDateTime(dateStr).getMillis();
         } catch (IllegalArgumentException e) {
             log.warn("parseStr() Caught IllegalArgumentException: " + e.getMessage());
-            return defaultDate();
+            return defaultDate(TimeZone.getTimeZone("UTC"));
         }
     }
 
-    protected long defaultDate() {
-        DateMidnight startOfMonth = new DateMidnight().withDayOfMonth(1);
+    protected long defaultDate(TimeZone timeZone) {
+        // Beginning of current month in the given time zone.
+        DateMidnight startOfMonth = new DateMidnight(DateTimeZone.forTimeZone(timeZone)).withDayOfMonth(1);
         return startOfMonth.getMillis();
     }
 

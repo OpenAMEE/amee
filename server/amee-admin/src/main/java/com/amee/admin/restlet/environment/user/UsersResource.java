@@ -12,6 +12,7 @@ import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.environment.EnvironmentConstants;
 import com.amee.service.environment.SiteService;
+import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 @Component
 @Scope("prototype")
@@ -160,6 +162,10 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                     if (LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                         newUser.setLocale(locale);
                     }
+                }
+                if (form.getNames().contains("timeZone")) {
+                    TimeZone timeZone = TimeZone.getTimeZone(form.getFirstValue("timeZone"));
+                    newUser.setTimeZone(timeZone);
                 }
                 newUser.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
                 if (newUser.getAPIVersion() != null) {

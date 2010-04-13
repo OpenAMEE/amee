@@ -3,6 +3,7 @@ package com.amee.domain.profile;
 import org.joda.time.DateTime;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * This file is part of AMEE.
@@ -38,7 +39,8 @@ public abstract class GCDate extends java.util.Date {
             setTime(parseStr(dateStr));
             this.dateStr = dateStr;
         } else {
-            setTime(defaultDate());
+            // Default to UTC
+            setTime(defaultDate(TimeZone.getTimeZone("UTC")));
             setDefaultDateStr();
         }
     }
@@ -47,7 +49,7 @@ public abstract class GCDate extends java.util.Date {
 
     protected abstract void setDefaultDateStr();
 
-    protected abstract long defaultDate();
+    protected abstract long defaultDate(TimeZone timeZone);
     
     public String toString() {
         return dateStr;    
