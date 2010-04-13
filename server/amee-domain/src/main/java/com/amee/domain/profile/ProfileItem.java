@@ -97,6 +97,7 @@ public class ProfileItem extends Item {
         this.builder = builder;
     }
 
+    @Override
     public String toString() {
         return "ProfileItem_" + getUid();
     }

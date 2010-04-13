@@ -25,6 +25,7 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
+import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataCategoryLocaleName;
 import com.amee.domain.data.DataItem;
@@ -145,8 +146,18 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         log.debug("doGet()");
         if (getAPIVersion().isNotVersionOne()) {
             Form form = getRequest().getResourceRef().getQueryAsForm();
-            dataBrowser.setQueryStartDate(form.getFirstValue("startDate"));
+            String startDate = form.getFirstValue("startDate");
+            if (StringUtils.isEmpty(startDate)) {
+                User currentUser = (User) Request.getCurrent().getAttributes().get("activeUser");
+                dataBrowser.setDefaultQueryStartDate(currentUser.getTimeZone());
+            } else {
+                dataBrowser.setQueryStartDate(startDate);
+            }
+            // Set default
             dataBrowser.setQueryEndDate(form.getFirstValue("endDate"));
+        } else {
+            User currentUser = (User) Request.getCurrent().getAttributes().get("activeUser");
+            dataBrowser.setDefaultQueryStartDate(currentUser.getTimeZone());
         }
         super.doGet();
     }
