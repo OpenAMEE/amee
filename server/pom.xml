@@ -235,9 +235,9 @@
 
     <!-- Version Control. -->
     <scm>
-        <connection>scm:git:ssh://git@github.com/catditch/amee.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/catditch/amee.git</developerConnection>
-        <url>scm:git:ssh://git@github.com/catditch/amee.git</url>
+        <connection>scm:git:ssh://git@github.com/AMEE/amee.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/AMEE/amee.git</developerConnection>
+        <url>scm:git:ssh://git@github.com/AMEE/amee.git</url>
     </scm>
 
 </project>

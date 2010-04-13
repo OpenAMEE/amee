@@ -6,7 +6,7 @@
 default_run_options[:pty] = true
 
 set :application, "amee"
-set :repository,  "git@github.com:catditch/amee.deploy.git"
+set :repository,  "git@github.com:AMEE/amee.deploy.git"
 set :deploy_to, "/var/www/apps/#{application}"
 
 # Sudo command on remote machine
