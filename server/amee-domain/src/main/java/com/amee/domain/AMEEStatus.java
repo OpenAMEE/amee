@@ -32,34 +32,38 @@ import java.util.Map;
 
 public enum AMEEStatus implements Serializable {
 
-    TRASH, ACTIVE, DEPRECATED;
+    // The order of these values must not be changed!
+    // Hibernate has mapped them to ordinal values.
+    // Any new values must be appended to the list.
+    TRASH("TRASH", "Trash"),
+    ACTIVE("ACTIVE", "Active"),
+    DEPRECATED("DEPRECATED", "Deprecated");
 
-    private String[] names = {
-            "TRASH",
-            "ACTIVE",
-            "DEPRECATED"};
+    AMEEStatus(String name, String label) {
+        this.name = name;
+        this.label = label;
+    }
 
-    private String[] labels = {
-            "Trash",
-            "Active",
-            "Deprecated"};
+    private final String name;
+    private final String label;
 
+    @Override
     public String toString() {
-        return getName();
+        return name;
     }
 
     public String getName() {
-        return names[this.ordinal()];
+        return name;
     }
 
     public String getLabel() {
-        return labels[this.ordinal()];
+        return label;
     }
 
     public static Map<String, String> getChoices() {
         Map<String, String> choices = new LinkedHashMap<String, String>();
         for (AMEEStatus status : AMEEStatus.values()) {
-            choices.put(status.getName(), status.getLabel());
+            choices.put(status.name, status.label);
         }
         return choices;
     }
@@ -67,8 +71,8 @@ public enum AMEEStatus implements Serializable {
     public static JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         Map<String, String> choices = AMEEStatus.getChoices();
-        for (String key : choices.keySet()) {
-            obj.put(key, choices.get(key));
+        for (Map.Entry<String, String> e : choices.entrySet()) {
+            obj.put(e.getKey(), e.getValue());
         }
         return obj;
     }
@@ -76,10 +80,11 @@ public enum AMEEStatus implements Serializable {
     public static Element getElement(Document document) {
         Element statesElem = document.createElement("States");
         Map<String, String> choices = AMEEStatus.getChoices();
-        for (String name : choices.keySet()) {
+        for (Map.Entry<String, String> e : choices.entrySet()) {
             Element statusElem = document.createElement("Status");
-            statusElem.setAttribute("name", name);
-            statusElem.setAttribute("label", choices.get(name));
+            statusElem.setAttribute("name", e.getKey());
+            statusElem.setAttribute("label", e.getValue());
+            statesElem.appendChild(statusElem);
         }
         return statesElem;
     }
