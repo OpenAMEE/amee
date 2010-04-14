@@ -21,6 +21,7 @@
  */
 package com.amee.googleds;
 
+import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
@@ -52,6 +53,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 @SuppressWarnings("serial")
 public class ProfileCategoryServlet extends DataSourceServlet {
@@ -186,8 +188,8 @@ public class ProfileCategoryServlet extends DataSourceServlet {
         DataCategory category = dataService.getDataCategoryByUid(pathItem.getUid());
         if (category.getItemDefinition() != null) {
             Profile profile = profileService.getProfile(environment, profileUid);
-            User currentUser = (User) Request.getCurrent().getAttributes().get("activeUser");
-            return profileService.getProfileItems(profile, category, StartEndDate.getStartOfMonthDate(currentUser.getTimeZone()), null);
+            TimeZone timeZone = TimeZoneHolder.getTimeZone();
+            return profileService.getProfileItems(profile, category, StartEndDate.getStartOfMonthDate(timeZone), null);
         } else {
             return new ArrayList<ProfileItem>(0);
         }

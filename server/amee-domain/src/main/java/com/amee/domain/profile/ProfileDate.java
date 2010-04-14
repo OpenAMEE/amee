@@ -1,5 +1,6 @@
 package com.amee.domain.profile;
 
+import com.amee.domain.TimeZoneHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateMidnight;
@@ -40,16 +41,8 @@ public class ProfileDate extends GCDate {
         super(System.currentTimeMillis());
     }
 
-    // Called if profileDate is null (empty)
     public ProfileDate(String profileDate) {
         super(profileDate);
-    }
-
-    // Default time in the given time zone
-    public ProfileDate(TimeZone timeZone) {
-        super(System.currentTimeMillis());
-        setTime(defaultDate(timeZone));
-        setDefaultDateStr();
     }
 
     protected long parseStr(String dateStr) {
@@ -57,12 +50,13 @@ public class ProfileDate extends GCDate {
             return MONTH_DATE.parseDateTime(dateStr).getMillis();
         } catch (IllegalArgumentException e) {
             log.warn("parseStr() Caught IllegalArgumentException: " + e.getMessage());
-            return defaultDate(TimeZone.getTimeZone("UTC"));
+            return defaultDate();
         }
     }
 
-    protected long defaultDate(TimeZone timeZone) {
-        // Beginning of current month in the given time zone.
+    protected long defaultDate() {
+        // Beginning of current month in the user's time zone.
+        TimeZone timeZone = TimeZoneHolder.getTimeZone();
         DateMidnight startOfMonth = new DateMidnight(DateTimeZone.forTimeZone(timeZone)).withDayOfMonth(1);
         return startOfMonth.getMillis();
     }

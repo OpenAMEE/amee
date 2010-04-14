@@ -20,8 +20,11 @@
 package com.amee.domain.profile.builder.v2;
 
 import com.amee.core.APIUtils;
+import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.Builder;
 import com.amee.core.CO2AmountUnit;
+import com.amee.domain.LocaleHolder;
+import com.amee.domain.auth.User;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
@@ -97,6 +100,7 @@ public class ProfileItemBuilder implements Builder {
         amount.put("unit", returnUnit);
         obj.put("amount", amount);
 
+        // TODO: Convert to user time
         obj.put("startDate", item.getStartDate().toString());
         obj.put("endDate", (item.getEndDate() != null) ? item.getEndDate().toString() : "");
         obj.put("dataItem", item.getDataItem().getIdentityJSONObject());
@@ -122,7 +126,8 @@ public class ProfileItemBuilder implements Builder {
         amount.setTextContent(item.getAmount().convert(returnUnit).toString());
         amount.setAttribute("unit", returnUnit.toString());
         element.appendChild(amount);
-        
+
+        // TODO: Convert to user time
         element.appendChild(APIUtils.getElement(document, "StartDate", item.getStartDate().toString()));
         element.appendChild(APIUtils.getElement(document, "EndDate", (item.getEndDate() != null) ? item.getEndDate().toString() : ""));
 
