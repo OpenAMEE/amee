@@ -3,7 +3,9 @@ package com.amee.domain.data.builder.v2;
 import com.amee.core.APIUtils;
 import com.amee.domain.APIVersion;
 import com.amee.domain.Builder;
+import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.ItemValueDefinition;
+import com.amee.platform.science.StartEndDate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,8 +62,10 @@ public class ItemValueDefinitionBuilder implements Builder {
         }
 
         if (detailed) {
-            obj.put("created", itemValueDefinition.getCreated());
-            obj.put("modified", itemValueDefinition.getModified());
+            obj.put("created",
+                    StartEndDate.getLocalStartEndDate(itemValueDefinition.getCreated(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("modified",
+                    StartEndDate.getLocalStartEndDate(itemValueDefinition.getModified(), TimeZoneHolder.getTimeZone()).toDate());
             obj.put("value", itemValueDefinition.getValue());
             obj.put("choices", itemValueDefinition.getChoices());
             obj.put("allowedRoles", itemValueDefinition.getAllowedRoles());
@@ -97,8 +101,10 @@ public class ItemValueDefinitionBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "FromData", Boolean.toString(itemValueDefinition.isFromData())));
         element.appendChild((APIUtils.getElement(document, "DrillDown", Boolean.toString(itemValueDefinition.isDrillDown()))));
         if (detailed) {
-            element.setAttribute("created", itemValueDefinition.getCreated().toString());
-            element.setAttribute("modified", itemValueDefinition.getModified().toString());
+            element.setAttribute("created",
+                    StartEndDate.getLocalStartEndDate(itemValueDefinition.getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("modified",
+                    StartEndDate.getLocalStartEndDate(itemValueDefinition.getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
             element.appendChild(APIUtils.getElement(document, "Value", itemValueDefinition.getValue()));
             element.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getChoices()));
             element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));

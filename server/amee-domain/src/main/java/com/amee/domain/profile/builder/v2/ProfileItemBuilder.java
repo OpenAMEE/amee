@@ -20,22 +20,26 @@
 package com.amee.domain.profile.builder.v2;
 
 import com.amee.core.APIUtils;
-import com.amee.core.ThreadBeanHolder;
 import com.amee.domain.Builder;
 import com.amee.core.CO2AmountUnit;
-import com.amee.domain.LocaleHolder;
-import com.amee.domain.auth.User;
+import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.DecimalCompoundUnit;
 import com.amee.platform.science.StartEndDate;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.ISODateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import java.util.Date;
+import java.util.TimeZone;
 
 public class ProfileItemBuilder implements Builder {
 
@@ -53,8 +57,8 @@ public class ProfileItemBuilder implements Builder {
 
     public void buildElement(JSONObject obj, boolean detailed) throws JSONException {
         obj.put("uid", item.getUid());
-        obj.put("created", new StartEndDate(item.getCreated()));
-        obj.put("modified", new StartEndDate(item.getModified()));
+        obj.put("created", StartEndDate.getLocalStartEndDate(item.getCreated(), TimeZoneHolder.getTimeZone()).toDate());
+        obj.put("modified", StartEndDate.getLocalStartEndDate(item.getModified(), TimeZoneHolder.getTimeZone()).toDate());
 
         obj.put("name", item.getName().isEmpty() ? JSONObject.NULL : item.getName());
         JSONArray itemValues = new JSONArray();
@@ -73,8 +77,10 @@ public class ProfileItemBuilder implements Builder {
 
     public void buildElement(Document document, Element element, boolean detailed) {
         element.setAttribute("uid", item.getUid());
-        element.setAttribute("created", new StartEndDate(item.getCreated()).toString());
-        element.setAttribute("modified", new StartEndDate(item.getModified()).toString());
+        element.setAttribute("created",
+                StartEndDate.getLocalStartEndDate(item.getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+        element.setAttribute("modified",
+                StartEndDate.getLocalStartEndDate(item.getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
 
         element.appendChild(APIUtils.getElement(document, "Name", item.getName()));
         Element itemValuesElem = document.createElement("ItemValues");
@@ -100,9 +106,9 @@ public class ProfileItemBuilder implements Builder {
         amount.put("unit", returnUnit);
         obj.put("amount", amount);
 
-        // TODO: Convert to user time
-        obj.put("startDate", item.getStartDate().toString());
-        obj.put("endDate", (item.getEndDate() != null) ? item.getEndDate().toString() : "");
+        // Convert to user's time zone
+        obj.put("startDate", StartEndDate.getLocalStartEndDate(item.getStartDate(), TimeZoneHolder.getTimeZone()).toString());
+        obj.put("endDate", (item.getEndDate() != null) ? StartEndDate.getLocalStartEndDate(item.getEndDate(), TimeZoneHolder.getTimeZone()).toString() : "");
         obj.put("dataItem", item.getDataItem().getIdentityJSONObject());
 
         // DataItem
@@ -127,9 +133,11 @@ public class ProfileItemBuilder implements Builder {
         amount.setAttribute("unit", returnUnit.toString());
         element.appendChild(amount);
 
-        // TODO: Convert to user time
-        element.appendChild(APIUtils.getElement(document, "StartDate", item.getStartDate().toString()));
-        element.appendChild(APIUtils.getElement(document, "EndDate", (item.getEndDate() != null) ? item.getEndDate().toString() : ""));
+        // Convert to user's time zone
+        element.appendChild(APIUtils.getElement(document, "StartDate",
+                StartEndDate.getLocalStartEndDate(item.getStartDate(), TimeZoneHolder.getTimeZone()).toString()));
+        element.appendChild(APIUtils.getElement(document, "EndDate",
+                (item.getEndDate() != null) ? StartEndDate.getLocalStartEndDate(item.getEndDate(), TimeZoneHolder.getTimeZone()).toString() : ""));
 
         // DataItem
         DataItem bDataItem = item.getDataItem();

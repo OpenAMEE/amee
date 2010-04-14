@@ -20,12 +20,10 @@
 package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.AMEEStatus;
-import com.amee.domain.LocaleHolder;
-import com.amee.domain.ObjectType;
+import com.amee.domain.*;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
+import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -168,8 +166,8 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         obj.put("name", getName());
         obj.put("deprecated", isDeprecated());
         if (detailed) {
-            obj.put("created", getCreated().toString());
-            obj.put("modified", getModified().toString());
+            obj.put("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            obj.put("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
             obj.put("environment", getEnvironment().getJSONObject(false));
             if (getDataCategory() != null) {
                 obj.put("dataCategory", getDataCategory().getIdentityJSONObject());
@@ -192,8 +190,10 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         element.appendChild(APIUtils.getElement(document, "Path", getPath()));
         element.appendChild(APIUtils.getElement(document, "Deprecated", "" + isDeprecated()));
         if (detailed) {
-            element.setAttribute("created", getCreated().toString());
-            element.setAttribute("modified", getModified().toString());
+            element.setAttribute("created",
+                    StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("modified",
+                    StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
             element.appendChild(getEnvironment().getIdentityElement(document));
             if (getDataCategory() != null) {
                 element.appendChild(getDataCategory().getIdentityElement(document));
