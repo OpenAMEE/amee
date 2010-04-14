@@ -50,10 +50,6 @@ public class ProfileBrowser extends BaseBrowser {
         this.profileDate = new ProfileDate(profileDate);
     }
 
-    public void setDefaultProfileDate(TimeZone timeZone) {
-        this.profileDate = new ProfileDate(timeZone);
-    }
-
     public Date getProfileDate() {
         return profileDate;
     }

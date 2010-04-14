@@ -148,13 +148,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
         // TODO - Each APIVersion should have it's own Acceptor
         if (resource.getAPIVersion().isVersionOne()) {
             // Set the startDate and end marker.
-            String validFrom = form.getFirstValue("validFrom");
-            if (StringUtils.isEmpty(validFrom)) {
-                User currentUser = (User) Request.getCurrent().getAttributes().get("activeUser");
-                profileItem.setStartDate(ValidFromDate.getDefaultValidFromDate(currentUser.getTimeZone()));
-            } else {
-                profileItem.setStartDate(new ValidFromDate(validFrom));
-            }
+            profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
             boolean end = Boolean.valueOf(form.getFirstValue("end"));
             if (end) {
                 profileItem.setEndDate(profileItem.getStartDate());

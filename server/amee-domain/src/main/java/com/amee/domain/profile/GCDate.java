@@ -39,27 +39,18 @@ public abstract class GCDate extends java.util.Date {
             setTime(parseStr(dateStr));
             this.dateStr = dateStr;
         } else {
-            // Default to UTC
-            setTime(defaultDate(TimeZone.getTimeZone("UTC")));
+            setTime(defaultDate());
             setDefaultDateStr();
         }
-    }
-
-    /**
-     * Creates a default date using the given time zone.
-     * @param timezone the time zone to use when calculating the default date.
-     */
-    public GCDate(TimeZone timezone) {
-        setTime(defaultDate(timezone));
-        setDefaultDateStr();
     }
 
     protected abstract long parseStr(String dateStr);
 
     protected abstract void setDefaultDateStr();
 
-    protected abstract long defaultDate(TimeZone timeZone);
+    protected abstract long defaultDate();
     
+    @Override
     public String toString() {
         return dateStr;    
     }

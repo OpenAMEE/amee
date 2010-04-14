@@ -146,18 +146,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         log.debug("doGet()");
         if (getAPIVersion().isNotVersionOne()) {
             Form form = getRequest().getResourceRef().getQueryAsForm();
-            String startDate = form.getFirstValue("startDate");
-            if (StringUtils.isEmpty(startDate)) {
-                User currentUser = (User) Request.getCurrent().getAttributes().get("activeUser");
-                dataBrowser.setDefaultQueryStartDate(currentUser.getTimeZone());
-            } else {
-                dataBrowser.setQueryStartDate(startDate);
-            }
-            // Set default
+            dataBrowser.setQueryStartDate(form.getFirstValue("startDate"));
             dataBrowser.setQueryEndDate(form.getFirstValue("endDate"));
-        } else {
-            User currentUser = (User) Request.getCurrent().getAttributes().get("activeUser");
-            dataBrowser.setDefaultQueryStartDate(currentUser.getTimeZone());
         }
         super.doGet();
     }
