@@ -21,8 +21,10 @@ package com.amee.domain.data.builder.v2;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.Builder;
+import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
+import com.amee.platform.science.StartEndDate;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -40,15 +42,15 @@ public class ItemValueInListBuilder implements Builder {
         JSONObject obj = new JSONObject();
         // Meta.
         obj.put("uid", itemValue.getUid());
-        obj.put("created", itemValue.getCreated());
-        obj.put("modified", itemValue.getModified());
+        obj.put("created", StartEndDate.getLocalStartEndDate(itemValue.getCreated(), TimeZoneHolder.getTimeZone()).toDate());
+        obj.put("modified", StartEndDate.getLocalStartEndDate(itemValue.getModified(), TimeZoneHolder.getTimeZone()).toDate());
         // Data.
         obj.put("path", itemValue.getPath());
         obj.put("name", itemValue.getName());
         obj.put("value", itemValue.getValue());
         obj.put("unit", itemValue.getUnit());
         obj.put("perUnit", itemValue.getPerUnit());
-        obj.put("startDate", itemValue.getStartDate().toString());
+        obj.put("startDate", StartEndDate.getLocalStartEndDate(itemValue.getStartDate(), TimeZoneHolder.getTimeZone()).toString());
         // Related entities.
         obj.put("itemValueDefinition", getItemValueDefinitionJSONObject(itemValue.getItemValueDefinition()));
         return obj;
@@ -64,15 +66,18 @@ public class ItemValueInListBuilder implements Builder {
         Element element = document.createElement("ItemValue");
         // Meta.
         element.setAttribute("uid", itemValue.getUid());
-        element.setAttribute("created", itemValue.getCreated().toString());
-        element.setAttribute("modified", itemValue.getModified().toString());
+        element.setAttribute("created",
+                StartEndDate.getLocalStartEndDate(itemValue.getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+        element.setAttribute("modified",
+                StartEndDate.getLocalStartEndDate(itemValue.getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
         // Data.
         element.appendChild(APIUtils.getElement(document, "Path", itemValue.getPath()));
         element.appendChild(APIUtils.getElement(document, "Name", itemValue.getName()));
         element.appendChild(APIUtils.getElement(document, "Value", itemValue.getValue()));
         element.appendChild(APIUtils.getElement(document, "Unit", itemValue.getUnit().toString()));
         element.appendChild(APIUtils.getElement(document, "PerUnit", itemValue.getPerUnit().toString()));
-        element.appendChild(APIUtils.getElement(document, "StartDate", itemValue.getStartDate().toString()));
+        element.appendChild(APIUtils.getElement(document, "StartDate",
+                StartEndDate.getLocalStartEndDate(itemValue.getStartDate(), TimeZoneHolder.getTimeZone()).toString()));
         // Related entities.
         element.appendChild(getItemValueDefinitionElement(document, itemValue.getItemValueDefinition()));
         return element;

@@ -21,10 +21,12 @@ package com.amee.domain.data.builder.v2;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.Builder;
+import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.Item;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
+import com.amee.platform.science.StartEndDate;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -46,13 +48,16 @@ public class ItemValueBuilder implements Builder {
         obj.put("value", itemValue.getValue());
         obj.put("unit", itemValue.getUnit());
         obj.put("perUnit", itemValue.getPerUnit());
-        obj.put("startDate", itemValue.getStartDate().toString());
+        obj.put("startDate",
+                StartEndDate.getLocalStartEndDate(itemValue.getStartDate(), TimeZoneHolder.getTimeZone()).toString());
         obj.put("itemValueDefinition", itemValue.getItemValueDefinition().getJSONObject(false));
         obj.put("displayName", itemValue.getDisplayName());
         obj.put("displayPath", itemValue.getDisplayPath());
         if (detailed) {
-            obj.put("created", itemValue.getCreated());
-            obj.put("modified", itemValue.getModified());
+            obj.put("created",
+                    StartEndDate.getLocalStartEndDate(itemValue.getCreated(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("modified",
+                    StartEndDate.getLocalStartEndDate(itemValue.getModified(), TimeZoneHolder.getTimeZone()).toDate());
             Item item = itemValue.getItem();
             if (item instanceof ProfileItem) {
                 ProfileItem pi = ((ProfileItem) item);
@@ -71,11 +76,14 @@ public class ItemValueBuilder implements Builder {
         element.appendChild(APIUtils.getElement(document, "Value", itemValue.getValue()));
         element.appendChild(APIUtils.getElement(document, "Unit", itemValue.getUnit().toString()));
         element.appendChild(APIUtils.getElement(document, "PerUnit", itemValue.getPerUnit().toString()));
-        element.appendChild(APIUtils.getElement(document, "StartDate", itemValue.getStartDate().toString()));
+        element.appendChild(APIUtils.getElement(document, "StartDate",
+                StartEndDate.getLocalStartEndDate(itemValue.getStartDate(), TimeZoneHolder.getTimeZone()).toString()));
         element.appendChild(itemValue.getItemValueDefinition().getElement(document, false));
         if (detailed) {
-            element.setAttribute("Created", itemValue.getCreated().toString());
-            element.setAttribute("Modified", itemValue.getModified().toString());
+            element.setAttribute("Created",
+                    StartEndDate.getLocalStartEndDate(itemValue.getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("Modified",
+                    StartEndDate.getLocalStartEndDate(itemValue.getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
             element.appendChild(itemValue.getItem().getIdentityElement(document));
         }
         return element;

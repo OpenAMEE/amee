@@ -22,6 +22,7 @@ package com.amee.domain.data;
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.ObjectType;
+import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.sheet.Choice;
 import com.amee.platform.science.StartEndDate;
@@ -58,6 +59,7 @@ public class DataItem extends Item {
         super(dataCategory, itemDefinition);
     }
 
+    @Override
     public String toString() {
         return "DataItem_" + getUid();
     }
@@ -94,8 +96,10 @@ public class DataItem extends Item {
         }
         element.appendChild(itemValuesElem);
         if (detailed) {
-            element.setAttribute("created", getCreated().toString());
-            element.setAttribute("modified", getModified().toString());
+            element.setAttribute("created",
+                    StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("modified",
+                    StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
             element.appendChild(getEnvironment().getIdentityElement(document));
             element.appendChild(getItemDefinition().getIdentityElement(document));
             element.appendChild(getDataCategory().getIdentityElement(document));
@@ -134,8 +138,8 @@ public class DataItem extends Item {
         }
         obj.put("itemValues", itemValues);
         if (detailed) {
-            obj.put("created", getCreated());
-            obj.put("modified", getModified());
+            obj.put("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate());
             obj.put("environment", getEnvironment().getJSONObject());
             obj.put("itemDefinition", getItemDefinition().getJSONObject());
             obj.put("dataCategory", getDataCategory().getIdentityJSONObject());
@@ -177,8 +181,9 @@ public class DataItem extends Item {
         buildJSON(obj, detailed, showHistory);
         obj.put("path", getPath());
         obj.put("label", getLabel());
-        obj.put("startDate", getStartDate().toString());
-        obj.put("endDate", (getEndDate() != null) ? getEndDate().toString() : "");
+        obj.put("startDate", StartEndDate.getLocalStartEndDate(getStartDate(), TimeZoneHolder.getTimeZone()).toString());
+        obj.put("endDate",
+                (getEndDate() != null) ? StartEndDate.getLocalStartEndDate(getEndDate(), TimeZoneHolder.getTimeZone()).toString() : "");
         return obj;
     }
 
@@ -199,8 +204,10 @@ public class DataItem extends Item {
         buildElement(document, dataItemElement, detailed, showHistory);
         dataItemElement.appendChild(APIUtils.getElement(document, "Path", getDisplayPath()));
         dataItemElement.appendChild(APIUtils.getElement(document, "Label", getLabel()));
-        dataItemElement.appendChild(APIUtils.getElement(document, "StartDate", getStartDate().toString()));
-        dataItemElement.appendChild(APIUtils.getElement(document, "EndDate", (getEndDate() != null) ? getEndDate().toString() : ""));
+        dataItemElement.appendChild(APIUtils.getElement(document, "StartDate",
+                StartEndDate.getLocalStartEndDate(getStartDate(), TimeZoneHolder.getTimeZone()).toString()));
+        dataItemElement.appendChild(APIUtils.getElement(document, "EndDate",
+                (getEndDate() != null) ? StartEndDate.getLocalStartEndDate(getEndDate(), TimeZoneHolder.getTimeZone()).toString() : ""));
         return dataItemElement;
     }
 

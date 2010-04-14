@@ -1,13 +1,11 @@
 package com.amee.domain.auth;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.APIVersion;
-import com.amee.domain.LocaleConstants;
-import com.amee.domain.ObjectType;
+import com.amee.domain.*;
 import com.amee.domain.auth.crypto.Crypto;
 import com.amee.domain.auth.crypto.CryptoException;
 import com.amee.domain.environment.Environment;
+import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -85,6 +83,7 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         setName(name);
     }
 
+    @Override
     public String toString() {
         return "User: " + getUsername();
     }
@@ -111,8 +110,8 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
             obj.put("name", getName());
             obj.put("email", getEmail());
             obj.put("environment", getEnvironment().getIdentityJSONObject());
-            obj.put("created", getCreated());
-            obj.put("modified", getModified());
+            obj.put("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate());
         }
         return obj;
     }
@@ -143,8 +142,10 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
             element.appendChild(APIUtils.getElement(document, "Username", getUsername()));
             element.appendChild(APIUtils.getElement(document, "Email", getEmail()));
             element.appendChild(getEnvironment().getIdentityElement(document));
-            element.setAttribute("created", getCreated().toString());
-            element.setAttribute("modified", getModified().toString());
+            element.setAttribute("created",
+                    StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("modified",
+                    StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
         }
         return element;
     }

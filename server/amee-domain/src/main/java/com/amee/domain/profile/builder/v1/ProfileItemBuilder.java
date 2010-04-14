@@ -21,10 +21,15 @@ package com.amee.domain.profile.builder.v1;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.Builder;
+import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v1.ItemValueBuilder;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.DecimalPerUnit;
+import com.amee.platform.science.StartEndDate;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.ISODateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +38,8 @@ import org.w3c.dom.Element;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class ProfileItemBuilder implements Builder {
 
@@ -55,8 +62,8 @@ public class ProfileItemBuilder implements Builder {
         }
         obj.put("itemValues", itemValues);
         if (detailed) {
-            obj.put("created", item.getCreated());
-            obj.put("modified", item.getModified());
+            obj.put("created", StartEndDate.getLocalStartEndDate(item.getCreated(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("modified", StartEndDate.getLocalStartEndDate(item.getModified(), TimeZoneHolder.getTimeZone()).toDate());
             obj.put("environment", item.getEnvironment().getIdentityJSONObject());
             obj.put("itemDefinition", item.getItemDefinition().getIdentityJSONObject());
             obj.put("dataCategory", item.getDataCategory().getIdentityJSONObject());
@@ -73,8 +80,10 @@ public class ProfileItemBuilder implements Builder {
         }
         element.appendChild(itemValuesElem);
         if (detailed) {
-            element.setAttribute("created", item.getCreated().toString());
-            element.setAttribute("modified", item.getModified().toString());
+            element.setAttribute("created",
+                    StartEndDate.getLocalStartEndDate(item.getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("modified",
+                    StartEndDate.getLocalStartEndDate(item.getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
             element.appendChild(item.getEnvironment().getIdentityElement(document));
             element.appendChild(item.getItemDefinition().getIdentityElement(document));
             element.appendChild(item.getDataCategory().getIdentityElement(document));
@@ -89,7 +98,7 @@ public class ProfileItemBuilder implements Builder {
         } else {
             obj.put("amountPerMonth", item.getAmount().getValue());
         }
-        obj.put("validFrom", DAY_DATE_FMT.format(item.getStartDate()));
+        obj.put("validFrom", DAY_DATE_FMT.format(StartEndDate.getLocalStartEndDate(item.getStartDate(), TimeZoneHolder.getTimeZone())));
         obj.put("end", Boolean.toString(item.isEnd()));
         obj.put("dataItem", item.getDataItem().getIdentityJSONObject());
         if (detailed) {
@@ -108,7 +117,8 @@ public class ProfileItemBuilder implements Builder {
         } else {
             element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
         }
-        element.appendChild(APIUtils.getElement(document, "ValidFrom", DAY_DATE_FMT.format(item.getStartDate())));
+        element.appendChild(APIUtils.getElement(document, "ValidFrom",
+                DAY_DATE_FMT.format(StartEndDate.getLocalStartEndDate(item.getStartDate(), TimeZoneHolder.getTimeZone()))));
         element.appendChild(APIUtils.getElement(document, "End", Boolean.toString(item.isEnd())));
         element.appendChild(item.getDataItem().getIdentityElement(document));
         if (detailed) {

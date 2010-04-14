@@ -25,6 +25,7 @@ import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.Choice;
 import com.amee.platform.science.InternalValue;
+import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -117,6 +118,7 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
         setName(name);
     }
 
+    @Override
     public String toString() {
         return "ItemDefinition_" + getUid();
     }
@@ -171,8 +173,8 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
         obj.put("name", getName());
         obj.put("drillDown", getDrillDown());
         if (detailed) {
-            obj.put("created", getCreated());
-            obj.put("modified", getModified());
+            obj.put("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate());
             obj.put("environment", getEnvironment().getIdentityJSONObject());
         }
         return obj;
@@ -192,8 +194,10 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         element.appendChild(APIUtils.getElement(document, "DrillDown", getDrillDown()));
         if (detailed) {
-            element.setAttribute("created", getCreated().toString());
-            element.setAttribute("modified", getModified().toString());
+            element.setAttribute("created",
+                    StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("modified",
+                    StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
             element.appendChild(getEnvironment().getIdentityElement(document));
         }
         return element;

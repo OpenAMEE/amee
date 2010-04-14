@@ -3,6 +3,8 @@ package com.amee.domain.environment;
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.ObjectType;
+import com.amee.domain.TimeZoneHolder;
+import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -51,6 +53,7 @@ public class Environment extends AMEEEntity implements Comparable {
         setName(name);
     }
 
+    @Override
     public String toString() {
         return "Environment_" + getUid();
     }
@@ -76,8 +79,8 @@ public class Environment extends AMEEEntity implements Comparable {
         obj.put("itemsPerPage", getItemsPerPage());
         obj.put("itemsPerFeed", getItemsPerFeed());
         if (detailed) {
-            obj.put("created", getCreated().toString());
-            obj.put("modified", getModified().toString());
+            obj.put("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            obj.put("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
         }
         return obj;
     }
@@ -100,8 +103,10 @@ public class Environment extends AMEEEntity implements Comparable {
         element.appendChild(APIUtils.getElement(document, "ItemsPerPage", getItemsPerPage().toString()));
         element.appendChild(APIUtils.getElement(document, "ItemsPerFeed", getItemsPerFeed().toString()));
         if (detailed) {
-            element.setAttribute("created", getCreated().toString());
-            element.setAttribute("modified", getModified().toString());
+            element.setAttribute("created",
+                    StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("modified",
+                    StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
         }
         return element;
     }
