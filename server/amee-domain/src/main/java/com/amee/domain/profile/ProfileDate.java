@@ -1,15 +1,12 @@
 package com.amee.domain.profile;
 
 import com.amee.domain.TimeZoneHolder;
+import com.amee.platform.science.StartEndDate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateMidnight;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
@@ -57,8 +54,7 @@ public class ProfileDate extends GCDate {
     protected long defaultDate() {
         // Beginning of current month in the user's time zone.
         TimeZone timeZone = TimeZoneHolder.getTimeZone();
-        DateMidnight startOfMonth = new DateMidnight(DateTimeZone.forTimeZone(timeZone)).withDayOfMonth(1);
-        return startOfMonth.getMillis();
+        return StartEndDate.getStartOfMonthDate(timeZone).getTime();
     }
 
     public static boolean validate(String dateStr) {
