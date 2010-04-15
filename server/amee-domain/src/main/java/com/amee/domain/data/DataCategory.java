@@ -20,10 +20,12 @@
 package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.*;
+import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.AMEEStatus;
+import com.amee.domain.LocaleHolder;
+import com.amee.domain.ObjectType;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
-import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -32,20 +34,8 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Table(name = "DATA_CATEGORY")
@@ -151,6 +141,7 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         setItemDefinition(itemDefinition);
     }
 
+    @Override
     public String toString() {
         return "DataCategory_" + getUid();
     }
@@ -166,8 +157,8 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         obj.put("name", getName());
         obj.put("deprecated", isDeprecated());
         if (detailed) {
-            obj.put("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-            obj.put("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            obj.put("created", getCreated().toString());
+            obj.put("modified", getModified().toString());
             obj.put("environment", getEnvironment().getJSONObject(false));
             if (getDataCategory() != null) {
                 obj.put("dataCategory", getDataCategory().getIdentityJSONObject());
@@ -190,10 +181,8 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         element.appendChild(APIUtils.getElement(document, "Path", getPath()));
         element.appendChild(APIUtils.getElement(document, "Deprecated", "" + isDeprecated()));
         if (detailed) {
-            element.setAttribute("created",
-                    StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-            element.setAttribute("modified",
-                    StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("created", getCreated().toString());
+            element.setAttribute("modified", getModified().toString());
             element.appendChild(getEnvironment().getIdentityElement(document));
             if (getDataCategory() != null) {
                 element.appendChild(getDataCategory().getIdentityElement(document));

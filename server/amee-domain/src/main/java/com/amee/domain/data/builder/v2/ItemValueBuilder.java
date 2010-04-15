@@ -54,10 +54,8 @@ public class ItemValueBuilder implements Builder {
         obj.put("displayName", itemValue.getDisplayName());
         obj.put("displayPath", itemValue.getDisplayPath());
         if (detailed) {
-            obj.put("created",
-                    StartEndDate.getLocalStartEndDate(itemValue.getCreated(), TimeZoneHolder.getTimeZone()).toDate());
-            obj.put("modified",
-                    StartEndDate.getLocalStartEndDate(itemValue.getModified(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("created", itemValue.getCreated());
+            obj.put("modified", itemValue.getModified());
             Item item = itemValue.getItem();
             if (item instanceof ProfileItem) {
                 ProfileItem pi = ((ProfileItem) item);
@@ -80,10 +78,8 @@ public class ItemValueBuilder implements Builder {
                 StartEndDate.getLocalStartEndDate(itemValue.getStartDate(), TimeZoneHolder.getTimeZone()).toString()));
         element.appendChild(itemValue.getItemValueDefinition().getElement(document, false));
         if (detailed) {
-            element.setAttribute("Created",
-                    StartEndDate.getLocalStartEndDate(itemValue.getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-            element.setAttribute("Modified",
-                    StartEndDate.getLocalStartEndDate(itemValue.getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("Created", itemValue.getCreated().toString());
+            element.setAttribute("Modified", itemValue.getModified().toString());
             element.appendChild(itemValue.getItem().getIdentityElement(document));
         }
         return element;

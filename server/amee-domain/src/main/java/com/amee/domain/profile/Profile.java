@@ -22,13 +22,11 @@ package com.amee.domain.profile;
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.ObjectType;
-import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;
 import com.amee.domain.path.Pathable;
-import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -36,12 +34,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,8 +77,8 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         obj.put("path", getDisplayPath());
         obj.put("name", getDisplayName());
         if (detailed) {
-            obj.put("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-            obj.put("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            obj.put("created", getCreated().toString());
+            obj.put("modified", getModified().toString());
             obj.put("user", getUser().getIdentityJSONObject());
             obj.put("environment", getEnvironment().getIdentityJSONObject());
         }
@@ -106,10 +99,8 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
         element.appendChild(APIUtils.getElement(document, "Path", getPath()));
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         if (detailed) {
-            element.setAttribute("created",
-                    StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-            element.setAttribute("modified",
-                    StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("created", getCreated().toString());
+            element.setAttribute("modified", getModified().toString());
             element.appendChild(getUser().getIdentityElement(document));
             element.appendChild(getEnvironment().getIdentityElement(document));
         }

@@ -2,7 +2,6 @@ package com.amee.domain.auth;
 
 import com.amee.domain.*;
 import com.amee.domain.environment.Environment;
-import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
@@ -128,8 +127,8 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         obj.put("entity", getEntityReference().getJSONObject());
         obj.put("principal", getPrincipalReference().getJSONObject());
         if (detailed) {
-            obj.put("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate());
-            obj.put("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("created", getCreated());
+            obj.put("modified", getModified());
             obj.put("environmentUid", getEnvironment().getUid());
         }
         return obj;
@@ -150,10 +149,8 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
         element.appendChild(getEntityReference().getElement(document, "Entity"));
         element.appendChild(getPrincipalReference().getElement(document, "Principal"));
         if (detailed) {
-            element.setAttribute("created",
-                    StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-            element.setAttribute("modified",
-                    StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("created", getCreated().toString());
+            element.setAttribute("modified", getModified().toString());
             element.appendChild(getEnvironment().getIdentityElement(document));
         }
         return element;
