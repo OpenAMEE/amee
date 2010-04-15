@@ -96,10 +96,8 @@ public class DataItem extends Item {
         }
         element.appendChild(itemValuesElem);
         if (detailed) {
-            element.setAttribute("created",
-                    StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-            element.setAttribute("modified",
-                    StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("created", getCreated().toString());
+            element.setAttribute("modified", getModified().toString());
             element.appendChild(getEnvironment().getIdentityElement(document));
             element.appendChild(getItemDefinition().getIdentityElement(document));
             element.appendChild(getDataCategory().getIdentityElement(document));
@@ -138,8 +136,8 @@ public class DataItem extends Item {
         }
         obj.put("itemValues", itemValues);
         if (detailed) {
-            obj.put("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate());
-            obj.put("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("created", getCreated());
+            obj.put("modified", getModified());
             obj.put("environment", getEnvironment().getJSONObject());
             obj.put("itemDefinition", getItemDefinition().getJSONObject());
             obj.put("dataCategory", getDataCategory().getIdentityJSONObject());

@@ -42,8 +42,8 @@ public class ItemValueInListBuilder implements Builder {
         JSONObject obj = new JSONObject();
         // Meta.
         obj.put("uid", itemValue.getUid());
-        obj.put("created", StartEndDate.getLocalStartEndDate(itemValue.getCreated(), TimeZoneHolder.getTimeZone()).toDate());
-        obj.put("modified", StartEndDate.getLocalStartEndDate(itemValue.getModified(), TimeZoneHolder.getTimeZone()).toDate());
+        obj.put("created", itemValue.getCreated());
+        obj.put("modified", itemValue.getModified());
         // Data.
         obj.put("path", itemValue.getPath());
         obj.put("name", itemValue.getName());
@@ -66,10 +66,8 @@ public class ItemValueInListBuilder implements Builder {
         Element element = document.createElement("ItemValue");
         // Meta.
         element.setAttribute("uid", itemValue.getUid());
-        element.setAttribute("created",
-                StartEndDate.getLocalStartEndDate(itemValue.getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-        element.setAttribute("modified",
-                StartEndDate.getLocalStartEndDate(itemValue.getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+        element.setAttribute("created", itemValue.getCreated().toString());
+        element.setAttribute("modified", itemValue.getModified().toString());
         // Data.
         element.appendChild(APIUtils.getElement(document, "Path", itemValue.getPath()));
         element.appendChild(APIUtils.getElement(document, "Name", itemValue.getName()));

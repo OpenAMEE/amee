@@ -27,9 +27,6 @@ import com.amee.domain.data.builder.v1.ItemValueBuilder;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.DecimalPerUnit;
 import com.amee.platform.science.StartEndDate;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.ISODateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,8 +35,6 @@ import org.w3c.dom.Element;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 public class ProfileItemBuilder implements Builder {
 
@@ -62,8 +57,8 @@ public class ProfileItemBuilder implements Builder {
         }
         obj.put("itemValues", itemValues);
         if (detailed) {
-            obj.put("created", StartEndDate.getLocalStartEndDate(item.getCreated(), TimeZoneHolder.getTimeZone()).toDate());
-            obj.put("modified", StartEndDate.getLocalStartEndDate(item.getModified(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("created", item.getCreated());
+            obj.put("modified", item.getModified());
             obj.put("environment", item.getEnvironment().getIdentityJSONObject());
             obj.put("itemDefinition", item.getItemDefinition().getIdentityJSONObject());
             obj.put("dataCategory", item.getDataCategory().getIdentityJSONObject());
@@ -80,10 +75,8 @@ public class ProfileItemBuilder implements Builder {
         }
         element.appendChild(itemValuesElem);
         if (detailed) {
-            element.setAttribute("created",
-                    StartEndDate.getLocalStartEndDate(item.getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-            element.setAttribute("modified",
-                    StartEndDate.getLocalStartEndDate(item.getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("created", item.getCreated().toString());
+            element.setAttribute("modified", item.getModified().toString());
             element.appendChild(item.getEnvironment().getIdentityElement(document));
             element.appendChild(item.getItemDefinition().getIdentityElement(document));
             element.appendChild(item.getDataCategory().getIdentityElement(document));

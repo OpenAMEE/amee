@@ -2,9 +2,7 @@ package com.amee.domain.algorithm;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.environment.Environment;
-import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
@@ -55,8 +53,8 @@ public abstract class AbstractAlgorithm extends AMEEEnvironmentEntity {
         obj.put("name", getName());
         obj.put("content", getContent());
         if (detailed) {
-            obj.put("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate());
-            obj.put("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("created", getCreated());
+            obj.put("modified", getModified());
             obj.put("environment", getEnvironment().getIdentityJSONObject());
         }
         return obj;
@@ -78,10 +76,8 @@ public abstract class AbstractAlgorithm extends AMEEEnvironmentEntity {
         element.appendChild(APIUtils.getElement(document, "Name", getName()));
         element.appendChild(APIUtils.getElement(document, "Content", getContent()));
         if (detailed) {
-            element.setAttribute("created",
-                    StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-            element.setAttribute("modified",
-                    StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("created", getCreated().toString());
+            element.setAttribute("modified", getModified().toString());
             element.appendChild(getEnvironment().getIdentityElement(document));
         }
         return element;

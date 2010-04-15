@@ -1,8 +1,10 @@
 package com.amee.domain.auth;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.*;
-import com.amee.platform.science.StartEndDate;
+import com.amee.domain.AMEEEntityReference;
+import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.IAMEEEntityReference;
+import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -72,8 +74,8 @@ public class GroupPrincipal extends AMEEEnvironmentEntity implements Comparable 
         obj.put("principal", getPrincipalReference().getJSONObject());
         if (detailed) {
             obj.put("environment", getEnvironment().getIdentityJSONObject());
-            obj.put("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate());
-            obj.put("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate());
+            obj.put("created", getCreated());
+            obj.put("modified", getModified());
         }
         return obj;
     }
@@ -93,8 +95,8 @@ public class GroupPrincipal extends AMEEEnvironmentEntity implements Comparable 
         element.appendChild(getPrincipalReference().getElement(document, "Principal"));
         if (detailed) {
             element.appendChild(getEnvironment().getIdentityElement(document));
-            element.setAttribute("created", StartEndDate.getLocalStartEndDate(getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-            element.setAttribute("modified", StartEndDate.getLocalStartEndDate(getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+            element.setAttribute("created", getCreated().toString());
+            element.setAttribute("modified", getModified().toString());
         }
         return element;
     }

@@ -20,8 +20,8 @@
 package com.amee.domain.profile.builder.v2;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.Builder;
 import com.amee.core.CO2AmountUnit;
+import com.amee.domain.Builder;
 import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
@@ -29,17 +29,11 @@ import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.DecimalCompoundUnit;
 import com.amee.platform.science.StartEndDate;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.ISODateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.Date;
-import java.util.TimeZone;
 
 public class ProfileItemBuilder implements Builder {
 
@@ -57,8 +51,8 @@ public class ProfileItemBuilder implements Builder {
 
     public void buildElement(JSONObject obj, boolean detailed) throws JSONException {
         obj.put("uid", item.getUid());
-        obj.put("created", StartEndDate.getLocalStartEndDate(item.getCreated(), TimeZoneHolder.getTimeZone()).toDate());
-        obj.put("modified", StartEndDate.getLocalStartEndDate(item.getModified(), TimeZoneHolder.getTimeZone()).toDate());
+        obj.put("created", item.getCreated());
+        obj.put("modified", item.getModified());
 
         obj.put("name", item.getName().isEmpty() ? JSONObject.NULL : item.getName());
         JSONArray itemValues = new JSONArray();
@@ -77,10 +71,8 @@ public class ProfileItemBuilder implements Builder {
 
     public void buildElement(Document document, Element element, boolean detailed) {
         element.setAttribute("uid", item.getUid());
-        element.setAttribute("created",
-                StartEndDate.getLocalStartEndDate(item.getCreated(), TimeZoneHolder.getTimeZone()).toDate().toString());
-        element.setAttribute("modified",
-                StartEndDate.getLocalStartEndDate(item.getModified(), TimeZoneHolder.getTimeZone()).toDate().toString());
+        element.setAttribute("created", item.getCreated().toString());
+        element.setAttribute("modified", item.getModified().toString());
 
         element.appendChild(APIUtils.getElement(document, "Name", item.getName()));
         Element itemValuesElem = document.createElement("ItemValues");
