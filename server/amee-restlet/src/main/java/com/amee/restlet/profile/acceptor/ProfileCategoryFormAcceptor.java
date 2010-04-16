@@ -7,11 +7,10 @@ import com.amee.domain.AMEEStatistics;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.PermissionEntry;
-import com.amee.domain.auth.User;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.ValidFromDate;
+import com.amee.domain.profile.MonthDate;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.utils.APIException;
@@ -19,12 +18,10 @@ import com.amee.restlet.utils.APIFault;
 import com.amee.service.auth.AuthorizationService;
 import com.amee.service.data.DataService;
 import com.amee.service.profile.ProfileService;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.data.Form;
 import org.restlet.data.Method;
-import org.restlet.data.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -148,7 +145,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
         // TODO - Each APIVersion should have it's own Acceptor
         if (resource.getAPIVersion().isVersionOne()) {
             // Set the startDate and end marker.
-            profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
+            profileItem.setStartDate(new MonthDate(form.getFirstValue("validFrom")));
             boolean end = Boolean.valueOf(form.getFirstValue("end"));
             if (end) {
                 profileItem.setEndDate(profileItem.getStartDate());

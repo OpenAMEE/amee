@@ -4,7 +4,7 @@ import com.amee.calculation.service.CalculationService;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.ValidFromDate;
+import com.amee.domain.profile.MonthDate;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.utils.APIFault;
@@ -137,7 +137,7 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
 
         // Update 'validFrom' value
         if (!StringUtils.isBlank(form.getFirstValue("validFrom"))) {
-            profileItem.setStartDate(new ValidFromDate(form.getFirstValue("validFrom")));
+            profileItem.setStartDate(new MonthDate(form.getFirstValue("validFrom")));
         }
 
         // Update 'end' value
