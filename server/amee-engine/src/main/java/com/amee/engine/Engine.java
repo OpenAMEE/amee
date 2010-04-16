@@ -12,6 +12,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTimeZone;
 import org.restlet.Component;
 import org.restlet.Server;
 import org.restlet.service.LogService;
@@ -154,6 +155,7 @@ public class Engine implements WrapperListener, Serializable {
                 TimeZone timeZone = TimeZone.getTimeZone(timeZoneStr);
                 if (timeZone != null) {
                     TimeZone.setDefault(timeZone);
+                    DateTimeZone.setDefault(DateTimeZone.forTimeZone(timeZone));
                 }
             }
         }
