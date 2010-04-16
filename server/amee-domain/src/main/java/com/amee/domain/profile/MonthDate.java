@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
 
 /**
  * This file is part of AMEE.
@@ -27,14 +28,28 @@ import org.joda.time.format.DateTimeFormatter;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class ValidFromDate extends GCDate {
+public class MonthDate extends GCDate {
 
-    private final static Log log = LogFactory.getLog(ValidFromDate.class);
+    private static final Log log = LogFactory.getLog(MonthDate.class);
 
-    // V1 API does not support resolution less than 1 month so time zones are not valid.
-    private static DateTimeFormatter FMT = DateTimeFormat.forPattern("yyyyMMdd").withZone(DateTimeZone.UTC);
+    /**
+     * V1 API does not support resolution greater than 1 month so time zones are not relevant.
+     * This custom DateTimeFormatter accepts dates in the following format:
+     *  - yyyyMMdd
+     *  - yyyyMM
+     * In either case, the date is always set to the first of the month and the time zone is set to UTC.
+     */
+    private static DateTimeFormatter FMT = new DateTimeFormatterBuilder()
+        .appendYear(4, 4)
+        .appendMonthOfYear(2)
+        .appendOptional(DateTimeFormat.forPattern("dd").getParser())
+        .toFormatter().withZone(DateTimeZone.UTC);
 
-    public ValidFromDate(String validFrom) {
+    public MonthDate() {
+        super(System.currentTimeMillis());
+    }
+
+    public MonthDate(String validFrom) {
         super(validFrom);
     }
 

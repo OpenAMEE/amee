@@ -20,20 +20,19 @@
 package com.amee.service.profile;
 
 import com.amee.core.CO2AmountUnit;
-import com.amee.domain.profile.ProfileDate;
+import com.amee.domain.profile.MonthDate;
 import com.amee.service.BaseBrowser;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.TimeZone;
 
 @Component("profileBrowser")
 @Scope("prototype")
 public class ProfileBrowser extends BaseBrowser {
 
     // ProfileDate (API v1)
-    private Date profileDate = new ProfileDate();
+    private Date profileDate = new MonthDate();
 
     // Return Unit
     private CO2AmountUnit co2AmountUnit = CO2AmountUnit.DEFAULT;
@@ -47,7 +46,7 @@ public class ProfileBrowser extends BaseBrowser {
     }
 
     public void setProfileDate(String profileDate) {
-        this.profileDate = new ProfileDate(profileDate);
+        this.profileDate = new MonthDate(profileDate);
     }
 
     public Date getProfileDate() {

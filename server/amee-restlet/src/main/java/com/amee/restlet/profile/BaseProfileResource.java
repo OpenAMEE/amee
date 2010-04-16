@@ -1,10 +1,9 @@
 package com.amee.restlet.profile;
 
 import com.amee.domain.path.PathItem;
+import com.amee.domain.profile.MonthDate;
 import com.amee.domain.profile.Profile;
-import com.amee.domain.profile.ProfileDate;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.domain.profile.ValidFromDate;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.utils.APIFault;
@@ -155,12 +154,12 @@ public abstract class BaseProfileResource extends AMEEResource {
 
     private boolean validMonthDateTimeFormat() {
         String profileDate = getForm().getFirstValue("profileDate");
-        if (profileDate != null && !ProfileDate.validate(profileDate)) {
+        if (profileDate != null && !MonthDate.validate(profileDate)) {
             return false;
         }
 
         String validFromDate = getForm().getFirstValue("validFrom");
-        if (validFromDate != null && !ValidFromDate.validate(validFromDate)) {
+        if (validFromDate != null && !MonthDate.validate(validFromDate)) {
             return false;
         }
         return true;
