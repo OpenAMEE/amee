@@ -1,6 +1,5 @@
 package com.amee.domain.profile;
 
-import com.amee.domain.TimeZoneHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateMidnight;
@@ -8,9 +7,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import java.util.Calendar;
-import java.util.TimeZone;
 
 /**
  * This file is part of AMEE.
@@ -35,7 +31,8 @@ public class ValidFromDate extends GCDate {
 
     private final static Log log = LogFactory.getLog(ValidFromDate.class);
 
-    private static DateTimeFormatter FMT = DateTimeFormat.forPattern("yyyyMMdd");
+    // V1 API does not support resolution less than 1 month so time zones are not valid.
+    private static DateTimeFormatter FMT = DateTimeFormat.forPattern("yyyyMMdd").withZone(DateTimeZone.UTC);
 
     public ValidFromDate(String validFrom) {
         super(validFrom);
@@ -44,6 +41,7 @@ public class ValidFromDate extends GCDate {
     protected long parseStr(String dateStr) {
         try {
             DateTime date = FMT.parseDateTime(dateStr);
+            // v1 dates are always rounded down to the start of the month.
             return date.dayOfMonth().withMinimumValue().toDateMidnight().getMillis();
         } catch (IllegalArgumentException e) {
             log.warn("parseStr() Caught IllegalArgumentException: " + e.getMessage());
@@ -57,9 +55,8 @@ public class ValidFromDate extends GCDate {
 
     @Override
     protected long defaultDate() {
-        // Beginning of current month in the user's time zone.
-        TimeZone timeZone = TimeZoneHolder.getTimeZone();
-        DateMidnight startOfMonth = new DateMidnight(DateTimeZone.forTimeZone(timeZone)).withDayOfMonth(1);
+        // Beginning of current month in UTC.
+        DateMidnight startOfMonth = new DateMidnight(DateTimeZone.UTC).withDayOfMonth(1);
         return startOfMonth.getMillis();
     }
 
