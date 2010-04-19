@@ -27,6 +27,7 @@ import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 @Component
 @Scope("prototype")
@@ -149,6 +150,10 @@ public class UserResource extends AuthorizeResource {
                 if (LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                     user.setLocale(locale);
                 }
+            }
+            if (form.getNames().contains("timeZone")) {
+                TimeZone timeZone = TimeZone.getTimeZone(form.getFirstValue("timeZone"));
+                user.setTimeZone(timeZone);
             }
             success();
         } else {
