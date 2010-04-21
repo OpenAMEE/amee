@@ -51,8 +51,8 @@ public class ProfileItemBuilder implements Builder {
 
     public void buildElement(JSONObject obj, boolean detailed) throws JSONException {
         obj.put("uid", item.getUid());
-        obj.put("created", item.getCreated());
-        obj.put("modified", item.getModified());
+        obj.put("created", new StartEndDate(item.getCreated()));
+        obj.put("modified", new StartEndDate(item.getModified()));
 
         obj.put("name", item.getName().isEmpty() ? JSONObject.NULL : item.getName());
         JSONArray itemValues = new JSONArray();
@@ -71,8 +71,8 @@ public class ProfileItemBuilder implements Builder {
 
     public void buildElement(Document document, Element element, boolean detailed) {
         element.setAttribute("uid", item.getUid());
-        element.setAttribute("created", item.getCreated().toString());
-        element.setAttribute("modified", item.getModified().toString());
+        element.setAttribute("created", new StartEndDate(item.getCreated()).toString());
+        element.setAttribute("modified", new StartEndDate(item.getModified()).toString());
 
         element.appendChild(APIUtils.getElement(document, "Name", item.getName()));
         Element itemValuesElem = document.createElement("ItemValues");

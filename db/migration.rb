@@ -101,288 +101,51 @@ end
 Java::com.mysql.jdbc.Driver
 puts "Running migration using url: #{@url}, user: #{@user}, password: #{@pswd}" 
 
-# Migration ProfileItems where end is true
-def migrate_pi
-  puts "Starting ITEM migrations"
+# Load the time zone data and migrate data
+def migrate_tz(from_tz, to_tz)
+  puts "Loading the time zone tables"
+
+  system("mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u#{@user} -p#{@pswd} mysql")
+
+  puts "Migrating dates from #{from_tz} to #{to_tz}"
 
   begin
     conn = JavaSql::DriverManager.get_connection(@url, @user, @pswd)
+    conn.setAutoCommit(false);
+
     stmt = conn.create_statement()
+    stmt.addBatch("UPDATE ALGORITHM SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE API_VERSION SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE DATA_CATEGORY SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE ENVIRONMENT SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE GROUPS SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE ITEM SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}'), START_DATE = CONVERT_TZ(START_DATE,'#{from_tz}','#{to_tz}'), END_DATE = CONVERT_TZ(END_DATE,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE ITEM_DEFINITION SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE ITEM_VALUE SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}'), START_DATE = CONVERT_TZ(START_DATE, '#{from_tz}','#{to_tz}'), END_DATE = CONVERT_TZ(END_DATE,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE ITEM_VALUE_DEFINITION SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE LOCALE_NAME SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE PERMISSION SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE PROFILE SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE USER SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE USER_PROFILE_COUNT SET DATE = CONVERT_TZ(DATE,'#{from_tz}','#{to_tz}')")
+    stmt.addBatch("UPDATE VALUE_DEFINITION SET CREATED = CONVERT_TZ(CREATED,'#{from_tz}','#{to_tz}'), MODIFIED = CONVERT_TZ(MODIFIED,'#{from_tz}','#{to_tz}')")
 
-    # Get a count of rows to be updated
-    rs = stmt.execute_query("select count(ID) as c from ITEM where TYPE = 'PI' and END is TRUE")
-    rs.first()
-    before_count = rs.getInt("c")
-    puts "migrate_pi - updating #{before_count} rows"
-    
-    # Select all ProfileItems where end is true
-    query = "update ITEM set END_DATE = START_DATE where TYPE = 'PI' and END is TRUE"
-    after_count = stmt.executeUpdate(query)
-    puts "migrate_pi - updated #{after_count} rows"
+    stmt.executeBatch();
+    conn.commit();
 
-    # Drop the END column following migration to END_DATE
-    stmt.execute("ALTER TABLE ITEM DROP COLUMN END")
-    
   rescue => err
+    conn.rollback()
     puts err
     break
   
   ensure
-    puts "Finished ITEM migrations"
-    rs.close
+    puts "Finished time zone migrations"
     stmt.close
     conn.close
   end
     
 end
 
-# Migration ProfileItem amounts
-# Add this to migrate_pi for live migration
-def migrate_amount
-  puts "Starting AMOUNT migrations"
-
-  begin
-
-    out = File.new("migrate_amount.out","w+")
-
-    converted_count = 0
-    single_flight_count = 0
-    twelve = Core::Decimal.new("12")
-    
-    conn = JavaSql::DriverManager.get_connection(@url, @user, @pswd)
-    stmt = conn.create_statement()
-    stmt2 = conn.create_statement()
-    stmt3 = conn.create_statement()
-
-    # TODO - Get a count of rows to be updated
-    # TODO - THE DATE CLAUSE SHOULD BE REMOVED FOR LIVE RELEASE
-    #item_query = "select id, amount from ITEM where modified < DATE('2009-03-23 05:56:23') and type = 'PI' and amount != 0.0"
-    item_query = "select id, amount from ITEM where type = 'PI' and amount != 0.0"
-    rs = stmt.execute_query(item_query)
-    #puts "Running - #{item_query}"
-    while(rs.next) 
-      
-      id = rs.getString("id")
-      amount = rs.getString("amount")
-
-      item_value_query = "select iv.id, ivd.name, iv.value from ITEM_VALUE iv, ITEM_VALUE_DEFINITION ivd where iv.item_id = #{id} and iv.item_value_definition_id = ivd.id"
-      rs2 = stmt2.execute_query(item_value_query)
-      item_value_s = ""
-      single_flight = false
-      while(rs2.next)
-        iv_id = rs2.getString("id")
-        name = rs2.getString("name")
-        value = rs2.getString("value")
-        item_value_s += "#{iv_id}:#{name}=#{value},"
-        if 
-        (
-          (name.startsWith("IATA") && value.length > 0) ||
-          (name.startsWith("Lat") && value != "-999") ||
-          (name.startsWith("Lon") && value != "-999")
-        )
-          single_flight = true
-        end
-      end
-
-      if single_flight
-        out.puts "singleflight,id:#{id},#{item_value_s}"  
-        single_flight_count = single_flight_count + 1
-      
-      else
-        # NOT NEEDED
-        if (amount != "0.000")
-          new_amount = Core::Decimal.new(amount).mulitply(twelve)
-          out.puts "perTime,#{id},#{amount},#{new_amount.getValue()}"
-          item_update_query = "update ITEM set amount = #{new_amount} where id = #{id}"
-          # puts "Running - #{item_update_query}"
-          stmt3.execute(item_update_query)
-          converted_count = converted_count + 1
-        end
-      end
-
-    end
-
-    puts "converted: #{converted_count}"
-    puts "single_flights: #{single_flight_count}"
-
-  rescue => err
-    puts err
-    break
-  
-  ensure
-    puts "Finished AMOUNT migrations"
-    rs.close
-    rs2.close
-    stmt.close
-    stmt2.close
-    conn.close
-    out.close
-  end
-  
-end
-
-def migrate_ivd 
-  puts "Starting ITEM_VALUE_DEFINITION migrations"
-
-  begin
-    out = File.new("migrate_ivd.out","w+")
-    
-    conn = JavaSql::DriverManager.get_connection(@url, @user, @pswd)
-    stmt = conn.create_statement(JavaSql::ResultSet::TYPE_SCROLL_SENSITIVE, JavaSql::ResultSet::CONCUR_UPDATABLE)
-    conn.setAutoCommit(false)
-
-    # SQL Statements
-    select_old = "SELECT ID, VALUE, CHOICES, ITEM_DEFINITION_ID FROM ITEM_VALUE_DEFINITION WHERE PATH={OLD_PATH}"
-    insert_new = "INSERT INTO ITEM_VALUE_DEFINITION(UID, NAME, PATH, VALUE, CHOICES, FROM_PROFILE, FROM_DATA, ALLOWED_ROLES, CREATED, MODIFIED, ENVIRONMENT_ID, ITEM_DEFINITION_ID, VALUE_DEFINITION_ID, PER_UNIT,UNIT) " + 
-      "VALUES('{UID}',{NEW_NAME},{NEW_PATH},'{VALUE}', '{CHOICES}', true, false, '', curdate(), curdate(), 2, {ITEM_DEFINITION_ID}, 16,{NEW_PER_UNIT},{NEW_UNIT})"
-    update_old = "UPDATE ITEM_VALUE_DEFINITION SET ALIASED_TO_ID=LAST_INSERT_ID(), PER_UNIT={OLD_PER_UNIT},UNIT={OLD_UNIT} WHERE ID={ID}"
-    insert_old_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},1)"
-    insert_new_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES(LAST_INSERT_ID(),2)"
-
-    file = File.new("ivd.csv","r")
-    while(line = file.gets)
-      # Row order: OLD_PATH, OLD_UNIT, OLD_PER_UNIT, NEW_NAME, NEW_PATH, NEW_UNIT, NEW_PER_UNIT
-      old_path, old_unit, old_per_unit, new_name, new_path, new_unit, new_per_unit = line.split(",")
-
-      query = select_old.sub(/\{OLD_PATH\}/, old_path)
-      out.puts query 
-      rs = stmt.executeQuery(query)
-      
-      while(rs.next())
-        item_value_definition_id = rs.getInt("ID").to_s
-        item_definition_id = rs.getInt("ITEM_DEFINITION_ID").to_s
-        value = rs.getString("VALUE")
-        choices = rs.getString("CHOICES")
-        query = insert_new.sub(/\{UID\}/, JM::UidGen.getUid())
-        query = query.sub(/\{NEW_NAME\}/, new_name)
-        query = query.sub(/\{NEW_PATH\}/, new_path)
-        query = query.sub(/\{ITEM_DEFINITION_ID\}/, item_definition_id)
-        query = query.sub(/\{NEW_UNIT\}/, new_unit)
-        query = query.sub(/\{NEW_PER_UNIT\}/, new_per_unit)
-        query = query.sub(/\{VALUE\}/, value)
-        query = query.sub(/\{CHOICES\}/, choices)
-        out.puts query
-        stmt.addBatch(query)
-        
-        query = update_old.sub(/\{OLD_PATH\}/, old_path)
-        query = query.sub(/\{OLD_UNIT\}/, old_unit)
-        query = query.sub(/\{OLD_PER_UNIT\}/, old_per_unit)
-        query = query.sub(/\{ID\}/, item_value_definition_id)
-        out.puts query
-        stmt.addBatch(query)
-
-        out.puts insert_new_api_version
-        stmt.addBatch(insert_new_api_version)
-
-        query = insert_old_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
-        out.puts query
-        stmt.addBatch(query)
-        
-      end
-      
-      unless @dryrun
-        stmt.executeBatch()
-        conn.commit()
-        stmt.clearBatch()
-      end
-
-      out.puts "\n"
-              
-    end
-
-    # Add all other ITEM_VALUE_DEFINITION_ID - API_VERSION_ID pairs into ITEM_VALUE_DEFINITION_API_VERSION
-    insert_old_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},1)"
-    insert_new_api_version = "INSERT INTO ITEM_VALUE_DEFINITION_API_VERSION(ITEM_VALUE_DEFINITION_ID, API_VERSION_ID) VALUES({ITEM_VALUE_DEFINITION_ID},2)"
-    query = "SELECT ID FROM ITEM_VALUE_DEFINITION WHERE ID NOT IN (SELECT ITEM_VALUE_DEFINITION_ID FROM ITEM_VALUE_DEFINITION_API_VERSION)"
-    out.puts query
-    rs = stmt.executeQuery(query)
-    while(rs.next())
-      item_value_definition_id = rs.getInt("ID").to_s
-      query = insert_old_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
-      out.puts query
-      stmt.addBatch(query)
-      query = insert_new_api_version.sub(/\{ITEM_VALUE_DEFINITION_ID\}/, item_value_definition_id)
-      out.puts query
-      stmt.addBatch(query)
-    end
-
-    unless @dryrun
-      stmt.executeBatch()
-      conn.commit()
-    end
-
-  rescue => err
-    puts err
-    break
-  
-  ensure
-    puts "Finished ITEM_VALUE_DEFINITION migrations"
-    rs.close
-    stmt.close
-    conn.close
-    out.close
-  end
-
-end
-
-# Migrate the algorithms
-def migrate_algo
-  puts "Starting ALGORITHM migrations"
-
-  begin
-    
-    out = File.new("migrate_algo.out","w+")
-    
-    conn = JavaSql::DriverManager.get_connection(@url, @user, @pswd)
-    stmt = conn.create_statement()
-
-    # SQL Statements
-    select = "SELECT ID FROM ITEM_DEFINITION WHERE NAME='{NAME}' AND ENVIRONMENT_ID=2"
-    insert = "INSERT INTO ALGORITHM(UID, NAME, CONTENT, CREATED, MODIFIED, ENVIRONMENT_ID, ITEM_DEFINITION_ID, TYPE) " + 
-      "VALUES('{UID}','default','{CONTENT}', curdate(), curdate(), 2, {ID}, 'AL')"
-
-    file = File.new("algo.csv","r")
-    while(line = file.gets)
-      path, name = line.split(",")
-      out.puts "Migrating #{name.chomp} : #{path}"
-      query = select.sub(/\{NAME\}/, name.chomp)
-      out.puts query 
-      rs = stmt.executeQuery(query)
-      if rs.next()
-        id = rs.getInt("ID") 
-        query = insert.sub(/\{UID\}/, JM::UidGen.getUid())
-        js = File.new(path + "/default.js","r")
-
-        lines = js.readlines() 
-        lines.each do |l| 
-          l.chomp! 
-          l.gsub!(/'/,"''")
-        end
-        query = query.sub(/\{CONTENT\}/,lines.join("\\n"))
-        query = query.sub(/\{ID\}/,id.to_s)
-        out.puts query
-        count = stmt.executeUpdate(query)
-        out.puts "migrate_algo - updated #{count} rows"
-        out.puts "\n"
-      else
-        out.puts "Error: ID not found - #{id}"
-      end
-    end
-
-  rescue => err
-    puts err
-    break
-  
-  ensure
-    puts "Finished ALGORITHM migrations"
-    rs.close
-    stmt.close
-    conn.close
-    out.close
-  end
-   
-end
-  
 # Load and run SQL commands
 def run_sql(file) 
   puts "Starting #{file} migrations"
@@ -390,17 +153,7 @@ def run_sql(file)
   puts "Finished #{file} migrations"
 end
 
-class String
-  def startsWith str
-    return self[0...str.length] == str
-  end
-end
-
 # Run the migrations
 run_sql("ddl.sql")
-migrate_ivd
+migrate_tz('Europe/London', 'UTC')
 run_sql("dml.sql")
-migrate_pi
-migrate_amount
-migrate_algo
-run_sql("innodb.sql")

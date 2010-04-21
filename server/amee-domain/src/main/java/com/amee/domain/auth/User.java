@@ -107,6 +107,7 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         obj.put("type", getType().getName());
         obj.put("apiVersion", getAPIVersion());
         obj.put("locale", getLocale());
+        obj.put("timeZone", getTimeZone().getID());
         if (detailed) {
             obj.put("username", getUsername());
             obj.put("name", getName());
@@ -139,6 +140,7 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
         element.appendChild(APIUtils.getElement(document, "Type", getType().getName()));
         element.appendChild(APIUtils.getElement(document, "ApiVersion", getAPIVersion().toString()));
         element.appendChild(APIUtils.getElement(document, "Locale", getLocale()));
+        element.appendChild(APIUtils.getElement(document, "TimeZone", getTimeZone().getID()));
         if (detailed) {
             element.appendChild(APIUtils.getElement(document, "Name", getName()));
             element.appendChild(APIUtils.getElement(document, "Username", getUsername()));
