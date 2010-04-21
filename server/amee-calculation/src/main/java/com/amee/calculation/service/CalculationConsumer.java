@@ -101,6 +101,6 @@ public class CalculationConsumer extends RpcMessageConsumer {
 
     @Override
     public String getBindingKey() {
-        return "platform.calculation";
+        return getQueueConfig().getName();
     }
 }

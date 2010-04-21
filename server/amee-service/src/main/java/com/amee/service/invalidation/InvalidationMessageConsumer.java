@@ -46,6 +46,6 @@ public class InvalidationMessageConsumer extends TopicMessageConsumer {
     }
 
     public String getBindingKey() {
-        return "platform.invalidation.#";
+        return getQueueConfig().getName() + ".#";
     }
 }
