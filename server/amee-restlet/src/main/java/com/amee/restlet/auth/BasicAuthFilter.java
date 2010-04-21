@@ -51,7 +51,7 @@ public class BasicAuthFilter extends Guard {
 
     @Override
     public int doHandle(Request request, Response response) {
-        boolean challengePresent = false;
+        boolean challengePresent;
         try {
             challengePresent = request.getChallengeResponse() != null;
         } catch (IllegalArgumentException e) {
