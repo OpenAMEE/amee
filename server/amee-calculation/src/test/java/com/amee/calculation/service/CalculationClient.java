@@ -18,8 +18,8 @@ public class CalculationClient {
         public void run() {
             try {
                 Channel channel = connection.createChannel();
-                channel.exchangeDeclare("platform.calculation", "direct");
-                RpcClient rpcClient = new RpcClient(channel, "platform.calculation", "platform.calculation");
+                channel.exchangeDeclare("platform.live.calculation", "direct");
+                RpcClient rpcClient = new RpcClient(channel, "platform.live.calculation", "platform.live.calculation");
                 for (int i = 0; i < 1000; i++) {
                     System.out.println(rpcClient.stringCall(outbound.toString()));
                 }
@@ -28,7 +28,6 @@ public class CalculationClient {
                 e.printStackTrace();
                 System.exit(1);
             }
-
         }
     }
 
@@ -37,7 +36,7 @@ public class CalculationClient {
 
     public static void main(String[] args) {
         try {
-            connection = new ConnectionFactory().newConnection("localhost", AMQP.PROTOCOL.PORT);
+            connection = new ConnectionFactory().newConnection("127.0.0.1", AMQP.PROTOCOL.PORT);
 
             outbound = new JSONObject();
             outbound.put("dataItemUid", "7F0D7F6AE66D");

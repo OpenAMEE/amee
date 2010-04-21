@@ -7,28 +7,30 @@
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-    <bean class="com.amee.service.messaging.config.MessagingConfig"/>
+    <bean class="com.amee.service.messaging.config.MessagingConfig">
+        <property name="runSleep" value="${MESSAGING_RUN_SLEEP}"/>
+    </bean>
 
     <bean class="com.amee.service.messaging.config.ConnectionConfig">
         <property name="addresses">
             <list>
                 <bean class="com.rabbitmq.client.Address">
-                    <constructor-arg value="127.0.0.1"/>
-                    <constructor-arg value="5672"/>
+                    <constructor-arg value="${RABBIT_MQ_ADDRESS}"/>
+                    <constructor-arg value="${RABBIT_MQ_PORT}"/>
                 </bean>
             </list>
         </property>
     </bean>
 
     <bean class="com.rabbitmq.client.ConnectionParameters">
-        <property name="username" value="guest"/>
-        <property name="password" value="guest"/>
+        <property name="username" value="${RABBIT_MQ_USERNAME}"/>
+        <property name="password" value="${RABBIT_MQ_PASSWORD}"/>
         <property name="virtualHost" value="/"/>
         <property name="requestedHeartbeat" value="0"/>
     </bean>
 
     <bean id="invalidationExchange" class="com.amee.service.messaging.config.ExchangeConfig">
-        <property name="name" value="platform.invalidation"/>
+        <property name="name" value="platform.${MESSAGING_SCOPE}.invalidation"/>
         <property name="type" value="topic"/>
         <property name="durable" value="true"/>
     </bean>
@@ -38,19 +40,19 @@
     <bean id="invalidationConsume" class="com.amee.service.messaging.config.ConsumeConfig"/>
 
     <bean id="invalidationQueue" class="com.amee.service.messaging.config.QueueConfig">
-        <property name="name" value="platform.invalidation.${AMEE_SERVER_NAME}.${AMEE_INSTANCE_NAME}"/>
+        <property name="name" value="platform.${MESSAGING_SCOPE}.invalidation.${AMEE_SERVER_NAME}.${AMEE_INSTANCE_NAME}"/>
         <property name="exclusive" value="true"/>
         <property name="autoDelete" value="true"/>
     </bean>
 
     <bean id="calculationExchange" class="com.amee.service.messaging.config.ExchangeConfig">
-        <property name="name" value="platform.calculation"/>
+        <property name="name" value="platform.${MESSAGING_SCOPE}.calculation"/>
         <property name="type" value="direct"/>
         <property name="durable" value="true"/>
     </bean>
 
     <bean id="calculationQueue" class="com.amee.service.messaging.config.QueueConfig">
-        <property name="name" value="platform.calculation"/>
+        <property name="name" value="platform.${MESSAGING_SCOPE}.calculation"/>
     </bean>
 
 </beans>
