@@ -3,6 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- Identity. -->
+    <name>amee-restlet</name>
     <parent>
         <groupId>com.amee</groupId>
         <artifactId>server</artifactId>
@@ -11,9 +14,9 @@
     <artifactId>amee-restlet</artifactId>
     <packaging>jar</packaging>
 
-    <name>amee-restlet</name>
-
+    <!-- Dependencies. -->
     <dependencies>
+
         <!-- Internal Dependencies. -->
         <dependency>
             <groupId>com.amee</groupId>
@@ -27,7 +30,8 @@
             <groupId>com.amee</groupId>
             <artifactId>amee-service</artifactId>
         </dependency>
-        <!-- External Dependencies. -->
+
+        <!-- Compile Dependencies. -->
         <dependency>
             <groupId>org.restlet</groupId>
             <artifactId>org.restlet</artifactId>
@@ -66,12 +70,12 @@
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
-            <version>2.9.1</version>
+            <version>${xerces.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.abdera</groupId>
             <artifactId>abdera-server</artifactId>
-            <version>0.4.0-incubating</version>
+            <version>${abdera.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.servlet</groupId>
@@ -82,13 +86,14 @@
         <dependency>
             <groupId>org.apache.abdera</groupId>
             <artifactId>abdera-extensions-opensearch</artifactId>
-            <version>0.4.0-incubating</version>
+            <version>${abdera.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.abdera</groupId>
             <artifactId>abdera-extensions-main</artifactId>
-            <version>0.4.0-incubating</version>
+            <version>${abdera.version}</version>
         </dependency>
+        
     </dependencies>
 
 </project>

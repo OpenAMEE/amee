@@ -1,9 +1,9 @@
 package com.amee.service.invalidation;
 
-import com.amee.service.messaging.TopicMessageConsumer;
-import com.amee.service.messaging.config.ConsumeConfig;
-import com.amee.service.messaging.config.ExchangeConfig;
-import com.amee.service.messaging.config.QueueConfig;
+import com.amee.messaging.TopicMessageConsumer;
+import com.amee.messaging.config.ConsumeConfig;
+import com.amee.messaging.config.QueueConfig;
+import com.amee.messaging.config.ExchangeConfig;
 import com.rabbitmq.client.QueueingConsumer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

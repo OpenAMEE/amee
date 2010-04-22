@@ -2,8 +2,8 @@ package com.amee.service.invalidation;
 
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.ObjectType;
-import com.amee.service.messaging.Message;
-import com.amee.service.messaging.MessagingException;
+import com.amee.messaging.Message;
+import com.amee.messaging.MessagingException;
 import org.json.JSONException;
 import org.json.JSONObject;
 

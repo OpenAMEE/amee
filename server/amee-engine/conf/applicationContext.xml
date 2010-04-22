@@ -27,15 +27,15 @@
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
     <!-- Enable request scope - NOT IN USE (steve@amee.com - 08/09/09) -->
-    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
-        <property name="scopes">
-            <map>
-                <entry key="event">
-                    <bean class="com.amee.engine.spring.RestletRequestScope"/>
-                </entry>
-            </map>
-        </property>
-    </bean>
+    <!--<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">-->
+    <!--<property name="scopes">-->
+    <!--<map>-->
+    <!--<entry key="event">-->
+    <!--<bean class="com.amee.engine.spring.RestletRequestScope"/>-->
+    <!--</entry>-->
+    <!--</map>-->
+    <!--</property>-->
+    <!--</bean>-->
 
     <!-- EHCache -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">

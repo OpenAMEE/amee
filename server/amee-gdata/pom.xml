@@ -1,8 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- Identity. -->
+    <name>amee-gdata</name>
     <parent>
         <groupId>com.amee</groupId>
         <artifactId>server</artifactId>
@@ -11,9 +13,9 @@
     <artifactId>amee-gdata</artifactId>
     <packaging>jar</packaging>
 
-    <name>amee-gdata</name>
-
+    <!-- Dependencies. -->
     <dependencies>
+
         <!-- Internal Dependencies -->
         <dependency>
             <groupId>com.amee</groupId>
@@ -27,57 +29,61 @@
             <groupId>com.amee</groupId>
             <artifactId>amee-engine</artifactId>
         </dependency>
-        <!-- External Dependencies -->
+
+        <!-- Compile Dependencies -->
+        <dependency>
+            <groupId>com.google.visualization</groupId>
+            <artifactId>visualization-datasource</artifactId>
+            <version>${google-visualization-datasource.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gdata</groupId>
+            <artifactId>gdata-core</artifactId>
+            <version>${google-gdata-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>org.json</artifactId>
+            <version>${org-json.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>${ibm-icu4j.version}</version>
+        </dependency>
+
+        <!-- Runtime Dependencies -->
         <dependency>
             <groupId>ant</groupId>
             <artifactId>ant</artifactId>
-            <version>1.6</version>
+            <version>${ant.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>jetty</groupId>
             <artifactId>jsp-api</artifactId>
-            <version>2.1-6.0.2</version>
+            <version>${jetty-jsp.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>jetty</groupId>
             <artifactId>jsp</artifactId>
-            <version>2.1-6.0.2</version>
+            <version>${jetty-jsp.version}</version>
             <scope>runtime</scope>
         </dependency>
-       <dependency>
-           <groupId>javax.servlet</groupId>
-           <artifactId>servlet-api</artifactId>
-           <version>2.5</version>
-           <scope>runtime</scope>
-       </dependency>
-       <dependency>
-           <groupId>com.google.visualization</groupId>
-           <artifactId>visualization-datasource</artifactId>
-           <version>1.0.2</version>
-       </dependency>
-       <dependency>
-           <groupId>com.google.gdata</groupId>
-           <artifactId>gdata-core</artifactId>
-           <version>1.0</version>
-       </dependency>
-       <dependency>
-          <groupId>org.json</groupId>
-          <artifactId>org.json</artifactId>
-          <version>${org.json.version}</version>
-      </dependency>
-      <dependency>
-          <groupId>com.ibm.icu</groupId>
-          <artifactId>icu4j</artifactId>
-          <version>4.0.1</version>
-      </dependency>
-       <dependency>
-           <groupId>com.google.collections</groupId>
-           <artifactId>google-collections</artifactId>
-           <version>1.0-rc5</version>
-           <scope>runtime</scope>
-       </dependency>
-   </dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${javax-servlet-api.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.collections</groupId>
+            <artifactId>google-collections</artifactId>
+            <version>${google-collections.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+    </dependencies>
 
 </project>

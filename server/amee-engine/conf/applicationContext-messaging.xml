@@ -7,11 +7,11 @@
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-    <bean class="com.amee.service.messaging.config.MessagingConfig">
+    <bean class="com.amee.messaging.config.MessagingConfig">
         <property name="runSleep" value="${MESSAGING_RUN_SLEEP}"/>
     </bean>
 
-    <bean class="com.amee.service.messaging.config.ConnectionConfig">
+    <bean class="com.amee.messaging.config.ConnectionConfig">
         <property name="addresses">
             <list>
                 <bean class="com.rabbitmq.client.Address">
@@ -29,29 +29,29 @@
         <property name="requestedHeartbeat" value="0"/>
     </bean>
 
-    <bean id="invalidationExchange" class="com.amee.service.messaging.config.ExchangeConfig">
+    <bean id="invalidationExchange" class="com.amee.messaging.config.ExchangeConfig">
         <property name="name" value="platform.${MESSAGING_SCOPE}.invalidation"/>
         <property name="type" value="topic"/>
         <property name="durable" value="true"/>
     </bean>
 
-    <bean id="invalidationPublish" class="com.amee.service.messaging.config.PublishConfig"/>
+    <bean id="invalidationPublish" class="com.amee.messaging.config.PublishConfig"/>
 
-    <bean id="invalidationConsume" class="com.amee.service.messaging.config.ConsumeConfig"/>
+    <bean id="invalidationConsume" class="com.amee.messaging.config.ConsumeConfig"/>
 
-    <bean id="invalidationQueue" class="com.amee.service.messaging.config.QueueConfig">
+    <bean id="invalidationQueue" class="com.amee.messaging.config.QueueConfig">
         <property name="name" value="platform.${MESSAGING_SCOPE}.invalidation.${AMEE_SERVER_NAME}.${AMEE_INSTANCE_NAME}"/>
         <property name="exclusive" value="true"/>
         <property name="autoDelete" value="true"/>
     </bean>
 
-    <bean id="calculationExchange" class="com.amee.service.messaging.config.ExchangeConfig">
+    <bean id="calculationExchange" class="com.amee.messaging.config.ExchangeConfig">
         <property name="name" value="platform.${MESSAGING_SCOPE}.calculation"/>
         <property name="type" value="direct"/>
         <property name="durable" value="true"/>
     </bean>
 
-    <bean id="calculationQueue" class="com.amee.service.messaging.config.QueueConfig">
+    <bean id="calculationQueue" class="com.amee.messaging.config.QueueConfig">
         <property name="name" value="platform.${MESSAGING_SCOPE}.calculation"/>
     </bean>
 

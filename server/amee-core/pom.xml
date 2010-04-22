@@ -1,8 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- Identity. -->
+    <name>amee-core</name>
     <parent>
         <groupId>com.amee</groupId>
         <artifactId>server</artifactId>
@@ -10,19 +12,22 @@
     </parent>
     <artifactId>amee-core</artifactId>
     <packaging>jar</packaging>
-    <name>amee-core</name>
+
+    <!-- Dependencies. -->
     <dependencies>
-        <!-- AMEE Dependencies. -->
+
+        <!-- Internal Dependencies. -->
         <dependency>
             <groupId>com.amee.platform</groupId>
             <artifactId>amee-platform-science</artifactId>
             <version>${amee-platform-science.version}</version>
         </dependency>
-        <!-- 3rd Party Dependencies. -->
+        
+        <!-- Compile Dependencies. -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>org.json</artifactId>
-            <version>${org.json.version}</version>
+            <version>${org-json.version}</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -32,22 +37,22 @@
         <dependency>
             <groupId>org.jscience</groupId>
             <artifactId>jscience</artifactId>
-            <version>4.3.1</version>
+            <version>${jscience.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.4</version>
+            <version>${commons-lang.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-            <version>3.2</version>
+            <version>${commons-collections.version}</version>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
+            <version>${dom4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -57,8 +62,10 @@
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
-            <version>2.9.1</version>
+            <version>${xerces.version}</version>
             <scope>test</scope>
         </dependency>
+        
     </dependencies>
+    
 </project>
