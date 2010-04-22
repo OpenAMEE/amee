@@ -1,8 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- Identity. -->
+    <name>amee-domain</name>
     <parent>
         <groupId>com.amee</groupId>
         <artifactId>server</artifactId>
@@ -11,30 +13,30 @@
     <artifactId>amee-domain</artifactId>
     <packaging>jar</packaging>
 
-    <name>amee-domain</name>
-
+    <!-- Dependencies. -->
     <dependencies>
+        
         <!-- Internal Dependencies. -->
         <dependency>
             <groupId>com.amee</groupId>
             <artifactId>amee-core</artifactId>
         </dependency>
-        <!-- AMEE Dependencies. -->
         <dependency>
             <groupId>com.amee.platform</groupId>
             <artifactId>amee-platform-science</artifactId>
             <version>${amee-platform-science.version}</version>
         </dependency>
-        <!-- 3rd Party Dependencies. -->
+
+        <!-- Compile Dependencies. -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>org.json</artifactId>
-            <version>${org.json.version}</version>
+            <version>${org-json.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-annotations</artifactId>
-            <version>${hibernate-entitymanager.version}</version>
+            <version>${hibernate-core.version}</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -44,33 +46,32 @@
         <dependency>
             <groupId>org.jscience</groupId>
             <artifactId>jscience</artifactId>
-            <version>4.3.1</version>
+            <version>${jscience.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.3</version>
+            <version>${commons-codec.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.4</version>
+            <version>${commons-lang.version}</version>
         </dependency>
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache</artifactId>
             <version>${ehcache.version}</version>
         </dependency>
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>1.0</version>
-        </dependency>
+
+        <!-- Test Dependencies. -->
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
-            <version>2.9.1</version>
+            <version>${xerces.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
+    
 </project>

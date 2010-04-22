@@ -1,8 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- Identity. -->
+    <name>amee-calculation</name>
     <parent>
         <groupId>com.amee</groupId>
         <artifactId>server</artifactId>
@@ -10,8 +12,10 @@
     </parent>
     <artifactId>amee-calculation</artifactId>
     <packaging>jar</packaging>
-    <name>amee-calculation</name>
+
+    <!-- Dependencies. -->
     <dependencies>
+
         <!-- Internal Dependencies. -->
         <dependency>
             <groupId>com.amee</groupId>
@@ -21,7 +25,8 @@
             <groupId>com.amee</groupId>
             <artifactId>amee-service</artifactId>
         </dependency>
-        <!-- External Dependencies. -->
+        
+        <!-- Compile Dependencies. -->
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
@@ -30,17 +35,12 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.0.1</version>
+            <version>${apache-httpcomponents-httpclient}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
-            <version>4.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>${rabbitmq.version}</version>
+            <version>${apache-httpcomponents-httpcore}</version>
         </dependency>
         <dependency>
             <!-- For RabbitMQ. -->
@@ -48,5 +48,7 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
+        
     </dependencies>
+
 </project>

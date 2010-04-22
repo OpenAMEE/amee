@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Project Metadata. -->
+    <!-- Identity. -->
     <groupId>com.amee</groupId>
     <artifactId>server</artifactId>
     <packaging>pom</packaging>
@@ -11,29 +12,64 @@
     <name>AMEE Platform</name>
 
     <!-- Project Properties. -->
-    <!-- Note: Keep restlet, jetty and servlet-api versions in sync. -->
-    <!-- Note: Check Restlet release notes and jetty dependencies. -->
     <properties>
+        <!-- Internal Versions. -->
         <amee.version>2.1</amee.version>
-        <restlet.version>1.1.4</restlet.version>
-        <jetty.version>6.1.15</jetty.version>
-        <jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>
-        <commons-fileupload.version>1.2.1</commons-fileupload.version>
-        <org.json.version>2.0</org.json.version>
-        <joda-time.version>1.6</joda-time.version>
-        <spring.version>2.5.6</spring.version>
-        <hibernate-core.version>3.3.0.SP1</hibernate-core.version>
-        <hibernate-entitymanager.version>3.4.0.GA</hibernate-entitymanager.version>
-        <commons-dbcp.version>1.2.2</commons-dbcp.version>
-        <ehcache.version>1.6.2</ehcache.version>
-        <rabbitmq.version>1.7.2</rabbitmq.version>
-        <commons-io.version>1.4</commons-io.version>
+        <amee-base.version>1.0.1-SNAPSHOT</amee-base.version>
+        <amee-messaging.version>1.0.0-SNAPSHOT</amee-messaging.version>
         <amee-platform-science.version>1.0.6</amee-platform-science.version>
+        <!-- External Versions. -->
+        <!-- Note: Keep restlet, jetty and servlet-api versions in sync. -->
+        <!-- Note: Check Restlet release notes and jetty dependencies. -->
+        <abdera.version>0.4.0-incubating</abdera.version>
+        <ant.version>1.6</ant.version>
+        <apache-httpcomponents-httpclient>4.0.1</apache-httpcomponents-httpclient>
+        <apache-httpcomponents-httpcore>4.0.1</apache-httpcomponents-httpcore>
+        <cglib.version>2.2</cglib.version>
+        <commons-cli.version>1.2</commons-cli.version>
+        <commons-codec.version>1.3</commons-codec.version>
+        <commons-collections.version>3.2</commons-collections.version>
+        <commons-dbcp.version>1.2.2</commons-dbcp.version>
+        <commons-fileupload.version>1.2.1</commons-fileupload.version>
+        <commons-io.version>1.4</commons-io.version>
+        <commons-lang.version>2.5</commons-lang.version>
+        <commons-logging.version>1.1.1</commons-logging.version>
+        <dom4j.version>1.6.1</dom4j.version>
+        <ehcache.version>1.6.2</ehcache.version>
+        <google-collections.version>1.0-rc5</google-collections.version>
+        <google-gdata-core.version>1.0</google-gdata-core.version>
+        <google-visualization-datasource.version>1.0.2</google-visualization-datasource.version>
+        <hibernate-core.version>3.5.1-Final</hibernate-core.version>
+        <ibm-icu4j.version>4.0.1</ibm-icu4j.version>
+        <javacsv.version>2.0</javacsv.version>
+        <javax-servlet-api.version>2.5</javax-servlet-api.version>
+        <javax.mail.version>1.4</javax.mail.version>
+        <jetty-jsp.version>2.1-6.0.2</jetty-jsp.version>
+        <jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>
+        <jetty.version>6.1.15</jetty.version>
+        <joda-time.version>1.6</joda-time.version>
+        <jscience.version>4.3.1</jscience.version>
+        <junit.version>4.7</junit.version>
+        <log4j.version>1.2.15</log4j.version>
+        <log4jdbc.version>4-1.2alpha2</log4jdbc.version>
+        <mysql-connector-java.version>5.1.10</mysql-connector-java.version>
+        <org-json.version>2.0</org-json.version>
+        <quartz.version>1.6.1</quartz.version>
+        <restlet.version>1.1.9</restlet.version>
+        <slf4j.version>1.5.11</slf4j.version>
+        <spring.version>3.0.2.RELEASE</spring.version>
+        <wrapper.version>3.4.0</wrapper.version>
+        <xerces.version>2.9.1</xerces.version>
+        <xml-apis.version>1.3.04</xml-apis.version>
+        <!-- Paths. -->
         <amee.home>/var/www/apps/amee</amee.home>
         <amee.current>${amee.home}/current</amee.current>
         <amee.current.lib>${amee.current}/lib</amee.current.lib>
         <amee.current.bin>${amee.current}/bin</amee.current.bin>
         <amee.shared.lib>${amee.home}/shared</amee.shared.lib>
+        <!-- Other. -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <!-- Modules. -->
@@ -143,7 +179,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>amee-platform-science</includeArtifactIds>
+                            <includeArtifactIds>amee-platform-science,amee-messaging</includeArtifactIds>
                             <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
@@ -165,9 +201,10 @@
 
     </build>
 
-    <!-- Project Dependencies. -->
+    <!-- Dependencies. -->
     <dependencies>
 
+        <!-- Compile Dependencies. -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -186,12 +223,12 @@
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.15</version>
+            <version>${log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.1</version>
+            <version>${commons-logging.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.servlet</groupId>
@@ -209,19 +246,19 @@
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
-            <version>1.3.04</version>
+            <version>${xml-apis.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.5.0</version>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <!-- Test Dependencies. -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.4</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

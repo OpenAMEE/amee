@@ -1,8 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- Identity. -->
+    <name>amee-service</name>
     <parent>
         <groupId>com.amee</groupId>
         <artifactId>server</artifactId>
@@ -11,29 +13,30 @@
     <artifactId>amee-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>amee-service</name>
-
+    <!-- Dependencies. -->
     <dependencies>
+
         <!-- Internal Dependencies. -->
         <dependency>
             <groupId>com.amee</groupId>
             <artifactId>amee-domain</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.amee</groupId>
+            <artifactId>amee-messaging</artifactId>
+            <version>${amee-messaging.version}</version>
+        </dependency>
+
         <!-- External Dependencies. -->
         <dependency>
             <groupId>net.sourceforge.javacsv</groupId>
             <artifactId>javacsv</artifactId>
-            <version>2.0</version>
+            <version>${javacsv.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>${commons-fileupload.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -45,17 +48,7 @@
             <artifactId>spring-context-support</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>${rabbitmq.version}</version>
-        </dependency>
-        <dependency>
-            <!-- For RabbitMQ. -->
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
-        </dependency>
+        
     </dependencies>
 
 </project>
