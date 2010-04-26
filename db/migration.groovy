@@ -46,6 +46,7 @@ def updateTimeZones(timeZone) {
 def fixEpoch() {
     println("Fixing the epoch date")
     sql.executeUpdate("UPDATE ITEM_VALUE SET START_DATE = '1970-01-01 00:00:00' WHERE START_DATE IS NOT NULL")
+    sql.executeUpdate("UPDATE ITEM SET START_DATE = NULL WHERE TYPE = 'DI'")
 }
 
 def cli = new CliBuilder(usage: 'groovy migration.groovy [-cp path/to/mysql-connector-java.jar] [-h] [-s server] [-d database] [-u user] [-p password] [-r]')
