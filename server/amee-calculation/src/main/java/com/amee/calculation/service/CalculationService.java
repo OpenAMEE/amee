@@ -19,7 +19,7 @@
  */
 package com.amee.calculation.service;
 
-import com.amee.core.CO2Amount;
+import com.amee.base.transaction.TransactionController;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.APIVersion;
 import com.amee.domain.algorithm.Algorithm;
@@ -31,9 +31,9 @@ import com.amee.domain.profile.CO2CalculationService;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choices;
 import com.amee.platform.science.AlgorithmRunner;
+import com.amee.platform.science.CO2Amount;
 import com.amee.platform.science.Decimal;
 import com.amee.platform.science.InternalValue;
-import com.amee.service.transaction.TransactionController;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;

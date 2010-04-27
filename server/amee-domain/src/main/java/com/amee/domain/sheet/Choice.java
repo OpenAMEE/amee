@@ -1,6 +1,6 @@
 package com.amee.domain.sheet;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.APIObject;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,8 +91,8 @@ public class Choice implements Serializable, Comparable, APIObject {
 
     public Element getElement(Document document) {
         Element element = document.createElement("Choice");
-        element.appendChild(APIUtils.getElement(document, "Name", getName()));
-        element.appendChild(APIUtils.getElement(document, "Value", getValue()));
+        element.appendChild(XMLUtils.getElement(document, "Name", getName()));
+        element.appendChild(XMLUtils.getElement(document, "Value", getValue()));
         return element;
     }
 

@@ -1,7 +1,7 @@
 package com.amee.domain.sheet;
 
 import com.amee.domain.APIObject;
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -129,7 +129,7 @@ public class Choices implements Serializable, APIObject {
 
     public Element getElement(Document document) {
         Element element = document.createElement("Choices");
-        element.appendChild(APIUtils.getElement(document, "Name", getName()));
+        element.appendChild(XMLUtils.getElement(document, "Name", getName()));
         Element choicesElement = document.createElement("Choices");
         for (Choice choice : getChoices()) {
             choicesElement.appendChild(choice.getElement(document));

@@ -25,7 +25,7 @@ import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.RewriteFilter;
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.service.path.PathItemService;
 import com.amee.service.profile.ProfileService;
 import org.restlet.Application;

@@ -1,3 +1,0 @@
-manufacturer,product,kgCO2e,unit,source,algorithm
-innocent,smoothie_125ml,0.294,kgCO2e,mango and passion fruit - http://www.innocentdrinks.co.uk/us/?Page=our_carbon_footprint,numberConsumed*value
-walkers,crisps_25g,0.075,kgCO2e,http://www.walkerscarbonfootprint.co.uk,numberConsumed*value

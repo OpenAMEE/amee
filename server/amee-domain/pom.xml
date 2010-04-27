@@ -19,7 +19,13 @@
         <!-- Internal Dependencies. -->
         <dependency>
             <groupId>com.amee</groupId>
-            <artifactId>amee-core</artifactId>
+            <artifactId>amee-base</artifactId>
+            <version>${amee-base.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amee</groupId>
+            <artifactId>amee-persist</artifactId>
+            <version>${amee-persist.version}</version>
         </dependency>
         <dependency>
             <groupId>com.amee.platform</groupId>

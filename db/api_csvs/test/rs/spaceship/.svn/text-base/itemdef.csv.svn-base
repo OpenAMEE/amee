@@ -1,9 +1,0 @@
-name,Spaceship
-algFile,alg.js
-name,path,type,isDataMapValue,isDrillDown,default,choices
-Distance,distance,DECIMAL,false,false
-kgCO2 Per Passenger Journey,kgCO2PerPassengerJourney,DECIMAL,true,false
-Number of Passengers,numberOfPassengers,DECIMAL,false,false
-Source,source,TEXT,true,true
-Type,type,TEXT,true,true
-Size,size,TEXT,true,true

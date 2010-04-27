@@ -1,8 +1,8 @@
 package com.amee.service.auth;
 
+import com.amee.base.crypto.CryptoException;
+import com.amee.base.crypto.InternalCrypto;
 import com.amee.domain.auth.User;
-import com.amee.domain.auth.crypto.Crypto;
-import com.amee.domain.auth.crypto.CryptoException;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.site.ISite;
 import org.apache.commons.logging.Log;
@@ -259,7 +259,7 @@ public class AuthenticationService implements Serializable {
 
         public static String decryptToken(String token) {
             try {
-                return Crypto.decrypt(token);
+                return InternalCrypto.decrypt(token);
             } catch (CryptoException e) {
                 // log.error("caught CryptoException: " + e);
                 // TODO: do something now
@@ -269,7 +269,7 @@ public class AuthenticationService implements Serializable {
 
         public static String encryptToken(String token) {
             try {
-                return Crypto.encrypt(token);
+                return InternalCrypto.encrypt(token);
             } catch (CryptoException e) {
                 // log.error("caught CryptoException: " + e);
                 // TODO: do something now

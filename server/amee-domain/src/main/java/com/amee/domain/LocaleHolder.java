@@ -21,7 +21,7 @@
  */
 package com.amee.domain;
 
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
 
 /**
  * A thread local helper for retrieving the locale string of the request

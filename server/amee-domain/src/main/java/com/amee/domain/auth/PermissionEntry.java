@@ -22,7 +22,7 @@
 package com.amee.domain.auth;
 
 import com.amee.domain.AMEEStatus;
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -174,9 +174,9 @@ public class PermissionEntry implements Serializable {
 
     public Element getElement(Document document) {
         Element element = document.createElement("PermissionEntry");
-        element.appendChild(APIUtils.getElement(document, "Value", getValue()));
-        element.appendChild(APIUtils.getElement(document, "Status", getStatus().getName()));
-        element.appendChild(APIUtils.getElement(document, "Allow", getAllow().toString()));
+        element.appendChild(XMLUtils.getElement(document, "Value", getValue()));
+        element.appendChild(XMLUtils.getElement(document, "Status", getStatus().getName()));
+        element.appendChild(XMLUtils.getElement(document, "Allow", getAllow().toString()));
         return element;
     }
 

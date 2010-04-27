@@ -1,6 +1,6 @@
 package com.amee.domain;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONException;
@@ -83,7 +83,7 @@ public class APIVersion extends AMEEEntity {
     }
 
     public JSONObject getIdentityJSONObject() throws JSONException {
-        JSONObject obj = APIUtils.getIdentityJSONObject(this);
+        JSONObject obj = XMLUtils.getIdentityJSONObject(this);
         obj.put("apiVersion", getVersion());
         return obj;
     }
@@ -93,12 +93,12 @@ public class APIVersion extends AMEEEntity {
     }
 
     public Element getElement(Document document, boolean detailed) {
-        return APIUtils.getElement(document, "APIVersion", getVersion());
+        return XMLUtils.getElement(document, "APIVersion", getVersion());
     }
 
     public Element getIdentityElement(Document document) {
-        Element element = APIUtils.getIdentityElement(document, this);
-        element.appendChild(APIUtils.getElement(document, "APIVersion", getVersion()));
+        Element element = XMLUtils.getIdentityElement(document, this);
+        element.appendChild(XMLUtils.getElement(document, "APIVersion", getVersion()));
         return element;
     }
 

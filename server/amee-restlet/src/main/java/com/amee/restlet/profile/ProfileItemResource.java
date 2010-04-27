@@ -19,8 +19,8 @@
  */
 package com.amee.restlet.profile;
 
-import com.amee.core.CO2AmountUnit;
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.ProfileItem;

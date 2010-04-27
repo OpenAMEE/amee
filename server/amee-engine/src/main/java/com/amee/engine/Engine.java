@@ -1,6 +1,6 @@
 package com.amee.engine;
 
-import com.amee.service.transaction.TransactionController;
+import com.amee.base.transaction.TransactionController;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;

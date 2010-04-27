@@ -1,89 +1,0 @@
-8
-
-dir
-3066
-http://svn.amee.com/internal/api_csvs/transport/plane/generic
-http://svn.amee.com
-
-
-
-2009-04-27T11:33:38.571031Z
-3062
-james.hetherington
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-b293a2d2-da53-4cb3-b1bf-c591e3edcd7a
-
-default.js
-file
-
-
-
-
-2009-04-27T17:57:40.000000Z
-a160d2fa283e3f51bac24710dd744be9
-2009-04-25T11:57:54.462416Z
-3056
-andrew
-
-airports
-dir
-
-data.csv
-file
-
-
-
-
-2009-04-20T11:03:00.000000Z
-c256b4a4c456fa5244913423fc80ab5c
-2009-01-27T21:45:07.059474Z
-2443
-andrew
-has-props
-
-itemdef.csv
-file
-
-
-
-
-2009-04-27T17:57:40.000000Z
-e632d00e6e901acdd6cb6fc42c83ddd3
-2009-04-25T11:57:54.462416Z
-3056
-andrew
-
-freight
-dir
-
-distance
-dir
-
-passengerclass
-dir
-
-perMonth.js.migrate
-file
-
-
-
-
-2009-04-20T11:03:00.000000Z
-3092f63d3bae49c270dcb8337cc246b0
-2009-02-11T15:06:12.125777Z
-2568
-james.hetherington
-

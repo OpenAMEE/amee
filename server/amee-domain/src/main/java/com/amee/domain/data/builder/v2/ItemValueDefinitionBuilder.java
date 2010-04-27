@@ -1,6 +1,6 @@
 package com.amee.domain.data.builder.v2;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.APIVersion;
 import com.amee.domain.Builder;
 import com.amee.domain.data.ItemValueDefinition;
@@ -81,34 +81,34 @@ public class ItemValueDefinitionBuilder implements Builder {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ItemValueDefinition");
         element.setAttribute("uid", itemValueDefinition.getUid());
-        element.appendChild(APIUtils.getElement(document, "Path", itemValueDefinition.getPath()));
-        element.appendChild(APIUtils.getElement(document, "Name", itemValueDefinition.getName()));
+        element.appendChild(XMLUtils.getElement(document, "Path", itemValueDefinition.getPath()));
+        element.appendChild(XMLUtils.getElement(document, "Name", itemValueDefinition.getName()));
         element.appendChild(itemValueDefinition.getValueDefinition().getElement(document));
 
         if (itemValueDefinition.hasUnit()) {
-            element.appendChild(APIUtils.getElement(document, "Unit", itemValueDefinition.getUnit().toString()));
+            element.appendChild(XMLUtils.getElement(document, "Unit", itemValueDefinition.getUnit().toString()));
         }
 
         if (itemValueDefinition.hasPerUnit()) {
-            element.appendChild(APIUtils.getElement(document, "PerUnit", itemValueDefinition.getPerUnit().toString()));
+            element.appendChild(XMLUtils.getElement(document, "PerUnit", itemValueDefinition.getPerUnit().toString()));
         }
 
-        element.appendChild(APIUtils.getElement(document, "FromProfile", Boolean.toString(itemValueDefinition.isFromProfile())));
-        element.appendChild(APIUtils.getElement(document, "FromData", Boolean.toString(itemValueDefinition.isFromData())));
-        element.appendChild((APIUtils.getElement(document, "DrillDown", Boolean.toString(itemValueDefinition.isDrillDown()))));
+        element.appendChild(XMLUtils.getElement(document, "FromProfile", Boolean.toString(itemValueDefinition.isFromProfile())));
+        element.appendChild(XMLUtils.getElement(document, "FromData", Boolean.toString(itemValueDefinition.isFromData())));
+        element.appendChild((XMLUtils.getElement(document, "DrillDown", Boolean.toString(itemValueDefinition.isDrillDown()))));
         if (detailed) {
             element.setAttribute("created", itemValueDefinition.getCreated().toString());
             element.setAttribute("modified", itemValueDefinition.getModified().toString());
-            element.appendChild(APIUtils.getElement(document, "Value", itemValueDefinition.getValue()));
-            element.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getChoices()));
-            element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
+            element.appendChild(XMLUtils.getElement(document, "Value", itemValueDefinition.getValue()));
+            element.appendChild(XMLUtils.getElement(document, "Choices", itemValueDefinition.getChoices()));
+            element.appendChild(XMLUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
             element.appendChild(itemValueDefinition.getEnvironment().getIdentityElement(document));
             element.appendChild(itemValueDefinition.getItemDefinition().getIdentityElement(document));
             if (itemValueDefinition.getAliasedTo() != null) {
                 element.appendChild(itemValueDefinition.getAliasedTo().getIdentityElement(document));
-                element.appendChild(APIUtils.getIdentityElement(document, "AliasedTo", itemValueDefinition.getAliasedTo()));
+                element.appendChild(XMLUtils.getIdentityElement(document, "AliasedTo", itemValueDefinition.getAliasedTo()));
             } else {
-                element.appendChild(APIUtils.getElement(document, "AliasedTo", ""));
+                element.appendChild(XMLUtils.getElement(document, "AliasedTo", ""));
             }
             Element apiVersions = document.createElement("APIVersions");
             for (APIVersion v : itemValueDefinition.getAPIVersions()) {

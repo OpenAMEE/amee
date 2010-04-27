@@ -1,6 +1,6 @@
 package com.amee.restlet.profile.builder.v1;
 
-import com.amee.core.ValueType;
+import com.amee.domain.ValueType;
 import com.amee.domain.APIVersion;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;

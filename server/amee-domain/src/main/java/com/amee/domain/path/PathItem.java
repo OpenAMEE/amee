@@ -19,8 +19,12 @@
  */
 package com.amee.domain.path;
 
-import com.amee.core.APIUtils;
-import com.amee.domain.*;
+import com.amee.base.utils.UidGen;
+import com.amee.base.utils.XMLUtils;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.APIObject;
+import com.amee.domain.IAMEEEntityReference;
+import com.amee.domain.ObjectType;
 import com.amee.domain.auth.AccessSpecification;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,7 +33,12 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
 
@@ -86,8 +95,8 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     public Element getElement(Document document, String name) {
         Element element = document.createElement(name);
         element.setAttribute("uid", getUid());
-        element.appendChild(APIUtils.getElement(document, "Name", getName()));
-        element.appendChild(APIUtils.getElement(document, "Path", getPath()));
+        element.appendChild(XMLUtils.getElement(document, "Name", getName()));
+        element.appendChild(XMLUtils.getElement(document, "Path", getPath()));
         return element;
     }
 
@@ -120,6 +129,7 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     // Used by EnvironmentPIGFactory & ProfilePIGFactory.
+
     public void add(PathItem child) {
         children.add(child);
         child.setParent(this);
@@ -133,6 +143,7 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     // Used by PathItemGroup.
+
     public PathItem findLastPathItem(List<String> segments, boolean forProfile) {
         PathItem result = null;
         PathItem child;
@@ -170,7 +181,7 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
                     child = new PathItem();
                     child.setObjectType(forProfile ? ObjectType.PI : ObjectType.DI);
                     child.setPath(segment);
-                    child.setUid(UidGen.isValid(segment) ? segment : "");
+                    child.setUid(UidGen.INSTANCE_12.isValid(segment) ? segment : "");
                     child.setParent(this);
                     child.setPathItemGroup(getPathItemGroup());
                     break;
@@ -188,6 +199,7 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     // used in dataTrail.ftl & profileTrail.ftl
+
     public List<PathItem> getPathItems() {
         List<PathItem> pathItems = new ArrayList<PathItem>();
         if (hasParent()) {
@@ -210,16 +222,19 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     // Only used by dataCategory.ftl & profileCategory.ftl. FreeMarker needed a distinct method name.
+
     public Set<PathItem> findChildrenByType(String typeName) {
         return getChildrenByType(typeName);
     }
 
     // Used by DataCategoryResourceBuilder, BaseProfileResource & ProfileCategoryResourceBuilder.
+
     public Set<PathItem> getChildrenByType(String typeName) {
         return getChildrenByType(typeName, false);
     }
 
     // Used by DataCategoryResourceBuilder, BaseProfileResource & ProfileCategoryResourceBuilder.
+
     protected Set<PathItem> getChildrenByType(String typeName, boolean recurse) {
         Set<PathItem> childrenByType = new TreeSet<PathItem>();
         for (PathItem child : getChildren()) {
@@ -257,6 +272,7 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     // Used internally & by DataFilter, ProfileFilter.
+
     public String getInternalPath() {
         ObjectType ot = getObjectType();
         if (ot.equals(ObjectType.DC)) {

@@ -19,7 +19,7 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.core.ValueType;
+import com.amee.domain.ValueType;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.ValueDefinition;
 import com.amee.restlet.AuthorizeResource;

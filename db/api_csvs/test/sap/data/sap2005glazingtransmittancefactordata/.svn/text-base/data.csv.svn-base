@@ -1,9 +1,0 @@
-type,totalsolarenergytransmittance,lighttransmittance,units,source
-Single glazed,0.85,0.90,0,0
-Double glazed (air or argon filled),0.76,0.80,0,0
-Double glazed (Low-E, hard-coat),0.72,0.80,0,0
-Double glazed (Low-E, soft-coat),0.63,0.80,0,0
-Window with secondary glazing,0.76,0.80,0,0
-Triple glazed (air or argon filled),0.68,0.70,0,0
-Triple glazed (Low-E, hard-coat),0.64,0.70,0,0
-Triple glazed (Low-E, soft-coat),0.57,0.70,0,0

@@ -1,8 +1,8 @@
 package com.amee.restlet.ria;
 
+import com.amee.base.utils.UidGen;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.ObjectType;
-import com.amee.domain.UidGen;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.path.PathItem;
 import com.amee.restlet.AuthorizeResource;
@@ -46,7 +46,7 @@ public class RIATreeResource extends AuthorizeResource {
         node = request.getResourceRef().getQueryAsForm().getFirstValue("node");
         if ((node == null) || node.equalsIgnoreCase("root")) {
             pathItem = pathItemService.getPathItemGroup(getActiveEnvironment()).getRootPathItem();
-        } else if (UidGen.isValid(node)) {
+        } else if (UidGen.INSTANCE_12.isValid(node)) {
             pathItem = pathItemService.getPathItemGroup(getActiveEnvironment()).findByUId(node);
             if (!pathItem.getObjectType().equals(ObjectType.DC)) {
                 pathItem = null;

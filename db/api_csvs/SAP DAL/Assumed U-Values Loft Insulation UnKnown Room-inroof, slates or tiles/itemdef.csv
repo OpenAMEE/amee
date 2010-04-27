@@ -1,6 +1,0 @@
-name,"Assumed U-Values Loft Insulation UnKnown Room-inroof, slates or tiles",,,
-algFile,perMonth.js,,,
-name,path,type,isDataItemValue,isDrillDown
-"Room-inroof, slates or tiles",roomInroofSlatesOrTiles,TEXT,TRUE,FALSE
-Source,source,TEXT,TRUE,FALSE
-Type,type,TEXT,TRUE,TRUE

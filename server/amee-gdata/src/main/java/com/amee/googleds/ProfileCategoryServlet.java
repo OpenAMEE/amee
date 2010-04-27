@@ -21,8 +21,8 @@
  */
 package com.amee.googleds;
 
+import com.amee.base.transaction.TransactionController;
 import com.amee.domain.TimeZoneHolder;
-import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
@@ -37,7 +37,6 @@ import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.path.PathItemService;
 import com.amee.service.profile.ProfileService;
-import com.amee.service.transaction.TransactionController;
 import com.google.visualization.datasource.DataSourceServlet;
 import com.google.visualization.datasource.base.TypeMismatchException;
 import com.google.visualization.datasource.datatable.ColumnDescription;
@@ -47,7 +46,6 @@ import com.google.visualization.datasource.datatable.value.DateTimeValue;
 import com.google.visualization.datasource.datatable.value.ValueType;
 import com.google.visualization.datasource.query.Query;
 import org.joda.time.DateTime;
-import org.restlet.data.Request;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

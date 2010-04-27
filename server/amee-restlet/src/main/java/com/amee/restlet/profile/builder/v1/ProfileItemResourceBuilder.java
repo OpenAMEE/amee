@@ -1,6 +1,6 @@
 package com.amee.restlet.profile.builder.v1;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v1.ProfileItemBuilder;
 import com.amee.platform.science.DecimalPerUnit;
@@ -52,7 +52,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         setProfileItemBuilder(profileItem);
         Element element = document.createElement("ProfileItemResource");
         element.appendChild(profileItem.getElement(document, true));
-        element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
     }

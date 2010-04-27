@@ -1,6 +1,6 @@
 package com.amee.restlet.data.builder;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
 import com.amee.domain.Pager;
@@ -143,7 +143,7 @@ public class DataCategoryResourceBuilder {
     public Element getElement(DataCategoryResource resource, Document document) {
 
         Element element = document.createElement("DataCategoryResource");
-        element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
 
         if (resource.isGet()) {
 

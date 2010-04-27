@@ -21,10 +21,10 @@
  */
 package com.amee.restlet.permissions;
 
+import com.amee.base.utils.UidGen;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEEntityReference;
 import com.amee.domain.ObjectType;
-import com.amee.domain.UidGen;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.restlet.AuthorizeResource;
@@ -117,7 +117,7 @@ public class PermissionsResource extends AuthorizeResource {
         }
 
         // must have valid principalUid parameter
-        if (!UidGen.isValid(principalUid)) {
+        if (!UidGen.INSTANCE_12.isValid(principalUid)) {
             badRequest(APIFault.INVALID_PARAMETERS);
             return;
         }

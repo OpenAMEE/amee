@@ -19,7 +19,7 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.core.CO2Amount;
+import com.amee.platform.science.CO2Amount;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;

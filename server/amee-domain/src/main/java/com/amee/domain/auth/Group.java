@@ -1,6 +1,6 @@
 package com.amee.domain.auth;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.ObjectType;
 import com.amee.domain.environment.Environment;
@@ -85,7 +85,7 @@ public class Group extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public JSONObject getIdentityJSONObject() throws JSONException {
-        JSONObject obj = APIUtils.getIdentityJSONObject(this);
+        JSONObject obj = XMLUtils.getIdentityJSONObject(this);
         obj.put("name", getName());
         return obj;
     }
@@ -97,8 +97,8 @@ public class Group extends AMEEEnvironmentEntity implements Comparable {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("Group");
         element.setAttribute("uid", getUid());
-        element.appendChild(APIUtils.getElement(document, "Name", getName()));
-        element.appendChild(APIUtils.getElement(document, "Description", getName()));
+        element.appendChild(XMLUtils.getElement(document, "Name", getName()));
+        element.appendChild(XMLUtils.getElement(document, "Description", getName()));
         if (detailed) {
             element.appendChild(getEnvironment().getIdentityElement(document));
             element.setAttribute("created", getCreated().toString());
@@ -108,8 +108,8 @@ public class Group extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public Element getIdentityElement(Document document) {
-        Element element = APIUtils.getIdentityElement(document, this);
-        element.appendChild(APIUtils.getElement(document, "Name", getName()));
+        Element element = XMLUtils.getIdentityElement(document, this);
+        element.appendChild(XMLUtils.getElement(document, "Name", getName()));
         return element;
     }
 

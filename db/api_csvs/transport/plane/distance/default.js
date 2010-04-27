@@ -1,1 +1,0 @@
-(takeOffAndLanding+cruising*distance)*passengers

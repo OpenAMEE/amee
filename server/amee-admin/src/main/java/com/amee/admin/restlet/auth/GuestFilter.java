@@ -1,6 +1,6 @@
 package com.amee.admin.restlet.auth;
 
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.auth.User;
 import com.amee.restlet.auth.AuthUtils;
 import com.amee.restlet.auth.BaseAuthFilter;

@@ -19,7 +19,7 @@
  */
 package com.amee.domain.data;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.LocaleHolder;
@@ -183,7 +183,7 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     }
 
     public JSONObject getIdentityJSONObject() throws JSONException {
-        return APIUtils.getIdentityJSONObject(this);
+        return XMLUtils.getIdentityJSONObject(this);
     }
 
     public Element getElement(Document document) {
@@ -193,8 +193,8 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ItemDefinition");
         element.setAttribute("uid", getUid());
-        element.appendChild(APIUtils.getElement(document, "Name", getName()));
-        element.appendChild(APIUtils.getElement(document, "DrillDown", getDrillDown()));
+        element.appendChild(XMLUtils.getElement(document, "Name", getName()));
+        element.appendChild(XMLUtils.getElement(document, "DrillDown", getDrillDown()));
         if (detailed) {
             element.setAttribute("created", getCreated().toString());
             element.setAttribute("modified", getModified().toString());
@@ -204,7 +204,7 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     }
 
     public Element getIdentityElement(Document document) {
-        return APIUtils.getIdentityElement(document, this);
+        return XMLUtils.getIdentityElement(document, this);
     }
 
     public String getName() {

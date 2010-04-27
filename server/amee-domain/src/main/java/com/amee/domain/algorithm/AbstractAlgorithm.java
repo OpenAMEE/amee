@@ -1,6 +1,6 @@
 package com.amee.domain.algorithm;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
@@ -61,7 +61,7 @@ public abstract class AbstractAlgorithm extends AMEEEnvironmentEntity {
     }
 
     public JSONObject getIdentityJSONObject() throws JSONException {
-        return APIUtils.getIdentityJSONObject(this);
+        return XMLUtils.getIdentityJSONObject(this);
     }
 
     public Element getElement(Document document) {
@@ -73,8 +73,8 @@ public abstract class AbstractAlgorithm extends AMEEEnvironmentEntity {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement(getElementName());
         element.setAttribute("uid", getUid());
-        element.appendChild(APIUtils.getElement(document, "Name", getName()));
-        element.appendChild(APIUtils.getElement(document, "Content", getContent()));
+        element.appendChild(XMLUtils.getElement(document, "Name", getName()));
+        element.appendChild(XMLUtils.getElement(document, "Content", getContent()));
         if (detailed) {
             element.setAttribute("created", getCreated().toString());
             element.setAttribute("modified", getModified().toString());

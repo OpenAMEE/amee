@@ -1,6 +1,6 @@
 package com.amee.domain.sheet;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -85,10 +85,10 @@ public class Column implements Serializable, Comparable {
 
     public Element getElement(Document document, boolean detailed) {
         Element columnElement = document.createElement("Column");
-        columnElement.appendChild(APIUtils.getElement(document, "Name", getName()));
-        columnElement.appendChild(APIUtils.getElement(document, "Label", getLabel()));
-        columnElement.appendChild(APIUtils.getElement(document, "Atribute", Boolean.toString(isAttribute())));
-        columnElement.appendChild(APIUtils.getElement(document, "SortOrder", getSortOrder().toString()));
+        columnElement.appendChild(XMLUtils.getElement(document, "Name", getName()));
+        columnElement.appendChild(XMLUtils.getElement(document, "Label", getLabel()));
+        columnElement.appendChild(XMLUtils.getElement(document, "Atribute", Boolean.toString(isAttribute())));
+        columnElement.appendChild(XMLUtils.getElement(document, "SortOrder", getSortOrder().toString()));
         return columnElement;
     }
 

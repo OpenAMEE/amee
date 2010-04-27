@@ -1,6 +1,0 @@
-name,Heating UK Renewable
-algFile,default.js
-name,path,type,isDataItemValue,isDrillDown,unit,perUnit
-Type,type,TEXT,true,true,,
-Source,source,TEXT,true,false,,
-Energy generated,energyGenerated,DECIMAL,true,false,kWh,year

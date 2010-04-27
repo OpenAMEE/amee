@@ -1,7 +1,6 @@
 package com.amee.engine;
 
-import com.amee.core.APIUtils;
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEStatistics;
 import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.MediaTypeUtils;
@@ -128,10 +127,10 @@ public class EngineStatusService extends StatusService {
         Document document = new DocumentImpl();
         Element elem = document.createElement("Resources");
         Element statusElem = document.createElement("Status");
-        statusElem.appendChild(APIUtils.getElement(document, "Code", "" + status.getCode()));
-        statusElem.appendChild(APIUtils.getElement(document, "Name", status.getName()));
-        statusElem.appendChild(APIUtils.getElement(document, "Description", status.getDescription()));
-        statusElem.appendChild(APIUtils.getElement(document, "URI", status.getUri()));
+        statusElem.appendChild(XMLUtils.getElement(document, "Code", "" + status.getCode()));
+        statusElem.appendChild(XMLUtils.getElement(document, "Name", status.getName()));
+        statusElem.appendChild(XMLUtils.getElement(document, "Description", status.getDescription()));
+        statusElem.appendChild(XMLUtils.getElement(document, "URI", status.getUri()));
         elem.appendChild(statusElem);
         document.appendChild(elem);
         representation = new DomRepresentation(MediaType.APPLICATION_XML, document);

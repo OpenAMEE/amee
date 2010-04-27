@@ -4,18 +4,21 @@ import org.apache.xerces.dom.DocumentImpl;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class UserTypeTest {
     // Map of Enum name => label
     private static final Map<String, String> pairs = new HashMap<String, String>();
+
     {
         pairs.put("STANDARD", "Standard");
         pairs.put("GUEST", "Guest");
@@ -67,7 +70,7 @@ public class UserTypeTest {
         assertEquals("Number of elements not equal to number of enum values.", UserType.values().length, nl.getLength());
 
         // Check we have the correct name, label attributes
-        for(int i = 0 ; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Node UserTypeNode = nl.item(i);
             assertTrue("UserType node has no attributes.", UserTypeNode.hasAttributes());
 

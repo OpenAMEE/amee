@@ -1,9 +1,0 @@
-name,Entertainment Generic
-algFile,default.js
-name,path,type,isDataItemValue,isDrillDown
-Device,device,TEXT,true,true
-KWh Per Year,kWhPerYear,DECIMAL,true,false
-Number Owned,numberOwned,INTEGER,false,false
-On standby,onStandby,TEXT,false,false
-Rating,rating,TEXT,true,true
-Source,source,TEXT,true,false

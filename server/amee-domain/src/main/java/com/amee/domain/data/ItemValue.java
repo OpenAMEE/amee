@@ -19,7 +19,7 @@
  */
 package com.amee.domain.data;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.*;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
@@ -174,7 +174,7 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
     }
 
     public Element getIdentityElement(Document document) {
-        return APIUtils.getIdentityElement(document, this);
+        return XMLUtils.getIdentityElement(document, this);
     }
 
     public Environment getEnvironment() {

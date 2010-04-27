@@ -1,6 +1,6 @@
 package com.amee.domain.data.builder.v1;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.Builder;
 import com.amee.domain.data.ItemValueDefinition;
 import org.json.JSONException;
@@ -58,17 +58,17 @@ public class ItemValueDefinitionBuilder implements Builder {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ItemValueDefinition");
         element.setAttribute("uid", itemValueDefinition.getUid());
-        element.appendChild(APIUtils.getElement(document, "Path", itemValueDefinition.getPath()));
-        element.appendChild(APIUtils.getElement(document, "Name", itemValueDefinition.getName()));
-        element.appendChild(APIUtils.getElement(document, "FromProfile", Boolean.toString(itemValueDefinition.isFromProfile())));
-        element.appendChild(APIUtils.getElement(document, "FromData", Boolean.toString(itemValueDefinition.isFromData())));
+        element.appendChild(XMLUtils.getElement(document, "Path", itemValueDefinition.getPath()));
+        element.appendChild(XMLUtils.getElement(document, "Name", itemValueDefinition.getName()));
+        element.appendChild(XMLUtils.getElement(document, "FromProfile", Boolean.toString(itemValueDefinition.isFromProfile())));
+        element.appendChild(XMLUtils.getElement(document, "FromData", Boolean.toString(itemValueDefinition.isFromData())));
         element.appendChild(itemValueDefinition.getValueDefinition().getElement(document, false));
         if (detailed) {
             element.setAttribute("created", itemValueDefinition.getCreated().toString());
             element.setAttribute("modified", itemValueDefinition.getModified().toString());
-            element.appendChild(APIUtils.getElement(document, "Value", itemValueDefinition.getValue()));
-            element.appendChild(APIUtils.getElement(document, "Choices", itemValueDefinition.getChoices()));
-            element.appendChild(APIUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
+            element.appendChild(XMLUtils.getElement(document, "Value", itemValueDefinition.getValue()));
+            element.appendChild(XMLUtils.getElement(document, "Choices", itemValueDefinition.getChoices()));
+            element.appendChild(XMLUtils.getElement(document, "AllowedRoles", itemValueDefinition.getAllowedRoles()));
             element.appendChild(itemValueDefinition.getEnvironment().getIdentityElement(document));
             element.appendChild(itemValueDefinition.getItemDefinition().getIdentityElement(document));
         }

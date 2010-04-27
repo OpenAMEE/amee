@@ -1,8 +1,8 @@
 package com.amee.domain.environment;
 
-import com.amee.core.PersistentObject;
+import com.amee.base.domain.IdentityObject;
 
-public interface EnvironmentObject extends PersistentObject {
+public interface EnvironmentObject extends IdentityObject {
 
     public Environment getEnvironment();
 

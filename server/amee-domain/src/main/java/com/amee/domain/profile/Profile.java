@@ -19,7 +19,7 @@
  */
 package com.amee.domain.profile;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.ObjectType;
 import com.amee.domain.auth.AuthorizationContext;
@@ -86,7 +86,7 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
     }
 
     public JSONObject getIdentityJSONObject() throws JSONException {
-        return APIUtils.getIdentityJSONObject(this);
+        return XMLUtils.getIdentityJSONObject(this);
     }
 
     public Element getElement(Document document) {
@@ -96,8 +96,8 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("Profile");
         element.setAttribute("uid", getUid());
-        element.appendChild(APIUtils.getElement(document, "Path", getPath()));
-        element.appendChild(APIUtils.getElement(document, "Name", getName()));
+        element.appendChild(XMLUtils.getElement(document, "Path", getPath()));
+        element.appendChild(XMLUtils.getElement(document, "Name", getName()));
         if (detailed) {
             element.setAttribute("created", getCreated().toString());
             element.setAttribute("modified", getModified().toString());
@@ -108,7 +108,7 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
     }
 
     public Element getIdentityElement(Document document) {
-        return APIUtils.getIdentityElement(document, this);
+        return XMLUtils.getIdentityElement(document, this);
     }
 
     /**

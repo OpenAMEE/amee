@@ -1,8 +1,8 @@
 package com.amee.domain.sheet;
 
-import com.amee.core.ValueType;
-import com.amee.core.APIUtils;
-import com.amee.domain.UidGen;
+import com.amee.base.utils.UidGen;
+import com.amee.domain.ValueType;
+import com.amee.base.utils.XMLUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -37,7 +37,7 @@ public class Cell implements Serializable, Comparable {
         setRow(row);
         setValue("");
         setValueType();
-        setUid(UidGen.getUid());
+        setUid(UidGen.INSTANCE_12.getUid());
         add();
     }
 
@@ -48,7 +48,7 @@ public class Cell implements Serializable, Comparable {
         setRow(row);
         setValue(value);
         setValueType();
-        setUid(UidGen.getUid());
+        setUid(UidGen.INSTANCE_12.getUid());
         add();
     }
 
@@ -58,7 +58,7 @@ public class Cell implements Serializable, Comparable {
         setColumn(column);
         setRow(row);
         setValue(value);
-        setUid(UidGen.getUid());
+        setUid(UidGen.INSTANCE_12.getUid());
         setValueType(valueType);
         add();
     }
@@ -98,8 +98,8 @@ public class Cell implements Serializable, Comparable {
         Element cellElement = document.createElement("Cell");
         cellElement.setAttribute("uid", getValueType().toString());
         cellElement.setAttribute("type", getValueType().toString());
-        cellElement.appendChild(APIUtils.getElement(document, "Name", getColumn().getName()));
-        cellElement.appendChild(APIUtils.getElement(document, "Value", getValueAsString()));
+        cellElement.appendChild(XMLUtils.getElement(document, "Name", getColumn().getName()));
+        cellElement.appendChild(XMLUtils.getElement(document, "Value", getValueAsString()));
         return cellElement;
     }
 

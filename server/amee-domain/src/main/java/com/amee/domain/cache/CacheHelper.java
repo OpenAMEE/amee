@@ -1,6 +1,6 @@
 package com.amee.domain.cache;
 
-import com.amee.core.PersistentObject;
+import com.amee.base.domain.IdentityObject;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
@@ -196,19 +196,19 @@ public class CacheHelper implements Serializable {
         return null;
     }
 
-    public void add(String cacheName, PersistentObject persistentObject, String scope) {
-        add(cacheName, getCacheKey(persistentObject.getUid(), scope), persistentObject);
+    public void add(String cacheName, IdentityObject identityObject, String scope) {
+        add(cacheName, getCacheKey(identityObject.getUid(), scope), identityObject);
     }
 
-    public void add(String cacheName, PersistentObject persistentObject) {
-        add(cacheName, persistentObject.getUid(), persistentObject);
+    public void add(String cacheName, IdentityObject identityObject) {
+        add(cacheName, identityObject.getUid(), identityObject);
     }
 
-    public void remove(String cacheName, PersistentObject persistentObject, String scope) {
-        remove(cacheName, getCacheKey(persistentObject.getUid(), scope));
+    public void remove(String cacheName, IdentityObject identityObject, String scope) {
+        remove(cacheName, getCacheKey(identityObject.getUid(), scope));
     }
 
-    public void remove(String cacheName, PersistentObject persistentObject) {
-        remove(cacheName, persistentObject.getUid());
+    public void remove(String cacheName, IdentityObject identityObject) {
+        remove(cacheName, identityObject.getUid());
     }
 }

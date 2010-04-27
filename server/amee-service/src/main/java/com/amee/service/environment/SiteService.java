@@ -1,8 +1,8 @@
 package com.amee.service.environment;
 
+import com.amee.base.utils.UidGen;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.Pager;
-import com.amee.domain.UidGen;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
 import org.apache.commons.lang.StringUtils;
@@ -75,7 +75,7 @@ public class SiteService implements Serializable {
         Set<String> uids = new HashSet<String>();
         for (String uid : search.split(",")) {
             uid = uid.trim();
-            if (UidGen.isValid(uid)) {
+            if (UidGen.INSTANCE_12.isValid(uid)) {
                 uids.add(uid);
             }
         }

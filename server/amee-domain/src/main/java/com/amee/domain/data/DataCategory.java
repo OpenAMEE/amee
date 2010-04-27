@@ -19,7 +19,7 @@
  */
 package com.amee.domain.data;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.LocaleHolder;
@@ -177,9 +177,9 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("DataCategory");
         element.setAttribute("uid", getUid());
-        element.appendChild(APIUtils.getElement(document, "Name", getName()));
-        element.appendChild(APIUtils.getElement(document, "Path", getPath()));
-        element.appendChild(APIUtils.getElement(document, "Deprecated", "" + isDeprecated()));
+        element.appendChild(XMLUtils.getElement(document, "Name", getName()));
+        element.appendChild(XMLUtils.getElement(document, "Path", getPath()));
+        element.appendChild(XMLUtils.getElement(document, "Deprecated", "" + isDeprecated()));
         if (detailed) {
             element.setAttribute("created", getCreated().toString());
             element.setAttribute("modified", getModified().toString());

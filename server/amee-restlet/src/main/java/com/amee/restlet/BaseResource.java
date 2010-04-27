@@ -1,7 +1,7 @@
 package com.amee.restlet;
 
 import com.amee.calculation.service.CalculationException;
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.*;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;

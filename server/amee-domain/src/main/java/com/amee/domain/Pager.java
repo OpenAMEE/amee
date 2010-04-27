@@ -1,5 +1,6 @@
 package com.amee.domain;
 
+import com.amee.base.utils.XMLUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -10,8 +11,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
-import com.amee.core.APIUtils;
 
 public class Pager implements APIObject, Serializable {
 
@@ -283,17 +282,17 @@ public class Pager implements APIObject, Serializable {
 
     public Element getElement(Document document) {
         Element element = document.createElement("Pager");
-        element.appendChild(APIUtils.getElement(document, "Start", getStart() + ""));
-        element.appendChild(APIUtils.getElement(document, "From", getFrom() + ""));
-        element.appendChild(APIUtils.getElement(document, "To", getTo() + ""));
-        element.appendChild(APIUtils.getElement(document, "Items", getItems() + ""));
-        element.appendChild(APIUtils.getElement(document, "CurrentPage", getCurrentPage() + ""));
-        element.appendChild(APIUtils.getElement(document, "RequestedPage", getRequestedPage() + ""));
-        element.appendChild(APIUtils.getElement(document, "NextPage", getNextPage() + ""));
-        element.appendChild(APIUtils.getElement(document, "PreviousPage", getPreviousPage() + ""));
-        element.appendChild(APIUtils.getElement(document, "LastPage", getLastPage() + ""));
-        element.appendChild(APIUtils.getElement(document, "ItemsPerPage", getItemsPerPage() + ""));
-        element.appendChild(APIUtils.getElement(document, "ItemsFound", getItemsFound() + ""));
+        element.appendChild(XMLUtils.getElement(document, "Start", getStart() + ""));
+        element.appendChild(XMLUtils.getElement(document, "From", getFrom() + ""));
+        element.appendChild(XMLUtils.getElement(document, "To", getTo() + ""));
+        element.appendChild(XMLUtils.getElement(document, "Items", getItems() + ""));
+        element.appendChild(XMLUtils.getElement(document, "CurrentPage", getCurrentPage() + ""));
+        element.appendChild(XMLUtils.getElement(document, "RequestedPage", getRequestedPage() + ""));
+        element.appendChild(XMLUtils.getElement(document, "NextPage", getNextPage() + ""));
+        element.appendChild(XMLUtils.getElement(document, "PreviousPage", getPreviousPage() + ""));
+        element.appendChild(XMLUtils.getElement(document, "LastPage", getLastPage() + ""));
+        element.appendChild(XMLUtils.getElement(document, "ItemsPerPage", getItemsPerPage() + ""));
+        element.appendChild(XMLUtils.getElement(document, "ItemsFound", getItemsFound() + ""));
         return element;
     }
 

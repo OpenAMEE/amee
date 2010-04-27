@@ -19,8 +19,8 @@
  */
 package com.amee.domain.data;
 
-import com.amee.core.APIUtils;
-import com.amee.core.ValueType;
+import com.amee.base.utils.XMLUtils;
+import com.amee.domain.ValueType;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.Builder;
@@ -217,7 +217,7 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
     }
 
     public JSONObject getIdentityJSONObject() throws JSONException {
-        return APIUtils.getIdentityJSONObject(this);
+        return XMLUtils.getIdentityJSONObject(this);
     }
 
     public Element getElement(Document document) {
@@ -229,7 +229,7 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
     }
 
     public Element getIdentityElement(Document document) {
-        return APIUtils.getIdentityElement(document, this);
+        return XMLUtils.getIdentityElement(document, this);
     }
 
     public ItemDefinition getItemDefinition() {

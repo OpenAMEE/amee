@@ -1,9 +1,9 @@
 package com.amee.engine.restlet;
 
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.transaction.TransactionController;
+import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.restlet.RequestContext;
 import com.amee.service.invalidation.InvalidationService;
-import com.amee.service.transaction.TransactionController;
 import org.restlet.Application;
 import org.restlet.Filter;
 import org.restlet.data.Method;

@@ -19,7 +19,7 @@
 */
 package com.amee.domain.profile.builder.v1;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.Builder;
 import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.ItemValue;
@@ -67,7 +67,7 @@ public class ProfileItemBuilder implements Builder {
 
     public void buildElement(Document document, Element element, boolean detailed) {
         element.setAttribute("uid", item.getUid());
-        element.appendChild(APIUtils.getElement(document, "Name", item.getDisplayName()));
+        element.appendChild(XMLUtils.getElement(document, "Name", item.getDisplayName()));
         Element itemValuesElem = document.createElement("ItemValues");
         for (ItemValue itemValue : item.getItemValues()) {
             itemValue.setBuilder(new ItemValueBuilder(itemValue));
@@ -105,14 +105,14 @@ public class ProfileItemBuilder implements Builder {
         buildElement(document, element, detailed);
 
         if (!item.isSingleFlight()) {
-            element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
+            element.appendChild(XMLUtils.getElement(document, "AmountPerMonth",
                 item.getAmount().convert(DecimalPerUnit.MONTH).toString()));
         } else {
-            element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
+            element.appendChild(XMLUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
         }
-        element.appendChild(APIUtils.getElement(document, "ValidFrom",
+        element.appendChild(XMLUtils.getElement(document, "ValidFrom",
                 DAY_DATE_FMT.format(StartEndDate.getLocalStartEndDate(item.getStartDate(), TimeZoneHolder.getTimeZone()))));
-        element.appendChild(APIUtils.getElement(document, "End", Boolean.toString(item.isEnd())));
+        element.appendChild(XMLUtils.getElement(document, "End", Boolean.toString(item.isEnd())));
         element.appendChild(item.getDataItem().getIdentityElement(document));
         if (detailed) {
             element.appendChild(item.getProfile().getIdentityElement(document));

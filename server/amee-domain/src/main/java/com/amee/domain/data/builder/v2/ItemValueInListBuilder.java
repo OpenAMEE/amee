@@ -19,7 +19,7 @@
  */
 package com.amee.domain.data.builder.v2;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.Builder;
 import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.ItemValue;
@@ -69,12 +69,12 @@ public class ItemValueInListBuilder implements Builder {
         element.setAttribute("created", itemValue.getCreated().toString());
         element.setAttribute("modified", itemValue.getModified().toString());
         // Data.
-        element.appendChild(APIUtils.getElement(document, "Path", itemValue.getPath()));
-        element.appendChild(APIUtils.getElement(document, "Name", itemValue.getName()));
-        element.appendChild(APIUtils.getElement(document, "Value", itemValue.getValue()));
-        element.appendChild(APIUtils.getElement(document, "Unit", itemValue.getUnit().toString()));
-        element.appendChild(APIUtils.getElement(document, "PerUnit", itemValue.getPerUnit().toString()));
-        element.appendChild(APIUtils.getElement(document, "StartDate",
+        element.appendChild(XMLUtils.getElement(document, "Path", itemValue.getPath()));
+        element.appendChild(XMLUtils.getElement(document, "Name", itemValue.getName()));
+        element.appendChild(XMLUtils.getElement(document, "Value", itemValue.getValue()));
+        element.appendChild(XMLUtils.getElement(document, "Unit", itemValue.getUnit().toString()));
+        element.appendChild(XMLUtils.getElement(document, "PerUnit", itemValue.getPerUnit().toString()));
+        element.appendChild(XMLUtils.getElement(document, "StartDate",
                 StartEndDate.getLocalStartEndDate(itemValue.getStartDate(), TimeZoneHolder.getTimeZone()).toString()));
         // Related entities.
         element.appendChild(getItemValueDefinitionElement(document, itemValue.getItemValueDefinition()));

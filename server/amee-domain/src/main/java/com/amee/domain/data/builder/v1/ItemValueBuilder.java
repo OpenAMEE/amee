@@ -1,6 +1,6 @@
 package com.amee.domain.data.builder.v1;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.Builder;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
@@ -58,9 +58,9 @@ public class ItemValueBuilder implements Builder {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("ItemValue");
         element.setAttribute("uid", itemValue.getUid());
-        element.appendChild(APIUtils.getElement(document, "Path", itemValue.getPath()));
-        element.appendChild(APIUtils.getElement(document, "Name", itemValue.getName()));
-        element.appendChild(APIUtils.getElement(document, "Value", itemValue.getValue()));
+        element.appendChild(XMLUtils.getElement(document, "Path", itemValue.getPath()));
+        element.appendChild(XMLUtils.getElement(document, "Name", itemValue.getName()));
+        element.appendChild(XMLUtils.getElement(document, "Value", itemValue.getValue()));
         ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
         itemValueDefinition.setBuilder(itemValueDefinitionRenderer);
         element.appendChild(itemValueDefinition.getElement(document, false));
