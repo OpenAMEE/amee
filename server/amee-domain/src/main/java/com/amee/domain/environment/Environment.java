@@ -1,6 +1,6 @@
 package com.amee.domain.environment;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Cache;
@@ -84,7 +84,7 @@ public class Environment extends AMEEEntity implements Comparable {
     }
 
     public JSONObject getIdentityJSONObject() throws JSONException {
-        return APIUtils.getIdentityJSONObject(this);
+        return XMLUtils.getIdentityJSONObject(this);
     }
 
     public Element getElement(Document document) {
@@ -94,12 +94,12 @@ public class Environment extends AMEEEntity implements Comparable {
     public Element getElement(Document document, boolean detailed) {
         Element element = document.createElement("Environment");
         element.setAttribute("uid", getUid());
-        element.appendChild(APIUtils.getElement(document, "Name", getName()));
-        element.appendChild(APIUtils.getElement(document, "Path", getPath()));
-        element.appendChild(APIUtils.getElement(document, "Description", getDescription()));
-        element.appendChild(APIUtils.getElement(document, "Owner", getOwner()));
-        element.appendChild(APIUtils.getElement(document, "ItemsPerPage", getItemsPerPage().toString()));
-        element.appendChild(APIUtils.getElement(document, "ItemsPerFeed", getItemsPerFeed().toString()));
+        element.appendChild(XMLUtils.getElement(document, "Name", getName()));
+        element.appendChild(XMLUtils.getElement(document, "Path", getPath()));
+        element.appendChild(XMLUtils.getElement(document, "Description", getDescription()));
+        element.appendChild(XMLUtils.getElement(document, "Owner", getOwner()));
+        element.appendChild(XMLUtils.getElement(document, "ItemsPerPage", getItemsPerPage().toString()));
+        element.appendChild(XMLUtils.getElement(document, "ItemsPerFeed", getItemsPerFeed().toString()));
         if (detailed) {
             element.setAttribute("created", getCreated().toString());
             element.setAttribute("modified", getModified().toString());
@@ -108,7 +108,7 @@ public class Environment extends AMEEEntity implements Comparable {
     }
 
     public Element getIdentityElement(Document document) {
-        return APIUtils.getIdentityElement(document, this);
+        return XMLUtils.getIdentityElement(document, this);
     }
 
     public void populate(org.dom4j.Element element) {

@@ -19,13 +19,11 @@
  */
 package com.amee.restlet.data;
 
-import com.amee.core.APIUtils;
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
-import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataCategoryLocaleName;
 import com.amee.domain.data.DataItem;
@@ -36,6 +34,7 @@ import com.amee.domain.path.PathItem;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.data.builder.DataCategoryResourceBuilder;
 import com.amee.restlet.utils.APIFault;
+import com.amee.restlet.utils.APIUtils;
 import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;

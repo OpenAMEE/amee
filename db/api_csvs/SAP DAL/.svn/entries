@@ -1,172 +1,0 @@
-8
-
-dir
-3066
-http://svn.amee.com/internal/api_csvs/SAP%20DAL
-http://svn.amee.com
-
-
-
-2009-03-18T23:17:36.977810Z
-2904
-david
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-b293a2d2-da53-4cb3-b1bf-c591e3edcd7a
-
-ventilation_parameters
-dir
-
-Basis for floor U-value calculation Scotland
-dir
-
-temp_zones
-dir
-
-Door UValue
-dir
-
-boilertype_oil_equation
-dir
-
-ExposedSemi-exposed floor U-values Insulated
-dir
-
-Non Seperated Conservatory U Value
-dir
-
-Assumed U-Values Loft Insulation UnKnown Thatched roof
-dir
-
-secondary_heat_supply_fraction
-dir
-
-Assumed U-Values Loft Insulation UnKnown Pitched, Slates or tiles between Rafters
-dir
-
-Assumed U-Values Loft Insulation UnKnown Flat Roof
-dir
-
-heating_system_kwh
-dir
-
-Basis for floor U-value calculation England and Wales
-dir
-
-Thermal Bridging
-dir
-
-ExposedSemi-exposed floor U-values Insulation Unknown
-dir
-
-Cylinder Size
-dir
-
-wallthickness_by_age_band
-dir
-
-fuel_parameters pg151 table 12
-dir
-
-boiler_category
-dir
-
-wallthickness_age_band
-dir
-
-degree_days
-dir
-
-Assumed U-Values Loft Insulation UnKnown Room-inroof, slates or tiles
-dir
-
-boilertype_gas_lpg_equation
-dir
-
-wall_uvalues_northern_ireland
-dir
-
-maximum_efficiency_values
-dir
-
-electric_dhw_heating_fraction
-dir
-
-fuel_net_to_gross_conversion_factor
-dir
-
-measures
-dir
-
-New Folder
-dir
-
-wall_uvalues_england_wales
-dir
-
-sap2001_sap2005_ratings
-dir
-
-Roof U-Values Loft Insulation Known Thatched Roof
-dir
-
-wall_uvalues_scotland
-dir
-
-improvement_measures_existing_dwellings
-dir
-
-heating_system_speciification
-dir
-
-temperature_living_area
-dir
-
-window_area_m2
-dir
-
-Assumed U-Values Loft Insulation UnKnown Pitched, Slates or tiles between Joists
-dir
-
-Data to be collected
-dir
-
-Window Characteristics
-dir
-
-Assumed U-Values Loft Insulation UnKnown Thatched roof Room in Roof
-dir
-
-Heating and Hot Water Parameters
-dir
-
-Basis for floor U-value calculation Northern Ireland
-dir
-
-Living Area Fraction
-dir
-
-s2_age_bands
-dir
-
-dimension_conversions
-dir
-
-Roof U-Values Loft Insulation Known Slates or Tiles
-dir
-
-solar_flux
-dir
-

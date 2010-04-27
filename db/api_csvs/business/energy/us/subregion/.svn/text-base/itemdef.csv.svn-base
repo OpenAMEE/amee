@@ -1,9 +1,0 @@
-name,GHGUSSubregion
-algFile,default.js
-name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
-eGRID Subregion,subregion,TEXT,true,true,,,,
-Energy Per Time,energyPerTime,DECIMAL,false,false,,,,
-Mass CO2 per Energy,massCO2PerEnergy,DECIMAL,true,false,,,,
-Responsible area,responsibleArea,DECIMAL,false,false,,,,
-Source,source,TEXT,true,false,,,,
-Total area,totalArea,DECIMAL,false,false,,,,

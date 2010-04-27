@@ -21,7 +21,7 @@
  */
 package com.amee.restlet.profile.builder.v2;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.restlet.profile.ProfileItemValueResource;
@@ -48,7 +48,7 @@ public class ProfileItemValueResourceBuilder implements IProfileItemValueResourc
         Element element = document.createElement("ProfileItemValueResource");
         itemValue.setBuilder(new ItemValueBuilder(itemValue));
         element.appendChild(itemValue.getElement(document));
-        element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
     }

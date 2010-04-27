@@ -1,7 +1,0 @@
-name,Heating UK Floor Area,,,,,,,
-algFile,default.js
-name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
-Home type,homeType,TEXT,TRUE,TRUE,,,,
-Number of bedrooms,numberOfBedrooms,TEXT,TRUE,TRUE,,,,
-Floor area,floorArea,TEXT,TRUE,FALSE,m^2,,,
-Source,source,TEXT,TRUE,FALSE,,,,

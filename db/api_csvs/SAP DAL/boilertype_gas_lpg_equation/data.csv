@@ -1,9 +1,0 @@
-type,equationNumber,equation,units,source
-D1.4 : On/off regular,101,E = 0.5(Efull + Epart) – 2.5 – 4p,calculation,SAP 2005
-D1.5 : Modulating regular,102,E = 0.5(Efull + Epart) – 2.0 – 4p,calculation,SAP 2005
-D1.8 : On/off instantaneous combination,103,E = 0.5(Efull + Epart) – 2.8 – 4p,calculation,SAP 2005
-D1.9 : Modulating instantaneous combination,104,E = 0.5(Efull + Epart) – 2.1 – 4p,calculation,SAP 2005
-D1.11 : On/off storage combination,105,E = 0.5(Efull + Epart ) – 2.8 + (0.209 × b × L × Vcs) – 4p,calculation,SAP 2005
-D1.12 : Modulating storage combination,106,E = 0.5(Efull + Epart ) – 1.7 + (0.209 × b × L × Vcs) – 4p,calculation,SAP 2005
-D1.13 : On/ off combined primary storage unit (condensing and non-condensing),107,E = 0.5(Efull + Epart ) – (0.539 × L × Vcs) – 4p,calculation,SAP 2005
-D1.14 : Modulating combined primary (condensing and non-condensing),107,E = 0.5(Efull + Epart ) – (0.539 × L × Vcs) – 4p,calculation,SAP 2005

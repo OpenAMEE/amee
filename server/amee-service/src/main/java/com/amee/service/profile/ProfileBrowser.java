@@ -19,7 +19,7 @@
  */
 package com.amee.service.profile;
 
-import com.amee.core.CO2AmountUnit;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.domain.profile.MonthDate;
 import com.amee.service.BaseBrowser;
 import org.springframework.context.annotation.Scope;

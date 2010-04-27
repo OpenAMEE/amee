@@ -1,6 +1,6 @@
 package com.amee.domain.algorithm;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.ObjectType;
 import org.w3c.dom.Document;
@@ -33,7 +33,7 @@ public class AlgorithmContext extends AbstractAlgorithm {
     }
 
     public Element getIdentityElement(Document document) {
-        return APIUtils.getIdentityElement(document, this);
+        return XMLUtils.getIdentityElement(document, this);
     }
 
     @Override

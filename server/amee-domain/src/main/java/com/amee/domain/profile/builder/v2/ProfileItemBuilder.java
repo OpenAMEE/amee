@@ -19,8 +19,8 @@
  */
 package com.amee.domain.profile.builder.v2;
 
-import com.amee.core.APIUtils;
-import com.amee.core.CO2AmountUnit;
+import com.amee.base.utils.XMLUtils;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.domain.Builder;
 import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.DataItem;
@@ -74,7 +74,7 @@ public class ProfileItemBuilder implements Builder {
         element.setAttribute("created", new StartEndDate(item.getCreated()).toString());
         element.setAttribute("modified", new StartEndDate(item.getModified()).toString());
 
-        element.appendChild(APIUtils.getElement(document, "Name", item.getName()));
+        element.appendChild(XMLUtils.getElement(document, "Name", item.getName()));
         Element itemValuesElem = document.createElement("ItemValues");
         // Find all matching active ItemValues at the item startDate
         for (ItemValue itemValue : item.getItemValues()) {
@@ -126,15 +126,15 @@ public class ProfileItemBuilder implements Builder {
         element.appendChild(amount);
 
         // Convert to user's time zone
-        element.appendChild(APIUtils.getElement(document, "StartDate",
+        element.appendChild(XMLUtils.getElement(document, "StartDate",
                 StartEndDate.getLocalStartEndDate(item.getStartDate(), TimeZoneHolder.getTimeZone()).toString()));
-        element.appendChild(APIUtils.getElement(document, "EndDate",
+        element.appendChild(XMLUtils.getElement(document, "EndDate",
                 (item.getEndDate() != null) ? StartEndDate.getLocalStartEndDate(item.getEndDate(), TimeZoneHolder.getTimeZone()).toString() : ""));
 
         // DataItem
         DataItem bDataItem = item.getDataItem();
         Element dataItemElement = bDataItem.getIdentityElement(document);
-        dataItemElement.appendChild(APIUtils.getElement(document, "Label", bDataItem.getLabel()));
+        dataItemElement.appendChild(XMLUtils.getElement(document, "Label", bDataItem.getLabel()));
 
         element.appendChild(dataItemElement);
 

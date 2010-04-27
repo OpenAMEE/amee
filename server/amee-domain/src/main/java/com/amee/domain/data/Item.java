@@ -19,7 +19,7 @@
  */
 package com.amee.domain.data;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.path.Pathable;
@@ -131,13 +131,13 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     }
 
     public JSONObject getIdentityJSONObject() throws JSONException {
-        return APIUtils.getIdentityJSONObject(this);
+        return XMLUtils.getIdentityJSONObject(this);
     }
 
     public abstract JSONObject getJSONObject(boolean detailed) throws JSONException;
 
     public Element getIdentityElement(Document document) {
-        return APIUtils.getIdentityElement(document, this);
+        return XMLUtils.getIdentityElement(document, this);
     }
 
     public List<AMEEEntity> getHierarchy() {

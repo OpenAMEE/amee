@@ -1,7 +1,0 @@
-name,Cooking
-algFile,default.js
-name,path,type,isDataItemValue,isDrillDown
-Number Of People,numberOfPeople,INTEGER,true,true
-Fuel,fuel,TEXT,true,true
-kgCO2 Per Year,kgCO2PerYear,DECIMAL,true,false
-Source,source,TEXT,true,false

@@ -1,1 +1,0 @@
-(EF*carbonateQuantity*calcinationFrac)-(lkdQuantity*weightLkd(1-lkdCalcFrac)*EF)

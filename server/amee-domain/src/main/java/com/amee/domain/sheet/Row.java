@@ -1,6 +1,6 @@
 package com.amee.domain.sheet;
 
-import com.amee.domain.UidGen;
+import com.amee.base.utils.UidGen;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class Row implements Serializable, Comparable {
     public Row(Sheet sheet) {
         this();
         setSheet(sheet);
-        setUid(UidGen.getUid());
+        setUid(UidGen.INSTANCE_12.getUid());
         add();
     }
 

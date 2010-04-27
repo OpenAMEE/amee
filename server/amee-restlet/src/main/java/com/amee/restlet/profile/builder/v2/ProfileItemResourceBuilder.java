@@ -1,7 +1,7 @@
 package com.amee.restlet.profile.builder.v2;
 
-import com.amee.core.APIUtils;
-import com.amee.core.CO2AmountUnit;
+import com.amee.base.utils.XMLUtils;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.restlet.profile.ProfileItemResource;
@@ -57,7 +57,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         setProfileItemBuilder(resource, profileItem);
         Element element = document.createElement("ProfileItemResource");
         element.appendChild(profileItem.getElement(document, true));
-        element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
     }

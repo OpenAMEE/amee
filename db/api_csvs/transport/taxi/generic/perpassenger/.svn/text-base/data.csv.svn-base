@@ -1,3 +1,0 @@
-type,kgCO2PerKmPassenger,kgCO2PerPassengerKmIE,typicalJourneyDistance,units,source,algorithm,default
-typical,0.1593,0.1593,7.4,kgCO2/km.passenger,defra/amee 2008,value*user_distance,
-black cab,0.1720,0.1720,7.4,kgCO2/km.passenger,defra/amee 2008,value*user_distance,

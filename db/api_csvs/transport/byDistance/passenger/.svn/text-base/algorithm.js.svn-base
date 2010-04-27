@@ -1,1 +1,0 @@
-distance*passengers*massCO2perPassengerDistance;

@@ -19,8 +19,9 @@
  */
 package com.amee.service.data;
 
+import com.amee.base.transaction.TransactionController;
+import com.amee.base.utils.UidGen;
 import com.amee.domain.APIVersion;
-import com.amee.domain.UidGen;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
@@ -34,7 +35,6 @@ import com.amee.service.BaseService;
 import com.amee.service.invalidation.InvalidationMessage;
 import com.amee.service.invalidation.InvalidationService;
 import com.amee.service.path.PathItemService;
-import com.amee.service.transaction.TransactionController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -156,7 +156,7 @@ public class DataService extends BaseService implements ApplicationListener {
     public DataItem getDataItem(Environment environment, String path) {
         DataItem dataItem = null;
         if (!StringUtils.isBlank(path)) {
-            if (UidGen.isValid(path)) {
+            if (UidGen.INSTANCE_12.isValid(path)) {
                 dataItem = getDataItemByUid(environment, path);
             }
             if (dataItem == null) {

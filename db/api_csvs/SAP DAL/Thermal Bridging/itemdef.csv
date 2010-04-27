@@ -1,6 +1,0 @@
-name,Thermal Bridging,,,
-algFile,perMonth.js,,,
-name,path,type,isDataItemValue,isDrillDown
-Thermal Bridging Factor y(W/m2k),thermalBrigdingFactorY(W/m2k),DECIMAL,TRUE,FALSE
-Source,source,TEXT,TRUE,FALSE
-Type,type,TEXT,TRUE,TRUE

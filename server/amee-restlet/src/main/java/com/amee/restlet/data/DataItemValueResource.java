@@ -19,8 +19,8 @@
  */
 package com.amee.restlet.data;
 
-import com.amee.core.APIUtils;
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.LocaleConstants;
@@ -258,7 +258,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             element.appendChild(values);
         }
         element.appendChild(getDataItem().getIdentityElement(document));
-        element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", pathItem.getFullPath()));
         return element;
     }
 

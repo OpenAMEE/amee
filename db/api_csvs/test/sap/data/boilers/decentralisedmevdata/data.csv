@@ -1,7 +1,0 @@
-index,mrn,manufacturersname,brandname,modelname,modelqualifier,firstyearofmanufacture,finalyearofmanufacture,maintype,flexibleorrigidducting,numberofconfigurations,a:configurations,a:fanspeedsetting,a:specificfanpower,b:configurations,b:fanspeedsetting,b:specificfanpower,c:configurations,c:fanspeedsetting,c:specificfanpower,d:configurations,d:fanspeedsetting,d:specificfanpower,e:configurations,e:fanspeedsetting,e:specificfanpower,f:configurations,f:fanspeedsetting,f:specificfanpower,dbentryupdated,units,source
-500017,20004,Greenwood Air Management,Greenwood,Unity CV100,,,current,2,2,6,1,Boost,0.35,2,10 l/s,0.26,3,Boost,0.43,4,10 l/s,0.31,5,Boost,0.31,6,10 l/s,0.25,2007/Sep/15 07:46,0,0
-500018,20004,Greenwood Air Management,Greenwood,Unity CV100,,,current,2,1,6,1,Boost,0.38,2,10 l/s,0.28,3,Boost,0.45,4,10 l/s,0.33,5,Boost,0.31,6,10 l/s,0.25,2007/Sep/15 07:48,0,0
-500045,20015,Helios Ventilation Systems Ltd,Helios,ELS-VE 60/30,,2008,current,2,2,6,1,High,0.63,2,Low,0.6,3,,,4,,,5,High,0.63,6,Low,0.59,2008/Apr/19 11:37,0,0
-500046,20015,Helios Ventilation Systems Ltd,Helios,ELS-VE 60/30,,2008,current,2,1,6,1,High,0.63,2,Low,0.59,3,,,4,,,5,High,0.63,6,Low,0.59,2008/Apr/19 11:38,0,0
-500057,20011,Vectaire Ltd,Vectaire,ESmile,,2008,current,2,2,6,1,3,0.55,2,2,0.61,3,,,4,,,5,2,0.37,6,1,0.45,2008/Jul/09 18:59,0,0
-500058,20011,Vectaire Ltd,Vectaire,ESmile,,2008,current,2,1,6,1,3,0.57,2,2,0.61,3,,,4,,,5,2,0.37,6,1,0.45,2008/Jul/09 18:57,0,0

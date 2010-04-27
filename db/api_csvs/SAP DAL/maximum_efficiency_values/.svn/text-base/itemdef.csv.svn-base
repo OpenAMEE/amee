@@ -1,6 +1,0 @@
-name,Maximum Efficiency Values,,,
-algFile,perMonth.js,,,
-name,path,type,isDataItemValue,isDrillDown
-Full Load,fullLoad,DECIMAL,TRUE,FALSE
-30% Part Load,30PercentPartLoad,DECIMAL,TRUE,FALSE
-Type,type,text,TRUE,TRUE

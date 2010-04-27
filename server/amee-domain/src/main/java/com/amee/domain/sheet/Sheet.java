@@ -1,6 +1,6 @@
 package com.amee.domain.sheet;
 
-import com.amee.core.ValueType;
+import com.amee.domain.ValueType;
 import com.amee.domain.Pager;
 import org.json.JSONArray;
 import org.json.JSONException;

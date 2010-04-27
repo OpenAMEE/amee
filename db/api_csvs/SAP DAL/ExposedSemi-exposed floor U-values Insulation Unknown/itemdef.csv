@@ -1,6 +1,0 @@
-name,Exposed/Semi-exposed floor U-values,,,
-algFile,perMonth.js,,,
-name,path,type,isDataItemValue,isDrillDown
-Insulation Unknown or as Built,insulationUnknownOrAsBuilt,DECIMAL,TRUE,FALSE
-Source,source,TEXT,TRUE,FALSE
-Type,type,TEXT,TRUE,TRUE

@@ -19,7 +19,7 @@
  */
 package com.amee.domain.data;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.ObjectType;
 import com.amee.domain.TimeZoneHolder;
@@ -87,7 +87,7 @@ public class DataItem extends Item {
 
     private void buildElement(Document document, Element element, boolean detailed, boolean showHistory) {
         element.setAttribute("uid", getUid());
-        element.appendChild(APIUtils.getElement(document, "Name", getDisplayName()));
+        element.appendChild(XMLUtils.getElement(document, "Name", getDisplayName()));
         Element itemValuesElem = document.createElement("ItemValues");
         if (showHistory) {
             buildElementItemValuesWithHistory(document, itemValuesElem);
@@ -200,11 +200,11 @@ public class DataItem extends Item {
     public Element getElement(Document document, boolean detailed, boolean showHistory) {
         Element dataItemElement = document.createElement("DataItem");
         buildElement(document, dataItemElement, detailed, showHistory);
-        dataItemElement.appendChild(APIUtils.getElement(document, "Path", getDisplayPath()));
-        dataItemElement.appendChild(APIUtils.getElement(document, "Label", getLabel()));
-        dataItemElement.appendChild(APIUtils.getElement(document, "StartDate",
+        dataItemElement.appendChild(XMLUtils.getElement(document, "Path", getDisplayPath()));
+        dataItemElement.appendChild(XMLUtils.getElement(document, "Label", getLabel()));
+        dataItemElement.appendChild(XMLUtils.getElement(document, "StartDate",
                 StartEndDate.getLocalStartEndDate(getStartDate(), TimeZoneHolder.getTimeZone()).toString()));
-        dataItemElement.appendChild(APIUtils.getElement(document, "EndDate",
+        dataItemElement.appendChild(XMLUtils.getElement(document, "EndDate",
                 (getEndDate() != null) ? StartEndDate.getLocalStartEndDate(getEndDate(), TimeZoneHolder.getTimeZone()).toString() : ""));
         return dataItemElement;
     }

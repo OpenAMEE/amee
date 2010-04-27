@@ -19,7 +19,7 @@
  */
 package com.amee.restlet.profile;
 
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.AMEEEntity;
@@ -30,7 +30,6 @@ import com.amee.restlet.profile.builder.IProfileItemValueResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileItemValueResourceBuilderFactory;
 import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.ProfileConstants;
-import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;

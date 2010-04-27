@@ -1,8 +1,0 @@
-name,S2 Age bands,,,
-algFile,perMonth.js,,,
-name,path,type,isDataItemValue,isDrillDown
-England & Wales,englandWales,TEXT,TRUE,FALSE
-Scotland,scotland,TEXT,TRUE,FALSE
-Northern Ireland,northernIreland,TEXT,TRUE,FALSE
-Source,source,TEXT,TRUE,FALSE
-Type,type,TEXT,TRUE,TRUE

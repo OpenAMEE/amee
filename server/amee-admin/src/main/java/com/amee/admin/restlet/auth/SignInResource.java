@@ -1,7 +1,7 @@
 package com.amee.admin.restlet.auth;
 
-import com.amee.core.APIUtils;
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.auth.User;
 import com.amee.restlet.BaseResource;
 import com.amee.restlet.auth.AuthUtils;
@@ -9,7 +9,11 @@ import com.amee.service.auth.AuthenticationService;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.data.*;
+import org.restlet.data.Form;
+import org.restlet.data.Protocol;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
+import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -56,7 +60,7 @@ public class SignInResource extends BaseResource implements Serializable {
     public Element getElement(Document document) {
         User activeUser = getActiveUser();
         Element element = document.createElement("SignInResource");
-        element.appendChild(APIUtils.getElement(document, "Next", AuthUtils.getNextUrl(getRequest(), getForm())));
+        element.appendChild(XMLUtils.getElement(document, "Next", AuthUtils.getNextUrl(getRequest(), getForm())));
         if (activeUser != null) {
             element.appendChild(activeUser.getElement(document, false));
         }

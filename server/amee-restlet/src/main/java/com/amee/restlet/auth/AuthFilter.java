@@ -1,6 +1,6 @@
 package com.amee.restlet.auth;
 
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.LocaleHolder;
 import com.amee.domain.auth.User;

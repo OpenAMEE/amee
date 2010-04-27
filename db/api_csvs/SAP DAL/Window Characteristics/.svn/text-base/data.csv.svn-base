@@ -1,7 +1,0 @@
-type,frame,uvalueWindow,uvalueRoofWindow,gValue,unit,Source
-Single,wood frame frame factor 0.7,4.8,5.1,0.85,UValue,sap 2005
-"Double glazed unit England & Wales: before 2002, Scotland: before 2003
-N. Ireland: before 2006",PVC frame frame factor 0.7,3.1,3.3,0.76,UValue,sap 2005
-"Double glazed unit England & Wales: 2002 or later, Scotland: 2003 or later N. Ireland: 2006 or later",PVC frame frame factor 0.7,2,2.2,0.72,UValue,sap 2005
-Secondary glazing,wood frame frame factor 0.7,2.4,2.6,0.76,UValue,sap 2005
-Triple glazing,PVC frame frame factor 0.7,2,2.2,0.68,UValue,sap 2005

@@ -1,4 +1,0 @@
-type,netToGrossConversionFactorf,units,source
-natural gas,0.901,factor,sap 2005
-lpg (propane or butane),0.921,factor,sap 2005
-oil (kerosene or gas oil),0.937,factor,sap 2006

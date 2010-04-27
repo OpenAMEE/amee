@@ -19,7 +19,7 @@
  */
 package com.amee.domain.algorithm;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.ObjectType;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.environment.Environment;
@@ -79,7 +79,7 @@ public class Algorithm extends AbstractAlgorithm implements com.amee.platform.sc
     }
 
     public Element getIdentityElement(Document document) {
-        return APIUtils.getIdentityElement(document, this);
+        return XMLUtils.getIdentityElement(document, this);
     }
 
     @Override

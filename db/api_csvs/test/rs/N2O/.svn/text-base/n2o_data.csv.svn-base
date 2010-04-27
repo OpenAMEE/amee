@@ -1,7 +1,0 @@
-plantType,defEmFact,units,source
-Atmospheric pressure plant (low pressure),5.00,kgN20/tHNO,2006 IPCC Guidelines for National Greenhouse Gas Inventories
-Plants with NSCR (all processes),2.00,kgN20/tHNO,2006 IPCC Guidelines for National Greenhouse Gas Inventories
-Plants with process-integrated or tailgas N20 destruction,2.50,kgN20/tHNO,2006 IPCC Guidelines for National Greenhouse Gas Inventories
-Medium pressure combustion plant,7.00,kgN20/tHNO,2006 IPCC Guidelines for National Greenhouse Gas Inventories
-High pressure plants,9.00,kgN20/tHNO,2006 IPCC Guidelines for National Greenhouse Gas Inventories
-

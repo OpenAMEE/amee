@@ -1,6 +1,0 @@
-name,Assumed U-Values Loft Insulation UnKnown Thatched roof,,,
-algFile,perMonth.js,,,
-name,path,type,isDataItemValue,isDrillDown
-Thatched Roof,thatchedRoof,TEXT,TRUE,FALSE
-Source,source,TEXT,TRUE,FALSE
-Type,type,TEXT,TRUE,TRUE

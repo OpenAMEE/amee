@@ -24,7 +24,7 @@ import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.sheet.Sheet;
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;

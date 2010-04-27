@@ -1,6 +1,6 @@
 package com.amee.restlet.profile.builder.v1;
 
-import com.amee.core.APIUtils;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.Pager;
 import com.amee.domain.ObjectType;
 import com.amee.domain.data.DataCategory;
@@ -177,10 +177,10 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     protected void addProfileCategoryInfo(ProfileCategoryResource resource, Document document, Element element) {
 
         // add objects
-        element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
 
         // add profile date
-        element.appendChild(APIUtils.getElement(document, "ProfileDate", resource.getProfileBrowser().getProfileDate().toString()));
+        element.appendChild(XMLUtils.getElement(document, "ProfileDate", resource.getProfileBrowser().getProfileDate().toString()));
 
         // add relevant Profile info depending on whether we are at root
         if (resource.hasParent()) {
@@ -200,7 +200,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         Element element = document.createElement("ProfileCategory");
 
         // add path and DataCategory
-        element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", pathItem.getFullPath()));
         element.appendChild(dataCategory.getIdentityElement(document));
 
         // only add children if ProfileItems are available
@@ -247,7 +247,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
                 childrenElement.appendChild(pager.getElement(document));
             }
             // add CO2 amount
-            element.appendChild(APIUtils.getElement(document, "TotalAmountPerMonth",
+            element.appendChild(XMLUtils.getElement(document, "TotalAmountPerMonth",
                     getTotalAmountPerMonth(sheet).toString()));
         }
     }

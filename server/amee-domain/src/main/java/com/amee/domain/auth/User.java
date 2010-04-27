@@ -1,12 +1,12 @@
 package com.amee.domain.auth;
 
-import com.amee.core.APIUtils;
+import com.amee.base.crypto.CryptoException;
+import com.amee.base.crypto.InternalCrypto;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
-import com.amee.domain.auth.crypto.Crypto;
-import com.amee.domain.auth.crypto.CryptoException;
 import com.amee.domain.environment.Environment;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -16,7 +16,12 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.TimeZone;
 
 /**
@@ -120,7 +125,7 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public JSONObject getIdentityJSONObject() throws JSONException {
-        JSONObject obj = APIUtils.getIdentityJSONObject(this);
+        JSONObject obj = XMLUtils.getIdentityJSONObject(this);
         obj.put("username", getUsername());
         return obj;
     }
@@ -136,15 +141,15 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
     public Element getElement(Document document, String name, boolean detailed) {
         Element element = document.createElement(name);
         element.setAttribute("uid", getUid());
-        element.appendChild(APIUtils.getElement(document, "Status", getStatus().getName()));
-        element.appendChild(APIUtils.getElement(document, "Type", getType().getName()));
-        element.appendChild(APIUtils.getElement(document, "ApiVersion", getAPIVersion().toString()));
-        element.appendChild(APIUtils.getElement(document, "Locale", getLocale()));
-        element.appendChild(APIUtils.getElement(document, "TimeZone", getTimeZone().getID()));
+        element.appendChild(XMLUtils.getElement(document, "Status", getStatus().getName()));
+        element.appendChild(XMLUtils.getElement(document, "Type", getType().getName()));
+        element.appendChild(XMLUtils.getElement(document, "ApiVersion", getAPIVersion().toString()));
+        element.appendChild(XMLUtils.getElement(document, "Locale", getLocale()));
+        element.appendChild(XMLUtils.getElement(document, "TimeZone", getTimeZone().getID()));
         if (detailed) {
-            element.appendChild(APIUtils.getElement(document, "Name", getName()));
-            element.appendChild(APIUtils.getElement(document, "Username", getUsername()));
-            element.appendChild(APIUtils.getElement(document, "Email", getEmail()));
+            element.appendChild(XMLUtils.getElement(document, "Name", getName()));
+            element.appendChild(XMLUtils.getElement(document, "Username", getUsername()));
+            element.appendChild(XMLUtils.getElement(document, "Email", getEmail()));
             element.appendChild(getEnvironment().getIdentityElement(document));
             element.setAttribute("created", getCreated().toString());
             element.setAttribute("modified", getModified().toString());
@@ -153,14 +158,14 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
     }
 
     public Element getIdentityElement(Document document) {
-        Element element = APIUtils.getIdentityElement(document, this);
-        element.appendChild(APIUtils.getElement(document, "Username", getUsername()));
+        Element element = XMLUtils.getIdentityElement(document, this);
+        element.appendChild(XMLUtils.getElement(document, "Username", getUsername()));
         return element;
     }
 
     public Element getIdentityElement(Document document, String name) {
-        Element element = APIUtils.getIdentityElement(document, name, this);
-        element.appendChild(APIUtils.getElement(document, "Username", getUsername()));
+        Element element = XMLUtils.getIdentityElement(document, name, this);
+        element.appendChild(XMLUtils.getElement(document, "Username", getUsername()));
         return element;
     }
 
@@ -251,7 +256,7 @@ public class User extends AMEEEnvironmentEntity implements Comparable {
 
     public void setPasswordInClear(String password) {
         try {
-            setPassword(Crypto.getAsMD5AndBase64(password));
+            setPassword(InternalCrypto.getAsMD5AndBase64(password));
         } catch (CryptoException e) {
             log.error("Caught CryptoException: " + e.getMessage());
             throw new RuntimeException(e);

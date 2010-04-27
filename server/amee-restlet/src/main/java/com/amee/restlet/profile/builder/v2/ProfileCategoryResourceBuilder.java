@@ -1,8 +1,8 @@
 package com.amee.restlet.profile.builder.v2;
 
 import com.amee.calculation.service.ProRataProfileService;
-import com.amee.core.APIUtils;
-import com.amee.core.CO2AmountUnit;
+import com.amee.base.utils.XMLUtils;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.domain.ObjectType;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
@@ -173,7 +173,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             // create element
             element = document.createElement("ProfileCategoryResource");
 
-            element.appendChild(APIUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
+            element.appendChild(XMLUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
 
             // add relevant Profile info depending on whether we are at root
             if (resource.hasParent()) {
@@ -214,7 +214,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
                 }
 
                 // add CO2 amount
-                Element totalAmount = APIUtils.getElement(document,
+                Element totalAmount = XMLUtils.getElement(document,
                         "TotalAmount",
                         getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit()).toString());
                 totalAmount.setAttribute("unit", resource.getProfileBrowser().getCo2AmountUnit().toString());

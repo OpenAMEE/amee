@@ -19,6 +19,7 @@
  */
 package com.amee.restlet.data;
 
+import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.sheet.Choice;
@@ -27,9 +28,6 @@ import com.amee.domain.AMEEEntity;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DrillDownService;
 import com.amee.restlet.RequestContext;
-import com.amee.core.ThreadBeanHolder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

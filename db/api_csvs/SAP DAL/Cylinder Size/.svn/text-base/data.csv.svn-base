@@ -1,8 +1,0 @@
-type,indicativeSizeRange,sizeToBeUsedInSAPCalculation,unit,Source
-Descriptor,Indicative size range,Size to be used in SAP calculation,,sap 2005
-Inaccessible,,"if off-peak electric dual immersion: 210 litres
-if from solid fuel boiler: 160 litres
-otherwise: 110 litres",,sap 2005
-Normal,90 – 130 litres,110 litres,,sap 2005
-Medium,131 – 170 litres,160 litres,,sap 2005
-Large,> 170 litres,210 litres,,sap 2005

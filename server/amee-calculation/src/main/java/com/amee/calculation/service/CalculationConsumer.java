@@ -1,6 +1,6 @@
 package com.amee.calculation.service;
 
-import com.amee.core.CO2Amount;
+import com.amee.base.transaction.TransactionController;
 import com.amee.domain.APIVersion;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.sheet.Choice;
@@ -8,9 +8,9 @@ import com.amee.domain.sheet.Choices;
 import com.amee.messaging.RpcMessageConsumer;
 import com.amee.messaging.config.ExchangeConfig;
 import com.amee.messaging.config.QueueConfig;
+import com.amee.platform.science.CO2Amount;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
-import com.amee.service.transaction.TransactionController;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;

@@ -19,11 +19,11 @@
  */
 package com.amee.restlet.data;
 
+import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.calculation.service.CalculationService;
-import com.amee.core.APIUtils;
-import com.amee.core.CO2Amount;
-import com.amee.core.CO2AmountUnit;
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.XMLUtils;
+import com.amee.platform.science.CO2Amount;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
@@ -185,9 +185,9 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new DecimalUnit(SI.KILOGRAM), new DecimalPerUnit(NonSI.MONTH));
         Element element = document.createElement("DataItemResource");
         element.appendChild(dataItem.getElement(document, true, false));
-        element.appendChild(APIUtils.getElement(document, "Path", pathItem.getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", pathItem.getFullPath()));
         element.appendChild(userValueChoices.getElement(document));
-        element.appendChild(APIUtils.getElement(document, "AmountPerMonth", amount.convert(kgPerMonth).toString()));
+        element.appendChild(XMLUtils.getElement(document, "AmountPerMonth", amount.convert(kgPerMonth).toString()));
         if (getAPIVersion().isNotVersionOne()) {
             CO2AmountUnit returnUnit = new CO2AmountUnit(unit, perUnit);
             Element amountElem = document.createElement("Amount");

@@ -1,7 +1,0 @@
-name,AMEEM Teleporter
-algFile,default.js
-name,path,type,isDataItemValue,isDrillDown,unit,perUnit,default,choices
-kgCO2 Per Km,kgCO2PerKm,DECIMAL,true,false,,,,
-Parsecs per Month,parsecsPerMonth,DECIMAL,false,false,,,,
-Source,source,TEXT,true,false,,,,
-Type,Type,TEXT,true,true,,,,

@@ -1,5 +1,0 @@
-name,Fuel,,,
-algFile,perMonth.js,,,
-name,path,type,isDataItemValue,isDrillDown
-"Net-to-gross conversion factor, f",netToGrossConversionFactorf,DECIMAL,TRUE,FALSE
-Type,type,text,TRUE,TRUE

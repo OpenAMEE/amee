@@ -1,7 +1,7 @@
 package com.amee.admin.restlet.auth;
 
-import com.amee.core.APIUtils;
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
+import com.amee.base.utils.XMLUtils;
 import com.amee.domain.auth.User;
 import com.amee.restlet.BaseResource;
 import com.amee.restlet.auth.AuthUtils;
@@ -66,7 +66,7 @@ public class SignOutResource extends BaseResource implements Serializable {
     @Override
     public Element getElement(Document document) {
         Element element = document.createElement("SignOutResource");
-        element.appendChild(APIUtils.getElement(document, "Next", AuthUtils.getNextUrl(getRequest(), getForm())));
+        element.appendChild(XMLUtils.getElement(document, "Next", AuthUtils.getNextUrl(getRequest(), getForm())));
         if (activeUser != null) {
             element.appendChild(activeUser.getElement(document, false));
         }

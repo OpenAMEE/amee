@@ -1,7 +1,7 @@
 package com.amee.restlet.profile.acceptor;
 
 import com.amee.calculation.service.CalculationService;
-import com.amee.core.CO2AmountUnit;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.auth.AccessSpecification;

@@ -19,7 +19,7 @@
  */
 package com.amee.service.data;
 
-import com.amee.core.ValueType;
+import com.amee.domain.ValueType;
 import com.amee.domain.LocaleHolder;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;

@@ -21,39 +21,31 @@
  */
 package com.amee.engine;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-@Service
-public class AMEENotifier {
-
-    private final Log log = LogFactory.getLog(getClass());
-
-    private static final String to = " sx5g8t@twittermail.com";
-    private MailSender mailSender;
-
-    @Transactional
-    public void echo() {
-        log.info("echo()");
-
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(to);
-        msg.setText("hello from AMEE");
-        try{
-            this.mailSender.send(msg);
-        }
-        catch(MailException ex) {
-            log.error(ex.getMessage());
-        }
-    }
-
-    public void setMailSender(MailSender mailSender) {
-        this.mailSender = mailSender;
-    }
-
-}
+//@Service
+//public class AMEENotifier {
+//
+//    private final Log log = LogFactory.getLog(getClass());
+//
+//    private static final String to = " sx5g8t@twittermail.com";
+//    private MailSender mailSender;
+//
+//    @Transactional
+//    public void echo() {
+//        log.info("echo()");
+//
+//        SimpleMailMessage msg = new SimpleMailMessage();
+//        msg.setTo(to);
+//        msg.setText("hello from AMEE");
+//        try{
+//            this.mailSender.send(msg);
+//        }
+//        catch(MailException ex) {
+//            log.error(ex.getMessage());
+//        }
+//    }
+//
+//    public void setMailSender(MailSender mailSender) {
+//        this.mailSender = mailSender;
+//    }
+//
+//}

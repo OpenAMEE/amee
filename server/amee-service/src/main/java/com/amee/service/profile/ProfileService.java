@@ -1,6 +1,10 @@
 package com.amee.service.profile;
 
-import com.amee.domain.*;
+import com.amee.base.transaction.TransactionController;
+import com.amee.base.utils.UidGen;
+import com.amee.domain.AMEEStatistics;
+import com.amee.domain.APIVersion;
+import com.amee.domain.Pager;
 import com.amee.domain.auth.User;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
@@ -13,14 +17,18 @@ import com.amee.domain.sheet.Sheet;
 import com.amee.platform.science.StartEndDate;
 import com.amee.service.BaseService;
 import com.amee.service.auth.PermissionService;
-import com.amee.service.transaction.TransactionController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Primary service interface for Profile Resources.
@@ -80,7 +88,7 @@ public class ProfileService extends BaseService {
     public Profile getProfile(Environment environment, String path) {
         Profile profile = null;
         if (!StringUtils.isBlank(path)) {
-            if (UidGen.isValid(path)) {
+            if (UidGen.INSTANCE_12.isValid(path)) {
                 profile = getProfileByUid(environment, path);
             }
             if (profile == null) {

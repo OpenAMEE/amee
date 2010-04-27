@@ -1,5 +1,0 @@
-type,ageBand,doorUvalue,unit,Source
-Outside,A to J,3,uValue,sap 2005
-Outside,K,2,uValue,sap 2005
-Unheated corridor or stairwell,,1.4,uValue,sap 2005
-Heated corridor or stairwell,,0,uValue,sap 2005

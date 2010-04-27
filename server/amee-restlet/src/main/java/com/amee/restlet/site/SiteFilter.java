@@ -1,6 +1,6 @@
 package com.amee.restlet.site;
 
-import com.amee.core.ThreadBeanHolder;
+import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.site.ISite;
 import com.amee.restlet.AMEEApplication;
