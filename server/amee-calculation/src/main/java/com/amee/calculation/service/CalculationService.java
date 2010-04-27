@@ -89,11 +89,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         }
 
         // Always set the ProfileItem amount.
-        // The ProfileItem will only be re-saved if the amount has changed.
-        // If the ProfileItem has changed start a transaction.
-        if (profileItem.setAmount(amount)) {
-            transactionController.begin(true);
-        }
+        profileItem.setAmount(amount);
     }
 
     /**
