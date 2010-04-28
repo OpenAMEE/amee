@@ -49,6 +49,11 @@ def fixEpoch() {
     sql.executeUpdate("UPDATE ITEM SET START_DATE = NULL WHERE TYPE = 'DI'")
 }
 
+def addIndex() {
+    println("Adding index to ITEM table (OPS-38)")
+    sql.execute("ALTER TABLE ITEM ADD INDEX (TYPE)")
+}
+
 def cli = new CliBuilder(usage: 'groovy migration.groovy [-cp path/to/mysql-connector-java.jar] [-h] [-s server] [-d database] [-u user] [-p password] [-r]')
 cli.h(longOpt:'help', 'usage information')
 cli.s(argName:'servername', longOpt:'server', args:1, required:false, type:GString, "server name (default 'localhost')")
@@ -87,6 +92,7 @@ if (opt.r) {
     fromTz = "Europe/London"
     toTz = "UTC"
 
+    addIndex()
     addTimeZoneField()
     updateTimeZones("Europe/London")
     convertTimeZone(fromTz, toTz)
