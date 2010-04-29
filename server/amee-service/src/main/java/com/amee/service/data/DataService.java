@@ -91,6 +91,31 @@ public class DataService extends BaseService implements ApplicationListener {
 
     // DataCategories
 
+    public DataCategory getDataCategoryByIdentifier(Environment environment, String identifier) {
+        DataCategory dataCategory = null;
+        if (UidGen.INSTANCE_12.isValid(identifier)) {
+            dataCategory = getDataCategoryByUid(identifier);
+        }
+        if (dataCategory == null) {
+            dataCategory = getDataCategoryByWikiName(environment, identifier);
+        }
+        return dataCategory;
+
+    }
+
+    public DataCategory getDataCategoryByWikiName(Environment environment, String wikiName) {
+        return getDataCategoryByWikiName(environment, wikiName, false);
+    }
+
+    public DataCategory getDataCategoryByWikiName(Environment environment, String wikiName, boolean includeTrash) {
+        DataCategory dataCategory = dao.getDataCategoryByWikiName(environment, wikiName, includeTrash);
+        if ((dataCategory != null) && (includeTrash || !dataCategory.isTrash())) {
+            return dataCategory;
+        } else {
+            return null;
+        }
+    }
+
     public DataCategory getDataCategoryByUid(String uid) {
         return getDataCategoryByUid(uid, false);
     }

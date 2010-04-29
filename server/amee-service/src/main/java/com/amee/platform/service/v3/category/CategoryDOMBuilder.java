@@ -5,6 +5,7 @@ import com.amee.base.resource.ResourceBuilder;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.service.data.DataService;
+import com.amee.service.environment.EnvironmentService;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.joda.time.format.DateTimeFormatter;
@@ -21,6 +22,9 @@ public class CategoryDOMBuilder implements ResourceBuilder<Document> {
     private final static DateTimeFormatter FMT = ISODateTimeFormat.dateTimeNoMillis();
 
     @Autowired
+    private EnvironmentService environmentService;
+
+    @Autowired
     private DataService dataService;
 
     @Transactional(readOnly = true)
@@ -28,9 +32,8 @@ public class CategoryDOMBuilder implements ResourceBuilder<Document> {
         Element representationElem = new Element("Representation");
         String categoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
         if (categoryIdentifier != null) {
-            // TODO: Need to handle WikiName too.
-            // TODO: Needs to be Environment sensitive.
-            DataCategory dataCategory = dataService.getDataCategoryByUid(categoryIdentifier);
+            DataCategory dataCategory = dataService.getDataCategoryByIdentifier(
+                    environmentService.getEnvironmentByName("AMEE"), categoryIdentifier);
             if (dataCategory != null) {
                 representationElem.addContent(getCategoryElement(requestWrapper, dataCategory));
                 representationElem.addContent(new Element("Status").setText("OK"));
