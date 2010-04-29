@@ -20,10 +20,18 @@
 package com.amee.domain.data;
 
 import com.amee.base.utils.XMLUtils;
-import com.amee.domain.*;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEStatus;
+import com.amee.domain.Builder;
+import com.amee.domain.LocaleHolder;
+import com.amee.domain.ObjectType;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
-import com.amee.platform.science.*;
+import com.amee.platform.science.DecimalCompoundUnit;
+import com.amee.platform.science.DecimalPerUnit;
+import com.amee.platform.science.DecimalUnit;
+import com.amee.platform.science.ExternalValue;
+import com.amee.platform.science.StartEndDate;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -33,7 +41,13 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,9 +85,10 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
     @Index(name = "START_DATE_IND")
     private Date startDate = new Date();
 
-    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @MapKey(name = "locale")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @MapKey(name = "locale")
+//    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Transient
     private Map<String, LocaleName> localeValues = new HashMap<String, LocaleName>();
 
     /**

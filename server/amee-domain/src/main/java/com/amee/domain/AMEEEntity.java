@@ -27,7 +27,6 @@ import com.amee.domain.auth.Permission;
 import com.amee.persist.BaseEntity;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -36,7 +35,6 @@ import java.util.List;
 /**
  * Extends BaseEntity to add state (status) and permissions.
  */
-@Entity
 @MappedSuperclass
 public abstract class AMEEEntity extends BaseEntity implements IAMEEEntityReference {
 

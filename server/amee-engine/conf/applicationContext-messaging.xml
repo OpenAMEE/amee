@@ -40,7 +40,8 @@
     <bean id="invalidationConsume" class="com.amee.messaging.config.ConsumeConfig"/>
 
     <bean id="invalidationQueue" class="com.amee.messaging.config.QueueConfig">
-        <property name="name" value="platform.${MESSAGING_SCOPE}.invalidation.${AMEE_SERVER_NAME}.${AMEE_INSTANCE_NAME}"/>
+        <property name="name"
+                  value="platform.${MESSAGING_SCOPE}.invalidation.${AMEE_SERVER_NAME}.${AMEE_INSTANCE_NAME}"/>
         <property name="exclusive" value="true"/>
         <property name="autoDelete" value="true"/>
     </bean>
@@ -54,5 +55,17 @@
     <bean id="calculationQueue" class="com.amee.messaging.config.QueueConfig">
         <property name="name" value="platform.${MESSAGING_SCOPE}.calculation"/>
     </bean>
+
+    <bean id="requestWrapperExchange" class="com.amee.messaging.config.ExchangeConfig">
+        <property name="name" value="platform.${MESSAGING_SCOPE}.requestWrapper"/>
+        <property name="type" value="direct"/>
+        <property name="durable" value="true"/>
+    </bean>
+
+    <bean id="requestWrapperQueue" class="com.amee.messaging.config.QueueConfig">
+        <property name="name" value="platform.${MESSAGING_SCOPE}.requestWrapper"/>
+    </bean>
+
+    <bean class="com.amee.messaging.resource.RequestWrapperMessageConsumer"/>
 
 </beans>

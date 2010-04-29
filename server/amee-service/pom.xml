@@ -27,7 +27,7 @@
             <version>${amee-messaging.version}</version>
         </dependency>
 
-        <!-- External Dependencies. -->
+        <!-- Compile Dependencies. -->
         <dependency>
             <groupId>net.sourceforge.javacsv</groupId>
             <artifactId>javacsv</artifactId>
@@ -48,7 +48,12 @@
             <artifactId>spring-context-support</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>${xerces.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

@@ -168,18 +168,18 @@ public class AuthenticationService implements Serializable {
      * @return the authenticated User
      */
     public User authenticate(User sampleUser) {
-        // try to find auth based on 'sampleUser' User 'template'
+        // Try to find User based on 'sampleUser' User 'template'.
         User activeUser = getUserByUsername(sampleUser.getEnvironment(), sampleUser.getUsername());
         if (activeUser != null) {
             if (activeUser.getPassword().equals(sampleUser.getPassword())) {
-                log.debug("authenticate() - auth authenticated and signed in: " + sampleUser.getUsername());
+                log.debug("authenticate() - User authenticated and signed in: " + sampleUser.getUsername());
                 return activeUser;
             } else {
-                log.debug("authenticate() - auth NOT authenticated, bad password: " + sampleUser.getUsername());
+                log.debug("authenticate() - User NOT authenticated, bad password: " + sampleUser.getUsername());
                 return null;
             }
         } else {
-            log.debug("authenticate() - auth NOT authenticated, not found: " + sampleUser.getUsername());
+            log.debug("authenticate() - User NOT authenticated, not found: " + sampleUser.getUsername());
             return null;
         }
     }

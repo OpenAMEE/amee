@@ -35,8 +35,21 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 @Entity
 @Table(name = "ITEM_DEFINITION")
@@ -65,9 +78,10 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     @OrderBy("name")
     private Set<ItemValueDefinition> itemValueDefinitions = new HashSet<ItemValueDefinition>();
 
-    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @MapKey(name = "locale")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @MapKey(name = "locale")
+//    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Transient
     private Map<String, LocaleName> localeNames = new HashMap<String, LocaleName>();
 
     /**
@@ -93,6 +107,7 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     * The locale specific name of this ItemDefinition for the locale of the current thread.
     * If no locale specific name is found, the default name will be returned.
     */
+
     @SuppressWarnings("unchecked")
     private String getLocaleName() {
         String name = null;

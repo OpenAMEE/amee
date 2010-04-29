@@ -14,7 +14,7 @@
     <name>amee-engine</name>
 
     <dependencies>
-        
+
         <!-- Internal Dependencies. -->
         <dependency>
             <groupId>com.amee</groupId>
@@ -167,7 +167,19 @@
             <version>${quartz.version}</version>
             <scope>runtime</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${org-aspectj.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${org-aspectj.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

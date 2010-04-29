@@ -24,9 +24,11 @@ package com.amee.domain;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.environment.EnvironmentObject;
 
-import javax.persistence.*;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 
-@Entity
 @MappedSuperclass
 public abstract class AMEEEnvironmentEntity extends AMEEEntity implements EnvironmentObject {
 
