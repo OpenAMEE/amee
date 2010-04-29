@@ -27,10 +27,13 @@ import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Provides a Locale-to-name mapping for an {@link AMEEEnvironmentEntity} instance.
@@ -55,8 +58,9 @@ public class LocaleName extends AMEEEntity {
     private String name;
 
     // The owning entitiy.
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENTITY_ID", nullable = false)
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "ENTITY_ID", nullable = false)
+    @Transient
     private AMEEEntity entity;
 
     public LocaleName() {

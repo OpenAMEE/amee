@@ -21,8 +21,7 @@
     <context:spring-configured/>
     <context:annotation-config/>
     <context:component-scan base-package="com"/>
-    <!--<tx:annotation-driven mode="aspectj"/>-->
-
+    <tx:annotation-driven mode="aspectj"/>
     <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 

@@ -1,6 +1,5 @@
 package com.amee.calculation.service;
 
-import com.amee.base.transaction.TransactionController;
 import com.amee.domain.APIVersion;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.sheet.Choice;
@@ -18,6 +17,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,9 +27,6 @@ import java.util.List;
 public class CalculationConsumer extends RpcMessageConsumer {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    private TransactionController transactionController;
 
     @Autowired
     private EnvironmentService environmentService;
@@ -48,10 +45,9 @@ public class CalculationConsumer extends RpcMessageConsumer {
     @Qualifier("calculationQueue")
     private QueueConfig queueConfig;
 
+    @Transactional(readOnly = true)
     protected String handle(String message) {
         try {
-            // We need a DB session.
-            transactionController.begin(false);
             // Setup JSONObjects.
             JSONObject inbound = new JSONObject(message);
             JSONObject outbound = new JSONObject();
@@ -72,9 +68,6 @@ public class CalculationConsumer extends RpcMessageConsumer {
         } catch (JSONException e) {
             log.warn("handle() Caught JSONException: " + e.getMessage());
             return "{\"error\": \"Could not parse JSON.\"}";
-        } finally {
-            // Always close the DB session.
-            transactionController.end();
         }
     }
 

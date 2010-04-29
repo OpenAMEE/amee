@@ -34,15 +34,29 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Entity
 @Table(name = "DATA_CATEGORY")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
 
-    public final static int NAME_SIZE = 255;
+    public final static int NAME_MIN_SIZE = 3;
+    public final static int NAME_MAX_SIZE = 255;
+    public final static int WIKI_NAME_MIN_SIZE = 3;
+    public final static int WIKI_NAME_MAX_SIZE = 255;
     public final static int PATH_SIZE = 255;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
@@ -53,12 +67,16 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     @JoinColumn(name = "ITEM_DEFINITION_ID")
     private ItemDefinition itemDefinition;
 
-    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
+    @Column(name = "NAME", length = NAME_MAX_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "PATH", length = PATH_SIZE, nullable = true)
+    @Column(name = "PATH", length = PATH_SIZE, nullable = false)
     @Index(name = "PATH_IND")
     private String path = "";
+
+    @Column(name = "WIKI_NAME", length = WIKI_NAME_MAX_SIZE, nullable = false)
+    @Index(name = "WIKI_NAME_IND")
+    private String wikiName = "";
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ALIASED_TO_ID")
@@ -68,9 +86,10 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     @JoinColumn(name = "ALIASED_TO_ID")
     private List<DataCategory> aliases = new ArrayList<DataCategory>();
 
-    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @MapKey(name = "locale")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @MapKey(name = "locale")
+//    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Transient
     private Map<String, LocaleName> localeNames = new HashMap<String, LocaleName>();
 
     /**
@@ -253,6 +272,17 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
             path = "";
         }
         this.path = path;
+    }
+
+    public String getWikiName() {
+        return wikiName;
+    }
+
+    public void setWikiName(String wikiName) {
+        if (wikiName == null) {
+            wikiName = "";
+        }
+        this.wikiName = wikiName;
     }
 
     public ObjectType getObjectType() {

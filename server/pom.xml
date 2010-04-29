@@ -26,11 +26,12 @@
         <ant.version>1.6</ant.version>
         <apache-httpcomponents-httpclient>4.0.1</apache-httpcomponents-httpclient>
         <apache-httpcomponents-httpcore>4.0.1</apache-httpcomponents-httpcore>
+        <org-aspectj.version>1.6.8</org-aspectj.version>
         <cglib.version>2.2</cglib.version>
         <commons-cli.version>1.2</commons-cli.version>
         <commons-codec.version>1.3</commons-codec.version>
         <commons-collections.version>3.2</commons-collections.version>
-        <commons-dbcp.version>1.2.2</commons-dbcp.version>
+        <commons-dbcp.version>1.4</commons-dbcp.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>1.4</commons-io.version>
         <commons-lang.version>2.5</commons-lang.version>
@@ -156,36 +157,28 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
+                    <!-- Copy all dependencies to build directories, ready for Capistrano install. -->
                     <execution>
-                        <id>copy-dependencies-local-other</id>
+                        <id>copy-dependencies-other</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <excludeGroupIds>com.amee</excludeGroupIds>
-                            <stripVersion>true</stripVersion>
+                            <includeScope>runtime</includeScope>
+                            <excludeScope>provided</excludeScope>
                         </configuration>
                     </execution>
+                    <!-- Copy all dependencies to local runtime directory, ready for local execution. -->
                     <execution>
-                        <id>copy-dependencies-local-amee</id>
+                        <id>copy-dependencies-other-local</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>amee-platform-science,amee-messaging</includeArtifactIds>
-                            <stripVersion>true</stripVersion>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <stripVersion>true</stripVersion>
+                            <includeScope>runtime</includeScope>
+                            <excludeScope>provided</excludeScope>
                             <outputDirectory>${amee.current.lib}</outputDirectory>
                         </configuration>
                     </execution>
