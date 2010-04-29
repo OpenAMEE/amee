@@ -158,7 +158,7 @@ public class DefinitionBrowser extends BaseBrowser {
     public ItemDefinition getItemDefinition() {
         if (itemDefinition == null) {
             if ((itemDefinitionUid != null) && (getEnvironment() != null)) {
-                itemDefinition = definitionService.getItemDefinition(getEnvironment(), itemDefinitionUid);
+                itemDefinition = definitionService.getItemDefinitionByUid(getEnvironment(), itemDefinitionUid);
             }
         }
         return itemDefinition;

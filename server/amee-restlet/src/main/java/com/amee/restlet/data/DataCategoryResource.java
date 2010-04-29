@@ -370,7 +370,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 }
             } else if (form.getNames().contains("itemDefinitionUid")) {
                 ItemDefinition itemDefinition =
-                        definitionService.getItemDefinition(
+                        definitionService.getItemDefinitionByUid(
                                 thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
                 if (itemDefinition != null) {
                     dataCategory.setItemDefinition(itemDefinition);
@@ -546,7 +546,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 return;
             } else {
                 ItemDefinition itemDefinition =
-                        definitionService.getItemDefinition(thisDataCategory.getEnvironment(),
+                        definitionService.getItemDefinitionByUid(thisDataCategory.getEnvironment(),
                                 form.getFirstValue("itemDefinitionUid"));
                 if (itemDefinition != null) {
                     thisDataCategory.setItemDefinition(itemDefinition);
@@ -604,6 +604,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     // TODO: This is not used in the Java code. Is it used by a template or in a script?
+
     public DataService getDataService() {
         return dataService;
     }
