@@ -4,8 +4,11 @@ import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.path.PathItem;
+import com.amee.domain.path.PathItemGroup;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
+import com.amee.service.path.PathItemService;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.joda.time.format.DateTimeFormatter;
@@ -26,6 +29,9 @@ public class CategoryDOMBuilder implements ResourceBuilder<Document> {
 
     @Autowired
     private DataService dataService;
+
+    @Autowired
+    private PathItemService pathItemService;
 
     @Transactional(readOnly = true)
     public Document handle(RequestWrapper requestWrapper) {
@@ -69,8 +75,14 @@ public class CategoryDOMBuilder implements ResourceBuilder<Document> {
 
         // Optional attributes.
         if (path || full) {
+            // Get PathItem.
+            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(dataCategory.getEnvironment());
+            PathItem pathItem = pathItemGroup.findByUId(dataCategory.getUid());
+            // Add Paths.
             categoryElem.addContent(new Element("Path").setText(dataCategory.getPath()));
-            categoryElem.addContent(new Element("FullPath").setText("/not/yet/implemented"));
+            if (pathItem != null) {
+                categoryElem.addContent(new Element("FullPath").setText(pathItem.getFullPath()));
+            }
         }
         if (audit || full) {
             categoryElem.setAttribute("status", dataCategory.getStatus().getName());
