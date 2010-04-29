@@ -86,7 +86,7 @@ public class DataItemDOMBuilder implements ResourceBuilder<Document> {
         itemElem.setAttribute("uid", dataItem.getUid());
 
         // Optional attributes.
-        if (path || full) {
+        if (name || full) {
             itemElem.addContent(new Element("Name").setText(dataItem.getName()));
             itemElem.addContent(new Element("CategoryWikiName").setText(dataItem.getDataCategory().getWikiName()));
         }

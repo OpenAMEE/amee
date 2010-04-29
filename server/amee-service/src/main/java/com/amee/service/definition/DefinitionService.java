@@ -74,9 +74,9 @@ public class DefinitionService extends BaseService {
      *
      * @param environment within which the ItemDefinition must belong
      * @param uid         of the ItemDefinition to fetch
-     * @return the ItemDefininition matching the Environment and ItemDefinition UID specified
+     * @return the ItemDefinition matching the Environment and ItemDefinition UID specified
      */
-    public ItemDefinition getItemDefinition(Environment environment, String uid) {
+    public ItemDefinition getItemDefinitionByUid(Environment environment, String uid) {
         ItemDefinition itemDefinition = dao.getItemDefinitionByUid(uid);
         checkEnvironmentObject(environment, itemDefinition);
         return itemDefinition;
@@ -99,6 +99,15 @@ public class DefinitionService extends BaseService {
     }
 
     // ItemValueDefinitions
+
+    public ItemValueDefinition getItemValueDefinitionByUid(ItemDefinition itemDefinition, String uid) {
+        ItemValueDefinition itemValueDefinition = getItemValueDefinitionByUid(uid);
+        if (itemValueDefinition.getItemDefinition().equals(itemDefinition)) {
+            return itemValueDefinition;
+        } else {
+            return null;
+        }
+    }
 
     public ItemValueDefinition getItemValueDefinitionByUid(String uid) {
         return dao.getItemValueDefinitionByUid(uid);
