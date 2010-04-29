@@ -79,6 +79,32 @@ public class DataServiceDAO implements Serializable {
     }
 
     @SuppressWarnings(value = "unchecked")
+    protected DataCategory getDataCategoryByWikiName(Environment environment, String wikiName, boolean includeTrash) {
+        DataCategory dataCategory = null;
+        if (!StringUtils.isBlank(wikiName)) {
+            Session session = (Session) entityManager.getDelegate();
+            Criteria criteria = session.createCriteria(DataCategory.class);
+            criteria.add(Restrictions.eq("environment.id", environment.getId()));
+            criteria.add(Restrictions.eq("wikiName", wikiName));
+            if (!includeTrash) {
+                criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
+            }
+            criteria.setCacheable(true);
+            criteria.setCacheRegion(CACHE_REGION);
+            List<DataCategory> dataCategories = criteria.list();
+            if (dataCategories.size() == 0) {
+                log.debug("getDataCategoryByWikiName() NOT found: " + wikiName);
+            } else {
+                if (log.isTraceEnabled()) {
+                    log.trace("getDataCategoryByWikiName() found: " + wikiName);
+                }
+                dataCategory = dataCategories.get(0);
+            }
+        }
+        return dataCategory;
+    }
+
+    @SuppressWarnings(value = "unchecked")
     protected List<DataCategory> getDataCategories(Environment environment) {
         return (List<DataCategory>) entityManager.createQuery(
                 "FROM DataCategory " +
