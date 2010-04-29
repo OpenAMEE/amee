@@ -13,7 +13,7 @@
                   description="The location of the AMEE shared config."/>
     </target>
 
-    <target name="rebuild" depends="clean, package"
+    <target name="rebuild" depends="clean, package, copy-amee-libs"
             description="Perform a clean build from src."/>
 
     <target name="build" depends="package"
@@ -38,6 +38,14 @@
             <!--arg value="-o"/-->
             <arg value="package"/>
         </exec>
+    </target>
+
+    <target name="copy-amee-libs" description="Copy libs to deployment dir.">
+        <copy todir="${amee.current.lib}" flatten="true">
+            <fileset dir=".">
+                <include name="**/amee-*.jar"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="copy-wrapper" depends="init"

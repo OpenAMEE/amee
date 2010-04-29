@@ -5,6 +5,11 @@
 
 import groovy.sql.Sql
 
+def addDataCategoryWikiName() {
+    println("Adding WIKI_NAME field to the DATA_CATEGORY table");
+    sql.execute("ALTER TABLE DATA_CATEGORY ADD WIKI_NAME VARCHAR(255) NOT NULL DEFAULT ''");
+}
+
 def addTimeZoneField() {
     println("Adding TIME_ZONE field to the USER table")
     sql.execute("ALTER TABLE USER ADD TIME_ZONE VARCHAR( 255 ) NULL")
