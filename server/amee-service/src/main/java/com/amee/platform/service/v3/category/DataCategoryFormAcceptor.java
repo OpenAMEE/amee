@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("categoryFormAcceptor")
+@Service("dataCategoryFormAcceptor")
 @Scope("prototype")
-public class CategoryFormAcceptor implements ResourceAcceptor {
+public class DataCategoryFormAcceptor implements ResourceAcceptor {
 
     @Autowired
     private DataService dataService;

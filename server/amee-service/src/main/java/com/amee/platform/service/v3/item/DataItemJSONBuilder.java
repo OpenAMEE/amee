@@ -1,8 +1,9 @@
-package com.amee.platform.service.v3.category;
+package com.amee.platform.service.v3.item;
 
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
@@ -18,9 +19,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("categoryJSONBuilder")
+@Service("dataItemJSONBuilder")
 @Scope("prototype")
-public class CategoryJSONBuilder implements ResourceBuilder<JSONObject> {
+public class DataItemJSONBuilder implements ResourceBuilder<JSONObject> {
 
     private final static DateTimeFormatter FMT = ISODateTimeFormat.dateTimeNoMillis();
 
@@ -37,13 +38,29 @@ public class CategoryJSONBuilder implements ResourceBuilder<JSONObject> {
     public JSONObject handle(RequestWrapper requestWrapper) {
         try {
             JSONObject representation = new JSONObject();
+            // Get DataCategory identifier.
             String categoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
             if (categoryIdentifier != null) {
+                // Get DataCategory.
                 DataCategory dataCategory = dataService.getDataCategoryByIdentifier(
                         environmentService.getEnvironmentByName("AMEE"), categoryIdentifier);
                 if (dataCategory != null) {
-                    representation.put("category", getCategoryJSONObject(requestWrapper, dataCategory));
-                    representation.put("status", "OK");
+                    // Get DataItem identifier.
+                    String dataItemIdentifier = requestWrapper.getAttributes().get("itemIdentifier");
+                    if (dataItemIdentifier != null) {
+                        // Get DataItem.
+                        DataItem dataItem = dataService.getDataItemByUid(dataCategory, dataItemIdentifier);
+                        if (dataItem != null) {
+                            // Get DataItem Element.
+                            representation.put("item", getDataItemJSONObject(requestWrapper, dataItem));
+                            representation.put("status", "OK");
+                        } else {
+                            representation.put("status", "NOT_FOUND");
+                        }
+                    } else {
+                        representation.put("status", "ERROR");
+                        representation.put("error", "The itemIdentifier was missing.");
+                    }
                 } else {
                     representation.put("status", "NOT_FOUND");
                 }
@@ -58,56 +75,52 @@ public class CategoryJSONBuilder implements ResourceBuilder<JSONObject> {
         }
     }
 
-    protected JSONObject getCategoryJSONObject(RequestWrapper requestWrapper, DataCategory dataCategory) throws JSONException {
+    protected JSONObject getDataItemJSONObject(RequestWrapper requestWrapper, DataItem dataItem) throws JSONException {
 
-        JSONObject category = new JSONObject();
+        JSONObject itemObj = new JSONObject();
         boolean full = requestWrapper.getMatrixParameters().containsKey("full");
+        boolean name = requestWrapper.getMatrixParameters().containsKey("name");
         boolean path = requestWrapper.getMatrixParameters().containsKey("path");
         boolean audit = requestWrapper.getMatrixParameters().containsKey("audit");
-        boolean authority = requestWrapper.getMatrixParameters().containsKey("authority");
         boolean wikiDoc = requestWrapper.getMatrixParameters().containsKey("wikiDoc");
         boolean provenance = requestWrapper.getMatrixParameters().containsKey("provenance");
         boolean itemDefinition = requestWrapper.getMatrixParameters().containsKey("itemDefinition");
 
         // Basic attributes.
-        category.put("uid", dataCategory.getUid());
-        category.put("name", dataCategory.getName());
-        category.put("wikiName", dataCategory.getWikiName());
-        if (dataCategory.getDataCategory() != null) {
-            category.put("parentWikiName", dataCategory.getDataCategory().getWikiName());
-        }
+        itemObj.put("uid", dataItem.getUid());
 
         // Optional attributes.
+        if (name || full) {
+            itemObj.put("name", dataItem.getName());
+            itemObj.put("categoryWikiName", dataItem.getDataCategory().getWikiName());
+        }
         if (path || full) {
             // Get PathItem.
-            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(dataCategory.getEnvironment());
-            PathItem pathItem = pathItemGroup.findByUId(dataCategory.getUid());
+            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(dataItem.getEnvironment());
+            PathItem pathItem = pathItemGroup.findByUId(dataItem.getDataCategory().getUid());
             // Add Paths.
-            category.put("path", dataCategory.getPath());
+            itemObj.put("path", dataItem.getPath());
             if (pathItem != null) {
-                category.put("fullPath", pathItem.getFullPath());
+                itemObj.put("fullPath", pathItem.getFullPath() + "/" + dataItem.getDisplayPath());
             }
         }
         if (audit || full) {
-            category.put("status", dataCategory.getStatus().getName());
-            category.put("created", FMT.print(dataCategory.getCreated().getTime()));
-            category.put("modified", FMT.print(dataCategory.getModified().getTime()));
-        }
-        if (authority || full) {
-            category.put("authority", "Not yet implemented.");
+            itemObj.put("status", dataItem.getStatus().getName());
+            itemObj.put("created", FMT.print(dataItem.getCreated().getTime()));
+            itemObj.put("modified", FMT.print(dataItem.getModified().getTime()));
         }
         if (wikiDoc || full) {
-            category.put("wikiDoc", "Not yet implemented.");
+            itemObj.put("wikiDoc", "Not yet implemented.");
         }
         if (provenance || full) {
-            category.put("provenance", "Not yet implemented.");
+            itemObj.put("provenance", "Not yet implemented.");
         }
-        if ((itemDefinition || full) && (dataCategory.getItemDefinition() != null)) {
-            ItemDefinition id = dataCategory.getItemDefinition();
-            category.put("itemDefinition", new JSONObject().put("uid", id.getUid()).put("name", id.getName()));
+        if ((itemDefinition || full) && (dataItem.getItemDefinition() != null)) {
+            ItemDefinition id = dataItem.getItemDefinition();
+            itemObj.put("itemDefinition", new JSONObject().put("uid", id.getUid()).put("name", id.getName()));
         }
 
-        return category;
+        return itemObj;
     }
 
     public String getMediaType() {

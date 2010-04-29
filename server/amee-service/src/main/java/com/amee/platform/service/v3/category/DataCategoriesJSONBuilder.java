@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("categoriesJSONBuilder")
+@Service("dataCategoriesJSONBuilder")
 @Scope("prototype")
-public class CategoriesJSONBuilder implements ResourceBuilder<JSONObject> {
+public class DataCategoriesJSONBuilder implements ResourceBuilder<JSONObject> {
 
     @Autowired
     private EnvironmentService environmentService;
@@ -24,13 +24,13 @@ public class CategoriesJSONBuilder implements ResourceBuilder<JSONObject> {
     private DataService dataService;
 
     @Autowired
-    private CategoryJSONBuilder categoryJSONBuilder;
+    private DataCategoryJSONBuilder dataCategoryJSONBuilder;
 
     @Transactional(readOnly = true)
     public JSONObject handle(RequestWrapper requestWrapper) {
         try {
             JSONObject representation = new JSONObject();
-            representation.put("categories", getCategoriesJSONArray(requestWrapper));
+            representation.put("categories", getDataCategoriesJSONArray(requestWrapper));
             representation.put("status", "OK");
             representation.put("version", requestWrapper.getVersion().toString());
             return representation;
@@ -39,10 +39,10 @@ public class CategoriesJSONBuilder implements ResourceBuilder<JSONObject> {
         }
     }
 
-    protected JSONArray getCategoriesJSONArray(RequestWrapper requestWrapper) throws JSONException {
+    protected JSONArray getDataCategoriesJSONArray(RequestWrapper requestWrapper) throws JSONException {
         JSONArray categories = new JSONArray();
         for (DataCategory dataCategory : dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"))) {
-            categories.put(categoryJSONBuilder.getCategoryJSONObject(requestWrapper, dataCategory));
+            categories.put(dataCategoryJSONBuilder.getDataCategoryJSONObject(requestWrapper, dataCategory));
         }
         return categories;
     }

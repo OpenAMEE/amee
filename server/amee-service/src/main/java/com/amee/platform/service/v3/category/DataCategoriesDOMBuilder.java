@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("categoriesDOMBuilder")
+@Service("dataCategoriesDOMBuilder")
 @Scope("prototype")
-public class CategoriesDOMBuilder implements ResourceBuilder<Document> {
+public class DataCategoriesDOMBuilder implements ResourceBuilder<Document> {
 
     @Autowired
     private EnvironmentService environmentService;
@@ -24,21 +24,21 @@ public class CategoriesDOMBuilder implements ResourceBuilder<Document> {
     private DataService dataService;
 
     @Autowired
-    private CategoryDOMBuilder categoryDOMBuilder;
+    private DataCategoryDOMBuilder dataCategoryDOMBuilder;
 
     @Transactional(readOnly = true)
     public Document handle(RequestWrapper requestWrapper) {
         Element representationElem = new Element("Representation");
-        representationElem.addContent(getCategoriesElement(requestWrapper));
+        representationElem.addContent(getDataCategoriesElement(requestWrapper));
         representationElem.addContent(new Element("Status").setText("OK"));
         representationElem.addContent(new Element("Version").setText(requestWrapper.getVersion().toString()));
         return new Document(representationElem, new DocType("xml"));
     }
 
-    protected Element getCategoriesElement(RequestWrapper requestWrapper) {
+    protected Element getDataCategoriesElement(RequestWrapper requestWrapper) {
         Element categoriesElem = new Element("Categories");
         for (DataCategory dataCategory : dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"))) {
-            categoriesElem.addContent(categoryDOMBuilder.getCategoryElement(requestWrapper, dataCategory));
+            categoriesElem.addContent(dataCategoryDOMBuilder.getDataCategoryElement(requestWrapper, dataCategory));
         }
         return categoriesElem;
     }

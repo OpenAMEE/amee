@@ -191,9 +191,18 @@ public class DataService extends BaseService implements ApplicationListener {
         return dataItem;
     }
 
+    public DataItem getDataItemByUid(DataCategory dataCategory, String uid) {
+        DataItem dataItem = getDataItemByUid(dataCategory.getEnvironment(), uid);
+        if ((dataItem != null) && dataItem.getDataCategory().equals(dataCategory)) {
+            return dataItem;
+        } else {
+            return null;
+        }
+    }
+
     private DataItem getDataItemByUid(Environment environment, String uid) {
         DataItem dataItem = dao.getDataItemByUid(uid);
-        if (dataItem != null && !dataItem.isTrash()) {
+        if ((dataItem != null) && !dataItem.isTrash()) {
             checkEnvironmentObject(environment, dataItem);
             checkDataItem(dataItem);
             return dataItem;
@@ -204,7 +213,7 @@ public class DataService extends BaseService implements ApplicationListener {
 
     private DataItem getDataItemByPath(Environment environment, String path) {
         DataItem dataItem = dao.getDataItemByPath(environment, path);
-        if (dataItem != null && !dataItem.isTrash()) {
+        if ((dataItem != null) && !dataItem.isTrash()) {
             checkEnvironmentObject(environment, dataItem);
             checkDataItem(dataItem);
             return dataItem;

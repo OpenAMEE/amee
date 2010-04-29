@@ -18,9 +18,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("categoryDOMBuilder")
+@Service("dataCategoryDOMBuilder")
 @Scope("prototype")
-public class CategoryDOMBuilder implements ResourceBuilder<Document> {
+public class DataCategoryDOMBuilder implements ResourceBuilder<Document> {
 
     private final static DateTimeFormatter FMT = ISODateTimeFormat.dateTimeNoMillis();
 
@@ -41,7 +41,7 @@ public class CategoryDOMBuilder implements ResourceBuilder<Document> {
             DataCategory dataCategory = dataService.getDataCategoryByIdentifier(
                     environmentService.getEnvironmentByName("AMEE"), categoryIdentifier);
             if (dataCategory != null) {
-                representationElem.addContent(getCategoryElement(requestWrapper, dataCategory));
+                representationElem.addContent(getDataCategoryElement(requestWrapper, dataCategory));
                 representationElem.addContent(new Element("Status").setText("OK"));
             } else {
                 representationElem.addContent(new Element("Status").setText("NOT_FOUND"));
@@ -54,7 +54,7 @@ public class CategoryDOMBuilder implements ResourceBuilder<Document> {
         return new Document(representationElem);
     }
 
-    protected Element getCategoryElement(RequestWrapper requestWrapper, DataCategory dataCategory) {
+    protected Element getDataCategoryElement(RequestWrapper requestWrapper, DataCategory dataCategory) {
 
         Element categoryElem = new Element("Category");
         boolean full = requestWrapper.getMatrixParameters().containsKey("full");
