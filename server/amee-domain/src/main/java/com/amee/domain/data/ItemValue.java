@@ -260,11 +260,11 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
         return ObjectType.IV;
     }
 
-    public DecimalUnit getUnit() {
-        return (unit != null) ? DecimalUnit.valueOf(unit) : getItemValueDefinition().getUnit();
+    public AmountUnit getUnit() {
+        return (unit != null) ? AmountUnit.valueOf(unit) : getItemValueDefinition().getUnit();
     }
 
-    public DecimalUnit getCanonicalUnit() {
+    public AmountUnit getCanonicalUnit() {
         return getItemValueDefinition().getUnit();
     }
 
@@ -275,19 +275,19 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
         this.unit = unit;
     }
 
-    public DecimalPerUnit getPerUnit() {
+    public AmountPerUnit getPerUnit() {
         if (perUnit != null) {
             if (perUnit.equals("none")) {
-                return DecimalPerUnit.valueOf(getItem().getDuration());
+                return AmountPerUnit.valueOf(getItem().getDuration());
             } else {
-                return DecimalPerUnit.valueOf(perUnit);
+                return AmountPerUnit.valueOf(perUnit);
             }
         } else {
             return getItemValueDefinition().getPerUnit();
         }
     }
 
-    public DecimalPerUnit getCanonicalPerUnit() {
+    public AmountPerUnit getCanonicalPerUnit() {
         return getItemValueDefinition().getPerUnit();
     }
 
@@ -298,11 +298,11 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
         this.perUnit = perUnit;
     }
 
-    public DecimalCompoundUnit getCompoundUnit() {
+    public AmountCompoundUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
 
-    public DecimalCompoundUnit getCanonicalCompoundUnit() {
+    public AmountCompoundUnit getCanonicalCompoundUnit() {
         return getItemValueDefinition().getCanonicalCompoundUnit();
     }
 

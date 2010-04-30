@@ -307,6 +307,18 @@ public class Cell implements Serializable, Comparable {
         }
     }
 
+    public Double getValueAsDouble() {
+        if (value instanceof Double) {
+            return (Double) value;
+        } else {
+            try {
+                return new Double(value.toString());
+            } catch (NumberFormatException e) {
+                return new Double(0);
+            }
+        }
+    }
+
     public Boolean getValueAsBoolean() {
         if (value instanceof Boolean) {
             return (Boolean) value;

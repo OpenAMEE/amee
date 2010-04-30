@@ -25,7 +25,7 @@ import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v1.ItemValueBuilder;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.platform.science.DecimalPerUnit;
+import com.amee.platform.science.AmountPerUnit;
 import com.amee.platform.science.StartEndDate;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,7 +87,7 @@ public class ProfileItemBuilder implements Builder {
         JSONObject obj = new JSONObject();
         buildElement(obj, detailed);
         if (!item.isSingleFlight()) {
-            obj.put("amountPerMonth", item.getAmount().convert(DecimalPerUnit.MONTH).getValue());
+            obj.put("amountPerMonth", item.getAmount().convert(AmountPerUnit.MONTH).getValue());
         } else {
             obj.put("amountPerMonth", item.getAmount().getValue());
         }
@@ -106,7 +106,7 @@ public class ProfileItemBuilder implements Builder {
 
         if (!item.isSingleFlight()) {
             element.appendChild(APIUtils.getElement(document, "AmountPerMonth",
-                item.getAmount().convert(DecimalPerUnit.MONTH).toString()));
+                item.getAmount().convert(AmountPerUnit.MONTH).toString()));
         } else {
             element.appendChild(APIUtils.getElement(document, "AmountPerMonth", item.getAmount().toString()));
         }

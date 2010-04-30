@@ -24,6 +24,7 @@ public class ValueTypeTest {
         pairs.put("TEXT", "Text");
         pairs.put("DATE","Date");
         pairs.put("UNSPECIFIED", "Unspecified");
+        pairs.put("DOUBLE", "Double");
     }
 
     @Test
@@ -103,7 +104,7 @@ public class ValueTypeTest {
         assertEquals("Should return ValueType.UNSPECIFIED", ValueType.UNSPECIFIED, ValueType.getValueType(f));
 
         Double d = new Double(123.45);
-        assertEquals("Should return ValueType.UNSPECIFIED", ValueType.UNSPECIFIED, ValueType.getValueType(d));
+        assertEquals("Should return ValueType.DOUBLE", ValueType.DOUBLE, ValueType.getValueType(d));
 
         Object o = new Object();
         assertEquals("Should return ValueType.UNSPECIFIED", ValueType.UNSPECIFIED, ValueType.getValueType(o));

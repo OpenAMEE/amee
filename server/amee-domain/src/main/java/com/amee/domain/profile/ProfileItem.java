@@ -63,8 +63,10 @@ public class ProfileItem extends Item {
     @Index(name = "END_DATE_IND")
     protected Date endDate;
 
+    // TODO: We use a Double so we can set it to null
+    // to check if the calculation has been performed already. Is this good?
     @Transient
-    private BigDecimal amount = null;
+    private Double amount;
 
     @Transient
     private Builder builder;

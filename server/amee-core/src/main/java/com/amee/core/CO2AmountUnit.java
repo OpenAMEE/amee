@@ -1,8 +1,6 @@
 package com.amee.core;
 
-import com.amee.platform.science.DecimalCompoundUnit;
-import com.amee.platform.science.DecimalPerUnit;
-import com.amee.platform.science.DecimalUnit;
+import com.amee.platform.science.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.measure.unit.NonSI;
@@ -29,18 +27,18 @@ import javax.measure.unit.SI;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class CO2AmountUnit extends DecimalCompoundUnit {
+public class CO2AmountUnit extends AmountCompoundUnit {
 
     // The default unit
-    private static final DecimalUnit UNIT = new DecimalUnit(SI.KILOGRAM);
+    private static final AmountUnit UNIT = new AmountUnit(SI.KILOGRAM);
 
     // The default perUnit
-    private static final DecimalPerUnit PER_UNIT = new DecimalPerUnit(NonSI.YEAR);
+    private static final AmountPerUnit PER_UNIT = new AmountPerUnit(NonSI.YEAR);
 
     // The default compound unit (i.e. unit/perUnit)
     public static final CO2AmountUnit DEFAULT = new CO2AmountUnit(UNIT, PER_UNIT);
 
-    public CO2AmountUnit(DecimalUnit unit, DecimalPerUnit perUnit) {
+    public CO2AmountUnit(AmountUnit unit, AmountPerUnit perUnit) {
         super(unit, perUnit);
     }
 
@@ -48,12 +46,12 @@ public class CO2AmountUnit extends DecimalCompoundUnit {
         super(parseUnit(unit), parsePerUnit(perUnit));
     }
 
-    private static DecimalUnit parseUnit(String unit) {
-        return StringUtils.isNotBlank(unit) ? DecimalUnit.valueOf(unit) : UNIT;
+    private static AmountUnit parseUnit(String unit) {
+        return StringUtils.isNotBlank(unit) ? AmountUnit.valueOf(unit) : UNIT;
     }
 
-    private static DecimalPerUnit parsePerUnit(String perUnit) {
-        return StringUtils.isNotBlank(perUnit) ? DecimalPerUnit.valueOf(perUnit) : PER_UNIT;
+    private static AmountPerUnit parsePerUnit(String perUnit) {
+        return StringUtils.isNotBlank(perUnit) ? AmountPerUnit.valueOf(perUnit) : PER_UNIT;
     }
 
     /**
@@ -66,20 +64,20 @@ public class CO2AmountUnit extends DecimalCompoundUnit {
     }
 
     /**
-     * Does the supplied DecimalPerUnit represent an external unit.
+     * Does the supplied AmountPerUnit represent an external unit.
      * @param perUnit
-     * @return true if the current instance represents the default DecimalPerUnit for a CO2 amount calculated by AMEE
+     * @return true if the current instance represents the default AmountPerUnit for a CO2 amount calculated by AMEE
      */
-    public static boolean isExternal(DecimalPerUnit perUnit) {
+    public static boolean isExternal(AmountPerUnit perUnit) {
         return !PER_UNIT.equals(perUnit);
     }
 
     /**
-     * Does the supplied DecimalUnit represent an external unit.
+     * Does the supplied AmountUnit represent an external unit.
      * @param unit
-     * @return true if the current instance represents the default DecimalUnit for a CO2 amount calculated by AMEE
+     * @return true if the current instance represents the default AmountUnit for a CO2 amount calculated by AMEE
      */
-    public static boolean isExternal(DecimalUnit unit) {
+    public static boolean isExternal(AmountUnit unit) {
         return !UNIT.equals(unit);
     }
 }

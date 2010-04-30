@@ -27,7 +27,7 @@ import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.platform.science.DecimalCompoundUnit;
+import com.amee.platform.science.AmountCompoundUnit;
 import com.amee.platform.science.StartEndDate;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,9 +38,9 @@ import org.w3c.dom.Element;
 public class ProfileItemBuilder implements Builder {
 
     private ProfileItem item;
-    private DecimalCompoundUnit returnUnit = CO2AmountUnit.DEFAULT;
+    private AmountCompoundUnit returnUnit = CO2AmountUnit.DEFAULT;
 
-    public ProfileItemBuilder(ProfileItem item, DecimalCompoundUnit returnUnit) {
+    public ProfileItemBuilder(ProfileItem item, AmountCompoundUnit returnUnit) {
         this.item = item;
         this.returnUnit = returnUnit;
     }
