@@ -117,9 +117,9 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      * Intended to be used publically in test harnesses when passing the modified algorithm content and input values
      * for execution is desirable.
      *
-     * @param algorithm
-     * @param values
-     * @return the algorithm result as a BigDecimal
+     * @param algorithm the algorithm to use
+     * @param values input values for the algorithm
+     * @return the algorithm result
      */
     public CO2Amount calculate(Algorithm algorithm, Map<String, Object> values) {
 
