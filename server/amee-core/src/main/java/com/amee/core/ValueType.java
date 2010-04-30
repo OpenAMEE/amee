@@ -21,7 +21,8 @@ public enum ValueType implements Serializable {
     DATE("DATE", "Date"),
     BOOLEAN("BOOLEAN", "Boolean"),
     INTEGER("INTEGER", "Integer"),
-    DECIMAL("DECIMAL", "Decimal");
+    DECIMAL("DECIMAL", "Decimal"),
+    DOUBLE("DOUBLE", "Double");
 
     ValueType(String name, String label) {
         this.name = name;
@@ -78,7 +79,9 @@ public enum ValueType implements Serializable {
             return ValueType.TEXT;
         } else if (object instanceof BigDecimal) {
             return ValueType.DECIMAL;
-        } else if ((object instanceof Integer)) {
+        } else if (object instanceof Double) {
+            return ValueType.DOUBLE;
+        } else if (object instanceof Integer) {
             return ValueType.INTEGER;
         } else if (object instanceof Boolean) {
             return ValueType.BOOLEAN;

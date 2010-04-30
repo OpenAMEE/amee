@@ -29,9 +29,9 @@ import com.amee.domain.ObjectType;
 import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import com.amee.domain.sheet.Choice;
-import com.amee.platform.science.DecimalCompoundUnit;
-import com.amee.platform.science.DecimalPerUnit;
-import com.amee.platform.science.DecimalUnit;
+import com.amee.platform.science.AmountCompoundUnit;
+import com.amee.platform.science.AmountPerUnit;
+import com.amee.platform.science.AmountUnit;
 import com.amee.platform.science.ExternalValue;
 import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Cache;
@@ -349,19 +349,19 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
         this.unit = unit;
     }
 
-    public DecimalUnit getUnit() {
-        return (unit != null) ? DecimalUnit.valueOf(unit) : DecimalUnit.ONE;
+    public AmountUnit getUnit() {
+        return (unit != null) ? AmountUnit.valueOf(unit) : AmountUnit.ONE;
     }
 
-    public DecimalUnit getCanonicalUnit() {
+    public AmountUnit getCanonicalUnit() {
         return getUnit();
     }
 
-    public DecimalPerUnit getPerUnit() {
-        return (perUnit != null) ? DecimalPerUnit.valueOf(perUnit) : DecimalPerUnit.ONE;
+    public AmountPerUnit getPerUnit() {
+        return (perUnit != null) ? AmountPerUnit.valueOf(perUnit) : AmountPerUnit.ONE;
     }
 
-    public DecimalPerUnit getCanonicalPerUnit() {
+    public AmountPerUnit getCanonicalPerUnit() {
         return getPerUnit();
     }
 
@@ -381,11 +381,11 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
         return getPerUnit().isCompatibleWith(perUnit);
     }
 
-    public DecimalCompoundUnit getCompoundUnit() {
+    public AmountCompoundUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
 
-    public DecimalCompoundUnit getCanonicalCompoundUnit() {
+    public AmountCompoundUnit getCanonicalCompoundUnit() {
         if (aliasedTo != null) {
             return aliasedTo.getCompoundUnit();
         } else {

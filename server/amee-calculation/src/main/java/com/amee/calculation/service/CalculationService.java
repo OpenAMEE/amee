@@ -31,7 +31,6 @@ import com.amee.domain.profile.CO2CalculationService;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choices;
 import com.amee.platform.science.AlgorithmRunner;
-import com.amee.platform.science.Decimal;
 import com.amee.platform.science.InternalValue;
 import com.amee.service.transaction.TransactionController;
 import org.apache.commons.logging.Log;
@@ -170,7 +169,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
                             "): " + e.getMessage());
 
             // ...and return zero by default.
-            amount = new CO2Amount(Decimal.BIG_DECIMAL_ZERO);
+            amount = CO2Amount.ZERO;
         } finally {
             ameeStatistics.addToThreadCalculationDuration(System.nanoTime() - startTime);
         }

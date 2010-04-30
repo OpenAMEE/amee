@@ -1,8 +1,8 @@
 package com.amee.restlet.profile.builder.v1;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.Pager;
 import com.amee.domain.ObjectType;
+import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.profile.Profile;
@@ -11,7 +11,6 @@ import com.amee.domain.profile.builder.v1.ProfileItemBuilder;
 import com.amee.domain.sheet.Cell;
 import com.amee.domain.sheet.Row;
 import com.amee.domain.sheet.Sheet;
-import com.amee.platform.science.Decimal;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
 import com.amee.service.data.DataService;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -248,7 +246,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             }
             // add CO2 amount
             element.appendChild(APIUtils.getElement(document, "TotalAmountPerMonth",
-                    getTotalAmountPerMonth(sheet).toString()));
+                    Double.toString(getTotalAmountPerMonth(sheet))));
         }
     }
 
@@ -301,15 +299,15 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         return values;
     }
 
-    public BigDecimal getTotalAmountPerMonth(Sheet sheet) {
+    public double getTotalAmountPerMonth(Sheet sheet) {
         Cell endCell;
-        BigDecimal totalAmountPerMonth = Decimal.BIG_DECIMAL_ZERO;
-        BigDecimal amountPerMonth;
+        double totalAmountPerMonth = 0.0;
+        double amountPerMonth;
         for (Row row : sheet.getRows()) {
             endCell = row.findCell("end");
             if (!endCell.getValueAsBoolean()) {
-                amountPerMonth = row.findCell("amountPerMonth").getValueAsBigDecimal();
-                totalAmountPerMonth = totalAmountPerMonth.add(amountPerMonth);
+                amountPerMonth = row.findCell("amountPerMonth").getValueAsDouble();
+                totalAmountPerMonth = totalAmountPerMonth + amountPerMonth;
             }
         }
         return totalAmountPerMonth;
