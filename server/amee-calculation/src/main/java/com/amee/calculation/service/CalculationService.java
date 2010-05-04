@@ -203,8 +203,8 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         profileItem.appendInternalValues(values);
 
         // Add actual values to returnValues list based on InternalValues in values list.
-        for (ItemValueDefinition ivd : values.keySet()) {
-            returnValues.put(ivd.getCanonicalPath(), values.get(ivd).getValue());
+        for (Map.Entry<ItemValueDefinition, InternalValue> entry : values.entrySet()) {
+            returnValues.put(entry.getKey().getCanonicalPath(), entry.getValue().getValue());
         }
 
         // Initialise finders for algorithm.
@@ -251,8 +251,8 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         appendUserValueChoices(dataItem.getItemDefinition(), userValueChoices, values, version);
 
         Map<String, Object> returnValues = new HashMap<String, Object>();
-        for (ItemValueDefinition ivd : values.keySet()) {
-            returnValues.put(ivd.getCanonicalPath(), values.get(ivd).getValue());
+        for (Map.Entry<ItemValueDefinition, InternalValue> entry : values.entrySet()) {
+            returnValues.put(entry.getKey().getCanonicalPath(), entry.getValue().getValue());
         }
 
         DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");
