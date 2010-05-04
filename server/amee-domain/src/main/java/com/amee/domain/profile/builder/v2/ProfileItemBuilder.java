@@ -95,7 +95,7 @@ public class ProfileItemBuilder implements Builder {
 
         JSONObject amount = new JSONObject();
         amount.put("value", item.getAmount().convert(returnUnit).getValue());
-        amount.put("unit", returnUnit);
+        amount.put("unit", returnUnit.toString());
         obj.put("amount", amount);
 
         // Convert to user's time zone
