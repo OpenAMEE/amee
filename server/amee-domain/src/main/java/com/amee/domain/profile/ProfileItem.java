@@ -150,7 +150,7 @@ public class ProfileItem extends Item {
     }
 
     public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+        this.startDate = new Date(startDate.getTime());
     }
 
     public StartEndDate getEndDate() {
@@ -162,7 +162,7 @@ public class ProfileItem extends Item {
     }
 
     public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+        this.endDate = new Date(endDate.getTime());
     }
 
     public boolean isEnd() {
