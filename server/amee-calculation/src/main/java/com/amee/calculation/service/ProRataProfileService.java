@@ -137,8 +137,8 @@ public class ProRataProfileService {
                     pic.addItemValue(iv.getCopy());
                 }
 
-                Long event = getIntervalInMillis(pic.getStartDate(), pic.getEndDate());
-                double eventIntersectRatio = intersect.toDurationMillis() / event;
+                long event = getIntervalInMillis(pic.getStartDate(), pic.getEndDate());
+                double eventIntersectRatio = intersect.toDurationMillis() / (double) event;
                 double proratedAmount = (pic.getAmount().getValue()) * eventIntersectRatio;
                 pic.setAmount(new CO2Amount(proratedAmount));
 
