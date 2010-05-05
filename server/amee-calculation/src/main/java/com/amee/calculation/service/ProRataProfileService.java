@@ -168,7 +168,6 @@ public class ProRataProfileService {
         return requestedItems;
     }
 
-    // TODO: Check these changes
     @SuppressWarnings(value = "unchecked")
     private ItemValue getProRatedItemValue(Interval interval, ItemValue itemValue) {
         Measure measure = Measure.valueOf(1, itemValue.getPerUnit().toUnit());
