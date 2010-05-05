@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("dataItemsDOMBuilder")
+@Service
 @Scope("prototype")
 public class DataItemsDOMBuilder implements ResourceBuilder<Document> {
 
