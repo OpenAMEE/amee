@@ -33,6 +33,14 @@ public class Choice implements Serializable, Comparable, APIObject {
     }
 
     public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof Choice)) {
+            return false;
+        }
+        
         Choice other = (Choice) o;
         return getName().equalsIgnoreCase(other.getName());
     }

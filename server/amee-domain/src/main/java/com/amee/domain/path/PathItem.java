@@ -102,6 +102,14 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof PathItem)) {
+            return false;
+        }
+        
         PathItem other = (PathItem) o;
         return getFullPath().equalsIgnoreCase(other.getFullPath());
     }
