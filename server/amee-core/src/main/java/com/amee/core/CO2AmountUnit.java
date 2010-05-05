@@ -80,5 +80,15 @@ public class CO2AmountUnit extends AmountCompoundUnit {
     public static boolean isExternal(AmountUnit unit) {
         return !UNIT.equals(unit);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
 
