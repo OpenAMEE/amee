@@ -19,7 +19,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.annotation.Resource;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -43,9 +49,9 @@ import java.util.Date;
  * Website http://www.amee.cc
  */
 
-@Configurable(autowire = Autowire.BY_TYPE)
 @Entity
 @DiscriminatorValue("PI")
+@Configurable(autowire = Autowire.BY_TYPE)
 public class ProfileItem extends Item {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)

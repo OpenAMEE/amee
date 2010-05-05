@@ -27,7 +27,7 @@ import javax.persistence.Table;
  * @author Diggory Briercliffe
  */
 @Entity(name = "Group")
-// can't use 'GROUP' as that is a resevered word in SQL
+// can't use 'GROUP' as that is a reserved word in SQL
 @Table(name = "GROUPS")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Group extends AMEEEnvironmentEntity implements Comparable {

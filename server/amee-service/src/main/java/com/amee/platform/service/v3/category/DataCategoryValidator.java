@@ -24,6 +24,7 @@ public class DataCategoryValidator implements Validator {
 
     private ValidationSpecification nameSpec;
     private ValidationSpecification wikiNameSpec;
+    private ValidationSpecification wikiDocSpec;
 //    private ValidationSpecification descriptionSpec;
 //    private ValidationSpecification unitSpec;
 //    private ValidationSpecification directionSpec;
@@ -43,6 +44,12 @@ public class DataCategoryValidator implements Validator {
         wikiNameSpec.setMinSize(DataCategory.WIKI_NAME_MIN_SIZE);
         wikiNameSpec.setMaxSize(DataCategory.WIKI_NAME_MAX_SIZE);
         wikiNameSpec.setFormat(WIKI_NAME_PATTERN_STRING);
+        // wikiDoc
+        wikiDocSpec = new ValidationSpecification();
+        wikiDocSpec.setName("wikiDoc");
+        wikiDocSpec.setMinSize(DataCategory.WIKI_DOC_MIN_SIZE);
+        wikiDocSpec.setMaxSize(DataCategory.WIKI_DOC_MAX_SIZE);
+        wikiDocSpec.setAllowEmpty(true);
     }
 
     public boolean supports(Class clazz) {
@@ -66,6 +73,8 @@ public class DataCategoryValidator implements Validator {
 //        }
         // wikiName
         wikiNameSpec.validate(datacategory.getWikiName(), e);
+        // wikiDoc
+        wikiDocSpec.validate(datacategory.getWikiDoc(), e);
     }
 }
 

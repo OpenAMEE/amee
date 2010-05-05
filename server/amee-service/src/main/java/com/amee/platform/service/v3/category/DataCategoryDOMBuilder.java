@@ -93,7 +93,7 @@ public class DataCategoryDOMBuilder implements ResourceBuilder<Document> {
             categoryElem.addContent(new Element("Authority").setText("Not yet implemented."));
         }
         if (wikiDoc || full) {
-            categoryElem.addContent(new Element("WikiDoc").setText("Not yet implemented."));
+            categoryElem.addContent(new Element("WikiDoc").setText(dataCategory.getWikiDoc()));
         }
         if (provenance || full) {
             categoryElem.addContent(new Element("Provenance").setText("Not yet implemented."));
