@@ -121,7 +121,7 @@ public class Sheet implements Serializable {
      * filter rules:
      * Only show a row if :
      * cell is an integer and > 0
-     * cell is a decimal and > 0
+     * cell is a double and > 0
      * cell is a boolean and true
      * cell is a string with length > 0
      * cell is a date or unspecified (e.g filtering on these will make no difference)
@@ -154,7 +154,7 @@ public class Sheet implements Serializable {
                             && cell.getValueAsString().length() == 0) {
                         addRow = false;
                         break;
-                    } else if (cell.getValueType().equals(ValueType.DECIMAL)
+                    } else if (cell.getValueType().equals(ValueType.DOUBLE)
                             && Double.parseDouble(cell.getValueAsString()) == 0) {
                         addRow = false;
                         break;

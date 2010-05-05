@@ -34,7 +34,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -233,7 +232,7 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
         }
 
         // Ensure numerics are a valid format.
-        if (getItemValueDefinition().isDecimal() && !value.isEmpty()) {
+        if (getItemValueDefinition().isDouble() && !value.isEmpty()) {
             try {
                 Double.parseDouble(value);
             } catch (NumberFormatException e) {
@@ -248,8 +247,8 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
         return new StartEndDate(startDate);
     }
 
-    public boolean isDecimal() {
-        return getItemValueDefinition().isDecimal();
+    public boolean isDouble() {
+        return getItemValueDefinition().isDouble();
     }
 
     public void setStartDate(Date startDate) {
@@ -319,9 +318,9 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
     }
 
     public boolean isNonZero() {
-        return getItemValueDefinition().isDecimal() &&
-                !StringUtils.isBlank(getValue()) &&
-                !new BigDecimal(getValue()).equals(BigDecimal.ZERO);
+        return getItemValueDefinition().isDouble() &&
+            !StringUtils.isBlank(getValue()) &&
+            Double.parseDouble(getValue()) != 0.0;
     }
 
     public ItemValue getCopy() {

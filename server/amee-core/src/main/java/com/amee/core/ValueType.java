@@ -6,7 +6,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,7 +20,6 @@ public enum ValueType implements Serializable {
     DATE("DATE", "Date"),
     BOOLEAN("BOOLEAN", "Boolean"),
     INTEGER("INTEGER", "Integer"),
-    DECIMAL("DECIMAL", "Decimal"),
     DOUBLE("DOUBLE", "Double");
 
     ValueType(String name, String label) {
@@ -77,8 +75,6 @@ public enum ValueType implements Serializable {
     public static ValueType getValueType(Object object) {
         if (object instanceof String) {
             return ValueType.TEXT;
-        } else if (object instanceof BigDecimal) {
-            return ValueType.DECIMAL;
         } else if (object instanceof Double) {
             return ValueType.DOUBLE;
         } else if (object instanceof Integer) {

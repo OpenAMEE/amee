@@ -442,14 +442,14 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
     }
 
     /**
-     * Does this represent a decimal value.
+     * Does this represent a double value.
      *
-     * @return true if this value represents a decimal value, otherwise false
+     * @return true if this value represents a double value, otherwise false
      *         <p/>
-     *         {@see ValueType.DECIMAL}
+     *         {@see ValueType.DOUBLE}
      */
-    public boolean isDecimal() {
-        return getValueDefinition().getValueType().equals(ValueType.DECIMAL);
+    public boolean isDouble() {
+        return getValueDefinition().getValueType().equals(ValueType.DOUBLE);
     }
 
     /**

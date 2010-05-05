@@ -19,7 +19,6 @@ import org.w3c.dom.Element;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
