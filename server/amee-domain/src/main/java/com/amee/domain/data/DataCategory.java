@@ -22,7 +22,9 @@ package com.amee.domain.data;
 import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.IMetadataService;
 import com.amee.domain.LocaleHolder;
+import com.amee.domain.Metadata;
 import com.amee.domain.ObjectType;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
@@ -31,9 +33,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.annotation.Resource;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -51,13 +56,20 @@ import java.util.TreeMap;
 @Entity
 @Table(name = "DATA_CATEGORY")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Configurable(autowire = Autowire.BY_TYPE)
 public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
 
     public final static int NAME_MIN_SIZE = 3;
     public final static int NAME_MAX_SIZE = 255;
     public final static int WIKI_NAME_MIN_SIZE = 3;
     public final static int WIKI_NAME_MAX_SIZE = 255;
+    public final static int WIKI_DOC_MIN_SIZE = 0;
+    public final static int WIKI_DOC_MAX_SIZE = Metadata.VALUE_SIZE;
     public final static int PATH_SIZE = 255;
+
+    @Transient
+    @Resource
+    private IMetadataService metadataService;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "DATA_CATEGORY_ID")
@@ -77,6 +89,9 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     @Column(name = "WIKI_NAME", length = WIKI_NAME_MAX_SIZE, nullable = false)
     @Index(name = "WIKI_NAME_IND")
     private String wikiName = "";
+
+    @Transient
+    private Metadata wikiDoc = null;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ALIASED_TO_ID")
@@ -285,8 +300,33 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         this.wikiName = wikiName;
     }
 
-    public ObjectType getObjectType() {
-        return ObjectType.DC;
+    public String getWikiDoc() {
+        Metadata wikiDoc = getWikiDocEntity();
+        if (wikiDoc != null) {
+            return wikiDoc.getValue();
+        } else {
+            return "";
+        }
+    }
+
+    public void setWikiDoc(String wikiDoc) {
+        getOrCreateWikiDocEntity().setValue(wikiDoc);
+    }
+
+    private Metadata getWikiDocEntity() {
+        if (wikiDoc == null) {
+            wikiDoc = metadataService.getMetadataForEntity(this, "wikiDoc");
+        }
+        return wikiDoc;
+    }
+
+    protected Metadata getOrCreateWikiDocEntity() {
+        getWikiDocEntity();
+        if (wikiDoc == null) {
+            wikiDoc = new Metadata(this, "wikiDoc");
+            metadataService.persist(wikiDoc);
+        }
+        return wikiDoc;
     }
 
     @Override
@@ -312,5 +352,9 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         for (DataCategory alias : aliases) {
             alias.setStatus(status);
         }
+    }
+
+    public ObjectType getObjectType() {
+        return ObjectType.DC;
     }
 }

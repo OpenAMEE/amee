@@ -97,7 +97,7 @@ public class DataCategoryJSONBuilder implements ResourceBuilder<JSONObject> {
             category.put("authority", "Not yet implemented.");
         }
         if (wikiDoc || full) {
-            category.put("wikiDoc", "Not yet implemented.");
+            category.put("wikiDoc", dataCategory.getWikiDoc());
         }
         if (provenance || full) {
             category.put("provenance", "Not yet implemented.");

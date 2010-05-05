@@ -34,7 +34,7 @@ import java.io.Serializable;
 
 /**
  * An embeddable entity for use in AMEEEntity extended classes to encapsulate properties
- * for refering to another AMEEEntity (from another database table). The entityId, entityUid
+ * for referring to another AMEEEntity (from another database table). The entityId, entityUid
  * and entityType properties allow the application to reference any entity / database row
  * in another AMEEEntity table.
  */

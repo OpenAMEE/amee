@@ -244,6 +244,16 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
+    <!-- Metadata -->
+    <cache name="com.amee.domain.Metadata"
+           maxElementsInMemory="5000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
     <!-- **** AMEE - Queries **** -->
 
     <!-- DataServiceDAO -->
@@ -376,8 +386,6 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- **** Kiwi - Queries **** -->
-
     <!-- AuthenticationDAO -->
     <cache name="query.authenticationService"
            maxElementsInMemory="200"
@@ -420,6 +428,16 @@
 
     <!-- EnvironmentService -->
     <cache name="query.environmentService"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
+    <!-- MetadataService -->
+    <cache name="query.metadataService"
            maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"

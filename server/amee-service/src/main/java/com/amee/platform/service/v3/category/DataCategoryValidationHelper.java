@@ -52,6 +52,7 @@ public class DataCategoryValidationHelper extends ValidationHelper {
             allowedFields = new HashSet<String>();
             allowedFields.add("name");
             allowedFields.add("wikiName");
+            allowedFields.add("wikiDoc");
 //            allowedFields.add("description");
 //            allowedFields.add("unit");
 //            allowedFields.add("direction");

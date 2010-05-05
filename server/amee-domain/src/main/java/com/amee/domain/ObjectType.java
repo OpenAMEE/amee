@@ -28,7 +28,12 @@ import com.amee.domain.auth.Group;
 import com.amee.domain.auth.GroupPrincipal;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.User;
-import com.amee.domain.data.*;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
@@ -37,7 +42,7 @@ import java.io.Serializable;
 
 public enum ObjectType implements Serializable {
 
-    DC, AL, ID, IVD, DI, PI, IV, PR, ALC, USR, GRP, ENV, PRM, LN, GP, VD, AV;
+    DC, AL, ID, IVD, DI, PI, IV, PR, ALC, USR, GRP, ENV, PRM, LN, GP, VD, AV, MD;
 
     private String[] names = {
             "DC",
@@ -56,7 +61,8 @@ public enum ObjectType implements Serializable {
             "LN",
             "GP",
             "VD",
-            "AV"};
+            "AV",
+            "MD"};
 
     private String[] labels = {
             "DataCategory",
@@ -75,7 +81,8 @@ public enum ObjectType implements Serializable {
             "LocaleName",
             "GroupPrincipal",
             "ValueDefinition",
-            "APIVersion"};
+            "APIVersion",
+            "Metadata"};
 
     public String toString() {
         return getName();
@@ -124,6 +131,8 @@ public enum ObjectType implements Serializable {
             return VD;
         } else if (APIVersion.class.isAssignableFrom(c)) {
             return AV;
+        } else if (Metadata.class.isAssignableFrom(c)) {
+            return MD;
         }
         throw new IllegalArgumentException("Class not supported.");
     }
@@ -170,6 +179,8 @@ public enum ObjectType implements Serializable {
             return ValueDefinition.class;
         } else if (APIVersion.class.isAssignableFrom(c)) {
             return APIVersion.class;
+        } else if (Metadata.class.isAssignableFrom(c)) {
+            return Metadata.class;
         }
         throw new IllegalArgumentException("Class not supported.");
     }
@@ -191,6 +202,8 @@ public enum ObjectType implements Serializable {
             return ProfileItem.class;
         } else if (this.equals(IV)) {
             return ItemValue.class;
+        } else if (this.equals(MD)) {
+            return Metadata.class;
         }
         throw new IllegalArgumentException("Class not supported.");
     }
