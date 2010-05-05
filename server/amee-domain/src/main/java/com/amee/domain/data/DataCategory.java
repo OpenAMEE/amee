@@ -61,11 +61,16 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
 
     public final static int NAME_MIN_SIZE = 3;
     public final static int NAME_MAX_SIZE = 255;
+    public final static int PATH_MIN_SIZE = 3;
+    public final static int PATH_MAX_SIZE = 255;
     public final static int WIKI_NAME_MIN_SIZE = 3;
     public final static int WIKI_NAME_MAX_SIZE = 255;
     public final static int WIKI_DOC_MIN_SIZE = 0;
     public final static int WIKI_DOC_MAX_SIZE = Metadata.VALUE_SIZE;
-    public final static int PATH_SIZE = 255;
+    public final static int PROVENANCE_MIN_SIZE = 0;
+    public final static int PROVENANCE_MAX_SIZE = 255;
+    public final static int AUTHORITY_MIN_SIZE = 0;
+    public final static int AUTHORITY_MAX_SIZE = 255;
 
     @Transient
     @Resource
@@ -82,7 +87,7 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     @Column(name = "NAME", length = NAME_MAX_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "PATH", length = PATH_SIZE, nullable = false)
+    @Column(name = "PATH", length = PATH_MAX_SIZE, nullable = false)
     @Index(name = "PATH_IND")
     private String path = "";
 
@@ -91,7 +96,7 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     private String wikiName = "";
 
     @Transient
-    private Metadata wikiDoc = null;
+    private Map<String, Metadata> metadatas = new HashMap<String, Metadata>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ALIASED_TO_ID")
@@ -301,32 +306,53 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     }
 
     public String getWikiDoc() {
-        Metadata wikiDoc = getWikiDocEntity();
-        if (wikiDoc != null) {
-            return wikiDoc.getValue();
+        return getMetadataValue("wikiDoc");
+    }
+
+    public void setWikiDoc(String wikiDoc) {
+        getOrCreateMetadata("wikiDoc").setValue(wikiDoc);
+    }
+
+    public String getProvenance() {
+        return getMetadataValue("provenance");
+    }
+
+    public void setProvenance(String provenance) {
+        getOrCreateMetadata("provenance").setValue(provenance);
+    }
+
+    public String getAuthority() {
+        return getMetadataValue("authority");
+    }
+
+    public void setAuthority(String authority) {
+        getOrCreateMetadata("authority").setValue(authority);
+    }
+
+    private Metadata getMetadata(String key) {
+        if (!metadatas.containsKey(key)) {
+            metadatas.put(key, metadataService.getMetadataForEntity(this, key));
+        }
+        return metadatas.get(key);
+    }
+
+    private String getMetadataValue(String key) {
+        Metadata metadata = getMetadata(key);
+        if (metadata != null) {
+            return metadata.getValue();
         } else {
             return "";
         }
     }
 
-    public void setWikiDoc(String wikiDoc) {
-        getOrCreateWikiDocEntity().setValue(wikiDoc);
-    }
-
-    private Metadata getWikiDocEntity() {
-        if (wikiDoc == null) {
-            wikiDoc = metadataService.getMetadataForEntity(this, "wikiDoc");
+    protected Metadata getOrCreateMetadata(String key) {
+        Metadata metadata = getMetadata(key);
+        if (metadata == null) {
+            metadata = new Metadata(this, key);
+            metadataService.persist(metadata);
+            metadatas.put(key, metadata);
         }
-        return wikiDoc;
-    }
-
-    protected Metadata getOrCreateWikiDocEntity() {
-        getWikiDocEntity();
-        if (wikiDoc == null) {
-            wikiDoc = new Metadata(this, "wikiDoc");
-            metadataService.persist(wikiDoc);
-        }
-        return wikiDoc;
+        return metadata;
     }
 
     @Override

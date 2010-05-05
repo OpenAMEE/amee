@@ -32,6 +32,7 @@ public class DataCategoryFormAcceptor implements ResourceAcceptor {
                     validationHelper.setDataCategory(dataCategory);
                     if (validationHelper.isValid(requestWrapper.getFormParameters())) {
                         representation.put("status", "OK");
+                        dataService.invalidate(dataCategory);
                     } else {
                         // TODO: Must cause a rollback here.
                         representation.put("validationResult", validationHelper.getValidationResult().getJSONObject());
