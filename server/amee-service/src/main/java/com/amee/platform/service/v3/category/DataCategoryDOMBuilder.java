@@ -90,13 +90,13 @@ public class DataCategoryDOMBuilder implements ResourceBuilder<Document> {
             categoryElem.setAttribute("modified", FMT.print(dataCategory.getModified().getTime()));
         }
         if (authority || full) {
-            categoryElem.addContent(new Element("Authority").setText("Not yet implemented."));
+            categoryElem.addContent(new Element("Authority").setText(dataCategory.getAuthority()));
         }
         if (wikiDoc || full) {
             categoryElem.addContent(new Element("WikiDoc").setText(dataCategory.getWikiDoc()));
         }
         if (provenance || full) {
-            categoryElem.addContent(new Element("Provenance").setText("Not yet implemented."));
+            categoryElem.addContent(new Element("Provenance").setText(dataCategory.getProvenance()));
         }
         if ((itemDefinition || full) && (dataCategory.getItemDefinition() != null)) {
             ItemDefinition id = dataCategory.getItemDefinition();

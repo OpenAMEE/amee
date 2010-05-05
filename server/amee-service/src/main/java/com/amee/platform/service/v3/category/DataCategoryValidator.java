@@ -13,23 +13,19 @@ import org.springframework.validation.Validator;
 @Scope("prototype")
 public class DataCategoryValidator implements Validator {
 
-    // Alpha numerics, dash & underscore.
-    // private final static String NAME_PATTERN_STRING = "^[a-zA-Z0-9_\\-]*$";
-
     // Alpha numerics & underscore.
-    private final static String WIKI_NAME_PATTERN_STRING = "^[a-zA-Z0-9_]*$";
+    private final static String PATH_PATTERN_STRING = "^[a-zA-Z0-9_]*$";
+    private final static String WIKI_NAME_PATTERN_STRING = PATH_PATTERN_STRING;
 
     @Autowired
     private DataService dataService;
 
     private ValidationSpecification nameSpec;
+    private ValidationSpecification pathSpec;
     private ValidationSpecification wikiNameSpec;
     private ValidationSpecification wikiDocSpec;
-//    private ValidationSpecification descriptionSpec;
-//    private ValidationSpecification unitSpec;
-//    private ValidationSpecification directionSpec;
-//    private ValidationSpecification aggregationSpec;
-//    private ValidationSpecification minPeriodSpec;
+    private ValidationSpecification provenanceSpec;
+    private ValidationSpecification authoritySpec;
 
     public DataCategoryValidator() {
         // name
@@ -37,7 +33,11 @@ public class DataCategoryValidator implements Validator {
         nameSpec.setName("name");
         nameSpec.setMinSize(DataCategory.NAME_MIN_SIZE);
         nameSpec.setMaxSize(DataCategory.NAME_MAX_SIZE);
-        // nameSpec.setFormat(NAME_PATTERN_STRING);
+        // path
+        pathSpec = new ValidationSpecification();
+        pathSpec.setName("path");
+        pathSpec.setMinSize(DataCategory.PATH_MIN_SIZE);
+        pathSpec.setMaxSize(DataCategory.PATH_MAX_SIZE);
         // wikiName
         wikiNameSpec = new ValidationSpecification();
         wikiNameSpec.setName("wikiName");
@@ -50,6 +50,18 @@ public class DataCategoryValidator implements Validator {
         wikiDocSpec.setMinSize(DataCategory.WIKI_DOC_MIN_SIZE);
         wikiDocSpec.setMaxSize(DataCategory.WIKI_DOC_MAX_SIZE);
         wikiDocSpec.setAllowEmpty(true);
+        // provenance
+        provenanceSpec = new ValidationSpecification();
+        provenanceSpec.setName("provenance");
+        provenanceSpec.setMinSize(DataCategory.PROVENANCE_MIN_SIZE);
+        provenanceSpec.setMaxSize(DataCategory.PROVENANCE_MAX_SIZE);
+        provenanceSpec.setAllowEmpty(true);
+        // authority
+        authoritySpec = new ValidationSpecification();
+        authoritySpec.setName("authority");
+        authoritySpec.setMinSize(DataCategory.AUTHORITY_MIN_SIZE);
+        authoritySpec.setMaxSize(DataCategory.AUTHORITY_MAX_SIZE);
+        authoritySpec.setAllowEmpty(true);
     }
 
     public boolean supports(Class clazz) {
@@ -60,21 +72,18 @@ public class DataCategoryValidator implements Validator {
         DataCategory datacategory = (DataCategory) o;
         // name
         nameSpec.validate(datacategory.getName(), e);
-//        if (datacategory.getId() == null) {
-//            // New DataCategory.
-//            if (dataService.getDataCategoryByName(datacategory.getName()) != null) {
-//                e.rejectValue("name", "taken");
-//            }
-//        } else {
-//            // Existing DataCategory.
-//            if (!dataService.isDataCategoryUniqueOnName(datacategory)) {
-//                e.rejectValue("name", "taken");
-//            }
-//        }
+        // path
+        pathSpec.validate(datacategory.getPath(), e);
+        // TODO: This must be unique amongst peers.
         // wikiName
+        // TODO: This must be unique.
         wikiNameSpec.validate(datacategory.getWikiName(), e);
         // wikiDoc
         wikiDocSpec.validate(datacategory.getWikiDoc(), e);
+        // provenance
+        provenanceSpec.validate(datacategory.getProvenance(), e);
+        // authority
+        authoritySpec.validate(datacategory.getAuthority(), e);
     }
 }
 

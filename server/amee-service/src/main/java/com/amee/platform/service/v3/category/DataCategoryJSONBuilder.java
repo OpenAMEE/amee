@@ -94,13 +94,13 @@ public class DataCategoryJSONBuilder implements ResourceBuilder<JSONObject> {
             category.put("modified", FMT.print(dataCategory.getModified().getTime()));
         }
         if (authority || full) {
-            category.put("authority", "Not yet implemented.");
+            category.put("authority", dataCategory.getAuthority());
         }
         if (wikiDoc || full) {
             category.put("wikiDoc", dataCategory.getWikiDoc());
         }
         if (provenance || full) {
-            category.put("provenance", "Not yet implemented.");
+            category.put("provenance", dataCategory.getProvenance());
         }
         if ((itemDefinition || full) && (dataCategory.getItemDefinition() != null)) {
             ItemDefinition id = dataCategory.getItemDefinition();

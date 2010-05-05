@@ -5,7 +5,6 @@ import com.amee.domain.data.DataCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
 
 import java.util.HashSet;
@@ -20,16 +19,6 @@ public class DataCategoryValidationHelper extends ValidationHelper {
 
     private DataCategory dataCategory;
     private Set<String> allowedFields;
-
-    @Override
-    protected void registerCustomEditors(DataBinder dataBinder) {
-        // dataBinder.registerCustomEditor(String.class, "name", new TrimEditor());
-//        dataBinder.registerCustomEditor(String.class, "description", new TrimEditor());
-//        dataBinder.registerCustomEditor(String.class, "unit", new TrimEditor());
-//        dataBinder.registerCustomEditor(Direction.class, "direction", new DirectionEditor());
-//        dataBinder.registerCustomEditor(Aggregation.class, "aggregation", new AggregationEditor());
-//        dataBinder.registerCustomEditor(Period.class, "minPeriod", new PeriodEditor());
-    }
 
     @Override
     public Object getObject() {
@@ -51,13 +40,11 @@ public class DataCategoryValidationHelper extends ValidationHelper {
         if (allowedFields == null) {
             allowedFields = new HashSet<String>();
             allowedFields.add("name");
+            allowedFields.add("path");
             allowedFields.add("wikiName");
             allowedFields.add("wikiDoc");
-//            allowedFields.add("description");
-//            allowedFields.add("unit");
-//            allowedFields.add("direction");
-//            allowedFields.add("aggregation");
-//            allowedFields.add("minPeriod");
+            allowedFields.add("provenance");
+            allowedFields.add("authority");
         }
         return allowedFields.toArray(new String[]{});
     }
