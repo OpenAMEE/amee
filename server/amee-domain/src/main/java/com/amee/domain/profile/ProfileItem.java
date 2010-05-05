@@ -159,7 +159,8 @@ public class ProfileItem extends Item {
     }
 
     public void setEndDate(Date endDate) {
-        this.endDate = new Date(endDate.getTime());
+        // May be null.
+        this.endDate = endDate != null ? new Date(endDate.getTime()) : null;
     }
 
     public boolean isEnd() {
