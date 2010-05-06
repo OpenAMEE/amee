@@ -28,7 +28,7 @@ public class DataItemsDOMBuilder implements ResourceBuilder<Document> {
 
     @Transactional(readOnly = true)
     public Document handle(RequestWrapper requestWrapper) {
-        Element representationElem = new Element("Representation");
+        Element e = new Element("Representation");
         // Get DataCategory identifier.
         String categoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
         if (categoryIdentifier != null) {
@@ -37,24 +37,24 @@ public class DataItemsDOMBuilder implements ResourceBuilder<Document> {
                     environmentService.getEnvironmentByName("AMEE"), categoryIdentifier);
             if (dataCategory != null) {
                 // Get DataItems.
-                representationElem.addContent(getDataItemsElement(requestWrapper, dataCategory));
-                representationElem.addContent(new Element("Status").setText("OK"));
+                e.addContent(getDataItemsElement(requestWrapper, dataCategory));
+                e.addContent(new Element("Status").setText("OK"));
             } else {
-                representationElem.addContent(new Element("Status").setText("NOT_FOUND"));
+                e.addContent(new Element("Status").setText("NOT_FOUND"));
             }
         } else {
-            representationElem.addContent(new Element("Status").setText("ERROR"));
-            representationElem.addContent(new Element("Error").setText("The categoryIdentifier was missing."));
+            e.addContent(new Element("Status").setText("ERROR"));
+            e.addContent(new Element("Error").setText("The categoryIdentifier was missing."));
         }
-        return new Document(representationElem, new DocType("xml"));
+        return new Document(e, new DocType("xml"));
     }
 
     protected Element getDataItemsElement(RequestWrapper requestWrapper, DataCategory dataCategory) {
-        Element itemsElem = new Element("Items");
+        Element e = new Element("Items");
 //        for (DataCategory dataCategory : dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"))) {
 //            categoriesElem.addContent(categoryDOMBuilder.getDataCategoryElement(requestWrapper, dataCategory));
 //        }
-        return itemsElem;
+        return e;
     }
 
     public String getMediaType() {

@@ -32,6 +32,7 @@ public class ItemValueDefinitionValidator implements Validator {
         pathSpec.setName("path");
         pathSpec.setMinSize(ItemValueDefinition.PATH_MIN_SIZE);
         pathSpec.setMaxSize(ItemValueDefinition.PATH_MAX_SIZE);
+        pathSpec.setFormat(PATH_PATTERN_STRING);
         // wikiDoc
         wikiDocSpec = new ValidationSpecification();
         wikiDocSpec.setName("wikiDoc");

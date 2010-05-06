@@ -37,7 +37,7 @@ public class DataItemJSONBuilder implements ResourceBuilder<JSONObject> {
     @Transactional(readOnly = true)
     public JSONObject handle(RequestWrapper requestWrapper) {
         try {
-            JSONObject representation = new JSONObject();
+            JSONObject o = new JSONObject();
             // Get DataCategory identifier.
             String categoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
             if (categoryIdentifier != null) {
@@ -52,23 +52,23 @@ public class DataItemJSONBuilder implements ResourceBuilder<JSONObject> {
                         DataItem dataItem = dataService.getDataItemByUid(dataCategory, dataItemIdentifier);
                         if (dataItem != null) {
                             // Get DataItem Element.
-                            representation.put("item", getDataItemJSONObject(requestWrapper, dataItem));
-                            representation.put("status", "OK");
+                            o.put("item", getDataItemJSONObject(requestWrapper, dataItem));
+                            o.put("status", "OK");
                         } else {
-                            representation.put("status", "NOT_FOUND");
+                            o.put("status", "NOT_FOUND");
                         }
                     } else {
-                        representation.put("status", "ERROR");
-                        representation.put("error", "The itemIdentifier was missing.");
+                        o.put("status", "ERROR");
+                        o.put("error", "The itemIdentifier was missing.");
                     }
                 } else {
-                    representation.put("status", "NOT_FOUND");
+                    o.put("status", "NOT_FOUND");
                 }
             } else {
-                representation.put("status", "ERROR");
-                representation.put("error", "The categoryIdentifier was missing.");
+                o.put("status", "ERROR");
+                o.put("error", "The categoryIdentifier was missing.");
             }
-            return representation;
+            return o;
         } catch (Exception e) {
             throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
         }
@@ -109,10 +109,10 @@ public class DataItemJSONBuilder implements ResourceBuilder<JSONObject> {
             itemObj.put("modified", FMT.print(dataItem.getModified().getTime()));
         }
         if (wikiDoc || full) {
-            itemObj.put("wikiDoc", "Not yet implemented.");
+            itemObj.put("wikiDoc", dataItem.getWikiDoc());
         }
         if (provenance || full) {
-            itemObj.put("provenance", "Not yet implemented.");
+            itemObj.put("provenance", dataItem.getProvenance());
         }
         if ((itemDefinition || full) && (dataItem.getItemDefinition() != null)) {
             ItemDefinition id = dataItem.getItemDefinition();
