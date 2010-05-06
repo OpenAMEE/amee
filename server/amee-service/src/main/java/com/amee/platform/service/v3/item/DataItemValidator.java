@@ -33,9 +33,9 @@ public class DataItemValidator implements Validator {
         // path
         pathSpec = new ValidationSpecification();
         pathSpec.setName("path");
-        pathSpec.setMinSize(DataItem.PATH_MIN_SIZE);
         pathSpec.setMaxSize(DataItem.PATH_MAX_SIZE);
         pathSpec.setFormat(PATH_PATTERN_STRING);
+        pathSpec.setAllowEmpty(true);
         // wikiDoc
         wikiDocSpec = new ValidationSpecification();
         wikiDocSpec.setName("wikiDoc");
@@ -57,7 +57,7 @@ public class DataItemValidator implements Validator {
         // name
         nameSpec.validate(dataitem.getName(), e);
         // path
-        // TODO: This must be unique amongst peers.
+        // TODO: This must be unique amongst peers, if set.
         pathSpec.validate(dataitem.getPath(), e);
         // wikiDoc
         wikiDocSpec.validate(dataitem.getWikiDoc(), e);
