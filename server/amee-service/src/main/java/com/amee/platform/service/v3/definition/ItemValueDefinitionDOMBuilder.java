@@ -29,7 +29,7 @@ public class ItemValueDefinitionDOMBuilder implements ResourceBuilder<Document> 
 
     @Transactional(readOnly = true)
     public Document handle(RequestWrapper requestWrapper) {
-        Element representationElem = new Element("Representation");
+        Element e = new Element("Representation");
         // Get ItemDefinition identifier.
         String itemDefinitionIdentifier = requestWrapper.getAttributes().get("itemDefinitionIdentifier");
         if (itemDefinitionIdentifier != null) {
@@ -45,24 +45,23 @@ public class ItemValueDefinitionDOMBuilder implements ResourceBuilder<Document> 
                             itemDefinition, itemValueDefinitionIdentifier);
                     if (itemValueDefinition != null) {
                         // Get ItemValueDefinition Element.
-                        representationElem.addContent(getItemValueDefinitionElement(requestWrapper, itemValueDefinition));
-                        representationElem.addContent(new Element("Status").setText("OK"));
+                        e.addContent(getItemValueDefinitionElement(requestWrapper, itemValueDefinition));
+                        e.addContent(new Element("Status").setText("OK"));
                     } else {
-                        representationElem.addContent(new Element("Status").setText("NOT_FOUND"));
+                        e.addContent(new Element("Status").setText("NOT_FOUND"));
                     }
                 } else {
-                    representationElem.addContent(new Element("Status").setText("ERROR"));
-                    representationElem.addContent(new Element("Error").setText("The itemValueDefinitionIdentifier was missing."));
+                    e.addContent(new Element("Status").setText("ERROR"));
+                    e.addContent(new Element("Error").setText("The itemValueDefinitionIdentifier was missing."));
                 }
             } else {
-                representationElem.addContent(new Element("Status").setText("NOT_FOUND"));
+                e.addContent(new Element("Status").setText("NOT_FOUND"));
             }
         } else {
-            representationElem.addContent(new Element("Status").setText("ERROR"));
-            representationElem.addContent(new Element("Error").setText("The itemDefinitionIdentifier was missing."));
+            e.addContent(new Element("Status").setText("ERROR"));
+            e.addContent(new Element("Error").setText("The itemDefinitionIdentifier was missing."));
         }
-        representationElem.addContent(new Element("Version").setText(requestWrapper.getVersion().toString()));
-        return new Document(representationElem);
+        return new Document(e);
     }
 
     protected Element getItemValueDefinitionElement(RequestWrapper requestWrapper, ItemValueDefinition itemValueDefinition) {

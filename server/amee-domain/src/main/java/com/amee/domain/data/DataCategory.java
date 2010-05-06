@@ -65,11 +65,8 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     public final static int PATH_MAX_SIZE = 255;
     public final static int WIKI_NAME_MIN_SIZE = 3;
     public final static int WIKI_NAME_MAX_SIZE = 255;
-    public final static int WIKI_DOC_MIN_SIZE = 0;
     public final static int WIKI_DOC_MAX_SIZE = Metadata.VALUE_SIZE;
-    public final static int PROVENANCE_MIN_SIZE = 0;
     public final static int PROVENANCE_MAX_SIZE = 255;
-    public final static int AUTHORITY_MIN_SIZE = 0;
     public final static int AUTHORITY_MAX_SIZE = 255;
 
     @Transient
@@ -95,9 +92,6 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     @Index(name = "WIKI_NAME_IND")
     private String wikiName = "";
 
-    @Transient
-    private Map<String, Metadata> metadatas = new HashMap<String, Metadata>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ALIASED_TO_ID")
     private DataCategory aliasedTo;
@@ -112,43 +106,8 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     @Transient
     private Map<String, LocaleName> localeNames = new HashMap<String, LocaleName>();
 
-    /**
-     * Get the collection of locale specific names for this DataCategory.
-     *
-     * @return the collection of locale specific names. The collection will be empty
-     *         if no locale specific names exist.
-     */
-    public Map<String, LocaleName> getLocaleNames() {
-        Map<String, LocaleName> activeLocaleNames = new TreeMap<String, LocaleName>();
-        for (String locale : localeNames.keySet()) {
-            LocaleName name = localeNames.get(locale);
-            if (!name.isTrash()) {
-                activeLocaleNames.put(locale, name);
-            }
-        }
-        return activeLocaleNames;
-    }
-
-    /*
-     * Get the locale specific name of this DataCategory for the locale of the current thread.
-     *
-     * The locale specific name of this DataCategory for the locale of the current thread.
-     * If no locale specific name is found, the default name will be returned.
-     */
-
-    @SuppressWarnings("unchecked")
-    private String getLocaleName() {
-        String name = null;
-        LocaleName localeName = localeNames.get(LocaleHolder.getLocale());
-        if (localeName != null && !localeName.isTrash()) {
-            name = localeName.getName();
-        }
-        return name;
-    }
-
-    public void addLocaleName(LocaleName localeName) {
-        localeNames.put(localeName.getLocale(), localeName);
-    }
+    @Transient
+    private Map<String, Metadata> metadatas = new HashMap<String, Metadata>();
 
     public DataCategory() {
         super();
@@ -305,6 +264,61 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
         this.wikiName = wikiName;
     }
 
+    @Override
+    public boolean isTrash() {
+        return status.equals(AMEEStatus.TRASH) || ((getItemDefinition() != null) && getItemDefinition().isTrash());
+    }
+
+    public DataCategory getAliasedCategory() {
+        return aliasedTo;
+    }
+
+    public void setAliasedTo(DataCategory aliasedTo) {
+        this.aliasedTo = aliasedTo;
+    }
+
+    public List<DataCategory> getAliases() {
+        return aliases;
+    }
+
+    /**
+     * Get the collection of locale specific names for this DataCategory.
+     *
+     * @return the collection of locale specific names. The collection will be empty
+     *         if no locale specific names exist.
+     */
+    public Map<String, LocaleName> getLocaleNames() {
+        Map<String, LocaleName> activeLocaleNames = new TreeMap<String, LocaleName>();
+        for (String locale : localeNames.keySet()) {
+            LocaleName name = localeNames.get(locale);
+            if (!name.isTrash()) {
+                activeLocaleNames.put(locale, name);
+            }
+        }
+        return activeLocaleNames;
+    }
+
+    /*
+     * Get the locale specific name of this DataCategory for the locale of the current thread.
+     *
+     * The locale specific name of this DataCategory for the locale of the current thread.
+     * If no locale specific name is found, the default name will be returned.
+     */
+
+    @SuppressWarnings("unchecked")
+    private String getLocaleName() {
+        String name = null;
+        LocaleName localeName = localeNames.get(LocaleHolder.getLocale());
+        if (localeName != null && !localeName.isTrash()) {
+            name = localeName.getName();
+        }
+        return name;
+    }
+
+    public void addLocaleName(LocaleName localeName) {
+        localeNames.put(localeName.getLocale(), localeName);
+    }
+
     public String getWikiDoc() {
         return getMetadataValue("wikiDoc");
     }
@@ -328,6 +342,8 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     public void setAuthority(String authority) {
         getOrCreateMetadata("authority").setValue(authority);
     }
+
+    // TODO: The following three methods are cut-and-pasted between various entities. They should be consolidated.
 
     private Metadata getMetadata(String key) {
         if (!metadatas.containsKey(key)) {
@@ -353,23 +369,6 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
             metadatas.put(key, metadata);
         }
         return metadata;
-    }
-
-    @Override
-    public boolean isTrash() {
-        return status.equals(AMEEStatus.TRASH) || ((getItemDefinition() != null) && getItemDefinition().isTrash());
-    }
-
-    public DataCategory getAliasedCategory() {
-        return aliasedTo;
-    }
-
-    public void setAliasedTo(DataCategory aliasedTo) {
-        this.aliasedTo = aliasedTo;
-    }
-
-    public List<DataCategory> getAliases() {
-        return aliases;
     }
 
     @Override

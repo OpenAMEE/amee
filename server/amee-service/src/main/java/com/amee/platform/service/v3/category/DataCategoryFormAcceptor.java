@@ -2,6 +2,8 @@ package com.amee.platform.service.v3.category;
 
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceAcceptor;
+import com.amee.base.transaction.TransactionController;
+import com.amee.base.validation.ValidationException;
 import com.amee.domain.data.DataCategory;
 import com.amee.service.data.DataService;
 import org.json.JSONException;
@@ -16,36 +18,37 @@ import org.springframework.transaction.annotation.Transactional;
 public class DataCategoryFormAcceptor implements ResourceAcceptor {
 
     @Autowired
+    private TransactionController transactionController;
+
+    @Autowired
     private DataService dataService;
 
     @Autowired
     private DataCategoryValidationHelper validationHelper;
 
-    @Transactional
-    public JSONObject handle(RequestWrapper requestWrapper) {
+    @Transactional(rollbackFor = {com.amee.base.validation.ValidationException.class})
+    public JSONObject handle(RequestWrapper requestWrapper) throws ValidationException {
         try {
-            JSONObject representation = new JSONObject();
+            JSONObject o = new JSONObject();
             String categoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
             if (categoryIdentifier != null) {
                 DataCategory dataCategory = dataService.getDataCategoryByUid(categoryIdentifier);
                 if (dataCategory != null) {
                     validationHelper.setDataCategory(dataCategory);
                     if (validationHelper.isValid(requestWrapper.getFormParameters())) {
-                        representation.put("status", "OK");
+                        o.put("status", "OK");
                         dataService.invalidate(dataCategory);
                     } else {
-                        // TODO: Must cause a rollback here.
-                        representation.put("validationResult", validationHelper.getValidationResult().getJSONObject());
-                        representation.put("status", "INVALID");
+                        throw new ValidationException(validationHelper);
                     }
                 } else {
-                    representation.put("status", "NOT_FOUND");
+                    o.put("status", "NOT_FOUND");
                 }
             } else {
-                representation.put("status", "ERROR");
-                representation.put("error", "The categoryIdentifier was missing.");
+                o.put("status", "ERROR");
+                o.put("error", "The categoryIdentifier was missing.");
             }
-            return representation;
+            return o;
         } catch (JSONException e) {
             throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
         }

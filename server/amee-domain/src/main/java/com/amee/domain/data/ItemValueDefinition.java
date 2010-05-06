@@ -23,7 +23,9 @@ import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.Builder;
+import com.amee.domain.IMetadataService;
 import com.amee.domain.LocaleHolder;
+import com.amee.domain.Metadata;
 import com.amee.domain.ObjectType;
 import com.amee.domain.ValueDefinition;
 import com.amee.domain.ValueType;
@@ -39,9 +41,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.annotation.Resource;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -63,15 +68,24 @@ import java.util.TreeMap;
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Configurable(autowire = Autowire.BY_TYPE)
 public class ItemValueDefinition extends AMEEEnvironmentEntity implements ExternalValue {
 
-    public final static int NAME_SIZE = 255;
-    public final static int PATH_SIZE = 255;
-    public final static int VALUE_SIZE = 255;
-    public final static int CHOICES_SIZE = 255;
-    public final static int ALLOWED_ROLES_SIZE = 255;
+    public final static int NAME_MIN_SIZE = 3;
+    public final static int NAME_MAX_SIZE = 255;
+    public final static int PATH_MIN_SIZE = 3;
+    public final static int PATH_MAX_SIZE = 255;
+    public final static int VALUE_MAX_SIZE = 255;
+    public final static int CHOICES_MAX_SIZE = 255;
+    public final static int ALLOWED_ROLES_MAX_SIZE = 255;
+    public final static int WIKI_DOC_MIN_SIZE = 0;
+    public final static int WIKI_DOC_MAX_SIZE = Metadata.VALUE_SIZE;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Transient
+    @Resource
+    private IMetadataService metadataService;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "ITEM_DEFINITION_ID")
     private ItemDefinition itemDefinition;
 
@@ -85,14 +99,14 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
     @Column(name = "PER_UNIT")
     private String perUnit;
 
-    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
+    @Column(name = "NAME", length = NAME_MAX_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "PATH", length = PATH_SIZE, nullable = false)
+    @Column(name = "PATH", length = PATH_MAX_SIZE, nullable = false)
     @Index(name = "PATH_IND")
     private String path = "";
 
-    @Column(name = "VALUE", length = VALUE_SIZE, nullable = true)
+    @Column(name = "VALUE", length = VALUE_MAX_SIZE, nullable = true)
     private String value = "";
 
     // Comma separated key/value pairs. Value is key if key not supplied. Example: "key=value,key=value"
@@ -107,7 +121,7 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
     @Index(name = "FROM_PROFILE_IND")
     private boolean fromData = false;
 
-    @Column(name = "ALLOWED_ROLES", length = ALLOWED_ROLES_SIZE, nullable = true)
+    @Column(name = "ALLOWED_ROLES", length = ALLOWED_ROLES_MAX_SIZE, nullable = true)
     private String allowedRoles = "";
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -134,6 +148,9 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
 //    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @Transient
     private Map<String, LocaleName> localeNames = new HashMap<String, LocaleName>();
+
+    @Transient
+    private Map<String, Metadata> metadatas = new HashMap<String, Metadata>();
 
     /**
      * Get the collection of locale specific names for this ItemValueDefinition.
@@ -336,10 +353,6 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
         this.allowedRoles = allowedRoles;
     }
 
-    public ObjectType getObjectType() {
-        return ObjectType.IVD;
-    }
-
     public void setPerUnit(String perUnit) {
         this.perUnit = perUnit;
     }
@@ -497,6 +510,42 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
         this.isForceTimeSeries = isForceTimeSeries;
     }
 
+    public String getWikiDoc() {
+        return getMetadataValue("wikiDoc");
+    }
+
+    public void setWikiDoc(String wikiDoc) {
+        getOrCreateMetadata("wikiDoc").setValue(wikiDoc);
+    }
+
+    // TODO: The following three methods are cut-and-pasted between various entities. They should be consolidated.
+
+    private Metadata getMetadata(String key) {
+        if (!metadatas.containsKey(key)) {
+            metadatas.put(key, metadataService.getMetadataForEntity(this, key));
+        }
+        return metadatas.get(key);
+    }
+
+    private String getMetadataValue(String key) {
+        Metadata metadata = getMetadata(key);
+        if (metadata != null) {
+            return metadata.getValue();
+        } else {
+            return "";
+        }
+    }
+
+    protected Metadata getOrCreateMetadata(String key) {
+        Metadata metadata = getMetadata(key);
+        if (metadata == null) {
+            metadata = new Metadata(this, key);
+            metadataService.persist(metadata);
+            metadatas.put(key, metadata);
+        }
+        return metadata;
+    }
+
     public String getLabel() {
         return getItemDefinition().getName() + "/" + getPath();
     }
@@ -517,5 +566,9 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
      */
     public boolean isConvertible() {
         return false;
+    }
+
+    public ObjectType getObjectType() {
+        return ObjectType.IVD;
     }
 }
