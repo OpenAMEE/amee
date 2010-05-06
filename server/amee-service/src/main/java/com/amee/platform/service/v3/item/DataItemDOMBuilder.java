@@ -67,7 +67,6 @@ public class DataItemDOMBuilder implements ResourceBuilder<Document> {
             representationElem.addContent(new Element("Status").setText("ERROR"));
             representationElem.addContent(new Element("Error").setText("The categoryIdentifier was missing."));
         }
-        representationElem.addContent(new Element("Version").setText(requestWrapper.getVersion().toString()));
         return new Document(representationElem);
     }
 

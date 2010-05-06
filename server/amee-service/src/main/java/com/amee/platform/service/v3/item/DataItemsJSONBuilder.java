@@ -44,7 +44,6 @@ public class DataItemsJSONBuilder implements ResourceBuilder<JSONObject> {
                 representation.put("status", "ERROR");
                 representation.put("error", "The categoryIdentifier was missing.");
             }
-            representation.put("version", requestWrapper.getVersion().toString());
             return representation;
         } catch (JSONException e) {
             throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);

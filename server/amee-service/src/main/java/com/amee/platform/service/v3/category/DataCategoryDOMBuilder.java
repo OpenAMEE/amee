@@ -50,13 +50,12 @@ public class DataCategoryDOMBuilder implements ResourceBuilder<Document> {
             representationElem.addContent(new Element("Status").setText("ERROR"));
             representationElem.addContent(new Element("Error").setText("The categoryIdentifier was missing."));
         }
-        representationElem.addContent(new Element("Version").setText(requestWrapper.getVersion().toString()));
         return new Document(representationElem);
     }
 
     protected Element getDataCategoryElement(RequestWrapper requestWrapper, DataCategory dataCategory) {
 
-        Element categoryElem = new Element("Category");
+        Element e = new Element("Category");
         boolean full = requestWrapper.getMatrixParameters().containsKey("full");
         boolean audit = requestWrapper.getMatrixParameters().containsKey("audit");
         boolean path = requestWrapper.getMatrixParameters().containsKey("path");
@@ -66,11 +65,11 @@ public class DataCategoryDOMBuilder implements ResourceBuilder<Document> {
         boolean itemDefinition = requestWrapper.getMatrixParameters().containsKey("itemDefinition");
 
         // Basic attributes.
-        categoryElem.setAttribute("uid", dataCategory.getUid());
-        categoryElem.addContent(new Element("Name").setText(dataCategory.getName()));
-        categoryElem.addContent(new Element("WikiName").setText(dataCategory.getWikiName()));
+        e.setAttribute("uid", dataCategory.getUid());
+        e.addContent(new Element("Name").setText(dataCategory.getName()));
+        e.addContent(new Element("WikiName").setText(dataCategory.getWikiName()));
         if (dataCategory.getDataCategory() != null) {
-            categoryElem.addContent(new Element("ParentWikiName").setText(dataCategory.getDataCategory().getWikiName()));
+            e.addContent(new Element("ParentWikiName").setText(dataCategory.getDataCategory().getWikiName()));
         }
 
         // Optional attributes.
@@ -79,34 +78,34 @@ public class DataCategoryDOMBuilder implements ResourceBuilder<Document> {
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(dataCategory.getEnvironment());
             PathItem pathItem = pathItemGroup.findByUId(dataCategory.getUid());
             // Add Paths.
-            categoryElem.addContent(new Element("Path").setText(dataCategory.getPath()));
+            e.addContent(new Element("Path").setText(dataCategory.getPath()));
             if (pathItem != null) {
-                categoryElem.addContent(new Element("FullPath").setText(pathItem.getFullPath()));
+                e.addContent(new Element("FullPath").setText(pathItem.getFullPath()));
             }
         }
         if (audit || full) {
-            categoryElem.setAttribute("status", dataCategory.getStatus().getName());
-            categoryElem.setAttribute("created", FMT.print(dataCategory.getCreated().getTime()));
-            categoryElem.setAttribute("modified", FMT.print(dataCategory.getModified().getTime()));
+            e.setAttribute("status", dataCategory.getStatus().getName());
+            e.setAttribute("created", FMT.print(dataCategory.getCreated().getTime()));
+            e.setAttribute("modified", FMT.print(dataCategory.getModified().getTime()));
         }
         if (authority || full) {
-            categoryElem.addContent(new Element("Authority").setText(dataCategory.getAuthority()));
+            e.addContent(new Element("Authority").setText(dataCategory.getAuthority()));
         }
         if (wikiDoc || full) {
-            categoryElem.addContent(new Element("WikiDoc").setText(dataCategory.getWikiDoc()));
+            e.addContent(new Element("WikiDoc").setText(dataCategory.getWikiDoc()));
         }
         if (provenance || full) {
-            categoryElem.addContent(new Element("Provenance").setText(dataCategory.getProvenance()));
+            e.addContent(new Element("Provenance").setText(dataCategory.getProvenance()));
         }
         if ((itemDefinition || full) && (dataCategory.getItemDefinition() != null)) {
             ItemDefinition id = dataCategory.getItemDefinition();
-            Element itemDefinitionElem = new Element("ItemDefinition");
-            categoryElem.addContent(itemDefinitionElem);
-            itemDefinitionElem.setAttribute("uid", id.getUid());
-            itemDefinitionElem.addContent(new Element("Name").setText(id.getName()));
+            Element e2 = new Element("ItemDefinition");
+            e.addContent(e2);
+            e2.setAttribute("uid", id.getUid());
+            e2.addContent(new Element("Name").setText(id.getName()));
         }
 
-        return categoryElem;
+        return e;
     }
 
     public String getMediaType() {

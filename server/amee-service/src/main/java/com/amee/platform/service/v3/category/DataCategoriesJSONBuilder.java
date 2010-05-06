@@ -29,11 +29,10 @@ public class DataCategoriesJSONBuilder implements ResourceBuilder<JSONObject> {
     @Transactional(readOnly = true)
     public JSONObject handle(RequestWrapper requestWrapper) {
         try {
-            JSONObject representation = new JSONObject();
-            representation.put("categories", getDataCategoriesJSONArray(requestWrapper));
-            representation.put("status", "OK");
-            representation.put("version", requestWrapper.getVersion().toString());
-            return representation;
+            JSONObject o = new JSONObject();
+            o.put("categories", getDataCategoriesJSONArray(requestWrapper));
+            o.put("status", "OK");
+            return o;
         } catch (JSONException e) {
             throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
         }

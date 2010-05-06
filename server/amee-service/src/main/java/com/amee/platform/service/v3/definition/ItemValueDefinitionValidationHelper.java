@@ -1,7 +1,7 @@
-package com.amee.platform.service.v3.category;
+package com.amee.platform.service.v3.definition;
 
 import com.amee.base.validation.ValidationHelper;
-import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.ItemValueDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -12,27 +12,27 @@ import java.util.Set;
 
 @Service
 @Scope("prototype")
-public class DataCategoryValidationHelper extends ValidationHelper {
+public class ItemValueDefinitionValidationHelper extends ValidationHelper {
 
     @Autowired
-    private DataCategoryValidator dataCategoryValidator;
+    private ItemValueDefinitionValidator itemValueDefinitionValidator;
 
-    private DataCategory dataCategory;
+    private ItemValueDefinition itemValueDefinition;
     private Set<String> allowedFields;
 
     @Override
     public Object getObject() {
-        return dataCategory;
+        return itemValueDefinition;
     }
 
     @Override
     protected Validator getValidator() {
-        return dataCategoryValidator;
+        return itemValueDefinitionValidator;
     }
 
     @Override
     public String getName() {
-        return "dataCategory";
+        return "itemValueDefinition";
     }
 
     @Override
@@ -41,19 +41,16 @@ public class DataCategoryValidationHelper extends ValidationHelper {
             allowedFields = new HashSet<String>();
             allowedFields.add("name");
             allowedFields.add("path");
-            allowedFields.add("wikiName");
             allowedFields.add("wikiDoc");
-            allowedFields.add("provenance");
-            allowedFields.add("authority");
         }
         return allowedFields.toArray(new String[]{});
     }
 
-    public DataCategory getDataCategory() {
-        return dataCategory;
+    public ItemValueDefinition getItemValueDefinition() {
+        return itemValueDefinition;
     }
 
-    public void setDataCategory(DataCategory dataCategory) {
-        this.dataCategory = dataCategory;
+    public void setItemValueDefinition(ItemValueDefinition itemValueDefinition) {
+        this.itemValueDefinition = itemValueDefinition;
     }
 }

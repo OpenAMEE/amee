@@ -47,19 +47,16 @@ public class DataCategoryValidator implements Validator {
         // wikiDoc
         wikiDocSpec = new ValidationSpecification();
         wikiDocSpec.setName("wikiDoc");
-        wikiDocSpec.setMinSize(DataCategory.WIKI_DOC_MIN_SIZE);
         wikiDocSpec.setMaxSize(DataCategory.WIKI_DOC_MAX_SIZE);
         wikiDocSpec.setAllowEmpty(true);
         // provenance
         provenanceSpec = new ValidationSpecification();
         provenanceSpec.setName("provenance");
-        provenanceSpec.setMinSize(DataCategory.PROVENANCE_MIN_SIZE);
         provenanceSpec.setMaxSize(DataCategory.PROVENANCE_MAX_SIZE);
         provenanceSpec.setAllowEmpty(true);
         // authority
         authoritySpec = new ValidationSpecification();
         authoritySpec.setName("authority");
-        authoritySpec.setMinSize(DataCategory.AUTHORITY_MIN_SIZE);
         authoritySpec.setMaxSize(DataCategory.AUTHORITY_MAX_SIZE);
         authoritySpec.setAllowEmpty(true);
     }
@@ -73,8 +70,8 @@ public class DataCategoryValidator implements Validator {
         // name
         nameSpec.validate(datacategory.getName(), e);
         // path
-        pathSpec.validate(datacategory.getPath(), e);
         // TODO: This must be unique amongst peers.
+        pathSpec.validate(datacategory.getPath(), e);
         // wikiName
         // TODO: This must be unique.
         wikiNameSpec.validate(datacategory.getWikiName(), e);

@@ -31,7 +31,6 @@ public class DataCategoriesDOMBuilder implements ResourceBuilder<Document> {
         Element representationElem = new Element("Representation");
         representationElem.addContent(getDataCategoriesElement(requestWrapper));
         representationElem.addContent(new Element("Status").setText("OK"));
-        representationElem.addContent(new Element("Version").setText(requestWrapper.getVersion().toString()));
         return new Document(representationElem, new DocType("xml"));
     }
 
