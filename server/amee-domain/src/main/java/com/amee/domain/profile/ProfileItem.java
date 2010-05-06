@@ -13,8 +13,6 @@ import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -51,7 +49,6 @@ import java.util.Date;
 
 @Entity
 @DiscriminatorValue("PI")
-@Configurable(autowire = Autowire.BY_TYPE)
 public class ProfileItem extends Item {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)

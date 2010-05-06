@@ -33,6 +33,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.joda.time.Duration;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -60,9 +62,11 @@ import java.util.Set;
 @Table(name = "ITEM")
 @DiscriminatorColumn(name = "TYPE", length = 3)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Configurable(autowire = Autowire.BY_TYPE)
 public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
 
-    public final static int NAME_SIZE = 255;
+    public final static int NAME_MIN_SIZE = 3;
+    public final static int NAME_MAX_SIZE = 255;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ITEM_DEFINITION_ID")
@@ -76,7 +80,7 @@ public abstract class Item extends AMEEEnvironmentEntity implements Pathable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private List<ItemValue> itemValues = new ArrayList<ItemValue>();
 
-    @Column(name = "NAME", length = NAME_SIZE, nullable = false)
+    @Column(name = "NAME", length = NAME_MAX_SIZE, nullable = false)
     private String name = "";
 
     @Transient
