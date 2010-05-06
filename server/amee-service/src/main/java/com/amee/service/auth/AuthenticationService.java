@@ -17,7 +17,7 @@ import java.util.Map;
 @Service
 public class AuthenticationService implements Serializable {
 
-    private final Log log = LogFactory.getLog(getClass());
+    private final static Log log = LogFactory.getLog(AuthenticationService.class);
 
     public static final String AUTH_TOKEN = "authToken";
 
@@ -261,8 +261,8 @@ public class AuthenticationService implements Serializable {
             try {
                 return InternalCrypto.decrypt(token);
             } catch (CryptoException e) {
-                // log.error("caught CryptoException: " + e);
-                // TODO: do something now
+                log.warn("Caught CryptoException: " + e.getMessage(), e);
+                // TODO: Do something nice now.
                 return "";
             }
         }
@@ -271,8 +271,8 @@ public class AuthenticationService implements Serializable {
             try {
                 return InternalCrypto.encrypt(token);
             } catch (CryptoException e) {
-                // log.error("caught CryptoException: " + e);
-                // TODO: do something now
+                log.warn("Caught CryptoException: " + e.getMessage(), e);
+                // TODO: Do something nice now.
                 return "";
             }
         }

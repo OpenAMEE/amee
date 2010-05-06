@@ -90,7 +90,7 @@ public class ItemValueDefinitionDOMBuilder implements ResourceBuilder<Document> 
             e.setAttribute("modified", FMT.print(itemValueDefinition.getModified().getTime()));
         }
         if (wikiDoc || full) {
-            e.addContent(new Element("WikiDoc").setText("Not yet implemented."));
+            e.addContent(new Element("WikiDoc").setText(itemValueDefinition.getWikiDoc()));
         }
         if ((itemDefinition || full) && (itemValueDefinition.getItemDefinition() != null)) {
             ItemDefinition id = itemValueDefinition.getItemDefinition();

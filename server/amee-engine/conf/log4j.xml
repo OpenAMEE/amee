@@ -104,7 +104,7 @@
     <!-- ############### AMEE ################### -->
 
     <category name="com.amee">
-        <priority value="INFO"/>
+        <priority value="${amee.logLevel}"/>
     </category>
 
     <category name="transactions" additivity="false">
@@ -144,7 +144,7 @@
     <!-- ############### Default ################### -->
 
     <root>
-        <priority value="INFO"/>
+        <priority value="${amee.defaultLogLevel}"/>
         <!--<appender-ref ref="FILE"/>-->
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="PLATFORM_EMAIL"/>
