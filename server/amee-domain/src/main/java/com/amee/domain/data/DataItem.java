@@ -48,7 +48,6 @@ import java.util.Map;
 @DiscriminatorValue("DI")
 public class DataItem extends Item {
 
-    public final static int PATH_MIN_SIZE = 3;
     public final static int PATH_MAX_SIZE = 255;
     public final static int WIKI_DOC_MAX_SIZE = Metadata.VALUE_SIZE;
     public final static int PROVENANCE_MAX_SIZE = 255;
