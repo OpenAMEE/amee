@@ -18,6 +18,7 @@
         <amee-base.version>1.0.1-SNAPSHOT</amee-base.version>
         <amee-persist.version>1.0.1-SNAPSHOT</amee-persist.version>
         <amee-messaging.version>1.0.0-SNAPSHOT</amee-messaging.version>
+        <amee-platform-domain.version>1.0.0-SNAPSHOT</amee-platform-domain.version>
         <amee-platform-science.version>1.0.7-SNAPSHOT</amee-platform-science.version>
         <!-- External Versions. -->
         <!-- Note: Keep restlet, jetty and servlet-api versions in sync. -->
@@ -78,7 +79,6 @@
     <modules>
         <module>amee-admin</module>
         <module>amee-calculation</module>
-        <module>amee-domain</module>
         <module>amee-engine</module>
         <module>amee-gdata</module>
         <module>amee-restlet</module>
@@ -99,9 +99,9 @@
                 <version>${amee.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.amee</groupId>
-                <artifactId>amee-domain</artifactId>
-                <version>${amee.version}</version>
+                <groupId>com.amee.platform</groupId>
+                <artifactId>amee-platform-domain</artifactId>
+                <version>${amee-platform-domain.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.amee</groupId>

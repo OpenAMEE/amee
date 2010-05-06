@@ -19,8 +19,8 @@
 
         <!-- Internal Dependencies. -->
         <dependency>
-            <groupId>com.amee</groupId>
-            <artifactId>amee-domain</artifactId>
+            <groupId>com.amee.platform</groupId>
+            <artifactId>amee-platform-domain</artifactId>
         </dependency>
         <dependency>
             <groupId>com.amee</groupId>
