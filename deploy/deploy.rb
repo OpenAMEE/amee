@@ -29,8 +29,8 @@ set :use_sudo, false
 set :user, "amee"
 
 # Source code and build locations
-set :src_dir, "/Development/AMEE/amee"
-set :package_dir, "/Development/AMEE/amee.deploy"
+set :src_dir, "/Development/AMEE/amee.platform/project/amee"
+set :package_dir, "/Development/AMEE/amee.platform/project/amee.deploy"
 
 # Override Capistrano tasks
 deploy.task :start, :roles => :app do
