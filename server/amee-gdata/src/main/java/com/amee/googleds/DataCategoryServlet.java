@@ -97,7 +97,7 @@ public class DataCategoryServlet extends DataSourceServlet {
             String path = itemValue.getPath();
             ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
             ValueType type;
-            if (itemValueDefinition.isDecimal()) {
+            if (itemValueDefinition.isDouble()) {
                 type = ValueType.NUMBER;
             } else if (itemValueDefinition.isDate()) {
                 type = ValueType.DATETIME;

@@ -1,8 +1,6 @@
 package com.amee.core;
 
-import com.amee.platform.science.Decimal;
-
-import java.math.BigDecimal;
+import com.amee.platform.science.Amount;
 
 /**
  * A CO2 amount calculated by AMEE.
@@ -25,49 +23,39 @@ import java.math.BigDecimal;
  * Created by http://www.dgen.net.
  * Website http://www.amee.cc
  */
-public class CO2Amount extends Decimal {
+public class CO2Amount extends Amount {
 
-    public static final CO2Amount ZERO = new CO2Amount(Decimal.ZERO);
+    public static final CO2Amount ZERO = new CO2Amount(0.0);
 
     /**
-     * A CO2Amount representing the supplied decimal and default unit.
+     * A CO2Amount representing the supplied value and default unit.
      *
-     * @param decimal
+     * @param amount
      *
      */
-    public CO2Amount(String decimal) {
-        super(decimal, CO2AmountUnit.DEFAULT);
+    public CO2Amount(String amount) {
+        super(amount, CO2AmountUnit.DEFAULT);
     }
 
     /**
-     * A CO2Amount representing the supplied decimal and default unit.
+     * A CO2Amount representing the supplied value and default unit.
      *
-     * @param decimal
-     *
-     */
-    public CO2Amount(BigDecimal decimal) {
-        this(decimal.toString());
-    }
-
-    /**
-     * A CO2Amount representing the supplied decimal and default unit.
-     *
-     * @param decimal
+     * @param value
      *
      */
-    public CO2Amount(Decimal decimal) {
-        this(decimal, CO2AmountUnit.DEFAULT);
+    public CO2Amount(double value) {
+        this(value, CO2AmountUnit.DEFAULT);
     }
 
 
     /**
-     * A CO2Amount representing the supplied decimal and unit.
+     * A CO2Amount representing the supplied value and unit.
      *
-     * @param decimal
+     * @param value
      * @param unit
      *
      */
-    public CO2Amount(Decimal decimal, CO2AmountUnit unit) {
-        super(decimal.toString(), unit);
+    public CO2Amount(double value, CO2AmountUnit unit) {
+        super(value, unit);
     }
 }

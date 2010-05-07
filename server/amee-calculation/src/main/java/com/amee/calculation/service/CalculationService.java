@@ -31,7 +31,6 @@ import com.amee.domain.profile.CO2CalculationService;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choices;
 import com.amee.platform.science.AlgorithmRunner;
-import com.amee.platform.science.Decimal;
 import com.amee.platform.science.InternalValue;
 import com.amee.service.transaction.TransactionController;
 import org.apache.commons.logging.Log;
@@ -89,11 +88,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         }
 
         // Always set the ProfileItem amount.
-        // The ProfileItem will only be re-saved if the amount has changed.
-        // If the ProfileItem has changed start a transaction.
-        if (profileItem.setAmount(amount)) {
-            transactionController.begin(true);
-        }
+        profileItem.setAmount(amount);
     }
 
     /**
@@ -122,9 +117,9 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      * Intended to be used publically in test harnesses when passing the modified algorithm content and input values
      * for execution is desirable.
      *
-     * @param algorithm
-     * @param values
-     * @return the algorithm result as a BigDecimal
+     * @param algorithm the algorithm to use
+     * @param values input values for the algorithm
+     * @return the algorithm result
      */
     public CO2Amount calculate(Algorithm algorithm, Map<String, Object> values) {
 
@@ -174,7 +169,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
                             "): " + e.getMessage());
 
             // ...and return zero by default.
-            amount = new CO2Amount(Decimal.BIG_DECIMAL_ZERO);
+            amount = CO2Amount.ZERO;
         } finally {
             ameeStatistics.addToThreadCalculationDuration(System.nanoTime() - startTime);
         }
@@ -208,8 +203,8 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         profileItem.appendInternalValues(values);
 
         // Add actual values to returnValues list based on InternalValues in values list.
-        for (ItemValueDefinition ivd : values.keySet()) {
-            returnValues.put(ivd.getCanonicalPath(), values.get(ivd).getValue());
+        for (Map.Entry<ItemValueDefinition, InternalValue> entry : values.entrySet()) {
+            returnValues.put(entry.getKey().getCanonicalPath(), entry.getValue().getValue());
         }
 
         // Initialise finders for algorithm.
@@ -256,8 +251,8 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
         appendUserValueChoices(dataItem.getItemDefinition(), userValueChoices, values, version);
 
         Map<String, Object> returnValues = new HashMap<String, Object>();
-        for (ItemValueDefinition ivd : values.keySet()) {
-            returnValues.put(ivd.getCanonicalPath(), values.get(ivd).getValue());
+        for (Map.Entry<ItemValueDefinition, InternalValue> entry : values.entrySet()) {
+            returnValues.put(entry.getKey().getCanonicalPath(), entry.getValue().getValue());
         }
 
         DataFinder dataFinder = (DataFinder) beanFactory.getBean("dataFinder");

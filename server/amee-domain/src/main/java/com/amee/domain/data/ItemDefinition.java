@@ -49,9 +49,6 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
     @Column(name = "NAME", length = NAME_SIZE, nullable = false)
     private String name = "";
 
-    @Column(name = "SKIP_RECALCULATION")
-    private boolean skipRecalculation = false;
-
     @Column(name = "DRILL_DOWN", length = DRILL_DOWN_SIZE, nullable = true)
     private String drillDown = "";
 
@@ -221,14 +218,6 @@ public class ItemDefinition extends AMEEEnvironmentEntity {
             name = "";
         }
         this.name = name;
-    }
-
-    public boolean isSkipRecalculation() {
-        return skipRecalculation;
-    }
-
-    public void setSkipRecalculation(boolean skipRecalculation) {
-        this.skipRecalculation = skipRecalculation;
     }
 
     public String getDrillDown() {

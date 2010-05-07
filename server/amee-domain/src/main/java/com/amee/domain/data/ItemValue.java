@@ -34,7 +34,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -233,7 +232,7 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
         }
 
         // Ensure numerics are a valid format.
-        if (getItemValueDefinition().isDecimal() && !value.isEmpty()) {
+        if (getItemValueDefinition().isDouble() && !value.isEmpty()) {
             try {
                 Double.parseDouble(value);
             } catch (NumberFormatException e) {
@@ -248,23 +247,23 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
         return new StartEndDate(startDate);
     }
 
-    public boolean isDecimal() {
-        return getItemValueDefinition().isDecimal();
+    public boolean isDouble() {
+        return getItemValueDefinition().isDouble();
     }
 
     public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+        this.startDate = new Date(startDate.getTime());
     }
 
     public ObjectType getObjectType() {
         return ObjectType.IV;
     }
 
-    public DecimalUnit getUnit() {
-        return (unit != null) ? DecimalUnit.valueOf(unit) : getItemValueDefinition().getUnit();
+    public AmountUnit getUnit() {
+        return (unit != null) ? AmountUnit.valueOf(unit) : getItemValueDefinition().getUnit();
     }
 
-    public DecimalUnit getCanonicalUnit() {
+    public AmountUnit getCanonicalUnit() {
         return getItemValueDefinition().getUnit();
     }
 
@@ -275,19 +274,19 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
         this.unit = unit;
     }
 
-    public DecimalPerUnit getPerUnit() {
+    public AmountPerUnit getPerUnit() {
         if (perUnit != null) {
             if (perUnit.equals("none")) {
-                return DecimalPerUnit.valueOf(getItem().getDuration());
+                return AmountPerUnit.valueOf(getItem().getDuration());
             } else {
-                return DecimalPerUnit.valueOf(perUnit);
+                return AmountPerUnit.valueOf(perUnit);
             }
         } else {
             return getItemValueDefinition().getPerUnit();
         }
     }
 
-    public DecimalPerUnit getCanonicalPerUnit() {
+    public AmountPerUnit getCanonicalPerUnit() {
         return getItemValueDefinition().getPerUnit();
     }
 
@@ -298,11 +297,11 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
         this.perUnit = perUnit;
     }
 
-    public DecimalCompoundUnit getCompoundUnit() {
+    public AmountCompoundUnit getCompoundUnit() {
         return getUnit().with(getPerUnit());
     }
 
-    public DecimalCompoundUnit getCanonicalCompoundUnit() {
+    public AmountCompoundUnit getCanonicalCompoundUnit() {
         return getItemValueDefinition().getCanonicalCompoundUnit();
     }
 
@@ -319,9 +318,9 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
     }
 
     public boolean isNonZero() {
-        return getItemValueDefinition().isDecimal() &&
-                !StringUtils.isBlank(getValue()) &&
-                !new BigDecimal(getValue()).equals(BigDecimal.ZERO);
+        return getItemValueDefinition().isDouble() &&
+            !StringUtils.isBlank(getValue()) &&
+            Double.parseDouble(getValue()) != 0.0;
     }
 
     public ItemValue getCopy() {

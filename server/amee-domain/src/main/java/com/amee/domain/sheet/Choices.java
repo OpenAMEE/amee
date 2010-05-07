@@ -1,7 +1,7 @@
 package com.amee.domain.sheet;
 
-import com.amee.domain.APIObject;
 import com.amee.core.APIUtils;
+import com.amee.domain.APIObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,7 +9,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -81,10 +80,10 @@ public class Choices implements Serializable, APIObject {
         }
         if(type == String.class){
             ret = type.cast(val);
-        }else if(type == BigDecimal.class){
+        }else if(type == Double.class){
             try{
-                BigDecimal bd = new BigDecimal(val);
-                ret = type.cast(bd);
+                Double d = new Double(val);
+                ret = type.cast(d);
             }catch(NumberFormatException nfe){
                 //swallow
             }

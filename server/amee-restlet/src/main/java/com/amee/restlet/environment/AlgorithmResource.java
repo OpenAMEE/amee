@@ -48,12 +48,7 @@ import org.w3c.dom.Element;
 
 import javax.script.ScriptException;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Scope("prototype")
@@ -205,7 +200,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
 
         private StringBuffer error = null;
 
-        private BigDecimal amount = null;
+        private Double amount = null;
 
         private String values = null;
 
@@ -230,11 +225,11 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
             this.error = error;
         }
 
-        public BigDecimal getAmount() {
+        public Double getAmount() {
             return amount;
         }
 
-        public void setAmount(BigDecimal amount) {
+        public void setAmount(Double amount) {
             this.amount = amount;
         }
 

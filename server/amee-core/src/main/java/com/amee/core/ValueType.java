@@ -6,7 +6,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,13 +14,14 @@ public enum ValueType implements Serializable {
 
     // The order of these values must not be changed!
     // Hibernate has mapped them to ordinal values.
-    // Any new values must be appended to the list. 
+    // Any new values must be appended to the list.
+    // TODO: We keep the old "DECIMAL" name and label for now so as not to break API compatibility. See: PL-1507
     UNSPECIFIED("UNSPECIFIED", "Unspecified"),
     TEXT("TEXT", "Text"),
     DATE("DATE", "Date"),
     BOOLEAN("BOOLEAN", "Boolean"),
     INTEGER("INTEGER", "Integer"),
-    DECIMAL("DECIMAL", "Decimal");
+    DOUBLE("DECIMAL", "Decimal");
 
     ValueType(String name, String label) {
         this.name = name;
@@ -76,9 +76,9 @@ public enum ValueType implements Serializable {
     public static ValueType getValueType(Object object) {
         if (object instanceof String) {
             return ValueType.TEXT;
-        } else if (object instanceof BigDecimal) {
-            return ValueType.DECIMAL;
-        } else if ((object instanceof Integer)) {
+        } else if (object instanceof Double) {
+            return ValueType.DOUBLE;
+        } else if (object instanceof Integer) {
             return ValueType.INTEGER;
         } else if (object instanceof Boolean) {
             return ValueType.BOOLEAN;
