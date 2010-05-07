@@ -32,6 +32,14 @@ set :user, "amee"
 set :src_dir, "/Development/AMEE/amee.platform/project/amee"
 set :package_dir, "/Development/AMEE/amee.platform/project/amee.deploy"
 
+# Pick tag to deploy.
+set :branch do
+  default_tag = `git tag`.split("\n").last
+  tag = Capistrano::CLI.ui.ask "Tag to deploy (make sure to push the tag first): [#{default_tag}] "
+  tag = default_tag if tag.empty?
+  tag
+end
+
 # Override Capistrano tasks
 deploy.task :start, :roles => :app do
   amee.start
@@ -48,4 +56,6 @@ end
 deploy.task :migrate, :roles => :db, :only => { :primary => true } do
   #mysql.migrate
 end
+
+
 
