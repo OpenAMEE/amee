@@ -14,13 +14,14 @@ public enum ValueType implements Serializable {
 
     // The order of these values must not be changed!
     // Hibernate has mapped them to ordinal values.
-    // Any new values must be appended to the list. 
+    // Any new values must be appended to the list.
+    // TODO: We keep the old "DECIMAL" name and label for now so as not to break API compatibility. See: PL-1507
     UNSPECIFIED("UNSPECIFIED", "Unspecified"),
     TEXT("TEXT", "Text"),
     DATE("DATE", "Date"),
     BOOLEAN("BOOLEAN", "Boolean"),
     INTEGER("INTEGER", "Integer"),
-    DOUBLE("DOUBLE", "Double");
+    DOUBLE("DECIMAL", "Decimal");
 
     ValueType(String name, String label) {
         this.name = name;

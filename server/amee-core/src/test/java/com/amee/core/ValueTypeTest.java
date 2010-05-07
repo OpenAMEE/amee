@@ -22,7 +22,7 @@ public class ValueTypeTest {
         pairs.put("DATE","Date");
         pairs.put("BOOLEAN", "Boolean");
         pairs.put("INTEGER", "Integer");
-        pairs.put("DOUBLE", "Double");
+        pairs.put("DECIMAL", "Decimal");
     }
 
     @Test
