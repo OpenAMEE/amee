@@ -1,7 +1,7 @@
 package com.amee.domain.sheet;
 
-import com.amee.core.ValueType;
 import com.amee.core.APIUtils;
+import com.amee.core.ValueType;
 import com.amee.domain.UidGen;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,7 +9,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -156,25 +155,25 @@ public class Cell implements Serializable, Comparable {
                 result = a.compareTo(b);
                 break;
             }
-            case DECIMAL: {
-                BigDecimal a = null;
-                BigDecimal b = null;
+            case DOUBLE: {
+                Double a = null;
+                Double b = null;
                 try {
-                    a = new BigDecimal(getValueAsString());
+                    a = new Double(getValueAsString());
                 } catch (NumberFormatException e) {
-                    // swallow, push non decimal to the end of list
+                    // swallow, push non double to the end of list
                     result = 1;
                 }
                 try {
-                    b = new BigDecimal(other.getValueAsString());
+                    b = new Double(other.getValueAsString());
                 } catch (NumberFormatException e) {
-                    // swallow, push non decimal to the end of list
+                    // swallow, push non double to the end of list
                     result = -1;
                 }
                 if ((a != null) && (b != null)) {
                     result = a.compareTo(b);
                 } else if ((a == null) && (b == null)) {
-                    // neither values are BigDecimals so just compare text values instead
+                    // neither values are Doubles so just compare text values instead
                     result = getValueAsString().compareToIgnoreCase(other.getValueAsString());
                 }
                 break;
@@ -295,14 +294,14 @@ public class Cell implements Serializable, Comparable {
         }
     }
 
-    public BigDecimal getValueAsBigDecimal() {
-        if (value instanceof BigDecimal) {
-            return (BigDecimal) value;
+    public Double getValueAsDouble() {
+        if (value instanceof Double) {
+            return (Double) value;
         } else {
             try {
-                return new BigDecimal(value.toString());
+                return new Double(value.toString());
             } catch (NumberFormatException e) {
-                return new BigDecimal(0);
+                return new Double(0);
             }
         }
     }

@@ -13,7 +13,7 @@ import com.amee.domain.sheet.Cell;
 import com.amee.domain.sheet.Column;
 import com.amee.domain.sheet.Row;
 import com.amee.domain.sheet.Sheet;
-import com.amee.platform.science.DecimalPerUnit;
+import com.amee.platform.science.AmountPerUnit;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.service.profile.ProfileService;
 
@@ -103,9 +103,9 @@ public class ProfileSheetBuilder implements CacheableFactory {
                         new Cell(column, row, profileItem.getName(), ValueType.TEXT);
                     } else if ("amountPerMonth".equalsIgnoreCase(column.getName())) {
                         if (!profileItem.isSingleFlight()) {
-                            new Cell(column, row, profileItem.getAmount().convert(DecimalPerUnit.MONTH), ValueType.DECIMAL);
+                            new Cell(column, row, profileItem.getAmount().convert(AmountPerUnit.MONTH), ValueType.DOUBLE);
                         } else {
-                            new Cell(column, row, profileItem.getAmount().getValue(), ValueType.DECIMAL);
+                            new Cell(column, row, profileItem.getAmount().getValue(), ValueType.DOUBLE);
                         }
                     } else if ("validFrom".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, DAY_DATE_FMT.format(profileItem.getStartDate()), ValueType.TEXT);

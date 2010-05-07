@@ -8,7 +8,6 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.Item;
 import com.amee.domain.data.ItemValue;
-import com.amee.platform.science.Decimal;
 import com.amee.platform.science.StartEndDate;
 import org.hibernate.annotations.Index;
 import org.json.JSONException;
@@ -20,7 +19,6 @@ import org.w3c.dom.Element;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -64,11 +62,8 @@ public class ProfileItem extends Item {
     @Index(name = "END_DATE_IND")
     protected Date endDate;
 
-    @Column(name = "AMOUNT", precision = Decimal.PRECISION, scale = Decimal.SCALE)
-    private BigDecimal persistentAmount = BigDecimal.ZERO;
-
     @Transient
-    private BigDecimal amount = null;
+    private Double amount;
 
     @Transient
     private Builder builder;
@@ -120,7 +115,6 @@ public class ProfileItem extends Item {
         o.dataItem = dataItem;
         o.startDate = (startDate != null) ? (Date) startDate.clone() : null;
         o.endDate = (endDate != null) ? (Date) endDate.clone() : null;
-        o.persistentAmount = persistentAmount;
         o.amount = amount;
         o.builder = builder;
         o.calculationService = calculationService;
@@ -153,7 +147,7 @@ public class ProfileItem extends Item {
     }
 
     public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+        this.startDate = new Date(startDate.getTime());
     }
 
     public StartEndDate getEndDate() {
@@ -165,7 +159,8 @@ public class ProfileItem extends Item {
     }
 
     public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+        // May be null.
+        this.endDate = endDate != null ? new Date(endDate.getTime()) : null;
     }
 
     public boolean isEnd() {
@@ -180,37 +175,15 @@ public class ProfileItem extends Item {
      * @return - the {@link com.amee.core.CO2Amount CO2Amount} for this ProfileItem
      */
     public CO2Amount getAmount() {
-        // CO2 amounts are lazily determined once per session.
         if (amount == null) {
-            // decide whether to use the persistent amount or recalculate 
-            if ((persistentAmount != null) && getItemDefinition().isSkipRecalculation()) {
-                log.debug("getAmount() - using persistent amount");
-                amount = persistentAmount;
-            } else {
-                log.debug("getAmount() - lazily calculating amount");
-                calculationService.calculate(this);
-            }
+            log.debug("getAmount() - calculating amount");
+            calculationService.calculate(this);
         }
         return new CO2Amount(amount);
     }
 
-    /**
-     * Set the amount. If the amount is different to the current persistentAmount then set this too. Will
-     * return true if the persistentAmount was changed.
-     *
-     * @param amount to set
-     * @return true if the persistentAmount was changed
-     */
-    public boolean setAmount(CO2Amount amount) {
+    public void setAmount(CO2Amount amount) {
         this.amount = amount.getValue();
-        // Persist the transient session CO2 amount if it is different from the last persisted amount.
-        if (this.amount.compareTo(persistentAmount) != 0) {
-            log.debug("setAmount() - amount has changed from " + persistentAmount + " to " + this.amount);
-            persistentAmount = this.amount;
-            return true;
-        } else {
-            return false;
-        }
     }
 
     @Override

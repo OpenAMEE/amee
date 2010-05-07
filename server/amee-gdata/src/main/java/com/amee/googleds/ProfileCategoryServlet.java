@@ -22,7 +22,6 @@
 package com.amee.googleds;
 
 import com.amee.domain.TimeZoneHolder;
-import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
@@ -47,7 +46,6 @@ import com.google.visualization.datasource.datatable.value.DateTimeValue;
 import com.google.visualization.datasource.datatable.value.ValueType;
 import com.google.visualization.datasource.query.Query;
 import org.joda.time.DateTime;
-import org.restlet.data.Request;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -111,7 +109,7 @@ public class ProfileCategoryServlet extends DataSourceServlet {
 
         for (ColumnDescription col : table.getColumnDescriptions()) {
             if (col.getId().equals("co2")) {
-                row.addCell(item.getAmount().getValue().floatValue());
+                row.addCell(item.getAmount().getValue());
             } else if (col.getId().equals("startDate")) {
                 DateTimeValue dateTime = getDateTime(item);
                 row.addCell(dateTime);
@@ -160,7 +158,7 @@ public class ProfileCategoryServlet extends DataSourceServlet {
             String path = itemValue.getPath();
             ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
             ValueType type;
-            if (itemValueDefinition.isDecimal()) {
+            if (itemValueDefinition.isDouble()) {
                 type = ValueType.NUMBER;
             } else if (itemValueDefinition.isDate()) {
                 type = ValueType.DATETIME;
