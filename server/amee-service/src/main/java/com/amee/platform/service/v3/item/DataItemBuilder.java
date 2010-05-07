@@ -5,8 +5,10 @@ import com.amee.base.resource.ResourceBuilder;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
+import com.amee.service.auth.AuthenticationService;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.path.PathItemService;
@@ -19,6 +21,9 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
     private EnvironmentService environmentService;
 
     @Autowired
+    private AuthenticationService authenticationService;
+
+    @Autowired
     private DataService dataService;
 
     @Autowired
@@ -26,12 +31,21 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
 
     @Transactional(readOnly = true)
     protected void handle(RequestWrapper requestWrapper, DataItemRenderer renderer) {
+        // Get Environment.
+        Environment environment = environmentService.getEnvironmentByName("AMEE");
+//        // Authenticate - Create sample User.
+//        User sampleUser = new User();
+//        sampleUser.setEnvironment(environment);
+//        sampleUser.setUsername(requestWrapper.getAttributes().get("username"));
+//        sampleUser.setPasswordInClear(requestWrapper.getAttributes().get("password"));
+//        // Authenticate - Check sample User.
+//        User authUser = authenticationService.authenticate(sampleUser);
+//        if (authUser != null) {
         // Get DataCategory identifier.
         String dataCategoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
         if (dataCategoryIdentifier != null) {
             // Get DataCategory.
-            DataCategory dataCategory = dataService.getDataCategoryByIdentifier(
-                    environmentService.getEnvironmentByName("AMEE"), dataCategoryIdentifier);
+            DataCategory dataCategory = dataService.getDataCategoryByIdentifier(environment, dataCategoryIdentifier);
             if (dataCategory != null) {
                 // Get DataItem identifier.
                 String dataItemIdentifier = requestWrapper.getAttributes().get("itemIdentifier");
@@ -54,6 +68,9 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
         } else {
             renderer.categoryIdentifierMissing();
         }
+//        } else {
+//            renderer.notAuthenticated();
+//        }
     }
 
     protected void handle(
@@ -101,6 +118,8 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
         public void ok();
 
         public void notFound();
+
+        public void notAuthenticated();
 
         public void itemIdentifierMissing();
 

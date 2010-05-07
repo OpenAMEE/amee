@@ -46,6 +46,10 @@ public class DataItemDOMBuilder extends DataItemBuilder<Document> {
             rootElem.addContent(new Element("Status").setText("NOT_FOUND"));
         }
 
+        public void notAuthenticated() {
+            rootElem.addContent(new Element("Status").setText("NOT_AUTHENTICATED"));
+        }
+
         public void itemIdentifierMissing() {
             rootElem.addContent(new Element("Status").setText("ERROR"));
             rootElem.addContent(new Element("Error").setText("The itemIdentifier was missing."));
@@ -59,6 +63,7 @@ public class DataItemDOMBuilder extends DataItemBuilder<Document> {
         public void newDataItem(DataItem dataItem) {
             this.dataItem = dataItem;
             dataItemElem = new Element("Item");
+            rootElem.addContent(dataItemElem);
         }
 
         public void addBasic() {

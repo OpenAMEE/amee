@@ -46,6 +46,10 @@ public class DataItemJSONBuilder extends DataItemBuilder<JSONObject> {
             put(rootObj, "status", "NOT_FOUND");
         }
 
+        public void notAuthenticated() {
+            put(rootObj, "status", "NOT_AUTHENTICATED");
+        }
+
         public void itemIdentifierMissing() {
             put(rootObj, "status", "ERROR");
             put(rootObj, "error", "The itemIdentifier was missing.");
