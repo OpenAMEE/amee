@@ -1,9 +1,9 @@
 package com.amee.restlet.profile.builder.v2;
 
 import com.amee.core.APIUtils;
-import com.amee.core.CO2AmountUnit;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
 import org.apache.abdera.model.Category;

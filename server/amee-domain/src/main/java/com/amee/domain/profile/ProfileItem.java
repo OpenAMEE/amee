@@ -1,6 +1,6 @@
 package com.amee.domain.profile;
 
-import com.amee.core.CO2Amount;
+import com.amee.platform.science.CO2Amount;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.Builder;
 import com.amee.domain.ObjectType;

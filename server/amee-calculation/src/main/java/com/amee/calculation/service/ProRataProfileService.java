@@ -1,10 +1,10 @@
 package com.amee.calculation.service;
 
-import com.amee.core.CO2Amount;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
+import com.amee.platform.science.CO2Amount;
 import com.amee.platform.science.StartEndDate;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;

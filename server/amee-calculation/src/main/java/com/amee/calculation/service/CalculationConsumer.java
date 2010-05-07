@@ -1,10 +1,10 @@
 package com.amee.calculation.service;
 
-import com.amee.core.CO2Amount;
 import com.amee.domain.APIVersion;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
+import com.amee.platform.science.CO2Amount;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.messaging.RpcMessageConsumer;

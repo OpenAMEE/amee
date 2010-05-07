@@ -19,13 +19,13 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.core.CO2Amount;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choice;
 import com.amee.platform.science.AlgorithmRunner;
+import com.amee.platform.science.CO2Amount;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
