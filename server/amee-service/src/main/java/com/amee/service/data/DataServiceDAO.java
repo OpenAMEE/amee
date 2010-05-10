@@ -40,6 +40,7 @@ import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class DataServiceDAO implements Serializable {
@@ -112,6 +113,25 @@ public class DataServiceDAO implements Serializable {
                         "AND status != :trash")
                 .setParameter("environmentId", environment.getId())
                 .setParameter("trash", AMEEStatus.TRASH)
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
+                .getResultList();
+    }
+
+    @SuppressWarnings(value = "unchecked")
+    protected List<DataCategory> getDataCategories(Environment environment, Set<Long> dataCategoryIds) {
+        // Don't fail with an empty Set.
+        if (dataCategoryIds.isEmpty()) {
+            dataCategoryIds.add(0L);
+        }
+        return (List<DataCategory>) entityManager.createQuery(
+                "FROM DataCategory " +
+                        "WHERE environment.id = :environmentId " +
+                        "AND status != :trash " +
+                        "AND id IN (:dataCategoryIds)")
+                .setParameter("environmentId", environment.getId())
+                .setParameter("trash", AMEEStatus.TRASH)
+                .setParameter("dataCategoryIds", dataCategoryIds)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
                 .getResultList();
