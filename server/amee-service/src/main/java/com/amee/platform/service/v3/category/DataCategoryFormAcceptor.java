@@ -39,7 +39,7 @@ public class DataCategoryFormAcceptor implements ResourceAcceptor {
                         o.put("status", "OK");
                         dataService.invalidate(dataCategory);
                     } else {
-                        throw new ValidationException(validationHelper);
+                        throw new ValidationException(validationHelper.getValidationResult());
                     }
                 } else {
                     o.put("status", "NOT_FOUND");
