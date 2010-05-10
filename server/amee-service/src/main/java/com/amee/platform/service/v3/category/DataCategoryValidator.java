@@ -39,6 +39,7 @@ public class DataCategoryValidator implements Validator {
         pathSpec.setMinSize(DataCategory.PATH_MIN_SIZE);
         pathSpec.setMaxSize(DataCategory.PATH_MAX_SIZE);
         pathSpec.setFormat(PATH_PATTERN_STRING);
+        wikiDocSpec.setAllowEmpty(true);
         // wikiName
         wikiNameSpec = new ValidationSpecification();
         wikiNameSpec.setName("wikiName");
