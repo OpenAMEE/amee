@@ -1,8 +1,7 @@
 package com.amee.restlet.profile.builder.v2;
 
-import com.amee.calculation.service.ProRataProfileService;
 import com.amee.base.utils.XMLUtils;
-import com.amee.platform.science.CO2AmountUnit;
+import com.amee.calculation.service.ProRataProfileService;
 import com.amee.domain.ObjectType;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
@@ -11,7 +10,7 @@ import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
-import com.amee.platform.science.Decimal;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
 import com.amee.service.path.PathItemService;
@@ -36,7 +35,6 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -139,7 +137,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
                 // add CO2 amount
                 JSONObject totalAmount = new JSONObject();
-                totalAmount.put("value", getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit()).toString());
+                totalAmount.put("value", getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit()));
                 totalAmount.put("unit", resource.getProfileBrowser().getCo2AmountUnit());
                 obj.put("totalAmount", totalAmount);
 
@@ -216,11 +214,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
                 // add CO2 amount
                 Element totalAmount = XMLUtils.getElement(document,
                         "TotalAmount",
-                        getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit()).toString());
+                        Double.toString(getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit())));
                 totalAmount.setAttribute("unit", resource.getProfileBrowser().getCo2AmountUnit().toString());
                 element.appendChild(totalAmount);
 
             }
+            // Shouldn't we still display the amount here. See: JSON.
 
         }
         return element;
@@ -285,12 +284,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         }
     }
 
-    private BigDecimal getTotalAmount(List<ProfileItem> profileItems, CO2AmountUnit returnUnit) {
-        BigDecimal totalAmount = Decimal.BIG_DECIMAL_ZERO;
-        BigDecimal amount;
+    private double getTotalAmount(List<ProfileItem> profileItems, CO2AmountUnit returnUnit) {
+        double totalAmount = 0.0;
+        double amount;
         for (ProfileItem profileItem : profileItems) {
             amount = profileItem.getAmount().convert(returnUnit).getValue();
-            totalAmount = totalAmount.add(amount);
+            totalAmount = totalAmount + amount;
         }
         return totalAmount;
     }
@@ -349,8 +348,8 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         List<ProfileItem> profileItems = getProfileItems(resource);
 
         atomFeed.addName(feed, resource.getDataCategory().getName());
-        BigDecimal totalAmount = getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit());
-        atomFeed.addTotalAmount(feed, totalAmount.toString(), resource.getProfileBrowser().getCo2AmountUnit().toString());
+        double totalAmount = getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit());
+        atomFeed.addTotalAmount(feed, Double.toString(totalAmount), resource.getProfileBrowser().getCo2AmountUnit().toString());
 
         Pager pager = resource.getPager();
         int numOfProfileItems = profileItems.size();

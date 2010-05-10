@@ -3,7 +3,7 @@ package com.amee.restlet.profile.builder.v1;
 import com.amee.base.utils.XMLUtils;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v1.ProfileItemBuilder;
-import com.amee.platform.science.DecimalPerUnit;
+import com.amee.platform.science.AmountPerUnit;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
 import org.json.JSONException;
@@ -64,7 +64,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         values.put("profile", profileItem.getProfile());
         values.put("profileItem", profileItem);
         if (!profileItem.isSingleFlight()) {
-            values.put("amountPerMonth", profileItem.getAmount().convert(DecimalPerUnit.MONTH).getValue());
+            values.put("amountPerMonth", profileItem.getAmount().convert(AmountPerUnit.MONTH).getValue());
         } else {
             values.put("amountPerMonth", profileItem.getAmount().getValue());
         }

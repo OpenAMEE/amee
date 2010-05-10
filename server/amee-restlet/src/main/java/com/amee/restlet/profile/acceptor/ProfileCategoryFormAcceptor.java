@@ -1,7 +1,6 @@
 package com.amee.restlet.profile.acceptor;
 
 import com.amee.calculation.service.CalculationService;
-import com.amee.platform.science.CO2AmountUnit;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.auth.AccessSpecification;
@@ -9,8 +8,9 @@ import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.MonthDate;
+import com.amee.domain.profile.ProfileItem;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.utils.APIException;

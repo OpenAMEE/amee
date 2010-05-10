@@ -1,11 +1,10 @@
 package com.amee.calculation.service;
 
-import com.amee.platform.science.CO2Amount;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.platform.science.Decimal;
+import com.amee.platform.science.CO2Amount;
 import com.amee.platform.science.StartEndDate;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
@@ -15,9 +14,8 @@ import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.measure.DecimalMeasure;
+import javax.measure.Measure;
 import javax.measure.unit.SI;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -139,9 +137,9 @@ public class ProRataProfileService {
                     pic.addItemValue(iv.getCopy());
                 }
 
-                BigDecimal event = new BigDecimal(getIntervalInMillis(pic.getStartDate(), pic.getEndDate()));
-                BigDecimal eventIntersectRatio = new BigDecimal(intersect.toDurationMillis()).divide(event, Decimal.CONTEXT);
-                BigDecimal proratedAmount = pic.getAmount().getValue().multiply(eventIntersectRatio, Decimal.CONTEXT);
+                long event = getIntervalInMillis(pic.getStartDate(), pic.getEndDate());
+                double eventIntersectRatio = intersect.toDurationMillis() / (double) event;
+                double proratedAmount = (pic.getAmount().getValue()) * eventIntersectRatio;
                 pic.setAmount(new CO2Amount(proratedAmount));
 
                 if (log.isDebugEnabled()) {
@@ -171,13 +169,14 @@ public class ProRataProfileService {
     }
 
     @SuppressWarnings(value = "unchecked")
-    private ItemValue getProRatedItemValue(Interval interval, ItemValue ivc) {
-        BigDecimal perTime = DecimalMeasure.valueOf(new BigDecimal(1), ivc.getPerUnit().toUnit()).to(SI.MILLI(SI.SECOND)).getValue();
-        BigDecimal intersectPerTimeRatio = new BigDecimal(interval.toDurationMillis()).divide(perTime, Decimal.CONTEXT);
-        BigDecimal value = new BigDecimal(ivc.getValue());
-        value = value.multiply(intersectPerTimeRatio, Decimal.CONTEXT);
-        ivc.setValue(value.setScale(Decimal.SCALE, Decimal.ROUNDING_MODE).toString());
-        return ivc;
+    private ItemValue getProRatedItemValue(Interval interval, ItemValue itemValue) {
+        Measure measure = Measure.valueOf(1, itemValue.getPerUnit().toUnit());
+        double perTime = measure.doubleValue(SI.MILLI(SI.SECOND));
+        double intersectPerTimeRatio = (interval.toDurationMillis()) / perTime;
+        double value = Double.parseDouble(itemValue.getValue());
+        value = value * intersectPerTimeRatio;
+        itemValue.setValue(Double.toString(value));
+        return itemValue;
     }
 
     private Interval getInterval(Date startDate, Date endDate) {
