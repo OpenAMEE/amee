@@ -48,7 +48,7 @@ public class ItemValueDefinitionFormAcceptor implements ResourceAcceptor {
                             if (validationHelper.isValid(requestWrapper.getFormParameters())) {
                                 o.put("status", "OK");
                             } else {
-                                throw new ValidationException(validationHelper);
+                                throw new ValidationException(validationHelper.getValidationResult());
                             }
                         } else {
                             o.put("status", "NOT_FOUND");

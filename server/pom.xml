@@ -55,10 +55,11 @@
         <junit.version>4.7</junit.version>
         <log4j.version>1.2.15</log4j.version>
         <log4jdbc.version>4-1.2alpha2</log4jdbc.version>
+        <lucene-core.version>3.0.1</lucene-core.version>
         <mysql-connector-java.version>5.1.10</mysql-connector-java.version>
         <org-json.version>2.0</org-json.version>
         <quartz.version>1.6.1</quartz.version>
-        <restlet.version>1.1.9</restlet.version>
+        <restlet.version>1.1.10</restlet.version>
         <slf4j.version>1.5.11</slf4j.version>
         <spring.version>3.0.2.RELEASE</spring.version>
         <wrapper.version>3.4.0</wrapper.version>

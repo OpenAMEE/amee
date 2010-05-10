@@ -3,8 +3,7 @@ package com.amee.platform.service.v3.category;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.domain.data.DataCategory;
-import com.amee.service.data.DataService;
-import com.amee.service.environment.EnvironmentService;
+import com.amee.platform.search.SearchService;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -18,10 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DataCategoriesDOMBuilder implements ResourceBuilder<Document> {
 
     @Autowired
-    private EnvironmentService environmentService;
-
-    @Autowired
-    private DataService dataService;
+    private SearchService searchService;
 
     @Autowired
     private DataCategoryDOMBuilder dataCategoryDOMBuilder;
@@ -36,7 +32,7 @@ public class DataCategoriesDOMBuilder implements ResourceBuilder<Document> {
 
     protected Element getDataCategoriesElement(RequestWrapper requestWrapper) {
         Element categoriesElem = new Element("Categories");
-        for (DataCategory dataCategory : dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"))) {
+        for (DataCategory dataCategory : searchService.getDataCategories(requestWrapper)) {
             categoriesElem.addContent(dataCategoryDOMBuilder.getDataCategoryElement(requestWrapper, dataCategory));
         }
         return categoriesElem;
