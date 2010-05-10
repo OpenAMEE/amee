@@ -141,6 +141,10 @@ public class DataService extends BaseService implements ApplicationListener {
         return activeCategories;
     }
 
+    public List<DataCategory> getDataCategories(Environment environment, Set<Long> dataCategoryIds) {
+        return dao.getDataCategories(environment, dataCategoryIds);
+    }
+
     public void persist(DataCategory dataCategory) {
         dao.persist(dataCategory);
     }
