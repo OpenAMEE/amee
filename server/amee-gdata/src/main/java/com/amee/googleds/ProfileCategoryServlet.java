@@ -109,7 +109,7 @@ public class ProfileCategoryServlet extends DataSourceServlet {
 
         for (ColumnDescription col : table.getColumnDescriptions()) {
             if (col.getId().equals("co2")) {
-                row.addCell(item.getAmount().getValue().floatValue());
+                row.addCell(item.getAmount().getValue());
             } else if (col.getId().equals("startDate")) {
                 DateTimeValue dateTime = getDateTime(item);
                 row.addCell(dateTime);
@@ -158,7 +158,7 @@ public class ProfileCategoryServlet extends DataSourceServlet {
             String path = itemValue.getPath();
             ItemValueDefinition itemValueDefinition = itemValue.getItemValueDefinition();
             ValueType type;
-            if (itemValueDefinition.isDecimal()) {
+            if (itemValueDefinition.isDouble()) {
                 type = ValueType.NUMBER;
             } else if (itemValueDefinition.isDate()) {
                 type = ValueType.DATETIME;

@@ -154,9 +154,6 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
         if (names.contains("name")) {
             itemDefinition.setName(form.getFirstValue("name"));
         }
-        if (form.getNames().contains("skipRecalculation")) {
-            itemDefinition.setSkipRecalculation(Boolean.valueOf(form.getFirstValue("skipRecalculation")));
-        }
         if (names.contains("drillDown")) {
             itemDefinition.setDrillDown(form.getFirstValue("drillDown"));
         }

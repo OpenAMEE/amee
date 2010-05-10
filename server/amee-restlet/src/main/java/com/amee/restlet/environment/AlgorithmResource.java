@@ -19,13 +19,13 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.platform.science.CO2Amount;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choice;
 import com.amee.platform.science.AlgorithmRunner;
+import com.amee.platform.science.CO2Amount;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
@@ -48,7 +48,6 @@ import org.w3c.dom.Element;
 
 import javax.script.ScriptException;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -205,7 +204,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
 
         private StringBuffer error = null;
 
-        private BigDecimal amount = null;
+        private Double amount = null;
 
         private String values = null;
 
@@ -230,11 +229,11 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
             this.error = error;
         }
 
-        public BigDecimal getAmount() {
+        public Double getAmount() {
             return amount;
         }
 
-        public void setAmount(BigDecimal amount) {
+        public void setAmount(Double amount) {
             this.amount = amount;
         }
 

@@ -19,8 +19,8 @@
  */
 package com.amee.service.profile;
 
-import com.amee.platform.science.CO2AmountUnit;
 import com.amee.domain.profile.MonthDate;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.service.BaseBrowser;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

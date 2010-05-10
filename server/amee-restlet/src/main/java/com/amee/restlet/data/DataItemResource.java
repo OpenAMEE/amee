@@ -20,18 +20,18 @@
 package com.amee.restlet.data;
 
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.calculation.service.CalculationService;
 import com.amee.base.utils.XMLUtils;
-import com.amee.platform.science.CO2Amount;
-import com.amee.platform.science.CO2AmountUnit;
+import com.amee.calculation.service.CalculationService;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
-import com.amee.platform.science.DecimalPerUnit;
-import com.amee.platform.science.DecimalUnit;
+import com.amee.platform.science.AmountPerUnit;
+import com.amee.platform.science.AmountUnit;
+import com.amee.platform.science.CO2Amount;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.RequestContext;
 import com.amee.service.data.DataConstants;
@@ -144,7 +144,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
-        CO2AmountUnit kgPerMonth = new CO2AmountUnit(new DecimalUnit(SI.KILOGRAM), new DecimalPerUnit(NonSI.MONTH));
+        CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
         values.put("dataItem", dataItem);
@@ -160,7 +160,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
-        CO2AmountUnit kgPerMonth = new CO2AmountUnit(new DecimalUnit(SI.KILOGRAM), new DecimalPerUnit(NonSI.MONTH));
+        CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         JSONObject obj = new JSONObject();
         obj.put("dataItem", dataItem.getJSONObject(true, false));
         obj.put("path", pathItem.getFullPath());
@@ -182,7 +182,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
-        CO2AmountUnit kgPerMonth = new CO2AmountUnit(new DecimalUnit(SI.KILOGRAM), new DecimalPerUnit(NonSI.MONTH));
+        CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         Element element = document.createElement("DataItemResource");
         element.appendChild(dataItem.getElement(document, true, false));
         element.appendChild(XMLUtils.getElement(document, "Path", pathItem.getFullPath()));
