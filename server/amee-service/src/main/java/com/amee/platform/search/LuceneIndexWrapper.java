@@ -96,9 +96,11 @@ public class LuceneIndexWrapper implements Serializable {
      */
     protected void unlockIndex() {
         try {
-            IndexReader.open(getDirectory());
-            if (IndexWriter.isLocked(getDirectory())) {
-                IndexWriter.unlock(getDirectory());
+            if (IndexReader.indexExists(getDirectory())) {
+                IndexReader.open(getDirectory());
+                if (IndexWriter.isLocked(getDirectory())) {
+                    IndexWriter.unlock(getDirectory());
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
