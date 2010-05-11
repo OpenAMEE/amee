@@ -179,7 +179,6 @@ public class DataService extends BaseService implements ApplicationListener {
     public void clearCaches(DataCategory dataCategory) {
         log.info("clearCaches() dataCategory: " + dataCategory.getUid());
         drillDownService.clearDrillDownCache();
-        pathItemService.removePathItemGroup(dataCategory.getEnvironment());
         dataSheetService.removeSheet(dataCategory);
     }
 
