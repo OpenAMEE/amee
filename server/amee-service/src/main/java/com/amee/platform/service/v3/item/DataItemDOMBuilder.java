@@ -35,6 +35,9 @@ public class DataItemDOMBuilder extends DataItemBuilder<Document> {
 
         public DataItemDOMRenderer() {
             super();
+        }
+
+        public void start() {
             rootElem = new Element("Representation");
         }
 
@@ -63,7 +66,9 @@ public class DataItemDOMBuilder extends DataItemBuilder<Document> {
         public void newDataItem(DataItem dataItem) {
             this.dataItem = dataItem;
             dataItemElem = new Element("Item");
-            rootElem.addContent(dataItemElem);
+            if (rootElem != null) {
+                rootElem.addContent(dataItemElem);
+            }
         }
 
         public void addBasic() {
