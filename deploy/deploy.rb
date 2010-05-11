@@ -1,4 +1,4 @@
-set :stages, %w(development staging production ec2)
+set :stages, %w(development staging production ec2 localhost)
 set :default_stage, "development"
 set :stage_dir, "deploy"
 
