@@ -28,9 +28,8 @@ public class DataItemValidator implements Validator {
         // name
         nameSpec = new ValidationSpecification();
         nameSpec.setName("name");
-        nameSpec.setMinSize(DataItem.NAME_MIN_SIZE);
         nameSpec.setMaxSize(DataItem.NAME_MAX_SIZE);
-        pathSpec.setAllowEmpty(true);
+        nameSpec.setAllowEmpty(true);
         // path
         pathSpec = new ValidationSpecification();
         pathSpec.setName("path");
