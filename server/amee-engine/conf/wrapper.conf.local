@@ -6,12 +6,12 @@ set.JDK_HOME=%JAVA_HOME%
 set.default.AMEE_SERVER_NAME=localhost
 
 # Extra Java Parameters
-wrapper.java.additional.18=-Xdebug
-wrapper.java.additional.19=-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
-wrapper.java.additional.20=-Dcom.sun.management.jmxremote.port=9988
-wrapper.java.additional.21=-Dcom.sun.management.jmxremote.authenticate=false
-wrapper.java.additional.22=-Dcom.sun.management.jmxremote.ssl=false
-wrapper.java.additional.23=-XX:+PrintGCDetails
+wrapper.java.additional.19=-Xdebug
+wrapper.java.additional.20=-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+wrapper.java.additional.21=-Dcom.sun.management.jmxremote.port=9988
+wrapper.java.additional.22=-Dcom.sun.management.jmxremote.authenticate=false
+wrapper.java.additional.23=-Dcom.sun.management.jmxremote.ssl=false
+wrapper.java.additional.24=-XX:+PrintGCDetails
 
 # Database
 set.DB_USERNAME=amee
