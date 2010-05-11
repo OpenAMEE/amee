@@ -35,9 +35,13 @@
         <property name="durable" value="true"/>
     </bean>
 
-    <bean id="invalidationPublish" class="com.amee.messaging.config.PublishConfig"/>
+    <bean id="invalidationPublish" class="com.amee.messaging.config.PublishConfig">
+        <property name="scope" value="${MESSAGING_SCOPE}"/>
+    </bean>
 
-    <bean id="invalidationConsume" class="com.amee.messaging.config.ConsumeConfig"/>
+    <bean id="invalidationConsume" class="com.amee.messaging.config.ConsumeConfig">
+        <property name="scope" value="${MESSAGING_SCOPE}"/>
+    </bean>
 
     <bean id="invalidationQueue" class="com.amee.messaging.config.QueueConfig">
         <property name="name"
