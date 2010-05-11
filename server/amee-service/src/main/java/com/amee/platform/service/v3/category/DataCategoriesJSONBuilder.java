@@ -1,10 +1,6 @@
 package com.amee.platform.service.v3.category;
 
 import com.amee.base.resource.RequestWrapper;
-import com.amee.base.resource.ResourceBuilder;
-import com.amee.base.validation.ValidationException;
-import com.amee.domain.data.DataCategory;
-import com.amee.platform.search.DataCategoryFilter;
 import com.amee.platform.search.DataCategoryFilterValidationHelper;
 import com.amee.platform.search.SearchService;
 import org.json.JSONArray;
@@ -13,48 +9,74 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Scope("prototype")
-public class DataCategoriesJSONBuilder implements ResourceBuilder<JSONObject> {
+public class DataCategoriesJSONBuilder extends DataCategoriesBuilder<JSONObject> {
 
     @Autowired
     private SearchService searchService;
 
     @Autowired
-    private DataCategoryJSONBuilder dataCategoryJSONBuilder;
+    private DataCategoryDOMBuilder dataCategoryDOMBuilder;
 
     @Autowired
     private DataCategoryFilterValidationHelper validationHelper;
 
-    @Transactional(readOnly = true)
     public JSONObject handle(RequestWrapper requestWrapper) {
-        try {
-            JSONObject o = new JSONObject();
-            DataCategoryFilter filter = new DataCategoryFilter();
-            validationHelper.setDataCategoryFilter(filter);
-            if (validationHelper.isValid(requestWrapper.getQueryParameters())) {
-                o.put("categories", getDataCategoriesJSONArray(requestWrapper, filter));
-                o.put("status", "OK");
-            } else {
-                throw new ValidationException(validationHelper.getValidationResult());
-            }
-            return o;
-        } catch (JSONException e) {
-            throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
-        }
-    }
-
-    protected JSONArray getDataCategoriesJSONArray(RequestWrapper requestWrapper, DataCategoryFilter filter) throws JSONException {
-        JSONArray categories = new JSONArray();
-        for (DataCategory dataCategory : searchService.getDataCategories(filter)) {
-            categories.put(dataCategoryJSONBuilder.getDataCategoryJSONObject(requestWrapper, dataCategory));
-        }
-        return categories;
+        DataCategoriesJSONRenderer renderer =
+                new DataCategoriesJSONRenderer(new DataCategoryJSONBuilder.DataCategoryJSONRenderer());
+        super.handle(requestWrapper, renderer);
+        return renderer.getJSONObject();
     }
 
     public String getMediaType() {
         return "application/json";
+    }
+
+    public class DataCategoriesJSONRenderer implements DataCategoriesBuilder.DataCategoriesRenderer {
+
+        private DataCategoryJSONBuilder.DataCategoryJSONRenderer dataCategoryRenderer;
+        private JSONObject rootObj;
+        private JSONArray categoriesArr;
+
+        public DataCategoriesJSONRenderer(DataCategoryJSONBuilder.DataCategoryJSONRenderer dataCategoryRenderer) {
+            super();
+            this.dataCategoryRenderer = dataCategoryRenderer;
+        }
+
+        public void start() {
+            rootObj = new JSONObject();
+            categoriesArr = new JSONArray();
+            put(rootObj, "categories", categoriesArr);
+        }
+
+        public void ok() {
+            put(rootObj, "status", "OK");
+        }
+
+        public void notAuthenticated() {
+            put(rootObj, "status", "NOT_AUTHENTICATED");
+        }
+
+        public void newDataCategory() {
+            categoriesArr.put(dataCategoryRenderer.getDataCategoryObject());
+        }
+
+        public DataCategoryBuilder.DataCategoryRenderer getDataCategoryRenderer() {
+            return dataCategoryRenderer;
+        }
+
+        protected JSONObject put(JSONObject o, String key, Object value) {
+            try {
+                return o.put(key, value);
+            } catch (JSONException e) {
+                throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
+            }
+        }
+
+        public JSONObject getJSONObject() {
+            return rootObj;
+        }
     }
 }

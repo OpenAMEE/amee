@@ -1,27 +1,22 @@
-package com.amee.platform.service.v3.item;
+package com.amee.platform.service.v3.category;
 
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
-import com.amee.service.auth.AuthenticationService;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.path.PathItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
+public abstract class DataCategoryBuilder<E> implements ResourceBuilder<E> {
 
     @Autowired
     private EnvironmentService environmentService;
-
-    @Autowired
-    private AuthenticationService authenticationService;
 
     @Autowired
     private DataService dataService;
@@ -30,77 +25,53 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
     private PathItemService pathItemService;
 
     @Transactional(readOnly = true)
-    protected void handle(RequestWrapper requestWrapper, DataItemRenderer renderer) {
+    protected void handle(RequestWrapper requestWrapper, DataCategoryRenderer renderer) {
         // Get Environment.
         Environment environment = environmentService.getEnvironmentByName("AMEE");
-//        // Authenticate - Create sample User.
-//        User sampleUser = new User();
-//        sampleUser.setEnvironment(environment);
-//        sampleUser.setUsername(requestWrapper.getAttributes().get("username"));
-//        sampleUser.setPasswordInClear(requestWrapper.getAttributes().get("password"));
-//        // Authenticate - Check sample User.
-//        User authUser = authenticationService.authenticate(sampleUser);
-//        if (authUser != null) {
-        // Get DataCategory identifier.
         String dataCategoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
         if (dataCategoryIdentifier != null) {
             // Get DataCategory.
             DataCategory dataCategory = dataService.getDataCategoryByIdentifier(environment, dataCategoryIdentifier);
             if (dataCategory != null) {
-                // Get DataItem identifier.
-                String dataItemIdentifier = requestWrapper.getAttributes().get("itemIdentifier");
-                if (dataItemIdentifier != null) {
-                    // Get DataItem.
-                    DataItem dataItem = dataService.getDataItemByUid(dataCategory, dataItemIdentifier);
-                    if (dataItem != null) {
-                        // Handle the DataItem.
-                        renderer.start();
-                        this.handle(requestWrapper, dataItem, renderer);
-                        renderer.ok();
-                    } else {
-                        renderer.notFound();
-                    }
-                } else {
-                    renderer.itemIdentifierMissing();
-                }
+                // Handle the DataCategory.
+                renderer.start();
+                this.handle(requestWrapper, dataCategory, renderer);
+                renderer.ok();
             } else {
                 renderer.notFound();
             }
         } else {
             renderer.categoryIdentifierMissing();
         }
-//        } else {
-//            renderer.notAuthenticated();
-//        }
     }
 
-    protected void handle(
+    public void handle(
             RequestWrapper requestWrapper,
-            DataItem dataItem,
-            DataItemRenderer renderer) {
+            DataCategory dataCategory,
+            DataCategoryRenderer renderer) {
 
         boolean full = requestWrapper.getMatrixParameters().containsKey("full");
-        boolean name = requestWrapper.getMatrixParameters().containsKey("name");
-        boolean path = requestWrapper.getMatrixParameters().containsKey("path");
         boolean audit = requestWrapper.getMatrixParameters().containsKey("audit");
+        boolean path = requestWrapper.getMatrixParameters().containsKey("path");
+        boolean authority = requestWrapper.getMatrixParameters().containsKey("authority");
         boolean wikiDoc = requestWrapper.getMatrixParameters().containsKey("wikiDoc");
         boolean provenance = requestWrapper.getMatrixParameters().containsKey("provenance");
         boolean itemDefinition = requestWrapper.getMatrixParameters().containsKey("itemDefinition");
 
-        // New DataItem & basic.
-        renderer.newDataItem(dataItem);
+        // New DataCategory & basic.
+        renderer.newDataCategory(dataCategory);
         renderer.addBasic();
 
         // Optionals.
-        if (name || full) {
-            renderer.addName();
-        }
         if (path || full) {
-            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(dataItem.getEnvironment());
-            renderer.addPath(pathItemGroup.findByUId(dataItem.getDataCategory().getUid()));
+            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(dataCategory.getEnvironment());
+            renderer.addPath(pathItemGroup.findByUId(dataCategory.getDataCategory().getUid()));
         }
         if (audit || full) {
             renderer.addAudit();
+        }
+        if (authority || full) {
+            renderer.addAuthority();
         }
         if (wikiDoc || full) {
             renderer.addWikiDoc();
@@ -108,13 +79,13 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
         if (provenance || full) {
             renderer.addProvenance();
         }
-        if ((itemDefinition || full) && (dataItem.getItemDefinition() != null)) {
-            ItemDefinition id = dataItem.getItemDefinition();
+        if ((itemDefinition || full) && (dataCategory.getItemDefinition() != null)) {
+            ItemDefinition id = dataCategory.getItemDefinition();
             renderer.addItemDefinition(id);
         }
     }
 
-    public interface DataItemRenderer {
+    public interface DataCategoryRenderer {
 
         public void start();
 
@@ -124,19 +95,17 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
 
         public void notAuthenticated();
 
-        public void itemIdentifierMissing();
-
         public void categoryIdentifierMissing();
 
-        public void newDataItem(DataItem dataItem);
+        public void newDataCategory(DataCategory dataCategory);
 
         public void addBasic();
-
-        public void addName();
 
         public void addPath(PathItem pathItem);
 
         public void addAudit();
+
+        public void addAuthority();
 
         public void addWikiDoc();
 

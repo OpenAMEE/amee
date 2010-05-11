@@ -35,6 +35,9 @@ public class DataItemJSONBuilder extends DataItemBuilder<JSONObject> {
 
         public DataItemJSONRenderer() {
             super();
+        }
+
+        public void start() {
             rootObj = new JSONObject();
         }
 
@@ -63,6 +66,9 @@ public class DataItemJSONBuilder extends DataItemBuilder<JSONObject> {
         public void newDataItem(DataItem dataItem) {
             this.dataItem = dataItem;
             dataItemObj = new JSONObject();
+            if (rootObj != null) {
+                put(rootObj, "item", dataItemObj);
+            }
         }
 
         public void addBasic() {
