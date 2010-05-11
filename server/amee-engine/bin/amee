@@ -13,7 +13,7 @@
 #-----------------------------------------------------------------------------
 # These settings can be modified to fit the needs of your application
 
-# Application
+# Application name. This should be changed for multi-deploys, eg amee-science
 APP_NAME=${AMEE_APP_NAME:-amee}
 INSTANCE_NAME=${AMEE_INSTANCE_NAME:-live}
 APP_LONG_NAME="AMEE"
@@ -29,7 +29,7 @@ APP_LONG_NAME="AMEE"
 ### END INIT INFO
 
 # Wrapper
-WRAPPER_CMD="/var/www/apps/amee/${INSTANCE_NAME}/current/bin/wrapper"
+WRAPPER_CMD="/var/www/apps/${APP_NAME}/current/bin/wrapper"
 WRAPPER_CONF="../conf/wrapper.conf"
 
 # Priority at which to run the wrapper.  See "man nice" for valid priorities.
@@ -37,7 +37,7 @@ WRAPPER_CONF="../conf/wrapper.conf"
 PRIORITY=
 
 # Location of the pid file.
-PIDDIR="/var/www/apps/amee/${INSTANCE_NAME}/shared/pids"
+PIDDIR="/var/www/apps/${APP_NAME}/shared/pids"
 
 # If uncommented, causes the Wrapper to be shutdown using an anchor file.
 #  When launched with the 'start' command, it will also ignore all INT and
