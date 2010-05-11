@@ -72,7 +72,11 @@ public class SearchService implements ApplicationListener {
             if (invalidationMessage.getObjectType().equals(ObjectType.DC)) {
                 transactionController.begin(false);
                 DataCategory dataCategory = dataService.getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
-                update(dataCategory);
+                if (dataCategory != null) {
+                    update(dataCategory);
+                } else {
+                    remove(invalidationMessage.getEntityUid());
+                }
                 transactionController.end();
             }
         }
@@ -102,6 +106,13 @@ public class SearchService implements ApplicationListener {
         }
     }
 
+    /**
+     * Update index with a new Document for the DataCategory.
+     * <p/>
+     * TODO: Also need to update any 'child' Documents. Look up with the UID.
+     *
+     * @param dataCategory to update index with
+     */
     protected void update(DataCategory dataCategory) {
         log.debug("update() DataCategory: " + dataCategory.getUid());
         try {
@@ -109,6 +120,25 @@ public class SearchService implements ApplicationListener {
             IndexWriter indexWriter = index.getIndexWriter();
             Document document = getDocument(dataCategory);
             indexWriter.updateDocument(new Term("uid", dataCategory.getUid()), document, index.getAnalyzer());
+            index.closeIndexWriter();
+        } catch (IOException e) {
+            throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Removes a document from the index.
+     * <p/>
+     * TODO: This will need enhancing when we we index more than just DCs. We should be able to use a search.
+     *
+     * @param uid of document to remove.
+     */
+    protected void remove(String uid) {
+        log.debug("remove() remove: " + uid);
+        try {
+            LuceneIndexWrapper index = new LuceneIndexWrapper();
+            IndexWriter indexWriter = index.getIndexWriter();
+            indexWriter.deleteDocuments(new Term("uid", uid));
             index.closeIndexWriter();
         } catch (IOException e) {
             throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
