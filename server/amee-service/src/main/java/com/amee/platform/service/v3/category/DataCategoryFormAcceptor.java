@@ -6,6 +6,7 @@ import com.amee.base.transaction.TransactionController;
 import com.amee.base.validation.ValidationException;
 import com.amee.domain.data.DataCategory;
 import com.amee.service.data.DataService;
+import com.amee.service.invalidation.InvalidationService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class DataCategoryFormAcceptor implements ResourceAcceptor {
 
     @Autowired
     private TransactionController transactionController;
+
+    @Autowired
+    private InvalidationService invalidationService;
 
     @Autowired
     private DataService dataService;
@@ -37,7 +41,9 @@ public class DataCategoryFormAcceptor implements ResourceAcceptor {
                     validationHelper.setDataCategory(dataCategory);
                     if (validationHelper.isValid(requestWrapper.getFormParameters())) {
                         o.put("status", "OK");
+                        invalidationService.beforeHandle();
                         dataService.invalidate(dataCategory);
+                        invalidationService.afterHandle();
                     } else {
                         throw new ValidationException(validationHelper.getValidationResult());
                     }

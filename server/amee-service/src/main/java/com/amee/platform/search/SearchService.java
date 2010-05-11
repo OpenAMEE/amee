@@ -1,10 +1,14 @@
 package com.amee.platform.search;
 
+import com.amee.base.transaction.TransactionController;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.ObjectType;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
+import com.amee.service.invalidation.InvalidationMessage;
 import com.amee.service.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,6 +20,8 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,7 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class SearchService {
+public class SearchService implements ApplicationListener {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -46,6 +52,9 @@ public class SearchService {
     public final static Set<String> DATA_CATEGORY_FIELDS = new HashSet<String>(Arrays.asList(DATA_CATEGORY_FIELDS_ARR));
 
     @Autowired
+    private TransactionController transactionController;
+
+    @Autowired
     private EnvironmentService environmentService;
 
     @Autowired
@@ -54,9 +63,26 @@ public class SearchService {
     @Autowired
     private PathItemService pathItemService;
 
-    public void buildSearchIndex() {
+    // Events
+
+    public void onApplicationEvent(ApplicationEvent event) {
+        if (event instanceof InvalidationMessage) {
+            log.debug("onApplicationEvent() Handling InvalidationMessage.");
+            InvalidationMessage invalidationMessage = (InvalidationMessage) event;
+            if (invalidationMessage.getObjectType().equals(ObjectType.DC)) {
+                transactionController.begin(false);
+                DataCategory dataCategory = dataService.getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
+                update(dataCategory);
+                transactionController.end();
+            }
+        }
+    }
+
+    // Index & Document management.
+
+    public void build() {
         try {
-            log.debug("buildSearchIndex() Building...");
+            log.debug("build() Building...");
             // Get a LuceneWrapper to use in this thread.
             LuceneIndexWrapper index = new LuceneIndexWrapper();
             // Ensure we have an empty Lucene index.
@@ -70,15 +96,14 @@ public class SearchService {
             }
             // Ensure IndexWriter is closed.
             index.closeIndexWriter();
-            log.debug("buildSearchIndex() Building... DONE");
+            log.debug("build() Building... DONE");
         } catch (IOException e) {
             throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
         }
     }
 
-    // TODO: Hook this into DataCategory invalidation message.
-    protected void updateIndexEntry(DataCategory dataCategory) {
-        log.debug("updateIndexEntry() DataCategory: " + dataCategory.getUid());
+    protected void update(DataCategory dataCategory) {
+        log.debug("update() DataCategory: " + dataCategory.getUid());
         try {
             LuceneIndexWrapper index = new LuceneIndexWrapper();
             IndexWriter indexWriter = index.getIndexWriter();
@@ -93,27 +118,32 @@ public class SearchService {
     protected Document getDocument(DataCategory dataCategory) {
         PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(dataCategory.getEnvironment());
         PathItem pathItem = pathItemGroup.findByUId(dataCategory.getUid());
-        Document doc = new Document();
-        doc.add(new Field("type", dataCategory.getObjectType().getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field("id", dataCategory.getId().toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field("uid", dataCategory.getUid(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        Document doc = getDocument((AMEEEntity) dataCategory);
         doc.add(new Field("name", dataCategory.getName(), Field.Store.NO, Field.Index.ANALYZED));
         doc.add(new Field("path", dataCategory.getPath(), Field.Store.NO, Field.Index.NOT_ANALYZED));
         if (pathItem != null) {
             doc.add(new Field("fullPath", pathItem.getFullPath(), Field.Store.NO, Field.Index.NOT_ANALYZED));
         }
-        doc.add(new Field("wikiName", dataCategory.getWikiName(), Field.Store.NO, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("wikiName", dataCategory.getWikiName(), Field.Store.NO, Field.Index.ANALYZED));
         doc.add(new Field("wikiDoc", dataCategory.getWikiDoc(), Field.Store.NO, Field.Index.ANALYZED));
         doc.add(new Field("provenance", dataCategory.getProvenance(), Field.Store.NO, Field.Index.ANALYZED));
         doc.add(new Field("authority", dataCategory.getAuthority(), Field.Store.NO, Field.Index.ANALYZED));
         if (dataCategory.getDataCategory() != null) {
             doc.add(new Field("parentUid", dataCategory.getDataCategory().getUid(), Field.Store.NO, Field.Index.NOT_ANALYZED));
-            doc.add(new Field("parentWikiName", dataCategory.getDataCategory().getWikiName(), Field.Store.NO, Field.Index.NOT_ANALYZED));
+            doc.add(new Field("parentWikiName", dataCategory.getDataCategory().getWikiName(), Field.Store.NO, Field.Index.ANALYZED));
         }
         if (dataCategory.getItemDefinition() != null) {
             doc.add(new Field("itemDefinitionUid", dataCategory.getItemDefinition().getUid(), Field.Store.NO, Field.Index.NOT_ANALYZED));
             doc.add(new Field("itemDefinitionName", dataCategory.getItemDefinition().getName(), Field.Store.NO, Field.Index.ANALYZED));
         }
+        return doc;
+    }
+
+    private Document getDocument(AMEEEntity entity) {
+        Document doc = new Document();
+        doc.add(new Field("type", entity.getObjectType().getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("id", entity.getId().toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("uid", entity.getUid(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         return doc;
     }
 

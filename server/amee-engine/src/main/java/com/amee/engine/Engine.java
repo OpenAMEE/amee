@@ -80,7 +80,7 @@ public class Engine implements WrapperListener, Serializable {
         // TODO: This will slow down as we index more stuff. Don't do this.
         transactionController.begin(false);
         SearchService searchService = ((SearchService) applicationContext.getBean("searchService"));
-        searchService.buildSearchIndex();
+        searchService.build();
         transactionController.end();
 
         // Configure Restlet server (ajp, http, etc).
