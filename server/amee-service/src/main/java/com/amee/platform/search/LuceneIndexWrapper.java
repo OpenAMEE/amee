@@ -55,12 +55,30 @@ public class LuceneIndexWrapper implements Serializable {
      * @return a List of Lucene Documents
      */
     public List<Document> doSearch(String field, String q) {
-        log.debug("doLuceneSearch()");
+        log.debug("doSearch()");
+        QueryParser parser = new QueryParser(Version.LUCENE_30, field, getAnalyzer());
+        try {
+            return doSearch(parser.parse(q));
+        } catch (ParseException e) {
+            ValidationResult validationResult = new ValidationResult();
+            validationResult.addValue("field", field);
+            validationResult.addValue("query", q);
+            validationResult.addError(field, "parse", q);
+            throw new ValidationException(validationResult);
+        }
+    }
+
+    /**
+     * Conduct a search in the Lucene index based on the supplied Query.
+     *
+     * @param query to search with
+     * @return a List of Lucene Documents
+     */
+    public List<Document> doSearch(Query query) {
+        log.debug("doSearch()");
         List<Document> documents = new ArrayList<Document>();
         try {
             IndexSearcher searcher = new IndexSearcher(getDirectory());
-            QueryParser parser = new QueryParser(Version.LUCENE_30, field, getAnalyzer());
-            Query query = parser.parse(q);
             TopScoreDocCollector collector = TopScoreDocCollector.create(50, true);
             searcher.search(query, collector);
             ScoreDoc[] hits = collector.topDocs().scoreDocs;
@@ -70,12 +88,6 @@ public class LuceneIndexWrapper implements Serializable {
             searcher.close();
         } catch (IOException e) {
             throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
-        } catch (ParseException e) {
-            ValidationResult validationResult = new ValidationResult();
-            validationResult.addValue("field", field);
-            validationResult.addValue("query", q);
-            validationResult.addError(field, "parse", q);
-            throw new ValidationException(validationResult);
         }
         return documents;
     }

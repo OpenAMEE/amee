@@ -1,6 +1,5 @@
 package com.amee.platform.search;
 
-import com.amee.base.resource.RequestWrapper;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
@@ -13,6 +12,9 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -117,20 +119,31 @@ public class SearchService {
 
     // DataCategory Search.
 
-    public List<DataCategory> getDataCategories(RequestWrapper requestWrapper) {
-        // First attempt - Filter based on an allowed query parameter.
-        for (String field : DATA_CATEGORY_FIELDS) {
-            if (requestWrapper.getQueryParameters().containsKey(field)) {
-                return getDataCategories(field, requestWrapper.getQueryParameters().get(field));
+    public List<DataCategory> getDataCategories(DataCategoryFilter filter) {
+        // Filter based on an allowed query parameter.
+        if (!filter.getQueries().isEmpty()) {
+            BooleanQuery query = new BooleanQuery();
+            for (Query q : filter.getQueries().values()) {
+                query.add(q, BooleanClause.Occur.MUST);
             }
+            return getDataCategories(query);
+        } else {
+            // Just get a simple list of Data Categories.
+            return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"));
         }
-        // Second attempt - Just get a simple list of Data Categories.
-        return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"));
     }
 
     public List<DataCategory> getDataCategories(String key, String value) {
         Set<Long> dataCategoryIds = new HashSet<Long>();
         for (Document document : new LuceneIndexWrapper().doSearch(key, value)) {
+            dataCategoryIds.add(new Long(document.getField("id").stringValue()));
+        }
+        return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"), dataCategoryIds);
+    }
+
+    public List<DataCategory> getDataCategories(Query query) {
+        Set<Long> dataCategoryIds = new HashSet<Long>();
+        for (Document document : new LuceneIndexWrapper().doSearch(query)) {
             dataCategoryIds.add(new Long(document.getField("id").stringValue()));
         }
         return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"), dataCategoryIds);
