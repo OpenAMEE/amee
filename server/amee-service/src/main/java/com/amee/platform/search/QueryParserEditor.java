@@ -14,7 +14,7 @@ public class QueryParserEditor extends PropertyEditorSupport {
 
     public QueryParserEditor(String field) {
         setField(field);
-        setAnalyzer(DataCategoryFilter.STANDARD_ANALYZER);
+        setAnalyzer(SearchService.STANDARD_ANALYZER);
     }
 
     public QueryParserEditor(String field, Analyzer analyzer) {

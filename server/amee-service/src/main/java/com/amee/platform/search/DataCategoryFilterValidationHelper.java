@@ -23,7 +23,7 @@ public class DataCategoryFilterValidationHelper extends ValidationHelper {
 
     @Override
     protected void registerCustomEditors(DataBinder dataBinder) {
-        dataBinder.registerCustomEditor(Query.class, "uid", new QueryParserEditor("entityUid", DataCategoryFilter.KEYWORD_ANALYZER));
+        dataBinder.registerCustomEditor(Query.class, "uid", new QueryParserEditor("entityUid", SearchService.KEYWORD_ANALYZER));
         dataBinder.registerCustomEditor(Query.class, "name", new QueryParserEditor("name"));
         dataBinder.registerCustomEditor(Query.class, "path", new QueryParserEditor("path"));
         dataBinder.registerCustomEditor(Query.class, "fullPath", new QueryParserEditor("fullPath"));
@@ -31,9 +31,9 @@ public class DataCategoryFilterValidationHelper extends ValidationHelper {
         dataBinder.registerCustomEditor(Query.class, "wikiDoc", new QueryParserEditor("wikiDoc"));
         dataBinder.registerCustomEditor(Query.class, "provenance", new QueryParserEditor("provenance"));
         dataBinder.registerCustomEditor(Query.class, "authority", new QueryParserEditor("authority"));
-        dataBinder.registerCustomEditor(Query.class, "parentUid", new QueryParserEditor("parentUid", DataCategoryFilter.KEYWORD_ANALYZER));
+        dataBinder.registerCustomEditor(Query.class, "parentUid", new QueryParserEditor("parentUid", SearchService.KEYWORD_ANALYZER));
         dataBinder.registerCustomEditor(Query.class, "parentWikiName", new QueryParserEditor("parentWikiName"));
-        dataBinder.registerCustomEditor(Query.class, "itemDefinitionUid", new QueryParserEditor("itemDefinitionUid", DataCategoryFilter.KEYWORD_ANALYZER));
+        dataBinder.registerCustomEditor(Query.class, "itemDefinitionUid", new QueryParserEditor("itemDefinitionUid", SearchService.KEYWORD_ANALYZER));
         dataBinder.registerCustomEditor(Query.class, "itemDefinitionName", new QueryParserEditor("itemDefinitionName"));
     }
 

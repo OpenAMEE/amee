@@ -15,7 +15,7 @@ public class MultiFieldQueryParserEditor extends PropertyEditorSupport {
 
     public MultiFieldQueryParserEditor(String[] fields) {
         setFields(fields);
-        setAnalyzer(DataCategoryFilter.STANDARD_ANALYZER);
+        setAnalyzer(SearchService.STANDARD_ANALYZER);
     }
 
     public MultiFieldQueryParserEditor(String[] fields, Analyzer analyzer) {

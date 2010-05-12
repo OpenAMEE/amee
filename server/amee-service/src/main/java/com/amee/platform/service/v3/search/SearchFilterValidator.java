@@ -1,5 +1,6 @@
 package com.amee.platform.service.v3.search;
 
+import com.amee.base.validation.ValidationSpecification;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
@@ -9,8 +10,13 @@ import org.springframework.validation.Validator;
 @Scope("prototype")
 public class SearchFilterValidator implements Validator {
 
+    private ValidationSpecification qSpec;
+
     public SearchFilterValidator() {
         super();
+        qSpec = new ValidationSpecification();
+        qSpec.setName("q");
+
     }
 
     public boolean supports(Class clazz) {
@@ -18,6 +24,7 @@ public class SearchFilterValidator implements Validator {
     }
 
     public void validate(Object o, Errors e) {
-        // Do nothing. The Editors do the validation.
+        SearchFilter searchFilter = (SearchFilter) o;
+        qSpec.validate(searchFilter.getQ(), e);
     }
 }

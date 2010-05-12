@@ -25,6 +25,7 @@ public class DataItemValidator implements Validator {
     private ValidationSpecification provenanceSpec;
 
     public DataItemValidator() {
+        super();
         // name
         nameSpec = new ValidationSpecification();
         nameSpec.setName("name");
