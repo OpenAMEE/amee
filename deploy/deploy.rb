@@ -1,4 +1,4 @@
-set :stages, %w(development staging production ec2 localhost)
+set :stages, %w(development staging production ec2 local)
 set :default_stage, "development"
 set :stage_dir, "deploy"
 
@@ -47,5 +47,9 @@ end
 
 deploy.task :migrate, :roles => :db, :only => { :primary => true } do
   #mysql.migrate
+end
+
+deploy.task :finalize_update do
+  # Override the rails stuff
 end
 
