@@ -32,8 +32,6 @@
         <amee.home>/var/www/apps/amee</amee.home>
         <amee.current>${amee.home}/current</amee.current>
         <amee.current.lib>${amee.current}/lib</amee.current.lib>
-        <amee.current.bin>${amee.current}/bin</amee.current.bin>
-        <amee.shared.lib>${amee.home}/shared</amee.shared.lib>
     </properties>
 
     <!-- Modules. -->
