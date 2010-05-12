@@ -285,6 +285,25 @@ public class DataServiceDAO implements Serializable {
                 .getResultList();
     }
 
+    @SuppressWarnings(value = "unchecked")
+    protected List<DataItem> getDataItems(Environment environment, Set<Long> dataItemIds) {
+        // Don't fail with an empty Set.
+        if (dataItemIds.isEmpty()) {
+            dataItemIds.add(0L);
+        }
+        return (List<DataItem>) entityManager.createQuery(
+                "FROM DataItem " +
+                        "WHERE environment.id = :environmentId " +
+                        "AND status != :trash " +
+                        "AND id IN (:dataItemIds)")
+                .setParameter("environmentId", environment.getId())
+                .setParameter("trash", AMEEStatus.TRASH)
+                .setParameter("dataItemIds", dataItemIds)
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
+                .getResultList();
+    }
+
     protected void persist(DataItem dataItem) {
         entityManager.persist(dataItem);
     }

@@ -74,7 +74,7 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
 //        }
     }
 
-    protected void handle(
+    public void handle(
             RequestWrapper requestWrapper,
             DataItem dataItem,
             DataItemRenderer renderer) {

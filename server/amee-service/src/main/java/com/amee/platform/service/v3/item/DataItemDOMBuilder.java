@@ -27,7 +27,7 @@ public class DataItemDOMBuilder extends DataItemBuilder<Document> {
         return "application/xml";
     }
 
-    public class DataItemDOMRenderer implements DataItemRenderer {
+    public static class DataItemDOMRenderer implements DataItemRenderer {
 
         private DataItem dataItem;
         private Element rootElem;
@@ -106,6 +106,10 @@ public class DataItemDOMBuilder extends DataItemBuilder<Document> {
             dataItemElem.addContent(e);
             e.setAttribute("uid", itemDefinition.getUid());
             e.addContent(new Element("Name").setText(itemDefinition.getName()));
+        }
+
+        public Element getDataItemElement() {
+            return dataItemElem;
         }
 
         public Document getDocument() {

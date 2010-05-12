@@ -228,6 +228,10 @@ public class DataService extends BaseService implements ApplicationListener {
         }
     }
 
+    public List<DataItem> getDataItems(Environment environment, Set<Long> dataItemIds) {
+        return dao.getDataItems(environment, dataItemIds);
+    }
+
     public List<DataItem> getDataItems(DataCategory dataCategory) {
         return checkDataItems(dao.getDataItems(dataCategory));
     }

@@ -4,6 +4,8 @@ import com.amee.base.resource.RequestWrapper;
 import com.amee.platform.search.SearchService;
 import com.amee.platform.service.v3.category.DataCategoryBuilder;
 import com.amee.platform.service.v3.category.DataCategoryDOMBuilder;
+import com.amee.platform.service.v3.item.DataItemBuilder;
+import com.amee.platform.service.v3.item.DataItemDOMBuilder;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +23,16 @@ public class SearchDOMBuilder extends SearchBuilder<Document> {
     private DataCategoryDOMBuilder dataCategoryDOMBuilder;
 
     @Autowired
+    private DataItemDOMBuilder dataItemDOMBuilder;
+
+    @Autowired
     private SearchFilterValidationHelper validationHelper;
 
     public Document handle(RequestWrapper requestWrapper) {
         SearchDOMRenderer renderer =
-                new SearchDOMRenderer(new DataCategoryDOMBuilder.DataCategoryDOMRenderer());
+                new SearchDOMRenderer(
+                        new DataCategoryDOMBuilder.DataCategoryDOMRenderer(),
+                        new DataItemDOMBuilder.DataItemDOMRenderer());
         super.handle(requestWrapper, renderer);
         return renderer.getDocument();
     }
@@ -38,21 +45,32 @@ public class SearchDOMBuilder extends SearchBuilder<Document> {
         return dataCategoryDOMBuilder;
     }
 
+    public DataItemBuilder getDataItemBuilder() {
+        return dataItemDOMBuilder;
+    }
+
     public class SearchDOMRenderer implements SearchRenderer {
 
         private DataCategoryDOMBuilder.DataCategoryDOMRenderer dataCategoryRenderer;
+        private DataItemDOMBuilder.DataItemDOMRenderer dataItemRenderer;
         private Element rootElem;
         private Element categoriesElem;
+        private Element itemsElem;
 
-        public SearchDOMRenderer(DataCategoryDOMBuilder.DataCategoryDOMRenderer dataCategoryRenderer) {
+        public SearchDOMRenderer(
+                DataCategoryDOMBuilder.DataCategoryDOMRenderer dataCategoryRenderer,
+                DataItemDOMBuilder.DataItemDOMRenderer dataItemRenderer) {
             super();
             this.dataCategoryRenderer = dataCategoryRenderer;
+            this.dataItemRenderer = dataItemRenderer;
         }
 
         public void start() {
             rootElem = new Element("Representation");
             categoriesElem = new Element("Categories");
             rootElem.addContent(categoriesElem);
+            itemsElem = new Element("Items");
+            rootElem.addContent(itemsElem);
         }
 
         public void ok() {
@@ -67,8 +85,16 @@ public class SearchDOMBuilder extends SearchBuilder<Document> {
             categoriesElem.addContent(dataCategoryRenderer.getDataCategoryElement());
         }
 
+        public void newDataItem() {
+            itemsElem.addContent(dataItemRenderer.getDataItemElement());
+        }
+
         public DataCategoryBuilder.DataCategoryRenderer getDataCategoryRenderer() {
             return dataCategoryRenderer;
+        }
+
+        public DataItemBuilder.DataItemRenderer getDataItemRenderer() {
+            return dataItemRenderer;
         }
 
         public Document getDocument() {

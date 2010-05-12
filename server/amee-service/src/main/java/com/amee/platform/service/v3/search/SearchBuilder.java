@@ -4,8 +4,10 @@ import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.base.validation.ValidationException;
 import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
 import com.amee.platform.search.SearchService;
 import com.amee.platform.service.v3.category.DataCategoryBuilder;
+import com.amee.platform.service.v3.item.DataItemBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +40,15 @@ public abstract class SearchBuilder<E> implements ResourceBuilder<E> {
             getDataCategoryBuilder().handle(requestWrapper, dataCategory, renderer.getDataCategoryRenderer());
             renderer.newDataCategory();
         }
+        for (DataItem dataItem : searchService.getDataItems(filter.getQ())) {
+            getDataItemBuilder().handle(requestWrapper, dataItem, renderer.getDataItemRenderer());
+            renderer.newDataItem();
+        }
     }
 
     public abstract DataCategoryBuilder getDataCategoryBuilder();
+
+    public abstract DataItemBuilder getDataItemBuilder();
 
     public interface SearchRenderer {
 
@@ -52,6 +60,10 @@ public abstract class SearchBuilder<E> implements ResourceBuilder<E> {
 
         public void newDataCategory();
 
+        public void newDataItem();
+
         public DataCategoryBuilder.DataCategoryRenderer getDataCategoryRenderer();
+
+        public DataItemBuilder.DataItemRenderer getDataItemRenderer();
     }
 }

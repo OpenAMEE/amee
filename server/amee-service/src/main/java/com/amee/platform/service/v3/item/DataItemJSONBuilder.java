@@ -27,7 +27,7 @@ public class DataItemJSONBuilder extends DataItemBuilder<JSONObject> {
         return "application/json";
     }
 
-    public class DataItemJSONRenderer implements DataItemBuilder.DataItemRenderer {
+    public static class DataItemJSONRenderer implements DataItemBuilder.DataItemRenderer {
 
         private DataItem dataItem;
         private JSONObject rootObj;
@@ -114,6 +114,10 @@ public class DataItemJSONBuilder extends DataItemBuilder<JSONObject> {
             } catch (JSONException e) {
                 throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
             }
+        }
+
+        public JSONObject getDataItemJSONObject() {
+            return dataItemObj;
         }
 
         public JSONObject getJSONObject() {

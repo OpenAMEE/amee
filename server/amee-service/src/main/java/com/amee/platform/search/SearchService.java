@@ -274,4 +274,14 @@ public class SearchService implements ApplicationListener {
         }
         return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"), dataCategoryIds);
     }
+
+    public List<DataItem> getDataItems(Query query) {
+        Set<Long> dataItemIds = new HashSet<Long>();
+        for (Document document : new LuceneIndexWrapper().doSearch(query)) {
+            if (ObjectType.DI.getName().equals(document.getField("entityType").stringValue())) {
+                dataItemIds.add(new Long(document.getField("entityId").stringValue()));
+            }
+        }
+        return dataService.getDataItems(environmentService.getEnvironmentByName("AMEE"), dataItemIds);
+    }
 }
