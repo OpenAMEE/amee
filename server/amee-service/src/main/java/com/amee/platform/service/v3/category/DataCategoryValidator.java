@@ -28,6 +28,7 @@ public class DataCategoryValidator implements Validator {
     private ValidationSpecification authoritySpec;
 
     public DataCategoryValidator() {
+        super();
         // name
         nameSpec = new ValidationSpecification();
         nameSpec.setName("name");

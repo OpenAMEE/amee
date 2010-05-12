@@ -22,6 +22,7 @@ public class ItemValueDefinitionValidator implements Validator {
     private ValidationSpecification wikiDocSpec;
 
     public ItemValueDefinitionValidator() {
+        super();
         // name
         nameSpec = new ValidationSpecification();
         nameSpec.setName("name");

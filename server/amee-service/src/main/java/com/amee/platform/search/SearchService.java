@@ -14,6 +14,9 @@ import com.amee.service.invalidation.InvalidationMessage;
 import com.amee.service.path.PathItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
@@ -21,6 +24,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
@@ -35,6 +39,9 @@ import java.util.Set;
 public class SearchService implements ApplicationListener {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    public final static Analyzer STANDARD_ANALYZER = new StandardAnalyzer(Version.LUCENE_30);
+    public final static Analyzer KEYWORD_ANALYZER = new KeywordAnalyzer();
 
     @Autowired
     private TransactionController transactionController;

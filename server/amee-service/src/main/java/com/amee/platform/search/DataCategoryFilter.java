@@ -1,19 +1,12 @@
 package com.amee.platform.search;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.KeywordAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.util.Version;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DataCategoryFilter implements Serializable {
-
-    public final static Analyzer STANDARD_ANALYZER = new StandardAnalyzer(Version.LUCENE_30);
-    public final static Analyzer KEYWORD_ANALYZER = new KeywordAnalyzer();
 
     private Map<String, Query> queries = new HashMap<String, Query>();
 
