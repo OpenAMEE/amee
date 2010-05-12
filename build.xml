@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="amee" default="run" basedir=".">
-    
-    <property file="build.properties" />
-    <property file="default.properties" />
+<project name="amee" default="build" basedir=".">
+
+    <property environment="env"/>
+    <property name="amee.appName" value="amee"/>
+    <property name="amee.home" value="/var/www/apps/${amee.appName}" description="The root of the AMEE deployment layout."/>
+    <property name="amee.current" value="${amee.home}/current" description="The root of the current AMEE package"/>
+    <property name="amee.current.lib" value="${amee.current}/lib" description="The location of the AMEE libs and dependencies."/>
+    <property name="amee.shared" value="${amee.home}/shared" description="The location of the AMEE shared config."/>
 
     <target name="rebuild" depends="clean, package" description="Perform a clean build from src."/>
 
@@ -28,7 +32,7 @@
     </target>
 
     <target name="copy-wrapper" description="Copy the AMEE local wrapper.conf to the deployment folder.">
-        <copy tofile="${amee.shared.lib}/wrapper.conf" file="server/amee-engine/conf/wrapper.conf.local"
+        <copy tofile="${amee.shared}/wrapper.conf" file="server/amee-engine/conf/wrapper.conf.local"
               overwrite="true"/>
     </target>
 
@@ -40,25 +44,7 @@
         </copy>
     </target>
 
-    <target name="start" description="Start AMEE.">
-        <exec executable="amee" dir="${amee.current.bin}" failonerror="true">
-            <env key="RUN_AS_USER" value="${env.USER}"/>
-            <arg value="start"/>
-        </exec>
-    </target>
-
-    <target name="stop" description="Stop AMEE.">
-        <exec executable="amee" dir="${amee.current.bin}" failonerror="true">
-            <env key="RUN_AS_USER" value="${env.USER}"/>
-            <arg value="stop"/>
-        </exec>
-    </target>
-
-    <target name="run" depends="build, start" description="Make and run AMEE."/>
-
     <target name="clean-deploy" depends="rebuild, copy-webapps" description="Rebuild and deploy AMEE"/>
-
-    <target name="clean-run" depends="copy-wrapper, clean-deploy, stop, start" description="Rebuild and restart AMEE."/>
 
 </project>
 
