@@ -2,11 +2,11 @@
 role :app, "localhost"
 role :db,  "localhost", :primary => true
 
-unset :user
-#set :user, "local.user"
-
 set :application, "amee"
 set :deploy_to, "/var/www/apps/#{application}"
+
+unset :user
+#set :user, "local.user"
 
 # Deploy from local folder
 set :repository,  "/Development/AMEE/amee.deploy"
