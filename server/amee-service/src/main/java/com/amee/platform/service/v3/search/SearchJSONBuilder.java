@@ -4,6 +4,8 @@ import com.amee.base.resource.RequestWrapper;
 import com.amee.platform.search.SearchService;
 import com.amee.platform.service.v3.category.DataCategoryBuilder;
 import com.amee.platform.service.v3.category.DataCategoryJSONBuilder;
+import com.amee.platform.service.v3.item.DataItemBuilder;
+import com.amee.platform.service.v3.item.DataItemJSONBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,11 +24,16 @@ public class SearchJSONBuilder extends SearchBuilder<JSONObject> {
     private DataCategoryJSONBuilder dataCategoryJSONBuilder;
 
     @Autowired
+    private DataItemJSONBuilder dataItemJSONBuilder;
+
+    @Autowired
     private SearchFilterValidationHelper validationHelper;
 
     public JSONObject handle(RequestWrapper requestWrapper) {
         SearchJSONRenderer renderer =
-                new SearchJSONRenderer(new DataCategoryJSONBuilder.DataCategoryJSONRenderer());
+                new SearchJSONRenderer(
+                        new DataCategoryJSONBuilder.DataCategoryJSONRenderer(),
+                        new DataItemJSONBuilder.DataItemJSONRenderer());
         super.handle(requestWrapper, renderer);
         return renderer.getJSONObject();
     }
@@ -39,21 +46,32 @@ public class SearchJSONBuilder extends SearchBuilder<JSONObject> {
         return dataCategoryJSONBuilder;
     }
 
+    public DataItemBuilder getDataItemBuilder() {
+        return dataItemJSONBuilder;
+    }
+
     public class SearchJSONRenderer implements SearchRenderer {
 
         private DataCategoryJSONBuilder.DataCategoryJSONRenderer dataCategoryRenderer;
+        private DataItemJSONBuilder.DataItemJSONRenderer dataItemRenderer;
         private JSONObject rootObj;
         private JSONArray categoriesArr;
+        private JSONArray itemsArr;
 
-        public SearchJSONRenderer(DataCategoryJSONBuilder.DataCategoryJSONRenderer dataCategoryRenderer) {
+        public SearchJSONRenderer(
+                DataCategoryJSONBuilder.DataCategoryJSONRenderer dataCategoryRenderer,
+                DataItemJSONBuilder.DataItemJSONRenderer dataItemRenderer) {
             super();
             this.dataCategoryRenderer = dataCategoryRenderer;
+            this.dataItemRenderer = dataItemRenderer;
         }
 
         public void start() {
             rootObj = new JSONObject();
             categoriesArr = new JSONArray();
             put(rootObj, "categories", categoriesArr);
+            itemsArr = new JSONArray();
+            put(rootObj, "items", itemsArr);
         }
 
         public void ok() {
@@ -68,8 +86,16 @@ public class SearchJSONBuilder extends SearchBuilder<JSONObject> {
             categoriesArr.put(dataCategoryRenderer.getDataCategoryObject());
         }
 
+        public void newDataItem() {
+            itemsArr.put(dataItemRenderer.getDataItemJSONObject());
+        }
+
         public DataCategoryBuilder.DataCategoryRenderer getDataCategoryRenderer() {
             return dataCategoryRenderer;
+        }
+
+        public DataItemBuilder.DataItemRenderer getDataItemRenderer() {
+            return dataItemRenderer;
         }
 
         protected JSONObject put(JSONObject o, String key, Object value) {
