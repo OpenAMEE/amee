@@ -1,27 +1,26 @@
-package com.amee.platform.service.v3.category;
+package com.amee.platform.service.v3.search;
 
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.base.validation.ValidationException;
 import com.amee.domain.data.DataCategory;
-import com.amee.platform.search.DataCategoryFilter;
-import com.amee.platform.search.DataCategoryFilterValidationHelper;
 import com.amee.platform.search.SearchService;
+import com.amee.platform.service.v3.category.DataCategoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public abstract class DataCategoriesBuilder<E> implements ResourceBuilder<E> {
+public abstract class SearchBuilder<E> implements ResourceBuilder<E> {
 
     @Autowired
     private SearchService searchService;
 
     @Autowired
-    private DataCategoryFilterValidationHelper validationHelper;
+    private SearchFilterValidationHelper validationHelper;
 
     @Transactional(readOnly = true)
-    protected void handle(RequestWrapper requestWrapper, DataCategoriesRenderer renderer) {
-        DataCategoryFilter filter = new DataCategoryFilter();
-        validationHelper.setDataCategoryFilter(filter);
+    protected void handle(RequestWrapper requestWrapper, SearchRenderer renderer) {
+        SearchFilter filter = new SearchFilter();
+        validationHelper.setSearchFilter(filter);
         if (validationHelper.isValid(requestWrapper.getQueryParameters())) {
             renderer.start();
             handle(requestWrapper, filter, renderer);
@@ -33,9 +32,9 @@ public abstract class DataCategoriesBuilder<E> implements ResourceBuilder<E> {
 
     protected void handle(
             RequestWrapper requestWrapper,
-            DataCategoryFilter filter,
-            DataCategoriesRenderer renderer) {
-        for (DataCategory dataCategory : searchService.getDataCategories(filter)) {
+            SearchFilter filter,
+            SearchRenderer renderer) {
+        for (DataCategory dataCategory : searchService.getDataCategories(filter.getQ())) {
             getDataCategoryBuilder().handle(requestWrapper, dataCategory, renderer.getDataCategoryRenderer());
             renderer.newDataCategory();
         }
@@ -43,7 +42,7 @@ public abstract class DataCategoriesBuilder<E> implements ResourceBuilder<E> {
 
     public abstract DataCategoryBuilder getDataCategoryBuilder();
 
-    public interface DataCategoriesRenderer {
+    public interface SearchRenderer {
 
         public void ok();
 

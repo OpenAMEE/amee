@@ -1,8 +1,9 @@
-package com.amee.platform.service.v3.category;
+package com.amee.platform.service.v3.search;
 
 import com.amee.base.resource.RequestWrapper;
-import com.amee.platform.search.DataCategoryFilterValidationHelper;
 import com.amee.platform.search.SearchService;
+import com.amee.platform.service.v3.category.DataCategoryBuilder;
+import com.amee.platform.service.v3.category.DataCategoryJSONBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Scope("prototype")
-public class DataCategoriesJSONBuilder extends DataCategoriesBuilder<JSONObject> {
+public class SearchJSONBuilder extends SearchBuilder<JSONObject> {
 
     @Autowired
     private SearchService searchService;
@@ -21,11 +22,11 @@ public class DataCategoriesJSONBuilder extends DataCategoriesBuilder<JSONObject>
     private DataCategoryJSONBuilder dataCategoryJSONBuilder;
 
     @Autowired
-    private DataCategoryFilterValidationHelper validationHelper;
+    private SearchFilterValidationHelper validationHelper;
 
     public JSONObject handle(RequestWrapper requestWrapper) {
-        DataCategoriesJSONRenderer renderer =
-                new DataCategoriesJSONRenderer(new DataCategoryJSONBuilder.DataCategoryJSONRenderer());
+        SearchJSONRenderer renderer =
+                new SearchJSONRenderer(new DataCategoryJSONBuilder.DataCategoryJSONRenderer());
         super.handle(requestWrapper, renderer);
         return renderer.getJSONObject();
     }
@@ -38,13 +39,13 @@ public class DataCategoriesJSONBuilder extends DataCategoriesBuilder<JSONObject>
         return dataCategoryJSONBuilder;
     }
 
-    public class DataCategoriesJSONRenderer implements DataCategoriesBuilder.DataCategoriesRenderer {
+    public class SearchJSONRenderer implements SearchRenderer {
 
         private DataCategoryJSONBuilder.DataCategoryJSONRenderer dataCategoryRenderer;
         private JSONObject rootObj;
         private JSONArray categoriesArr;
 
-        public DataCategoriesJSONRenderer(DataCategoryJSONBuilder.DataCategoryJSONRenderer dataCategoryRenderer) {
+        public SearchJSONRenderer(DataCategoryJSONBuilder.DataCategoryJSONRenderer dataCategoryRenderer) {
             super();
             this.dataCategoryRenderer = dataCategoryRenderer;
         }

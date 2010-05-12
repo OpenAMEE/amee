@@ -1,7 +1,6 @@
 package com.amee.engine;
 
 import com.amee.base.transaction.TransactionController;
-import com.amee.platform.search.SearchService;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -75,13 +74,6 @@ public class Engine implements WrapperListener, Serializable {
 
         // Initialise TransactionController (for controlling Spring).
         transactionController = (TransactionController) applicationContext.getBean("transactionController");
-
-        // Build the search index every time.
-        // TODO: This will slow down as we index more stuff. Don't do this.
-        transactionController.begin(false);
-        SearchService searchService = ((SearchService) applicationContext.getBean("searchService"));
-        searchService.build();
-        transactionController.end();
 
         // Configure Restlet server (ajp, http, etc).
         // TODO: try and do this in Spring XML config
