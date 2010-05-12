@@ -4,6 +4,8 @@ import com.amee.base.transaction.TransactionController;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.ObjectType;
 import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.ItemValue;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.service.data.DataService;
@@ -25,7 +27,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,22 +35,6 @@ import java.util.Set;
 public class SearchService implements ApplicationListener {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    public final static String[] DATA_CATEGORY_FIELDS_ARR = {
-            "uid",
-            "name",
-            "wikiName",
-            "path",
-            "fullPath",
-            "parentWikiName",
-            "wikiDoc",
-            "provenance",
-            "authority",
-            "parentUid",
-            "parentWikiName",
-            "itemDefinitionUid",
-            "itemDefinitionName"};
-    public final static Set<String> DATA_CATEGORY_FIELDS = new HashSet<String>(Arrays.asList(DATA_CATEGORY_FIELDS_ARR));
 
     @Autowired
     private TransactionController transactionController;
@@ -85,6 +70,10 @@ public class SearchService implements ApplicationListener {
     // Index & Document management.
 
     public void build() {
+        build(true, false);
+    }
+
+    public void build(boolean indexDataCategories, boolean indexDataItems) {
         try {
             log.debug("build() Building...");
             // Get a LuceneWrapper to use in this thread.
@@ -93,10 +82,13 @@ public class SearchService implements ApplicationListener {
             index.clearIndex();
             // Get an IndexWriter to work with.
             IndexWriter indexWriter = index.getIndexWriter();
-            // Add all DataCategories to the index.
-            for (DataCategory dataCategory :
-                    dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"))) {
-                indexWriter.addDocument(getDocument(dataCategory));
+            // Add DataCategories.
+            if (indexDataCategories) {
+                buildDataCategories(indexWriter);
+            }
+            // Add DataItems.
+            if (indexDataItems) {
+                buildDataItems(indexWriter);
             }
             // Ensure IndexWriter is closed.
             index.closeIndexWriter();
@@ -104,6 +96,47 @@ public class SearchService implements ApplicationListener {
         } catch (IOException e) {
             throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Add all DataCategories to the index.
+     *
+     * @param indexWriter
+     * @throws IOException
+     */
+    protected void buildDataCategories(IndexWriter indexWriter) throws IOException {
+        transactionController.begin(false);
+        for (DataCategory dataCategory :
+                dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"))) {
+            log.debug("buildDataCategories() " + dataCategory.getName());
+            indexWriter.addDocument(getDocument(dataCategory));
+        }
+        transactionController.end();
+    }
+
+    /**
+     * Add all DataItems to the index.
+     *
+     * @param indexWriter
+     * @throws IOException
+     */
+    protected void buildDataItems(IndexWriter indexWriter) throws IOException {
+        transactionController.begin(false);
+        int i = 0;
+        for (DataCategory dataCategory :
+                dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"))) {
+            if (dataCategory.getItemDefinition() != null) {
+                i++;
+                log.debug("buildDataItems() " + dataCategory.getName());
+                for (DataItem dataItem : dataService.getDataItems(dataCategory)) {
+                    indexWriter.addDocument(getDocument(dataItem));
+                }
+                if (i > 30) {
+                    break;
+                }
+            }
+        }
+        transactionController.end();
     }
 
     /**
@@ -119,7 +152,7 @@ public class SearchService implements ApplicationListener {
             LuceneIndexWrapper index = new LuceneIndexWrapper();
             IndexWriter indexWriter = index.getIndexWriter();
             Document document = getDocument(dataCategory);
-            indexWriter.updateDocument(new Term("uid", dataCategory.getUid()), document, index.getAnalyzer());
+            indexWriter.updateDocument(new Term("entityUid", dataCategory.getUid()), document, index.getAnalyzer());
             index.closeIndexWriter();
         } catch (IOException e) {
             throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
@@ -138,7 +171,7 @@ public class SearchService implements ApplicationListener {
         try {
             LuceneIndexWrapper index = new LuceneIndexWrapper();
             IndexWriter indexWriter = index.getIndexWriter();
-            indexWriter.deleteDocuments(new Term("uid", uid));
+            indexWriter.deleteDocuments(new Term("entityUid", uid));
             index.closeIndexWriter();
         } catch (IOException e) {
             throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
@@ -163,17 +196,41 @@ public class SearchService implements ApplicationListener {
             doc.add(new Field("parentWikiName", dataCategory.getDataCategory().getWikiName(), Field.Store.NO, Field.Index.ANALYZED));
         }
         if (dataCategory.getItemDefinition() != null) {
-            doc.add(new Field("itemDefinitionUid", dataCategory.getItemDefinition().getUid(), Field.Store.NO, Field.Index.NOT_ANALYZED));
-            doc.add(new Field("itemDefinitionName", dataCategory.getItemDefinition().getName(), Field.Store.NO, Field.Index.ANALYZED));
+            doc.add(new Field("definitionUid", dataCategory.getItemDefinition().getUid(), Field.Store.NO, Field.Index.NOT_ANALYZED));
+            doc.add(new Field("definitionName", dataCategory.getItemDefinition().getName(), Field.Store.NO, Field.Index.ANALYZED));
         }
+        return doc;
+    }
+
+    protected Document getDocument(DataItem dataItem) {
+        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(dataItem.getEnvironment());
+        PathItem pathItem = pathItemGroup.findByUId(dataItem.getDataCategory().getUid());
+        Document doc = getDocument((AMEEEntity) dataItem);
+        doc.add(new Field("name", dataItem.getName(), Field.Store.NO, Field.Index.ANALYZED));
+        doc.add(new Field("path", dataItem.getPath(), Field.Store.NO, Field.Index.NOT_ANALYZED));
+        if (pathItem != null) {
+            doc.add(new Field("fullPath", pathItem.getFullPath() + "/" + dataItem.getDisplayPath(), Field.Store.NO, Field.Index.NOT_ANALYZED));
+        }
+        doc.add(new Field("wikiDoc", dataItem.getWikiDoc(), Field.Store.NO, Field.Index.ANALYZED));
+        doc.add(new Field("provenance", dataItem.getProvenance(), Field.Store.NO, Field.Index.ANALYZED));
+        doc.add(new Field("categoryUid", dataItem.getDataCategory().getUid(), Field.Store.NO, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("categoryWikiName", dataItem.getDataCategory().getWikiName(), Field.Store.NO, Field.Index.ANALYZED));
+        doc.add(new Field("definitionUid", dataItem.getItemDefinition().getUid(), Field.Store.NO, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("definitionName", dataItem.getItemDefinition().getName(), Field.Store.NO, Field.Index.ANALYZED));
+        for (Object key : dataItem.getItemValuesMap().keySet()) {
+            String path = (String) key;
+            ItemValue itemValue = dataItem.getItemValuesMap().get(path);
+            doc.add(new Field(path, itemValue.getValue(), Field.Store.NO, Field.Index.ANALYZED));
+        }
+        doc.add(new Field("label", dataItem.getLabel(), Field.Store.NO, Field.Index.ANALYZED));
         return doc;
     }
 
     private Document getDocument(AMEEEntity entity) {
         Document doc = new Document();
-        doc.add(new Field("type", entity.getObjectType().getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field("id", entity.getId().toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-        doc.add(new Field("uid", entity.getUid(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("entityType", entity.getObjectType().getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("entityId", entity.getId().toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("entityUid", entity.getUid(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         return doc;
     }
 
@@ -196,7 +253,7 @@ public class SearchService implements ApplicationListener {
     public List<DataCategory> getDataCategories(String key, String value) {
         Set<Long> dataCategoryIds = new HashSet<Long>();
         for (Document document : new LuceneIndexWrapper().doSearch(key, value)) {
-            dataCategoryIds.add(new Long(document.getField("id").stringValue()));
+            dataCategoryIds.add(new Long(document.getField("entityId").stringValue()));
         }
         return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"), dataCategoryIds);
     }
@@ -204,7 +261,9 @@ public class SearchService implements ApplicationListener {
     public List<DataCategory> getDataCategories(Query query) {
         Set<Long> dataCategoryIds = new HashSet<Long>();
         for (Document document : new LuceneIndexWrapper().doSearch(query)) {
-            dataCategoryIds.add(new Long(document.getField("id").stringValue()));
+            if (ObjectType.DC.getName().equals(document.getField("entityType").stringValue())) {
+                dataCategoryIds.add(new Long(document.getField("entityId").stringValue()));
+            }
         }
         return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"), dataCategoryIds);
     }

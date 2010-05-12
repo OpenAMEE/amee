@@ -23,7 +23,7 @@ public class DataCategoryFilterValidationHelper extends ValidationHelper {
 
     @Override
     protected void registerCustomEditors(DataBinder dataBinder) {
-        dataBinder.registerCustomEditor(Query.class, "uid", new QueryParserEditor("uid", DataCategoryFilter.KEYWORD_ANALYZER));
+        dataBinder.registerCustomEditor(Query.class, "uid", new QueryParserEditor("entityUid", DataCategoryFilter.KEYWORD_ANALYZER));
         dataBinder.registerCustomEditor(Query.class, "name", new QueryParserEditor("name"));
         dataBinder.registerCustomEditor(Query.class, "path", new QueryParserEditor("path"));
         dataBinder.registerCustomEditor(Query.class, "fullPath", new QueryParserEditor("fullPath"));

@@ -1,8 +1,9 @@
-package com.amee.platform.service.v3.category;
+package com.amee.platform.service.v3.search;
 
 import com.amee.base.resource.RequestWrapper;
-import com.amee.platform.search.DataCategoryFilterValidationHelper;
 import com.amee.platform.search.SearchService;
+import com.amee.platform.service.v3.category.DataCategoryBuilder;
+import com.amee.platform.service.v3.category.DataCategoryDOMBuilder;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Scope("prototype")
-public class DataCategoriesDOMBuilder extends DataCategoriesBuilder<Document> {
+public class SearchDOMBuilder extends SearchBuilder<Document> {
 
     @Autowired
     private SearchService searchService;
@@ -20,11 +21,11 @@ public class DataCategoriesDOMBuilder extends DataCategoriesBuilder<Document> {
     private DataCategoryDOMBuilder dataCategoryDOMBuilder;
 
     @Autowired
-    private DataCategoryFilterValidationHelper validationHelper;
+    private SearchFilterValidationHelper validationHelper;
 
     public Document handle(RequestWrapper requestWrapper) {
-        DataCategoriesDOMRenderer renderer =
-                new DataCategoriesDOMRenderer(new DataCategoryDOMBuilder.DataCategoryDOMRenderer());
+        SearchDOMRenderer renderer =
+                new SearchDOMRenderer(new DataCategoryDOMBuilder.DataCategoryDOMRenderer());
         super.handle(requestWrapper, renderer);
         return renderer.getDocument();
     }
@@ -37,13 +38,13 @@ public class DataCategoriesDOMBuilder extends DataCategoriesBuilder<Document> {
         return dataCategoryDOMBuilder;
     }
 
-    public class DataCategoriesDOMRenderer implements DataCategoriesBuilder.DataCategoriesRenderer {
+    public class SearchDOMRenderer implements SearchRenderer {
 
         private DataCategoryDOMBuilder.DataCategoryDOMRenderer dataCategoryRenderer;
         private Element rootElem;
         private Element categoriesElem;
 
-        public DataCategoriesDOMRenderer(DataCategoryDOMBuilder.DataCategoryDOMRenderer dataCategoryRenderer) {
+        public SearchDOMRenderer(DataCategoryDOMBuilder.DataCategoryDOMRenderer dataCategoryRenderer) {
             super();
             this.dataCategoryRenderer = dataCategoryRenderer;
         }
