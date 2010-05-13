@@ -3,9 +3,11 @@ package com.amee.platform.service.v3.item;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
+import com.amee.domain.data.ItemValue;
 import com.amee.domain.path.PathItem;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.context.annotation.Scope;
@@ -73,11 +75,11 @@ public class DataItemJSONBuilder extends DataItemBuilder<JSONObject> {
 
         public void addBasic() {
             put(dataItemObj, "uid", dataItem.getUid());
+            put(dataItemObj, "type", dataItem.getObjectType().getName());
         }
 
         public void addName() {
             put(dataItemObj, "name", dataItem.getName());
-            put(dataItemObj, "categoryWikiName", dataItem.getDataCategory().getWikiName());
         }
 
         public void addPath(PathItem pathItem) {
@@ -85,6 +87,11 @@ public class DataItemJSONBuilder extends DataItemBuilder<JSONObject> {
             if (pathItem != null) {
                 put(dataItemObj, "fullPath", pathItem.getFullPath() + "/" + dataItem.getDisplayPath());
             }
+        }
+
+        public void addParent() {
+            put(dataItemObj, "categoryUid", dataItem.getDataCategory().getUid());
+            put(dataItemObj, "categoryWikiName", dataItem.getDataCategory().getWikiName());
         }
 
         public void addAudit() {
@@ -106,6 +113,24 @@ public class DataItemJSONBuilder extends DataItemBuilder<JSONObject> {
             put(itemDefinitionObj, "uid", itemDefinition.getUid());
             put(itemDefinitionObj, "name", itemDefinition.getName());
             put(dataItemObj, "itemDefinition", itemDefinitionObj);
+        }
+
+        public void addValues() {
+            JSONArray valuesArr = new JSONArray();
+            put(dataItemObj, "values", valuesArr);
+            for (ItemValue itemValue : dataItem.getItemValues()) {
+                JSONObject valueObj = new JSONObject();
+                put(valueObj, "path", itemValue.getPath());
+                put(valueObj, "value", itemValue.getValue());
+                if (itemValue.hasUnit()) {
+                    put(valueObj, "unit", itemValue.getUnit().toString());
+                }
+                if (itemValue.hasPerUnit()) {
+                    put(valueObj, "perUnit", itemValue.getPerUnit().toString());
+                    put(valueObj, "compoundUnit", itemValue.getCompoundUnit().toString());
+                }
+                valuesArr.put(valueObj);
+            }
         }
 
         protected JSONObject put(JSONObject o, String key, Object value) {

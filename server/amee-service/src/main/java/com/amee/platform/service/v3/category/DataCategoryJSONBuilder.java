@@ -68,17 +68,22 @@ public class DataCategoryJSONBuilder extends DataCategoryBuilder<JSONObject> {
 
         public void addBasic() {
             put(dataCategoryObj, "uid", dataCategory.getUid());
+            put(dataCategoryObj, "type", dataCategory.getObjectType().getName());
             put(dataCategoryObj, "name", dataCategory.getName());
             put(dataCategoryObj, "wikiName", dataCategory.getWikiName());
-            if (dataCategory.getDataCategory() != null) {
-                put(dataCategoryObj, "parentWikiName", dataCategory.getDataCategory().getWikiName());
-            }
         }
 
         public void addPath(PathItem pathItem) {
             put(dataCategoryObj, "path", dataCategory.getPath());
             if (pathItem != null) {
                 put(dataCategoryObj, "fullPath", pathItem.getFullPath() + "/" + dataCategory.getDisplayPath());
+            }
+        }
+
+        public void addParent() {
+            if (dataCategory.getDataCategory() != null) {
+                put(dataCategoryObj, "parentUid", dataCategory.getDataCategory().getUid());
+                put(dataCategoryObj, "parentWikiName", dataCategory.getDataCategory().getWikiName());
             }
         }
 
@@ -115,7 +120,7 @@ public class DataCategoryJSONBuilder extends DataCategoryBuilder<JSONObject> {
             }
         }
 
-        public JSONObject getDataCategoryObject() {
+        public JSONObject getDataCategoryJSONObject() {
             return dataCategoryObj;
         }
 
