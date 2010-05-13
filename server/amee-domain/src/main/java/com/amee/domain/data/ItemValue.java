@@ -252,7 +252,7 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
     }
 
     public void setStartDate(Date startDate) {
-        this.startDate = new Date(startDate.getTime());
+        this.startDate = startDate;
     }
 
     public ObjectType getObjectType() {
