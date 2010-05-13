@@ -67,10 +67,6 @@ public class SearchDOMBuilder extends SearchBuilder<Document> {
 
         public void start() {
             rootElem = new Element("Representation");
-            categoriesElem = new Element("Categories");
-            rootElem.addContent(categoriesElem);
-            itemsElem = new Element("Items");
-            rootElem.addContent(itemsElem);
         }
 
         public void ok() {
@@ -82,10 +78,18 @@ public class SearchDOMBuilder extends SearchBuilder<Document> {
         }
 
         public void newDataCategory() {
+            if (categoriesElem == null) {
+                categoriesElem = new Element("Categories");
+                rootElem.addContent(categoriesElem);
+            }
             categoriesElem.addContent(dataCategoryRenderer.getDataCategoryElement());
         }
 
         public void newDataItem() {
+            if (itemsElem == null) {
+                itemsElem = new Element("Items");
+                rootElem.addContent(itemsElem);
+            }
             itemsElem.addContent(dataItemRenderer.getDataItemElement());
         }
 

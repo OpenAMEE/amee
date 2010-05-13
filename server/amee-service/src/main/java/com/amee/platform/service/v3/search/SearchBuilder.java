@@ -3,6 +3,7 @@ package com.amee.platform.service.v3.search;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.base.validation.ValidationException;
+import com.amee.domain.ObjectType;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.platform.search.SearchService;
@@ -36,13 +37,17 @@ public abstract class SearchBuilder<E> implements ResourceBuilder<E> {
             RequestWrapper requestWrapper,
             SearchFilter filter,
             SearchRenderer renderer) {
-        for (DataCategory dataCategory : searchService.getDataCategories(filter.getQ())) {
-            getDataCategoryBuilder().handle(requestWrapper, dataCategory, renderer.getDataCategoryRenderer());
-            renderer.newDataCategory();
+        if (filter.getTypes().isEmpty() || filter.getTypes().contains(ObjectType.DC)) {
+            for (DataCategory dataCategory : searchService.getDataCategories(filter.getQ())) {
+                getDataCategoryBuilder().handle(requestWrapper, dataCategory, renderer.getDataCategoryRenderer());
+                renderer.newDataCategory();
+            }
         }
-        for (DataItem dataItem : searchService.getDataItems(filter.getQ())) {
-            getDataItemBuilder().handle(requestWrapper, dataItem, renderer.getDataItemRenderer());
-            renderer.newDataItem();
+        if (filter.getTypes().isEmpty() || filter.getTypes().contains(ObjectType.DI)) {
+            for (DataItem dataItem : searchService.getDataItems(filter.getQ())) {
+                getDataItemBuilder().handle(requestWrapper, dataItem, renderer.getDataItemRenderer());
+                renderer.newDataItem();
+            }
         }
     }
 

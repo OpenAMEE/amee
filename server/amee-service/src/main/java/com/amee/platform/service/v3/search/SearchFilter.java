@@ -1,14 +1,18 @@
 package com.amee.platform.service.v3.search;
 
+import com.amee.domain.ObjectType;
 import org.apache.lucene.search.Query;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class SearchFilter implements Serializable {
 
     private Map<String, Query> queries = new HashMap<String, Query>();
+    private Set<ObjectType> types = new HashSet<ObjectType>();
 
     public SearchFilter() {
         super();
@@ -27,6 +31,18 @@ public class SearchFilter implements Serializable {
     }
 
     public void setQueries(Map<String, Query> queries) {
-        this.queries = queries;
+        if (queries != null) {
+            this.queries = queries;
+        }
+    }
+
+    public Set<ObjectType> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Set<ObjectType> types) {
+        if (types != null) {
+            this.types = types;
+        }
     }
 }
