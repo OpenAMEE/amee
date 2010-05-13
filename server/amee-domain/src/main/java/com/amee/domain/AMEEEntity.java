@@ -137,8 +137,8 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
         o.id = id;
         o.uid = uid;
         o.status = status;
-        o.created = (created != null) ? new Date(created.getTime()) : null;
-        o.modified = (modified != null) ? new Date(modified.getTime()) : null;
+        o.created = (created != null) ? (Date) created.clone() : null;
+        o.modified = (modified != null) ? (Date) modified.clone() : null;
     }
 
     /**
@@ -321,7 +321,7 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
      * @return the created timestamp
      */
     public Date getCreated() {
-        return new Date(created.getTime());
+        return created;
     }
 
     /**
@@ -330,7 +330,7 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
      * @param created timestamp to set
      */
     public void setCreated(Date created) {
-        this.created = new Date(created.getTime());
+        this.created = created;
     }
 
     /**
@@ -339,7 +339,7 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
      * @return modified timestamp to set
      */
     public Date getModified() {
-        return new Date(modified.getTime());
+        return modified;
     }
 
     /**
@@ -348,7 +348,7 @@ public abstract class AMEEEntity implements IAMEEEntityReference, DatedObject, S
      * @param modified timestamp to set
      */
     public void setModified(Date modified) {
-        this.modified = new Date(modified.getTime());
+        this.modified = modified;
     }
 
     /**
