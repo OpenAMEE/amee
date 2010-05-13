@@ -44,13 +44,6 @@
                 <td colspan="2"><input name='name' value='${itemDefinition.name}' type='text' size='30'/></td>
             </tr>
             <tr>
-                <td>Skip Recalculation (Profile Items):</td>
-                <td colspan="2">
-                    Yes <input type="radio" name="skipRecalculation" value="true"<#if itemDefinition.skipRecalculation> checked</#if>/>
-                    No <input type="radio" name="skipRecalculation" value="false"<#if !itemDefinition.skipRecalculation> checked</#if>/>
-                </td>
-            </tr>
-            <tr>
                 <td>Drill Down:</td>
                 <td colspan="2"><input name='drillDown' value='${itemDefinition.drillDown}' type='text' size='30'/></td>
             </tr>
