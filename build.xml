@@ -44,7 +44,7 @@
         </copy>
     </target>
 
-    <target name="clean-deploy" depends="rebuild, copy-webapps" description="Rebuild and deploy AMEE"/>
+    <target name="clean-deploy" depends="rebuild, copy-webapps" description="Rebuild and deploy AMEE."/>
 
     <target name="cap-local-deploy" depends="rebuild" description="Capistrano local deploy from working copy">
         <exec executable="cap" dir="${basedir}" failonerror="true">
@@ -58,6 +58,14 @@
         <exec executable="cap" dir="${basedir}" failonerror="true">
             <arg value="local"/>
             <arg value="deploy:update"/>
+        </exec>
+    </target>
+
+    <target name="cap-install" depends="rebuild" description="Create a new release and deploy to git.">
+        <fail unless="tag" message="You must specify a tag, eg -Dtag=2.10.5" />
+        <exec executable="cap" dir="${basedir}" failonerror="true">
+            <arg value="install"/>
+            <arg value="TAG=${tag}"/>
         </exec>
     </target>
 </project>
