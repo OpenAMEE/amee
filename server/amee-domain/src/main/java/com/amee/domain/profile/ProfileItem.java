@@ -167,11 +167,11 @@ public class ProfileItem extends Item {
     }
 
     /**
-     * Get the {@link com.amee.core.CO2Amount CO2Amount} for this ProfileItem.
+     * Get the {@link com.amee.platform.science.CO2Amount CO2Amount} for this ProfileItem.
      * <p/>
      * If the ProfileItem does not support CO2 calculations (i.e. metadata) CO2Amount.ZERO is returned.
      *
-     * @return - the {@link com.amee.core.CO2Amount CO2Amount} for this ProfileItem
+     * @return - the {@link com.amee.platform.science.CO2Amount CO2Amount} for this ProfileItem
      */
     public CO2Amount getAmount() {
         if (amount == null) {
