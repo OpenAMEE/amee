@@ -210,7 +210,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
                 element.appendChild(totalAmount);
 
             }
-            // Shouldn't we still display the amount here. See: JSON.
+            // Shouldn't we still display the amount here. See: JSON. (PL-1653)
 
         }
         return element;
