@@ -54,8 +54,7 @@ public class SearchDOMBuilder extends SearchBuilder<Document> {
         private DataCategoryDOMBuilder.DataCategoryDOMRenderer dataCategoryRenderer;
         private DataItemDOMBuilder.DataItemDOMRenderer dataItemRenderer;
         private Element rootElem;
-        private Element categoriesElem;
-        private Element itemsElem;
+        private Element resultsElem;
 
         public SearchDOMRenderer(
                 DataCategoryDOMBuilder.DataCategoryDOMRenderer dataCategoryRenderer,
@@ -67,6 +66,8 @@ public class SearchDOMBuilder extends SearchBuilder<Document> {
 
         public void start() {
             rootElem = new Element("Representation");
+            resultsElem = new Element("Results");
+            rootElem.addContent(resultsElem);
         }
 
         public void ok() {
@@ -78,19 +79,11 @@ public class SearchDOMBuilder extends SearchBuilder<Document> {
         }
 
         public void newDataCategory() {
-            if (categoriesElem == null) {
-                categoriesElem = new Element("Categories");
-                rootElem.addContent(categoriesElem);
-            }
-            categoriesElem.addContent(dataCategoryRenderer.getDataCategoryElement());
+            resultsElem.addContent(dataCategoryRenderer.getDataCategoryElement());
         }
 
         public void newDataItem() {
-            if (itemsElem == null) {
-                itemsElem = new Element("Items");
-                rootElem.addContent(itemsElem);
-            }
-            itemsElem.addContent(dataItemRenderer.getDataItemElement());
+            resultsElem.addContent(dataItemRenderer.getDataItemElement());
         }
 
         public DataCategoryBuilder.DataCategoryRenderer getDataCategoryRenderer() {

@@ -21,6 +21,7 @@ package com.amee.service.data;
 
 import com.amee.base.transaction.TransactionController;
 import com.amee.base.utils.UidGen;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.ObjectType;
 import com.amee.domain.data.DataCategory;
@@ -45,8 +46,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -144,6 +147,14 @@ public class DataService extends BaseService implements ApplicationListener {
         return activeCategories;
     }
 
+    public Map<Long, AMEEEntity> getDataCategoryMap(Environment environment, Set<Long> dataCategoryIds) {
+        Map<Long, AMEEEntity> dataCategoryMap = new HashMap<Long, AMEEEntity>();
+        for (DataCategory dataCategory : dao.getDataCategories(environment, dataCategoryIds)) {
+            dataCategoryMap.put(dataCategory.getEntityId(), dataCategory);
+        }
+        return dataCategoryMap;
+    }
+
     public List<DataCategory> getDataCategories(Environment environment, Set<Long> dataCategoryIds) {
         return dao.getDataCategories(environment, dataCategoryIds);
     }
@@ -226,6 +237,14 @@ public class DataService extends BaseService implements ApplicationListener {
         } else {
             return null;
         }
+    }
+
+    public Map<Long, AMEEEntity> getDataItemMap(Environment environment, Set<Long> dataItemIds) {
+        Map<Long, AMEEEntity> dataItemMap = new HashMap<Long, AMEEEntity>();
+        for (DataItem dataItem : dao.getDataItems(environment, dataItemIds)) {
+            dataItemMap.put(dataItem.getEntityId(), dataItem);
+        }
+        return dataItemMap;
     }
 
     public List<DataItem> getDataItems(Environment environment, Set<Long> dataItemIds) {

@@ -55,8 +55,7 @@ public class SearchJSONBuilder extends SearchBuilder<JSONObject> {
         private DataCategoryJSONBuilder.DataCategoryJSONRenderer dataCategoryRenderer;
         private DataItemJSONBuilder.DataItemJSONRenderer dataItemRenderer;
         private JSONObject rootObj;
-        private JSONArray categoriesArr;
-        private JSONArray itemsArr;
+        private JSONArray resultsArr;
 
         public SearchJSONRenderer(
                 DataCategoryJSONBuilder.DataCategoryJSONRenderer dataCategoryRenderer,
@@ -68,6 +67,8 @@ public class SearchJSONBuilder extends SearchBuilder<JSONObject> {
 
         public void start() {
             rootObj = new JSONObject();
+            resultsArr = new JSONArray();
+            put(rootObj, "results", resultsArr);
         }
 
         public void ok() {
@@ -79,19 +80,11 @@ public class SearchJSONBuilder extends SearchBuilder<JSONObject> {
         }
 
         public void newDataCategory() {
-            if (categoriesArr == null) {
-                categoriesArr = new JSONArray();
-                put(rootObj, "categories", categoriesArr);
-            }
-            categoriesArr.put(dataCategoryRenderer.getDataCategoryObject());
+            resultsArr.put(dataCategoryRenderer.getDataCategoryObject());
         }
 
         public void newDataItem() {
-            if (itemsArr == null) {
-                itemsArr = new JSONArray();
-                put(rootObj, "items", itemsArr);
-            }
-            itemsArr.put(dataItemRenderer.getDataItemJSONObject());
+            resultsArr.put(dataItemRenderer.getDataItemJSONObject());
         }
 
         public DataCategoryBuilder.DataCategoryRenderer getDataCategoryRenderer() {

@@ -65,7 +65,7 @@ public abstract class DataCategoryBuilder<E> implements ResourceBuilder<E> {
         // Optionals.
         if (path || full) {
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(dataCategory.getEnvironment());
-            renderer.addPath(pathItemGroup.findByUId(dataCategory.getDataCategory().getUid()));
+            renderer.addPath(pathItemGroup.findByUId(dataCategory.getUid()));
         }
         if (audit || full) {
             renderer.addAudit();
