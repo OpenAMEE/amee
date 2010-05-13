@@ -9,6 +9,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -18,6 +19,7 @@ import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,20 +34,14 @@ import java.util.List;
  * Instances of this class should only be used by one thread. Care should be taken to respect the
  * sequence of method calls as described in the method documentation.
  */
-public class LuceneIndexWrapper implements Serializable {
+@Service
+public class LuceneService implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
     private Analyzer analyzer;
     private Directory directory;
     private IndexWriter indexWriter;
-
-    /**
-     * Default constructor.
-     */
-    public LuceneIndexWrapper() {
-        super();
-    }
 
     /**
      * Conduct a search in the Lucene index based on the supplied field name and query string.
@@ -92,10 +88,37 @@ public class LuceneIndexWrapper implements Serializable {
         return documents;
     }
 
+    public synchronized void addDocument(Document document) {
+        try {
+            getIndexWriter().addDocument(document);
+            closeIndexWriter();
+        } catch (IOException e) {
+            throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+        }
+    }
+
+    public synchronized void updateDocument(Term term, Document document, Analyzer analyzer) {
+        try {
+            getIndexWriter().updateDocument(term, document, analyzer);
+            closeIndexWriter();
+        } catch (IOException e) {
+            throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+        }
+    }
+
+    public synchronized void deleteDocuments(Term... terms) {
+        try {
+            getIndexWriter().deleteDocuments(terms);
+            closeIndexWriter();
+        } catch (IOException e) {
+            throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+        }
+    }
+
     /**
      * Clear the Lucene index.
      */
-    public void clearIndex() {
+    public synchronized void clearIndex() {
         // First ensure index is not locked (perhaps from a crash).
         unlockIndex();
         // Create a new index.
@@ -106,7 +129,7 @@ public class LuceneIndexWrapper implements Serializable {
     /**
      * Unlocks the Lucene index. Useful following JVM crashes.
      */
-    protected void unlockIndex() {
+    private synchronized void unlockIndex() {
         try {
             if (IndexReader.indexExists(getDirectory())) {
                 IndexReader.open(getDirectory());
@@ -135,7 +158,7 @@ public class LuceneIndexWrapper implements Serializable {
      *
      * @return the Analyzer
      */
-    public Analyzer getAnalyzer() {
+    public synchronized Analyzer getAnalyzer() {
         if (analyzer == null) {
             createAnalyser();
         }
@@ -145,7 +168,7 @@ public class LuceneIndexWrapper implements Serializable {
     /**
      * Create a new Analyzer.
      */
-    protected void createAnalyser() {
+    private void createAnalyser() {
         setAnalyzer(new StandardAnalyzer(Version.LUCENE_30));
     }
 
@@ -154,7 +177,7 @@ public class LuceneIndexWrapper implements Serializable {
      *
      * @param analyzer to set
      */
-    protected void setAnalyzer(Analyzer analyzer) {
+    private void setAnalyzer(Analyzer analyzer) {
         this.analyzer = analyzer;
     }
 
@@ -163,7 +186,7 @@ public class LuceneIndexWrapper implements Serializable {
      *
      * @return the Analyzer
      */
-    protected Directory getDirectory() {
+    private synchronized Directory getDirectory() {
         if (directory == null) {
             createDirectory();
         }
@@ -173,7 +196,7 @@ public class LuceneIndexWrapper implements Serializable {
     /**
      * Open the Directory.
      */
-    protected void createDirectory() {
+    private void createDirectory() {
         try {
             String path = System.getProperty("amee.lucenePath", "/var/www/apps/amee/lucene");
             setDirectory(FSDirectory.open(new File(path)));
@@ -185,7 +208,7 @@ public class LuceneIndexWrapper implements Serializable {
     /**
      * Closes the Lucene directory.
      */
-    protected void closeDirectory() {
+    private synchronized void closeDirectory() {
         try {
             if (directory != null) {
                 directory.close();
@@ -200,7 +223,7 @@ public class LuceneIndexWrapper implements Serializable {
      *
      * @param directory to set
      */
-    protected void setDirectory(Directory directory) {
+    private void setDirectory(Directory directory) {
         this.directory = directory;
     }
 
@@ -210,7 +233,7 @@ public class LuceneIndexWrapper implements Serializable {
      *
      * @return the IndexWriter
      */
-    protected IndexWriter getIndexWriter() {
+    private IndexWriter getIndexWriter() {
         return getIndexWriter(false);
     }
 
@@ -224,7 +247,7 @@ public class LuceneIndexWrapper implements Serializable {
      * @param create a new index if true
      * @return the IndexWriter
      */
-    protected IndexWriter getIndexWriter(boolean create) {
+    private synchronized IndexWriter getIndexWriter(boolean create) {
         if (indexWriter == null) {
             createIndexWriter(create);
         }
@@ -238,7 +261,7 @@ public class LuceneIndexWrapper implements Serializable {
      *
      * @param create a new index if true
      */
-    protected void createIndexWriter(boolean create) {
+    private void createIndexWriter(boolean create) {
         try {
             setIndexWriter(new IndexWriter(
                     getDirectory(),
@@ -255,7 +278,7 @@ public class LuceneIndexWrapper implements Serializable {
      * <p/>
      * This must be called at least once following previous calls to getIndexWriter.
      */
-    protected void closeIndexWriter() {
+    private synchronized void closeIndexWriter() {
         if (indexWriter != null) {
             try {
                 indexWriter.optimize();
@@ -272,7 +295,7 @@ public class LuceneIndexWrapper implements Serializable {
      *
      * @param indexWriter to set
      */
-    protected void setIndexWriter(IndexWriter indexWriter) {
+    private void setIndexWriter(IndexWriter indexWriter) {
         this.indexWriter = indexWriter;
     }
 }

@@ -8,6 +8,7 @@ import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
+import com.amee.platform.service.v3.search.SearchFilter;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.invalidation.InvalidationMessage;
@@ -19,7 +20,6 @@ import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -31,9 +31,11 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -56,6 +58,9 @@ public class SearchService implements ApplicationListener {
     @Autowired
     private PathItemService pathItemService;
 
+    @Autowired
+    private LuceneService luceneService;
+
     // Events
 
     public void onApplicationEvent(ApplicationEvent event) {
@@ -68,7 +73,7 @@ public class SearchService implements ApplicationListener {
                 if (dataCategory != null) {
                     update(dataCategory);
                 } else {
-                    remove(invalidationMessage.getEntityUid());
+                    remove(invalidationMessage.getObjectType(), invalidationMessage.getEntityUid());
                 }
                 transactionController.end();
             }
@@ -82,53 +87,37 @@ public class SearchService implements ApplicationListener {
     }
 
     public void build(boolean indexDataCategories, boolean indexDataItems) {
-        try {
-            log.debug("build() Building...");
-            // Get a LuceneWrapper to use in this thread.
-            LuceneIndexWrapper index = new LuceneIndexWrapper();
-            // Ensure we have an empty Lucene index.
-            index.clearIndex();
-            // Get an IndexWriter to work with.
-            IndexWriter indexWriter = index.getIndexWriter();
-            // Add DataCategories.
-            if (indexDataCategories) {
-                buildDataCategories(indexWriter);
-            }
-            // Add DataItems.
-            if (indexDataItems) {
-                buildDataItems(indexWriter);
-            }
-            // Ensure IndexWriter is closed.
-            index.closeIndexWriter();
-            log.debug("build() Building... DONE");
-        } catch (IOException e) {
-            throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+        log.debug("build() Building...");
+        // Ensure we have an empty Lucene index.
+        luceneService.clearIndex();
+        // Add DataCategories.
+        if (indexDataCategories) {
+            buildDataCategories();
         }
+        // Add DataItems.
+        if (indexDataItems) {
+            buildDataItems();
+        }
+        log.debug("build() Building... DONE");
     }
 
     /**
      * Add all DataCategories to the index.
-     *
-     * @param indexWriter
-     * @throws IOException
      */
-    protected void buildDataCategories(IndexWriter indexWriter) throws IOException {
+    protected void buildDataCategories() {
         transactionController.begin(false);
         for (DataCategory dataCategory :
                 dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"))) {
             log.debug("buildDataCategories() " + dataCategory.getName());
-            indexWriter.addDocument(getDocument(dataCategory));
+            luceneService.addDocument(getDocument(dataCategory));
         }
         transactionController.end();
     }
 
     /**
      * Add all DataItems to the index.
-     *
-     * @param indexWriter
-     * @throws IOException
      */
-    protected void buildDataItems(IndexWriter indexWriter) throws IOException {
+    protected void buildDataItems() {
         transactionController.begin(false);
         int i = 0;
         for (DataCategory dataCategory :
@@ -137,7 +126,7 @@ public class SearchService implements ApplicationListener {
                 i++;
                 log.debug("buildDataItems() " + dataCategory.getName());
                 for (DataItem dataItem : dataService.getDataItems(dataCategory)) {
-                    indexWriter.addDocument(getDocument(dataItem));
+                    luceneService.addDocument(getDocument(dataItem));
                 }
                 if (i > 30) {
                     break;
@@ -156,34 +145,22 @@ public class SearchService implements ApplicationListener {
      */
     protected void update(DataCategory dataCategory) {
         log.debug("update() DataCategory: " + dataCategory.getUid());
-        try {
-            LuceneIndexWrapper index = new LuceneIndexWrapper();
-            IndexWriter indexWriter = index.getIndexWriter();
-            Document document = getDocument(dataCategory);
-            indexWriter.updateDocument(new Term("entityUid", dataCategory.getUid()), document, index.getAnalyzer());
-            index.closeIndexWriter();
-        } catch (IOException e) {
-            throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
-        }
+        Document document = getDocument(dataCategory);
+        luceneService.updateDocument(
+                new Term("entityUid", dataCategory.getUid()), document, luceneService.getAnalyzer());
     }
 
     /**
      * Removes a document from the index.
-     * <p/>
-     * TODO: This will need enhancing when we we index more than just DCs. We should be able to use a search.
      *
-     * @param uid of document to remove.
+     * @param entityType of document to remove
+     * @param uid        of document to remove
      */
-    protected void remove(String uid) {
-        log.debug("remove() remove: " + uid);
-        try {
-            LuceneIndexWrapper index = new LuceneIndexWrapper();
-            IndexWriter indexWriter = index.getIndexWriter();
-            indexWriter.deleteDocuments(new Term("entityUid", uid));
-            index.closeIndexWriter();
-        } catch (IOException e) {
-            throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
-        }
+    protected void remove(ObjectType entityType, String uid) {
+        log.debug("remove() " + uid);
+        luceneService.deleteDocuments(
+                new Term("entityType", entityType.getName()),
+                new Term("entityUid", uid));
     }
 
     protected Document getDocument(DataCategory dataCategory) {
@@ -260,10 +237,74 @@ public class SearchService implements ApplicationListener {
 
     public List<DataCategory> getDataCategories(String key, String value) {
         Set<Long> dataCategoryIds = new HashSet<Long>();
-        for (Document document : new LuceneIndexWrapper().doSearch(key, value)) {
+        for (Document document : luceneService.doSearch(key, value)) {
             dataCategoryIds.add(new Long(document.getField("entityId").stringValue()));
         }
         return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"), dataCategoryIds);
+    }
+
+
+    public List<AMEEEntity> getEntities(SearchFilter filter) {
+        Query query;
+        Long entityId;
+        ObjectType entityType;
+        // Obtain Query - Do we need to respect types?
+        if (!filter.getTypes().isEmpty()) {
+            // Only search specified types.
+            // First - add entityType queries.
+            BooleanQuery typesQuery = new BooleanQuery();
+            for (ObjectType objectType : filter.getTypes()) {
+                typesQuery.add(new TermQuery(new Term("entityType", objectType.getName())), BooleanClause.Occur.SHOULD);
+            }
+            // Second - combine filter query and types query
+            BooleanQuery combinedQuery = new BooleanQuery();
+            combinedQuery.add(typesQuery, BooleanClause.Occur.MUST);
+            combinedQuery.add(filter.getQ(), BooleanClause.Occur.MUST);
+            query = combinedQuery;
+        } else {
+            // Search all entities with filter query.
+            query = filter.getQ();
+        }
+        // Do search and fetch Lucene documents.
+        List<Document> documents = luceneService.doSearch(query);
+        // Collate entityIds against entityTypes.
+        Map<ObjectType, Set<Long>> entityIds = new HashMap<ObjectType, Set<Long>>();
+        for (Document document : documents) {
+            entityId = new Long(document.getField("entityId").stringValue());
+            entityType = ObjectType.valueOf(document.getField("entityType").stringValue());
+            Set<Long> idSet = entityIds.get(entityType);
+            if (idSet == null) {
+                idSet = new HashSet<Long>();
+                entityIds.put(entityType, idSet);
+            }
+            idSet.add(entityId);
+        }
+        // Collate AMEEEntities.
+        Map<ObjectType, Map<Long, AMEEEntity>> entities = new HashMap<ObjectType, Map<Long, AMEEEntity>>();
+        // Load DataCategories.
+        if (entityIds.containsKey(ObjectType.DC)) {
+            entities.put(
+                    ObjectType.DC,
+                    dataService.getDataCategoryMap(
+                            environmentService.getEnvironmentByName("AMEE"),
+                            entityIds.get(ObjectType.DC)));
+        }
+        // Load DataItems.
+        if (entityIds.containsKey(ObjectType.DI)) {
+            entities.put(
+                    ObjectType.DI,
+                    dataService.getDataItemMap(
+                            environmentService.getEnvironmentByName("AMEE"),
+                            entityIds.get(ObjectType.DI)));
+        }
+        // Create result list in relevance order.
+        List<AMEEEntity> results = new ArrayList<AMEEEntity>();
+        for (Document document : documents) {
+            entityId = new Long(document.getField("entityId").stringValue());
+            entityType = ObjectType.valueOf(document.getField("entityType").stringValue());
+            results.add(entities.get(entityType).get(entityId));
+        }
+        return results;
     }
 
     public List<DataCategory> getDataCategories(Query query) {
@@ -271,7 +312,7 @@ public class SearchService implements ApplicationListener {
         q.add(new TermQuery(new Term("entityType", ObjectType.DC.getName())), BooleanClause.Occur.MUST);
         q.add(query, BooleanClause.Occur.MUST);
         Set<Long> dataCategoryIds = new HashSet<Long>();
-        for (Document document : new LuceneIndexWrapper().doSearch(q)) {
+        for (Document document : luceneService.doSearch(q)) {
             dataCategoryIds.add(new Long(document.getField("entityId").stringValue()));
         }
         return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"), dataCategoryIds);
@@ -282,7 +323,7 @@ public class SearchService implements ApplicationListener {
         q.add(new TermQuery(new Term("entityType", ObjectType.DI.getName())), BooleanClause.Occur.MUST);
         q.add(query, BooleanClause.Occur.MUST);
         Set<Long> dataItemIds = new HashSet<Long>();
-        for (Document document : new LuceneIndexWrapper().doSearch(q)) {
+        for (Document document : luceneService.doSearch(q)) {
             dataItemIds.add(new Long(document.getField("entityId").stringValue()));
         }
         return dataService.getDataItems(environmentService.getEnvironmentByName("AMEE"), dataItemIds);
