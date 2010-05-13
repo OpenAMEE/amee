@@ -24,6 +24,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
@@ -266,21 +267,23 @@ public class SearchService implements ApplicationListener {
     }
 
     public List<DataCategory> getDataCategories(Query query) {
+        BooleanQuery q = new BooleanQuery();
+        q.add(new TermQuery(new Term("entityType", ObjectType.DC.getName())), BooleanClause.Occur.MUST);
+        q.add(query, BooleanClause.Occur.MUST);
         Set<Long> dataCategoryIds = new HashSet<Long>();
-        for (Document document : new LuceneIndexWrapper().doSearch(query)) {
-            if (ObjectType.DC.getName().equals(document.getField("entityType").stringValue())) {
-                dataCategoryIds.add(new Long(document.getField("entityId").stringValue()));
-            }
+        for (Document document : new LuceneIndexWrapper().doSearch(q)) {
+            dataCategoryIds.add(new Long(document.getField("entityId").stringValue()));
         }
         return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"), dataCategoryIds);
     }
 
     public List<DataItem> getDataItems(Query query) {
+        BooleanQuery q = new BooleanQuery();
+        q.add(new TermQuery(new Term("entityType", ObjectType.DI.getName())), BooleanClause.Occur.MUST);
+        q.add(query, BooleanClause.Occur.MUST);
         Set<Long> dataItemIds = new HashSet<Long>();
-        for (Document document : new LuceneIndexWrapper().doSearch(query)) {
-            if (ObjectType.DI.getName().equals(document.getField("entityType").stringValue())) {
-                dataItemIds.add(new Long(document.getField("entityId").stringValue()));
-            }
+        for (Document document : new LuceneIndexWrapper().doSearch(q)) {
+            dataItemIds.add(new Long(document.getField("entityId").stringValue()));
         }
         return dataService.getDataItems(environmentService.getEnvironmentByName("AMEE"), dataItemIds);
     }
