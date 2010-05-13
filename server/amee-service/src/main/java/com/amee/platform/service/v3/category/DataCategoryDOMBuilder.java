@@ -70,15 +70,19 @@ public class DataCategoryDOMBuilder extends DataCategoryBuilder<Document> {
             dataCategoryElem.setAttribute("uid", dataCategory.getUid());
             dataCategoryElem.addContent(new Element("Name").setText(dataCategory.getName()));
             dataCategoryElem.addContent(new Element("WikiName").setText(dataCategory.getWikiName()));
-            if (dataCategory.getDataCategory() != null) {
-                dataCategoryElem.addContent(new Element("ParentWikiName").setText(dataCategory.getDataCategory().getWikiName()));
-            }
         }
 
         public void addPath(PathItem pathItem) {
             dataCategoryElem.addContent(new Element("Path").setText(dataCategory.getPath()));
             if (pathItem != null) {
                 dataCategoryElem.addContent(new Element("FullPath").setText(pathItem.getFullPath()));
+            }
+        }
+
+        public void addParent() {
+            if (dataCategory.getDataCategory() != null) {
+                dataCategoryElem.addContent(new Element("ParentUid").setText(dataCategory.getDataCategory().getUid()));
+                dataCategoryElem.addContent(new Element("ParentWikiName").setText(dataCategory.getDataCategory().getWikiName()));
             }
         }
 

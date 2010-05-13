@@ -1,11 +1,19 @@
 package com.amee.platform.search;
 
+import com.amee.domain.data.ItemDefinition;
 import org.apache.lucene.search.Query;
 
-public class DataCategoryFilter extends QueryFilter {
+public class DataItemFilter extends QueryFilter {
 
-    public DataCategoryFilter() {
+    private ItemDefinition itemDefinition;
+
+    public DataItemFilter() {
         super();
+    }
+
+    public DataItemFilter(ItemDefinition itemDefinition) {
+        this();
+        setItemDefinition(itemDefinition);
     }
 
     public Query getUid() {
@@ -32,22 +40,6 @@ public class DataCategoryFilter extends QueryFilter {
         getQueries().put("path", path);
     }
 
-    public Query getFullPath() {
-        return getQueries().get("fullPath");
-    }
-
-    public void setFullPath(Query fullPath) {
-        getQueries().put("fullPath", fullPath);
-    }
-
-    public Query getWikiName() {
-        return getQueries().get("wikiName");
-    }
-
-    public void setWikiName(Query wikiName) {
-        getQueries().put("wikiName", wikiName);
-    }
-
     public Query getWikiDoc() {
         return getQueries().get("wikiDoc");
     }
@@ -64,28 +56,20 @@ public class DataCategoryFilter extends QueryFilter {
         getQueries().put("provenance", provenance);
     }
 
-    public Query getAuthority() {
-        return getQueries().get("authority");
+    public Query getCategoryUid() {
+        return getQueries().get("categoryUid");
     }
 
-    public void setAuthority(Query authority) {
-        getQueries().put("authority", authority);
+    public void setCategoryUid(Query categoryUid) {
+        getQueries().put("categoryUid", categoryUid);
     }
 
-    public Query getParentUid() {
-        return getQueries().get("parentUid");
+    public Query getCategoryWikiName() {
+        return getQueries().get("categoryWikiName");
     }
 
-    public void setParentUid(Query parentUid) {
-        getQueries().put("parentUid", parentUid);
-    }
-
-    public Query getParentWikiName() {
-        return getQueries().get("parentWikiName");
-    }
-
-    public void setParentWikiName(Query parentWikiName) {
-        getQueries().put("parentWikiName", parentWikiName);
+    public void setCategoryWikiName(Query categoryWikiName) {
+        getQueries().put("categoryWikiName", categoryWikiName);
     }
 
     public Query getItemDefinitionUid() {
@@ -100,7 +84,23 @@ public class DataCategoryFilter extends QueryFilter {
         return getQueries().get("itemDefinitionName");
     }
 
-    public void setItemDefinitionName(Query itemDefinitionName) {
-        getQueries().put("itemDefinitionName", itemDefinitionName);
+    public void setItemDefinitionName(Query definitionName) {
+        getQueries().put("itemDefinitionName", definitionName);
+    }
+
+    public Query getLabel() {
+        return getQueries().get("label");
+    }
+
+    public void setLabel(Query label) {
+        getQueries().put("label", label);
+    }
+
+    public ItemDefinition getItemDefinition() {
+        return itemDefinition;
+    }
+
+    public void setItemDefinition(ItemDefinition itemDefinition) {
+        this.itemDefinition = itemDefinition;
     }
 }

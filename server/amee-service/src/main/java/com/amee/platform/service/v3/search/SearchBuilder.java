@@ -22,10 +22,10 @@ public abstract class SearchBuilder<E> implements ResourceBuilder<E> {
 
     @Transactional(readOnly = true)
     protected void handle(RequestWrapper requestWrapper, SearchRenderer renderer) {
+        renderer.start();
         SearchFilter filter = new SearchFilter();
         validationHelper.setSearchFilter(filter);
         if (validationHelper.isValid(requestWrapper.getQueryParameters())) {
-            renderer.start();
             handle(requestWrapper, filter, renderer);
             renderer.ok();
         } else {

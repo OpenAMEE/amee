@@ -20,10 +20,10 @@ public abstract class DataCategoriesBuilder<E> implements ResourceBuilder<E> {
 
     @Transactional(readOnly = true)
     protected void handle(RequestWrapper requestWrapper, DataCategoriesRenderer renderer) {
+        renderer.start();
         DataCategoryFilter filter = new DataCategoryFilter();
         validationHelper.setDataCategoryFilter(filter);
         if (validationHelper.isValid(requestWrapper.getQueryParameters())) {
-            renderer.start();
             handle(requestWrapper, filter, renderer);
             renderer.ok();
         } else {

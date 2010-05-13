@@ -26,15 +26,16 @@ public abstract class DataCategoryBuilder<E> implements ResourceBuilder<E> {
 
     @Transactional(readOnly = true)
     protected void handle(RequestWrapper requestWrapper, DataCategoryRenderer renderer) {
+        renderer.start();
         // Get Environment.
         Environment environment = environmentService.getEnvironmentByName("AMEE");
+        // Get the DataCategory identifier.
         String dataCategoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
         if (dataCategoryIdentifier != null) {
             // Get DataCategory.
             DataCategory dataCategory = dataService.getDataCategoryByIdentifier(environment, dataCategoryIdentifier);
             if (dataCategory != null) {
                 // Handle the DataCategory.
-                renderer.start();
                 this.handle(requestWrapper, dataCategory, renderer);
                 renderer.ok();
             } else {
@@ -53,6 +54,7 @@ public abstract class DataCategoryBuilder<E> implements ResourceBuilder<E> {
         boolean full = requestWrapper.getMatrixParameters().containsKey("full");
         boolean audit = requestWrapper.getMatrixParameters().containsKey("audit");
         boolean path = requestWrapper.getMatrixParameters().containsKey("path");
+        boolean parent = requestWrapper.getMatrixParameters().containsKey("parent");
         boolean authority = requestWrapper.getMatrixParameters().containsKey("authority");
         boolean wikiDoc = requestWrapper.getMatrixParameters().containsKey("wikiDoc");
         boolean provenance = requestWrapper.getMatrixParameters().containsKey("provenance");
@@ -66,6 +68,9 @@ public abstract class DataCategoryBuilder<E> implements ResourceBuilder<E> {
         if (path || full) {
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(dataCategory.getEnvironment());
             renderer.addPath(pathItemGroup.findByUId(dataCategory.getUid()));
+        }
+        if (parent || full) {
+            renderer.addParent();
         }
         if (audit || full) {
             renderer.addAudit();
@@ -102,6 +107,8 @@ public abstract class DataCategoryBuilder<E> implements ResourceBuilder<E> {
         public void addBasic();
 
         public void addPath(PathItem pathItem);
+
+        public void addParent();
 
         public void addAudit();
 

@@ -64,7 +64,7 @@ public class DataCategoriesJSONBuilder extends DataCategoriesBuilder<JSONObject>
         }
 
         public void newDataCategory() {
-            categoriesArr.put(dataCategoryRenderer.getDataCategoryObject());
+            categoriesArr.put(dataCategoryRenderer.getDataCategoryJSONObject());
         }
 
         public DataCategoryBuilder.DataCategoryRenderer getDataCategoryRenderer() {

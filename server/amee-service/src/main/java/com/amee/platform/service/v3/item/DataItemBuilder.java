@@ -31,6 +31,7 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
 
     @Transactional(readOnly = true)
     protected void handle(RequestWrapper requestWrapper, DataItemRenderer renderer) {
+        renderer.start();
         // Get Environment.
         Environment environment = environmentService.getEnvironmentByName("AMEE");
 //        // Authenticate - Create sample User.
@@ -54,7 +55,6 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
                     DataItem dataItem = dataService.getDataItemByUid(dataCategory, dataItemIdentifier);
                     if (dataItem != null) {
                         // Handle the DataItem.
-                        renderer.start();
                         this.handle(requestWrapper, dataItem, renderer);
                         renderer.ok();
                     } else {
@@ -82,10 +82,12 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
         boolean full = requestWrapper.getMatrixParameters().containsKey("full");
         boolean name = requestWrapper.getMatrixParameters().containsKey("name");
         boolean path = requestWrapper.getMatrixParameters().containsKey("path");
+        boolean parent = requestWrapper.getMatrixParameters().containsKey("parent");
         boolean audit = requestWrapper.getMatrixParameters().containsKey("audit");
         boolean wikiDoc = requestWrapper.getMatrixParameters().containsKey("wikiDoc");
         boolean provenance = requestWrapper.getMatrixParameters().containsKey("provenance");
         boolean itemDefinition = requestWrapper.getMatrixParameters().containsKey("itemDefinition");
+        boolean values = requestWrapper.getMatrixParameters().containsKey("values");
 
         // New DataItem & basic.
         renderer.newDataItem(dataItem);
@@ -99,6 +101,9 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
             PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(dataItem.getEnvironment());
             renderer.addPath(pathItemGroup.findByUId(dataItem.getDataCategory().getUid()));
         }
+        if (parent || full) {
+            renderer.addParent();
+        }
         if (audit || full) {
             renderer.addAudit();
         }
@@ -111,6 +116,9 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
         if ((itemDefinition || full) && (dataItem.getItemDefinition() != null)) {
             ItemDefinition id = dataItem.getItemDefinition();
             renderer.addItemDefinition(id);
+        }
+        if (values || full) {
+            renderer.addValues();
         }
     }
 
@@ -136,6 +144,8 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
 
         public void addPath(PathItem pathItem);
 
+        public void addParent();
+
         public void addAudit();
 
         public void addWikiDoc();
@@ -143,5 +153,7 @@ public abstract class DataItemBuilder<E> implements ResourceBuilder<E> {
         public void addProvenance();
 
         public void addItemDefinition(ItemDefinition id);
+
+        public void addValues();
     }
 }

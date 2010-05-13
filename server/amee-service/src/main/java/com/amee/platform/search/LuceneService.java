@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -88,30 +89,49 @@ public class LuceneService implements Serializable {
         return documents;
     }
 
-    public synchronized void addDocument(Document document) {
-        try {
-            getIndexWriter().addDocument(document);
-            closeIndexWriter();
-        } catch (IOException e) {
-            throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+    public void addDocument(Document document) {
+        synchronized (getIndexWriter()) {
+            try {
+                getIndexWriter().addDocument(document);
+                closeIndexWriter();
+            } catch (IOException e) {
+                throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+            }
         }
     }
 
-    public synchronized void updateDocument(Term term, Document document, Analyzer analyzer) {
-        try {
-            getIndexWriter().updateDocument(term, document, analyzer);
-            closeIndexWriter();
-        } catch (IOException e) {
-            throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+    public void addDocuments(Collection<Document> documents) {
+        synchronized (getIndexWriter()) {
+            try {
+                for (Document document : documents) {
+                    getIndexWriter().addDocument(document);
+                }
+                closeIndexWriter();
+            } catch (IOException e) {
+                throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+            }
         }
     }
 
-    public synchronized void deleteDocuments(Term... terms) {
-        try {
-            getIndexWriter().deleteDocuments(terms);
-            closeIndexWriter();
-        } catch (IOException e) {
-            throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+    public void updateDocument(Term term, Document document, Analyzer analyzer) {
+        synchronized (getIndexWriter()) {
+            try {
+                getIndexWriter().updateDocument(term, document, analyzer);
+                closeIndexWriter();
+            } catch (IOException e) {
+                throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+            }
+        }
+    }
+
+    public void deleteDocuments(Term... terms) {
+        synchronized (getIndexWriter()) {
+            try {
+                getIndexWriter().deleteDocuments(terms);
+                closeIndexWriter();
+            } catch (IOException e) {
+                throw new RuntimeException("Caught IOException: " + e.getMessage(), e);
+            }
         }
     }
 
@@ -129,7 +149,7 @@ public class LuceneService implements Serializable {
     /**
      * Unlocks the Lucene index. Useful following JVM crashes.
      */
-    private synchronized void unlockIndex() {
+    public synchronized void unlockIndex() {
         try {
             if (IndexReader.indexExists(getDirectory())) {
                 IndexReader.open(getDirectory());

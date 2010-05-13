@@ -88,15 +88,20 @@ public class SearchService implements ApplicationListener {
 
     public void build(boolean indexDataCategories, boolean indexDataItems) {
         log.debug("build() Building...");
-        // Ensure we have an empty Lucene index.
-        luceneService.clearIndex();
-        // Add DataCategories.
+        // Add DataCategories?
         if (indexDataCategories) {
+            // Ensure we have an empty Lucene index.
+            luceneService.clearIndex();
+            // Add DataCategories.
             buildDataCategories();
-        }
-        // Add DataItems.
-        if (indexDataItems) {
-            buildDataItems();
+            // Add DataItems?
+            if (indexDataItems) {
+                // Add DataItems.
+                buildDataItems();
+            }
+        } else {
+            // Always make sure index is unlocked.
+            luceneService.unlockIndex();
         }
         log.debug("build() Building... DONE");
     }
@@ -105,12 +110,14 @@ public class SearchService implements ApplicationListener {
      * Add all DataCategories to the index.
      */
     protected void buildDataCategories() {
+        log.debug("buildDataCategories()");
         transactionController.begin(false);
+        List<Document> documents = new ArrayList<Document>();
         for (DataCategory dataCategory :
                 dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"))) {
-            log.debug("buildDataCategories() " + dataCategory.getName());
-            luceneService.addDocument(getDocument(dataCategory));
+            documents.add(getDocument(dataCategory));
         }
+        luceneService.addDocuments(documents);
         transactionController.end();
     }
 
@@ -118,19 +125,18 @@ public class SearchService implements ApplicationListener {
      * Add all DataItems to the index.
      */
     protected void buildDataItems() {
+        log.debug("buildDataItems()");
         transactionController.begin(false);
-        int i = 0;
+        List<Document> documents;
         for (DataCategory dataCategory :
                 dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"))) {
             if (dataCategory.getItemDefinition() != null) {
-                i++;
                 log.debug("buildDataItems() " + dataCategory.getName());
+                documents = new ArrayList<Document>();
                 for (DataItem dataItem : dataService.getDataItems(dataCategory)) {
-                    luceneService.addDocument(getDocument(dataItem));
+                    documents.add(getDocument(dataItem));
                 }
-                if (i > 30) {
-                    break;
-                }
+                luceneService.addDocuments(documents);
             }
         }
         transactionController.end();
@@ -181,8 +187,8 @@ public class SearchService implements ApplicationListener {
             doc.add(new Field("parentWikiName", dataCategory.getDataCategory().getWikiName(), Field.Store.NO, Field.Index.ANALYZED));
         }
         if (dataCategory.getItemDefinition() != null) {
-            doc.add(new Field("definitionUid", dataCategory.getItemDefinition().getUid(), Field.Store.NO, Field.Index.NOT_ANALYZED));
-            doc.add(new Field("definitionName", dataCategory.getItemDefinition().getName(), Field.Store.NO, Field.Index.ANALYZED));
+            doc.add(new Field("itemDefinitionUid", dataCategory.getItemDefinition().getUid(), Field.Store.NO, Field.Index.NOT_ANALYZED));
+            doc.add(new Field("itemDefinitionName", dataCategory.getItemDefinition().getName(), Field.Store.NO, Field.Index.ANALYZED));
         }
         return doc;
     }
@@ -200,8 +206,8 @@ public class SearchService implements ApplicationListener {
         doc.add(new Field("provenance", dataItem.getProvenance(), Field.Store.NO, Field.Index.ANALYZED));
         doc.add(new Field("categoryUid", dataItem.getDataCategory().getUid(), Field.Store.NO, Field.Index.NOT_ANALYZED));
         doc.add(new Field("categoryWikiName", dataItem.getDataCategory().getWikiName(), Field.Store.NO, Field.Index.ANALYZED));
-        doc.add(new Field("definitionUid", dataItem.getItemDefinition().getUid(), Field.Store.NO, Field.Index.NOT_ANALYZED));
-        doc.add(new Field("definitionName", dataItem.getItemDefinition().getName(), Field.Store.NO, Field.Index.ANALYZED));
+        doc.add(new Field("itemDefinitionUid", dataItem.getItemDefinition().getUid(), Field.Store.NO, Field.Index.NOT_ANALYZED));
+        doc.add(new Field("itemDefinitionName", dataItem.getItemDefinition().getName(), Field.Store.NO, Field.Index.ANALYZED));
         for (Object key : dataItem.getItemValuesMap().keySet()) {
             String path = (String) key;
             ItemValue itemValue = dataItem.getItemValuesMap().get(path);
@@ -219,30 +225,7 @@ public class SearchService implements ApplicationListener {
         return doc;
     }
 
-    // DataCategory Search.
-
-    public List<DataCategory> getDataCategories(DataCategoryFilter filter) {
-        // Filter based on an allowed query parameter.
-        if (!filter.getQueries().isEmpty()) {
-            BooleanQuery query = new BooleanQuery();
-            for (Query q : filter.getQueries().values()) {
-                query.add(q, BooleanClause.Occur.MUST);
-            }
-            return getDataCategories(query);
-        } else {
-            // Just get a simple list of Data Categories.
-            return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"));
-        }
-    }
-
-    public List<DataCategory> getDataCategories(String key, String value) {
-        Set<Long> dataCategoryIds = new HashSet<Long>();
-        for (Document document : luceneService.doSearch(key, value)) {
-            dataCategoryIds.add(new Long(document.getField("entityId").stringValue()));
-        }
-        return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"), dataCategoryIds);
-    }
-
+    // Entity search.
 
     public List<AMEEEntity> getEntities(SearchFilter filter) {
         Query query;
@@ -307,6 +290,30 @@ public class SearchService implements ApplicationListener {
         return results;
     }
 
+    // DataCategory Search.
+
+    public List<DataCategory> getDataCategories(DataCategoryFilter filter) {
+        // Filter based on an allowed query parameter.
+        if (!filter.getQueries().isEmpty()) {
+            BooleanQuery query = new BooleanQuery();
+            for (Query q : filter.getQueries().values()) {
+                query.add(q, BooleanClause.Occur.MUST);
+            }
+            return getDataCategories(query);
+        } else {
+            // Just get a simple list of Data Categories.
+            return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"));
+        }
+    }
+
+    public List<DataCategory> getDataCategories(String key, String value) {
+        Set<Long> dataCategoryIds = new HashSet<Long>();
+        for (Document document : luceneService.doSearch(key, value)) {
+            dataCategoryIds.add(new Long(document.getField("entityId").stringValue()));
+        }
+        return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"), dataCategoryIds);
+    }
+
     public List<DataCategory> getDataCategories(Query query) {
         BooleanQuery q = new BooleanQuery();
         q.add(new TermQuery(new Term("entityType", ObjectType.DC.getName())), BooleanClause.Occur.MUST);
@@ -318,12 +325,17 @@ public class SearchService implements ApplicationListener {
         return dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"), dataCategoryIds);
     }
 
-    public List<DataItem> getDataItems(Query query) {
-        BooleanQuery q = new BooleanQuery();
-        q.add(new TermQuery(new Term("entityType", ObjectType.DI.getName())), BooleanClause.Occur.MUST);
-        q.add(query, BooleanClause.Occur.MUST);
+    // DataItem search.
+
+    public List<DataItem> getDataItems(DataCategory dataCategory, QueryFilter filter) {
+        BooleanQuery query = new BooleanQuery();
+        for (Query q : filter.getQueries().values()) {
+            query.add(q, BooleanClause.Occur.MUST);
+        }
+        query.add(new TermQuery(new Term("entityType", ObjectType.DI.getName())), BooleanClause.Occur.MUST);
+        query.add(new TermQuery(new Term("categoryUid", dataCategory.getUid())), BooleanClause.Occur.MUST);
         Set<Long> dataItemIds = new HashSet<Long>();
-        for (Document document : luceneService.doSearch(q)) {
+        for (Document document : luceneService.doSearch(query)) {
             dataItemIds.add(new Long(document.getField("entityId").stringValue()));
         }
         return dataService.getDataItems(environmentService.getEnvironmentByName("AMEE"), dataItemIds);

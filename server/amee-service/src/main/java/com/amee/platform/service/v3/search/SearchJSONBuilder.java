@@ -80,7 +80,7 @@ public class SearchJSONBuilder extends SearchBuilder<JSONObject> {
         }
 
         public void newDataCategory() {
-            resultsArr.put(dataCategoryRenderer.getDataCategoryObject());
+            resultsArr.put(dataCategoryRenderer.getDataCategoryJSONObject());
         }
 
         public void newDataItem() {
