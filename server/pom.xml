@@ -69,8 +69,6 @@
         <amee.home>/var/www/apps/amee</amee.home>
         <amee.current>${amee.home}/current</amee.current>
         <amee.current.lib>${amee.current}/lib</amee.current.lib>
-        <amee.current.bin>${amee.current}/bin</amee.current.bin>
-        <amee.shared.lib>${amee.home}/shared</amee.shared.lib>
         <!-- Other. -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
