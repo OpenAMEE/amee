@@ -1,7 +1,6 @@
 package com.amee.platform.service.v3.search;
 
 import com.amee.base.resource.RequestWrapper;
-import com.amee.platform.search.SearchService;
 import com.amee.platform.service.v3.category.DataCategoryBuilder;
 import com.amee.platform.service.v3.category.DataCategoryJSONBuilder;
 import com.amee.platform.service.v3.item.DataItemBuilder;
@@ -18,16 +17,10 @@ import org.springframework.stereotype.Service;
 public class SearchJSONBuilder extends SearchBuilder<JSONObject> {
 
     @Autowired
-    private SearchService searchService;
-
-    @Autowired
     private DataCategoryJSONBuilder dataCategoryJSONBuilder;
 
     @Autowired
     private DataItemJSONBuilder dataItemJSONBuilder;
-
-    @Autowired
-    private SearchFilterValidationHelper validationHelper;
 
     public JSONObject handle(RequestWrapper requestWrapper) {
         SearchJSONRenderer renderer =
