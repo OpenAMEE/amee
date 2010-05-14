@@ -32,15 +32,17 @@ public class Engine implements WrapperListener, Serializable {
     protected static ClassPathXmlApplicationContext applicationContext;
     protected TransactionController transactionController;
     protected Component container;
-    protected String serverName = "localhost";
+
+    // This isn't really used except to determine the PID of the instance in the init script.
+    protected String instanceName = "live";
 
     public Engine() {
         super();
     }
 
-    public Engine(String serverName) {
+    public Engine(String instanceName) {
         this();
-        this.serverName = serverName;
+        this.instanceName = instanceName;
     }
 
     public static void main(String[] args) {
@@ -119,13 +121,13 @@ public class Engine implements WrapperListener, Serializable {
         CommandLineParser parser = new GnuParser();
         Options options = new Options();
 
-        // Define serverName option.
-        Option serverNameOpt = OptionBuilder.withArgName("serverName")
+        // Define instanceName option.
+        Option instanceNameOpt = OptionBuilder.withArgName("instanceName")
                 .hasArg()
-                .withDescription("The server name")
-                .create("serverName");
-        serverNameOpt.setRequired(true);
-        options.addOption(serverNameOpt);
+                .withDescription("The instance name")
+                .create("instanceName");
+        instanceNameOpt.setRequired(true);
+        options.addOption(instanceNameOpt);
 
         // Define timeZone option.
         Option timeZoneOpt = OptionBuilder.withArgName("timeZone")
@@ -143,9 +145,9 @@ public class Engine implements WrapperListener, Serializable {
             System.exit(-1);
         }
 
-        // Handle serverName.
-        if (line.hasOption(serverNameOpt.getOpt())) {
-            serverName = line.getOptionValue(serverNameOpt.getOpt());
+        // Handle instanceName.
+        if (line.hasOption(instanceNameOpt.getOpt())) {
+            instanceName = line.getOptionValue(instanceNameOpt.getOpt());
         }
 
         // Handle timeZone.

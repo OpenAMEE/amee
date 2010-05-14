@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="amee" default="run" basedir=".">
+<project name="amee" default="build" basedir=".">
 
-    <target name="init">
-        <property environment="env"/>
-        <property name="amee.home" value="/var/www/apps/amee" description="The root of the AMEE deployment layout."/>
-        <property name="amee.current" value="${amee.home}/current" description="The root of the current AMEE package"/>
-        <property name="amee.current.lib" value="${amee.current}/lib"
-                  description="The location of the AMEE libs and dependencies."/>
-        <property name="amee.current.bin" value="${amee.current}/bin"
-                  description="The location of the AMEE start scripts."/>
-        <property name="amee.shared.lib" value="${amee.home}/shared"
-                  description="The location of the AMEE shared config."/>
-    </target>
+    <property environment="env"/>
+    <property name="amee.appName" value="amee"/>
+    <property name="amee.home" value="/var/www/apps/${amee.appName}" description="The root of the AMEE deployment layout."/>
+    <property name="amee.current" value="${amee.home}/current" description="The root of the current AMEE package"/>
+    <property name="amee.current.lib" value="${amee.current}/lib" description="The location of the AMEE libs and dependencies."/>
+    <property name="amee.shared" value="${amee.home}/shared" description="The location of the AMEE shared config."/>
 
     <target name="rebuild" depends="clean, package, copy-amee-libs"
             description="Perform a clean build from src."/>
 
-    <target name="build" depends="package"
-            description="Perform an incremental build from src."/>
+    <target name="build" depends="package" description="Perform an incremental build from src."/>
 
-    <target name="clean" depends="init"
-            description="Clean the deployment lib and target directories.">
+    <target name="clean" description="Clean the deployment lib and target directories.">
         <!-- Clean the amee target dirs. -->
         <exec executable="mvn" dir="server" failonerror="true">
             <!--arg value="-o"/-->
@@ -32,14 +25,13 @@
         </delete>
     </target>
 
-    <target name="package"
-            description="Run the mvn package goal.">
+    <target name="package" description="Run the mvn package goal.">
         <exec executable="mvn" dir="server" failonerror="true">
             <!--arg value="-o"/-->
             <arg value="package"/>
         </exec>
     </target>
-
+    
     <target name="copy-amee-libs" description="Copy libs to deployment dir.">
         <copy todir="${amee.current.lib}" flatten="true">
             <fileset dir=".">
@@ -48,14 +40,12 @@
         </copy>
     </target>
 
-    <target name="copy-wrapper" depends="init"
-            description="Copy the AMEE local wrapper.conf to the deployment folder.">
-        <copy tofile="${amee.shared.lib}/wrapper.conf" file="server/amee-engine/conf/wrapper.conf.local"
+    <target name="copy-wrapper" description="Copy the AMEE local wrapper.conf to the deployment folder.">
+        <copy tofile="${amee.shared}/wrapper.conf" file="server/amee-engine/conf/wrapper.conf.local"
               overwrite="true"/>
     </target>
 
-    <target name="copy-webapps" depends="init"
-            description="Copy the AMEE webapp to the deployment folder.">
+    <target name="copy-webapps" description="Copy the AMEE webapp to the deployment folder.">
         <copy todir="${amee.current}">
             <fileset dir=".">
                 <include name="webapps/"/>
@@ -63,27 +53,29 @@
         </copy>
     </target>
 
-    <target name="start" depends="init" description="Start AMEE.">
-        <exec executable="amee" dir="${amee.current.bin}" failonerror="true">
-            <env key="RUN_AS_USER" value="${env.USER}"/>
-            <arg value="start"/>
+    <target name="clean-deploy" depends="rebuild, copy-webapps" description="Rebuild and deploy AMEE."/>
+
+    <target name="cap-local-deploy" depends="rebuild" description="Capistrano local deploy from working copy">
+        <exec executable="cap" dir="${basedir}" failonerror="true">
+            <arg value="local"/>
+            <arg value="install:prepare"/>
+        </exec>
+        <exec executable="cap" dir="${basedir}" failonerror="true">
+            <arg value="local"/>
+            <arg value="install:package"/>
+        </exec>
+        <exec executable="cap" dir="${basedir}" failonerror="true">
+            <arg value="local"/>
+            <arg value="deploy:update"/>
         </exec>
     </target>
 
-    <target name="stop" depends="init" description="Stop AMEE.">
-        <exec executable="amee" dir="${amee.current.bin}" failonerror="true">
-            <env key="RUN_AS_USER" value="${env.USER}"/>
-            <arg value="stop"/>
+    <target name="cap-install" depends="rebuild" description="Create a new release and deploy to git.">
+        <fail unless="tag" message="You must specify a tag, eg -Dtag=2.10.5" />
+        <exec executable="cap" dir="${basedir}" failonerror="true">
+            <arg value="install"/>
+            <arg value="TAG=${tag}"/>
         </exec>
     </target>
-
-    <target name="run" depends="build, start" description="Make and run AMEE."/>
-
-    <target name="clean-deploy" depends="rebuild, copy-webapps"
-            description="Rebuild and deploy AMEE"/>
-
-    <target name="clean-run" depends="copy-wrapper, clean-deploy, stop, start"
-            description="Rebuild and restart AMEE."/>
-
 </project>
 
