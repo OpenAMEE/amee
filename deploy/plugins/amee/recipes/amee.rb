@@ -26,6 +26,6 @@ namespace :amee do
     stream "egrep 'S:500|S:40' #{current_release}/log/wrapper.log"
   end
 
-  after "deploy:setup", "[amee:chmod, amee:init_d]"   
+  #after "deploy:setup", "amee:init_d"   
 
 end

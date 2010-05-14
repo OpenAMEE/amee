@@ -13,9 +13,9 @@
 #-----------------------------------------------------------------------------
 # These settings can be modified to fit the needs of your application
 
-# Application
+# Application name. This should be changed for multi-deploys, eg amee-science
 APP_NAME=${AMEE_APP_NAME:-amee}
-INSTANCE_NAME=${AMEE_INSTANCE_NAME:-shared}
+INSTANCE_NAME=${AMEE_INSTANCE_NAME:-live}
 APP_LONG_NAME="AMEE"
 
 ### BEGIN INIT INFO
@@ -29,7 +29,7 @@ APP_LONG_NAME="AMEE"
 ### END INIT INFO
 
 # Wrapper
-WRAPPER_CMD="/var/www/apps/amee/current/bin/wrapper"
+WRAPPER_CMD="/var/www/apps/${APP_NAME}/current/bin/wrapper"
 WRAPPER_CONF="../conf/wrapper.conf"
 
 # Priority at which to run the wrapper.  See "man nice" for valid priorities.
@@ -37,7 +37,7 @@ WRAPPER_CONF="../conf/wrapper.conf"
 PRIORITY=
 
 # Location of the pid file.
-PIDDIR="/var/www/apps/amee/${INSTANCE_NAME}/pids"
+PIDDIR="/var/www/apps/${APP_NAME}/shared/pids"
 
 # If uncommented, causes the Wrapper to be shutdown using an anchor file.
 #  When launched with the 'start' command, it will also ignore all INT and
@@ -409,7 +409,7 @@ console() {
         # The string passed to eval must handles spaces in paths correctly.
         COMMAND_LINE="$CMDNICE \"$WRAPPER_CMD\" \"$WRAPPER_CONF\" wrapper.syslog.ident=$APP_NAME wrapper.pidfile=\"$PIDFILE\" $ANCHORPROP $LOCKPROP"
         eval $COMMAND_LINE
-  	    jps -m | grep "$INSTANCE_NAME" | awk '{print $1}' > $PIDFILE.'java'
+  	    jps -m | grep "Engine -instanceName $INSTANCE_NAME" | awk '{print $1}' > $PIDFILE.'java'
     else
         echo "$APP_LONG_NAME is already running."
         exit 1
@@ -424,8 +424,7 @@ start() {
         # The string passed to eval must handles spaces in paths correctly.
         COMMAND_LINE="$CMDNICE \"$WRAPPER_CMD\" \"$WRAPPER_CONF\" wrapper.syslog.ident=$APP_NAME wrapper.pidfile=\"$PIDFILE\" wrapper.daemonize=TRUE $ANCHORPROP $IGNOREPROP $LOCKPROP"
         eval $COMMAND_LINE
-  	    jps | grep Engine | awk '{print $1}' > $PIDFILE.'java'
-        jps -m | grep "$INSTANCE_NAME" | awk '{print $1}' > $PIDFILE.'java'
+        jps -m | grep "Engine -instanceName $INSTANCE_NAME" | awk '{print $1}' > $PIDFILE.'java'
     else
         echo "$APP_LONG_NAME is already running."
         exit 1
