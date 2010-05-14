@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tag`
+-- Table structure for table `TAG`
 --
 
-DROP TABLE IF EXISTS `tag`;
+DROP TABLE IF EXISTS `TAG`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tag` (
+CREATE TABLE `TAG` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `CREATED` datetime NOT NULL,
   `MODIFIED` datetime NOT NULL,
@@ -31,7 +31,6 @@ CREATE TABLE `tag` (
   `TAG` varchar(255) NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `UID` (`UID`),
-  UNIQUE KEY `UID_2` (`UID`),
   KEY `TAG_IND` (`TAG`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
