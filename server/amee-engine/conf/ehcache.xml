@@ -254,6 +254,26 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
+    <!-- Tag -->
+    <cache name="com.amee.domain.tag.Tag"
+           maxElementsInMemory="5000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
+    <!-- EntityTag -->
+    <cache name="com.amee.domain.tag.EntityTag"
+           maxElementsInMemory="5000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
     <!-- **** AMEE - Queries **** -->
 
     <!-- DataServiceDAO -->
@@ -438,6 +458,16 @@
 
     <!-- MetadataService -->
     <cache name="query.metadataService"
+           maxElementsInMemory="200"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
+    <!-- TagService -->
+    <cache name="query.tagService"
            maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"

@@ -22,6 +22,8 @@
         <class>com.amee.domain.data.ItemDefinitionLocaleName</class>
         <class>com.amee.domain.data.ItemValueDefinitionLocaleName</class>
         <class>com.amee.domain.data.ItemValueLocaleName</class>
+        <class>com.amee.domain.tag.Tag</class>
+        <class>com.amee.domain.tag.EntityTag</class>
         <properties>
             <!-- *** Hibernate Configuration *** -->
             <!-- See: http://www.hibernate.org/hib_docs/reference/en/html/configuration-optional.html -->

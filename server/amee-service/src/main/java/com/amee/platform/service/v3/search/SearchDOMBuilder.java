@@ -1,7 +1,6 @@
 package com.amee.platform.service.v3.search;
 
 import com.amee.base.resource.RequestWrapper;
-import com.amee.platform.search.SearchService;
 import com.amee.platform.service.v3.category.DataCategoryBuilder;
 import com.amee.platform.service.v3.category.DataCategoryDOMBuilder;
 import com.amee.platform.service.v3.item.DataItemBuilder;
@@ -17,16 +16,10 @@ import org.springframework.stereotype.Service;
 public class SearchDOMBuilder extends SearchBuilder<Document> {
 
     @Autowired
-    private SearchService searchService;
-
-    @Autowired
     private DataCategoryDOMBuilder dataCategoryDOMBuilder;
 
     @Autowired
     private DataItemDOMBuilder dataItemDOMBuilder;
-
-    @Autowired
-    private SearchFilterValidationHelper validationHelper;
 
     public Document handle(RequestWrapper requestWrapper) {
         SearchDOMRenderer renderer =
