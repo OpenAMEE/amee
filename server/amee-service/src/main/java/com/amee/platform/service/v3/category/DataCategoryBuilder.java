@@ -7,9 +7,11 @@ import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
+import com.amee.domain.tag.Tag;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import com.amee.service.path.PathItemService;
+import com.amee.service.tag.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,9 @@ public abstract class DataCategoryBuilder<E> implements ResourceBuilder<E> {
 
     @Autowired
     private PathItemService pathItemService;
+
+    @Autowired
+    private TagService tagService;
 
     @Transactional(readOnly = true)
     protected void handle(RequestWrapper requestWrapper, DataCategoryRenderer renderer) {
@@ -59,6 +64,7 @@ public abstract class DataCategoryBuilder<E> implements ResourceBuilder<E> {
         boolean wikiDoc = requestWrapper.getMatrixParameters().containsKey("wikiDoc");
         boolean provenance = requestWrapper.getMatrixParameters().containsKey("provenance");
         boolean itemDefinition = requestWrapper.getMatrixParameters().containsKey("itemDefinition");
+        boolean tags = requestWrapper.getMatrixParameters().containsKey("tags");
 
         // New DataCategory & basic.
         renderer.newDataCategory(dataCategory);
@@ -87,6 +93,12 @@ public abstract class DataCategoryBuilder<E> implements ResourceBuilder<E> {
         if ((itemDefinition || full) && (dataCategory.getItemDefinition() != null)) {
             ItemDefinition id = dataCategory.getItemDefinition();
             renderer.addItemDefinition(id);
+        }
+        if (tags || full) {
+            renderer.startTags();
+            for (Tag tag : tagService.getTags(dataCategory)) {
+                renderer.newTag(tag);
+            }
         }
     }
 
@@ -119,5 +131,9 @@ public abstract class DataCategoryBuilder<E> implements ResourceBuilder<E> {
         public void addProvenance();
 
         public void addItemDefinition(ItemDefinition id);
+
+        public void startTags();
+
+        public void newTag(Tag tag);
     }
 }

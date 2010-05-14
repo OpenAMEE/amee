@@ -40,8 +40,8 @@ public class TagsJSONBuilder extends TagsBuilder<JSONObject> {
 
         public void newTag(Tag tag) {
             JSONObject tagObj = new JSONObject();
-            tagsArr.put(tagObj);
             put(tagObj, "tag", tag.getTag());
+            tagsArr.put(tagObj);
         }
 
         public void ok() {

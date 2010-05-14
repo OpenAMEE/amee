@@ -4,6 +4,7 @@ import com.amee.base.resource.RequestWrapper;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.path.PathItem;
+import com.amee.domain.tag.Tag;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.joda.time.format.DateTimeFormatter;
@@ -32,6 +33,7 @@ public class DataCategoryDOMBuilder extends DataCategoryBuilder<Document> {
         private DataCategory dataCategory;
         private Element rootElem;
         private Element dataCategoryElem;
+        private Element tagsElem;
 
         public DataCategoryDOMRenderer() {
             super();
@@ -109,6 +111,17 @@ public class DataCategoryDOMBuilder extends DataCategoryBuilder<Document> {
             dataCategoryElem.addContent(e);
             e.setAttribute("uid", itemDefinition.getUid());
             e.addContent(new Element("Name").setText(itemDefinition.getName()));
+        }
+
+        public void startTags() {
+            tagsElem = new Element("Tags");
+            rootElem.addContent(tagsElem);
+        }
+
+        public void newTag(Tag tag) {
+            Element tagElem = new Element("Tag");
+            tagsElem.addContent(tagElem);
+            tagElem.addContent(new Element("Tag").setText(tag.getTag()));
         }
 
         public Element getDataCategoryElement() {

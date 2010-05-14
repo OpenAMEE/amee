@@ -4,8 +4,10 @@ import com.amee.base.resource.RequestWrapper;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.path.PathItem;
+import com.amee.domain.tag.Tag;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.context.annotation.Scope;
@@ -32,6 +34,7 @@ public class DataCategoryJSONBuilder extends DataCategoryBuilder<JSONObject> {
         private DataCategory dataCategory;
         private JSONObject rootObj;
         private JSONObject dataCategoryObj;
+        private JSONArray tagsArr;
 
         public DataCategoryJSONRenderer() {
             super();
@@ -110,6 +113,17 @@ public class DataCategoryJSONBuilder extends DataCategoryBuilder<JSONObject> {
             put(itemDefinitionObj, "uid", itemDefinition.getUid());
             put(itemDefinitionObj, "name", itemDefinition.getName());
             put(dataCategoryObj, "itemDefinition", itemDefinitionObj);
+        }
+
+        public void startTags() {
+            tagsArr = new JSONArray();
+            put(dataCategoryObj, "tags", tagsArr);
+        }
+
+        public void newTag(Tag tag) {
+            JSONObject tagObj = new JSONObject();
+            put(tagObj, "tag", tag.getTag());
+            tagsArr.put(tagObj);
         }
 
         protected JSONObject put(JSONObject o, String key, Object value) {
