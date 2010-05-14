@@ -29,44 +29,103 @@ public class DataItemFormAcceptor implements ResourceAcceptor {
 
     @Transactional(rollbackFor = {ValidationException.class})
     public JSONObject handle(RequestWrapper requestWrapper) throws ValidationException {
-        try {
-            JSONObject o = new JSONObject();
-            // Get DataCategory identifier.
-            String dataCategoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
-            if (dataCategoryIdentifier != null) {
-                // Get DataCategory.
-                DataCategory dataCategory = dataService.getDataCategoryByIdentifier(
-                        environmentService.getEnvironmentByName("AMEE"), dataCategoryIdentifier);
-                if (dataCategory != null) {
-                    // Get DataItem identifier.
-                    String dataItemIdentifier = requestWrapper.getAttributes().get("itemIdentifier");
-                    if (dataItemIdentifier != null) {
-                        // Get DataItem.
-                        DataItem dataItem = dataService.getDataItemByUid(dataCategory, dataItemIdentifier);
-                        if (dataItem != null) {
-                            validationHelper.setDataItem(dataItem);
-                            if (validationHelper.isValid(requestWrapper.getFormParameters())) {
-                                o.put("status", "OK");
-                            } else {
-                                throw new ValidationException(validationHelper.getValidationResult());
-                            }
+        DataItemAcceptorRenderer renderer = new DataItemAcceptorJSONRenderer();
+        renderer.start();
+        // Get DataCategory identifier.
+        String dataCategoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
+        if (dataCategoryIdentifier != null) {
+            // Get DataCategory.
+            DataCategory dataCategory = dataService.getDataCategoryByIdentifier(
+                    environmentService.getEnvironmentByName("AMEE"), dataCategoryIdentifier);
+            if (dataCategory != null) {
+                // Get DataItem identifier.
+                String dataItemIdentifier = requestWrapper.getAttributes().get("itemIdentifier");
+                if (dataItemIdentifier != null) {
+                    // Get DataItem.
+                    DataItem dataItem = dataService.getDataItemByUid(dataCategory, dataItemIdentifier);
+                    if (dataItem != null) {
+                        validationHelper.setDataItem(dataItem);
+                        if (validationHelper.isValid(requestWrapper.getFormParameters())) {
+                            renderer.ok();
                         } else {
-                            o.put("status", "NOT_FOUND");
+                            throw new ValidationException(validationHelper.getValidationResult());
                         }
                     } else {
-                        o.put("status", "ERROR");
-                        o.put("error", "The itemIdentifier was missing.");
+                        renderer.notFound();
                     }
                 } else {
-                    o.put("status", "NOT_FOUND");
+                    renderer.itemIdentifierMissing();
                 }
             } else {
-                o.put("status", "ERROR");
-                o.put("error", "The categoryIdentifier was missing.");
+                renderer.notFound();
             }
-            return o;
-        } catch (JSONException e) {
-            throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
+        } else {
+            renderer.categoryIdentifierMissing();
+        }
+        return (JSONObject) renderer.getResult();
+    }
+
+    public interface DataItemAcceptorRenderer {
+
+        public void start();
+
+        public void ok();
+
+        public void notFound();
+
+        public void notAuthenticated();
+
+        public void itemIdentifierMissing();
+
+        public void categoryIdentifierMissing();
+
+        public Object getResult();
+    }
+
+    public static class DataItemAcceptorJSONRenderer implements DataItemAcceptorRenderer {
+
+        private JSONObject rootObj;
+
+        public DataItemAcceptorJSONRenderer() {
+            super();
+        }
+
+        public void start() {
+            rootObj = new JSONObject();
+        }
+
+        public void ok() {
+            put(rootObj, "status", "OK");
+        }
+
+        public void notFound() {
+            put(rootObj, "status", "NOT_FOUND");
+        }
+
+        public void notAuthenticated() {
+            put(rootObj, "status", "NOT_AUTHENTICATED");
+        }
+
+        public void itemIdentifierMissing() {
+            put(rootObj, "status", "ERROR");
+            put(rootObj, "error", "The itemIdentifier was missing.");
+        }
+
+        public void categoryIdentifierMissing() {
+            put(rootObj, "status", "ERROR");
+            put(rootObj, "error", "The categoryIdentifier was missing.");
+        }
+
+        public JSONObject getResult() {
+            return rootObj;
+        }
+
+        protected JSONObject put(JSONObject o, String key, Object value) {
+            try {
+                return o.put(key, value);
+            } catch (JSONException e) {
+                throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
+            }
         }
     }
 }
