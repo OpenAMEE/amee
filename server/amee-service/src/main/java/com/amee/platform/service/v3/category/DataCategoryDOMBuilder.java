@@ -115,7 +115,7 @@ public class DataCategoryDOMBuilder extends DataCategoryBuilder<Document> {
 
         public void startTags() {
             tagsElem = new Element("Tags");
-            rootElem.addContent(tagsElem);
+            dataCategoryElem.addContent(tagsElem);
         }
 
         public void newTag(Tag tag) {
