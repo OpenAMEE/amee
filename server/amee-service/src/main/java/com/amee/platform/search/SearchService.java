@@ -87,7 +87,7 @@ public class SearchService implements ApplicationListener {
     }
 
     public void build(boolean indexDataCategories, boolean indexDataItems) {
-        log.debug("build() Building...");
+        log.info("build() Building...");
         // Add DataCategories?
         if (indexDataCategories) {
             // Ensure we have an empty Lucene index.
@@ -103,14 +103,14 @@ public class SearchService implements ApplicationListener {
             // Always make sure index is unlocked.
             luceneService.unlockIndex();
         }
-        log.debug("build() Building... DONE");
+        log.info("build() Building... DONE");
     }
 
     /**
      * Add all DataCategories to the index.
      */
     protected void buildDataCategories() {
-        log.debug("buildDataCategories()");
+        log.info("buildDataCategories()");
         transactionController.begin(false);
         List<Document> documents = new ArrayList<Document>();
         for (DataCategory dataCategory :
@@ -125,13 +125,13 @@ public class SearchService implements ApplicationListener {
      * Add all DataItems to the index.
      */
     protected void buildDataItems() {
-        log.debug("buildDataItems()");
+        log.info("buildDataItems()");
         transactionController.begin(false);
         List<Document> documents;
         for (DataCategory dataCategory :
                 dataService.getDataCategories(environmentService.getEnvironmentByName("AMEE"))) {
             if (dataCategory.getItemDefinition() != null) {
-                log.debug("buildDataItems() " + dataCategory.getName());
+                log.info("buildDataItems() " + dataCategory.getName());
                 documents = new ArrayList<Document>();
                 for (DataItem dataItem : dataService.getDataItems(dataCategory)) {
                     documents.add(getDocument(dataItem));
