@@ -1,8 +1,10 @@
 package com.amee.platform.service.v3.tag;
 
+import com.amee.base.resource.NotFoundException;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceAcceptor;
 import com.amee.base.validation.ValidationException;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.tag.EntityTag;
 import com.amee.domain.tag.Tag;
@@ -35,35 +37,59 @@ public class TagsFormAcceptor implements ResourceAcceptor {
     @Transactional(rollbackFor = {ValidationException.class})
     public JSONObject handle(RequestWrapper requestWrapper) throws ValidationException {
         TagAcceptorRenderer renderer = new TagAcceptorJSONRenderer();
-        renderer.start();
-        // Get DataCategory identifier.
-        String dataCategoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
-        if (dataCategoryIdentifier != null) {
-            // Get DataCategory.
-            DataCategory dataCategory = dataService.getDataCategoryByIdentifier(
-                    environmentService.getEnvironmentByName("AMEE"), dataCategoryIdentifier);
-            if (dataCategory != null) {
-                // Create Tag.
-                Tag tag = new Tag();
-                validationHelper.setTag(tag);
-                if (validationHelper.isValid(requestWrapper.getFormParameters())) {
-                    // Save Tag.
-                    tagService.persist(tag);
-                    // Create and save EntityTag.
-                    EntityTag entityTag = new EntityTag(dataCategory, tag);
-                    tagService.persist(entityTag);
-                    // Woo!
-                    renderer.ok();
-                } else {
-                    throw new ValidationException(validationHelper.getValidationResult());
-                }
+        // Create new Tag.
+        Tag tag = new Tag();
+        validationHelper.setTag(tag);
+        if (validationHelper.isValid(requestWrapper.getFormParameters())) {
+            // Swap tag with existing tag if it exists.
+            Tag existingTag = tagService.getTag(tag.getTag());
+            if (existingTag == null) {
+                // Save new Tag.
+                tagService.persist(tag);
             } else {
-                renderer.notFound();
+                // Use existing tag.
+                tag = existingTag;
             }
+            // Deal with an entity if present.
+            IAMEEEntityReference entity = getEntity(requestWrapper);
+            if (entity != null) {
+                // Create and save EntityTag.
+                EntityTag entityTag = new EntityTag(entity, tag);
+                tagService.persist(entityTag);
+            }
+            // Woo!
+            renderer.ok();
         } else {
-            renderer.categoryIdentifierMissing();
+            throw new ValidationException(validationHelper.getValidationResult());
         }
         return (JSONObject) renderer.getResult();
+    }
+
+    /**
+     * Get the entity that Tags should belong to.
+     * <p/>
+     * This base implementation returns null.
+     * <p/>
+     * TODO: This is a cut-and-paste of code in TagsBuilder.
+     *
+     * @param requestWrapper
+     * @return IAMEEEntityReference entity reference
+     */
+    public IAMEEEntityReference getEntity(RequestWrapper requestWrapper) {
+        if (requestWrapper.getAttributes().containsKey("categoryIdentifier")) {
+            String dataCategoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
+            if (dataCategoryIdentifier != null) {
+                DataCategory dataCategory = dataService.getDataCategoryByIdentifier(
+                        environmentService.getEnvironmentByName("AMEE"),
+                        dataCategoryIdentifier);
+                if (dataCategory != null) {
+                    return dataCategory;
+                } else {
+                    throw new NotFoundException();
+                }
+            }
+        }
+        return null;
     }
 
     public interface TagAcceptorRenderer {
@@ -76,8 +102,6 @@ public class TagsFormAcceptor implements ResourceAcceptor {
 
         public void notAuthenticated();
 
-        public void categoryIdentifierMissing();
-
         public Object getResult();
     }
 
@@ -87,6 +111,7 @@ public class TagsFormAcceptor implements ResourceAcceptor {
 
         public TagAcceptorJSONRenderer() {
             super();
+            start();
         }
 
         public void start() {
@@ -103,11 +128,6 @@ public class TagsFormAcceptor implements ResourceAcceptor {
 
         public void notAuthenticated() {
             put(rootObj, "status", "NOT_AUTHENTICATED");
-        }
-
-        public void categoryIdentifierMissing() {
-            put(rootObj, "status", "ERROR");
-            put(rootObj, "error", "The categoryIdentifier was missing.");
         }
 
         public JSONObject getResult() {

@@ -40,6 +40,7 @@ public class TagsDOMBuilder extends TagsBuilder<Document> {
         public void newTag(Tag tag) {
             Element tagElem = new Element("Tag");
             tagElem.addContent(new Element("Tag").setText(tag.getTag()));
+            tagElem.addContent(new Element("Count").setText("" + tag.getCount()));
             tagsElem.addContent(tagElem);
         }
 
