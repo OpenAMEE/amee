@@ -35,6 +35,10 @@ public class TagService {
         return dao.getTag(tag);
     }
 
+    public EntityTag getEntityTag(IAMEEEntityReference entity, String tag) {
+        return dao.getEntityTag(entity, tag);
+    }
+
     public void persist(Tag tag) {
         dao.persist(tag);
     }
