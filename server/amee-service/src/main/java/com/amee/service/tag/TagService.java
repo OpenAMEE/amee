@@ -16,7 +16,7 @@ public class TagService {
     private TagServiceDAO dao;
 
     public List<Tag> getTags() {
-        return dao.getTags();
+        return dao.getTagsWithCount();
     }
 
     public List<Tag> getTags(IAMEEEntityReference entity) {
@@ -29,6 +29,10 @@ public class TagService {
         } else {
             return getTags();
         }
+    }
+
+    public Tag getTag(String tag) {
+        return dao.getTag(tag);
     }
 
     public void persist(Tag tag) {

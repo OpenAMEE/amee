@@ -40,6 +40,8 @@ public abstract class TagsBuilder<E> implements ResourceBuilder<E> {
      * Get the entity that Tags should belong to.
      * <p/>
      * This base implementation returns null.
+     * <p/>
+     * TODO: This is a cut-and-paste of code in TagsFormAcceptor.
      *
      * @param requestWrapper
      * @return IAMEEEntityReference entity reference
