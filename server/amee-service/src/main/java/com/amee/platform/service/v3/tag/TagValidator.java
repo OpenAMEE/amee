@@ -33,7 +33,6 @@ public class TagValidator implements Validator {
     public void validate(Object o, Errors e) {
         Tag tag = (Tag) o;
         // tag
-        // TODO: Tags need to be unique.
         tagSpec.validate(tag.getTag(), e);
     }
 }

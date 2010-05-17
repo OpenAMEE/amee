@@ -1,16 +1,14 @@
 package com.amee.platform.service.v3.tag;
 
-import com.amee.base.resource.NotFoundException;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceAcceptor;
 import com.amee.base.validation.ValidationException;
 import com.amee.domain.IAMEEEntityReference;
-import com.amee.domain.data.DataCategory;
 import com.amee.domain.tag.EntityTag;
 import com.amee.domain.tag.Tag;
-import com.amee.service.data.DataService;
-import com.amee.service.environment.EnvironmentService;
 import com.amee.service.tag.TagService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Scope("prototype")
 public class TagsFormAcceptor implements ResourceAcceptor {
 
-    @Autowired
-    private EnvironmentService environmentService;
-
-    @Autowired
-    private DataService dataService;
+    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private TagResourceService tagResourceService;
 
     @Autowired
     private TagValidationHelper validationHelper;
@@ -45,17 +42,28 @@ public class TagsFormAcceptor implements ResourceAcceptor {
             Tag existingTag = tagService.getTag(tag.getTag());
             if (existingTag == null) {
                 // Save new Tag.
+                log.debug("handle() Use new Tag.");
                 tagService.persist(tag);
             } else {
                 // Use existing tag.
+                log.debug("handle() Use existing Tag.");
                 tag = existingTag;
             }
             // Deal with an entity if present.
-            IAMEEEntityReference entity = getEntity(requestWrapper);
+            IAMEEEntityReference entity = tagResourceService.getEntity(requestWrapper);
             if (entity != null) {
-                // Create and save EntityTag.
-                EntityTag entityTag = new EntityTag(entity, tag);
-                tagService.persist(entityTag);
+                // Find existing EntityTag.
+                EntityTag entityTag = tagService.getEntityTag(entity, tag.getTag());
+                if (entityTag == null) {
+                    // Create and save EntityTag.
+                    log.debug("handle() Use new EntityTag.");
+                    entityTag = new EntityTag(entity, tag);
+                    tagService.persist(entityTag);
+                } else {
+                    log.debug("handle() EntityTag already exists.");
+                }
+            } else {
+                log.debug("handle() No entity.");
             }
             // Woo!
             renderer.ok();
@@ -63,33 +71,6 @@ public class TagsFormAcceptor implements ResourceAcceptor {
             throw new ValidationException(validationHelper.getValidationResult());
         }
         return (JSONObject) renderer.getResult();
-    }
-
-    /**
-     * Get the entity that Tags should belong to.
-     * <p/>
-     * This base implementation returns null.
-     * <p/>
-     * TODO: This is a cut-and-paste of code in TagsBuilder.
-     *
-     * @param requestWrapper
-     * @return IAMEEEntityReference entity reference
-     */
-    public IAMEEEntityReference getEntity(RequestWrapper requestWrapper) {
-        if (requestWrapper.getAttributes().containsKey("categoryIdentifier")) {
-            String dataCategoryIdentifier = requestWrapper.getAttributes().get("categoryIdentifier");
-            if (dataCategoryIdentifier != null) {
-                DataCategory dataCategory = dataService.getDataCategoryByIdentifier(
-                        environmentService.getEnvironmentByName("AMEE"),
-                        dataCategoryIdentifier);
-                if (dataCategory != null) {
-                    return dataCategory;
-                } else {
-                    throw new NotFoundException();
-                }
-            }
-        }
-        return null;
     }
 
     public interface TagAcceptorRenderer {

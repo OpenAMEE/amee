@@ -23,7 +23,6 @@ public class TagServiceDAO implements Serializable {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @SuppressWarnings(value = "unchecked")
     protected Tag getTag(String tag) {
         Session session = (Session) entityManager.getDelegate();
         Criteria criteria = session.createCriteria(Tag.class);
@@ -76,6 +75,18 @@ public class TagServiceDAO implements Serializable {
         criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
         criteria.setTimeout(1);
         return criteria.list();
+    }
+
+    public EntityTag getEntityTag(IAMEEEntityReference entity, String tag) {
+        Session session = (Session) entityManager.getDelegate();
+        Criteria criteria = session.createCriteria(EntityTag.class);
+        criteria.createAlias("tag", "t");
+        criteria.add(Restrictions.eq("entityReference.entityUid", entity.getEntityUid()));
+        criteria.add(Restrictions.eq("entityReference.entityType", entity.getObjectType().getName()));
+        criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
+        criteria.add(Restrictions.ilike("t.tag", tag, MatchMode.EXACT));
+        criteria.setTimeout(1);
+        return (EntityTag) criteria.uniqueResult();
     }
 
     public void persist(Tag tag) {
