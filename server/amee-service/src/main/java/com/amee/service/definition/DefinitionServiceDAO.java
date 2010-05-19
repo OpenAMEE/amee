@@ -243,7 +243,6 @@ public class DefinitionServiceDAO implements Serializable {
 
     public void remove(ItemValueDefinition itemValueDefinition) {
         itemValueDefinition.setStatus(AMEEStatus.TRASH);
-        remove(itemValueDefinition.getLocaleNames().values());
     }
 
     // ValueDefinitions
