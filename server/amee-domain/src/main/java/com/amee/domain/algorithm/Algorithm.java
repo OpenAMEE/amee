@@ -20,6 +20,7 @@
 package com.amee.domain.algorithm;
 
 import com.amee.core.APIUtils;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.ObjectType;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.environment.Environment;
@@ -57,6 +58,11 @@ public class Algorithm extends AbstractAlgorithm implements com.amee.platform.sc
 
     public Algorithm() {
         super();
+    }
+
+    @Override
+    public boolean isTrash() {
+        return status.equals(AMEEStatus.TRASH) || itemDefinition.isTrash();
     }
 
     public Algorithm(Environment environment) {
