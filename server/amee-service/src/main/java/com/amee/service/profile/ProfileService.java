@@ -110,7 +110,6 @@ public class ProfileService extends BaseService {
 
     public void remove(Profile profile) {
         dao.remove(profile);
-        permissionService.trashPermissionsForEntity(profile);
     }
 
     public void clearCaches(Profile profile) {
