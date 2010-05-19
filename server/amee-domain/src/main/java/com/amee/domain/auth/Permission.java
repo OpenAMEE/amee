@@ -43,6 +43,11 @@ public class Permission extends AMEEEnvironmentEntity implements Comparable {
 
     public final static int ENTRIES_MAX_SIZE = 1000;
 
+    @Override
+    public boolean isTrash() {
+        return status.equals(AMEEStatus.TRASH) || getEntityReference().getEntity().isTrash();
+    }
+
     /**
      * The entity that this permission is governing access to.
      */
