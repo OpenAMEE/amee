@@ -219,7 +219,6 @@ public class DataServiceDAO implements Serializable {
 
     protected void remove(ItemValue dataItemValue) {
         dataItemValue.setStatus(AMEEStatus.TRASH);
-        remove(dataItemValue.getLocaleValues().values());
     }
 
     protected void remove(Collection<LocaleName> localeNames) {
