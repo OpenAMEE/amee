@@ -21,6 +21,7 @@ package com.amee.domain.profile;
 
 import com.amee.core.APIUtils;
 import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.ObjectType;
 import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.Permission;
@@ -128,6 +129,11 @@ public class Profile extends AMEEEnvironmentEntity implements Pathable {
             permissions.add(new Permission(getEnvironment(), getUser(), this, PermissionEntry.OWN));
         }
         return permissions;
+    }
+
+    @Override
+    public boolean isTrash() {
+        return status.equals(AMEEStatus.TRASH) || user.isTrash();
     }
 
     public User getUser() {
