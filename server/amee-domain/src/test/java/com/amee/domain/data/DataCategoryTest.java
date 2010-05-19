@@ -9,6 +9,7 @@ import static org.mockito.Mockito.*;
 public class DataCategoryTest {
     private DataCategory dc;
     private DataCategory mockParentDc;
+    private DataCategory mockAliasDc;
     private ItemDefinition mockItemDef;
 
 
@@ -22,6 +23,9 @@ public class DataCategoryTest {
 
         mockParentDc = mock(DataCategory.class);
         dc.setDataCategory(mockParentDc);
+
+        mockAliasDc = mock(DataCategory.class);
+        dc.setAliasedTo(mockAliasDc);
     }
 
     @Test
@@ -56,5 +60,12 @@ public class DataCategoryTest {
         when(mockItemDef.isTrash()).thenReturn(true);
         assertTrue("Linked ItemDefinition is trashed", dc.isTrash());
         verify(mockItemDef).isTrash();
+    }
+
+    @Test
+    public void aliasTrashed() {
+        when(mockAliasDc.isTrash()).thenReturn(true);
+        assertTrue("DataCategory should be trashed", dc.isTrash());
+        verify(mockAliasDc).isTrash();
     }
 }
