@@ -122,9 +122,6 @@ public class DataService extends BaseService implements ApplicationListener {
 
     public void remove(DataCategory dataCategory) {
         dao.remove(dataCategory);
-        for (DataCategory alias : dataCategory.getAliases()) {
-            dao.remove(alias);
-        }
     }
 
     /**
