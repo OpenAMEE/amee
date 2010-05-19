@@ -21,12 +21,7 @@ package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
 import com.amee.core.ValueType;
-import com.amee.domain.AMEEEnvironmentEntity;
-import com.amee.domain.APIVersion;
-import com.amee.domain.Builder;
-import com.amee.domain.LocaleHolder;
-import com.amee.domain.ObjectType;
-import com.amee.domain.ValueDefinition;
+import com.amee.domain.*;
 import com.amee.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import com.amee.domain.sheet.Choice;
 import com.amee.platform.science.AmountCompoundUnit;
@@ -179,6 +174,11 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
 
     public ItemValueDefinition() {
         super();
+    }
+
+    @Override
+    public boolean isTrash() {
+        return status.equals(AMEEStatus.TRASH) || itemDefinition.isTrash();
     }
 
     public ItemValueDefinition(ItemDefinition itemDefinition) {
