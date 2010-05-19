@@ -222,6 +222,6 @@ public class ProfileItem extends Item {
 
     @Override
     public boolean isTrash() {
-        return status.equals(AMEEStatus.TRASH) || getDataItem().isTrash();
+        return status.equals(AMEEStatus.TRASH) || getDataItem().isTrash() || getProfile().isTrash();
     }
 }
