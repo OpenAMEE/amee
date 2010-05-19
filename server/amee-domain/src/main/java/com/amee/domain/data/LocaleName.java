@@ -23,6 +23,7 @@ package com.amee.domain.data;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.AMEEStatus;
 import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -61,6 +62,11 @@ public class LocaleName extends AMEEEntity {
 
     public LocaleName() {
         super();
+    }
+
+    @Override
+    public boolean isTrash() {
+        return status.equals(AMEEStatus.TRASH) || entity.isTrash();
     }
 
     /**
