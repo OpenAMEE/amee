@@ -209,36 +209,7 @@ public class DefinitionServiceDAO implements Serializable {
     }
 
     public void remove(ItemDefinition itemDefinition) {
-        beforeItemDefinitionDelete(itemDefinition);
         itemDefinition.setStatus(AMEEStatus.TRASH);
-        remove(itemDefinition.getLocaleNames().values());
-    }
-
-    @SuppressWarnings(value = "unchecked")
-    private void beforeItemDefinitionDelete(ItemDefinition itemDefinition) {
-        log.debug("beforeItemDefinitionDelete");
-
-        // trash ItemValueDefinitions for ItemDefinition
-        entityManager.createQuery(
-                "UPDATE ItemValueDefinition " +
-                        "SET status = :trash, " +
-                        "modified = current_timestamp() " +
-                        "WHERE itemDefinition.id = :itemDefinitionId " +
-                        "AND status != :trash")
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setParameter("itemDefinitionId", itemDefinition.getId())
-                .executeUpdate();
-
-        // trash Algorithms for ItemDefinition
-        entityManager.createQuery(
-                "UPDATE Algorithm " +
-                        "SET status = :trash, " +
-                        "modified = current_timestamp() " +
-                        "WHERE itemDefinition.id = :itemDefinitionId " +
-                        "AND status != :trash")
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setParameter("itemDefinitionId", itemDefinition.getId())
-                .executeUpdate();
     }
 
     // ItemValueDefinitions
@@ -272,7 +243,6 @@ public class DefinitionServiceDAO implements Serializable {
 
     public void remove(ItemValueDefinition itemValueDefinition) {
         itemValueDefinition.setStatus(AMEEStatus.TRASH);
-        remove(itemValueDefinition.getLocaleNames().values());
     }
 
     // ValueDefinitions

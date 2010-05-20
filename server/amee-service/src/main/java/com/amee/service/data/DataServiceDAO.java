@@ -146,36 +146,6 @@ public class DataServiceDAO implements Serializable {
 
         log.debug("remove: " + dataCategory.getName());
 
-        // trash ItemValues for DataItems
-        Session session = (Session) entityManager.getDelegate();
-        SQLQuery query = session.createSQLQuery(
-                new StringBuilder()
-                        .append("UPDATE ITEM_VALUE iv, ITEM i ")
-                        .append("SET iv.STATUS = :trash, ")
-                        .append("iv.MODIFIED = current_timestamp() ")
-                        .append("WHERE iv.ITEM_ID = i.ID ")
-                        .append("AND i.TYPE = 'DI' ")
-                        .append("AND i.DATA_CATEGORY_ID = :dataCategoryId").toString());
-        query.setInteger("trash", AMEEStatus.TRASH.ordinal());
-        query.setLong("dataCategoryId", dataCategory.getId());
-        query.addSynchronizedEntityClass(ItemValue.class);
-        query.executeUpdate();
-
-        // trash child DataCategories
-        List<DataCategory> dataCategories = entityManager.createQuery(
-                "FROM DataCategory di " +
-                        "WHERE di.dataCategory.id = :dataCategoryId " +
-                        "AND di.status != :trash")
-                .setParameter("trash", AMEEStatus.TRASH)
-                .setParameter("dataCategoryId", dataCategory.getId())
-                .getResultList();
-        for (DataCategory child : dataCategories) {
-            remove(child);
-        }
-
-        // trash locale names for this DataCategory
-        remove(dataCategory.getLocaleNames().values());
-
         // trash this DataCategory
         dataCategory.setStatus(AMEEStatus.TRASH);
     }
@@ -314,7 +284,6 @@ public class DataServiceDAO implements Serializable {
 
     protected void remove(ItemValue dataItemValue) {
         dataItemValue.setStatus(AMEEStatus.TRASH);
-        remove(dataItemValue.getLocaleValues().values());
     }
 
     protected void remove(Collection<LocaleName> localeNames) {
