@@ -67,7 +67,7 @@ public class SiteService implements Serializable {
     }
 
     public List<User> getUsers(Environment environment, Pager pager) {
-        return getUsers(environment, pager, null);
+        return getUsers(environment, pager, "");
     }
 
     public List<User> getUsers(Environment environment, Pager pager, String search) {
