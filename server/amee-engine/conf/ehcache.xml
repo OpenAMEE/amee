@@ -476,6 +476,16 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
+    <!-- TagService -->
+    <cache name="query.localeService"
+           maxElementsInMemory="1000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
     <!-- FreeMarkerConfigurations -->
     <cache name="FreeMarkerConfigurations"
            maxElementsInMemory="200"

@@ -28,7 +28,6 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
@@ -318,10 +317,6 @@ public class DataService extends BaseService implements ApplicationListener {
 
     public void remove(ItemValue dataItemValue) {
         dao.remove(dataItemValue);
-    }
-
-    public void remove(LocaleName localeName) {
-        dao.remove(localeName);
     }
 
     // Sheets & Choices

@@ -22,17 +22,16 @@ package com.amee.restlet.data;
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.AMEEStatus;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.LocaleName;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.data.builder.v2.ItemValueInListBuilder;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
+import com.amee.service.locale.LocaleService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -46,6 +45,7 @@ import org.restlet.data.Form;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -65,6 +65,9 @@ import java.util.Map;
 public class DataItemValueResource extends BaseDataResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private LocaleService localeService;
 
     // Will be null is a sequence of ItemValues is being requested.
     private ItemValue itemValue;
@@ -288,31 +291,27 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         // Parse any submitted locale values
         for (String name : form.getNames()) {
             if (name.startsWith("value_")) {
-
-                // Get the locale name and locale value from parameters.
+                // Get locale and locale name to handle.
                 String locale = name.substring(name.indexOf("_") + 1);
-                String localeValueStr = form.getFirstValue(name);
-
-                // Locale value cannot be blank and locale must exist.
-                if (StringUtils.isBlank(localeValueStr) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
+                // Validate - Must have an available locale.
+                if (!LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                     badRequest(APIFault.INVALID_PARAMETERS);
                     return;
                 }
-
-                // Does this locale already have an entry?
-                if (itemValue.getLocaleValues().containsKey(locale)) {
-                    // Update the locale.
-                    LocaleName localeName = itemValue.getLocaleValues().get(locale);
-                    localeName.setName(localeValueStr);
-                    // Should we remove this locale?
-                    if (form.getNames().contains("remove_value_" + locale)) {
-                        localeName.setStatus(AMEEStatus.TRASH);
-                    }
+                // Remove or Update/Create?
+                if (form.getNames().contains("remove_value_" + locale)) {
+                    // Remove.
+                    localeService.clearLocaleName(itemValue, locale);
                 } else {
-                    // Create a locale entry based on supplied locale name and value.
-                    LocaleName localeName =
-                            new LocaleName(itemValue, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeValueStr);
-                    itemValue.addLocaleName(localeName);
+                    // Update or create.
+                    String localeNameStr = form.getFirstValue(name);
+                    // Validate - Must have a locale name value.
+                    if (StringUtils.isBlank(localeNameStr)) {
+                        badRequest(APIFault.INVALID_PARAMETERS);
+                        return;
+                    }
+                    // Do the update or create.
+                    localeService.setLocaleName(itemValue, locale, localeNameStr);
                 }
             }
         }
