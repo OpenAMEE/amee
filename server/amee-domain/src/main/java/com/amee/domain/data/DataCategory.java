@@ -262,8 +262,8 @@ public class DataCategory extends AMEEEnvironmentEntity implements Pathable {
     @Override
     public boolean isTrash() {
         return status.equals(AMEEStatus.TRASH) ||
-            getDataCategory().isTrash() ||
-            getAliasedCategory().isTrash() ||
+            ((getDataCategory() != null) && getDataCategory().isTrash()) ||
+            ((getAliasedCategory() != null) && getAliasedCategory().isTrash()) ||
             ((getItemDefinition() != null) && getItemDefinition().isTrash());
     }
 
