@@ -24,7 +24,6 @@ import com.amee.domain.AMEEStatus;
 import com.amee.domain.APIVersion;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.data.ItemValueDefinitionLocaleName;
 import com.amee.domain.data.LocaleName;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;

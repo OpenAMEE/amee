@@ -26,7 +26,6 @@ import com.amee.domain.AMEEStatus;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.ItemValueLocaleName;
 import com.amee.domain.data.LocaleName;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.data.builder.v2.ItemValueInListBuilder;
