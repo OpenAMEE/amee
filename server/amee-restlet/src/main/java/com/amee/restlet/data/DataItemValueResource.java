@@ -311,7 +311,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
                 } else {
                     // Create a locale entry based on supplied locale name and value.
                     LocaleName localeName =
-                            new ItemValueLocaleName(itemValue, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeValueStr);
+                            new LocaleName(itemValue, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeValueStr);
                     itemValue.addLocaleName(localeName);
                 }
             }

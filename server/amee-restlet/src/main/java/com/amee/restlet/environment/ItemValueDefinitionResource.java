@@ -148,7 +148,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
                     }
                 } else {
                     LocaleName localeName =
-                            new ItemValueDefinitionLocaleName(itemValueDefinition, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeNameStr);
+                            new LocaleName(itemValueDefinition, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeNameStr);
                     itemValueDefinition.addLocaleName(localeName);
                 }
             }

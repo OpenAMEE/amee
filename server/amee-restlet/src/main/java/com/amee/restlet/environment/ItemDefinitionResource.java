@@ -143,7 +143,7 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
                     }
                 } else {
                     LocaleName localeName =
-                            new ItemDefinitionLocaleName(itemDefinition, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeNameStr);
+                            new LocaleName(itemDefinition, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeNameStr);
                     itemDefinition.addLocaleName(localeName);
                 }
             }
