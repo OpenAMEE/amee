@@ -2,6 +2,7 @@ package com.amee.domain.auth.crypto;
 
 import com.sun.crypto.provider.SunJCE;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.ArrayUtils;
 
 import javax.crypto.*;
 import javax.crypto.spec.DESedeKeySpec;
@@ -9,6 +10,7 @@ import javax.crypto.spec.IvParameterSpec;
 import java.io.*;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 
 public class Crypto {
 
@@ -201,15 +203,17 @@ public class Crypto {
         byte[] salt;
 
         try {
-            // read salt byte array from file
+            // Read salt byte array from file.
             input = new DataInputStream(new FileInputStream(file));
             salt = new byte[(int) file.length()];
             input.readFully(salt);
             input.close();
-            // must be 8 bytes
-            if (salt.length != 8) {
-                throw new RuntimeException("Salt from '" + file.getAbsolutePath() + "' is not 8 bytes.");
+            // Must be at least 8 bytes.
+            if (salt.length < 8) {
+                throw new RuntimeException("Salt from '" + file.getAbsolutePath() + "' is less than 8 bytes.");
             }
+            // Chop off anything beyond 8.
+            salt = Arrays.copyOf(salt, 8);
         } catch (IOException e) {
             System.out.println("readSaltFromFile() caught IOException: " + e.getMessage());
             throw new CryptoException("IOException", e);
