@@ -20,16 +20,15 @@
 package com.amee.restlet.environment;
 
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.AMEEStatus;
 import com.amee.domain.APIVersion;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.data.LocaleName;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import com.amee.service.environment.EnvironmentService;
+import com.amee.service.locale.LocaleService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,6 +56,9 @@ import java.util.Set;
 public class ItemValueDefinitionResource extends AuthorizeResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private LocaleService localeService;
 
     @Autowired
     private DefinitionService definitionService;
@@ -131,25 +133,27 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
         // Parse any submitted locale names
         for (String name : form.getNames()) {
             if (name.startsWith("name_")) {
-
+                // Get locale and locale name to handle.
                 String locale = name.substring(name.indexOf("_") + 1);
-                String localeNameStr = form.getFirstValue(name);
-
-                if (StringUtils.isBlank(localeNameStr) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
+                // Validate - Must have an available locale.
+                if (!LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                     badRequest(APIFault.INVALID_PARAMETERS);
                     return;
                 }
-
-                if (itemValueDefinition.getLocaleNames().containsKey(locale)) {
-                    LocaleName localeName = itemValueDefinition.getLocaleNames().get(locale);
-                    localeName.setName(localeNameStr);
-                    if (form.getNames().contains("remove_name_" + locale)) {
-                        localeName.setStatus(AMEEStatus.TRASH);
-                    }
+                // Remove or Update/Create?
+                if (form.getNames().contains("remove_name_" + locale)) {
+                    // Remove.
+                    localeService.clearLocaleName(itemValueDefinition, locale);
                 } else {
-                    LocaleName localeName =
-                            new LocaleName(itemValueDefinition, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeNameStr);
-                    itemValueDefinition.addLocaleName(localeName);
+                    // Update or create.
+                    String localeNameStr = form.getFirstValue(name);
+                    // Validate - Must have a locale name value.
+                    if (StringUtils.isBlank(localeNameStr)) {
+                        badRequest(APIFault.INVALID_PARAMETERS);
+                        return;
+                    }
+                    // Do the update or create.
+                    localeService.setLocaleName(itemValueDefinition, locale, localeNameStr);
                 }
             }
         }
