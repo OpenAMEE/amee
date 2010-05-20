@@ -583,7 +583,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                     }
                 } else {
                     LocaleName localeName =
-                            new DataCategoryLocaleName(thisDataCategory, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeNameStr);
+                            new LocaleName(thisDataCategory, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeNameStr);
                     thisDataCategory.addLocaleName(localeName);
                 }
             }
