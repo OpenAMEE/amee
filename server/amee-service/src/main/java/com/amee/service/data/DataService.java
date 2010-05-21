@@ -20,6 +20,7 @@
 package com.amee.service.data;
 
 import com.amee.domain.APIVersion;
+import com.amee.domain.ObjectType;
 import com.amee.domain.UidGen;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
@@ -79,10 +80,12 @@ public class DataService extends BaseService implements ApplicationListener {
         if (event instanceof InvalidationMessage) {
             log.debug("onApplicationEvent() Handling InvalidationMessage.");
             InvalidationMessage invalidationMessage = (InvalidationMessage) event;
-            if (invalidationMessage.isFromOtherInstance()) {
+            if (invalidationMessage.isFromOtherInstance() && invalidationMessage.getObjectType().equals(ObjectType.DC)) {
                 transactionController.begin(false);
                 DataCategory dataCategory = getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
-                clearCaches(dataCategory);
+                if (dataCategory != null) {
+                    clearCaches(dataCategory);
+                }
                 transactionController.end();
             }
         }
