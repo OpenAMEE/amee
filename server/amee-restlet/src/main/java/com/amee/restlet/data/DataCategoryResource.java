@@ -25,13 +25,10 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
-import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataCategoryLocaleName;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.LocaleName;
 import com.amee.domain.path.PathItem;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.data.builder.DataCategoryResourceBuilder;
@@ -40,6 +37,7 @@ import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionService;
+import com.amee.service.locale.LocaleService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -74,6 +72,9 @@ import java.util.Set;
 public class DataCategoryResource extends BaseDataResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private LocaleService localeService;
 
     @Autowired
     private DataService dataService;
@@ -566,27 +567,30 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             }
         }
 
-        // Parse any submitted locale names
+        // Parse any submitted locale names.
         for (String name : form.getNames()) {
             if (name.startsWith("name_")) {
+                // Get locale and locale name to handle.
                 String locale = name.substring(name.indexOf("_") + 1);
-                String localeNameStr = form.getFirstValue(name);
-
-                if (StringUtils.isBlank(localeNameStr) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
+                // Validate - Must have an available locale.
+                if (!LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                     badRequest(APIFault.INVALID_PARAMETERS);
                     return;
                 }
-
-                if (thisDataCategory.getLocaleNames().containsKey(locale)) {
-                    LocaleName localeName = thisDataCategory.getLocaleNames().get(locale);
-                    localeName.setName(localeNameStr);
-                    if (form.getNames().contains("remove_name_" + locale)) {
-                        localeName.setStatus(AMEEStatus.TRASH);
-                    }
+                // Remove or Update/Create?
+                if (form.getNames().contains("remove_name_" + locale)) {
+                    // Remove.
+                    localeService.clearLocaleName(thisDataCategory, locale);
                 } else {
-                    LocaleName localeName =
-                            new DataCategoryLocaleName(thisDataCategory, LocaleConstants.AVAILABLE_LOCALES.get(locale), localeNameStr);
-                    thisDataCategory.addLocaleName(localeName);
+                    // Update or create.
+                    String localeNameStr = form.getFirstValue(name);
+                    // Validate - Must have a locale name value.
+                    if (StringUtils.isBlank(localeNameStr)) {
+                        badRequest(APIFault.INVALID_PARAMETERS);
+                        return;
+                    }
+                    // Do the update or create.
+                    localeService.setLocaleName(thisDataCategory, locale, localeNameStr);
                 }
             }
         }
@@ -605,6 +609,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     }
 
     // TODO: This is not used in the Java code. Is it used by a template or in a script?
+
     public DataService getDataService() {
         return dataService;
     }
