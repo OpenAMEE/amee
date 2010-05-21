@@ -24,8 +24,8 @@ public class LocaleServiceDAO {
     public List<LocaleName> getLocaleNames(IAMEEEntityReference entity) {
         Session session = (Session) entityManager.getDelegate();
         Criteria criteria = session.createCriteria(LocaleName.class);
-        criteria.add(Restrictions.eq("entityReference.entityUid", entity.getEntityUid()));
-        criteria.add(Restrictions.eq("entityReference.entityType", entity.getObjectType().getName()));
+        criteria.add(Restrictions.eq("entity.entityUid", entity.getEntityUid()));
+        criteria.add(Restrictions.eq("entity.entityType", entity.getObjectType().getName()));
         criteria.add(Restrictions.ne("status", AMEEStatus.TRASH));
         criteria.setCacheable(true);
         criteria.setCacheRegion(CACHE_REGION);
