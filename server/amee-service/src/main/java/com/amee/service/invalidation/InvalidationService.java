@@ -67,7 +67,7 @@ public class InvalidationService {
             messageService.publish(
                     exchangeConfig,
                     publishConfig,
-                    "platform.invalidation." + entity.getObjectType().getName().toLowerCase(),
+                    "platform." + publishConfig.getScope() + ".invalidation",
                     new InvalidationMessage(this, entity));
         }
         entities.get().clear();
