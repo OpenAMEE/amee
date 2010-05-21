@@ -176,16 +176,15 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             }
         }
 
-        // TODO: NPE on dataItem (& dataCategory) is possible here.
         if ((dataCategory != null) || (dataItem != null) || !dataCategories.isEmpty() || !dataItems.isEmpty()) {
             // clear caches
             dataService.invalidate(thisDataCategory);
             if (isPost()) {
                 if (isBatchPost()) {
                     successfulBatchPost();
-                } else if (type.equalsIgnoreCase(ObjectType.DC.getName())) {
+                } else if ((dataCategory != null) && type.equalsIgnoreCase(ObjectType.DC.getName())) {
                     successfulPost(getFullPath(), dataCategory.getPath());
-                } else if (type.equalsIgnoreCase(ObjectType.DI.getName())) {
+                } else if ((dataItem != null) && type.equalsIgnoreCase(ObjectType.DI.getName())) {
                     successfulPost(getFullPath(), dataItem.getUid());
                 } else {
                     badRequest();

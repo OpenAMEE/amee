@@ -476,7 +476,7 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- TagService -->
+    <!-- LocaleService -->
     <cache name="query.localeService"
            maxElementsInMemory="1000"
            eternal="false"
