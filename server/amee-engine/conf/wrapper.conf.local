@@ -2,6 +2,9 @@
 set.default.JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
 set.JDK_HOME=%JAVA_HOME%
 
+# Java Library Path
+wrapper.java.library.path.1=%LIB_HOME%/wrapper/macosx-x86-64
+
 # AMEE_SERVER_NAME
 set.default.AMEE_SERVER_NAME=localhost
 
