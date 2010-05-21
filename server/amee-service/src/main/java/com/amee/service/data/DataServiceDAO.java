@@ -23,14 +23,12 @@ import com.amee.domain.AMEEStatus;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.LocaleName;
 import com.amee.domain.environment.Environment;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -38,7 +36,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -219,15 +216,5 @@ public class DataServiceDAO implements Serializable {
 
     protected void remove(ItemValue dataItemValue) {
         dataItemValue.setStatus(AMEEStatus.TRASH);
-    }
-
-    protected void remove(Collection<LocaleName> localeNames) {
-        for (LocaleName localeName : localeNames) {
-            remove(localeName);
-        }
-    }
-
-    protected void remove(LocaleName localeName) {
-        localeName.setStatus(AMEEStatus.TRASH);
     }
 }

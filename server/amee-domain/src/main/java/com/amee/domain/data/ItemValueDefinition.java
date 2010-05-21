@@ -21,7 +21,13 @@ package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
 import com.amee.core.ValueType;
-import com.amee.domain.*;
+import com.amee.domain.AMEEEnvironmentEntity;
+import com.amee.domain.AMEEStatus;
+import com.amee.domain.APIVersion;
+import com.amee.domain.Builder;
+import com.amee.domain.ILocaleService;
+import com.amee.domain.ObjectType;
+import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.builder.v2.ItemValueDefinitionBuilder;
 import com.amee.domain.sheet.Choice;
 import com.amee.platform.science.AmountCompoundUnit;
@@ -34,9 +40,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.annotation.Resource;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,11 +64,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 @Entity
 @Table(name = "ITEM_VALUE_DEFINITION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Configurable(autowire = Autowire.BY_TYPE)
 public class ItemValueDefinition extends AMEEEnvironmentEntity implements ExternalValue {
 
     public final static int NAME_SIZE = 255;
@@ -67,6 +76,10 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
     public final static int VALUE_SIZE = 255;
     public final static int CHOICES_SIZE = 255;
     public final static int ALLOWED_ROLES_SIZE = 255;
+
+    @Transient
+    @Resource
+    private ILocaleService localeService;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ITEM_DEFINITION_ID")
@@ -125,49 +138,6 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
 
     @Column(name = "FORCE_TIMESERIES")
     private boolean isForceTimeSeries;
-
-    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @MapKey(name = "locale")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Map<String, LocaleName> localeNames = new HashMap<String, LocaleName>();
-
-    /**
-     * Get the collection of locale specific names for this ItemValueDefinition.
-     *
-     * @return the collection of locale specific names. The collection will be empty
-     *         if no locale specific names exist.
-     */
-    public Map<String, LocaleName> getLocaleNames() {
-        Map<String, LocaleName> activeLocaleNames = new TreeMap<String, LocaleName>();
-        for (String locale : localeNames.keySet()) {
-            LocaleName name = localeNames.get(locale);
-            if (!name.isTrash()) {
-                activeLocaleNames.put(locale, name);
-            }
-        }
-        return activeLocaleNames;
-    }
-
-    /*
-     * Get the locale specific name of this ItemValueDefinition for the locale of the current thread.
-     *
-     * The locale specific name of this ItemValueDefinition for the locale of the current thread.
-     * If no locale specific name is found, the default name will be returned.
-     */
-
-    @SuppressWarnings("unchecked")
-    private String getLocaleName() {
-        String name = null;
-        LocaleName localeName = localeNames.get(LocaleHolder.getLocale());
-        if (localeName != null && !localeName.isTrash()) {
-            name = localeName.getName();
-        }
-        return name;
-    }
-
-    public void addLocaleName(LocaleName localeName) {
-        localeNames.put(localeName.getLocale(), localeName);
-    }
 
     @Transient
     private Builder builder;
@@ -249,12 +219,7 @@ public class ItemValueDefinition extends AMEEEnvironmentEntity implements Extern
     }
 
     public String getName() {
-        String localeName = getLocaleName();
-        if (localeName != null) {
-            return localeName;
-        } else {
-            return name;
-        }
+        return localeService.getLocaleNameValue(this, name);
     }
 
     public void setName(String name) {

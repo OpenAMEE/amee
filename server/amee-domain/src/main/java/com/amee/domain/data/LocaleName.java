@@ -22,16 +22,19 @@
 package com.amee.domain.data;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEEntityReference;
 import com.amee.domain.AMEEEnvironmentEntity;
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.ObjectType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Provides a Locale-to-name mapping for an {@link AMEEEnvironmentEntity} instance.
@@ -41,9 +44,7 @@ import java.util.TreeMap;
  * Modelled as a One-to-Many relationship with the owning entity.
  */
 @Entity
-@Inheritance
 @Table(name = "LOCALE_NAME")
-@DiscriminatorColumn(name = "ENTITY_TYPE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class LocaleName extends AMEEEntity {
 
@@ -53,12 +54,10 @@ public class LocaleName extends AMEEEntity {
 
     // The locale-specific name.
     @Column(name = "NAME", nullable = false)
-    private String name;
+    private String name = "";
 
-    // The owning entitiy.
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ENTITY_ID", nullable = false)
-    private AMEEEntity entity;
+    @Embedded
+    private AMEEEntityReference entity = new AMEEEntityReference();
 
     public LocaleName() {
         super();
@@ -66,7 +65,8 @@ public class LocaleName extends AMEEEntity {
 
     @Override
     public boolean isTrash() {
-        return status.equals(AMEEStatus.TRASH) || entity.isTrash();
+        // TODO: Currently entity.getEntity() may be null but should never be.
+        return status.equals(AMEEStatus.TRASH) || ((entity.getEntity() == null) || entity.getEntity().isTrash());
     }
 
     /**
@@ -76,8 +76,8 @@ public class LocaleName extends AMEEEntity {
      * @param locale - the {@link Locale} for this name.
      * @param name   - the locale-specific name.
      */
-    public LocaleName(AMEEEntity entity, Locale locale, String name) {
-        this.entity = entity;
+    public LocaleName(IAMEEEntityReference entity, Locale locale, String name) {
+        this.entity = new AMEEEntityReference(entity);
         this.locale = locale.toString();
         this.name = name;
     }
@@ -97,6 +97,9 @@ public class LocaleName extends AMEEEntity {
      * @param name - the locale-specific name
      */
     public void setName(String name) {
+        if (name == null) {
+            name = "";
+        }
         this.name = name;
     }
 

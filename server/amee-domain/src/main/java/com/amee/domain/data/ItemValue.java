@@ -20,34 +20,54 @@
 package com.amee.domain.data;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.*;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.AMEEStatus;
+import com.amee.domain.Builder;
+import com.amee.domain.ILocaleService;
+import com.amee.domain.LocaleHolder;
+import com.amee.domain.ObjectType;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.path.Pathable;
-import com.amee.platform.science.*;
+import com.amee.platform.science.AmountCompoundUnit;
+import com.amee.platform.science.AmountPerUnit;
+import com.amee.platform.science.AmountUnit;
+import com.amee.platform.science.ExternalValue;
+import com.amee.platform.science.StartEndDate;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.persistence.*;
+import javax.annotation.Resource;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 @Entity
 @Table(name = "ITEM_VALUE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Configurable(autowire = Autowire.BY_TYPE)
 public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
 
     // 32767 because this is bigger than 255, smaller than 65535 and fits into an exact number of bits
     public final static int VALUE_SIZE = 32767;
     public final static int UNIT_SIZE = 255;
     public final static int PER_UNIT_SIZE = 255;
+
+    @Transient
+    @Resource
+    private ILocaleService localeService;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ITEM_VALUE_DEFINITION_ID")
@@ -69,49 +89,6 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
     @Column(name = "START_DATE")
     @Index(name = "START_DATE_IND")
     private Date startDate = new Date();
-
-    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @MapKey(name = "locale")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Map<String, LocaleName> localeValues = new HashMap<String, LocaleName>();
-
-    /**
-     * Get the collection of locale specific values for this ItemValue.
-     *
-     * @return the collection of locale specific values. The collection will be empty
-     *         if no locale specific values exist.
-     */
-    public Map<String, LocaleName> getLocaleValues() {
-        Map<String, LocaleName> activeLocaleValues = new TreeMap<String, LocaleName>();
-        for (String locale : localeValues.keySet()) {
-            LocaleName value = localeValues.get(locale);
-            if (!value.isTrash()) {
-                activeLocaleValues.put(locale, value);
-            }
-        }
-        return activeLocaleValues;
-    }
-
-    /*
-     * Get the locale specific value of this ItemValue for the locale of the current thread.
-     *
-     * The locale specific value of this ItemValue for the locale of the current thread.
-     * If no locale specific value is found, the default value will be returned.
-     */
-
-    @SuppressWarnings("unchecked")
-    private String getLocaleValue() {
-        String name = null;
-        LocaleName localeName = localeValues.get(LocaleHolder.getLocale());
-        if (localeName != null && !localeName.isTrash()) {
-            name = localeName.getName();
-        }
-        return name;
-    }
-
-    public void addLocaleName(LocaleName localeName) {
-        localeValues.put(localeName.getLocale(), localeName);
-    }
 
     @Transient
     private Builder builder;
@@ -214,12 +191,10 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
 
     public String getValue() {
         if (getItemValueDefinition().isText() && !LocaleHolder.isDefaultLocale()) {
-            String localeValue = getLocaleValue();
-            if (localeValue != null) {
-                return localeValue;
-            }
+            return localeService.getLocaleNameValue(this, value);
+        } else {
+            return value;
         }
-        return value;
     }
 
     public void setValue(String value) {
@@ -319,8 +294,8 @@ public class ItemValue extends AMEEEntity implements Pathable, ExternalValue {
 
     public boolean isNonZero() {
         return getItemValueDefinition().isDouble() &&
-            !StringUtils.isBlank(getValue()) &&
-            Double.parseDouble(getValue()) != 0.0;
+                !StringUtils.isBlank(getValue()) &&
+                Double.parseDouble(getValue()) != 0.0;
     }
 
     public ItemValue getCopy() {
