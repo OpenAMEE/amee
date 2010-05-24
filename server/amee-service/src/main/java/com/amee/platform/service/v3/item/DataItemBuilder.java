@@ -1,5 +1,7 @@
 package com.amee.platform.service.v3.item;
 
+import com.amee.base.resource.MissingAttributeException;
+import com.amee.base.resource.NotFoundException;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.domain.data.DataCategory;
@@ -84,16 +86,16 @@ public class DataItemBuilder implements ResourceBuilder {
                         this.handle(requestWrapper, dataItem, renderer);
                         renderer.ok();
                     } else {
-                        renderer.notFound();
+                        throw new NotFoundException();
                     }
                 } else {
-                    renderer.itemIdentifierMissing();
+                    throw new MissingAttributeException("itemIdentifier");
                 }
             } else {
-                renderer.notFound();
+                throw new NotFoundException();
             }
         } else {
-            renderer.categoryIdentifierMissing();
+            throw new MissingAttributeException("categoryIdentifier");
         }
 //        } else {
 //            renderer.notAuthenticated();
@@ -174,14 +176,6 @@ public class DataItemBuilder implements ResourceBuilder {
 
         public void ok();
 
-        public void notFound();
-
-        public void notAuthenticated();
-
-        public void itemIdentifierMissing();
-
-        public void categoryIdentifierMissing();
-
         public void newDataItem(DataItem dataItem);
 
         public void addBasic();
@@ -228,24 +222,6 @@ public class DataItemBuilder implements ResourceBuilder {
 
         public void ok() {
             put(rootObj, "status", "OK");
-        }
-
-        public void notFound() {
-            put(rootObj, "status", "NOT_FOUND");
-        }
-
-        public void notAuthenticated() {
-            put(rootObj, "status", "NOT_AUTHENTICATED");
-        }
-
-        public void itemIdentifierMissing() {
-            put(rootObj, "status", "ERROR");
-            put(rootObj, "error", "The itemIdentifier was missing.");
-        }
-
-        public void categoryIdentifierMissing() {
-            put(rootObj, "status", "ERROR");
-            put(rootObj, "error", "The categoryIdentifier was missing.");
         }
 
         public void newDataItem(DataItem dataItem) {
@@ -356,24 +332,6 @@ public class DataItemBuilder implements ResourceBuilder {
 
         public void ok() {
             rootElem.addContent(new Element("Status").setText("OK"));
-        }
-
-        public void notFound() {
-            rootElem.addContent(new Element("Status").setText("NOT_FOUND"));
-        }
-
-        public void notAuthenticated() {
-            rootElem.addContent(new Element("Status").setText("NOT_AUTHENTICATED"));
-        }
-
-        public void itemIdentifierMissing() {
-            rootElem.addContent(new Element("Status").setText("ERROR"));
-            rootElem.addContent(new Element("Error").setText("The itemIdentifier was missing."));
-        }
-
-        public void categoryIdentifierMissing() {
-            rootElem.addContent(new Element("Status").setText("ERROR"));
-            rootElem.addContent(new Element("Error").setText("The categoryIdentifier was missing."));
         }
 
         public void newDataItem(DataItem dataItem) {

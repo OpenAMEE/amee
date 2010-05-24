@@ -1,5 +1,7 @@
 package com.amee.platform.service.v3.definition;
 
+import com.amee.base.resource.MissingAttributeException;
+import com.amee.base.resource.NotFoundException;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceAcceptor;
 import com.amee.base.validation.ValidationException;
@@ -51,18 +53,16 @@ public class ItemValueDefinitionFormAcceptor implements ResourceAcceptor {
                                 throw new ValidationException(validationHelper.getValidationResult());
                             }
                         } else {
-                            o.put("status", "NOT_FOUND");
+                            throw new NotFoundException();
                         }
                     } else {
-                        o.put("status", "ERROR");
-                        o.put("error", "The itemDefinitionIdentifier was missing.");
+                        throw new MissingAttributeException("itemValueDefinitionIdentifier");
                     }
                 } else {
-                    o.put("status", "NOT_FOUND");
+                    throw new NotFoundException();
                 }
             } else {
-                o.put("status", "ERROR");
-                o.put("error", "The itemDefinitionIdentifier was missing.");
+                throw new MissingAttributeException("itemDefinitionIdentifier");
             }
             return o;
         } catch (JSONException e) {

@@ -96,8 +96,6 @@ public class DataCategoriesBuilder implements ResourceBuilder {
 
         public void ok();
 
-        public void notAuthenticated();
-
         public void start();
 
         public void newDataCategory();
@@ -127,10 +125,6 @@ public class DataCategoriesBuilder implements ResourceBuilder {
 
         public void ok() {
             put(rootObj, "status", "OK");
-        }
-
-        public void notAuthenticated() {
-            put(rootObj, "status", "NOT_AUTHENTICATED");
         }
 
         public void newDataCategory() {
@@ -174,10 +168,6 @@ public class DataCategoriesBuilder implements ResourceBuilder {
 
         public void ok() {
             rootElem.addContent(new Element("Status").setText("OK"));
-        }
-
-        public void notAuthenticated() {
-            rootElem.addContent(new Element("Status").setText("NOT_AUTHENTICATED"));
         }
 
         public void newDataCategory() {
