@@ -20,7 +20,11 @@
 package com.amee.domain.path;
 
 import com.amee.core.APIUtils;
-import com.amee.domain.*;
+import com.amee.domain.AMEEEntity;
+import com.amee.domain.APIObject;
+import com.amee.domain.IAMEEEntityReference;
+import com.amee.domain.ObjectType;
+import com.amee.domain.UidGen;
 import com.amee.domain.auth.AccessSpecification;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,7 +33,14 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
 
@@ -43,7 +54,7 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     private String fullPath = "";
     private String name = "";
     private PathItem parent = null;
-    private Set<PathItem> children = new TreeSet<PathItem>();
+    private final Set<PathItem> children = Collections.synchronizedSet(new TreeSet<PathItem>());
     private boolean deprecated;
     private ThreadLocal<AccessSpecification> accessSpecification;
     private ThreadLocal<AMEEEntity> entity;
@@ -54,6 +65,10 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
 
     public PathItem(Pathable pathable) {
         super();
+        update(pathable);
+    }
+
+    public void update(Pathable pathable) {
         setId(pathable.getId());
         setUid(pathable.getUid());
         setObjectType(pathable.getObjectType());
@@ -61,6 +76,7 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         setName(pathable.getDisplayName());
         setIsDeprecated(pathable.isDeprecated());
         setEntity(pathable.getEntity());
+        updateFullPath();
     }
 
     public JSONObject getJSONObject() throws JSONException {
@@ -102,14 +118,6 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        }
-
-        if (!(o instanceof PathItem)) {
-            return false;
-        }
-        
         PathItem other = (PathItem) o;
         return getFullPath().equalsIgnoreCase(other.getFullPath());
     }
@@ -128,11 +136,14 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     // Used by EnvironmentPIGFactory & ProfilePIGFactory.
+
     public void add(PathItem child) {
-        children.add(child);
-        child.setParent(this);
-        if (getPathItemGroup() != null) {
-            getPathItemGroup().add(child);
+        synchronized (children) {
+            children.add(child);
+            child.setParent(this);
+            if (getPathItemGroup() != null) {
+                getPathItemGroup().add(child);
+            }
         }
     }
 
@@ -141,6 +152,7 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     // Used by PathItemGroup.
+
     public PathItem findLastPathItem(List<String> segments, boolean forProfile) {
         PathItem result = null;
         PathItem child;
@@ -165,10 +177,12 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     protected PathItem findChildPathItem(String segment, boolean forProfile) {
         PathItem child = null;
         // find child in the 'persistent' children set
-        for (PathItem pi : getChildren()) {
-            if (pi.getPath().equalsIgnoreCase(segment)) {
-                child = pi;
-                break;
+        synchronized (children) {
+            for (PathItem pi : children) {
+                if (pi.getPath().equalsIgnoreCase(segment)) {
+                    child = pi;
+                    break;
+                }
             }
         }
         if (child == null) {
@@ -196,6 +210,7 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     // used in dataTrail.ftl & profileTrail.ftl
+
     public List<PathItem> getPathItems() {
         List<PathItem> pathItems = new ArrayList<PathItem>();
         if (hasParent()) {
@@ -218,24 +233,29 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     // Only used by dataCategory.ftl & profileCategory.ftl. FreeMarker needed a distinct method name.
+
     public Set<PathItem> findChildrenByType(String typeName) {
         return getChildrenByType(typeName);
     }
 
     // Used by DataCategoryResourceBuilder, BaseProfileResource & ProfileCategoryResourceBuilder.
+
     public Set<PathItem> getChildrenByType(String typeName) {
         return getChildrenByType(typeName, false);
     }
 
     // Used by DataCategoryResourceBuilder, BaseProfileResource & ProfileCategoryResourceBuilder.
+
     protected Set<PathItem> getChildrenByType(String typeName, boolean recurse) {
         Set<PathItem> childrenByType = new TreeSet<PathItem>();
-        for (PathItem child : getChildren()) {
-            if (child.getObjectType().getName().equalsIgnoreCase(typeName)) {
-                childrenByType.add(child);
-            }
-            if (recurse) {
-                childrenByType.addAll(child.getChildrenByType(typeName, recurse));
+        synchronized (children) {
+            for (PathItem child : children) {
+                if (child.getObjectType().getName().equalsIgnoreCase(typeName)) {
+                    childrenByType.add(child);
+                }
+                if (recurse) {
+                    childrenByType.addAll(child.getChildrenByType(typeName, recurse));
+                }
             }
         }
         return childrenByType;
@@ -253,18 +273,21 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         if (dataCategoryIds.contains(getId())) {
             return true;
         }
-        for (PathItem pi : getChildren()) {
-            if (pi.getObjectType().equals(ObjectType.DC) && dataCategoryIds.contains(pi.getId())) {
-                return true;
-            }
-            if (recurse && pi.hasDataCategories(dataCategoryIds, recurse)) {
-                return true;
+        synchronized (children) {
+            for (PathItem pi : children) {
+                if (pi.getObjectType().equals(ObjectType.DC) && dataCategoryIds.contains(pi.getId())) {
+                    return true;
+                }
+                if (recurse && pi.hasDataCategories(dataCategoryIds, recurse)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     // Used internally & by DataFilter, ProfileFilter.
+
     public String getInternalPath() {
         ObjectType ot = getObjectType();
         if (ot.equals(ObjectType.DC)) {
@@ -337,6 +360,12 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         this.fullPath = fullPath;
     }
 
+    private void updateFullPath() {
+        if (parent != null) {
+            setFullPath(parent.getFullPath() + "/" + getPath());
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -362,16 +391,33 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
     }
 
     public void setParent(PathItem parent) {
-        setFullPath(parent.getFullPath() + "/" + getPath());
         this.parent = parent;
+        updateFullPath();
     }
 
     public boolean isChildrenAvailable() {
-        return !getChildren().isEmpty();
+        return !children.isEmpty();
     }
 
     public Set<PathItem> getChildren() {
-        return children;
+        return Collections.unmodifiableSet(children);
+    }
+
+    public void removeChildren() {
+        synchronized (children) {
+            Iterator<PathItem> i = children.iterator();
+            while (i.hasNext()) {
+                PathItem child = i.next();
+                child.removeChildren();
+                i.remove();
+            }
+        }
+    }
+
+    public void removeChild(PathItem pathItem) {
+        synchronized (children) {
+            children.remove(pathItem);
+        }
     }
 
     public AccessSpecification getAccessSpecification() {
@@ -393,7 +439,6 @@ public class PathItem implements IAMEEEntityReference, APIObject, Comparable {
         } else {
             return null;
         }
-
     }
 
     public void setEntity(AMEEEntity entity) {

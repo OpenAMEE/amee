@@ -8,8 +8,8 @@ import com.amee.domain.data.LocaleName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 @Service
 public class LocaleService implements ILocaleService {
@@ -18,7 +18,7 @@ public class LocaleService implements ILocaleService {
     private LocaleServiceDAO dao;
 
     public Map<String, LocaleName> getLocaleNames(IAMEEEntityReference entity) {
-        Map<String, LocaleName> localeNames = new TreeMap<String, LocaleName>();
+        Map<String, LocaleName> localeNames = new HashMap<String, LocaleName>();
         for (LocaleName localeName : dao.getLocaleNames(entity)) {
             localeNames.put(localeName.getLocale(), localeName);
         }
