@@ -79,10 +79,6 @@ public class TagsFormAcceptor implements ResourceAcceptor {
 
         public void ok();
 
-        public void notFound();
-
-        public void notAuthenticated();
-
         public Object getResult();
     }
 
@@ -101,14 +97,6 @@ public class TagsFormAcceptor implements ResourceAcceptor {
 
         public void ok() {
             put(rootObj, "status", "OK");
-        }
-
-        public void notFound() {
-            put(rootObj, "status", "NOT_FOUND");
-        }
-
-        public void notAuthenticated() {
-            put(rootObj, "status", "NOT_AUTHENTICATED");
         }
 
         public JSONObject getResult() {

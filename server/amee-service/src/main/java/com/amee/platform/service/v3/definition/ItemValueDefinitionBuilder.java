@@ -1,5 +1,7 @@
 package com.amee.platform.service.v3.definition;
 
+import com.amee.base.resource.MissingAttributeException;
+import com.amee.base.resource.NotFoundException;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.domain.data.ItemDefinition;
@@ -66,16 +68,16 @@ public class ItemValueDefinitionBuilder implements ResourceBuilder {
                         handle(requestWrapper, itemValueDefinition, renderer);
                         renderer.ok();
                     } else {
-                        renderer.notFound();
+                        throw new NotFoundException();
                     }
                 } else {
-                    renderer.itemValueDefinitionIdentifierMissing();
+                    throw new MissingAttributeException("itemValueDefinitionIdentifier");
                 }
             } else {
-                renderer.notFound();
+                throw new NotFoundException();
             }
         } else {
-            renderer.itemDefinitionIdentifierMissing();
+            throw new MissingAttributeException("itemDefinitionIdentifier");
         }
         return renderer.getObject();
     }
@@ -140,14 +142,6 @@ public class ItemValueDefinitionBuilder implements ResourceBuilder {
 
         public void ok();
 
-        public void notFound();
-
-        public void notAuthenticated();
-
-        public void itemValueDefinitionIdentifierMissing();
-
-        public void itemDefinitionIdentifierMissing();
-
         public void newItemValueDefinition(ItemValueDefinition itemValueDefinition);
 
         public void addBasic();
@@ -188,24 +182,6 @@ public class ItemValueDefinitionBuilder implements ResourceBuilder {
 
         public void ok() {
             put(rootObj, "status", "OK");
-        }
-
-        public void notFound() {
-            put(rootObj, "status", "NOT_FOUND");
-        }
-
-        public void notAuthenticated() {
-            put(rootObj, "status", "NOT_AUTHENTICATED");
-        }
-
-        public void itemValueDefinitionIdentifierMissing() {
-            put(rootObj, "status", "ERROR");
-            put(rootObj, "error", "The itemValueDefinitionIdentifier was missing.");
-        }
-
-        public void itemDefinitionIdentifierMissing() {
-            put(rootObj, "status", "ERROR");
-            put(rootObj, "error", "The itemDefinitionIdentifier was missing.");
         }
 
         public void newItemValueDefinition(ItemValueDefinition itemValueDefinition) {
@@ -286,24 +262,6 @@ public class ItemValueDefinitionBuilder implements ResourceBuilder {
 
         public void ok() {
             rootElem.addContent(new Element("Status").setText("OK"));
-        }
-
-        public void notFound() {
-            rootElem.addContent(new Element("Status").setText("NOT_FOUND"));
-        }
-
-        public void notAuthenticated() {
-            rootElem.addContent(new Element("Status").setText("NOT_AUTHENTICATED"));
-        }
-
-        public void itemValueDefinitionIdentifierMissing() {
-            rootElem.addContent(new Element("Status").setText("ERROR"));
-            rootElem.addContent(new Element("Error").setText("The itemValueDefinitionIdentifier was missing."));
-        }
-
-        public void itemDefinitionIdentifierMissing() {
-            rootElem.addContent(new Element("Status").setText("ERROR"));
-            rootElem.addContent(new Element("Error").setText("The itemDefinitionIdentifier was missing."));
         }
 
         public void newItemValueDefinition(ItemValueDefinition itemValueDefinition) {

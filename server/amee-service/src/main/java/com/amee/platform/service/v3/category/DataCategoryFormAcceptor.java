@@ -1,5 +1,7 @@
 package com.amee.platform.service.v3.category;
 
+import com.amee.base.resource.MissingAttributeException;
+import com.amee.base.resource.NotFoundException;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceAcceptor;
 import com.amee.base.transaction.TransactionController;
@@ -48,11 +50,10 @@ public class DataCategoryFormAcceptor implements ResourceAcceptor {
                         throw new ValidationException(validationHelper.getValidationResult());
                     }
                 } else {
-                    o.put("status", "NOT_FOUND");
+                    throw new NotFoundException();
                 }
             } else {
-                o.put("status", "ERROR");
-                o.put("error", "The categoryIdentifier was missing.");
+                throw new MissingAttributeException("categoryIdentifier");
             }
             return o;
         } catch (JSONException e) {
