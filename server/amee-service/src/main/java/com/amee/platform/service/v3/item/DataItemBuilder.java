@@ -149,7 +149,6 @@ public class DataItemBuilder implements ResourceBuilder {
         }
     }
 
-
     public DataItemRenderer getRenderer(RequestWrapper requestWrapper) {
         try {
             for (String acceptedMediaType : requestWrapper.getAcceptedMediaTypes()) {
