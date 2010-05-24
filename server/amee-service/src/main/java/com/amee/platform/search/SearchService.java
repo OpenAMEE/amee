@@ -65,12 +65,12 @@ public class SearchService implements ApplicationListener {
 
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof InvalidationMessage) {
-            log.debug("onApplicationEvent() Handling InvalidationMessage.");
             InvalidationMessage invalidationMessage = (InvalidationMessage) event;
-            if (invalidationMessage.getObjectType().equals(ObjectType.DC)) {
+            if (!invalidationMessage.isLocal() && invalidationMessage.getObjectType().equals(ObjectType.DC)) {
+                log.debug("onApplicationEvent() Handling InvalidationMessage.");
                 transactionController.begin(false);
                 DataCategory dataCategory = dataService.getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
-                if (dataCategory != null) {
+                if ((dataCategory != null) && !dataCategory.isTrash()) {
                     update(dataCategory);
                 } else {
                     remove(invalidationMessage.getObjectType(), invalidationMessage.getEntityUid());

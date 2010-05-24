@@ -177,14 +177,16 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         }
 
         if ((dataCategory != null) || (dataItem != null) || !dataCategories.isEmpty() || !dataItems.isEmpty()) {
-            // clear caches
-            dataService.invalidate(thisDataCategory);
             if (isPost()) {
                 if (isBatchPost()) {
+                    dataService.invalidate(thisDataCategory);
                     successfulBatchPost();
                 } else if ((dataCategory != null) && type.equalsIgnoreCase(ObjectType.DC.getName())) {
+                    dataService.invalidate(dataCategory);
+                    dataService.invalidate(thisDataCategory);
                     successfulPost(getFullPath(), dataCategory.getPath());
                 } else if ((dataItem != null) && type.equalsIgnoreCase(ObjectType.DI.getName())) {
+                    dataService.invalidate(thisDataCategory);
                     successfulPost(getFullPath(), dataItem.getUid());
                 } else {
                     badRequest();
@@ -431,12 +433,12 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             if (sibling.getPath().equals(dataCategory.getPath())) {
                 DataCategory dc = dataService.getDataCategoryByUid(sibling.getUid());
                 if (dc != null) {
-                    if (!dc.isTrash()) {
+                    if (!dc.equals(dataCategory) && !dc.isTrash()) {
                         unique = false;
                         break;
                     }
                 } else {
-                    throw new RuntimeException("DataCategory was unexpectedly null.");
+                    log.error("isUnique() PathItem for DataCategory without persistent entity: " + sibling.getUid());
                 }
             }
         }

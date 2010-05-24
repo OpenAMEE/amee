@@ -54,9 +54,10 @@ public class PathItemService implements ApplicationListener {
 
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof InvalidationMessage) {
-            log.debug("onApplicationEvent() Handling InvalidationMessage.");
             InvalidationMessage invalidationMessage = (InvalidationMessage) event;
-            if (invalidationMessage.getObjectType().equals(ObjectType.DC)) {
+            if ((invalidationMessage.isLocal() || invalidationMessage.isFromOtherInstance()) &&
+                    invalidationMessage.getObjectType().equals(ObjectType.DC)) {
+                log.debug("onApplicationEvent() Handling InvalidationMessage.");
                 transactionController.begin(false);
                 Environment environment = environmentService.getEnvironmentByName("AMEE");
                 DataCategory dataCategory = dataService.getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
@@ -74,10 +75,26 @@ public class PathItemService implements ApplicationListener {
         PathItemGroup pig = getPathItemGroup(environment);
         PathItem pathItem = pig.findByUId(dataCategory.getUid());
         if (pathItem != null) {
-            pathItem.update(dataCategory);
+            if (dataCategory.isActive()) {
+                pathItem.update(dataCategory);
+            } else {
+                remove(environment, dataCategory.getUid());
+            }
         } else {
-            // TODO: Can we add a new DataCategory without clearing the cache?
-            removePathItemGroup(environment);
+            if (dataCategory.isActive() && (dataCategory.getDataCategory() != null)) {
+                // TODO: This won't add children.
+                // TODO: This won't handle missing parents.
+                // TODO: Ticket - https://jira.amee.com/browse/PL-1788 
+                PathItem parentPathItem = pig.findByUId(dataCategory.getDataCategory().getUid());
+                if (parentPathItem != null) {
+                    pathItem = new PathItem(dataCategory);
+                    parentPathItem.add(pathItem);
+                } else {
+                    log.warn("update() Could not find parent PathItem.");
+                }
+            } else {
+                log.warn("update() DataCategory is not active or has no parent.");
+            }
         }
     }
 

@@ -81,9 +81,10 @@ public class DataService extends BaseService implements ApplicationListener {
 
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof InvalidationMessage) {
-            log.debug("onApplicationEvent() Handling InvalidationMessage.");
             InvalidationMessage invalidationMessage = (InvalidationMessage) event;
-            if (invalidationMessage.isFromOtherInstance() && invalidationMessage.getObjectType().equals(ObjectType.DC)) {
+            if ((invalidationMessage.isLocal() || invalidationMessage.isFromOtherInstance()) &&
+                    invalidationMessage.getObjectType().equals(ObjectType.DC)) {
+                log.debug("onApplicationEvent() Handling InvalidationMessage.");
                 transactionController.begin(false);
                 DataCategory dataCategory = getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
                 if (dataCategory != null) {
@@ -175,7 +176,6 @@ public class DataService extends BaseService implements ApplicationListener {
     public void invalidate(DataCategory dataCategory) {
         log.info("invalidate() dataCategory: " + dataCategory.getUid());
         invalidationService.add(dataCategory);
-        clearCaches(dataCategory);
     }
 
     /**
