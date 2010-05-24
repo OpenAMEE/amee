@@ -20,11 +20,17 @@
 package com.amee.domain.path;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PathItemGroup implements Serializable {
 
-    private Map<String, PathItem> pathItems = new HashMap<String, PathItem>();
+    private final Map<String, PathItem> pathItems = Collections.synchronizedMap(new HashMap<String, PathItem>());
     private PathItem rootPathItem = null;
 
     private PathItemGroup() {
@@ -49,11 +55,13 @@ public class PathItemGroup implements Serializable {
     }
 
     // Used by DataFinder.
+
     public PathItem findByPath(String path, boolean forProfile) {
         return findBySegments(new ArrayList<String>(Arrays.asList(path.split("/"))), forProfile);
     }
 
     // Used by DataFilter & ProfileFilter.
+
     public PathItem findBySegments(List<String> segments, boolean forProfile) {
         PathItem rootPathItem = getRootPathItem();
         if (rootPathItem != null) {
@@ -72,18 +80,31 @@ public class PathItemGroup implements Serializable {
      *
      * @param uid
      * @return the {@link PathItem} corresponding to the passed uid. NULL will be returned if there exists no
-     * {@link PathItem} for the passed uid. 
+     *         {@link PathItem} for the passed uid.
      */
     public PathItem findByUId(String uid) {
         return pathItems.get(uid);
     }
 
     // Used by DataFilter.
+
     public PathItem getRootPathItem() {
         return rootPathItem;
     }
 
     public void setRootPathItem(PathItem rootPathItem) {
         this.rootPathItem = rootPathItem;
+    }
+
+    public void remove(PathItem pathItem) {
+        if (pathItem != null) {
+            synchronized (pathItems) {
+                pathItems.remove(pathItem.getUid());
+                if (pathItem.getParent() != null) {
+                    pathItem.getParent().removeChild(pathItem);
+                }
+                pathItem.removeChildren();
+            }
+        }
     }
 }

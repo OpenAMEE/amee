@@ -16,14 +16,14 @@ public class InvalidationMessage extends Message {
 
     public InvalidationMessage(Object source) {
         super(source);
-        this.setServerName(System.getProperty("server.name"));
-        this.setInstanceName(System.getProperty("instance.name"));
+        setServerName(System.getProperty("server.name"));
+        setInstanceName(System.getProperty("instance.name"));
     }
 
     public InvalidationMessage(Object source, IAMEEEntityReference entity) {
         this(source);
-        this.setObjectType(entity.getObjectType());
-        this.setEntityUid(entity.getEntityUid());
+        setObjectType(entity.getObjectType());
+        setEntityUid(entity.getEntityUid());
     }
 
     public InvalidationMessage(Object source, String message) {
