@@ -12,10 +12,29 @@ import com.amee.platform.search.QueryFilter;
 import com.amee.platform.search.SearchService;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public abstract class DataItemsBuilder<E> implements ResourceBuilder<E> {
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+@Scope("prototype")
+public class DataItemsBuilder implements ResourceBuilder {
+
+    private final static Map<String, Class> RENDERERS = new HashMap<String, Class>() {
+        {
+            put("application/json", DataItemsJSONRenderer.class);
+            put("application/xml", DataItemsDOMRenderer.class);
+        }
+    };
 
     @Autowired
     private EnvironmentService environmentService;
@@ -27,11 +46,16 @@ public abstract class DataItemsBuilder<E> implements ResourceBuilder<E> {
     private SearchService searchService;
 
     @Autowired
+    private DataItemBuilder dataItemBuilder;
+
+    @Autowired
     private DataItemFilterValidationHelper validationHelper;
 
+    private DataItemsRenderer renderer;
+
     @Transactional(readOnly = true)
-    protected void handle(RequestWrapper requestWrapper, DataItemsRenderer renderer) {
-        renderer.start();
+    public Object handle(RequestWrapper requestWrapper) {
+        renderer = getRenderer(requestWrapper);
         // Get Environment.
         Environment environment = environmentService.getEnvironmentByName("AMEE");
         // Get DataCategory identifier.
@@ -55,6 +79,7 @@ public abstract class DataItemsBuilder<E> implements ResourceBuilder<E> {
         } else {
             renderer.categoryIdentifierMissing();
         }
+        return renderer.getObject();
     }
 
     protected void handle(
@@ -63,12 +88,29 @@ public abstract class DataItemsBuilder<E> implements ResourceBuilder<E> {
             QueryFilter filter,
             DataItemsRenderer renderer) {
         for (DataItem dataItem : searchService.getDataItems(dataCategory, filter)) {
-            getDataItemBuilder().handle(requestWrapper, dataItem, renderer.getDataItemRenderer());
+            dataItemBuilder.handle(requestWrapper, dataItem, renderer.getDataItemRenderer());
             renderer.newDataItem();
         }
     }
 
-    public abstract DataItemBuilder getDataItemBuilder();
+    public DataItemsRenderer getRenderer(RequestWrapper requestWrapper) {
+        try {
+            for (String acceptedMediaType : requestWrapper.getAcceptedMediaTypes()) {
+                if (RENDERERS.containsKey(acceptedMediaType)) {
+                    return (DataItemsRenderer) RENDERERS.get(acceptedMediaType).newInstance();
+                }
+            }
+        } catch (InstantiationException e) {
+            // TODO
+        } catch (IllegalAccessException e) {
+            // TODO
+        }
+        throw new RuntimeException("TODO");
+    }
+
+    public String getMediaType() {
+        throw new RuntimeException("Woo!");
+    }
 
     public interface DataItemsRenderer {
 
@@ -85,5 +127,112 @@ public abstract class DataItemsBuilder<E> implements ResourceBuilder<E> {
         public void newDataItem();
 
         public DataItemBuilder.DataItemRenderer getDataItemRenderer();
+
+        public Object getObject();
+    }
+
+    public static class DataItemsJSONRenderer implements DataItemsBuilder.DataItemsRenderer {
+
+        private DataItemBuilder.DataItemJSONRenderer dataItemRenderer;
+        private JSONObject rootObj;
+        private JSONArray itemsArr;
+
+        public DataItemsJSONRenderer() {
+            super();
+            start();
+        }
+
+        public void start() {
+            dataItemRenderer = new DataItemBuilder.DataItemJSONRenderer(false);
+            rootObj = new JSONObject();
+            itemsArr = new JSONArray();
+            put(rootObj, "items", itemsArr);
+        }
+
+        public void ok() {
+            put(rootObj, "status", "OK");
+        }
+
+        public void notFound() {
+            put(rootObj, "status", "NOT_FOUND");
+        }
+
+        public void notAuthenticated() {
+            put(rootObj, "status", "NOT_AUTHENTICATED");
+        }
+
+        public void categoryIdentifierMissing() {
+            put(rootObj, "status", "ERROR");
+            put(rootObj, "error", "The categoryIdentifier was missing.");
+        }
+
+        public void newDataItem() {
+            itemsArr.put(dataItemRenderer.getDataItemJSONObject());
+        }
+
+        public DataItemBuilder.DataItemRenderer getDataItemRenderer() {
+            return dataItemRenderer;
+        }
+
+        protected JSONObject put(JSONObject o, String key, Object value) {
+            try {
+                return o.put(key, value);
+            } catch (JSONException e) {
+                throw new RuntimeException("Caught JSONException: " + e.getMessage(), e);
+            }
+        }
+
+        public Object getObject() {
+            return rootObj;
+        }
+    }
+
+    public static class DataItemsDOMRenderer implements DataItemsBuilder.DataItemsRenderer {
+
+        private DataItemBuilder.DataItemDOMRenderer dataItemRenderer;
+        private Element rootElem;
+        private Element ItemsElem;
+
+        public DataItemsDOMRenderer() {
+            super();
+            dataItemRenderer = new DataItemBuilder.DataItemDOMRenderer(false);
+            start();
+        }
+
+        public void start() {
+            dataItemRenderer = new DataItemBuilder.DataItemDOMRenderer(false);
+            rootElem = new Element("Representation");
+            ItemsElem = new Element("Items");
+            rootElem.addContent(ItemsElem);
+        }
+
+        public void ok() {
+            rootElem.addContent(new Element("Status").setText("OK"));
+        }
+
+        public void notFound() {
+            rootElem.addContent(new Element("Status").setText("NOT_FOUND"));
+        }
+
+        public void notAuthenticated() {
+            rootElem.addContent(new Element("Status").setText("NOT_AUTHENTICATED"));
+        }
+
+        public void categoryIdentifierMissing() {
+            rootElem.addContent(new Element("Status").setText("ERROR"));
+            rootElem.addContent(new Element("Error").setText("The categoryIdentifier was missing."));
+        }
+
+        public void newDataItem() {
+            ItemsElem.addContent(dataItemRenderer.getDataItemElement());
+        }
+
+        public DataItemBuilder.DataItemRenderer getDataItemRenderer() {
+            return dataItemRenderer;
+        }
+
+        public Object getObject() {
+            return new Document(rootElem);
+        }
     }
 }
