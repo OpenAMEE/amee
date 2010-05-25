@@ -4,7 +4,7 @@ import com.amee.domain.APIVersion;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
-import com.amee.messaging.RpcMessageConsumer;
+import com.amee.messaging.StringRpcMessageConsumer;
 import com.amee.messaging.config.ExchangeConfig;
 import com.amee.messaging.config.QueueConfig;
 import com.amee.platform.science.Amounts;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class CalculationConsumer extends RpcMessageConsumer {
+public class CalculationConsumer extends StringRpcMessageConsumer {
 
     private final Log log = LogFactory.getLog(getClass());
 

@@ -32,7 +32,7 @@ public class DataCategoryFormAcceptor implements ResourceAcceptor {
     @Autowired
     private DataCategoryValidationHelper validationHelper;
 
-    @Transactional(rollbackFor = {com.amee.base.validation.ValidationException.class})
+    @Transactional(rollbackFor = {ValidationException.class, NotFoundException.class})
     public JSONObject handle(RequestWrapper requestWrapper) throws ValidationException {
         try {
             JSONObject o = new JSONObject();
