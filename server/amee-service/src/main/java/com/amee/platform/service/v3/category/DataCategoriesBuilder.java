@@ -1,5 +1,7 @@
 package com.amee.platform.service.v3.category;
 
+import com.amee.base.resource.Renderer;
+import com.amee.base.resource.RendererHelper;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.base.validation.ValidationException;
@@ -17,7 +19,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class DataCategoriesBuilder implements ResourceBuilder {
 
     @Transactional(readOnly = true)
     public Object handle(RequestWrapper requestWrapper) {
-        renderer = getRenderer(requestWrapper);
+        renderer = new RendererHelper<DataCategoriesRenderer>().getRenderer(requestWrapper, RENDERERS);
         DataCategoryFilter filter = new DataCategoryFilter();
         validationHelper.setDataCategoryFilter(filter);
         if (validationHelper.isValid(requestWrapper.getQueryParameters())) {
@@ -66,33 +67,7 @@ public class DataCategoriesBuilder implements ResourceBuilder {
         }
     }
 
-    public DataCategoriesRenderer getRenderer(RequestWrapper requestWrapper) {
-        try {
-            for (String acceptedMediaType : requestWrapper.getAcceptedMediaTypes()) {
-                if (RENDERERS.containsKey(acceptedMediaType)) {
-                    return (DataCategoriesRenderer) RENDERERS
-                            .get(acceptedMediaType)
-                            .getConstructor()
-                            .newInstance();
-                }
-            }
-        } catch (InstantiationException e) {
-            throw new RuntimeException("Caught InstantiationException: " + e.getMessage(), e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Caught IllegalAccessException: " + e.getMessage(), e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException("Caught NoSuchMethodException: " + e.getMessage(), e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException("Caught InvocationTargetException: " + e.getMessage(), e);
-        }
-        throw new RuntimeException("TODO");
-    }
-
-    public String getMediaType() {
-        throw new RuntimeException("Boo!");
-    }
-
-    public interface DataCategoriesRenderer {
+    public interface DataCategoriesRenderer<E> extends Renderer<E> {
 
         public void ok();
 
@@ -102,7 +77,7 @@ public class DataCategoriesBuilder implements ResourceBuilder {
 
         public DataCategoryBuilder.DataCategoryRenderer getDataCategoryRenderer();
 
-        public Object getObject();
+        public E getObject();
     }
 
     public static class DataCategoriesJSONRenderer implements DataCategoriesBuilder.DataCategoriesRenderer {
@@ -143,7 +118,7 @@ public class DataCategoriesBuilder implements ResourceBuilder {
             }
         }
 
-        public Object getObject() {
+        public JSONObject getObject() {
             return rootObj;
         }
     }
@@ -178,7 +153,7 @@ public class DataCategoriesBuilder implements ResourceBuilder {
             return dataCategoryRenderer;
         }
 
-        public Object getObject() {
+        public Document getObject() {
             return new Document(rootElem);
         }
     }

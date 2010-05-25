@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,18 +65,20 @@ public class SearchService implements ApplicationListener {
     // Events
 
     public void onApplicationEvent(ApplicationEvent event) {
-        if (event instanceof InvalidationMessage) {
-            InvalidationMessage invalidationMessage = (InvalidationMessage) event;
-            if (!invalidationMessage.isLocal() && invalidationMessage.getObjectType().equals(ObjectType.DC)) {
-                log.debug("onApplicationEvent() Handling InvalidationMessage.");
-                transactionController.begin(false);
-                DataCategory dataCategory = dataService.getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
-                if ((dataCategory != null) && !dataCategory.isTrash()) {
-                    update(dataCategory);
-                } else {
-                    remove(invalidationMessage.getObjectType(), invalidationMessage.getEntityUid());
-                }
-                transactionController.end();
+        if (InvalidationMessage.class.isAssignableFrom(event.getClass())) {
+            onInvalidationMessage((InvalidationMessage) event);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    private void onInvalidationMessage(InvalidationMessage invalidationMessage) {
+        if (!invalidationMessage.isLocal() && invalidationMessage.getObjectType().equals(ObjectType.DC)) {
+            log.debug("onInvalidationMessage() Handling InvalidationMessage.");
+            DataCategory dataCategory = dataService.getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
+            if ((dataCategory != null) && !dataCategory.isTrash()) {
+                update(dataCategory);
+            } else {
+                remove(invalidationMessage.getObjectType(), invalidationMessage.getEntityUid());
             }
         }
     }
