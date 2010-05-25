@@ -1,5 +1,6 @@
 package com.amee.platform.service.v3.search;
 
+import com.amee.base.resource.RendererHelper;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.base.validation.ValidationException;
@@ -49,7 +50,7 @@ public class SearchBuilder implements ResourceBuilder {
 
     @Transactional(readOnly = true)
     public Object handle(RequestWrapper requestWrapper) {
-        renderer = getRenderer(requestWrapper);
+        renderer = new RendererHelper<SearchRenderer>().getRenderer(requestWrapper, RENDERERS);
         renderer.start();
         SearchFilter filter = new SearchFilter();
         validationHelper.setSearchFilter(filter);
@@ -78,25 +79,6 @@ public class SearchBuilder implements ResourceBuilder {
                     break;
             }
         }
-    }
-
-    public SearchRenderer getRenderer(RequestWrapper requestWrapper) {
-        try {
-            for (String acceptedMediaType : requestWrapper.getAcceptedMediaTypes()) {
-                if (RENDERERS.containsKey(acceptedMediaType)) {
-                    return (SearchRenderer) RENDERERS.get(acceptedMediaType).newInstance();
-                }
-            }
-        } catch (InstantiationException e) {
-            // TODO
-        } catch (IllegalAccessException e) {
-            // TODO
-        }
-        throw new RuntimeException("TODO");
-    }
-
-    public String getMediaType() {
-        throw new RuntimeException("Woo!");
     }
 
     public interface SearchRenderer {

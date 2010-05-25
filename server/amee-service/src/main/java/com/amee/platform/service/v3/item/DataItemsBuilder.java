@@ -2,6 +2,7 @@ package com.amee.platform.service.v3.item;
 
 import com.amee.base.resource.MissingAttributeException;
 import com.amee.base.resource.NotFoundException;
+import com.amee.base.resource.RendererHelper;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.base.validation.ValidationException;
@@ -57,7 +58,8 @@ public class DataItemsBuilder implements ResourceBuilder {
 
     @Transactional(readOnly = true)
     public Object handle(RequestWrapper requestWrapper) {
-        renderer = getRenderer(requestWrapper);
+        // Get Renderer.
+        renderer = new RendererHelper<DataItemsRenderer>().getRenderer(requestWrapper, RENDERERS);
         // Get Environment.
         Environment environment = environmentService.getEnvironmentByName("AMEE");
         // Get DataCategory identifier.
@@ -93,25 +95,6 @@ public class DataItemsBuilder implements ResourceBuilder {
             dataItemBuilder.handle(requestWrapper, dataItem, renderer.getDataItemRenderer());
             renderer.newDataItem();
         }
-    }
-
-    public DataItemsRenderer getRenderer(RequestWrapper requestWrapper) {
-        try {
-            for (String acceptedMediaType : requestWrapper.getAcceptedMediaTypes()) {
-                if (RENDERERS.containsKey(acceptedMediaType)) {
-                    return (DataItemsRenderer) RENDERERS.get(acceptedMediaType).newInstance();
-                }
-            }
-        } catch (InstantiationException e) {
-            // TODO
-        } catch (IllegalAccessException e) {
-            // TODO
-        }
-        throw new RuntimeException("TODO");
-    }
-
-    public String getMediaType() {
-        throw new RuntimeException("Woo!");
     }
 
     public interface DataItemsRenderer {

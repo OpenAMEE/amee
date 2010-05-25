@@ -2,6 +2,7 @@ package com.amee.platform.service.v3.definition;
 
 import com.amee.base.resource.MissingAttributeException;
 import com.amee.base.resource.NotFoundException;
+import com.amee.base.resource.RendererHelper;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.domain.data.ItemDefinition;
@@ -46,7 +47,8 @@ public class ItemValueDefinitionBuilder implements ResourceBuilder {
 
     @Transactional(readOnly = true)
     public Object handle(RequestWrapper requestWrapper) {
-        renderer = getRenderer(requestWrapper);
+        // Get Renderer.
+        renderer = new RendererHelper<ItemValueDefinitionRenderer>().getRenderer(requestWrapper, RENDERERS);
         // Get Environment.
         Environment environment = environmentService.getEnvironmentByName("AMEE");
         Element e = new Element("Representation");
@@ -115,25 +117,6 @@ public class ItemValueDefinitionBuilder implements ResourceBuilder {
             ItemDefinition id = itemValueDefinition.getItemDefinition();
             renderer.addItemDefinition(id);
         }
-    }
-
-    public String getMediaType() {
-        return "application/xml";
-    }
-
-    public ItemValueDefinitionRenderer getRenderer(RequestWrapper requestWrapper) {
-        try {
-            for (String acceptedMediaType : requestWrapper.getAcceptedMediaTypes()) {
-                if (RENDERERS.containsKey(acceptedMediaType)) {
-                    return (ItemValueDefinitionRenderer) RENDERERS.get(acceptedMediaType).newInstance();
-                }
-            }
-        } catch (InstantiationException e) {
-            // TODO
-        } catch (IllegalAccessException e) {
-            // TODO
-        }
-        throw new RuntimeException("TODO");
     }
 
     public interface ItemValueDefinitionRenderer {

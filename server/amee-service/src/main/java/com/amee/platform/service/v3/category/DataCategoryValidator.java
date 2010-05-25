@@ -14,7 +14,7 @@ import org.springframework.validation.Validator;
 public class DataCategoryValidator implements Validator {
 
     // Alpha numerics & underscore.
-    private final static String PATH_PATTERN_STRING = "^[a-zA-Z0-9_]*$";
+    private final static String PATH_PATTERN_STRING = "^[a-zA-Z0-9_\\-]*$";
     private final static String WIKI_NAME_PATTERN_STRING = PATH_PATTERN_STRING;
 
     @Autowired

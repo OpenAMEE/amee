@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,17 +81,19 @@ public class DataService extends BaseService implements ApplicationListener {
     // Events
 
     public void onApplicationEvent(ApplicationEvent event) {
-        if (event instanceof InvalidationMessage) {
-            InvalidationMessage invalidationMessage = (InvalidationMessage) event;
-            if ((invalidationMessage.isLocal() || invalidationMessage.isFromOtherInstance()) &&
-                    invalidationMessage.getObjectType().equals(ObjectType.DC)) {
-                log.debug("onApplicationEvent() Handling InvalidationMessage.");
-                transactionController.begin(false);
-                DataCategory dataCategory = getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
-                if (dataCategory != null) {
-                    clearCaches(dataCategory);
-                }
-                transactionController.end();
+        if (InvalidationMessage.class.isAssignableFrom(event.getClass())) {
+            onInvalidationMessage((InvalidationMessage) event);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    private void onInvalidationMessage(InvalidationMessage invalidationMessage) {
+        if ((invalidationMessage.isLocal() || invalidationMessage.isFromOtherInstance()) &&
+                invalidationMessage.getObjectType().equals(ObjectType.DC)) {
+            log.debug("onInvalidationMessage() Handling InvalidationMessage.");
+            DataCategory dataCategory = getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
+            if (dataCategory != null) {
+                clearCaches(dataCategory);
             }
         }
     }
