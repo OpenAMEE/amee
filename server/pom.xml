@@ -21,7 +21,7 @@
         <amee-platform-domain.version>1.0.0-SNAPSHOT</amee-platform-domain.version>
         <amee-platform-science.version>1.0.8-SNAPSHOT</amee-platform-science.version>
         <!-- External Versions. -->
-        <!-- Note: Keep restlet, jetty and servlet-api versions in sync. -->
+        <!-- Note: Keep Restlet, Jetty and servlet-api versions in sync. -->
         <!-- Note: Check Restlet release notes and jetty dependencies. -->
         <abdera.version>0.4.0-incubating</abdera.version>
         <ant.version>1.6</ant.version>

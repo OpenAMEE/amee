@@ -19,7 +19,6 @@
  */
 package com.amee.service.path;
 
-import com.amee.base.transaction.TransactionController;
 import com.amee.domain.ObjectType;
 import com.amee.domain.cache.CacheHelper;
 import com.amee.domain.data.DataCategory;
@@ -35,14 +34,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PathItemService implements ApplicationListener {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    private TransactionController transactionController;
 
     @Autowired
     private EnvironmentService environmentService;
@@ -52,24 +49,30 @@ public class PathItemService implements ApplicationListener {
 
     private CacheHelper cacheHelper = CacheHelper.getInstance();
 
+    // Events
+
     public void onApplicationEvent(ApplicationEvent event) {
-        if (event instanceof InvalidationMessage) {
-            InvalidationMessage invalidationMessage = (InvalidationMessage) event;
-            if ((invalidationMessage.isLocal() || invalidationMessage.isFromOtherInstance()) &&
-                    invalidationMessage.getObjectType().equals(ObjectType.DC)) {
-                log.debug("onApplicationEvent() Handling InvalidationMessage.");
-                transactionController.begin(false);
-                Environment environment = environmentService.getEnvironmentByName("AMEE");
-                DataCategory dataCategory = dataService.getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
-                if (dataCategory != null) {
-                    update(environment, dataCategory);
-                } else {
-                    remove(environment, invalidationMessage.getEntityUid());
-                }
-                transactionController.end();
+        if (InvalidationMessage.class.isAssignableFrom(event.getClass())) {
+            onInvalidationMessage((InvalidationMessage) event);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    private void onInvalidationMessage(InvalidationMessage invalidationMessage) {
+        if ((invalidationMessage.isLocal() || invalidationMessage.isFromOtherInstance()) &&
+                invalidationMessage.getObjectType().equals(ObjectType.DC)) {
+            log.debug("onInvalidationMessage() Handling InvalidationMessage.");
+            Environment environment = environmentService.getEnvironmentByName("AMEE");
+            DataCategory dataCategory = dataService.getDataCategoryByUid(invalidationMessage.getEntityUid(), true);
+            if (dataCategory != null) {
+                update(environment, dataCategory);
+            } else {
+                remove(environment, invalidationMessage.getEntityUid());
             }
         }
     }
+
+    // Manage PathItems.
 
     public void update(Environment environment, DataCategory dataCategory) {
         PathItemGroup pig = getPathItemGroup(environment);

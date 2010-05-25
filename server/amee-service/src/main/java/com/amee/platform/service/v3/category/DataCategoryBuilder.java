@@ -2,6 +2,7 @@ package com.amee.platform.service.v3.category;
 
 import com.amee.base.resource.MissingAttributeException;
 import com.amee.base.resource.NotFoundException;
+import com.amee.base.resource.RendererHelper;
 import com.amee.base.resource.RequestWrapper;
 import com.amee.base.resource.ResourceBuilder;
 import com.amee.domain.data.DataCategory;
@@ -26,7 +27,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +60,7 @@ public class DataCategoryBuilder implements ResourceBuilder {
     @Transactional(readOnly = true)
     public Object handle(RequestWrapper requestWrapper) {
         // Get Renderer.
-        renderer = getRenderer(requestWrapper);
+        renderer = new RendererHelper<DataCategoryRenderer>().getRenderer(requestWrapper, RENDERERS);
         // Get Environment.
         Environment environment = environmentService.getEnvironmentByName("AMEE");
         // Get the DataCategory identifier.
@@ -79,28 +79,6 @@ public class DataCategoryBuilder implements ResourceBuilder {
             throw new MissingAttributeException("categoryIdentifier");
         }
         return renderer.getObject();
-    }
-
-    public DataCategoryRenderer getRenderer(RequestWrapper requestWrapper) {
-        try {
-            for (String acceptedMediaType : requestWrapper.getAcceptedMediaTypes()) {
-                if (RENDERERS.containsKey(acceptedMediaType)) {
-                    return (DataCategoryRenderer) RENDERERS
-                            .get(acceptedMediaType)
-                            .getDeclaredConstructor()
-                            .newInstance();
-                }
-            }
-        } catch (InstantiationException e) {
-            throw new RuntimeException("Caught InstantiationException: " + e.getMessage(), e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Caught IllegalAccessException: " + e.getMessage(), e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException("Caught NoSuchMethodException: " + e.getMessage(), e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException("Caught InvocationTargetException: " + e.getMessage(), e);
-        }
-        throw new RuntimeException("TODO");
     }
 
     public void handle(
@@ -152,10 +130,6 @@ public class DataCategoryBuilder implements ResourceBuilder {
                 renderer.newTag(tag);
             }
         }
-    }
-
-    public String getMediaType() {
-        throw new RuntimeException("Boo!");
     }
 
     public interface DataCategoryRenderer {
