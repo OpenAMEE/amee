@@ -288,7 +288,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         double totalAmount = 0.0;
         double amount;
         for (ProfileItem profileItem : profileItems) {
-            amount = profileItem.getAmount().convert(returnUnit).getValue();
+            amount = profileItem.getAmounts().getCo2Amount().convert(returnUnit).getValue();
             totalAmount = totalAmount + amount;
         }
         return totalAmount;
@@ -387,7 +387,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         // Add all ProfileItems as Entries in the Atom feed.
         for (ProfileItem profileItem : profileItems) {
 
-            String amount = profileItem.getAmount().convert(returnUnit).toString();
+            String amount = profileItem.getAmounts().getCo2Amount().convert(returnUnit).toString();
 
             Entry entry = feed.addEntry();
 
@@ -461,7 +461,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         ProfileItem profileItem = resource.getProfileItems().get(0);
 
         CO2AmountUnit returnUnit = resource.getProfileBrowser().getCo2AmountUnit();
-        String amount = profileItem.getAmount().convert(returnUnit).toString();
+        String amount = profileItem.getAmounts().getCo2Amount().convert(returnUnit).toString();
 
         Entry entry = atomFeed.newEntry();
         entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());
@@ -483,7 +483,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         atomFeed.addAmount(entry, amount, returnUnit.toString());
 
-        content.addSummary(profileItem.getAmount().convert(returnUnit) + " " + returnUnit.toString());
+        content.addSummary(profileItem.getAmounts().getCo2Amount().convert(returnUnit) + " " + returnUnit.toString());
         content.addStartDate(profileItem.getStartDate());
         if (profileItem.getEndDate() != null) {
             content.addEndDate(profileItem.getEndDate());
