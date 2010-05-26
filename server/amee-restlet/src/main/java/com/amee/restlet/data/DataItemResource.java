@@ -139,7 +139,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         DataItem dataItem = getDataItem();
         Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
-        Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion()).getCo2Amount();
+        Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion()).getDefaultAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
@@ -155,7 +155,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         DataItem dataItem = getDataItem();
         Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
-        Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion()).getCo2Amount();
+        Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion()).getDefaultAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         JSONObject obj = new JSONObject();
         obj.put("dataItem", dataItem.getJSONObject(true, false));
@@ -177,7 +177,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         DataItem dataItem = getDataItem();
         Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
-        Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion()).getCo2Amount();
+        Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion()).getDefaultAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         Element element = document.createElement("DataItemResource");
         element.appendChild(dataItem.getElement(document, true, false));
