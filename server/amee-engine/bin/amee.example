@@ -1,4 +1,0 @@
-#! /bin/sh
-export AMEE_APP_NAME=amee-example
-export AMEE_INSTANCE_NAME=example
-sh /var/www/apps/$AMEE_APP_NAME/current/bin/amee $1
