@@ -19,6 +19,7 @@
         <amee-persist.version>1.0.1-SNAPSHOT</amee-persist.version>
         <amee-messaging.version>1.0.0-SNAPSHOT</amee-messaging.version>
         <amee-platform-domain.version>1.0.0-SNAPSHOT</amee-platform-domain.version>
+        <amee-platform-service.version>1.0.0-SNAPSHOT</amee-platform-service.version>
         <amee-platform-science.version>1.0.8-SNAPSHOT</amee-platform-science.version>
         <!-- External Versions. -->
         <!-- Note: Keep Restlet, Jetty and servlet-api versions in sync. -->
@@ -27,7 +28,6 @@
         <ant.version>1.6</ant.version>
         <apache-httpcomponents-httpclient>4.0.1</apache-httpcomponents-httpclient>
         <apache-httpcomponents-httpcore>4.0.1</apache-httpcomponents-httpcore>
-        <org-aspectj.version>1.6.8</org-aspectj.version>
         <cglib.version>2.2</cglib.version>
         <commons-cli.version>1.2</commons-cli.version>
         <commons-codec.version>1.3</commons-codec.version>
@@ -57,6 +57,7 @@
         <log4jdbc.version>4-1.2alpha2</log4jdbc.version>
         <lucene-core.version>3.0.1</lucene-core.version>
         <mysql-connector-java.version>5.1.10</mysql-connector-java.version>
+        <org-aspectj.version>1.6.8</org-aspectj.version>
         <org-json.version>2.0</org-json.version>
         <quartz.version>1.6.1</quartz.version>
         <restlet.version>1.1.10</restlet.version>
@@ -89,6 +90,36 @@
         <dependencies>
             <dependency>
                 <groupId>com.amee</groupId>
+                <artifactId>amee-base</artifactId>
+                <version>${amee-base.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee</groupId>
+                <artifactId>amee-persist</artifactId>
+                <version>${amee-persist.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee</groupId>
+                <artifactId>amee-messaging</artifactId>
+                <version>${amee-messaging.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee.platform</groupId>
+                <artifactId>amee-platform-science</artifactId>
+                <version>${amee-platform-science.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee.platform</groupId>
+                <artifactId>amee-platform-domain</artifactId>
+                <version>${amee-platform-domain.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee.platform</groupId>
+                <artifactId>amee-platform-service</artifactId>
+                <version>${amee-platform-service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amee</groupId>
                 <artifactId>amee-admin</artifactId>
                 <version>${amee.version}</version>
             </dependency>
@@ -96,11 +127,6 @@
                 <groupId>com.amee</groupId>
                 <artifactId>amee-calculation</artifactId>
                 <version>${amee.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.amee.platform</groupId>
-                <artifactId>amee-platform-domain</artifactId>
-                <version>${amee-platform-domain.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.amee</groupId>

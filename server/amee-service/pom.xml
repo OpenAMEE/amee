@@ -22,6 +22,10 @@
             <artifactId>amee-platform-domain</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.amee.platform</groupId>
+            <artifactId>amee-platform-service</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.amee</groupId>
             <artifactId>amee-messaging</artifactId>
             <version>${amee-messaging.version}</version>
