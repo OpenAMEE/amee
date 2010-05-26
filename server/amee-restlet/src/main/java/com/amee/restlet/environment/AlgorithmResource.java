@@ -159,10 +159,9 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
 
         // apply calculation
         try {
-            algorithmTestWrapper.setAmount(
-                    new CO2Amount(algorithmRunner.evaluate(
-                            algorithmTestWrapper.getMockAlgorithm(),
-                            algorithmTestWrapper.getValuesMap()).getDefaultAmountAsDouble()).getValue());
+            algorithmTestWrapper.setAmount(algorithmRunner.evaluate(
+                algorithmTestWrapper.getMockAlgorithm(),
+                algorithmTestWrapper.getValuesMap()).getDefaultAmountAsDouble());
         } catch (ScriptException sc) {
             algorithmTestWrapper.setError(new StringBuffer(sc.getMessage()));
         }
