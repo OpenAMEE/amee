@@ -35,6 +35,7 @@ import com.amee.service.data.DataService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -170,26 +171,46 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             amountObj.put("unit", returnUnit);
             obj.put("amount", amountObj);
 
+            // TODO: Refactor this stuff into a method?
             // Multiple return values
-            // TODO: refactor
             JSONObject amounts = new JSONObject();
+
+            // Create an array of amount objects
+            JSONArray amountArray = new JSONArray();
             for (Map.Entry<String, ReturnValue> entry : returnAmounts.getReturnValues().entrySet()) {
-                JSONObject multiAmount = new JSONObject();
-                multiAmount.put("value", entry.getValue().getValue());
-                multiAmount.put("type", entry.getKey());
-                multiAmount.put("unit", entry.getValue().getUnit());
-                multiAmount.put("perUnit", entry.getValue().getPerUnit());
+
+                // Create an Amount object
+                JSONObject multiAmountObj = new JSONObject();
+                multiAmountObj.put("value", entry.getValue().getValue());
+                multiAmountObj.put("type", entry.getKey());
+                multiAmountObj.put("unit", entry.getValue().getUnit());
+                multiAmountObj.put("perUnit", entry.getValue().getPerUnit());
                 if (entry.getKey().equals(returnAmounts.getDefaultType())) {
-                    multiAmount.put("default", "true");
+                    multiAmountObj.put("default", "true");
                 }
-                amounts.put("amount", multiAmount);
+
+                // Add the object to the amounts array
+                amountArray.put(multiAmountObj);
             }
+
+            // Add the amount array to the amounts object.
+            amounts.put("amount", amountArray);
+
+            // Create an array of note objects
+            JSONArray noteArray = new JSONArray();
             for (Note note : returnAmounts.getNotes()) {
                 JSONObject noteObj = new JSONObject();
                 noteObj.put("type", note.getType());
                 noteObj.put("value", note.getValue());
                 amounts.put("note", noteObj);
+
+                // Add the note object to the notes array
+                noteArray.put(noteObj);
             }
+
+            // Add the notes array to the amounts object.
+            amounts.put("note", noteArray);
+
             obj.put("amounts", amounts);
         }
         return obj;
