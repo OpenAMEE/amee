@@ -161,7 +161,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
         try {
             algorithmTestWrapper.setAmount(algorithmRunner.evaluate(
                 algorithmTestWrapper.getMockAlgorithm(),
-                algorithmTestWrapper.getValuesMap()).getDefaultAmountAsDouble());
+                algorithmTestWrapper.getValuesMap()).defaultValueAsDouble());
         } catch (ScriptException sc) {
             algorithmTestWrapper.setError(new StringBuffer(sc.getMessage()));
         }
