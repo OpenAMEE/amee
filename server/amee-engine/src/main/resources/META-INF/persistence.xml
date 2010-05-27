@@ -15,6 +15,7 @@
         <class>com.amee.domain.data.ItemDefinition</class>
         <class>com.amee.domain.data.ItemValue</class>
         <class>com.amee.domain.data.ItemValueDefinition</class>
+        <class>com.amee.domain.data.ReturnValueDefinition</class>
         <class>com.amee.domain.data.LocaleName</class>
         <class>com.amee.domain.environment.Environment</class>
         <class>com.amee.domain.profile.Profile</class>
