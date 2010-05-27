@@ -5,6 +5,8 @@ import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.Amount;
+import com.amee.platform.science.CO2Amount;
+import com.amee.platform.science.ReturnValue;
 import com.amee.platform.science.StartEndDate;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
@@ -139,12 +141,13 @@ public class ProRataProfileService {
 
                 long event = getIntervalInMillis(pic.getStartDate(), pic.getEndDate());
                 double eventIntersectRatio = intersect.toDurationMillis() / (double) event;
-                Amount defaultAmount = pic.getAmounts().getDefaultAmount();
-                double proratedAmount = (defaultAmount.getValue() * eventIntersectRatio);
+                ReturnValue defaultReturnValue = pic.getAmounts().getReturnValues().get(pic.getAmounts().getDefaultType());
+                double defaultAmount = pic.getAmounts().defaultValueAsDouble();
+                double proratedAmount = (defaultAmount * eventIntersectRatio);
 
                 // Not neccesarily CO2
 //                pic.getAmounts().putCo2Amount(proratedAmount);
-                pic.getAmounts().putAmount(pic.getAmounts().getDefaultType(), defaultAmount.getUnit().toString(), "", proratedAmount);
+                pic.getAmounts().putValue(defaultReturnValue.getType(), defaultReturnValue.getUnit(), defaultReturnValue.getPerUnit(), proratedAmount);
 
                 // TODO: Add the other prorated amounts
 

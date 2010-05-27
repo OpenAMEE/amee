@@ -92,13 +92,13 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      * @param version          - the APIVersion. This is used to determine the correct ItemValueDefinitions to load into the calculation
      * @return the calculated GHG amounts
      */
-    public Amounts calculate(DataItem dataItem, Choices userValueChoices, APIVersion version) {
+    public ReturnValues calculate(DataItem dataItem, Choices userValueChoices, APIVersion version) {
         Algorithm algorithm = dataItem.getItemDefinition().getAlgorithm(Algorithm.DEFAULT);
         if (algorithm != null) {
             Map<String, Object> values = getValues(dataItem, userValueChoices, version);
             return calculate(algorithm, values);
         }
-        return new Amounts();
+        return new ReturnValues();
     }
 
     /**
@@ -111,7 +111,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
      * @param values input values for the algorithm
      * @return the algorithm result
      */
-    public Amounts calculate(Algorithm algorithm, Map<String, Object> values) {
+    public ReturnValues calculate(Algorithm algorithm, Map<String, Object> values) {
 
         if (log.isDebugEnabled()) {
             log.debug("calculate()");
@@ -120,7 +120,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
             log.debug("calculate() - starting calculation");
         }
 
-        Amounts amounts;
+        ReturnValues amounts;
         final long startTime = System.nanoTime();
 
         try {
@@ -159,7 +159,7 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
                             "): " + e.getMessage());
 
             // ...and return an empty result by default.
-            amounts = new Amounts();
+            amounts = new ReturnValues();
         } finally {
             ameeStatistics.addToThreadCalculationDuration(System.nanoTime() - startTime);
         }
