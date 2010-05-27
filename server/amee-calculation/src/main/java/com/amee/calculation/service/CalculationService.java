@@ -120,11 +120,11 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
             log.debug("calculate() - starting calculation");
         }
 
-        ReturnValues amounts;
+        ReturnValues returnValues;
         final long startTime = System.nanoTime();
 
         try {
-            amounts = algorithmRunner.evaluate(algorithm, values);
+            returnValues = algorithmRunner.evaluate(algorithm, values);
         } catch (ScriptException e) {
 
             // Bubble up parameter missing or format exceptions from the
@@ -159,17 +159,17 @@ public class CalculationService implements CO2CalculationService, BeanFactoryAwa
                             "): " + e.getMessage());
 
             // ...and return an empty result by default.
-            amounts = new ReturnValues();
+            returnValues = new ReturnValues();
         } finally {
             ameeStatistics.addToThreadCalculationDuration(System.nanoTime() - startTime);
         }
 
         if (log.isDebugEnabled()) {
             log.debug("calculate() - finished calculation");
-            log.debug("calculate() - Amounts: " + amounts);
+            log.debug("calculate() - Amounts: " + returnValues);
         }
 
-        return amounts;
+        return returnValues;
     }
 
     /**
