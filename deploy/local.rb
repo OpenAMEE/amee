@@ -9,7 +9,7 @@ unset :user
 #set :user, "local.user"
 
 # Deploy from local folder
-set :repository,  "/Development/AMEE/amee.deploy"
+set :repository,  "/Development/AMEE/amee.platform/project/amee.deploy"
 
 #set :scm, :git
 #set :scm_command, "/opt/local/bin/git"
