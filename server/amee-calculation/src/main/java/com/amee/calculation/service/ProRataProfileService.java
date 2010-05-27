@@ -67,15 +67,15 @@ public class ProRataProfileService {
 
         for (ProfileItem pi : profileService.getProfileItems(profile, dataCategory, startDate, endDate)) {
 
+            // Update ProfileItem with start and end dates.
+            pi.setEffectiveStartDate(startDate);
+            pi.setEffectiveEndDate(endDate);
+
             if (log.isDebugEnabled()) {
                 log.debug("getProfileItems() - ProfileItem: " + pi.getName() + " has un-prorated Amounts: " + pi.getAmounts());
             }
 
             Interval intersect = requestInterval;
-
-            // Update ProfileItem with start and end dates.
-            pi.setEffectiveStartDate(startDate);
-            pi.setEffectiveEndDate(endDate);
 
             // Find the intersection of the profile item with the requested window.
             if (intersect.getStart().toDate().before(pi.getStartDate())) {
