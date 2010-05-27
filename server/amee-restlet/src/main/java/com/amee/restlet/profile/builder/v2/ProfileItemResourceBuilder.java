@@ -79,7 +79,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         ProfileItem profileItem = resource.getProfileItem();
 
         CO2AmountUnit returnUnit = resource.getProfileBrowser().getCo2AmountUnit();
-        String amount = profileItem.getAmounts().defaultValueAsAmount().convert(returnUnit).toString();
+        String amount = profileItem.getAmounts().getDefaultValue().toAmount().convert(returnUnit).toString();
 
         Entry entry = atomFeed.newEntry();
         entry.setBaseUri(resource.getRequest().getAttributes().get("previousHierachicalPart").toString());

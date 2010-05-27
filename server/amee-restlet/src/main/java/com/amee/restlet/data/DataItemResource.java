@@ -178,9 +178,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
                 multiAmount.put("value", entry.getValue().getValue());
                 multiAmount.put("type", entry.getKey());
                 multiAmount.put("unit", entry.getValue().getUnit());
-//                if (entry.getValue().getUnit() instanceof AmountCompoundUnit) {
-                    multiAmount.put("perUnit", entry.getValue().getPerUnit());
-//                }
+                multiAmount.put("perUnit", entry.getValue().getPerUnit());
                 if (entry.getKey().equals(returnAmounts.getDefaultType())) {
                     multiAmount.put("default", "true");
                 }
@@ -224,9 +222,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
                 Element multiAmount = document.createElement("Amount");
                 multiAmount.setAttribute("type", entry.getKey());
                 multiAmount.setAttribute("unit", entry.getValue().getUnit());
-//                if (entry.getValue().getUnit() instanceof AmountCompoundUnit) {
-                    multiAmount.setAttribute("perUnit", entry.getValue().getPerUnit());
-//                }
+                multiAmount.setAttribute("perUnit", entry.getValue().getPerUnit());
                 if (entry.getKey().equals(returnAmounts.getDefaultType())) {
                     multiAmount.setAttribute("default", "true");
                 }

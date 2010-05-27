@@ -7,8 +7,6 @@ import com.amee.domain.sheet.Choices;
 import com.amee.messaging.StringRpcMessageConsumer;
 import com.amee.messaging.config.ExchangeConfig;
 import com.amee.messaging.config.QueueConfig;
-import com.amee.platform.science.Amounts;
-import com.amee.platform.science.CO2Amount;
 import com.amee.platform.science.ReturnValues;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
