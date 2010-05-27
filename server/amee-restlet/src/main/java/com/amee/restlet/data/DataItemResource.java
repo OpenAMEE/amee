@@ -209,7 +209,9 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             }
 
             // Add the notes array to the amounts object.
-            amounts.put("note", noteArray);
+            if (noteArray.length() > 0) {
+                amounts.put("note", noteArray);
+            }
 
             obj.put("amounts", amounts);
         }
