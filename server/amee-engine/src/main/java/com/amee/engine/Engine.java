@@ -33,7 +33,7 @@ public class Engine implements WrapperListener, Serializable {
     protected TransactionController transactionController;
     protected Component container;
 
-    // This isn't really used except to determine the PID of the instance in the init script.
+    // This is used to determine the PID of the instance in the init script.
     protected String instanceName = "live";
 
     public Engine() {
