@@ -28,17 +28,14 @@ import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
-import com.amee.platform.science.AmountPerUnit;
-import com.amee.platform.science.AmountUnit;
-import com.amee.platform.science.CO2Amount;
-import com.amee.platform.science.CO2AmountUnit;
-import com.amee.platform.science.StartEndDate;
+import com.amee.platform.science.*;
 import com.amee.restlet.RequestContext;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -143,7 +140,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         DataItem dataItem = getDataItem();
         Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
-        CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
+        Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion()).defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
@@ -159,7 +156,8 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         DataItem dataItem = getDataItem();
         Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
-        CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
+        ReturnValues returnAmounts = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
+        Amount amount = returnAmounts.defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         JSONObject obj = new JSONObject();
         obj.put("dataItem", dataItem.getJSONObject(true, false));
@@ -172,6 +170,49 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             amountObj.put("value", amount.convert(returnUnit).getValue());
             amountObj.put("unit", returnUnit);
             obj.put("amount", amountObj);
+
+            // Multiple return values
+            JSONObject amounts = new JSONObject();
+
+            // Create an array of amount objects
+            JSONArray amountArray = new JSONArray();
+            for (Map.Entry<String, ReturnValue> entry : returnAmounts.getReturnValues().entrySet()) {
+
+                // Create an Amount object
+                JSONObject multiAmountObj = new JSONObject();
+                multiAmountObj.put("value", entry.getValue().getValue());
+                multiAmountObj.put("type", entry.getKey());
+                multiAmountObj.put("unit", entry.getValue().getUnit());
+                multiAmountObj.put("perUnit", entry.getValue().getPerUnit());
+                if (entry.getKey().equals(returnAmounts.getDefaultType())) {
+                    multiAmountObj.put("default", "true");
+                }
+
+                // Add the object to the amounts array
+                amountArray.put(multiAmountObj);
+            }
+
+            // Add the amount array to the amounts object.
+            amounts.put("amount", amountArray);
+
+            // Create an array of note objects
+            JSONArray noteArray = new JSONArray();
+            for (Note note : returnAmounts.getNotes()) {
+                JSONObject noteObj = new JSONObject();
+                noteObj.put("type", note.getType());
+                noteObj.put("value", note.getValue());
+                amounts.put("note", noteObj);
+
+                // Add the note object to the notes array
+                noteArray.put(noteObj);
+            }
+
+            // Add the notes array to the amounts object.
+            if (noteArray.length() > 0) {
+                amounts.put("note", noteArray);
+            }
+
+            obj.put("amounts", amounts);
         }
         return obj;
     }
@@ -181,7 +222,8 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         DataItem dataItem = getDataItem();
         Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
-        CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
+        ReturnValues returnAmounts = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
+        Amount amount = returnAmounts.defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         Element element = document.createElement("DataItemResource");
         element.appendChild(dataItem.getElement(document, true, false));
@@ -194,6 +236,27 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             amountElem.setTextContent(amount.convert(returnUnit).toString());
             amountElem.setAttribute("unit", returnUnit.toString());
             element.appendChild(amountElem);
+
+            // Multiple return values
+            Element amounts = document.createElement("Amounts");
+            for (Map.Entry<String, ReturnValue> entry : returnAmounts.getReturnValues().entrySet()) {
+                Element multiAmount = document.createElement("Amount");
+                multiAmount.setAttribute("type", entry.getKey());
+                multiAmount.setAttribute("unit", entry.getValue().getUnit());
+                multiAmount.setAttribute("perUnit", entry.getValue().getPerUnit());
+                if (entry.getKey().equals(returnAmounts.getDefaultType())) {
+                    multiAmount.setAttribute("default", "true");
+                }
+                multiAmount.setTextContent(entry.getValue().getValue() + "");
+                amounts.appendChild(multiAmount);
+            }
+            for (Note note : returnAmounts.getNotes()) {
+                Element noteElm = document.createElement("Note");
+                noteElm.setAttribute("type", note.getType());
+                noteElm.setTextContent(note.getValue());
+                amounts.appendChild(noteElm);
+            }
+            element.appendChild(amounts);
         }
         return element;
     }
