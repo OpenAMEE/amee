@@ -171,7 +171,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             amountObj.put("unit", returnUnit);
             obj.put("amount", amountObj);
 
-            // TODO: Refactor this stuff into a method?
             // Multiple return values
             JSONObject amounts = new JSONObject();
 
@@ -239,7 +238,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             element.appendChild(amountElem);
 
             // Multiple return values
-            // TODO: refactor
             Element amounts = document.createElement("Amounts");
             for (Map.Entry<String, ReturnValue> entry : returnAmounts.getReturnValues().entrySet()) {
                 Element multiAmount = document.createElement("Amount");
