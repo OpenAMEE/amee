@@ -7,7 +7,7 @@ import com.amee.domain.sheet.Choices;
 import com.amee.messaging.StringRpcMessageConsumer;
 import com.amee.messaging.config.ExchangeConfig;
 import com.amee.messaging.config.QueueConfig;
-import com.amee.platform.science.CO2Amount;
+import com.amee.platform.science.ReturnValues;
 import com.amee.service.data.DataService;
 import com.amee.service.environment.EnvironmentService;
 import org.apache.commons.logging.Log;
@@ -57,8 +57,8 @@ public class CalculationConsumer extends StringRpcMessageConsumer {
                 Choices userValueChoices = dataService.getUserValueChoices(dataItem, APIVersion.TWO);
                 userValueChoices.merge(getParameters(inbound));
                 // Do the calculation
-                CO2Amount amount = calculationService.calculate(dataItem, userValueChoices, APIVersion.TWO);
-                outbound.put("result", amount.toString());
+                ReturnValues amounts = calculationService.calculate(dataItem, userValueChoices, APIVersion.TWO);
+                outbound.put("result", amounts);
             } else {
                 outbound.put("error", "DataItem not found.");
             }

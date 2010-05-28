@@ -103,9 +103,9 @@ public class ProfileSheetBuilder implements CacheableFactory {
                         new Cell(column, row, profileItem.getName(), ValueType.TEXT);
                     } else if ("amountPerMonth".equalsIgnoreCase(column.getName())) {
                         if (!profileItem.isSingleFlight()) {
-                            new Cell(column, row, profileItem.getAmount().convert(AmountPerUnit.MONTH), ValueType.DOUBLE);
+                            new Cell(column, row, profileItem.getAmounts().defaultValueAsAmount().convert(AmountPerUnit.MONTH), ValueType.DOUBLE);
                         } else {
-                            new Cell(column, row, profileItem.getAmount().getValue(), ValueType.DOUBLE);
+                            new Cell(column, row, profileItem.getAmounts().defaultValueAsDouble(), ValueType.DOUBLE);
                         }
                     } else if ("validFrom".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, DAY_DATE_FMT.format(profileItem.getStartDate()), ValueType.TEXT);

@@ -4,7 +4,7 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
-import com.amee.platform.science.CO2Amount;
+import com.amee.platform.science.ReturnValue;
 import com.amee.platform.science.StartEndDate;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
@@ -72,7 +72,7 @@ public class ProRataProfileService {
             pi.setEffectiveEndDate(endDate);
 
             if (log.isDebugEnabled()) {
-                log.debug("getProfileItems() - ProfileItem: " + pi.getName() + " has un-prorated CO2 Amount: " + pi.getAmount());
+                log.debug("getProfileItems() - ProfileItem: " + pi.getName() + " has un-prorated Amounts: " + pi.getAmounts());
             }
 
             Interval intersect = requestInterval;
@@ -118,7 +118,7 @@ public class ProRataProfileService {
                 calculationService.calculate(pic);
 
                 if (log.isDebugEnabled()) {
-                    log.debug("getProfileItems() - ProfileItem: " + pi.getName() + ". Adding prorated CO2 Amount: " + pic.getAmount());
+                    log.debug("getProfileItems() - ProfileItem: " + pi.getName() + ". Adding prorated Amounts: " + pic.getAmounts());
                 }
 
                 requestedItems.add(pic);
@@ -139,22 +139,29 @@ public class ProRataProfileService {
 
                 long event = getIntervalInMillis(pic.getStartDate(), pic.getEndDate());
                 double eventIntersectRatio = intersect.toDurationMillis() / (double) event;
-                double proratedAmount = (pic.getAmount().getValue()) * eventIntersectRatio;
-                pic.setAmount(new CO2Amount(proratedAmount));
+                ReturnValue defaultReturnValue = pic.getAmounts().getDefaultValue();
+                double defaultAmount = pic.getAmounts().defaultValueAsDouble();
+                double proratedAmount = (defaultAmount * eventIntersectRatio);
+
+                // Not necessarily CO2
+                pic.getAmounts().putValue(
+                    defaultReturnValue.getType(), defaultReturnValue.getUnit(), defaultReturnValue.getPerUnit(), proratedAmount);
+
+                // TODO: Add the other prorated amounts
 
                 if (log.isDebugEnabled()) {
                     log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
                             " is bounded (" + getInterval(pic.getStartDate(), pic.getEndDate()) +
                             ") and has no PerTime ItemValues.");
-                    log.debug("getProfileItems() - Adding pro-rated CO2 Amount: " + pic.getAmount());
+                    log.debug("getProfileItems() - Adding pro-rated Amounts: " + pic.getAmounts());
                 }
                 requestedItems.add(pic);
 
             } else {
-                // The ProfileItem has no perTime ItemValues and is unbounded. In this case, the CO2 is not prorated.
+                // The ProfileItem has no perTime ItemValues and is unbounded. In this case, the ReturnValues are not prorated.
                 if (log.isDebugEnabled()) {
                     log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
-                            " is unbounded and has no PerTime ItemValues. Adding un-prorated CO2 Amount: " + pi.getAmount());
+                            " is unbounded and has no PerTime ItemValues. Adding un-prorated Amounts: " + pi.getAmounts());
                 }
                 requestedItems.add(pi);
             }
