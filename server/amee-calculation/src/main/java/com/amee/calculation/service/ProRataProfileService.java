@@ -19,6 +19,7 @@ import javax.measure.unit.SI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A ProfileService which prorates amounts belonging to the {@link com.amee.domain.profile.ProfileItem ProfileItem} instances
@@ -139,15 +140,13 @@ public class ProRataProfileService {
 
                 long event = getIntervalInMillis(pic.getStartDate(), pic.getEndDate());
                 double eventIntersectRatio = intersect.toDurationMillis() / (double) event;
-                ReturnValue defaultReturnValue = pic.getAmounts().getDefaultValue();
-                double defaultAmount = pic.getAmounts().defaultValueAsDouble();
-                double proratedAmount = (defaultAmount * eventIntersectRatio);
 
-                // Not necessarily CO2
-                pic.getAmounts().putValue(
-                    defaultReturnValue.getType(), defaultReturnValue.getUnit(), defaultReturnValue.getPerUnit(), proratedAmount);
-
-                // TODO: Add the other prorated amounts
+                // For each amount, store the prorated value
+                for (Map.Entry<String, ReturnValue> entry : pic.getAmounts().getReturnValues().entrySet()) {
+                    ReturnValue value = entry.getValue();
+                    double proRatedValue = entry.getValue().toDouble() * eventIntersectRatio;
+                    pic.getAmounts().putValue(value.getType(), value.getUnit(), value.getPerUnit(), proRatedValue);
+                }
 
                 if (log.isDebugEnabled()) {
                     log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
