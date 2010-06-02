@@ -145,26 +145,6 @@
                     No <input type="radio" name="deprecated" value="false"<#if !dataCategory.deprecated> checked</#if>/>
                    </td>
                 </tr>
-                <#if dataCategory.localeNames?size != 0>
-                    <#list dataCategory.localeNames?keys as locale>
-                    <tr>
-                        <td>Name: [${locale}]</td>
-                        <td><input name='name_${locale}' value='${dataCategory.localeNames[locale].name}' type='text' size='30'/></td>
-                        <td>Remove: <input type="checkbox" name="remove_name_${locale}"/> </td>
-                    </tr>
-                    </#list>
-                </#if>
-                <tr>
-                    <td>New Locale Name:</td>
-                    <td>
-                        <select name='localeName_part' onchange='javascript:localeonchange();'> <br/>
-                        <#list availableLocales as locale>
-                            <option value='${locale}'>${locale}</option>
-                        </#list>
-                        </select>
-                        <input name='localeValue_part' type='text' size='30' onchange='javascript:localeonchange();'/><br/>
-                    </td>
-                </tr>
             </table>
             <input type='submit' value='Update'/>
         </form>
