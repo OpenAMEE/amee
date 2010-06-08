@@ -34,7 +34,8 @@ CREATE TABLE `METADATA` (
   `NAME` varchar(255) NOT NULL,
   `VALUE` longtext NOT NULL,
   PRIMARY KEY (`ID`),
-  UNIQUE KEY `UID` (`UID`)
+  UNIQUE KEY `UID` (`UID`),
+  KEY `ENTITY_UID` (`ENTITY_UID`) 
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
