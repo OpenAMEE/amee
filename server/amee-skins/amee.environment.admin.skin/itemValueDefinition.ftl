@@ -118,26 +118,6 @@
                         </select>
                     </td>
                 </tr>
-                <#if itemValueDefinition.localeNames?size != 0>
-                    <#list itemValueDefinition.localeNames?keys as locale>
-                        <tr>
-                            <td>Name: [${locale}]</td>
-                            <td><input name='name_${locale}' value='${itemValueDefinition.localeNames[locale].name}' type='text' size='30'/></td>
-                            <td>Remove: <input type="checkbox" name="remove_name_${locale}"/> </td>
-                        </tr>
-                    </#list>
-                </#if>
-                <tr>
-                    <td>New Locale Name:</td>
-                    <td>
-                        <select name='localeName_part' onchange='javascript:localeonchange();'> <br/>
-                            <#list availableLocales as locale>
-                                <option value='${locale}'>${locale}</option>
-                            </#list>
-                        </select>
-                        <input name='localeValue_part' type='text' size='30' onchange='javascript:localeonchange();'/><br/>
-                    </td>
-                </tr>
             </table>
             <input type='submit' value='Update'/>
         </form>
