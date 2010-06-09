@@ -12,7 +12,7 @@
     </appender>
 
     <!-- Declare the 'PLATFORM_EMAIL' SMTPAppender. -->
-    <appender name="PLATFORM_EMAIL" class="com.amee.engine.PatternSubjectSMTPAppender">
+    <appender name="PLATFORM_EMAIL" class="com.amee.base.engine.PatternSubjectSMTPAppender">
         <param name="BufferSize" value="512"/>
         <param name="SMTPHost" value="localhost"/>
         <param name="From" value="platform.issues@amee.cc"/>
@@ -29,7 +29,7 @@
     </appender>
 
     <!-- Declare the 'SCIENCE_EMAIL' SMTPAppender. -->
-    <appender name="SCIENCE_EMAIL" class="com.amee.engine.PatternSubjectSMTPAppender">
+    <appender name="SCIENCE_EMAIL" class="com.amee.base.engine.PatternSubjectSMTPAppender">
         <param name="BufferSize" value="512"/>
         <param name="SMTPHost" value="localhost"/>
         <param name="From" value="science.issues@amee.cc"/>
@@ -145,7 +145,6 @@
 
     <root>
         <priority value="${amee.defaultLogLevel}"/>
-        <!--<appender-ref ref="FILE"/>-->
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="PLATFORM_EMAIL"/>
     </root>
