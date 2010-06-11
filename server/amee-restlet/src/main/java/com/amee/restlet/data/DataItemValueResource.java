@@ -302,6 +302,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
                 if (form.getNames().contains("remove_value_" + locale)) {
                     // Remove.
                     localeService.clearLocaleName(itemValue, locale);
+                    itemValue.onModify();
                 } else {
                     // Update or create.
                     String localeNameStr = form.getFirstValue(name);
@@ -312,6 +313,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
                     }
                     // Do the update or create.
                     localeService.setLocaleName(itemValue, locale, localeNameStr);
+                    itemValue.onModify();
                 }
             }
         }

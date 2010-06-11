@@ -582,6 +582,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 if (form.getNames().contains("remove_name_" + locale)) {
                     // Remove.
                     localeService.clearLocaleName(thisDataCategory, locale);
+                    thisDataCategory.onModify();
                 } else {
                     // Update or create.
                     String localeNameStr = form.getFirstValue(name);
@@ -592,6 +593,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                     }
                     // Do the update or create.
                     localeService.setLocaleName(thisDataCategory, locale, localeNameStr);
+                    thisDataCategory.onModify();
                 }
             }
         }

@@ -144,6 +144,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
                 if (form.getNames().contains("remove_name_" + locale)) {
                     // Remove.
                     localeService.clearLocaleName(itemValueDefinition, locale);
+                    itemValueDefinition.onModify();
                 } else {
                     // Update or create.
                     String localeNameStr = form.getFirstValue(name);
@@ -154,6 +155,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
                     }
                     // Do the update or create.
                     localeService.setLocaleName(itemValueDefinition, locale, localeNameStr);
+                    itemValueDefinition.onModify();
                 }
             }
         }
