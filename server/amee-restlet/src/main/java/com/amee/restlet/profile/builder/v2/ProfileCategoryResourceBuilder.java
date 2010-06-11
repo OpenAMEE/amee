@@ -137,7 +137,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
                 // add CO2 amount
                 JSONObject totalAmount = new JSONObject();
-                totalAmount.put("value", getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit()));
+                totalAmount.put("value", getTotalAmount(profileItems, resource.getProfileBrowser().getCo2AmountUnit()) + "");
                 totalAmount.put("unit", resource.getProfileBrowser().getCo2AmountUnit());
                 obj.put("totalAmount", totalAmount);
 
