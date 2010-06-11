@@ -139,6 +139,7 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
                 if (form.getNames().contains("remove_name_" + locale)) {
                     // Remove.
                     localeService.clearLocaleName(itemDefinition, locale);
+                    itemDefinition.onModify();
                 } else {
                     // Update or create.
                     String localeNameStr = form.getFirstValue(name);
@@ -149,6 +150,7 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
                     }
                     // Do the update or create.
                     localeService.setLocaleName(itemDefinition, locale, localeNameStr);
+                    itemDefinition.onModify();
                 }
             }
         }
