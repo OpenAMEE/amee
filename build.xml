@@ -7,6 +7,7 @@
     <property name="amee.current" value="${amee.home}/current" description="The root of the current AMEE package"/>
     <property name="amee.current.lib" value="${amee.current}/lib" description="The location of the AMEE libs and dependencies."/>
     <property name="amee.shared" value="${amee.home}/shared" description="The location of the AMEE shared config."/>
+    <property name="amee.devel.home" value="/Development/AMEE/amee.platform/project/amee" />
 
     <target name="rebuild" depends="clean, package, copy-amee-libs"
             description="Perform a clean build from src."/>
@@ -77,5 +78,25 @@
             <arg value="TAG=${tag}"/>
         </exec>
     </target>
+
+    <target name="init-dir" description="Set up the deployment directory structure.">
+
+        <!-- shared -->
+        <mkdir dir="${amee.shared}" />
+        <mkdir dir="${amee.shared}/log" />
+        <mkdir dir="${amee.shared}/pids" />
+        <mkdir dir="${amee.shared}/system" />
+        <!--symlink link="${amee.shared}/crypto" resource="${amee.devel.home}/server/engine/src/test/resources/crypto" overwrite="true" /-->
+
+        <!-- current -->
+        <mkdir dir="${amee.current.lib}" />
+        <symlink link="${amee.current}/bin" resource="${amee.devel.home}/server/amee-engine/bin" overwrite="true" />
+        <symlink link="${amee.current}/conf" resource="${amee.devel.home}/server/amee-engine/conf" overwrite="true" />
+        <symlink link="${amee.current}/log" resource="${amee.home}/shared/log" overwrite="true" />
+        <symlink link="${amee.current.lib}/wrapper" resource="${amee.devel.home}/server/amee-engine/lib/wrapper" overwrite="true" />
+
+        <antcall target="copy-wrapper" />
+    </target>
+    
 </project>
 
