@@ -46,11 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
-import org.restlet.data.Form;
-import org.restlet.data.MediaType;
-import org.restlet.data.Method;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
+import org.restlet.data.*;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -60,12 +56,7 @@ import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component("dataCategoryResource")
 @Scope("prototype")
@@ -425,8 +416,12 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         return !(StringUtils.isBlank(dataCategory.getName()) || StringUtils.isBlank(dataCategory.getPath()));
     }
 
-    // A unique DataCategory is one with a unique path within it's set of un-trashed sibling DataCategories.
-
+    /**
+     * A unique DataCategory is one with a unique path within its set of un-trashed sibling DataCategories.
+     *
+     * @param dataCategory to check for uniqueness
+     * @return true if the DataCategory is unique
+     */
     private boolean isUnique(DataCategory dataCategory) {
         boolean unique = true;
         for (PathItem sibling : getPathItem().getChildrenByType(ObjectType.DC.getName())) {
@@ -438,7 +433,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                         break;
                     }
                 } else {
-                    log.error("isUnique() PathItem for DataCategory without persistent entity: " + sibling.getUid());
+                    log.warn("isUnique() PathItem for DataCategory without persistent entity: " + sibling.getUid());
                 }
             }
         }
