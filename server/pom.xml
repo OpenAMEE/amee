@@ -46,7 +46,6 @@
         <hibernate-core.version>3.5.1-Final</hibernate-core.version>
         <ibm-icu4j.version>4.0.1</ibm-icu4j.version>
         <javacsv.version>2.0</javacsv.version>
-        <javax-servlet-api.version>2.5</javax-servlet-api.version>
         <javax.mail.version>1.4</javax.mail.version>
         <jetty-jsp.version>2.1-6.0.2</jetty-jsp.version>
         <jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>
@@ -250,7 +249,7 @@
             </exclusions>
         </dependency>
 
-        <!-- Explicit dependency & version here to avoid transitive dependency mess -->
+        <!-- Explicit dependency & version here to avoid transitive dependency mess. -->
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>servlet-api</artifactId>
@@ -265,6 +264,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${commons-collections.version}</version>
+            <!-- Weirdly conflicted by: amee-platform-science -->
         </dependency>
 
         <!-- Test Dependencies. -->

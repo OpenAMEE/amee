@@ -55,6 +55,11 @@
             <artifactId>icu4j</artifactId>
             <version>${ibm-icu4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${jetty-servlet-api.version}</version>
+        </dependency>
 
         <!-- Runtime Dependencies -->
         <dependency>
@@ -73,12 +78,6 @@
             <groupId>jetty</groupId>
             <artifactId>jsp</artifactId>
             <version>${jetty-jsp.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>${javax-servlet-api.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

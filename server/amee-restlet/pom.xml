@@ -45,6 +45,17 @@
             <groupId>org.restlet</groupId>
             <artifactId>org.restlet.ext.spring</artifactId>
             <version>${restlet.version}</version>
+            <exclusions>
+                <!-- We don't want either of these. -->
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.restlet</groupId>
