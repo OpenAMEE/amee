@@ -20,7 +20,7 @@
         <amee-messaging.version>1.0.2</amee-messaging.version>
         <amee-platform-science.version>1.0.9</amee-platform-science.version>
         <amee-platform-domain.version>1.0.5-SNAPSHOT</amee-platform-domain.version>
-        <amee-platform-service.version>1.0.5-SNAPSHOT</amee-platform-service.version>
+        <amee-platform-service.version>1.0.7-SNAPSHOT</amee-platform-service.version>
         <!-- External Versions. -->
         <!-- Note: Keep Restlet, Jetty and servlet-api versions in sync. -->
         <!-- Note: Check Restlet release notes and jetty dependencies. -->
