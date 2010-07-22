@@ -1,0 +1,24 @@
+Running the Benerator scripts
+=============================
+
+1. Download databene benerator: http://sourceforge.net/projects/benerator/
+2. Extract it somewhere.
+3. Set BENERATOR_HOME environment variable to point to the extracted directory:
+	
+	export BENERATOR_HOME=/Users/david.keen/databene-benerator-0.6.2
+
+4. Make the scripts executable:
+
+	chmod a+x $BENERATOR+HOME/bin/*.sh
+	
+5. Ensure JAVA_HOME is set.
+6. Set BENERATOR_OPTS environment variable to define the stage and database
+   Stage may be one of [development|medium|large]:
+
+	export BENERATOR_OPTS="-Dstage=development -Ddatabase=mysql"
+   
+6. Run the script
+
+	$BENERATOR_HOME/bin/benerator.sh amee.ben.xml
+	
+
