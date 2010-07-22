@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<setup xmlns="http://databene.org/benerator/0.6.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://databene.org/benerator/0.6.2 http://databene.org/benerator-0.6.2.xsd">
+	<comment>
+		 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		 !   Benerator file for populating the amee database.        !
+		 !                                                           !
+		 !   You can choose a database and a stage like this:        !
+		 !       -Dstage=development -Ddatabase=mysql                !
+		 !                                                           !
+		 !   These database types are provided:                      !
+		 !       oracle, db2, sql_server, mysql, postgres, hsql,     !
+		 !       hsqlmem, mysql, firebird, derby, h2                 !
+		 !                                                           !
+		 !   ...and these stage configurations:                      !
+		 !       development, medium                                 !
+		 !                                                           !
+		 !   Set up your database connection in the file             !
+		 !       &lt;database&gt;/amee.&lt;database&gt;.properties   !
+		 !                                                           !
+		 !   You may want to try different generation quantities in  !
+		 !       amee.&lt;stage&gt;.properties                       !
+		 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --&gt;
+	</comment>
+	
+	<import defaults="true" platforms="db"/>
+	
+	<comment>setting default values</comment>
+	<property name="dbSchema" value=""/>
+	<property name="dbPassword" value=""/>
+	<property name="dbBatch" value="false"/>
+	
+	<if test="benerator.get('stage') == null">
+		<comment>no stage specified, using 'development'</comment>
+		<execute>stage = 'development'</execute>
+	</if>
+	
+	<if test="benerator.get('database') == null">
+		<comment>no database specified, using 'hsqlmem'</comment>
+		<execute>database = 'hsqlmem'</execute>
+	</if>
+	
+	<comment>import stage and database specific properties</comment>
+	<include uri="{ftl:amee.${database}.properties}"/>
+	<include uri="{ftl:amee.${stage}.properties}"/>
+	
+	<comment>log the settings to the console</comment>
+	<echo message="Starting generation for"/>
+	<echo message="{ftl:  ${category_count} categories}"/>
+	<echo message="{ftl:  ${items_per_category * category_count} data items}"/>
+	<echo message="{ftl:  ${items_per_category * category_count * values_per_item} data item values}"/>
+	<echo message="{ftl:Setup: ${benerator.defaultEncoding} def.pageSize=${benerator.defaultPageSize} def.script=${benerator.defaultScript}}"/>
+	<echo message="{ftl:JDBC URL: ${dbUrl}}"/>
+	
+	<comment>define a database that will be referred by the id 'db' later</comment>
+	<database id="db" url="{dbUrl}" driver="{dbDriver}" schema="{dbSchema}" user="{dbUser}" password="{dbPassword}" batch="{dbBatch}"/>
+	
+	<!--comment>drop the current tables/sequences if they exist and recreate them</comment>
+	<execute uri="{ftl:${database}/drop_tables.${database}.sql}"   target="db" onError="ignore" />
+	<execute uri="{ftl:${database}/create_tables.${database}.sql}" target="db" /-->
+	
+	<comment>Start IDs at 100,000,000</comment>
+	<bean id="idGen" spec="new IncrementGenerator(100000000)"/>
+	<!--bean id="uuidGen" spec="new UUIDGenerator()" /-->
+	
+	<generate type="ITEM_DEFINITION" count="{category_count}" consumer="db">
+		<id name="ID" generator="idGen"/>
+		<attribute name="UID" pattern="[A-F0-9]{12}"/>
+		<attribute name="NAME" generator="SeedWordGenerator"/>
+		<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
+		<attribute name="ENVIRONMENT_ID" constant="2"/>
+		<attribute name="STATUS" constant="1"/>
+		<attribute name="DRILL_DOWN" values="'Alpha','Bravo','Charlie'"/>
+		<attribute name="SKIP_RECALCULATION" constant="0"/>
+		
+		<generate type="DATA_CATEGORY" count="1" consumer="db">
+			<id name="ID" generator="idGen"/>
+			<attribute name="UID" pattern="[A-F0-9]{12}"/>
+			<attribute name="NAME" generator="SeedWordGenerator"/>
+			<attribute name="PATH" pattern="[A-Za-z0-9]{8,12}"/>
+			<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
+			<attribute name="ENVIRONMENT_ID" constant="2"/>
+			<reference name="DATA_CATEGORY_ID" source="db" targetType="DATA_CATEGORY" distribution="random" cyclic="true"/>
+			<attribute name="ITEM_DEFINITION_ID" script="ITEM_DEFINITION.ID"/>
+			<attribute name="STATUS" constant="1"/>
+			<attribute name="WIKI_NAME" generator="SeedWordGenerator"/>
+			
+			<generate type="ITEM_DEFINITION" count="{items_per_category * category_count}" consumer="db">
+				<id name="ID" generator="idGen"/>
+				<attribute name="UID" pattern="[A-F0-9]{12}"/>
+				<attribute name="NAME" generator="SeedWordGenerator"/>
+				<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
+				<attribute name="ENVIRONMENT_ID" constant="2"/>
+				<attribute name="STATUS" constant="1"/>
+				<attribute name="DRILL_DOWN" values="'Alpha','Bravo','Charlie'"/>
+				<attribute name="SKIP_RECALCULATION" constant="0"/>
+				
+				<generate type="ITEM" count="1" consumer="db">
+					<id name="ID" generator="idGen"/>
+					<attribute name="TYPE" constant="DI"/>
+					<attribute name="UID" pattern="[A-F0-9]{12}"/>
+					<attribute name="NAME" generator="SeedWordGenerator"/>
+					<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
+					<attribute name="ENVIRONMENT_ID" constant="2"/>
+					<attribute name="ITEM_DEFINITION_ID" script="ITEM_DEFINITION.ID"/>
+					<attribute name="DATA_CATEGORY_ID" script="DATA_CATEGORY.ID"/>
+					<attribute name="STATUS" constant="1"/>
+					
+					<generate type="ITEM_VALUE_DEFINITION" count="{values_per_item}" consumer="db">
+						<id name="ID" generator="idGen"/>
+						<attribute name="UID" pattern="[A-F0-9]{12}"/>
+						<attribute name="NAME" generator="SeedWordGenerator"/>
+						<attribute name="PATH" pattern="[A-Za-z0-9]{8,12}"/>
+						<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
+						<attribute name="ENVIRONMENT_ID" constant="2"/>
+						<reference name="VALUE_DEFINITION_ID" source="db" targetType="VALUE_DEFINITION" distribution="random" cyclic="true" />
+						<attribute name="ITEM_DEFINITION_ID" script="ITEM_DEFINITION.ID" />
+						<attribute name="FORCE_TIMESERIES" constant="0" /	>
+						
+						<generate type="ITEM_VALUE" count="1" consumer="db">
+							<id name="ID" generator="idGen"/>
+							<attribute name="UID" pattern="[A-F0-9]{12}"/>
+							<attribute name="VALUE" pattern="[A-Za-z0-9]{8,12}"/>
+							<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
+							<attribute name="ITEM_VALUE_DEFINITION_ID" script="ITEM_VALUE_DEFINITION.ID"/>
+							<attribute name="ITEM_ID" script="ITEM.ID"/>
+							<attribute name="STATUS" constant="1"/>
+						</generate>
+						<!-- End ITEM_VALUE -->
+					</generate>
+					<!-- End ITEM_VALUE_DEFINITION -->
+				</generate>
+				<!-- End ITEM -->
+			</generate>
+			<!-- End ITEM_DEFINITION -->
+		</generate>
+		<!-- End DATA_CATEGORY -->
+	</generate>
+	<!-- End ITEM_DEFINITION -->
+</setup>
