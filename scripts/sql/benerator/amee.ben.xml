@@ -110,11 +110,17 @@
 						<attribute name="UID" pattern="[A-F0-9]{12}"/>
 						<attribute name="NAME" generator="SeedWordGenerator"/>
 						<attribute name="PATH" pattern="[A-Za-z0-9]{8,12}"/>
+						<attribute name="VALUE" constant="" />
+						<attribute name="CHOICES" constant="" />
+						<attribute name="FROM_PROFILE" constant="0" />
+						<attribute name="FROM_DATA" constant="1" />
+						<attribute name="ALLOWED_ROLES" constant="" />
 						<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
 						<attribute name="ENVIRONMENT_ID" constant="2"/>
 						<reference name="VALUE_DEFINITION_ID" source="db" targetType="VALUE_DEFINITION" distribution="random" cyclic="true" />
 						<attribute name="ITEM_DEFINITION_ID" script="ITEM_DEFINITION.ID" />
-						<attribute name="FORCE_TIMESERIES" constant="0" /	>
+						<attribute name="FORCE_TIMESERIES" constant="0" />
+						<attribute name="STATUS" constant="1" />
 						
 						<generate type="ITEM_VALUE" count="1" consumer="db">
 							<id name="ID" generator="idGen"/>

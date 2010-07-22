@@ -40,3 +40,16 @@ set.AJP_PORT=8010
 # Memory Sizing
 wrapper.java.initmemory=512
 wrapper.java.maxmemory=2048
+
+# The license.
+wrapper.license.type=NODE
+wrapper.license.id=201004200024
+wrapper.license.licensee=AMEE UK (David Keen)
+wrapper.license.host_id=34159e1f2038
+wrapper.license.features=pro, 64bit, test
+wrapper.license.upgrade_term.begin_date=2010-04-20
+wrapper.license.upgrade_term.end_date=2011-04-20
+wrapper.license.key.1=1b91-8cc9-1f9b-c8b5
+wrapper.license.key.2=55ee-e067-dea0-56df
+wrapper.license.key.3=0a32-e831-12be-4534
+wrapper.license.key.4=43ff-21f3-b175-836a
