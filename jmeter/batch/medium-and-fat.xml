@@ -1,306 +1,307 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- /data/home/heating/uk/3D8450657B6F -->
 <ProfileCategory>
-  <ProfileItems>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>1</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>2</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>3</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>4</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>5</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>6</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>7</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>8</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>9</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>10</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>11</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>12</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>13</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>14</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>15</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>16</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>17</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>18</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>19</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-    <ProfileItem>
-      <dataItemUid>3D8450657B6F</dataItemUid>
-      <validFrom />
-      <name>20</name>
-      <hasPhotovoltaic>true</hasPhotovoltaic>
-      <hasCavityWallInsulation>true</hasCavityWallInsulation>
-      <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
-      <hasSolidWallInsulation>true</hasSolidWallInsulation>
-      <hasNoInsulation>false</hasNoInsulation>
-      <numberOfBedrooms>2</numberOfBedrooms>
-      <age>pre 1930</age>
-      <heatingType>boiler (average-5-10yrs old)</heatingType>
-      <hasWindTurbine>true</hasWindTurbine>
-      <hasNoRenewables>false</hasNoRenewables>
-    </ProfileItem>
-  </ProfileItems>
+    <ProfileItems>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>1</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>2</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>3</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>4</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>5</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>6</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>7</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>8</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>9</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>10</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>11</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>12</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>13</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>14</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>15</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>16</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>17</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>18</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>19</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+        <ProfileItem>
+            <dataItemUid>3D8450657B6F</dataItemUid>
+            <validFrom/>
+            <name>20</name>
+            <hasPhotovoltaic>true</hasPhotovoltaic>
+            <hasCavityWallInsulation>true</hasCavityWallInsulation>
+            <hasGroundSourceHeatPump>true</hasGroundSourceHeatPump>
+            <hasSolidWallInsulation>true</hasSolidWallInsulation>
+            <hasNoInsulation>false</hasNoInsulation>
+            <numberOfBedrooms>2</numberOfBedrooms>
+            <age>pre 1930</age>
+            <heatingType>boiler (average-5-10yrs old)</heatingType>
+            <hasWindTurbine>true</hasWindTurbine>
+            <hasNoRenewables>false</hasNoRenewables>
+        </ProfileItem>
+    </ProfileItems>
 </ProfileCategory>
 
