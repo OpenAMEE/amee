@@ -66,7 +66,7 @@
         <xerces.version>2.9.1</xerces.version>
         <xml-apis.version>1.3.04</xml-apis.version>
         <!-- Paths. -->
-        <amee.home>/var/www/apps/amee</amee.home>
+        <amee.home>/var/www/apps/amee-local</amee.home>
         <amee.current>${amee.home}/current</amee.current>
         <amee.current.lib>${amee.current}/lib</amee.current.lib>
         <!-- Other. -->
