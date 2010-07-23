@@ -33,15 +33,19 @@ public class Engine implements WrapperListener, Serializable {
     protected TransactionController transactionController;
     protected Component container;
 
-    // This is used to determine the PID of the instance in the init script.
-    protected String instanceName = "live";
+    // These are used to determine the PID of the instance in the init script.
+    private String appName = "amee";
+    private String serverName = "localhost";
+    private String instanceName = "live";
 
     public Engine() {
         super();
     }
 
-    public Engine(String instanceName) {
+    public Engine(String appName, String serverName, String instanceName) {
         this();
+        this.appName = appName;
+        this.serverName = serverName;
         this.instanceName = instanceName;
     }
 
@@ -121,6 +125,22 @@ public class Engine implements WrapperListener, Serializable {
         CommandLineParser parser = new GnuParser();
         Options options = new Options();
 
+        // Define appName option.
+        Option appNameOpt = OptionBuilder.withArgName("appName")
+                .hasArg()
+                .withDescription("The app name")
+                .create("appName");
+        appNameOpt.setRequired(true);
+        options.addOption(appNameOpt);
+
+        // Define serverName option.
+        Option serverNameOpt = OptionBuilder.withArgName("serverName")
+                .hasArg()
+                .withDescription("The server name")
+                .create("serverName");
+        serverNameOpt.setRequired(true);
+        options.addOption(serverNameOpt);
+
         // Define instanceName option.
         Option instanceNameOpt = OptionBuilder.withArgName("instanceName")
                 .hasArg()
@@ -143,6 +163,16 @@ public class Engine implements WrapperListener, Serializable {
         } catch (ParseException exp) {
             new HelpFormatter().printHelp("java com.amee.engine.Engine", options);
             System.exit(-1);
+        }
+
+        // Handle appName.
+        if (line.hasOption(appNameOpt.getOpt())) {
+            appName = line.getOptionValue(appNameOpt.getOpt());
+        }
+
+        // Handle serverName.
+        if (line.hasOption(serverNameOpt.getOpt())) {
+            serverName = line.getOptionValue(serverNameOpt.getOpt());
         }
 
         // Handle instanceName.
@@ -184,5 +214,17 @@ public class Engine implements WrapperListener, Serializable {
 
     public static ApplicationContext getAppContext() {
         return applicationContext;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public String getServerName() {
+        return serverName;
+    }
+
+    public String getInstanceName() {
+        return instanceName;
     }
 }

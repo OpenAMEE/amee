@@ -15,6 +15,7 @@
 
 # Application name. This should be changed for multi-deploys, eg amee-science
 APP_NAME=${AMEE_APP_NAME:-amee}
+SERVER_NAME=${AMEE_SERVER_NAME:-localhost}
 INSTANCE_NAME=${AMEE_INSTANCE_NAME:-live}
 APP_LONG_NAME="AMEE"
 
@@ -29,7 +30,7 @@ APP_LONG_NAME="AMEE"
 ### END INIT INFO
 
 # Wrapper
-WRAPPER_CMD="/var/www/apps/${APP_NAME}/current/bin/wrapper"
+WRAPPER_CMD="/var/www/apps/${APP_NAME}-${INSTANCE_NAME}/current/bin/wrapper"
 WRAPPER_CONF="../conf/wrapper.conf"
 
 # Priority at which to run the wrapper.  See "man nice" for valid priorities.
@@ -37,7 +38,7 @@ WRAPPER_CONF="../conf/wrapper.conf"
 PRIORITY=
 
 # Location of the pid file.
-PIDDIR="/var/www/apps/${APP_NAME}/shared/pids"
+PIDDIR="/var/www/apps/${APP_NAME}-${INSTANCE_NAME}/shared/pids"
 
 # If uncommented, causes the Wrapper to be shutdown using an anchor file.
 #  When launched with the 'start' command, it will also ignore all INT and
@@ -133,10 +134,10 @@ then
 fi
 
 # Process ID
-ANCHORFILE="$PIDDIR/$APP_NAME.anchor"
-PIDFILE="$PIDDIR/$APP_NAME.pid"
+ANCHORFILE="$PIDDIR/$APP_NAME.$INSTANCE_NAME.anchor"
+PIDFILE="$PIDDIR/$APP_NAME.$INSTANCE_NAME.pid"
 LOCKDIR="/var/lock/subsys"
-LOCKFILE="$LOCKDIR/$APP_NAME"
+LOCKFILE="$LOCKDIR/$APP_NAME.$INSTANCE_NAME"
 pid=""
 
 # Resolve the location of the 'ps' command
@@ -407,9 +408,10 @@ console() {
     if [ "X$pid" = "X" ]
     then
         # The string passed to eval must handles spaces in paths correctly.
-        COMMAND_LINE="$CMDNICE \"$WRAPPER_CMD\" \"$WRAPPER_CONF\" wrapper.syslog.ident=$APP_NAME wrapper.pidfile=\"$PIDFILE\" $ANCHORPROP $LOCKPROP"
+        COMMAND_LINE="$CMDNICE \"$WRAPPER_CMD\" \"$WRAPPER_CONF\" wrapper.syslog.ident=$APP_NAME.$INSTANCE_NAME wrapper.pidfile=\"$PIDFILE\" $ANCHORPROP $LOCKPROP"
         eval $COMMAND_LINE
-  	    jps -m | grep "Engine -instanceName $INSTANCE_NAME" | awk '{print $1}' > $PIDFILE.'java'
+        java_pid=`jps -m | grep "Engine -appName $APP_NAME -serverName $SERVER_NAME -instanceName $INSTANCE_NAME" | awk '{print $1}'`
+        echo "$java_pid" > $PIDFILE.'java'
     else
         echo "$APP_LONG_NAME is already running."
         exit 1
@@ -422,9 +424,10 @@ start() {
     if [ "X$pid" = "X" ]
     then
         # The string passed to eval must handles spaces in paths correctly.
-        COMMAND_LINE="$CMDNICE \"$WRAPPER_CMD\" \"$WRAPPER_CONF\" wrapper.syslog.ident=$APP_NAME wrapper.pidfile=\"$PIDFILE\" wrapper.daemonize=TRUE $ANCHORPROP $IGNOREPROP $LOCKPROP"
+        COMMAND_LINE="$CMDNICE \"$WRAPPER_CMD\" \"$WRAPPER_CONF\" wrapper.syslog.ident=$APP_NAME.$INSTANCE_NAME wrapper.pidfile=\"$PIDFILE\" wrapper.daemonize=TRUE $ANCHORPROP $IGNOREPROP $LOCKPROP"
         eval $COMMAND_LINE
-        jps -m | grep "Engine -instanceName $INSTANCE_NAME" | awk '{print $1}' > $PIDFILE.'java'
+        java_pid=`jps -m | grep "Engine -appName $APP_NAME -serverName $SERVER_NAME -instanceName $INSTANCE_NAME" | awk '{print $1}'`
+        echo "$java_pid" > $PIDFILE.'java'
     else
         echo "$APP_LONG_NAME is already running."
         exit 1

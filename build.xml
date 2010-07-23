@@ -2,7 +2,7 @@
 <project name="amee" default="clean-deploy" basedir=".">
 
     <property environment="env"/>
-    <property name="amee.appName" value="amee"/>
+    <property name="amee.appName" value="amee-local"/>
     <property name="amee.home" value="/var/www/apps/${amee.appName}" description="The root of the AMEE deployment layout."/>
     <property name="amee.current" value="${amee.home}/current" description="The root of the current AMEE package"/>
     <property name="amee.current.lib" value="${amee.current}/lib" description="The location of the AMEE libs and dependencies."/>
