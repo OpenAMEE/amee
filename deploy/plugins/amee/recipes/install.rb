@@ -56,7 +56,12 @@ namespace :install do
     # Create conf
     puts "Creating new deployment conf directory #{package_dir}/conf"
     FileUtils.mkdir_p("#{package_dir}/conf")
-    FileUtils.cp_r "#{src_dir}/server/amee-engine/conf/.","#{package_dir}/conf"  
+    FileUtils.cp_r "#{src_dir}/server/amee-engine/conf/.","#{package_dir}/conf"
+
+    # Create munin
+    puts "Creating new deployment munin directory #{package_dir}/munin"
+    FileUtils.mkdir_p("#{package_dir}/munin")
+    FileUtils.cp_r "#{src_dir}/server/amee-engine/munin/.","#{package_dir}/munin"
 
     # Create htdocs
     puts "Creating new deployment htdocs directory #{package_dir}/htdocs"
