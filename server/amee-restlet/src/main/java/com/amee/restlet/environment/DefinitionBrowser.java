@@ -24,7 +24,6 @@ import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.data.ReturnValueDefinition;
 import com.amee.domain.environment.Environment;
 import com.amee.service.BaseBrowser;
 import com.amee.service.definition.DefinitionService;
@@ -68,10 +67,6 @@ public class DefinitionBrowser extends BaseBrowser {
     // ItemValueDefinitions
     private String itemValueDefinitionUid = null;
     private ItemValueDefinition itemValueDefinition = null;
-
-    // ReturnValueDefinitions
-    private String returnValueDefinitionUid = null;
-    private ReturnValueDefinition returnValueDefinition = null;
 
     public DefinitionBrowser() {
         super();
@@ -186,24 +181,5 @@ public class DefinitionBrowser extends BaseBrowser {
             }
         }
         return itemValueDefinition;
-    }
-
-    // ReturnValueDefinitions
-
-    public String getReturnValueDefinitionUid() {
-        return returnValueDefinitionUid;
-    }
-
-    public void setReturnValueDefinitionUid(String returnValueDefinitionUid) {
-        this.returnValueDefinitionUid = returnValueDefinitionUid;
-    }
-
-    public ReturnValueDefinition getReturnValueDefinition() {
-        if (returnValueDefinition == null) {
-            if ((returnValueDefinitionUid != null) && (getItemDefinition() != null)) {
-                returnValueDefinition = definitionService.getReturnValueDefinitionByUid(returnValueDefinitionUid);
-            }
-        }
-        return returnValueDefinition;
     }
 }
