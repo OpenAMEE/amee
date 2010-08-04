@@ -45,7 +45,7 @@
 
     <bean id="invalidationQueue" class="com.amee.messaging.config.QueueConfig">
         <property name="name"
-                  value="platform.${MESSAGING_SCOPE}.invalidation.${AMEE_SERVER_NAME}.${AMEE_INSTANCE_NAME}"/>
+                  value="platform.${MESSAGING_SCOPE}.invalidation.${AMEE_SERVER_NAME}.${AMEE_APP_NAME}.${AMEE_INSTANCE_NAME}"/>
         <property name="exclusive" value="true"/>
         <property name="autoDelete" value="true"/>
     </bean>
