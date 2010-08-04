@@ -21,4 +21,6 @@ Running the Benerator scripts
 
 	$BENERATOR_HOME/bin/benerator.sh amee.ben.xml
 	
+Note: the generator script requires at least one row to already exist in DATA_CATEGORY and VALUE_DEFINITION.
+	
 
