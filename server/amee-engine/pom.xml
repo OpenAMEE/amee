@@ -37,7 +37,7 @@
         <!-- Compile Dependencies. -->
         <dependency>
             <groupId>tanukisoft</groupId>
-            <artifactId>wrapper</artifactId>
+            <artifactId>wrapper-standard</artifactId>
             <version>${wrapper-standard.version}</version>
         </dependency>
         <dependency>
