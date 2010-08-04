@@ -59,12 +59,12 @@
 	<execute uri="{ftl:${database}/create_tables.${database}.sql}" target="db" /-->
 	
 	<comment>Start IDs at 100,000,000</comment>
-	<bean id="idGen" spec="new IncrementGenerator(100000000)"/>
+	<bean id="idGen" spec="new IncrementGenerator(200000000)"/>
 	<!--bean id="uuidGen" spec="new UUIDGenerator()" /-->
 	
 	<generate type="ITEM_DEFINITION" count="{category_count}" consumer="db">
 		<id name="ID" generator="idGen"/>
-		<attribute name="UID" pattern="[A-F0-9]{12}"/>
+		<attribute name="UID" pattern="[A-F0-9]{12}" unique="true"/>
 		<attribute name="NAME" generator="SeedWordGenerator"/>
 		<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
 		<attribute name="ENVIRONMENT_ID" constant="2"/>
@@ -74,7 +74,7 @@
 		
 		<generate type="DATA_CATEGORY" count="1" consumer="db">
 			<id name="ID" generator="idGen"/>
-			<attribute name="UID" pattern="[A-F0-9]{12}"/>
+			<attribute name="UID" pattern="[A-F0-9]{12}" unique="true"/>
 			<attribute name="NAME" generator="SeedWordGenerator"/>
 			<attribute name="PATH" pattern="[A-Za-z0-9]{8,12}"/>
 			<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
@@ -84,9 +84,9 @@
 			<attribute name="STATUS" constant="1"/>
 			<attribute name="WIKI_NAME" generator="SeedWordGenerator"/>
 			
-			<generate type="ITEM_DEFINITION" count="{items_per_category * category_count}" consumer="db">
+			<generate type="ITEM_DEFINITION" count="{items_per_category}" consumer="db">
 				<id name="ID" generator="idGen"/>
-				<attribute name="UID" pattern="[A-F0-9]{12}"/>
+				<attribute name="UID" pattern="[A-F0-9]{12}" unique="true"/>
 				<attribute name="NAME" generator="SeedWordGenerator"/>
 				<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
 				<attribute name="ENVIRONMENT_ID" constant="2"/>
@@ -97,7 +97,7 @@
 				<generate type="ITEM" count="1" consumer="db">
 					<id name="ID" generator="idGen"/>
 					<attribute name="TYPE" constant="DI"/>
-					<attribute name="UID" pattern="[A-F0-9]{12}"/>
+					<attribute name="UID" pattern="[A-F0-9]{12}" unique="true"/>
 					<attribute name="NAME" generator="SeedWordGenerator"/>
 					<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
 					<attribute name="ENVIRONMENT_ID" constant="2"/>
@@ -107,7 +107,7 @@
 					
 					<generate type="ITEM_VALUE_DEFINITION" count="{values_per_item}" consumer="db">
 						<id name="ID" generator="idGen"/>
-						<attribute name="UID" pattern="[A-F0-9]{12}"/>
+						<attribute name="UID" pattern="[A-F0-9]{12}" unique="true"/>
 						<attribute name="NAME" generator="SeedWordGenerator"/>
 						<attribute name="PATH" pattern="[A-Za-z0-9]{8,12}"/>
 						<attribute name="VALUE" constant="" />
@@ -124,7 +124,7 @@
 						
 						<generate type="ITEM_VALUE" count="1" consumer="db">
 							<id name="ID" generator="idGen"/>
-							<attribute name="UID" pattern="[A-F0-9]{12}"/>
+							<attribute name="UID" pattern="[A-F0-9]{12}" unique="true"/>
 							<attribute name="VALUE" pattern="[A-Za-z0-9]{8,12}"/>
 							<attribute name="CREATED" generator="CurrentDateTimeGenerator"/>
 							<attribute name="ITEM_VALUE_DEFINITION_ID" script="ITEM_VALUE_DEFINITION.ID"/>
@@ -137,9 +137,9 @@
 				</generate>
 				<!-- End ITEM -->
 			</generate>
-			<!-- End ITEM_DEFINITION -->
+			<!-- End ITEM_DEFINITION (DI) -->
 		</generate>
 		<!-- End DATA_CATEGORY -->
 	</generate>
-	<!-- End ITEM_DEFINITION -->
+	<!-- End ITEM_DEFINITION (DC)-->
 </setup>
