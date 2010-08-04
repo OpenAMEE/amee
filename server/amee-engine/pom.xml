@@ -38,7 +38,7 @@
         <dependency>
             <groupId>tanukisoft</groupId>
             <artifactId>wrapper</artifactId>
-            <version>${wrapper.version}</version>
+            <version>${wrapper-standard.version}</version>
         </dependency>
         <dependency>
             <groupId>org.restlet</groupId>
