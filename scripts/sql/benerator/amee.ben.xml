@@ -59,7 +59,7 @@
 	<execute uri="{ftl:${database}/create_tables.${database}.sql}" target="db" /-->
 	
 	<comment>Start IDs at 100,000,000</comment>
-	<bean id="idGen" spec="new IncrementGenerator(200000000)"/>
+	<bean id="idGen" spec="new IncrementGenerator(100000000)"/>
 	<!--bean id="uuidGen" spec="new UUIDGenerator()" /-->
 	
 	<generate type="ITEM_DEFINITION" count="{category_count}" consumer="db">
