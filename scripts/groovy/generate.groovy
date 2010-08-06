@@ -1,12 +1,22 @@
 import com.amee.base.utils.UidGen
 import groovy.sql.Sql
 
-sub1Count = 160
-sub2Count = 100
-valueDefCount = 15
-itemCount = 500
+// LCA scaling vars
+//sub1Count = 160
+//sub2Count = 100
+//valueDefCount = 15
+//itemCount = 500
 
+// testing
+sub1Count = 2
+sub2Count = 2
+valueDefCount = 2
+itemCount = 2
 
+// The environmentId is always 2
+environmentId = 2
+
+// Deal with command line parameters
 def cli = new CliBuilder(usage: 'groovy generate.groovy [-h] [-s server] [-d database] [-u user] [-p password]')
 cli.h(longOpt:'help', 'usage information')
 cli.s(argName:'servername', longOpt:'server', args:1, required:false, type:GString, "server name (default 'localhost')")
@@ -33,6 +43,7 @@ if (opt.p) password = opt.p
 
 sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
 
+// Add a random character generator to the String class.
 String.metaClass.'static'.randomString = { length ->
     // The chars used for the random string
     def list = ('a'..'z')+('A'..'Z')+('0'..'9')
@@ -43,38 +54,29 @@ String.metaClass.'static'.randomString = { length ->
     length > 0 ? list[0..length - 1].join() : ''
 }
 
-// 1) Create a single DC called 'lca'
-println "Creating the root LCA DC"
+// Find the Root data category
+rootCat = sql.firstRow("SELECT ID FROM DATA_CATEGORY WHERE NAME = 'Root' AND ENVIRONMENT_ID = 2").ID
 
-uid = UidGen.INSTANCE_12.getUid()
-name = 'lca'
-path = name
-environmentId = 2
-dataCategoryId = 14
-wikiName = name
-rootKeys = sql.executeInsert("INSERT INTO DATA_CATEGORY (UID, NAME, PATH, CREATED, ENVIRONMENT_ID, DATA_CATEGORY_ID, WIKI_NAME)" +
-    "VALUES (?, ?, ?, NOW(), ?, ?, ?)",
-    [uid, name, path, environmentId, dataCategoryId, wikiName])
+// 1) Create a single top data category for LCA data called 'lca'
+rootKeys = sql.executeInsert(
+    "INSERT INTO DATA_CATEGORY (UID, NAME, PATH, CREATED, ENVIRONMENT_ID, DATA_CATEGORY_ID, WIKI_NAME) VALUES (?, ?, ?, NOW(), ?, ?, ?)",
+    [UidGen.INSTANCE_12.getUid(), 'lca', 'lca', environmentId, rootCat, 'lca'])
 
 lcaRootId = rootKeys[0][0]
-println "Created LCA root DC with ID: ${lcaRootId}"
+println "Created top level LCA DATA_CATEGORY (${lcaRootId})"
 
 // 2) Create 160 sub1 DCs with parent ID created in (1)
-println "Creating 160 sub1 cats with parent ID: ${lcaRootId}"
+println "Creating ${sub1Count} DATA_CATEGORYs with parent ID: ${lcaRootId}"
 sub1Keys = []
 sub1Count.times {
-    uid = UidGen.INSTANCE_12.getUid()
-    name = String.randomString(12)
+    name = 'LCA-' + String.randomString(12)
     path = name
-    environmentId = 2
     dataCategoryId = lcaRootId
     wikiName = name
-    sub1Keys << sql.executeInsert("INSERT INTO DATA_CATEGORY (UID, NAME, PATH, CREATED, ENVIRONMENT_ID, DATA_CATEGORY_ID, WIKI_NAME)" +
-        "VALUES (?, ?, ?, NOW(), ?, ?, ?)",
-        [uid, name, path, environmentId, dataCategoryId, wikiName])
+    sub1Keys << sql.executeInsert(
+        "INSERT INTO DATA_CATEGORY (UID, NAME, PATH, CREATED, ENVIRONMENT_ID, DATA_CATEGORY_ID, WIKI_NAME) VALUES (?, ?, ?, NOW(), ?, ?, ?)",
+        [UidGen.INSTANCE_12.getUid(), name, path, environmentId, dataCategoryId, wikiName])
 }
-
-//sub1Keys.each {println it[0]}
 
 // 3) For each sub1 DC created in (2)
 //    create 100 sub2 DCs with ItemDefs
@@ -88,45 +90,42 @@ sub1Keys.each { sub1Key ->
     sub2Count.times {
 
         // Create an Item Def
-        name = String.randomString(12)
+        name = 'LCA-' + String.randomString(12)
 
         //
         drillDownList = []
         valueDefCount.times {
-            drillDownList << String.randomString(4)
+            drillDownList << 'LCA-' + String.randomString(4)
         }
-        environmentId = 2
 
         itemDefKeys = sql.executeInsert("INSERT INTO ITEM_DEFINITION (UID, NAME, DRILL_DOWN, CREATED, ENVIRONMENT_ID)" +
             "VALUES (?, ?, ?, NOW(), ?)",
-            [uid, name, drillDownList.join(','), environmentId])
+            [UidGen.INSTANCE_12.getUid(), name, drillDownList.join(','), environmentId])
 
 
         itemDefKey = itemDefKeys[0][0]
-        println "Created Item Definition with ID: ${itemDefKey}"
+        println "Created ITEM_DEFINITION (${itemDefKey})"
 
         // And a linked Data Category
-        println "Creating a Data Cat with parent ID: ${sub1Key[0][0]} and Item Def ID: ${itemDefKey}"
-        uid = UidGen.INSTANCE_12.getUid()
-        name = String.randomString(12)
+        name = 'LCA-' + String.randomString(12)
         path = name
-        environmentId = 2
         dataCategoryId = sub1Key[0][0]
         wikiName = name
-        sub2Keys << sql.executeInsert("INSERT INTO DATA_CATEGORY (UID, NAME, PATH, CREATED, ENVIRONMENT_ID, DATA_CATEGORY_ID, ITEM_DEFINITION_ID, WIKI_NAME)" +
+        sub2Keys = sql.executeInsert("INSERT INTO DATA_CATEGORY (UID, NAME, PATH, CREATED, ENVIRONMENT_ID, DATA_CATEGORY_ID, ITEM_DEFINITION_ID, WIKI_NAME)" +
             "VALUES (?, ?, ?, NOW(), ?, ?, ?, ?)",
-            [uid, name, path, environmentId, dataCategoryId, itemDefKey, wikiName])
+            [UidGen.INSTANCE_12.getUid(), name, path, environmentId, dataCategoryId, itemDefKey, wikiName])
 
-
+        println "Created DATA_CATEGORY (${sub2Keys[0][0]}) with parent DATA_CATEGORY_ID: ${dataCategoryId} and ITEM_DEFINITION_ID: ${itemDefKey}"
+        
         // Map of DC IDs to Item Def IDs
-        map3[sub2Keys[0][0]] = itemDefKeys[0][0]
+
+        map3[(sub2Keys[0][0])] = itemDefKeys[0][0]
 
 
         //4) For each sub2 ItemDef created in (3)
         //   create 15 ItemValueDefs that match the drill downs set in the Item Def
 
         drillDownList.each { drillDown ->
-            uid = UidGen.INSTANCE_12.getUid()
             name = drillDown
             path = drillDown
             itemDefinitionId = itemDefKeys[0][0]
@@ -134,9 +133,9 @@ sub1Keys.each { sub1Key ->
             valueDefinitionId = rand.nextInt(100)
             valueDefKeys = sql.executeInsert("INSERT INTO ITEM_VALUE_DEFINITION (UID, NAME, PATH, FROM_DATA, CREATED, ENVIRONMENT_ID, ITEM_DEFINITION_ID, VALUE_DEFINITION_ID)" +
                 "VALUES (?, ?, ?, ?, NOW(), ?, ?, ?)",
-                [uid, name, path, 1, environmentId, itemDefinitionId, valueDefinitionId])
+                [UidGen.INSTANCE_12.getUid(), name, path, 1, environmentId, itemDefinitionId, valueDefinitionId])
 
-            println "Created value def with drill: ${drillDown} and ID: ${valueDefKeys[0][0]}"
+            println "Created ITEM_VALUE_DEFINITION (${valueDefKeys[0][0]}) with NAME: ${drillDown}"
         }
 
     }
@@ -147,20 +146,18 @@ sub1Keys.each { sub1Key ->
 itemKeys = []
 map3.each { catId, itemDefId ->
     itemCount.times {
-        uid = UidGen.INSTANCE_12.getUid()
-        itemDefinitionId = itemDefId
-        dataCategory = dataCategoryId
-        itemKeys << sql.executeInsert("INSERT INTO ITEM (UID, CREATED, ENVIRONMENT_ID, ITEM_DEFINITION_ID, DATA_CATEGORY_ID)" +
-            "VALUES (?, NOW(), ?, ?, ?)",
-            [uid, environmentId, itemDefinitionId, dataCategoryId])
+        itemKeys << sql.executeInsert(
+            "INSERT INTO ITEM (UID, CREATED, ENVIRONMENT_ID, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, TYPE, NAME) VALUES (?, NOW(), ?, ?, ?, ?, ?)",
+            [UidGen.INSTANCE_12.getUid(), environmentId, itemDefId, catId, 'DI', 'LCA data item'])
 
-        println "Created item with itemDefId: ${itemDefinitionId} and dataCatId: ${dataCategoryId}"
+        println "Created ITEM (${itemKeys[0][0]}) with ITEM_DEFINITION_ID: ${itemDefId} and DATA_CATEGORY_ID: ${catId}"
     }
 }
 
 // 6) For each Item created in (5)
 //    For each ItemValueDef for that Item
 //      create an ItemValue
+itemValueKeys = []
 itemKeys.each { itemKey ->
     // Get a list of Item Value Definitions for this item's item definition
     // select ITEM_VALUE_DEFINITION.ID from ITEM_VALUE_DEFINITION
@@ -168,22 +165,19 @@ itemKeys.each { itemKey ->
     // join ITEM on (ITEM.ITEM_DEFINITION_ID = ITEM_DEFINITION.ID)
     // where ITEM.ID = itemKey[0][0];
 
-    sql.eachRow("select ITEM_VALUE_DEFINITION.ID from ITEM_VALUE_DEFINITION" +
-        " join ITEM_DEFINITION on (ITEM_VALUE_DEFINITION.ITEM_DEFINITION_ID = ITEM_DEFINITION.ID)" +
-        " join ITEM on (ITEM.ITEM_DEFINITION_ID = ITEM_DEFINITION.ID)" +
-        " where ITEM.ID = ${itemKey[0][0]}") { row ->
-        uid = UidGen.INSTANCE_12.getUid()
+    sql.eachRow("SELECT ITEM_VALUE_DEFINITION.ID FROM ITEM_VALUE_DEFINITION" +
+        " JOIN ITEM_DEFINITION ON (ITEM_VALUE_DEFINITION.ITEM_DEFINITION_ID = ITEM_DEFINITION.ID)" +
+        " JOIN ITEM ON (ITEM.ITEM_DEFINITION_ID = ITEM_DEFINITION.ID)" +
+        " WHERE ITEM.ID = ${itemKey[0][0]}") { row ->
         itemValueDefinitionId = row.ID
         itemId = itemKey[0][0]
         value = String.randomString(5)
-        itemKeys << sql.executeInsert("INSERT INTO ITEM_VALUE (UID, CREATED, ENVIRONMENT_ID, ITEM_VALUE_DEFINITION_ID, ITEM_ID, VALUE)" +
+        itemValueKeys = sql.executeInsert("INSERT INTO ITEM_VALUE (UID, CREATED, ITEM_VALUE_DEFINITION_ID, ITEM_ID, VALUE, START_DATE)" +
             "VALUES (?, NOW(), ?, ?, ?, ?)",
-            [uid, environmentId, itemValueDefinitionId, itemId, value])
+            [UidGen.INSTANCE_12.getUid(), itemValueDefinitionId, itemId, value, '1970-01-01 00:00:00'])
 
-        println "Created item value for item ID: ${itemId} and itemValueDef ID: ${itemValueDefinitionId}"
+        println "Created ITEM_VALUE (${itemValueKeys[0][0]}) with ITEM_ID: ${itemId} and ITEM_VALUE_DEFINITION_ID: ${itemValueDefinitionId}"
     }
-
-
 }
 
 
