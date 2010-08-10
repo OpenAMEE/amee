@@ -8,12 +8,13 @@ import groovy.sql.Sql
 // * itemCount = 500
 
 // testing
-sub1Count = 5
-sub2Count = 5
+sub1Count = 1
+sub2Count = 1
 valueDefCount = 15
-itemCount = 500
+itemCount = 50
 itemValueBatch = 300
-itemValueSuperBatch = itemValueBatch * 10
+itemValueBatchGroup = itemValueBatch * 10
+itemValuesExpected = sub1Count * sub2Count * valueDefCount * itemCount;
 
 // The environmentId is always 2
 environmentId = 2
@@ -44,6 +45,7 @@ def password = "amee"
 if (opt.p) password = opt.p
 
 sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
+sql.connection.autoCommit = false
 
 // Add a random character generator to the String class.
 String.metaClass.'static'.randomString = { length ->
@@ -79,6 +81,12 @@ dataCategoryToItemDefinitionMap = getDataCategoryToItemDefinitionMap(sub1Keys);
 // 5) For each sub2 ItemDef created in (3) create itemCount Items
 itemKeys = getItemIDs(dataCategoryToItemDefinitionMap);
 
+// Commit all so far.
+sql.commit()
+
+
+println "Creating ${itemValuesExpected} Item Values."
+
 // SQL to create ItemValues.
 ivSql = "INSERT INTO ITEM_VALUE (UID, STATUS, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, ITEM_ID, VALUE, START_DATE) " +
   "VALUES (?, 1, NOW(), NOW(), ?, ?, ?, ?)";
@@ -86,7 +94,7 @@ stmt = sql.connection.prepareStatement(ivSql)
 
 // Counter for batching.
 batchCount = 0
-superBatchCount = 0
+batchGroupCount = 0
 
 // 6) For each Item created in (5)
 //    For each ItemValueDef for that Item
@@ -107,28 +115,31 @@ itemKeys.each { itemKey ->
     itemId = itemKey[0][0]
     value = String.randomString(5)
 
-    // Execute INSERTs in a batch.
+    // Execute INSERTs in a batches.
     valueDefCount.times {
+
+      // Create a single batch entry.
       stmt.setObject(1, UidGen.INSTANCE_12.getUid())
       stmt.setObject(2, itemValueDefinitionId)
       stmt.setObject(3, itemId)
       stmt.setObject(4, value)
       stmt.setObject(5, "1970-01-01 00:00:00")
       stmt.addBatch()
-    }
 
-    // Handle batch.
-    batchCount++
-    superBatchCount++
-    if (batchCount >= itemValueBatch) {
-      stmt.executeUpdate();
-      println "Created ${batchCount} ITEM_VALUEs in a batch.";
-      batchCount = 0;
-      if (superBatchCount > itemValueSuperBatch) {
-        stmt.close()
-        stmt = sql.connection.prepareStatement(ivSql)
-        println "Starting new super batch after ${superBatchCount} ITEM_VALUEs.";
-        superBatchCount = 0;
+      // Handle batch.
+      batchCount++
+      batchGroupCount++
+      if (batchCount >= itemValueBatch) {
+        stmt.executeUpdate();
+        println "Created ${batchCount} ITEM_VALUEs in a batch.";
+        batchCount = 0;
+        if (batchGroupCount > itemValueBatchGroup) {
+          stmt.close()
+          sql.commit()
+          stmt = sql.connection.prepareStatement(ivSql)
+          println "Starting new batch group after ${batchGroupCount} ITEM_VALUEs.";
+          batchGroupCount = 0;
+        }
       }
     }
   }
@@ -140,6 +151,7 @@ if (batchCount > 0) {
   println "Created ${batchCount} ITEM_VALUEs in a batch.";
 }
 stmt.close()
+sql.commit()
 
 println "Created all ITEM_VALUEs.";
 
