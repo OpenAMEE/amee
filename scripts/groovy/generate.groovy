@@ -9,12 +9,12 @@ import groovy.sql.Sql
 
 // testing
 sub1Count = 1
-sub2Count = 1
+sub2Count = 160
 valueDefCount = 15
-itemCount = 50
+itemCount = 500
 itemValueBatch = 300
 itemValueBatchGroup = itemValueBatch * 10
-itemValuesExpected = sub1Count * sub2Count * valueDefCount * itemCount;
+itemValuesExpected = sub1Count * sub2Count * itemCount * valueDefCount;
 
 // The environmentId is always 2
 environmentId = 2
@@ -104,54 +104,52 @@ itemKeys.each { itemKey ->
   // TODO: Use value types (numbers, strings) that match the IVD & VD.
   // Get a list of Item Value Definitions for this item's item definition
 
-  sql.eachRow("SELECT ITEM_VALUE_DEFINITION.ID FROM ITEM_VALUE_DEFINITION" +
-      " JOIN ITEM_DEFINITION ON (ITEM_VALUE_DEFINITION.ITEM_DEFINITION_ID = ITEM_DEFINITION.ID)" +
-      " JOIN ITEM ON (ITEM.ITEM_DEFINITION_ID = ITEM_DEFINITION.ID)" +
-      " WHERE ITEM.ID = ${itemKey[0][0]}") { row ->
-
+  sql.eachRow("SELECT DISTINCT ITEM_VALUE_DEFINITION.ID FROM ITEM_VALUE_DEFINITION " +
+      "JOIN ITEM_DEFINITION ON (ITEM_VALUE_DEFINITION.ITEM_DEFINITION_ID = ITEM_DEFINITION.ID) " +
+      "JOIN ITEM ON (ITEM.ITEM_DEFINITION_ID = ITEM_DEFINITION.ID) " +
+      "WHERE ITEM.ID = ${itemKey[0][0]}") { row ->
 
     // Vars for this ItemValue.
     itemValueDefinitionId = row.ID
     itemId = itemKey[0][0]
     value = String.randomString(5)
 
-    // Execute INSERTs in a batches.
-    valueDefCount.times {
+    // Create a single batch entry.
+    stmt.setObject(1, UidGen.INSTANCE_12.getUid())
+    stmt.setObject(2, itemValueDefinitionId)
+    stmt.setObject(3, itemId)
+    stmt.setObject(4, value)
+    stmt.setObject(5, "1970-01-01 00:00:00")
+    stmt.addBatch()
 
-      // Create a single batch entry.
-      stmt.setObject(1, UidGen.INSTANCE_12.getUid())
-      stmt.setObject(2, itemValueDefinitionId)
-      stmt.setObject(3, itemId)
-      stmt.setObject(4, value)
-      stmt.setObject(5, "1970-01-01 00:00:00")
-      stmt.addBatch()
-
-      // Handle batch.
-      batchCount++
-      batchGroupCount++
-      if (batchCount >= itemValueBatch) {
-        stmt.executeUpdate();
-        println "Created ${batchCount} ITEM_VALUEs in a batch.";
-        batchCount = 0;
-        if (batchGroupCount > itemValueBatchGroup) {
-          stmt.close()
-          sql.commit()
-          stmt = sql.connection.prepareStatement(ivSql)
-          println "Starting new batch group after ${batchGroupCount} ITEM_VALUEs.";
-          batchGroupCount = 0;
-        }
+    // Handle batch.
+    batchCount++
+    batchGroupCount++
+    if (batchCount >= itemValueBatch) {
+      // Execute this batch.
+      stmt.executeBatch();
+      println "Created ${batchCount} ITEM_VALUEs in a batch.";
+      batchCount = 0;
+      // End of batch group? If so we can commit.
+      if (batchGroupCount > itemValueBatchGroup) {
+        sql.commit()
+        println "Starting new batch group after ${batchGroupCount} ITEM_VALUEs.";
+        batchGroupCount = 0;
       }
+      // Start new statement for next batch.
+      stmt.close()
+      stmt = sql.connection.prepareStatement(ivSql)
     }
   }
 }
 
 // Handle remaining Item Values in current batch.
 if (batchCount > 0) {
-  stmt.executeUpdate();
+  stmt.executeBatch()
+  sql.commit()
   println "Created ${batchCount} ITEM_VALUEs in a batch.";
 }
 stmt.close()
-sql.commit()
 
 println "Created all ITEM_VALUEs.";
 
