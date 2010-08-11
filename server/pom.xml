@@ -57,6 +57,7 @@
         <log4jdbc.version>4-1.2alpha2</log4jdbc.version>
         <lucene-core.version>3.0.1</lucene-core.version>
         <mysql-connector-java.version>5.1.10</mysql-connector-java.version>
+        <opencsv.version>2.1</opencsv.version>
         <org-json.version>2.0</org-json.version>
         <quartz.version>1.6.1</quartz.version>
         <restlet.version>1.1.10</restlet.version>
@@ -247,6 +248,11 @@
                     <artifactId>servlet-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>${opencsv.version}</version>
         </dependency>
 
         <!-- Explicit dependency & version here to avoid transitive dependency mess. -->
