@@ -307,6 +307,7 @@ private def getOrCreateRootLCACategory(rootCategoryId) {
       "INSERT INTO DATA_CATEGORY (ID, UID, STATUS, NAME, PATH, CREATED, MODIFIED, ENVIRONMENT_ID, DATA_CATEGORY_ID, ITEM_DEFINITION_ID, WIKI_NAME) " +
               "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [nextDataCategoryId, UidGen.INSTANCE_12.getUid(), 1, 'lca', 'lca', getNow(), getNow(), environmentId, rootCategoryId, null, 'lca'])
+    nextDataCategoryId++;
     return nextDataCategoryId
   }
 }
