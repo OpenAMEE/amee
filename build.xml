@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="amee" default="clean-deploy" basedir=".">
 
+    <!-- Properties may be overridden in build.properties -->
     <property environment="env"/>
-    <property name="amee.appName" value="amee-local"/>
-    <property name="amee.home" value="/var/www/apps/${amee.appName}" description="The root of the AMEE deployment layout."/>
+    <property file="build.properties"/>
+    <property name="amee.appName" value="amee"/>
+    <property name="amee.instanceName" value="local"/>
+    <property name="amee.home" value="/var/www/apps/${amee.appName}-${amee.instanceName}" description="The root of the AMEE deployment layout."/>
     <property name="amee.current" value="${amee.home}/current" description="The root of the current AMEE package"/>
     <property name="amee.current.lib" value="${amee.current}/lib" description="The location of the AMEE libs and dependencies."/>
     <property name="amee.shared" value="${amee.home}/shared" description="The location of the AMEE shared config."/>
+
+    <!-- Set your development directory in build.properties -->
     <property name="amee.devel.home" value="/Development/AMEE/amee.platform/project/amee" />
 
     <target name="rebuild" depends="clean, package, copy-amee-libs"
@@ -86,12 +91,14 @@
         <mkdir dir="${amee.shared}/log" />
         <mkdir dir="${amee.shared}/pids" />
         <mkdir dir="${amee.shared}/system" />
-        <!--symlink link="${amee.shared}/crypto" resource="${amee.devel.home}/server/engine/src/test/resources/crypto" overwrite="true" /-->
+        <symlink link="${amee.shared}/crypto" resource="${amee.devel.home}/server/amee-engine/src/test/resources/crypto" overwrite="true" />        
 
         <!-- current -->
         <mkdir dir="${amee.current.lib}" />
         <symlink link="${amee.current}/bin" resource="${amee.devel.home}/server/amee-engine/bin" overwrite="true" />
         <symlink link="${amee.current}/conf" resource="${amee.devel.home}/server/amee-engine/conf" overwrite="true" />
+        <symlink link="${amee.current}/htdocs" resource="${amee.devel.home}/htdocs" overwrite="true" />
+        <symlink link="${amee.current}/skins" resource="${amee.devel.home}/server/amee-skins" overwrite="true" />
         <symlink link="${amee.current}/log" resource="${amee.home}/shared/log" overwrite="true" />
         <symlink link="${amee.current.lib}/wrapper" resource="${amee.devel.home}/server/amee-engine/lib/wrapper" overwrite="true" />
 

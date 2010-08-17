@@ -90,7 +90,12 @@ namespace :install do
     puts "Creating new deployment webapps directory #{package_dir}/webapps"
     FileUtils.mkdir_p("#{package_dir}/webapps")
     FileUtils.cp_r "#{src_dir}/webapps/.","#{package_dir}/webapps"
-    
+
+    # Create scripts
+    puts "Creating new deployment scripts directory #{package_dir}/scripts"
+    FileUtils.mkdir_p("#{package_dir}/scripts")
+    FileUtils.cp_r "#{src_dir}/scripts/.","#{package_dir}/scripts"
+
   end
 
   desc "Send the deployment package to Git repository"
