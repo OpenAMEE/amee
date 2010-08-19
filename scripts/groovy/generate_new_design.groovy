@@ -17,6 +17,9 @@ itemCount = 500;
 itemValueBatch = 1000;
 itemValuesExpected = levelOneCategoryCount * levelTwoCategoryCount * itemCount * valueDefCount;
 
+// For random numbers and IDs.
+random = new Random();
+
 // CSV support.
 writeToCSV = true;
 batchObjects = new ArrayList<String>();
@@ -60,9 +63,9 @@ sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password,
 sql.connection.autoCommit = false
 
 // Item Value batch vars.
-itemValueSql = "INSERT INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, ITEM_ID, VALUE, START_DATE) " +
-  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-itemValueStatement = sql.connection.prepareStatement(itemValueSql)
+dataItemNumberValueSql = "INSERT INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, DATA_ITEM_ID, UNIT, PER_UNIT) " +
+  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+dataItemNumberValueStatement = sql.connection.prepareStatement(dataItemNumberValueSql)
 batchCount = 0
 
 // Get initial IDs.
@@ -73,15 +76,13 @@ nextDataItemId = getMaxId("DATA_ITEM") + 1;
 nextDataItemNumberValueId = getMaxId("DATA_ITEM_NUMBER_VALUE") + 1;
 
 // Find the Root & LCA data categories
-def rootCategoryId = getOrCreateRootCategoryId();
+def rootCategoryId = getOrCreateRootCategory();
 println "Root DATA_CATEGORY '${rootCategoryId}'."
 def rootLCACategoryId = getOrCreateRootLCACategory(rootCategoryId);
 println "Top level LCA DATA_CATEGORY '${rootLCACategoryId}'."
 
 // Commit all so far.
 commit();
-
-return;
 
 // Create sub1Count sub1 DCs with parent ID created in (1)
 def levelOneCategoryIds = createLevelOneCategories(rootLCACategoryId);
@@ -115,9 +116,9 @@ private List createLevelOneCategories(rootLCACategoryId) {
     def dataCategoryId = rootLCACategoryId
     def wikiName = name
     executeInsert(
-      "INSERT INTO DATA_CATEGORY (ID, UID, STATUS, NAME, PATH, CREATED, MODIFIED, ENVIRONMENT_ID, DATA_CATEGORY_ID, ITEM_DEFINITION_ID, WIKI_NAME) " +
-              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [nextDataCategoryId, UidGen.INSTANCE_12.getUid(), 1, name, path, getNow(), getNow(), environmentId, dataCategoryId, null, wikiName])
+      "INSERT INTO DATA_CATEGORY (ID, UID, STATUS, NAME, PATH, CREATED, MODIFIED, DATA_CATEGORY_ID, ITEM_DEFINITION_ID, WIKI_NAME) " +
+              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [nextDataCategoryId, UidGen.INSTANCE_12.getUid(), 1, name, path, getNow(), getNow(), dataCategoryId, null, wikiName])
     levelOneCategoryIds << nextDataCategoryId
     nextDataCategoryId++
   }
@@ -165,7 +166,7 @@ private def createLevelTwoDataCategories(levelOneCategoryIds) {
 
       // Handle remaining Item Values in current batch.
       if (batchCount > 0) {
-        itemValueStatement.executeBatch()
+        dataItemNumberValueStatement.executeBatch()
         println "Created ${batchCount} ITEM_VALUEs in a batch.";
         batchCount = 0
       }
@@ -186,12 +187,13 @@ private def createItemValues(itemValueDefinitionIds, itemId) {
     setBatchObject(1, nextDataItemNumberValueId)
     setBatchObject(2, UidGen.INSTANCE_12.getUid())
     setBatchObject(3, 1);
-    setBatchObject(4, getNow());
+    setBatchObject(4, random.nextInt(100000000));
     setBatchObject(5, getNow());
-    setBatchObject(6, itemValueDefinitionId)
-    setBatchObject(7, itemId)
-    setBatchObject(8, String.randomString(5))
-    setBatchObject(9, "1970-01-01 00:00:00")
+    setBatchObject(6, getNow());
+    setBatchObject(7, itemValueDefinitionId)
+    setBatchObject(8, itemId)
+    setBatchObject(9, 'kg')
+    setBatchObject(10, 'month')
     addBatch()
 
     // Next ID.
@@ -213,9 +215,9 @@ private def createLevelTwoDataCategory(levelOneCategoryId, itemDefinitionId) {
   def name = 'LCA_' + String.randomString(12)
   def path = name
   def wikiName = name
-  executeInsert("INSERT INTO DATA_CATEGORY (ID, UID, STATUS, NAME, PATH, CREATED, MODIFIED, ENVIRONMENT_ID, DATA_CATEGORY_ID, ITEM_DEFINITION_ID, WIKI_NAME) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-          [nextDataCategoryId, UidGen.INSTANCE_12.getUid(), 1, name, path, getNow(), getNow(), environmentId, levelOneCategoryId, itemDefinitionId, wikiName])
+  executeInsert("INSERT INTO DATA_CATEGORY (ID, UID, STATUS, NAME, PATH, CREATED, MODIFIED, DATA_CATEGORY_ID, ITEM_DEFINITION_ID, WIKI_NAME) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          [nextDataCategoryId, UidGen.INSTANCE_12.getUid(), 1, name, path, getNow(), getNow(), levelOneCategoryId, itemDefinitionId, wikiName])
   def levelTwoCategoryId = nextDataCategoryId
   nextDataCategoryId++;
   println "Created DATA_CATEGORY '${levelTwoCategoryId}' with parent DATA_CATEGORY_ID '${levelOneCategoryId}' and ITEM_DEFINITION_ID '${itemDefinitionId}'."
@@ -229,11 +231,10 @@ private def createItemValueDefinitions(itemDefinitionId, List drillDownList) {
   drillDownList.each { drillDown ->
     def name = drillDown
     def path = drillDown
-    def rand = new Random()
-    def valueDefinitionId = rand.nextInt(100)
-    executeInsert("INSERT INTO ITEM_VALUE_DEFINITION (ID, UID, STATUS, NAME, PATH, FROM_PROFILE, FROM_DATA, CREATED, MODIFIED, ENVIRONMENT_ID, ITEM_DEFINITION_ID, VALUE_DEFINITION_ID, ALLOWED_ROLES) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '')",
-            [nextItemValueDefinitionId, UidGen.INSTANCE_12.getUid(), 1, name, path, 0, 1, getNow(), getNow(), environmentId, itemDefinitionId, valueDefinitionId])
+    def valueDefinitionId = random.nextInt(3) + 1;
+    executeInsert("INSERT INTO ITEM_VALUE_DEFINITION (ID, UID, STATUS, NAME, PATH, FROM_PROFILE, FROM_DATA, CREATED, MODIFIED, ITEM_DEFINITION_ID, VALUE_DEFINITION_ID, ALLOWED_ROLES) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '')",
+            [nextItemValueDefinitionId, UidGen.INSTANCE_12.getUid(), 1, name, path, 0, 1, getNow(), getNow(), itemDefinitionId, valueDefinitionId])
     def itemValueDefinitionId = nextItemValueDefinitionId
     nextItemValueDefinitionId++
     println "Created ITEM_VALUE_DEFINITION '${itemValueDefinitionId}' with NAME '${drillDown}'."
@@ -245,9 +246,9 @@ private def createItemValueDefinitions(itemDefinitionId, List drillDownList) {
 // Create Item Definition.
 private def createItemDefinition(String name, List drillDownList) {
   // Note: Using pipe delimiter instead of comma to make CSV SQL loading easier.
-  executeInsert("INSERT INTO ITEM_DEFINITION (ID, UID, STATUS, NAME, DRILL_DOWN, CREATED, MODIFIED, ENVIRONMENT_ID) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-          [nextItemDefinitionId, UidGen.INSTANCE_12.getUid(), 1, name, drillDownList.join('|'), getNow(), getNow(), environmentId])
+  executeInsert("INSERT INTO ITEM_DEFINITION (ID, UID, STATUS, NAME, DRILL_DOWN, CREATED, MODIFIED) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?)",
+          [nextItemDefinitionId, UidGen.INSTANCE_12.getUid(), 1, name, drillDownList.join('|'), getNow(), getNow()])
   def itemDefinitionId = nextItemDefinitionId
   nextItemDefinitionId++
   println "Created ITEM_DEFINITION '${itemDefinitionId}'."
@@ -259,9 +260,9 @@ private List createDataItems(dataCategoryId, itemDefinitionId) {
   itemIds = []
   itemCount.times {
     executeInsert(
-            "INSERT INTO ITEM (ID, UID, STATUS, CREATED, MODIFIED, ENVIRONMENT_ID, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, TYPE, NAME, PATH) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '')",
-            [nextDataItemId, UidGen.INSTANCE_12.getUid(), 1, getNow(), getNow(), environmentId, itemDefinitionId, dataCategoryId, 'DI', 'LCA data item'])
+            "INSERT INTO DATA_ITEM (ID, UID, STATUS, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, NAME, PATH) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, '')",
+            [nextDataItemId, UidGen.INSTANCE_12.getUid(), 1, getNow(), getNow(), itemDefinitionId, dataCategoryId, 'LCA data item'])
     itemIds << nextDataItemId
     nextDataItemId++
   }
@@ -293,15 +294,15 @@ private def addRandomStringMethodToString() {
 }
 
 // Get or create the single root data category.
-private def getOrCreateRootCategory(rootCategoryId) {
-  result = sql.firstRow("SELECT ID FROM DATA_CATEGORY WHERE NAME = 'Root'").ID;
+private def getOrCreateRootCategory() {
+  result = sql.firstRow("SELECT ID FROM DATA_CATEGORY WHERE NAME = 'Root'");
   if (result != null) {
     return result.ID;
   } else {
     executeInsert(
       "INSERT INTO DATA_CATEGORY (ID, UID, STATUS, NAME, PATH, CREATED, MODIFIED, DATA_CATEGORY_ID, ITEM_DEFINITION_ID, WIKI_NAME) " +
-              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [nextDataCategoryId, UidGen.INSTANCE_12.getUid(), 1, 'Root', '', getNow(), getNow(), rootCategoryId, null, 'Root'])
+              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [nextDataCategoryId, UidGen.INSTANCE_12.getUid(), 1, 'Root', '', getNow(), getNow(), null, null, 'Root'])
     nextDataCategoryId++;
     return nextDataCategoryId
   }
@@ -309,14 +310,14 @@ private def getOrCreateRootCategory(rootCategoryId) {
 
 // Get or create the single top data category for LCA data called 'lca'.
 private def getOrCreateRootLCACategory(rootCategoryId) {
-  result = sql.firstRow("SELECT ID FROM DATA_CATEGORY WHERE PATH = 'lca' AND ENVIRONMENT_ID = 2 AND DATA_CATEGORY_ID = " + rootCategoryId);
+  result = sql.firstRow("SELECT ID FROM DATA_CATEGORY WHERE PATH = 'lca' AND DATA_CATEGORY_ID = " + rootCategoryId);
   if (result != null) {
     return result.ID;
   } else {
     executeInsert(
-      "INSERT INTO DATA_CATEGORY (ID, UID, STATUS, NAME, PATH, CREATED, MODIFIED, ENVIRONMENT_ID, DATA_CATEGORY_ID, ITEM_DEFINITION_ID, WIKI_NAME) " +
-              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [nextDataCategoryId, UidGen.INSTANCE_12.getUid(), 1, 'lca', 'lca', getNow(), getNow(), environmentId, rootCategoryId, null, 'lca'])
+      "INSERT INTO DATA_CATEGORY (ID, UID, STATUS, NAME, PATH, CREATED, MODIFIED, DATA_CATEGORY_ID, ITEM_DEFINITION_ID, WIKI_NAME) " +
+              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [nextDataCategoryId, UidGen.INSTANCE_12.getUid(), 1, 'lca', 'lca', getNow(), getNow(), rootCategoryId, null, 'lca'])
     nextDataCategoryId++;
     return nextDataCategoryId
   }
@@ -324,7 +325,11 @@ private def getOrCreateRootLCACategory(rootCategoryId) {
 
 // Get max ID from column.
 private def getMaxId(column) {
-  return sql.firstRow("SELECT max(ID) ID FROM " + column).ID
+  def id = sql.firstRow("SELECT max(ID) ID FROM " + column).ID
+  if (id == null) {
+    id = 0;
+  }
+  return id;
 }
 
 // JDBC or CSV INSERT.
@@ -354,13 +359,13 @@ private def commit() {
 
 private def executeBatch() {
   if (!writeToCSV) {
-    itemValueStatement.executeBatch()
+    dataItemNumberValueStatement.executeBatch()
   }
 }
 
 private def addBatch() {
   if (!writeToCSV) {
-    itemValueStatement.addBatch()
+    dataItemNumberValueStatement.addBatch()
   } else {
     dataItemNumberValueWriter.writeNext(toStringArray(batchObjects));
     batchObjects = new ArrayList<String>();
@@ -369,7 +374,7 @@ private def addBatch() {
 
 private def setBatchObject(index, object) {
   if (!writeToCSV) {
-    itemValueStatement.setObject(index, object)
+    dataItemNumberValueStatement.setObject(index, object)
   } else {
     batchObjects.add(object.toString());
   }
