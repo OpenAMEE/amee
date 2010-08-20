@@ -2,7 +2,7 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 	
 	<changeSet id="1" author="david">
-        <comment>Change STATUS to TINYINT.</comment>
+        <comment>Change ITEM_DEFINITION.STATUS to TINYINT.</comment>
 		<modifyColumn tableName="ITEM_DEFINITION">
 		    <column name="STATUS" type="TINYINT(11)"/>
 		</modifyColumn>
