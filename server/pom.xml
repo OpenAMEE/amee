@@ -164,11 +164,31 @@
                         <target>1.6</target>
                     </configuration>
                 </plugin>
+
+                <!--plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-plugin</artifactId>
+                    <configuration>
+                        <driver>com.mysql.jdbc.Driver</driver>
+                        <url>jdbc:mysql://localhost/amee</url>
+                        <username>amee</username>
+                        <password>amee</password>
+                        <verbose>true</verbose>
+                        <dropFirst>false</dropFirst>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>${mysql-connector-java.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin-->
             </plugins>
         </pluginManagement>
 
         <plugins>
-
+                    
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.5</version>
@@ -210,13 +230,7 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-plugin</artifactId>
-                <configuration>
-                    <propertyFile>amee-engine/src/main/resources/liquibase.properties</propertyFile>
-                </configuration>
-            </plugin>
+            
             
         </plugins>
 
@@ -300,12 +314,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Required for liquibase -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql-connector-java.version}</version>
-        </dependency>
+        
 
     </dependencies>
 

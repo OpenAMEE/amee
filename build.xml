@@ -13,6 +13,9 @@
 
     <!-- Set your development directory in build.properties -->
     <property name="amee.devel.home" value="/Development/AMEE/amee.platform/project/amee" />
+    <property name="db.name" value="amee"/>
+    <property name="db.username" value="amee"/>
+    <property name="db.password" value="amee"/>
 
     <target name="rebuild" depends="clean, package, copy-amee-libs"
             description="Perform a clean build from src."/>
@@ -103,6 +106,24 @@
         <symlink link="${amee.current.lib}/wrapper" resource="${amee.devel.home}/server/amee-engine/lib/wrapper" overwrite="true" />
 
         <antcall target="copy-wrapper" />
+    </target>
+
+    <target name="update-db" description="Update the database schema to the latest version">
+        <exec executable="mvn" dir="server/amee-engine" failonerror="true">
+            <arg value="liquibase:update"/>
+            <arg value="-Dliquibase.url=jdbc:mysql://localhost/${db.name}"/>
+            <arg value="-Dliquibase.username=${db.username}"/>
+            <arg value="-Dliquibase.password=${db.password}"/>
+        </exec>
+    </target>
+
+    <target name="update-sql" description="Generate the SQL required to update the database schema to the latest version">
+        <exec executable="mvn" dir="server/amee-engine" failonerror="true">
+            <arg value="liquibase:updateSQL"/>
+            <arg value="-Dliquibase.url=jdbc:mysql://localhost/${db.name}"/>
+            <arg value="-Dliquibase.username=${db.username}"/>
+            <arg value="-Dliquibase.password=${db.password}"/>
+        </exec>
     </target>
     
 </project>

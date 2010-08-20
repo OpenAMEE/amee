@@ -1,4 +1,4 @@
-changeLogFile=amee-engine/src/main/resources/db/changelog/db.changelog-master.xml
+changeLogFile=/src/main/resources/db/changelog/db.changelog-master.xml
 driver=com.mysql.jdbc.Driver
 url=jdbc:mysql://localhost/amee
 username=amee

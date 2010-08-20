@@ -13,6 +13,28 @@
 
     <name>amee-engine</name>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-plugin</artifactId>
+                <configuration>
+                    <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>                    
+                    <driver>com.mysql.jdbc.Driver</driver>
+                    <verbose>true</verbose>
+                    <dropFirst>false</dropFirst>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql-connector-java.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
 
         <!-- Internal Dependencies. -->
