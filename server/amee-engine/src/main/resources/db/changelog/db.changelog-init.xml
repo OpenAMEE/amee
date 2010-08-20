@@ -1,0 +1,944 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+    <changeSet author="david.keen (generated)" id="1282225878470-1">
+        <createTable tableName="ALGORITHM">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="CONTENT" type="TEXT"/>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEM_DEFINITION_ID" type="BIGINT"/>
+            <column name="TYPE" type="VARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ALGORITHM_CONTEXT_ID" type="BIGINT"/>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-2">
+        <createTable tableName="API_VERSION">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VERSION" type="VARCHAR(3)"/>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-3">
+        <createTable tableName="DATA_CATEGORY">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="PATH" type="VARCHAR(255)"/>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATA_CATEGORY_ID" type="BIGINT"/>
+            <column name="ITEM_DEFINITION_ID" type="BIGINT"/>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ALIASED_TO_ID" type="BIGINT"/>
+            <column defaultValue="" name="WIKI_NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-4">
+        <createTable tableName="ENTITY_TAG">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATED" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MODIFIED" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="INT"/>
+            <column name="ENTITY_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTITY_TYPE" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTITY_UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAG_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-5">
+        <createTable tableName="ENVIRONMENT">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PATH" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEMS_PER_PAGE" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ITEMS_PER_FEED" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OWNER" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-6">
+        <createTable tableName="GROUP_PRINCIPAL">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GROUP_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="PRINCIPAL_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="PRINCIPAL_UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="PRINCIPAL_TYPE" type="VARCHAR(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-7">
+        <createTable tableName="GROUPS">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-8">
+        <createTable tableName="ITEM">
+            <column name="TYPE" type="VARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="PATH" type="VARCHAR(255)"/>
+            <column name="START_DATE" type="DATETIME"/>
+            <column name="AMOUNT" type="DECIMAL(21,6)"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEM_DEFINITION_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATA_CATEGORY_ID" type="BIGINT"/>
+            <column name="PROFILE_ID" type="BIGINT"/>
+            <column name="DATA_ITEM_ID" type="BIGINT"/>
+            <column name="END_DATE" type="DATETIME"/>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-9">
+        <createTable tableName="ITEM_DEFINITION">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="DRILL_DOWN" type="VARCHAR(255)"/>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="INT"/>
+            <column defaultValueBoolean="false" name="SKIP_RECALCULATION" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-10">
+        <createTable tableName="ITEM_VALUE">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VALUE" type="MEDIUMTEXT"/>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ITEM_VALUE_DEFINITION_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEM_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UNIT" type="VARCHAR(255)"/>
+            <column name="PER_UNIT" type="VARCHAR(255)"/>
+            <column name="START_DATE" type="DATETIME"/>
+            <column name="END_DATE" type="DATETIME"/>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-11">
+        <createTable tableName="ITEM_VALUE_DEFINITION">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="PATH" type="VARCHAR(255)"/>
+            <column name="VALUE" type="VARCHAR(255)"/>
+            <column name="CHOICES" type="VARCHAR(255)"/>
+            <column name="FROM_PROFILE" type="BIT"/>
+            <column name="FROM_DATA" type="BIT"/>
+            <column name="ALLOWED_ROLES" type="VARCHAR(255)"/>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEM_DEFINITION_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VALUE_DEFINITION_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UNIT" type="VARCHAR(255)"/>
+            <column name="PER_UNIT" type="VARCHAR(255)"/>
+            <column name="ALIASED_TO_ID" type="BIGINT"/>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="FORCE_TIMESERIES" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-12">
+        <createTable tableName="ITEM_VALUE_DEFINITION_API_VERSION">
+            <column name="ITEM_VALUE_DEFINITION_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="API_VERSION_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-13">
+        <createTable tableName="LOCALE_NAME">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATED" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MODIFIED" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="INT"/>
+            <column name="ENTITY_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTITY_TYPE" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTITY_UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCALE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-14">
+        <createTable tableName="METADATA">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATED" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MODIFIED" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="INT"/>
+            <column name="ENTITY_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTITY_TYPE" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTITY_UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VALUE" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-15">
+        <createTable tableName="PERMISSION">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="ENTITY_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="ENTITY_UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="ENTITY_TYPE" type="VARCHAR(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="PRINCIPAL_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="PRINCIPAL_UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="PRINCIPAL_TYPE" type="VARCHAR(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="ENTRIES" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-16">
+        <createTable tableName="PERMISSION_BACKUP">
+            <column defaultValueNumeric="0" name="ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OBJECT_CLASS" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OBJECT_UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GROUP_ALLOW_VIEW" type="BIT"/>
+            <column name="GROUP_ALLOW_MODIFY" type="BIT"/>
+            <column name="OTHER_ALLOW_VIEW" type="BIT"/>
+            <column name="OTHER_ALLOW_MODIFY" type="BIT"/>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GROUP_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-17">
+        <createTable tableName="PROFILE">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PATH" type="VARCHAR(255)"/>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="USER_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-18">
+        <createTable tableName="RETURN_VALUE_DEFINITION">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEM_DEFINITION_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VALUE_DEFINITION_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UNIT" type="VARCHAR(255)"/>
+            <column name="PER_UNIT" type="VARCHAR(255)"/>
+            <column name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="DEFAULT_TYPE" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-19">
+        <createTable tableName="TAG">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATED" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MODIFIED" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="INT"/>
+            <column name="TAG" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-20">
+        <createTable tableName="USER">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="INT"/>
+            <column name="USERNAME" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD" type="VARCHAR(40)"/>
+            <column name="NAME" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_TYPE" type="INT"/>
+            <column name="API_VERSION_ID" type="BIGINT"/>
+            <column name="LOCALE" type="VARCHAR(12)"/>
+            <column name="TIME_ZONE" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-21">
+        <createTable tableName="VALUE_DEFINITION">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="VALUE_TYPE" type="INT"/>
+            <column name="CREATED" type="DATETIME"/>
+            <column name="MODIFIED" type="DATETIME"/>
+            <column name="ENVIRONMENT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="STATUS" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-22">
+        <addPrimaryKey columnNames="ITEM_VALUE_DEFINITION_ID, API_VERSION_ID"
+                       tableName="ITEM_VALUE_DEFINITION_API_VERSION"/>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-23">
+        <createIndex indexName="ALGORITHM_CONTEXT_ID_IND" tableName="ALGORITHM" unique="false">
+            <column name="ALGORITHM_CONTEXT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-24">
+        <createIndex indexName="FKB388C44FD0C760BF" tableName="ALGORITHM" unique="false">
+            <column name="ENVIRONMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-25">
+        <createIndex indexName="FKB388C44FF2759956" tableName="ALGORITHM" unique="false">
+            <column name="ITEM_DEFINITION_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-26">
+        <createIndex indexName="NAME_IND" tableName="ALGORITHM" unique="false">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-27">
+        <createIndex indexName="UID" tableName="ALGORITHM" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-28">
+        <createIndex indexName="UID" tableName="API_VERSION" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-29">
+        <createIndex indexName="FK67A6F5F389D21C24" tableName="DATA_CATEGORY" unique="false">
+            <column name="DATA_CATEGORY_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-30">
+        <createIndex indexName="FK67A6F5F3D0C760BF" tableName="DATA_CATEGORY" unique="false">
+            <column name="ENVIRONMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-31">
+        <createIndex indexName="FK67A6F5F3F2759956" tableName="DATA_CATEGORY" unique="false">
+            <column name="ITEM_DEFINITION_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-32">
+        <createIndex indexName="PATH_IND" tableName="DATA_CATEGORY" unique="false">
+            <column name="PATH"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-33">
+        <createIndex indexName="UID" tableName="DATA_CATEGORY" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-34">
+        <createIndex indexName="WIKI_NAME_IND" tableName="DATA_CATEGORY" unique="false">
+            <column name="WIKI_NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-35">
+        <createIndex indexName="FKC498A11EEFD88C51" tableName="ENTITY_TAG" unique="false">
+            <column name="TAG_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-36">
+        <createIndex indexName="UID" tableName="ENTITY_TAG" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-37">
+        <createIndex indexName="UID" tableName="ENVIRONMENT" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-38">
+        <createIndex indexName="FK7DD0CDD4D0C760BF" tableName="GROUPS" unique="false">
+            <column name="ENVIRONMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-39">
+        <createIndex indexName="NAME_IND" tableName="GROUPS" unique="false">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-40">
+        <createIndex indexName="UID" tableName="GROUPS" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-41">
+        <createIndex indexName="ENVIRONMENT_ID_IND" tableName="GROUP_PRINCIPAL" unique="false">
+            <column name="ENVIRONMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-42">
+        <createIndex indexName="GROUP_ID_IND" tableName="GROUP_PRINCIPAL" unique="false">
+            <column name="GROUP_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-43">
+        <createIndex indexName="PRINCIPAL_TYPE_IND" tableName="GROUP_PRINCIPAL" unique="false">
+            <column name="PRINCIPAL_TYPE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-44">
+        <createIndex indexName="PRINCIPAL_UID_IND" tableName="GROUP_PRINCIPAL" unique="false">
+            <column name="PRINCIPAL_UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-45">
+        <createIndex indexName="UID" tableName="GROUP_PRINCIPAL" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-46">
+        <createIndex indexName="END_DATE_IND" tableName="ITEM" unique="false">
+            <column name="END_DATE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-47">
+        <createIndex indexName="FK22731389D21C24" tableName="ITEM" unique="false">
+            <column name="DATA_CATEGORY_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-48">
+        <createIndex indexName="FK22731394570D04" tableName="ITEM" unique="false">
+            <column name="DATA_ITEM_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-49">
+        <createIndex indexName="FK227313CC054486" tableName="ITEM" unique="false">
+            <column name="PROFILE_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-50">
+        <createIndex indexName="FK227313D0C760BF" tableName="ITEM" unique="false">
+            <column name="ENVIRONMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-51">
+        <createIndex indexName="FK227313F2759956" tableName="ITEM" unique="false">
+            <column name="ITEM_DEFINITION_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-52">
+        <createIndex indexName="PATH_IND" tableName="ITEM" unique="false">
+            <column name="PATH"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-53">
+        <createIndex indexName="PROFILE_ID_DATA_CATEGORY_ID" tableName="ITEM" unique="false">
+            <column name="PROFILE_ID"/>
+            <column name="DATA_CATEGORY_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-54">
+        <createIndex indexName="START_DATE_IND" tableName="ITEM" unique="false">
+            <column name="START_DATE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-55">
+        <createIndex indexName="TYPE" tableName="ITEM" unique="false">
+            <column name="TYPE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-56">
+        <createIndex indexName="UID" tableName="ITEM" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-57">
+        <createIndex indexName="FK776869FFD0C760BF" tableName="ITEM_DEFINITION" unique="false">
+            <column name="ENVIRONMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-58">
+        <createIndex indexName="UID" tableName="ITEM_DEFINITION" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-59">
+        <createIndex indexName="END_DATE_IND" tableName="ITEM_VALUE" unique="false">
+            <column name="END_DATE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-60">
+        <createIndex indexName="FKDF4D952533EE7809" tableName="ITEM_VALUE" unique="false">
+            <column name="ITEM_VALUE_DEFINITION_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-61">
+        <createIndex indexName="FKDF4D9525828044F" tableName="ITEM_VALUE" unique="false">
+            <column name="ITEM_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-62">
+        <createIndex indexName="START_DATE_IND" tableName="ITEM_VALUE" unique="false">
+            <column name="START_DATE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-63">
+        <createIndex indexName="UID" tableName="ITEM_VALUE" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-64">
+        <createIndex indexName="ALIASED_TO_IND" tableName="ITEM_VALUE_DEFINITION" unique="false">
+            <column name="ALIASED_TO_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-65">
+        <createIndex indexName="FK21D1A8AD5B42898E" tableName="ITEM_VALUE_DEFINITION" unique="false">
+            <column name="VALUE_DEFINITION_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-66">
+        <createIndex indexName="FK21D1A8ADD0C760BF" tableName="ITEM_VALUE_DEFINITION" unique="false">
+            <column name="ENVIRONMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-67">
+        <createIndex indexName="FK21D1A8ADF2759956" tableName="ITEM_VALUE_DEFINITION" unique="false">
+            <column name="ITEM_DEFINITION_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-68">
+        <createIndex indexName="FROM_PROFILE_IND" tableName="ITEM_VALUE_DEFINITION" unique="false">
+            <column name="FROM_PROFILE"/>
+            <column name="FROM_DATA"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-69">
+        <createIndex indexName="PATH_IND" tableName="ITEM_VALUE_DEFINITION" unique="false">
+            <column name="PATH"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-70">
+        <createIndex indexName="UID" tableName="ITEM_VALUE_DEFINITION" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-71">
+        <createIndex indexName="API_VERSION_ID_IND" tableName="ITEM_VALUE_DEFINITION_API_VERSION" unique="false">
+            <column name="API_VERSION_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-72">
+        <createIndex indexName="ITEM_VALUE_DEFINITION_ID_IND" tableName="ITEM_VALUE_DEFINITION_API_VERSION"
+                     unique="false">
+            <column name="ITEM_VALUE_DEFINITION_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-73">
+        <createIndex indexName="UID" tableName="LOCALE_NAME" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-74">
+        <createIndex indexName="ENTITY_UID" tableName="METADATA" unique="false">
+            <column name="ENTITY_UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-75">
+        <createIndex indexName="UID" tableName="METADATA" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-76">
+        <createIndex indexName="ENTITY_TYPE_IND" tableName="PERMISSION" unique="false">
+            <column name="ENTITY_TYPE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-77">
+        <createIndex indexName="ENTITY_UID_IND" tableName="PERMISSION" unique="false">
+            <column name="ENTITY_UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-78">
+        <createIndex indexName="FKFE0FB1CFD0C760BF" tableName="PERMISSION" unique="false">
+            <column name="ENVIRONMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-79">
+        <createIndex indexName="PRINCIPAL_TYPE_IND" tableName="PERMISSION" unique="false">
+            <column name="PRINCIPAL_TYPE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-80">
+        <createIndex indexName="PRINCIPAL_UID_IND" tableName="PERMISSION" unique="false">
+            <column name="PRINCIPAL_UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-81">
+        <createIndex indexName="UID" tableName="PERMISSION" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-82">
+        <createIndex indexName="CREATED_IND" tableName="PROFILE" unique="false">
+            <column name="CREATED"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-83">
+        <createIndex indexName="FK185A1589D0C760BF" tableName="PROFILE" unique="false">
+            <column name="ENVIRONMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-84">
+        <createIndex indexName="MODIFIED_IND" tableName="PROFILE" unique="false">
+            <column name="MODIFIED"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-85">
+        <createIndex indexName="UID" tableName="PROFILE" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-86">
+        <createIndex indexName="UID" tableName="RETURN_VALUE_DEFINITION" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-87">
+        <createIndex indexName="TAG_IND" tableName="TAG" unique="false">
+            <column name="TAG"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-88">
+        <createIndex indexName="UID" tableName="TAG" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-89">
+        <createIndex indexName="API_VERSION_ID_IND" tableName="USER" unique="false">
+            <column name="API_VERSION_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-90">
+        <createIndex indexName="FK27E3CBD0C760BF" tableName="USER" unique="false">
+            <column name="ENVIRONMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-91">
+        <createIndex indexName="UID" tableName="USER" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-92">
+        <createIndex indexName="USERNAME_IND" tableName="USER" unique="false">
+            <column name="USERNAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-93">
+        <createIndex indexName="FKB429101D0C760BF" tableName="VALUE_DEFINITION" unique="false">
+            <column name="ENVIRONMENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="david.keen (generated)" id="1282225878470-94">
+        <createIndex indexName="UID" tableName="VALUE_DEFINITION" unique="true">
+            <column name="UID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
