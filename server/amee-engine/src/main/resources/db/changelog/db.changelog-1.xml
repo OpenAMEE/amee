@@ -1,10 +1,275 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
-	
-	<changeSet id="1" author="david">
-        <comment>Change ITEM_DEFINITION.STATUS to TINYINT.</comment>
-		<modifyColumn tableName="ITEM_DEFINITION">
-		    <column name="STATUS" type="TINYINT(11)"/>
-		</modifyColumn>
-	</changeSet>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <!-- New tables -->
+    <changeSet author="david" id="1-1">
+        <comment>Add DATA_ITEM table.</comment>
+        <createTable tableName="DATA_ITEM">
+            <column autoIncrement="true" name="ID" type="BIGINT UNSIGNED">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValue="" name="UID" type="CHAR(12)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column defaultValue="" name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="PATH" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="CREATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="MODIFIED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEM_DEFINITION_ID" type="INT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATA_CATEGORY_ID" type="INT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="STATUS" type="TINYINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="david" id="1-2">
+        <comment>Add PROFILE_ITEM table.</comment>
+        <createTable tableName="PROFILE_ITEM">
+            <column autoIncrement="true" name="ID" type="BIGINT UNSIGNED">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValue="" name="UID" type="CHAR(12)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column defaultValue="" name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="CREATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="MODIFIED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="START_DATE" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="END_DATE" type="DATETIME"/>
+            <column name="ITEM_DEFINITION_ID" type="INT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATA_ITEM_ID" type="BIGINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROFILE_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="STATUS" type="TINYINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="david" id="1-3">
+        <comment>Add PROFILE_ITEM_TEXT_VALUE table.</comment>
+        <createTable tableName="PROFILE_ITEM_TEXT_VALUE">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValue="" name="UID" type="CHAR(12)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column defaultValueNumeric="0" name="STATUS" type="TINYINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="VALUE" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="CREATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="MODIFIED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEM_VALUE_DEFINITION_ID" type="INT UNSIGNED">
+                <contraints nullable="false"/>
+            </column>
+            <column name="DATA_ITEM_ID" type="BIGINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="UNIT" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="PER_UNIT" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="david" id="1-4">
+        <comment>Add PROFILE_ITEM_NUMBER_VALUE table.</comment>
+    </changeSet>
+
+    <changeSet author="david" id="1-5">
+        <comment>Add DATA_ITEM_TEXT_VALUE table.</comment>
+    </changeSet>
+
+    <changeSet author="david" id="1-6">
+        <comment>Add DATA_ITEM_NUMBER_VALUE table.</comment>
+        <createTable tableName="DATA_ITEM_NUMBER_VALUE">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValue="" name="UID" type="CHAR(12)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column defaultValueNumeric="0" name="STATUS" type="TINYINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="VALUE" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="CREATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="MODIFIED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEM_VALUE_DEFINITION_ID" type="INT UNSIGNED">
+                <contraints nullable="false"/>
+            </column>
+            <column name="DATA_ITEM_ID" type="BIGINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="UNIT" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="PER_UNIT" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="david" id="1-7">
+        <comment>Add DATA_ITEM_TEXT_VALUE_HISTORY table.</comment>
+    </changeSet>
+
+    <changeSet author="david" id="1-8">
+        <comment>Add DATA_ITEM_NUMBER_VALUE_HISTORY table.</comment>
+    </changeSet>
+
+    <!-- Altered tables -->
+    <changeSet author="david" id="1-9">
+        <comment>Alter VALUE_DEFINITION.</comment>
+
+        <!-- Use sql tag so all changes for a table are executed in one statement. -->
+        <sql>
+            ALTER TABLE VALUE_DEFINITION 
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE DESCRIPTION DESCRIPTION VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE VALUE_TYPE VALUE_TYPE TINYINT(3) NOT NULL DEFAULT '0',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            DROP COLUMN ENVIRONMENT_ID
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-10">
+        <comment>Alter ITEM_DEFINITION.</comment>
+        <sql>
+            ALTER TABLE ITEM_DEFINITION
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE DRILL_DOWN DRILL_DOWN VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            DROP COLUMN ENVIRONMENT_ID,
+            DROP COLUMN SKIP_RECALCULATION
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-11">
+        <comment>Alter ITEM_VALUE_DEFINITION</comment>
+        <sql>
+            ALTER TABLE ITEM_VALUE_DEFINITION
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE PATH PATH VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE VALUE VALUE VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE CHOICES CHOICES VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE FROM_PROFILE FROM_PROFILE BIT(1) NOT NULL DEFAULT b'0',
+            CHANGE FROM_DATA FROM_DATA BIT(1) NOT NULL DEFAULT b'0',
+            CHANGE ALLOWED_ROLES ALLOWED_ROLES VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE ITEM_DEFINITION_ID ITEM_DEFINITION_ID INT(11) UNSIGNED NOT NULL,
+            CHANGE VALUE_DEFINITION_ID VALUE_DEFINITION_ID INT(11) UNSIGNED NOT NULL,
+            CHANGE UNIT UNIT varchar(255) NOT NULL DEFAULT '',
+            CHANGE PER_UNIT PER_UNIT varchar(255) NOT NULL DEFAULT '',
+            CHANGE ALIASED_TO_ID ALIASED_TO_ID int(11) UNSIGNED NULL DEFAULT NULL,
+            CHANGE STATUS STATUS tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+            DROP COLUMN ENVIRONMENT_ID
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-12">
+        <comment>Alter DATA_CATEGORY</comment>
+        <sql>
+            ALTER TABLE DATA_CATEGORY
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE PATH PATH VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE DATA_CATEGORY_ID DATA_CATEGORY_ID INT(11) UNSIGNED NULL DEFAULT NULL,
+            CHANGE ITEM_DEFINITION_ID ITEM_DEFINITION_ID INT(11) UNSIGNED NULL DEFAULT NULL,
+            CHANGE STATUS STATUS TINYINT(3) NOT NULL DEFAULT '1',
+            CHANGE ALIASED_TO_ID ALIASED_TO_ID INT(11) UNSIGNED NULL DEFAULT NULL,
+            CHANGE WIKI_NAME WIKI_NAME VARCHAR(255) NOT NULL DEFAULT '',
+            DROP COLUMN ENVIRONMENT_ID
+        </sql>
+    </changeSet>
+
+    <!-- Indexes -->
+    <changeSet author="david" id="1-13">
+        <createIndex tableName="DATA_ITEM" indexName="PATH_KEY">
+            <column name="PATH"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="david" id="1-14">
+        <createIndex tableName="DATA_ITEM" indexName="ITEM_DEFINITION_ID_KEY">
+            <column name="ITEM_DEFINITION_ID"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="david" id="1-15">
+        <createIndex tableName="DATA_ITEM" indexName="DATA_CATEGORY_ID_KEY">
+            <column name="DATA_CATEGORY_ID"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="david" id="1-16">
+        <createIndex tableName="DATA_ITEM_NUMBER_VALUE" indexName="ITEM_VALUE_DEFINITION_ID_KEY">
+            <column name="ITEM_VALUE_DEFINITION_ID"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="david" id="1-17">
+        <createIndex tableName="DATA_ITEM_NUMBER_VALUE" indexName="DATA_ITEM_ID_KEY">
+            <column name="DATA_ITEM_ID"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
