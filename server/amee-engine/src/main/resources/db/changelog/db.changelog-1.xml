@@ -364,112 +364,79 @@
     </changeSet>
 
     <!-- Indexes -->
+    <!-- Must use custom sql to work around this MySQL bug: http://bugs.mysql.com/bug.php?id=48875 -->
     <changeSet author="david" id="1-14">
-        <createIndex tableName="DATA_ITEM" indexName="PATH_KEY">
-            <column name="PATH"/>
-        </createIndex>
+        <comment>Add indexes to DATA_ITEM</comment>
+        <sql>
+            ALTER TABLE DATA_ITEM
+            ADD INDEX PATH_KEY (PATH),
+            ADD INDEX ITEM_DEFINITION_ID_KEY (ITEM_DEFINITION_ID),
+            ADD INDEX DATA_CATEGORY_ID_KEY (DATA_CATEGORY_ID)
+        </sql>
     </changeSet>
 
     <changeSet author="david" id="1-15">
-        <createIndex tableName="DATA_ITEM" indexName="ITEM_DEFINITION_ID_KEY">
-            <column name="ITEM_DEFINITION_ID"/>
-        </createIndex>
+        <comment>Add indexes to PROFILE_ITEM</comment>
+        <sql>
+            ALTER TABLE PROFILE_ITEM
+            ADD INDEX ITEM_DEFINITION_ID_KEY (ITEM_DEFINITION_ID),
+            ADD INDEX DATA_ITEM_ID_KEY (DATA_ITEM_ID),
+            ADD INDEX PROFILE_ID_KEY (PROFILE_ID)
+        </sql>
     </changeSet>
 
     <changeSet author="david" id="1-16">
-        <createIndex tableName="DATA_ITEM" indexName="DATA_CATEGORY_ID_KEY">
-            <column name="DATA_CATEGORY_ID"/>
-        </createIndex>
+        <comment>Add indexes to PROFILE_ITEM_TEXT_VALUE</comment>
+        <sql>
+            ALTER TABLE PROFILE_ITEM_TEXT_VALUE
+            ADD INDEX ITEM_VALUE_DEFINITION_ID_KEY (ITEM_VALUE_DEFINITION_ID),
+            ADD INDEX PROFILE_ITEM_ID_KEY (PROFILE_ITEM_ID)
+        </sql>
     </changeSet>
 
     <changeSet author="david" id="1-17">
-        <createIndex tableName="PROFILE_ITEM" indexName="ITEM_DEFINITION_ID_KEY">
-            <column name="ITEM_DEFINITION_ID"/>
-        </createIndex>
+        <comment>Add indexes to PROFILE_ITEM_NUMBER_VALUE</comment>
+        <sql>
+            ALTER TABLE PROFILE_ITEM_NUMBER_VALUE
+            ADD INDEX ITEM_VALUE_DEFINITION_ID_KEY (ITEM_VALUE_DEFINITION_ID),
+            ADD INDEX PROFILE_ITEM_ID_KEY (PROFILE_ITEM_ID)
+        </sql>
     </changeSet>
 
     <changeSet author="david" id="1-18">
-        <createIndex tableName="PROFILE_ITEM" indexName="DATA_ITEM_ID_KEY">
-            <column name="DATA_ITEM_ID"/>
-        </createIndex>
+        <comment>Add indexes to DATA_ITEM_TEXT_VALUE</comment>
+        <sql>
+            ALTER TABLE DATA_ITEM_TEXT_VALUE
+            ADD INDEX ITEM_VALUE_DEFINITION_ID_KEY (ITEM_VALUE_DEFINITION_ID),
+            ADD INDEX DATA_ITEM_ID_KEY (DATA_ITEM_ID)
+        </sql>
     </changeSet>
 
     <changeSet author="david" id="1-19">
-        <createIndex tableName="PROFILE_ITEM" indexName="PROFILE_ID_KEY">
-            <column name="PROFILE_ID"/>
-        </createIndex>
+        <comment>Add indexes to DATA_ITEM_NUMBER_VALUE</comment>
+        <sql>
+            ALTER TABLE DATA_ITEM_NUMBER_VALUE
+            ADD INDEX ITEM_VALUE_DEFINITION_ID_KEY (ITEM_VALUE_DEFINITION_ID),
+            ADD INDEX DATA_ITEM_ID_KEY (DATA_ITEM_ID)
+        </sql>
     </changeSet>
 
     <changeSet author="david" id="1-20">
-        <createIndex tableName="PROFILE_ITEM_TEXT_VALUE" indexName="ITEM_VALUE_DEFINITION_ID_KEY">
-            <column name="ITEM_VALUE_DEFINITION_ID"/>
-        </createIndex>
+        <comment>Add indexes to DATA_ITEM_TEXT_VALUE_HISTORY</comment>
+        <sql>
+            ALTER TABLE DATA_ITEM_TEXT_VALUE_HISTORY
+            ADD INDEX ITEM_VALUE_DEFINITION_ID_KEY (ITEM_VALUE_DEFINITION_ID),
+            ADD INDEX DATA_ITEM_ID_KEY (DATA_ITEM_ID)
+        </sql>
     </changeSet>
 
     <changeSet author="david" id="1-21">
-        <createIndex tableName="PROFILE_ITEM_TEXT_VALUE" indexName="PROFILE_ITEM_ID_KEY">
-            <column name="PROFILE_ITEM_ID"/>
-        </createIndex>
+        <comment>Add indexes to DATA_ITEM_NUMBER_VALUE_HISTORY</comment>
+        <sql>
+            ALTER TABLE DATA_ITEM_NUMBER_VALUE_HISTORY
+            ADD INDEX ITEM_VALUE_DEFINITION_ID_KEY (ITEM_VALUE_DEFINITION_ID),
+            ADD INDEX DATA_ITEM_ID_KEY (DATA_ITEM_ID)
+        </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-22">
-        <createIndex tableName="PROFILE_ITEM_NUMBER_VALUE" indexName="ITEM_VALUE_DEFINITION_ID_KEY">
-            <column name="ITEM_VALUE_DEFINITION_ID"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="david" id="1-23">
-        <createIndex tableName="PROFILE_ITEM_NUMBER_VALUE" indexName="PROFILE_ITEM_ID_KEY">
-            <column name="PROFILE_ITEM_ID"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="david" id="1-24">
-        <createIndex tableName="DATA_ITEM_TEXT_VALUE" indexName="ITEM_VALUE_DEFINITION_ID_KEY">
-            <column name="ITEM_VALUE_DEFINITION_ID"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="david" id="1-25">
-        <createIndex tableName="DATA_ITEM_TEXT_VALUE" indexName="DATA_ITEM_ID_KEY">
-            <column name="DATA_ITEM_ID"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="david" id="1-26">
-        <createIndex tableName="DATA_ITEM_NUMBER_VALUE" indexName="ITEM_VALUE_DEFINITION_ID_KEY">
-            <column name="ITEM_VALUE_DEFINITION_ID"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="david" id="1-27">
-        <createIndex tableName="DATA_ITEM_NUMBER_VALUE" indexName="DATA_ITEM_ID_KEY">
-            <column name="DATA_ITEM_ID"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="david" id="1-28">
-        <createIndex tableName="DATA_ITEM_TEXT_VALUE_HISTORY" indexName="ITEM_VALUE_DEFINITION_ID_KEY">
-            <column name="ITEM_VALUE_DEFINITION_ID"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="david" id="1-29">
-        <createIndex tableName="DATA_ITEM_TEXT_VALUE_HISTORY" indexName="DATA_ITEM_ID_KEY">
-            <column name="DATA_ITEM_ID"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="david" id="1-30">
-        <createIndex tableName="DATA_ITEM_NUMBER_VALUE_HISTORY" indexName="ITEM_VALUE_DEFINITION_ID_KEY">
-            <column name="ITEM_VALUE_DEFINITION_ID"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="david" id="1-31">
-        <createIndex tableName="DATA_ITEM_NUMBER_VALUE_HISTORY" indexName="DATA_ITEM_ID_KEY">
-            <column name="DATA_ITEM_ID"/>
-        </createIndex>
-    </changeSet>
-    
 </databaseChangeLog>
