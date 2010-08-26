@@ -117,7 +117,7 @@ public class GroupService implements Serializable {
         query = entityManager.createQuery(
                 "SELECT count(g) " +
                         "FROM Group g " +
-                        "WHERE " + pagerSetClause + " " +
+                        "WHERE 1 = 1 " + pagerSetClause + " " +
                         "AND g.status != :trash ")
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
@@ -133,7 +133,7 @@ public class GroupService implements Serializable {
         query = entityManager.createQuery(
                 "SELECT g " +
                         "FROM Group g " +
-                        "WHERE " + pagerSetClause + " " +
+                        "WHERE 1 = 1 " + pagerSetClause + " " +
                         "AND g.status != :trash " +
                         "ORDER BY g.name")
                 .setParameter("trash", AMEEStatus.TRASH)
