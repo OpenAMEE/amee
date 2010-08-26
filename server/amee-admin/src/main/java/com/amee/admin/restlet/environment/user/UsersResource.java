@@ -172,7 +172,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                     } else {
                         // Clone User was NOT supplied.
                         // Look for requested Groups to join.
-                        if (form.getNames().contains("groups")) {
+                        if (form.getNames().contains("groups") && !(form.getFirstValue("groups") == null)) {
                             groupNames = form.getFirstValue("groups");
                             for (String groupName : groupNames.split(",")) {
                                 groupName = groupName.trim();
