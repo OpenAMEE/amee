@@ -45,9 +45,9 @@ public class RIATreeResource extends AuthorizeResource {
         setRequireSuperUser(true);
         node = request.getResourceRef().getQueryAsForm().getFirstValue("node");
         if ((node == null) || node.equalsIgnoreCase("root")) {
-            pathItem = pathItemService.getPathItemGroup(getActiveEnvironment()).getRootPathItem();
+            pathItem = pathItemService.getPathItemGroup().getRootPathItem();
         } else if (UidGen.INSTANCE_12.isValid(node)) {
-            pathItem = pathItemService.getPathItemGroup(getActiveEnvironment()).findByUId(node);
+            pathItem = pathItemService.getPathItemGroup().findByUId(node);
             if (!pathItem.getObjectType().equals(ObjectType.DC)) {
                 pathItem = null;
             }
@@ -63,7 +63,7 @@ public class RIATreeResource extends AuthorizeResource {
             entities.add(dataService.getDataCategoryByUid(parent.getUid()));
             parent = parent.getParent();
         }
-        entities.add(getActiveEnvironment());
+        entities.add(getRootDataCategory());
         Collections.reverse(entities);
         return entities;
     }

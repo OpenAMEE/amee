@@ -23,10 +23,11 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.environment.Environment;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
+import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionService;
-import com.amee.service.environment.EnvironmentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -56,20 +57,19 @@ public class ItemValueDefinitionsResource extends AuthorizeResource implements S
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
+    private DataService dataService;
+
+    @Autowired
     private DefinitionService definitionService;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
-
-    @Autowired
-    private EnvironmentService environmentService;
 
     private ItemValueDefinition newItemValueDefinition;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
     }
 
@@ -81,8 +81,7 @@ public class ItemValueDefinitionsResource extends AuthorizeResource implements S
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(definitionBrowser.getEnvironment());
+        entities.add(getRootDataCategory());
         entities.add(definitionBrowser.getItemDefinition());
         return entities;
     }
@@ -94,14 +93,13 @@ public class ItemValueDefinitionsResource extends AuthorizeResource implements S
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(definitionBrowser.getEnvironment());
+        List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions();
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
-        values.put("environment", definitionBrowser.getEnvironment());
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("itemValueDefinitions", definitionBrowser.getItemDefinition().getItemValueDefinitions());
         values.put("valueDefinitions", valueDefinitions.isEmpty() ? null : valueDefinitions);
-        values.put("apiVersions", environmentService.getAPIVersions());
+        values.put("apiVersions", dataService.getAPIVersions());
         return values;
     }
 
@@ -109,7 +107,7 @@ public class ItemValueDefinitionsResource extends AuthorizeResource implements S
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            obj.put("environment", definitionBrowser.getEnvironment().getIdentityJSONObject());
+            obj.put("environment", Environment.ENVIRONMENT.getIdentityJSONObject());
             obj.put("itemDefinition", definitionBrowser.getItemDefinition().getIdentityJSONObject());
             JSONArray itemValueDefinitions = new JSONArray();
             for (ItemValueDefinition itemValueDefinition : definitionBrowser.getItemDefinition().getItemValueDefinitions()) {
@@ -126,7 +124,7 @@ public class ItemValueDefinitionsResource extends AuthorizeResource implements S
     public Element getElement(Document document) {
         Element element = document.createElement("ItemValueDefinitionsResource");
         if (isGet()) {
-            element.appendChild(definitionBrowser.getEnvironment().getIdentityElement(document));
+            element.appendChild(Environment.ENVIRONMENT.getIdentityElement(document));
             element.appendChild(definitionBrowser.getItemDefinition().getIdentityElement(document));
             Element itemValueDefinitionsElement = document.createElement("ItemValueDefinitions");
             for (ItemValueDefinition itemValueDefinition : definitionBrowser.getItemDefinition().getItemValueDefinitions()) {
@@ -149,7 +147,7 @@ public class ItemValueDefinitionsResource extends AuthorizeResource implements S
         log.debug("doAccept()");
         Form form = getForm();
         ValueDefinition valueDefinition =
-                definitionService.getValueDefinition(definitionBrowser.getEnvironment(), form.getFirstValue("valueDefinitionUid"));
+                definitionService.getValueDefinition(form.getFirstValue("valueDefinitionUid"));
         if ((form.getFirstValue("name") != null) && (valueDefinition != null)) {
             newItemValueDefinition = new ItemValueDefinition(definitionBrowser.getItemDefinition());
             newItemValueDefinition.setValueDefinition(valueDefinition);
@@ -166,7 +164,7 @@ public class ItemValueDefinitionsResource extends AuthorizeResource implements S
                 newItemValueDefinition.setAliasedTo(definitionService.getItemValueDefinitionByUid(form.getFirstValue("aliasedTo")));
             }
             // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
-            List<APIVersion> apiVersions = environmentService.getAPIVersions();
+            List<APIVersion> apiVersions = dataService.getAPIVersions();
             for (APIVersion apiVersion : apiVersions) {
                 String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
                 if (version != null) {

@@ -121,8 +121,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
                 getDataItem() != null &&
                 !getDataItem().isTrash() &&
                 getDataCategory() != null &&
-                getDataItem().getDataCategory().equals(getDataCategory()) &&
-                getDataItem().getEnvironment().equals(getActiveEnvironment());
+                getDataItem().getDataCategory().equals(getDataCategory());
     }
 
     @Override

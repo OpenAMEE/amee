@@ -19,11 +19,11 @@
  */
 package com.amee.restlet.profile;
 
-import com.amee.platform.science.CO2AmountUnit;
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.ProfileItem;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.ProfileCategoryAtomAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileCategoryFormAcceptor;
@@ -94,8 +94,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     public boolean isValid() {
         return super.isValid() &&
                 getDataCategory() != null &&
-                !getDataCategory().isTrash() &&
-                getDataCategory().getEnvironment().equals(getActiveEnvironment());
+                !getDataCategory().isTrash();
     }
 
     @Override
@@ -107,7 +106,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
             dc = dc.getDataCategory();
         }
         entities.add(getProfile());
-        entities.add(getActiveEnvironment());
+        entities.add(getRootDataCategory());
         Collections.reverse(entities);
         return entities;
     }

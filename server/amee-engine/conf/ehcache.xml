@@ -39,7 +39,6 @@
 
     <!--
         **** Data capacity (collected from DB, with some contingency) ****
-        5 Environments
         40 APIVersions
         200 Data Categories
         200 Item Definitions
@@ -334,8 +333,8 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- Environment Path Item Groups -->
-    <cache name="EnvironmentPIGs"
+    <!-- Path Item Groups -->
+    <cache name="PIGs"
            maxElementsInMemory="5"
            eternal="false"
            overflowToDisk="false"
@@ -354,17 +353,7 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- **** Kiwi - Entities **** -->
-
-    <!-- Environment -->
-    <cache name="com.amee.domain.environment.Environment"
-           maxElementsInMemory="10"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-    </cache>
+    <!-- **** Entities **** -->
 
     <!-- User -->
     <cache name="com.amee.domain.auth.User"
@@ -438,16 +427,6 @@
 
     <!-- SiteService -->
     <cache name="query.siteService"
-           maxElementsInMemory="200"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-    </cache>
-
-    <!-- EnvironmentService -->
-    <cache name="query.environmentService"
            maxElementsInMemory="200"
            eternal="false"
            overflowToDisk="false"

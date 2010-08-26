@@ -91,8 +91,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
                 !getProfileItem().isTrash() &&
                 getDataCategory() != null &&
                 getProfileItem().getProfile().equals(getProfile()) &&
-                getProfileItem().getDataCategory().equals(getDataCategory()) &&
-                getProfileItem().getEnvironment().equals(getActiveEnvironment());
+                getProfileItem().getDataCategory().equals(getDataCategory());
     }
 
     @Override
@@ -105,7 +104,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
             dc = dc.getDataCategory();
         }
         entities.add(getProfile());
-        entities.add(getActiveEnvironment());
+        entities.add(getRootDataCategory());
         Collections.reverse(entities);
         return entities;
     }

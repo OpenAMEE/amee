@@ -20,14 +20,14 @@
 package com.amee.restlet.data;
 
 import com.amee.base.utils.ThreadBeanHolder;
+import com.amee.domain.AMEEEntity;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
-import com.amee.domain.AMEEEntity;
+import com.amee.restlet.RequestContext;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DrillDownService;
-import com.amee.restlet.RequestContext;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,7 +69,6 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
             entities.add(dc);
             dc = dc.getDataCategory();
         }
-        entities.add(getActiveEnvironment());
         Collections.reverse(entities);
         return entities;
     }
@@ -77,8 +76,7 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (getDataCategory() != null) &&
-                getDataCategory().getEnvironment().equals(getActiveEnvironment());
+                (getDataCategory() != null);
     }
 
     @Override
@@ -134,7 +132,7 @@ public class DrillDownResource extends BaseDataResource implements Serializable 
         if (itemDefinition != null) {
             element.appendChild(itemDefinition.getIdentityElement(document));
             List<Choice> selections = getSelections();
-            Choices choices = drillDownService.getChoices(dataCategory, selections);            
+            Choices choices = drillDownService.getChoices(dataCategory, selections);
             Element selectionsElement = document.createElement("Selections");
             for (Choice selection : selections) {
                 selectionsElement.appendChild(selection.getElement(document));

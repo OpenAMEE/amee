@@ -25,7 +25,9 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.PermissionEntry;
+import com.amee.domain.data.DataCategory;
 import com.amee.service.auth.AuthorizationService;
+import com.amee.service.data.DataService;
 import com.amee.service.environment.GroupService;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
@@ -47,6 +49,9 @@ public abstract class AuthorizeResource extends BaseResource {
 
     @Autowired
     protected GroupService groupService;
+
+    @Autowired
+    protected DataService dataService;
 
     protected AuthorizationContext authorizationContext;
 
@@ -316,6 +321,7 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     // TODO: What is this used by? Templates?
+
     public AuthorizationContext getAuthorizationContext() {
         return authorizationContext;
     }
@@ -326,5 +332,9 @@ public abstract class AuthorizeResource extends BaseResource {
 
     public void setRequireSuperUser(boolean requireSuperUser) {
         this.requireSuperUser = requireSuperUser;
+    }
+
+    public DataCategory getRootDataCategory() {
+        return dataService.getRootDataCategory();
     }
 }

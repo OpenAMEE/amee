@@ -94,8 +94,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     public boolean isValid() {
         return super.isValid() &&
                 getDataCategory() != null &&
-                !getDataCategory().isTrash() &&
-                getDataCategory().getEnvironment().equals(getActiveEnvironment());
+                !getDataCategory().isTrash();
     }
 
     @Override
@@ -106,7 +105,6 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             entities.add(dc);
             dc = dc.getDataCategory();
         }
-        entities.add(getActiveEnvironment());
         Collections.reverse(entities);
         return entities;
     }
@@ -364,8 +362,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 }
             } else if (form.getNames().contains("itemDefinitionUid")) {
                 ItemDefinition itemDefinition =
-                        definitionService.getItemDefinitionByUid(
-                                thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
+                        definitionService.getItemDefinitionByUid(form.getFirstValue("itemDefinitionUid"));
                 if (itemDefinition != null) {
                     dataCategory.setItemDefinition(itemDefinition);
                 }
@@ -476,7 +473,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             // Update DataItem.
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItem(getActiveEnvironment(), uid);
+                dataItem = dataService.getDataItem(uid);
                 if (dataItem != null) {
                     acceptDataItem(form, dataItem);
                 }
@@ -544,8 +541,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 return;
             } else {
                 ItemDefinition itemDefinition =
-                        definitionService.getItemDefinitionByUid(thisDataCategory.getEnvironment(),
-                                form.getFirstValue("itemDefinitionUid"));
+                        definitionService.getItemDefinitionByUid(form.getFirstValue("itemDefinitionUid"));
                 if (itemDefinition != null) {
                     thisDataCategory.setItemDefinition(itemDefinition);
                 } else {
