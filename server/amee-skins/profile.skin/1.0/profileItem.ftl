@@ -22,7 +22,6 @@
     Full Path: ${basePath}<br/>
     Data Item Label: ${profileItem.dataItem.label}<br/>
     Item Definition: ${profileItem.itemDefinition.name}<br/>
-    Environment: ${profileItem.environment.name}<br/>
     UID: ${profileItem.uid}<br/>
     Created: ${profileItem.created?datetime}<br/>
     Modified: ${profileItem.modified?datetime}<br/>

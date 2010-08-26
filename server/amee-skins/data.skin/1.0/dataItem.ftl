@@ -15,7 +15,6 @@
     Full Path: ${basePath}<br/>
     Label: ${dataItem.label}<br/>
     Item Definition: ${dataItem.itemDefinition.name}<br/>
-    Environment: ${dataItem.environment.name}<br/>
     UID: ${dataItem.uid}<br/>
     Created: ${dataItem.created?string.short}<br/>
     Modified: ${dataItem.modified?string.short}<br/>

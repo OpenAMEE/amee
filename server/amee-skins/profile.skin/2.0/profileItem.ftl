@@ -34,7 +34,6 @@
     <span id="fullPath"></span>
     <span id="dataItemLabel"></span>
     <span id="itemDefinition"></span>
-    <span id="environment"></span>
     <span id="uid"></span>
     <span id="created"></span>
     <span id="modified"></span>

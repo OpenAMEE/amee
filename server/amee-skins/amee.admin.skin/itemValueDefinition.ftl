@@ -1,4 +1,4 @@
-<#assign sectionName = 'environments'>
+<#assign sectionName = 'admin'>
 
 <#include '/includes/before_content.ftl'>
 
@@ -16,19 +16,18 @@
     }
 </script>
 
-<h1>Environment Administration</h1>
+<h1>Administration</h1>
 
-<p><a href='/environments'>Environments</a> /
-   <a href='/environments/${environment.uid}'>${environment.name}</a> / 
-   <a href='/environments/${environment.uid}/itemDefinitions'>Item Definitions</a> / 
-   <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}'>${itemDefinition.name}</a> / 
-   <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions'>Item Value Definitions</a> /
-   <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions/${itemValueDefinition.uid}'>${itemValueDefinition.name}</a></p>
+<p><a href='/admin'>Admin</a> /
+   <a href='/admin/itemDefinitions'>Item Definitions</a> /
+   <a href='/admin/itemDefinitions/${itemDefinition.uid}'>${itemDefinition.name}</a> /
+   <a href='/admin/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions'>Item Value Definitions</a> /
+   <a href='/admin/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions/${itemValueDefinition.uid}'>${itemValueDefinition.name}</a></p>
 
 <h2>Item Value Definition Details</h2>
 
 <p>Name: ${itemValueDefinition.name}<br/>
-   Value Definition: <a href='/environments/${environment.uid}/valueDefinitions/${itemValueDefinition.valueDefinition.uid}'>${itemValueDefinition.valueDefinition.name}</a><br/>
+   Value Definition: <a href='/admin/valueDefinitions/${itemValueDefinition.valueDefinition.uid}'>${itemValueDefinition.valueDefinition.name}</a><br/>
    Value Type: ${itemValueDefinition.valueDefinition.valueType}<br/>
    Created: ${itemValueDefinition.created?datetime}<br/>
    Modified: ${itemValueDefinition.modified?datetime}<br/>
@@ -38,7 +37,7 @@
 
     <h2>Update Item Value Definition</h2>
     <p>
-        <form id="update" action='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions/${itemValueDefinition.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+        <form id="update" action='/admin/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions/${itemValueDefinition.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
             <table>
                 <tr>
                     <td>Name:</td>

@@ -1,13 +1,12 @@
-<#assign sectionName = 'environments'>
+<#assign sectionName = 'admin'>
 
 <#include '/includes/before_content.ftl'>
 
-<h1>Environment Administration</h1>
+<h1>Administration</h1>
 
-<p><a href='/environments'>Environments</a> /
-   <a href='/environments/${environment.uid}'>${environment.name}</a> / 
-   <a href='/environments/${environment.uid}/valueDefinitions'>Value Definitions</a> / 
-   <a href='/environments/${environment.uid}/valueDefinitions/${valueDefinition.uid}'>${valueDefinition.name}</a></p>
+<p><a href='/admin'>Admin</a> / 
+   <a href='/admin/valueDefinitions'>Value Definitions</a> /
+   <a href='/admin/valueDefinitions/${valueDefinition.uid}'>${valueDefinition.name}</a></p>
 
 <h2>Value Definition Details</h2>
 
@@ -20,7 +19,7 @@
 <#if canModify()>
     <h2>Update Value Definition</h2>
     <p>
-        <form action='/environments/${environment.uid}/valueDefinitions/${valueDefinition.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+        <form action='/admin/valueDefinitions/${valueDefinition.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
             Name: <input name='name' value='${valueDefinition.name}' type='text' size='30'/><br/>
             Description: <input name='description' value='${valueDefinition.description}' type='text' size='50'/><br/>
             Value Type: <select name='valueType'>

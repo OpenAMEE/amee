@@ -412,9 +412,6 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         pElement.appendChild(document.createTextNode("Item Definition: " + dataItem.itemDefinition.name));
 
         pElement.insert(new Element("br"));
-        pElement.appendChild(document.createTextNode("Environment: " + dataItem.environment.name));
-
-        pElement.insert(new Element("br"));
         pElement.appendChild(document.createTextNode("UID: " + dataItem.uid));
 
         pElement.insert(new Element("br"));
@@ -674,9 +671,6 @@ var DataItemValueApiService = Class.create(DataItemApiService, ({
 
         pElement.insert(new Element("br"));
         pElement.appendChild(document.createTextNode("Item: " + itemValue.item.label));
-
-        pElement.insert(new Element("br"));
-        pElement.appendChild(document.createTextNode("Environment: " + itemValue.item.environment.name));
 
         pElement.insert(new Element("br"));
         pElement.appendChild(document.createTextNode("UID: " + itemValue.uid));
