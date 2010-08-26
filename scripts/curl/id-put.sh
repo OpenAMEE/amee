@@ -4,7 +4,7 @@
 . curl.conf
 
 data="name_fr=voiture generique"
-amee_url="environments/5F5887BCF726/itemDefinitions/CF344E20E9AC?method=put"
+amee_url="admin/itemDefinitions/CF344E20E9AC?method=put"
 
 type="xml"
 

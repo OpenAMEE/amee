@@ -53,6 +53,7 @@ public abstract class BaseDataResource extends AMEEResource {
     }
 
     //TODO - Remove once we have refactored out usage of browser to retrieve DC in DataSheet Factories
+
     public void setDataCategory(String dataCategoryUid) {
         super.setDataCategory(dataCategoryUid);
         dataBrowser.setDataCategory(getDataCategory());
@@ -60,7 +61,7 @@ public abstract class BaseDataResource extends AMEEResource {
 
     public void setDataItemByPathOrUid(String pathOrUid) {
         if (pathOrUid.isEmpty()) return;
-        dataItem = dataService.getDataItem(getActiveEnvironment(), pathOrUid);
+        dataItem = dataService.getDataItem(pathOrUid);
     }
 
     public DataItem getDataItem() {

@@ -5,6 +5,7 @@ import com.amee.calculation.service.ProRataProfileService;
 import com.amee.domain.ObjectType;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
+import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
@@ -19,12 +20,7 @@ import com.amee.service.profile.ProfileService;
 import com.amee.service.profile.SelectByProfileService;
 import org.apache.abdera.ext.history.FeedPagingHelper;
 import org.apache.abdera.ext.opensearch.OpenSearchExtensionFactory;
-import org.apache.abdera.model.Category;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Feed;
-import org.apache.abdera.model.IRIElement;
-import org.apache.abdera.model.Person;
-import org.apache.abdera.model.Text;
+import org.apache.abdera.model.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -35,11 +31,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This file is part of AMEE.
@@ -106,7 +98,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             }
 
             // add environment
-            obj.put("environment", resource.getActiveEnvironment().getJSONObject(true));
+            obj.put("environment", Environment.ENVIRONMENT.getJSONObject(true));
 
             // add Data Category
             obj.put("dataCategory", resource.getDataCategory().getJSONObject(true));
@@ -181,7 +173,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             }
 
             // add environment
-            element.appendChild(resource.getActiveEnvironment().getElement(document, true));
+            element.appendChild(Environment.ENVIRONMENT.getElement(document, true));
 
             // add DataCategory
             element.appendChild(resource.getDataCategory().getIdentityElement(document));
@@ -285,6 +277,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     }
 
     // TODO: What is the total? Total default? Total CO2e?
+
     private double getTotalAmount(List<ProfileItem> profileItems, CO2AmountUnit returnUnit) {
         double totalAmount = 0.0;
         double amount;
@@ -513,7 +506,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     }
 
     private String getFullPath(ProfileItem item) {
-        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(item.getEnvironment());
+        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
         return "/profiles/" + item.getProfile().getUid() + pathItemGroup.findByUId(item.getDataCategory().getUid()) + "/" + item.getUid();
     }
 }

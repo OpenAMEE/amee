@@ -9,11 +9,7 @@ import com.amee.service.auth.AuthenticationService;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.data.Form;
-import org.restlet.data.Protocol;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
-import org.restlet.data.Status;
+import org.restlet.data.*;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -104,12 +100,11 @@ public class SignInResource extends BaseResource implements Serializable {
             // deal with sign in
             nextUrl = AuthUtils.getNextUrl(getRequest(), getForm());
             sampleUser = new User();
-            sampleUser.setEnvironment(getActiveEnvironment());
             sampleUser.setUsername(form.getFirstValue("username"));
             sampleUser.setPasswordInClear(form.getFirstValue("password"));
             activeUser = authenticationService.authenticate(sampleUser);
             if (activeUser != null) {
-                // put active user in contextx
+                // put active user in context
                 getRequest().getAttributes().put("activeUser", activeUser);
                 ThreadBeanHolder.set("activeUser", activeUser);
                 // create AuthToken and add to response

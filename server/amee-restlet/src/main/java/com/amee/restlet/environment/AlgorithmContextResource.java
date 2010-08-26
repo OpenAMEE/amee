@@ -60,22 +60,19 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setAlgorithmContextUid(request.getAttributes().get("algorithmContextUid").toString());
     }
 
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (definitionBrowser.getEnvironment() != null) &&
                 (definitionBrowser.getAlgorithmContext() != null);
     }
 
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(definitionBrowser.getEnvironment());
+        entities.add(getRootDataCategory());
         entities.add(definitionBrowser.getAlgorithmContext());
         return entities;
     }
@@ -89,7 +86,6 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
-        values.put("environment", definitionBrowser.getEnvironment());
         values.put("algorithmContext", definitionBrowser.getAlgorithmContext());
         return values;
     }

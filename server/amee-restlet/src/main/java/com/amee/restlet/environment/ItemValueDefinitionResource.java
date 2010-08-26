@@ -26,8 +26,8 @@ import com.amee.domain.data.ItemValueDefinition;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
+import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionService;
-import com.amee.service.environment.EnvironmentService;
 import com.amee.service.locale.LocaleService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -61,10 +61,10 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
     private LocaleService localeService;
 
     @Autowired
-    private DefinitionService definitionService;
+    private DataService dataService;
 
     @Autowired
-    private EnvironmentService environmentService;
+    private DefinitionService definitionService;
 
     @Autowired
     private DefinitionBrowser definitionBrowser;
@@ -72,7 +72,6 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
         definitionBrowser.setItemValueDefinitionUid(request.getAttributes().get("itemValueDefinitionUid").toString());
     }
@@ -85,8 +84,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(definitionBrowser.getEnvironment());
+        entities.add(getRootDataCategory());
         entities.add(definitionBrowser.getItemDefinition());
         entities.add(definitionBrowser.getItemValueDefinition());
         return entities;
@@ -101,10 +99,9 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
-        values.put("environment", definitionBrowser.getEnvironment());
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("itemValueDefinition", definitionBrowser.getItemValueDefinition());
-        values.put("apiVersions", environmentService.getAPIVersions());
+        values.put("apiVersions", dataService.getAPIVersions());
         values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         return values;
     }
@@ -197,7 +194,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
 
         // Loop over all known APIVersions and check which have been submitted with the new ItemValueDefinition.
         // Remove any versions that have not been sumbitted.
-        List<APIVersion> apiVersions = environmentService.getAPIVersions();
+        List<APIVersion> apiVersions = dataService.getAPIVersions();
         for (APIVersion apiVersion : apiVersions) {
             String version = form.getFirstValue("apiversion-" + apiVersion.getVersion());
             if (version != null) {

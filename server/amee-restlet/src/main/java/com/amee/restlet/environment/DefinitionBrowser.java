@@ -24,10 +24,8 @@ import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.environment.Environment;
 import com.amee.service.BaseBrowser;
 import com.amee.service.definition.DefinitionService;
-import com.amee.service.environment.EnvironmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -39,14 +37,7 @@ import java.util.List;
 public class DefinitionBrowser extends BaseBrowser {
 
     @Autowired
-    private EnvironmentService environmentService;
-
-    @Autowired
     private DefinitionService definitionService;
-
-    // Environments
-    private String environmentUid = null;
-    private Environment environment = null;
 
     // ItemDefinitions
     private String valueDefinitionUid = null;
@@ -72,25 +63,6 @@ public class DefinitionBrowser extends BaseBrowser {
         super();
     }
 
-    // Environments
-
-    public String getEnvironmentUid() {
-        return environmentUid;
-    }
-
-    public void setEnvironmentUid(String environmentUid) {
-        this.environmentUid = environmentUid;
-    }
-
-    public Environment getEnvironment() {
-        if (environment == null) {
-            if (environmentUid != null) {
-                environment = environmentService.getEnvironmentByUid(getEnvironmentUid());
-            }
-        }
-        return environment;
-    }
-
     // ValueDefinitions
 
     public String getValueDefinitionUid() {
@@ -103,8 +75,8 @@ public class DefinitionBrowser extends BaseBrowser {
 
     public ValueDefinition getValueDefinition() {
         if (valueDefinition == null) {
-            if ((valueDefinitionUid != null) && (getEnvironment() != null)) {
-                valueDefinition = definitionService.getValueDefinition(getEnvironment(), valueDefinitionUid);
+            if ((valueDefinitionUid != null)) {
+                valueDefinition = definitionService.getValueDefinition(valueDefinitionUid);
             }
         }
         return valueDefinition;
@@ -135,14 +107,14 @@ public class DefinitionBrowser extends BaseBrowser {
     public AlgorithmContext getAlgorithmContext() {
         if (algorithmContext == null) {
             if (algorithmContextUid != null) {
-                algorithmContext = definitionService.getAlgorithmContextByUid(getEnvironment(), algorithmContextUid);
+                algorithmContext = definitionService.getAlgorithmContextByUid(algorithmContextUid);
             }
         }
         return algorithmContext;
     }
 
     public List<AlgorithmContext> getAlgorithmContexts() {
-        return definitionService.getAlgorithmContexts(getEnvironment());
+        return definitionService.getAlgorithmContexts();
     }
 
     // ItemDefinitions
@@ -157,8 +129,8 @@ public class DefinitionBrowser extends BaseBrowser {
 
     public ItemDefinition getItemDefinition() {
         if (itemDefinition == null) {
-            if ((itemDefinitionUid != null) && (getEnvironment() != null)) {
-                itemDefinition = definitionService.getItemDefinitionByUid(getEnvironment(), itemDefinitionUid);
+            if ((itemDefinitionUid != null)) {
+                itemDefinition = definitionService.getItemDefinitionByUid(itemDefinitionUid);
             }
         }
         return itemDefinition;

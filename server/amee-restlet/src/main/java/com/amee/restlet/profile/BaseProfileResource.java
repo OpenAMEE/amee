@@ -52,8 +52,7 @@ public abstract class BaseProfileResource extends AMEEResource {
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (getProfile() != null) &&
-                getProfile().getEnvironment().equals(getActiveEnvironment());
+                (getProfile() != null);
     }
 
     public boolean hasParent() {

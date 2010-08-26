@@ -211,7 +211,7 @@ public class DataCategoryResourceBuilder {
         values.put("dataCategory", dataCategory);
         values.put("itemDefinition", dataCategory.getItemDefinition());
         values.put("user", resource.getActiveUser());
-        values.put("itemDefinitions", definitionService.getItemDefinitions(resource.getActiveEnvironment()));
+        values.put("itemDefinitions", definitionService.getItemDefinitions());
         values.put("node", dataCategory);
         values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         if (sheet != null) {
@@ -235,7 +235,7 @@ public class DataCategoryResourceBuilder {
         // If the DC is a symlink, use the target PathItem
         PathItem pathItem = resource.getPathItem();
         if (resource.getDataCategory().getAliasedCategory() != null) {
-            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(resource.getActiveEnvironment());
+            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
             pathItem = pathItemGroup.findByUId(resource.getDataCategory().getAliasedCategory().getUid());
         }
         return pathItem;

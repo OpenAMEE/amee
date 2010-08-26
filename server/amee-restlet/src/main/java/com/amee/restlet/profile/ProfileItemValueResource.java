@@ -20,9 +20,9 @@
 package com.amee.restlet.profile;
 
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.DataCategory;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.ItemValue;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.IItemValueFormAcceptor;
 import com.amee.restlet.profile.acceptor.IItemValueRepresentationAcceptor;
@@ -46,10 +46,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Scope("prototype")
@@ -90,8 +90,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
                 getDataCategory() != null &&
                 getProfileItem().getDataCategory().equals(getDataCategory()) &&
                 getProfileItem().getProfile().equals(getProfile()) &&
-                getProfileItemValue().getItem().equals(getProfileItem()) &&
-                getProfileItemValue().getEnvironment().equals(getActiveEnvironment());
+                getProfileItemValue().getItem().equals(getProfileItem());
     }
 
     @Override
@@ -105,7 +104,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
             dc = dc.getDataCategory();
         }
         entities.add(getProfile());
-        entities.add(getActiveEnvironment());
+        entities.add(getRootDataCategory());
         Collections.reverse(entities);
         return entities;
     }

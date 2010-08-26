@@ -9,7 +9,6 @@ import com.amee.messaging.config.ExchangeConfig;
 import com.amee.messaging.config.QueueConfig;
 import com.amee.platform.science.ReturnValues;
 import com.amee.service.data.DataService;
-import com.amee.service.environment.EnvironmentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -25,9 +24,6 @@ import java.util.List;
 public class CalculationConsumer extends StringRpcMessageConsumer {
 
     private final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    private EnvironmentService environmentService;
 
     @Autowired
     private DataService dataService;
@@ -51,7 +47,7 @@ public class CalculationConsumer extends StringRpcMessageConsumer {
             JSONObject outbound = new JSONObject();
             // Get the DataItem.
             String dataItemUid = inbound.getString("dataItemUid");
-            DataItem dataItem = dataService.getDataItem(environmentService.getEnvironmentByName("AMEE"), dataItemUid);
+            DataItem dataItem = dataService.getDataItem(dataItemUid);
             if (dataItem != null) {
                 // Prepare the value choices.
                 Choices userValueChoices = dataService.getUserValueChoices(dataItem, APIVersion.TWO);

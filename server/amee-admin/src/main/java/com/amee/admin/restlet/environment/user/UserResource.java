@@ -1,13 +1,11 @@
 package com.amee.admin.restlet.environment.user;
 
-
-import com.amee.admin.restlet.environment.EnvironmentBrowser;
+import com.amee.admin.restlet.environment.AdminBrowser;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.auth.User;
 import com.amee.restlet.AuthorizeResource;
-import com.amee.service.environment.EnvironmentConstants;
-import com.amee.service.environment.EnvironmentService;
+import com.amee.service.environment.AdminConstants;
 import com.amee.service.environment.SiteService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,47 +35,41 @@ public class UserResource extends AuthorizeResource {
     private EntityManager entityManager;
 
     @Autowired
-    private EnvironmentBrowser environmentBrowser;
+    private AdminBrowser adminBrowser;
 
     @Autowired
     private SiteService siteService;
 
-    @Autowired
-    protected EnvironmentService environmentService;
-
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
-        environmentBrowser.setUserIdentifier(request.getAttributes().get("userUid").toString());
+        adminBrowser.setUserIdentifier(request.getAttributes().get("userUid").toString());
     }
 
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(environmentBrowser.getEnvironment());
-        entities.add(environmentBrowser.getUser());
+        entities.add(getRootDataCategory());
+        entities.add(adminBrowser.getUser());
         return entities;
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (environmentBrowser.getEnvironment() != null) && (environmentBrowser.getUser() != null);
+        return super.isValid() && (adminBrowser.getUser() != null);
     }
 
     @Override
     public String getTemplatePath() {
-        return EnvironmentConstants.VIEW_USER;
+        return AdminConstants.VIEW_USER;
     }
 
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
-        values.put("browser", environmentBrowser);
-        values.put("environment", environmentBrowser.getEnvironment());
-        values.put("user", environmentBrowser.getUser());
-        values.put("apiVersions", environmentBrowser.getApiVersions());
+        values.put("browser", adminBrowser);
+        values.put("user", adminBrowser.getUser());
+        values.put("apiVersions", adminBrowser.getApiVersions());
         values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         return values;
     }
@@ -85,16 +77,14 @@ public class UserResource extends AuthorizeResource {
     @Override
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
-        obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
-        obj.put("user", environmentBrowser.getUser().getJSONObject());
+        obj.put("user", adminBrowser.getUser().getJSONObject());
         return obj;
     }
 
     @Override
     public Element getElement(Document document) {
         Element element = document.createElement("UserResource");
-        element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
-        element.appendChild(environmentBrowser.getUser().getElement(document));
+        element.appendChild(adminBrowser.getUser().getElement(document));
         return element;
     }
 
@@ -109,7 +99,7 @@ public class UserResource extends AuthorizeResource {
     public void doStore(Representation entity) {
         log.debug("doStore");
         Form form = getForm();
-        User user = environmentBrowser.getUser();
+        User user = adminBrowser.getUser();
         boolean ok = true;
         // update values
         if (form.getNames().contains("name")) {
@@ -117,7 +107,7 @@ public class UserResource extends AuthorizeResource {
         }
         if (form.getNames().contains("username")) {
             if (form.getFirstValue("username").equalsIgnoreCase(user.getUsername())
-                    || siteService.getUserByUsername(environmentBrowser.getEnvironment(), form.getFirstValue("username")) == null) {
+                    || siteService.getUserByUsername(form.getFirstValue("username")) == null) {
                 user.setUsername(form.getFirstValue("username"));
             } else {
                 ok = false;
@@ -138,7 +128,7 @@ public class UserResource extends AuthorizeResource {
                 user.setEmail(form.getFirstValue("email"));
             }
             if (form.getNames().contains("APIVersion")) {
-                user.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("APIVersion")));
+                user.setAPIVersion(adminBrowser.getApiVersion(form.getFirstValue("APIVersion")));
                 if (user.getAPIVersion() == null) {
                     log.warn("Unable to find api version '" + form.getFirstValue("APIVersion") + "'");
                     badRequest();
@@ -168,7 +158,7 @@ public class UserResource extends AuthorizeResource {
 
     @Override
     public void doRemove() {
-        siteService.remove(environmentBrowser.getUser());
+        siteService.remove(adminBrowser.getUser());
         success();
     }
 }

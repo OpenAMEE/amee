@@ -24,7 +24,6 @@ package com.amee.service.environment;
 import com.amee.domain.*;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.GroupPrincipal;
-import com.amee.domain.environment.Environment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -33,9 +32,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 @Service
 public class GroupService implements Serializable {
@@ -61,14 +60,12 @@ public class GroupService implements Serializable {
 
     // Groups
 
-    public Group getGroupByUid(Environment environment, String uid) {
+    public Group getGroupByUid(String uid) {
         Group group = null;
         List<Group> groups = entityManager.createQuery(
                 "SELECT g FROM Group g " +
-                        "WHERE g.environment.id = :environmentId " +
-                        "AND g.uid = :uid " +
+                        "WHERE g.uid = :uid " +
                         "AND g.status != :trash")
-                .setParameter("environmentId", environment.getId())
                 .setParameter("uid", uid)
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
@@ -80,14 +77,12 @@ public class GroupService implements Serializable {
         return group;
     }
 
-    public Group getGroupByName(Environment environment, String name) {
+    public Group getGroupByName(String name) {
         Group group = null;
         List<Group> groups = entityManager.createQuery(
                 "SELECT g FROM Group g " +
-                        "WHERE g.environment.id = :environmentId " +
-                        "AND g.name = :name " +
+                        "WHERE g.name = :name " +
                         "AND g.status != :trash")
-                .setParameter("environmentId", environment.getId())
                 .setParameter("name", name.trim())
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
@@ -99,14 +94,12 @@ public class GroupService implements Serializable {
         return group;
     }
 
-    public List<Group> getGroups(Environment environment) {
+    public List<Group> getGroups() {
         List<Group> groups = entityManager.createQuery(
                 "SELECT g " +
                         "FROM Group g " +
-                        "WHERE g.environment.id = :environmentId " +
-                        "AND g.status != :trash " +
+                        "WHERE g.status != :trash " +
                         "ORDER BY g.name")
-                .setParameter("environmentId", environment.getId())
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
@@ -114,7 +107,7 @@ public class GroupService implements Serializable {
         return groups;
     }
 
-    public List<Group> getGroups(Environment environment, Pager pager) {
+    public List<Group> getGroups(Pager pager) {
 
         Query query;
 
@@ -124,9 +117,8 @@ public class GroupService implements Serializable {
         query = entityManager.createQuery(
                 "SELECT count(g) " +
                         "FROM Group g " +
-                        "WHERE g.environment.id = :environmentId " + pagerSetClause + " " +
+                        "WHERE " + pagerSetClause + " " +
                         "AND g.status != :trash ")
-                .setParameter("environmentId", environment.getId())
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION);
@@ -141,10 +133,9 @@ public class GroupService implements Serializable {
         query = entityManager.createQuery(
                 "SELECT g " +
                         "FROM Group g " +
-                        "WHERE g.environment.id = :environmentId " + pagerSetClause + " " +
+                        "WHERE " + pagerSetClause + " " +
                         "AND g.status != :trash " +
                         "ORDER BY g.name")
-                .setParameter("environmentId", environment.getId())
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)
@@ -188,15 +179,13 @@ public class GroupService implements Serializable {
 
     // GroupPrincipals
 
-    public GroupPrincipal getGroupPrincipalByUid(Environment environment, String uid) {
+    public GroupPrincipal getGroupPrincipalByUid(String uid) {
         GroupPrincipal groupPrincipal = null;
-        if ((environment != null) && (uid != null)) {
+        if ((uid != null)) {
             List<GroupPrincipal> groupPrincipals = entityManager.createQuery(
                     "SELECT gp FROM GroupPrincipal gp " +
-                            "WHERE gp.environment.id = :environmentId " +
-                            "AND gp.uid = :uid " +
+                            "WHERE gp.uid = :uid " +
                             "AND gp.status != :trash")
-                    .setParameter("environmentId", environment.getId())
                     .setParameter("uid", uid)
                     .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
@@ -214,12 +203,10 @@ public class GroupService implements Serializable {
         if ((group != null) && (entity != null)) {
             List<GroupPrincipal> groupPrincipals = entityManager.createQuery(
                     "SELECT gp FROM GroupPrincipal gp " +
-                            "WHERE gp.environment.id = :environmentId " +
-                            "AND gp.group.id = :groupId " +
+                            "WHERE gp.group.id = :groupId " +
                             "AND gp.principalReference.entityUid = :entityUid " +
                             "AND gp.principalReference.entityType = :entityType " +
                             "AND gp.status != :trash")
-                    .setParameter("environmentId", group.getEnvironment().getId())
                     .setParameter("groupId", group.getId())
                     .setParameter("entityUid", entity.getEntityUid())
                     .setParameter("entityType", entity.getObjectType().getName())
@@ -337,13 +324,11 @@ public class GroupService implements Serializable {
         return groupPrincipals;
     }
 
-    public List<GroupPrincipal> getGroupPrincipals(Environment environment) {
+    public List<GroupPrincipal> getGroupPrincipals() {
         List<GroupPrincipal> groupPrincipals = entityManager.createQuery(
                 "SELECT gp " +
                         "FROM GroupPrincipal gp " +
-                        "WHERE gp.environment.id = :environmentId " +
-                        "AND gp.status != :trash")
-                .setParameter("environmentId", environment.getId())
+                        "WHERE gp.status != :trash")
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
                 .setHint("org.hibernate.cacheRegion", CACHE_REGION)

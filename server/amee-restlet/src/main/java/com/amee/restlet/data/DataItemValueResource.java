@@ -52,11 +52,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //TODO - Move to builder model
 
@@ -103,8 +99,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     /**
      * Returns true if itemValue is valid. Internally calls isItemValueValid(ItemValue itemValue).
      * <p/>
-     * An ItemValue is valid if; it is not trashed, it belongs to the current DataItem, it belongs
-     * to the current Environment.
+     * An ItemValue is valid if; it is not trashed and it belongs to the current DataItem.
      *
      * @return true if the itemValue is valid, otherwise false
      */
@@ -115,8 +110,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     /**
      * Returns true if itemValue is valid.
      * <p/>
-     * An ItemValue is valid if; it is not trashed, it belongs to the current DataItem, it belongs
-     * to the current Environment.
+     * An ItemValue is valid if; it is not trashed & it belongs to the current DataItem.
      *
      * @param itemValue to validate
      * @return true if the itemValue is valid, otherwise false
@@ -124,8 +118,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     private boolean isItemValueValid(ItemValue itemValue) {
         return (itemValue != null) &&
                 !itemValue.isTrash() &&
-                itemValue.getItem().equals(getDataItem()) &&
-                itemValue.getEnvironment().equals(getActiveEnvironment());
+                itemValue.getItem().equals(getDataItem());
     }
 
     /**
@@ -165,7 +158,6 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             entities.add(dc);
             dc = dc.getDataCategory();
         }
-        entities.add(getActiveEnvironment());
         Collections.reverse(entities);
         return entities;
     }
