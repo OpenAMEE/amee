@@ -32,7 +32,6 @@
     <span id="itemValueDefinition"></span>
     <span id="valueDefinition"></span>
     <span id="valueType"></span>
-    <span id="environment"></span>
     <span id="uid"></span>
     <span id="created"></span>
     <span id="modified"></span>

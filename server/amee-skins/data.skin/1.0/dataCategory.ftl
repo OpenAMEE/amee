@@ -58,7 +58,6 @@
    <#if dataCategory.path != ''>Path: ${dataCategory.path}<br/></#if>
    Full Path: ${fullPath}<br/>
    <#if dataCategory.itemDefinition??>Item Definition: ${dataCategory.itemDefinition.name}<br/></#if>
-   Environment: ${dataCategory.environment.name}<br/>
    UID: ${dataCategory.uid}<br/>
    Created: ${dataCategory.created?string.short}<br/>
    Modified: ${dataCategory.modified?string.short}<br/>

@@ -1,4 +1,4 @@
-<#assign sectionName = 'environments' />
+<#assign sectionName = 'admin' />
 
 <#include '/includes/furniture.ftl'>
 <#include '/includes/before_content.ftl' />
@@ -45,7 +45,7 @@
     }
 
     function updateContext(select) {
-        var url = "/environments/${environment.uid}/algorithmContexts/";
+        var url = "/admin/algorithmContexts/";
         var uid = select.options[select.selectedIndex].value;
         if (uid != "") {
             // update url
@@ -105,14 +105,13 @@
     }
 </style>
 
-<h1>Environment Administration</h1>
+<h1>Administration</h1>
 
-<p><a href='/environments'>Environments</a> /
-    <a href='/environments/${environment.uid}'>${environment.name}</a> /
-    <a href='/environments/${environment.uid}/itemDefinitions'>Item Definitions</a> /
-    <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}'>${itemDefinition.name}</a> /
-    <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/algorithms'>Algorithms</a> /
-    <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/algorithms/${algorithm.uid}'>${algorithm.name}</a>
+<p><a href='/admin'>Admin</a> /
+   <a href='/admin/itemDefinitions'>Item Definitions</a> /
+   <a href='/admin/itemDefinitions/${itemDefinition.uid}'>${itemDefinition.name}</a> /
+   <a href='/admin/itemDefinitions/${itemDefinition.uid}/algorithms'>Algorithms</a> /
+   <a href='/admin/itemDefinitions/${itemDefinition.uid}/algorithms/${algorithm.uid}'>${algorithm.name}</a>
 </p>
 
 <h2>Algorithm Details</h2>
@@ -132,7 +131,7 @@
     <p>
 
         <form id="algorithmFrm" name="algorithmFrm"
-              action='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/algorithms/${algorithm.uid}?method=put'
+              action='/admin/itemDefinitions/${itemDefinition.uid}/algorithms/${algorithm.uid}?method=put'
               method='POST' enctype='application/x-www-form-urlencoded'>
 
             <fieldset>

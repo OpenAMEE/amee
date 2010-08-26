@@ -15,7 +15,6 @@
     Item Value Definition: ${profileItemValue.itemValueDefinition.name}<br/>
     Value Definition: ${profileItemValue.itemValueDefinition.valueDefinition.name}<br/>
     Value Type: ${profileItemValue.itemValueDefinition.valueDefinition.valueType}<br/>
-    Environment: ${profileItemValue.item.environment.name}<br/>
     UID: ${profileItemValue.uid}<br/>
     Created: ${profileItemValue.created?datetime}<br/>
     Modified: ${profileItemValue.modified?datetime}<br/>

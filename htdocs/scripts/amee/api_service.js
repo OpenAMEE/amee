@@ -324,17 +324,6 @@ var ApiService = Class.create({
                     pElement.insert("Item Definition: " + dataCategory.itemDefinition.name);
                 }
 
-                if (json.environment || dataCategory.environment) {
-                    var env;
-                    if (json.environment) {
-                        env = json.environment;
-                    } else {
-                        env = dataCategory.environment;
-                    }
-                    pElement.insert(new Element("br"));
-                    pElement.insert("Environment: " + env.name);
-                }
-
                 pElement.insert(new Element("br"));
                 pElement.insert("Data Category UID: " + dataCategory.uid);
 
