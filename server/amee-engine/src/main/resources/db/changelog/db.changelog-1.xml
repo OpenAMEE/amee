@@ -329,24 +329,97 @@
     </changeSet>
 
     <!-- Altered tables -->
+    <!-- Use sql tag so all changes for a table are executed in one statement. -->
     <changeSet author="david" id="1-9">
-        <comment>Alter VALUE_DEFINITION.</comment>
-
-        <!-- Use sql tag so all changes for a table are executed in one statement. -->
+        <comment>Alter ALGORITHM</comment>
         <sql>
-            ALTER TABLE VALUE_DEFINITION 
+            ALTER TABLE ALGORITHM
             CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
             CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
             CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT '',
-            CHANGE DESCRIPTION DESCRIPTION VARCHAR(255) NOT NULL DEFAULT '',
-            CHANGE VALUE_TYPE VALUE_TYPE TINYINT(3) NOT NULL DEFAULT '0',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE ALGORITHM_CONTEXT_ID ALGORITHM_CONTEXT_ID INT(11) UNSIGNED NULL DEFAULT NULL,
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1'
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-10">
+        <comment>Alter API_VERSION</comment>
+        <sql>
+            ALTER TABLE API_VERSION
+            CHANGE ID ID TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE VERSION VERSION VARCHAR(3) NOT NULL DEFAULT '',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1'
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-11">
+        <comment>Alter DATA_CATEGORY</comment>
+        <sql>
+            ALTER TABLE DATA_CATEGORY
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE PATH PATH VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE DATA_CATEGORY_ID DATA_CATEGORY_ID INT(11) UNSIGNED NULL DEFAULT NULL,
+            CHANGE ITEM_DEFINITION_ID ITEM_DEFINITION_ID INT(11) UNSIGNED NULL DEFAULT NULL,
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            CHANGE ALIASED_TO_ID ALIASED_TO_ID INT(11) UNSIGNED NULL DEFAULT NULL,
+            CHANGE WIKI_NAME WIKI_NAME VARCHAR(255) NOT NULL DEFAULT ''
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-12">
+        <comment>Alter ENTITY_TAG</comment>
+        <sql>
+            ALTER TABLE ENTITY_TAG
+            CHANGE ID ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            CHANGE ENTITY_ID ENTITY_ID BIGINT(20) UNSIGNED NOT NULL,
+            CHANGE ENTITY_TYPE ENTITY_TYPE VARCHAR(3) NOT NULL DEFAULT '',
+            CHANGE ENTITY_UID ENTITY_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE TAG_ID TAG_ID BIGINT(20) UNSIGNED NOT NULL
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-13">
+        <comment>Alter GROUPS</comment>
+        <sql>
+            ALTER TABLE GROUPS CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE NAME NAME VARCHAR(100) NOT NULL DEFAULT '',
             CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
             CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
             CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1'
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-10">
+    <changeSet author="david" id="1-14">
+        <comment>Alter GROUP_PRINCIPAL</comment>
+        <sql>
+            ALTER TABLE GROUP_PRINCIPAL
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            CHANGE GROUP_ID GROUP_ID INT(11) UNSIGNED NOT NULL,
+            CHANGE PRINCIPAL_ID PRINCIPAL_ID BIGINT(20) UNSIGNED NOT NULL,
+            CHANGE PRINCIPAL_UID PRINCIPAL_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE PRINCIPAL_TYPE PRINCIPAL_TYPE VARCHAR(3) NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-15">
         <comment>Alter ITEM_DEFINITION. See: OPS-159.</comment>
         <sql>
             ALTER TABLE ITEM_DEFINITION
@@ -360,8 +433,8 @@
             DROP COLUMN SKIP_RECALCULATION
         </sql>
     </changeSet>
-
-    <changeSet author="david" id="1-11">
+    
+    <changeSet author="david" id="1-16">
         <comment>Set NULL UNIT and PER_UNIT to ''</comment>
         <update tableName="ITEM_VALUE_DEFINITION">
             <column name="UNIT" value=""/>
@@ -373,7 +446,7 @@
         </update>
     </changeSet>
 
-    <changeSet author="david" id="1-12">
+    <changeSet author="david" id="1-17">
         <comment>Alter ITEM_VALUE_DEFINITION</comment>
         <sql>
             ALTER TABLE ITEM_VALUE_DEFINITION
@@ -397,27 +470,160 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-13">
-        <comment>Alter DATA_CATEGORY</comment>
+    <changeSet author="david" id="1-18">
+        <comment>Alter ITEM_VALUE_DEFINITION_API_VERSION</comment>
         <sql>
-            ALTER TABLE DATA_CATEGORY
+            ALTER TABLE ITEM_VALUE_DEFINITION_API_VERSION
+            CHANGE ITEM_VALUE_DEFINITION_ID ITEM_VALUE_DEFINITION_ID BIGINT(20) UNSIGNED NOT NULL,
+            CHANGE API_VERSION_ID API_VERSION_ID BIGINT(20) UNSIGNED NOT NULL
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-19">
+        <comment>Alter LOCALE_NAME</comment>
+        <sql>
+            ALTER TABLE LOCALE_NAME
+            CHANGE ID ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            CHANGE ENTITY_ID ENTITY_ID BIGINT(20) UNSIGNED NOT NULL,
+            CHANGE ENTITY_TYPE ENTITY_TYPE VARCHAR(3) NOT NULL DEFAULT '',
+            CHANGE ENTITY_UID ENTITY_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE LOCALE LOCALE VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT ''
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-20">
+        <comment>Alter METADATA</comment>
+        <sql>
+            ALTER TABLE METADATA
+            CHANGE ID ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            CHANGE ENTITY_ID ENTITY_ID BIGINT(20) UNSIGNED NOT NULL ,
+            CHANGE ENTITY_TYPE ENTITY_TYPE VARCHAR(3) NOT NULL DEFAULT '',
+            CHANGE ENTITY_UID ENTITY_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT ''
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-21">
+        <comment>Alter PERMISSION</comment>
+        <sql>
+            ALTER TABLE PERMISSION
+            CHANGE ID ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            CHANGE ENTITY_ID ENTITY_ID BIGINT(20) UNSIGNED NOT NULL,
+            CHANGE ENTITY_UID ENTITY_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE ENTITY_TYPE ENTITY_TYPE VARCHAR(3) NOT NULL DEFAULT '',
+            CHANGE PRINCIPAL_ID PRINCIPAL_ID BIGINT(20) UNSIGNED NOT NULL ,
+            CHANGE PRINCIPAL_UID PRINCIPAL_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE PRINCIPAL_TYPE PRINCIPAL_TYPE VARCHAR(3) NOT NULL DEFAULT '',
+            CHANGE ENTRIES ENTRIES VARCHAR(1000) NOT NULL DEFAULT ''
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-22">
+        <comment>Alter PROFILE</comment>
+        <sql>
+            ALTER TABLE PROFILE
+            CHANGE ID ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE PATH PATH VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            CHANGE USER_ID USER_ID BIGINT(20) UNSIGNED NOT NULL,
+            ADD INDEX USER_ID_KEY (USER_ID)
+        </sql>
+    </changeSet>
+    
+    <changeSet author="david" id="1-23">
+        <comment>Alter RETURN_VALUE_DEFINITION</comment>
+        <sql>
+            ALTER TABLE RETURN_VALUE_DEFINITION
+            CHANGE ID ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE ITEM_DEFINITION_ID ITEM_DEFINITION_ID INT(11) UNSIGNED NOT NULL,
+            CHANGE VALUE_DEFINITION_ID VALUE_DEFINITION_ID INT(11) UNSIGNED NOT NULL,
+            CHANGE TYPE TYPE VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE UNIT UNIT VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE PER_UNIT PER_UNIT VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            CHANGE DEFAULT_TYPE DEFAULT_TYPE BIT(1) NOT NULL DEFAULT b'0'
+        </sql>
+    </changeSet>
+    
+    <changeSet author="david" id="1-24">
+        <comment>Alter TAG</comment>
+        <sql>
+            ALTER TABLE TAG
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            CHANGE TAG TAG VARCHAR(255) NOT NULL DEFAULT ''
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-25">
+        <comment>Set NULL LOCALE to ''</comment>
+        <update tableName="USER">
+            <column name="LOCALE" value=""/>
+            <where>LOCALE IS NULL</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="david" id="1-26">
+        <comment>Alter USER</comment>
+        <sql>
+            ALTER TABLE USER
+            CHANGE ID ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            CHANGE USERNAME USERNAME VARCHAR(20) NOT NULL,
+            CHANGE PASSWORD PASSWORD VARCHAR(40) NOT NULL,
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE USER_TYPE USER_TYPE INT(11) NOT NULL,
+            CHANGE API_VERSION_ID API_VERSION_ID TINYINT(3) UNSIGNED NOT NULL,
+            CHANGE LOCALE LOCALE VARCHAR(12) NOT NULL DEFAULT '',
+            CHANGE TIME_ZONE TIME_ZONE VARCHAR(255) NOT NULL DEFAULT 'UTC',
+            DROP INDEX USERNAME_IND,
+            ADD UNIQUE INDEX USERNAME_KEY (USERNAME)
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="1-27">
+        <comment>Alter VALUE_DEFINITION.</comment>
+        <sql>
+            ALTER TABLE VALUE_DEFINITION
             CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
             CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
             CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT '',
-            CHANGE PATH PATH VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE DESCRIPTION DESCRIPTION VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE VALUE_TYPE VALUE_TYPE TINYINT(3) NOT NULL DEFAULT '0',
             CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
             CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
-            CHANGE DATA_CATEGORY_ID DATA_CATEGORY_ID INT(11) UNSIGNED NULL DEFAULT NULL,
-            CHANGE ITEM_DEFINITION_ID ITEM_DEFINITION_ID INT(11) UNSIGNED NULL DEFAULT NULL,
-            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
-            CHANGE ALIASED_TO_ID ALIASED_TO_ID INT(11) UNSIGNED NULL DEFAULT NULL,
-            CHANGE WIKI_NAME WIKI_NAME VARCHAR(255) NOT NULL DEFAULT ''
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1'
         </sql>
     </changeSet>
 
     <!-- Indexes -->
     <!-- Must use custom sql to work around this MySQL bug: http://bugs.mysql.com/bug.php?id=48875 -->
-    <changeSet author="david" id="1-14">
+    <changeSet author="david" id="1-28">
         <comment>Add indexes to DATA_ITEM</comment>
         <sql>
             ALTER TABLE DATA_ITEM
@@ -427,7 +633,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-15">
+    <changeSet author="david" id="1-29">
         <comment>Add indexes to PROFILE_ITEM</comment>
         <sql>
             ALTER TABLE PROFILE_ITEM
@@ -437,7 +643,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-16">
+    <changeSet author="david" id="1-30">
         <comment>Add indexes to PROFILE_ITEM_TEXT_VALUE</comment>
         <sql>
             ALTER TABLE PROFILE_ITEM_TEXT_VALUE
@@ -446,7 +652,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-17">
+    <changeSet author="david" id="1-31">
         <comment>Add indexes to PROFILE_ITEM_NUMBER_VALUE</comment>
         <sql>
             ALTER TABLE PROFILE_ITEM_NUMBER_VALUE
@@ -455,7 +661,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-18">
+    <changeSet author="david" id="1-32">
         <comment>Add indexes to DATA_ITEM_TEXT_VALUE</comment>
         <sql>
             ALTER TABLE DATA_ITEM_TEXT_VALUE
@@ -464,7 +670,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-19">
+    <changeSet author="david" id="1-33">
         <comment>Add indexes to DATA_ITEM_NUMBER_VALUE</comment>
         <sql>
             ALTER TABLE DATA_ITEM_NUMBER_VALUE
@@ -473,7 +679,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-20">
+    <changeSet author="david" id="1-34">
         <comment>Add indexes to DATA_ITEM_TEXT_VALUE_HISTORY</comment>
         <sql>
             ALTER TABLE DATA_ITEM_TEXT_VALUE_HISTORY
@@ -482,13 +688,19 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-21">
+    <changeSet author="david" id="1-35">
         <comment>Add indexes to DATA_ITEM_NUMBER_VALUE_HISTORY</comment>
         <sql>
             ALTER TABLE DATA_ITEM_NUMBER_VALUE_HISTORY
             ADD INDEX ITEM_VALUE_DEFINITION_ID_KEY (ITEM_VALUE_DEFINITION_ID),
             ADD INDEX DATA_ITEM_ID_KEY (DATA_ITEM_ID)
         </sql>
+    </changeSet>
+
+    <!-- Drop old permission table -->
+    <changeSet author="david" id="1-36">
+        <comment>Drop PERMISSION_BACKUP</comment>
+        <dropTable tableName="PERMISSION_BACKUP"/>
     </changeSet>
 
 </databaseChangeLog>
