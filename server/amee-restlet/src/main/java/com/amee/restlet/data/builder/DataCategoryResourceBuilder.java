@@ -93,7 +93,7 @@ public class DataCategoryResourceBuilder {
                     Column c = sheet.getColumn(sortBy);
                     if (c != null) {
                         try {
-                            c.setSortOrder(SortOrder.valueOf(resource.getRequest().getResourceRef().getQueryAsForm().getFirstValue("sortOrder")));
+                            c.setSortOrder(SortOrder.valueOf(resource.getRequest().getResourceRef().getQueryAsForm().getFirstValue("sortOrder", "")));
                         } catch (IllegalArgumentException e) {
                             // swallow
                         }
