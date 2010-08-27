@@ -13,6 +13,7 @@ import com.amee.domain.sheet.Sheet;
 import com.amee.domain.sheet.SortOrder;
 import com.amee.restlet.data.DataCategoryResource;
 import com.amee.service.data.DataService;
+import com.amee.service.data.DataSheetService;
 import com.amee.service.definition.DefinitionService;
 import com.amee.service.path.PathItemService;
 import org.json.JSONArray;
@@ -52,6 +53,9 @@ public class DataCategoryResourceBuilder {
     private DataService dataService;
 
     @Autowired
+    private DataSheetService dataSheetService;
+
+    @Autowired
     private DefinitionService definitionService;
 
     @Autowired
@@ -82,7 +86,7 @@ public class DataCategoryResourceBuilder {
             children.put("dataCategories", dataCategories);
 
             // addItemValue Sheet containing Data Items
-            Sheet sheet = dataService.getSheet(resource.getDataBrowser(), pathItem.getFullPath());
+            Sheet sheet = dataSheetService.getSheet(resource.getDataBrowser(), pathItem.getFullPath());
             if (sheet != null) {
                 String sortBy = resource.getRequest().getResourceRef().getQueryAsForm().getFirstValue("sortBy");
                 if (sortBy != null) {
@@ -165,7 +169,7 @@ public class DataCategoryResourceBuilder {
             childrenElement.appendChild(dataCategoriesElement);
 
             // list child Data Items via sheet
-            Sheet sheet = dataService.getSheet(resource.getDataBrowser(), pathItem.getFullPath());
+            Sheet sheet = dataSheetService.getSheet(resource.getDataBrowser(), pathItem.getFullPath());
             if (sheet != null) {
                 Pager pager = resource.getPager();
                 sheet = Sheet.getCopy(sheet, pager);
@@ -205,7 +209,7 @@ public class DataCategoryResourceBuilder {
     public Map<String, Object> getTemplateValues(DataCategoryResource resource) {
         DataCategory dataCategory = resource.getDataCategory();
         PathItem pathItem = getPathItem(resource);
-        Sheet sheet = dataService.getSheet(resource.getDataBrowser(), pathItem.getFullPath());
+        Sheet sheet = dataSheetService.getSheet(resource.getDataBrowser(), pathItem.getFullPath());
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("browser", resource.getDataBrowser());
         values.put("dataCategory", dataCategory);
