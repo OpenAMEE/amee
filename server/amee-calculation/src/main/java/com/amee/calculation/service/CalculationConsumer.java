@@ -9,6 +9,7 @@ import com.amee.messaging.config.ExchangeConfig;
 import com.amee.messaging.config.QueueConfig;
 import com.amee.platform.science.ReturnValues;
 import com.amee.service.data.DataService;
+import com.amee.service.data.DataSheetService;
 import com.amee.service.environment.EnvironmentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,6 +34,9 @@ public class CalculationConsumer extends StringRpcMessageConsumer {
     private DataService dataService;
 
     @Autowired
+    private DataSheetService dataSheetService;
+
+    @Autowired
     private CalculationService calculationService;
 
     @Autowired
@@ -54,7 +58,7 @@ public class CalculationConsumer extends StringRpcMessageConsumer {
             DataItem dataItem = dataService.getDataItem(environmentService.getEnvironmentByName("AMEE"), dataItemUid);
             if (dataItem != null) {
                 // Prepare the value choices.
-                Choices userValueChoices = dataService.getUserValueChoices(dataItem, APIVersion.TWO);
+                Choices userValueChoices = dataSheetService.getUserValueChoices(dataItem, APIVersion.TWO);
                 userValueChoices.merge(getParameters(inbound));
                 // Do the calculation
                 ReturnValues amounts = calculationService.calculate(dataItem, userValueChoices, APIVersion.TWO);

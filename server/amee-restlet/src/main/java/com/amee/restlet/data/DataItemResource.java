@@ -32,6 +32,7 @@ import com.amee.platform.science.*;
 import com.amee.restlet.RequestContext;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
+import com.amee.service.data.DataSheetService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -67,6 +68,9 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
     @Autowired
     private DataService dataService;
+
+    @Autowired
+    private DataSheetService dataSheetService;
 
     @Autowired
     private CalculationService calculationService;
@@ -138,7 +142,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Override
     public Map<String, Object> getTemplateValues() {
         DataItem dataItem = getDataItem();
-        Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
+        Choices userValueChoices = dataSheetService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion()).defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
@@ -154,7 +158,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Override
     public JSONObject getJSONObject() throws JSONException {
         DataItem dataItem = getDataItem();
-        Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
+        Choices userValueChoices = dataSheetService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         ReturnValues returnAmounts = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
         Amount amount = returnAmounts.defaultValueAsAmount();
@@ -220,7 +224,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Override
     public Element getElement(Document document) {
         DataItem dataItem = getDataItem();
-        Choices userValueChoices = dataService.getUserValueChoices(dataItem, getAPIVersion());
+        Choices userValueChoices = dataSheetService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         ReturnValues returnAmounts = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
         Amount amount = returnAmounts.defaultValueAsAmount();
