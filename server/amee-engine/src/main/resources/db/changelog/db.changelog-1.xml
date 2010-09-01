@@ -282,10 +282,9 @@
             <column name="DATA_ITEM_ID" type="BIGINT UNSIGNED">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValue="1970-01-01 00:00:00" name="START_DATE" type="DATETIME">
+            <column defaultValue="1000-01-01 00:00:00" name="START_DATE" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
-            <column name="END_DATE" type="DATETIME"/>
         </createTable>
         <modifySql dbms="mysql">
              <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
@@ -330,10 +329,9 @@
             <column defaultValue="" name="PER_UNIT" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValue="1970-01-01 00:00:00" name="START_DATE" type="DATETIME">
+            <column defaultValue="1000-01-01 00:00:00" name="START_DATE" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
-            <column name="END_DATE" type="DATETIME"/>
         </createTable>
         <modifySql dbms="mysql">
              <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
