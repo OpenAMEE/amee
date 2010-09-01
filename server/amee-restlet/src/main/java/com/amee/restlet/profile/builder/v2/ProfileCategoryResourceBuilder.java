@@ -2,29 +2,21 @@ package com.amee.restlet.profile.builder.v2;
 
 import com.amee.base.utils.XMLUtils;
 import com.amee.calculation.service.ProRataProfileService;
-import com.amee.domain.ObjectType;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.path.PathItem;
-import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
-import com.amee.service.path.PathItemService;
+import com.amee.service.data.DataService;
 import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.ProfileService;
 import com.amee.service.profile.SelectByProfileService;
 import org.apache.abdera.ext.history.FeedPagingHelper;
 import org.apache.abdera.ext.opensearch.OpenSearchExtensionFactory;
-import org.apache.abdera.model.Category;
-import org.apache.abdera.model.Entry;
-import org.apache.abdera.model.Feed;
-import org.apache.abdera.model.IRIElement;
-import org.apache.abdera.model.Person;
-import org.apache.abdera.model.Text;
+import org.apache.abdera.model.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -35,11 +27,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This file is part of AMEE.
@@ -66,6 +54,9 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
+    private DataService dataService;
+
+    @Autowired
     private ProRataProfileService proRataProfileService;
 
     @Autowired
@@ -73,9 +64,6 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
     @Autowired
     private ProfileService profileService;
-
-    @Autowired
-    PathItemService pathItemService;
 
     public JSONObject getJSONObject(ProfileCategoryResource resource) throws JSONException {
 
@@ -96,10 +84,10 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         } else {
 
             // add objects
-            obj.put("path", resource.getPathItem().getFullPath());
+            obj.put("path", resource.getDataCategory().getFullPath());
 
             // add relevant Profile info depending on whether we are at root
-            if (resource.hasParent()) {
+            if (resource.getDataCategory().getPath().isEmpty()) {
                 obj.put("profile", resource.getProfile().getIdentityJSONObject());
             } else {
                 obj.put("profile", resource.getProfile().getJSONObject());
@@ -111,10 +99,14 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             // add Data Category
             obj.put("dataCategory", resource.getDataCategory().getJSONObject(true));
 
-            // add Data Categories via pathItem to children
+            // add Data Categories to children
             JSONArray dataCategories = new JSONArray();
-            for (PathItem pi : resource.getChildrenByType(ObjectType.DC.getName())) {
-                dataCategories.put(pi.getJSONObject());
+            for (DataCategory dc : dataService.getDataCategories(resource.getDataCategory())) {
+                JSONObject dcObj = new JSONObject();
+                dcObj.put("uid", dc.getUid());
+                dcObj.put("name", dc.getName());
+                dcObj.put("path", dc.getPath());
+                dataCategories.put(dcObj);
             }
             obj.put("profileCategories", dataCategories);
 
@@ -171,10 +163,10 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             // create element
             element = document.createElement("ProfileCategoryResource");
 
-            element.appendChild(XMLUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
+            element.appendChild(XMLUtils.getElement(document, "Path", resource.getDataCategory().getFullPath()));
 
             // add relevant Profile info depending on whether we are at root
-            if (resource.hasParent()) {
+            if (resource.getDataCategory().getPath().isEmpty()) {
                 element.appendChild(resource.getProfile().getIdentityElement(document));
             } else {
                 element.appendChild(resource.getProfile().getElement(document));
@@ -186,10 +178,14 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             // add DataCategory
             element.appendChild(resource.getDataCategory().getIdentityElement(document));
 
-            // add Data Categories via pathItem to children
+            // add Data Categories
             Element dataCategoriesElement = document.createElement("ProfileCategories");
-            for (PathItem dc : resource.getChildrenByType(ObjectType.DC.getName())) {
-                dataCategoriesElement.appendChild(dc.getElement(document));
+            for (DataCategory dc : dataService.getDataCategories(resource.getDataCategory())) {
+                Element dcElement = document.createElement("DataCategory");
+                dcElement.setAttribute("uid", dc.getUid());
+                dcElement.appendChild(XMLUtils.getElement(document, "Name", dc.getName()));
+                dcElement.appendChild(XMLUtils.getElement(document, "Path", dc.getPath()));
+                dataCategoriesElement.appendChild(dcElement);
             }
             element.appendChild(dataCategoriesElement);
 
@@ -285,6 +281,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     }
 
     // TODO: What is the total? Total default? Total CO2e?
+
     private double getTotalAmount(List<ProfileItem> profileItems, CO2AmountUnit returnUnit) {
         double totalAmount = 0.0;
         double amount;
@@ -512,9 +509,8 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         return entry;
     }
 
-    private String getFullPath(ProfileItem item) {
-        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(item.getEnvironment());
-        return "/profiles/" + item.getProfile().getUid() + pathItemGroup.findByUId(item.getDataCategory().getUid()) + "/" + item.getUid();
+    private String getFullPath(ProfileItem profileItem) {
+        return "/profiles/" + profileItem.getFullPath();
     }
 }
 

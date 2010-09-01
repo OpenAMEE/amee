@@ -24,12 +24,15 @@ import com.amee.base.utils.XMLUtils;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.data.builder.v2.ItemValueInListBuilder;
 import com.amee.platform.science.StartEndDate;
+import com.amee.restlet.AMEEResource;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.utils.APIFault;
+import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.locale.LocaleService;
 import org.apache.commons.collections.CollectionUtils;
@@ -52,22 +55,24 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //TODO - Move to builder model
 
 @Component
 @Scope("prototype")
-public class DataItemValueResource extends BaseDataResource implements Serializable {
+public class DataItemValueResource extends AMEEResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private LocaleService localeService;
+
+    @Autowired
+    private DataBrowser dataBrowser;
+
+    private DataCategory dataCategory;
+    private DataItem dataItem;
 
     // Will be null is a sequence of ItemValues is being requested.
     private ItemValue itemValue;
@@ -81,11 +86,19 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        setDataItemByPathOrUid(request.getAttributes().get("itemPath").toString());
+
+        // Obtain DataCategory.
+        dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
+        dataBrowser.setDataCategory(dataCategory);
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
+
+        // Obtain DataItem.
+        dataItem = dataService.getDataItem(getActiveEnvironment(), request.getAttributes().get("itemPath").toString());
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataItem(dataItem);
+
+        // Obtain ItemValue.
         setDataItemValue(request);
-        if (getDataItemValue() != null) {
-            ((RequestContext) ThreadBeanHolder.get("ctx")).setItemValue(getDataItemValue());
-        }
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setItemValue(itemValue);
     }
 
     /**
@@ -96,7 +109,10 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (getDataItem() != null) &&
+                (dataCategory != null) &&
+                (dataItem != null) &&
+                dataItem.getDataCategory().equals(dataCategory) &&
+                !dataItem.isTrash() &&
                 (isItemValueValid() || isItemValuesValid());
     }
 
@@ -124,7 +140,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     private boolean isItemValueValid(ItemValue itemValue) {
         return (itemValue != null) &&
                 !itemValue.isTrash() &&
-                itemValue.getItem().equals(getDataItem()) &&
+                itemValue.getItem().equals(dataItem) &&
                 itemValue.getEnvironment().equals(getActiveEnvironment());
     }
 
@@ -159,8 +175,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getDataItem());
-        DataCategory dc = getDataItem().getDataCategory();
+        entities.add(dataItem);
+        DataCategory dc = dataItem.getDataCategory();
         while (dc != null) {
             entities.add(dc);
             dc = dc.getDataCategory();
@@ -180,7 +196,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", dataBrowser);
-        values.put("dataItem", getDataItem());
+        values.put("dataItem", dataItem);
         values.put("itemValue", itemValue);
         values.put("node", itemValue);
         values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
@@ -192,7 +208,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         Form query = request.getResourceRef().getQueryAsForm();
 
         // Must have a DataItem.
-        if (getDataItem() == null) {
+        if (dataItem == null) {
             return;
         }
 
@@ -216,13 +232,13 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             valuesPerPage = Integer.parseInt(query.getFirstValue("valuesPerPage"));
         }
 
-        // TODO: Implement paging.
         // Retrieve all itemValues in a historical sequence if mandated in the request (get=all), otherwise retrieve
         // the closest match.
         if (valuesPerPage > 1) {
-            itemValues = getDataItem().getAllItemValues(itemValueIdentifier);
+            // TODO: Implement paging.
+            itemValues = dataItem.getAllItemValues(itemValueIdentifier);
         } else {
-            itemValue = getDataItem().getItemValue(itemValueIdentifier, startDate);
+            itemValue = dataItem.getItemValue(itemValueIdentifier, startDate);
         }
     }
 
@@ -240,8 +256,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             }
             obj.put("itemValues", values);
         }
-        obj.put("dataItem", getDataItem().getIdentityJSONObject());
-        obj.put("path", pathItem.getFullPath());
+        obj.put("dataItem", dataItem.getIdentityJSONObject());
+        obj.put("path", dataItem.getFullPath() + "/" + getRequest().getAttributes().get("itemPath").toString());
         return obj;
     }
 
@@ -259,8 +275,8 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             }
             element.appendChild(values);
         }
-        element.appendChild(getDataItem().getIdentityElement(document));
-        element.appendChild(XMLUtils.getElement(document, "Path", pathItem.getFullPath()));
+        element.appendChild(dataItem.getIdentityElement(document));
+        element.appendChild(XMLUtils.getElement(document, "Path", dataItem.getFullPath() + "/" + getRequest().getAttributes().get("itemPath").toString()));
         return element;
     }
 
@@ -279,6 +295,12 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     public void doStore(Representation entity) {
 
         log.debug("doStore()");
+
+        // Must have a DataItem.
+        if (dataItem == null) {
+            badRequest();
+            return;
+        }
 
         Form form = getForm();
 
@@ -325,14 +347,14 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
             Date startDate = new StartEndDate(form.getFirstValue("startDate"));
 
             // Can't amend the startDate of the first ItemValue in a history (startDate == DI.startDate)
-            if (itemValue.getStartDate().equals(getDataItem().getStartDate())) {
+            if (itemValue.getStartDate().equals(dataItem.getStartDate())) {
                 log.warn("doStore() badRequest - Trying to update the startDate of the first DIV in a history.");
                 badRequest(APIFault.INVALID_RESOURCE_MODIFICATION);
                 return;
             }
 
             // The submitted startDate must be on or after the epoch.
-            if (!getDataItem().isWithinLifeTime(startDate)) {
+            if (!dataItem.isWithinLifeTime(startDate)) {
                 log.warn("doStore() badRequest - Trying to update a DIV to start before the epoch.");
                 badRequest(APIFault.INVALID_DATE_RANGE);
                 return;
@@ -343,7 +365,7 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
         }
 
         // Always invalidate the DataCategory caches.
-        dataService.invalidate(getDataItem().getDataCategory());
+        dataService.invalidate(dataItem.getDataCategory());
 
         // Update was a success.
         successfulPut(getFullPath());
@@ -357,17 +379,25 @@ public class DataItemValueResource extends BaseDataResource implements Serializa
     @Override
     public void doRemove() {
         log.debug("doRemove()");
-        int remaining = getDataItem().getAllItemValues(itemValue.getItemValueDefinition().getPath()).size();
+
+        // Must have a DataItem.
+        if (dataItem == null) {
+            badRequest();
+            return;
+        }
+
+        // Attempt to remove a single ItemValue.
+        int remaining = dataItem.getAllItemValues(itemValue.getItemValueDefinition().getPath()).size();
         if (remaining > 1) {
             dataService.remove(itemValue);
-            dataService.invalidate(getDataItem().getDataCategory());
-            successfulDelete(pathItem.getParent().getFullPath());
+            dataService.invalidate(dataItem.getDataCategory());
+            successfulDelete("/data/ " + dataItem.getFullPath());
         } else {
             badRequest(APIFault.DELETE_MUST_LEAVE_AT_LEAST_ONE_ITEM_VALUE);
         }
     }
 
-    public ItemValue getDataItemValue() {
-        return itemValue;
+    public String getFullPath() {
+        return "/data" + itemValue.getFullPath();
     }
 }

@@ -23,15 +23,9 @@ package com.amee.restlet.data;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.data.DataItem;
-import com.amee.domain.environment.Environment;
-import com.amee.domain.path.PathItem;
-import com.amee.domain.path.PathItemGroup;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
-import com.amee.service.path.PathItemService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
@@ -51,23 +45,14 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
     @Autowired
     private DataService dataService;
 
-    @Autowired
-    private PathItemService pathItemService;
-
     private String dataItemUid = "";
     private DataItem dataItem = null;
-    private PathItem pathItem = null;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         dataItemUid = request.getResourceRef().getQueryAsForm().getFirstValue("dataItemUid", "");
         dataItem = dataService.getDataItem(getActiveEnvironment(), dataItemUid);
-        if (dataItem != null) {
-            PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(getActiveEnvironment());
-            PathItem dataCategoryPathItem = pathItemGroup.findByUId(dataItem.getDataCategory().getUid());
-            pathItem = dataCategoryPathItem.findLastPathItem(dataItem.getUid(), true);
-        }
     }
 
     @Override
@@ -91,7 +76,6 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
         values.put("dataItemUid", dataItemUid);
         if (dataItem != null) {
             values.put("dataItem", dataItem);
-            values.put("pathItem", pathItem);
             values.put("itemValueDefinitions", dataItem.getItemDefinition().getItemValueDefinitions());
             values.put("itemValuesMap", dataItem.getItemValuesMap());
         }
