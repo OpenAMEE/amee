@@ -65,7 +65,7 @@ public class PermissionsResource extends AuthorizeResource {
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
+        entities.add(getRootDataCategory());
         return entities;
     }
 
@@ -165,7 +165,7 @@ public class PermissionsResource extends AuthorizeResource {
         entityReference.setEntityId(entityReference.getEntity().getId());
 
         // Create Permission.
-        permissionService.persist(new Permission(getActiveEnvironment(), principalReference, entityReference, entries));
+        permissionService.persist(new Permission(principalReference, entityReference, entries));
     }
 
     public AMEEEntityReference getEntityReference(Request request) {

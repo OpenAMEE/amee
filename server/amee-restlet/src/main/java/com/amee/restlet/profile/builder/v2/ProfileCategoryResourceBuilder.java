@@ -4,6 +4,7 @@ import com.amee.base.utils.XMLUtils;
 import com.amee.calculation.service.ProRataProfileService;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
+import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
@@ -94,7 +95,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             }
 
             // add environment
-            obj.put("environment", resource.getActiveEnvironment().getJSONObject(true));
+            obj.put("environment", Environment.ENVIRONMENT.getJSONObject(true));
 
             // add Data Category
             obj.put("dataCategory", resource.getDataCategory().getJSONObject(true));
@@ -173,7 +174,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             }
 
             // add environment
-            element.appendChild(resource.getActiveEnvironment().getElement(document, true));
+            element.appendChild(Environment.ENVIRONMENT.getElement(document, true));
 
             // add DataCategory
             element.appendChild(resource.getDataCategory().getIdentityElement(document));

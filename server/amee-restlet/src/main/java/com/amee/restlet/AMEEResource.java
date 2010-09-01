@@ -3,7 +3,6 @@ package com.amee.restlet;
 import com.amee.domain.path.Pathable;
 import com.amee.restlet.profile.builder.v2.AtomFeed;
 import com.amee.service.data.DataService;
-import com.amee.service.environment.EnvironmentService;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xerces.dom.DocumentImpl;
@@ -61,11 +60,6 @@ public abstract class AMEEResource extends AuthorizeResource {
     @Autowired
     protected DataService dataService;
 
-    @Autowired
-    protected EnvironmentService environmentService;
-
-    private Pathable pathable;
-
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
@@ -86,7 +80,6 @@ public abstract class AMEEResource extends AuthorizeResource {
     }
 
     // TODO: This is a modified duplication of the same method in BaseResource. Find a way to merge.
-
     @Override
     public Representation represent(Variant variant) throws ResourceException {
 
@@ -153,7 +146,6 @@ public abstract class AMEEResource extends AuthorizeResource {
     }
 
     // TODO: Needs to replace getJsonRepresentation in BaseResource or be merged.
-
     protected Representation getJsonRepresentation() throws ResourceException {
 
         // flag to ensure we only do the fetching work once
@@ -190,7 +182,6 @@ public abstract class AMEEResource extends AuthorizeResource {
     }
 
     // TODO: Needs to replace getAtomRepresentation in BaseResource or be merged.
-
     protected Representation getAtomRepresentation() throws ResourceException {
         final org.apache.abdera.model.Element atomElement = getAtomElement();
         return new WriterRepresentation(MediaType.APPLICATION_ATOM_XML) {
@@ -201,7 +192,6 @@ public abstract class AMEEResource extends AuthorizeResource {
     }
 
     //TODO - Implementing here so that subclasses are not required to. Admin client templates will be phased out in time.
-
     public String getTemplatePath() {
         return null;
     }
@@ -209,7 +199,7 @@ public abstract class AMEEResource extends AuthorizeResource {
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
-        values.put("apiVersions", environmentService.getAPIVersions());
+        values.put("apiVersions", dataService.getAPIVersions());
         return values;
     }
 

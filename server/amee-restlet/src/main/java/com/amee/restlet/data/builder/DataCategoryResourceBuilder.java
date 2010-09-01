@@ -214,7 +214,7 @@ public class DataCategoryResourceBuilder {
         values.put("dataCategories", dataService.getDataCategories(dataCategory));
         values.put("itemDefinition", dataCategory.getItemDefinition());
         values.put("user", resource.getActiveUser());
-        values.put("itemDefinitions", definitionService.getItemDefinitions(resource.getActiveEnvironment()));
+        values.put("itemDefinitions", definitionService.getItemDefinitions());
         values.put("node", dataCategory);
         values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         if (sheet != null) {

@@ -1,10 +1,10 @@
-<#assign sectionName = 'environments'>
+<#assign sectionName = 'admin'>
 
 <#include '/includes/before_content.ftl'>
 
 <script type="text/javascript">
     function deleteItemValueDefinition(itemValueDefinitionUid) {
-        resourceUrl = '/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions/' + itemValueDefinitionUid + '?method=delete';
+        resourceUrl = '/admin/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions/' + itemValueDefinitionUid + '?method=delete';
         resourceElem = $('Elem_' + itemValueDefinitionUid);
         resourceType = 'Item Value Definition';
         var deleteResource = new DeleteResource()
@@ -12,13 +12,12 @@
     }
 </script>
 
-<h1>Environment Administration</h1>
+<h1>Administration</h1>
 
-<p><a href='/environments'>Environments</a> /
-   <a href='/environments/${environment.uid}'>${environment.name}</a> / 
-   <a href='/environments/${environment.uid}/itemDefinitions'>Item Definitions</a> / 
-   <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}'>${itemDefinition.name}</a> / 
-   <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions'>Item Value Definitions</a></p>
+<p><a href='/admin'>Admin</a> / 
+   <a href='/admin/itemDefinitions'>Item Definitions</a> /
+   <a href='/admin/itemDefinitions/${itemDefinition.uid}'>${itemDefinition.name}</a> /
+   <a href='/admin/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions'>Item Value Definitions</a></p>
 
 <h2>Item Value Definitions</h2>
 <p>
@@ -33,10 +32,10 @@
         <#if canViewEntity(ivd)>
             <tr id="Elem_${ivd.uid}">
                 <td>${ivd.name}</td>
-                <td><a href='/environments/${environment.uid}/valueDefinitions/${ivd.valueDefinition.uid}'>${ivd.valueDefinition.name}</a></td>
+                <td><a href='/admin/valueDefinitions/${ivd.valueDefinition.uid}'>${ivd.valueDefinition.name}</a></td>
                 <td>${ivd.valueDefinition.valueType}</td>
                 <td>
-                    <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions/${ivd.uid}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
+                    <a href='/admin/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions/${ivd.uid}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
                     <#if canDeleteEntity(ivd)><input type="image" onClick="deleteItemValueDefinition('${ivd.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
                 </td>
             </tr>
@@ -49,7 +48,7 @@
     <h2>Create Item Value Definition</h2>
     <p>
         <#if valueDefinitions??>
-            <form action='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions' method='POST' enctype='application/x-www-form-urlencoded'>
+            <form action='/admin/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions' method='POST' enctype='application/x-www-form-urlencoded'>
                 Name: <input name='name' type='text' size='50'/><br/>
                 Path: <input name='path' type='text' size='50'/><br/>
                 Type: <select name='valueDefinitionUid'>

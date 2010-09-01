@@ -98,7 +98,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
 
         // Obtain DataItem.
-        dataItem = dataService.getDataItem(getActiveEnvironment(), request.getAttributes().get("itemPath").toString());
+        dataItem = dataService.getDataItem(request.getAttributes().get("itemPath").toString());
         ((RequestContext) ThreadBeanHolder.get("ctx")).setDataItem(dataItem);
 
         // Must have a DataItem to do anything here.
@@ -135,8 +135,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
                 (dataCategory != null) &&
                 (dataItem != null) &&
                 dataItem.getDataCategory().equals(dataCategory) &&
-                !dataItem.isTrash() &&
-                dataItem.getEnvironment().equals(getActiveEnvironment());
+                !dataItem.isTrash();
     }
 
     @Override

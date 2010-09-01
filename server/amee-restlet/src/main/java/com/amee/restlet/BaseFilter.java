@@ -22,7 +22,6 @@
 package com.amee.restlet;
 
 import com.amee.domain.auth.User;
-import com.amee.domain.environment.Environment;
 import com.amee.domain.site.ISite;
 import org.restlet.Context;
 import org.restlet.Filter;
@@ -41,10 +40,6 @@ public class BaseFilter extends Filter {
 
     public BaseFilter(Context context, Restlet next) {
         super(context, next);
-    }
-
-    public Environment getActiveEnvironment() {
-        return (Environment) Request.getCurrent().getAttributes().get("activeEnvironment");
     }
 
     public ISite getActiveSite() {

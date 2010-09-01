@@ -26,7 +26,6 @@ import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.environment.Environment;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
@@ -34,7 +33,6 @@ import com.amee.domain.profile.ProfileItem;
 import com.amee.engine.Engine;
 import com.amee.platform.science.StartEndDate;
 import com.amee.service.data.DataService;
-import com.amee.service.environment.EnvironmentService;
 import com.amee.service.path.PathItemService;
 import com.amee.service.profile.ProfileService;
 import com.google.visualization.datasource.DataSourceServlet;
@@ -171,9 +169,6 @@ public class ProfileCategoryServlet extends DataSourceServlet {
 
     private List<ProfileItem> getProfileItems(String path) {
 
-        Environment environment = ((EnvironmentService)
-                Engine.getAppContext().getBean("environmentService")).getEnvironmentByName("AMEE");
-
         String[] segmentArray = path.substring(1).split("\\.")[0].split("/");
 
         List<String> segments = new ArrayList<String>(segmentArray.length);
@@ -181,11 +176,11 @@ public class ProfileCategoryServlet extends DataSourceServlet {
             segments.add(s);
         }
         String profileUid = segments.remove(0);
-        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
+        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
         PathItem pathItem = pathItemGroup.findBySegments(segments, false);
         DataCategory category = dataService.getDataCategoryByUid(pathItem.getUid());
         if (category.getItemDefinition() != null) {
-            Profile profile = profileService.getProfile(environment, profileUid);
+            Profile profile = profileService.getProfile(profileUid);
             TimeZone timeZone = TimeZoneHolder.getTimeZone();
             return profileService.getProfileItems(profile, category, StartEndDate.getStartOfMonthDate(timeZone), null);
         } else {

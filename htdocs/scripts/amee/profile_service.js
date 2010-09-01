@@ -213,7 +213,6 @@ var ProfileItemApiService = Class.create(BaseProfileApiService, ({
             $('fullPath').replace(this.getInfoElement('fullPath', 'Full Path', window.location.pathname));
             $('dataItemLabel').replace(this.getInfoElement('dataItemLabel', 'Data Item Label', profileItem.dataItem.Label));
             $('itemDefinition').replace(this.getInfoElement('itemDefinition', 'Item Definition', profileItem.itemDefinition.name));
-            $('environment').replace(this.getInfoElement('environment', 'Environment', profileItem.environment.name));
             $('uid').replace(this.getInfoElement('uid', 'UID', profileItem.uid));
             $('created').replace(this.getInfoElement('created', 'Created', profileItem.created));
             $('modified').replace(this.getInfoElement('modified', 'Modified', profileItem.modified));
@@ -432,7 +431,6 @@ var ProfileItemValueApiService = Class.create(ProfileItemApiService, ({
             $('itemValueDefinition').replace(this.getInfoElement('itemValueDefinition', 'Item Value Definition', itemValue.itemValueDefinition.name));
             $('valueDefinition').replace(this.getInfoElement('valueDefinition', 'Value Definition', itemValue.itemValueDefinition.valueDefinition.name));
             $('valueType').replace(this.getInfoElement('valueType', 'Value Type', itemValue.itemValueDefinition.valueDefinition.valueType));
-            $('environment').replace(this.getInfoElement('environment', 'Environment', itemValue.item.environment.name));
             $('uid').replace(this.getInfoElement('uid', 'UID', itemValue.uid));
             $('created').replace(this.getInfoElement('created', 'Created', itemValue.created));
             $('modified').replace(this.getInfoElement('modified', 'Modified', itemValue.modified));

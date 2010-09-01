@@ -79,7 +79,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             // new ProfileItem
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItem(resource.getActiveEnvironment(), uid);
+                dataItem = dataService.getDataItem(uid);
                 if (dataItem != null) {
                     // Is authorized for the DataItem?
                     authorizationContext = getAuthorizationContext(resource, dataItem);

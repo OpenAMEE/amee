@@ -4,7 +4,7 @@
 . curl.conf
 
 data="name=AADigID"
-amee_url="environments/5F5887BCF726/itemDefinitions"
+amee_url="admin/itemDefinitions"
 
 type="xml"
 

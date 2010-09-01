@@ -4,7 +4,7 @@
 . curl.conf
 
 data="valueDefinitionUid=45433E48B39F&name=AADigIVD"
-amee_url="environments/5F5887BCF726/itemDefinitions/EACC85C156EA/itemValueDefinitions"
+amee_url="admin/itemDefinitions/EACC85C156EA/itemValueDefinitions"
 
 type="xml"
 

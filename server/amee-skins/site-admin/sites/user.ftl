@@ -1,13 +1,12 @@
-<#assign sectionName = "environments">
+<#assign sectionName = "admin">
 
 <#include '/includes/before_content.ftl'>
 
-<h1>Environment Administration</h1>
+<h1>Administration</h1>
 
-<p><a href='/environments'>Environments</a> /
-   <a href='/environments/${environment.uid}'>${environment.name}</a> /
-   <a href='/environments/${environment.uid}/users'>Users</a> /
-   <a href='/environments/${environment.uid}/users/${user.uid}'>${user.username}</a></p>
+<p><a href='/admin'>Admin</a> /
+   <a href='/admin/users'>Users</a> /
+   <a href='/admin/users/${user.uid}'>${user.username}</a></p>
 
 <h2>Details</h2>
 
@@ -23,12 +22,12 @@ Modified: ${user.modified?datetime}<br/>
 
     <h2>Manage</h2>
     <p>
-        <a href='/environments/${environment.uid}/users/${user.uid}/groups'>Groups</a><br/>
+        <a href='/admin/users/${user.uid}/groups'>Groups</a><br/>
     </p>
 
     <h2>Update User</h2>
     <p>
-        <form action='/environments/${environment.uid}/users/${user.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+        <form action='/admin/users/${user.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
             Name: <input name='name' value='${user.name}' type='text' size='30'/><br/>
             Username: <input name='username' value='${user.username}' type='text' size='30'/><br/>
             Email Address: <input name='email' value='${user.email}' type='text' size='30'/><br/>
@@ -55,7 +54,7 @@ Modified: ${user.modified?datetime}<br/>
 
     <h2>Change Password</h2>
     <p>
-        <form action='/environments/${environment.uid}/users/${user.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+        <form action='/admin/users/${user.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
             Password: <input name='password' value='' type='password' size='30'/><br/><br/>
             <input type='submit' value="Change Password"/><br/>
         </form>

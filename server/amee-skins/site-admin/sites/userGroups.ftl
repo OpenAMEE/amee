@@ -1,4 +1,4 @@
-<#assign sectionName = "environments">
+<#assign sectionName = "admin">
 
 <#include '/includes/before_content.ftl'>
 
@@ -18,7 +18,7 @@
     }
 
     function deleteGroupPrincipal(groupUid) {
-        resourceUrl = '/environments/${environment.uid}/users/${user.uid}/groups/' + groupUid + '?method=delete';
+        resourceUrl = '/admin/users/${user.uid}/groups/' + groupUid + '?method=delete';
         resourceElem = $('Elem_' + groupUid);
         resourceType = 'membership';
         var deleteResource = new DeleteResource();
@@ -29,7 +29,7 @@
     }
 
     function addGroupPrincipal(groupUid) {
-        resourceUrl = '/environments/${environment.uid}/users/${user.uid}/groups';
+        resourceUrl = '/admin/users/${user.uid}/groups';
         resourceElem = $('Elem_' + groupUid);
         resourceType = 'membership';
         var createResource = new CreateResource();
@@ -41,13 +41,12 @@
 
 </script>
 
-<h1>Environment Administration</h1>
+<h1>Administration</h1>
 
-<p><a href='/environments'>Environments</a> /
-   <a href='/environments/${environment.uid}'>${environment.name}</a> /
-   <a href='/environments/${environment.uid}/users'>Users</a> /
-   <a href='/environments/${environment.uid}/users/${user.uid}'>${user.username}</a> /
-   <a href='/environments/${environment.uid}/users/${user.uid}/groups'>Groups</a></p>
+<p><a href='/admin'>Admin</a> /
+   <a href='/admin/users'>Users</a> /
+   <a href='/admin/users/${user.uid}'>${user.username}</a> /
+   <a href='/admin/users/${user.uid}/groups'>Groups</a></p>
 
 <h2>User Groups</h2>
 <p>

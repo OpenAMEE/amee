@@ -31,7 +31,6 @@ function localeonchange() {
     Value Definition: ${itemValue.itemValueDefinition.valueDefinition.name}<br/>
     Value Type: ${itemValue.itemValueDefinition.valueDefinition.valueType}<br/>
     Item: ${itemValue.item.label}<br/>
-    Environment: ${itemValue.item.environment.name}<br/>
     UID: ${itemValue.uid}<br/>
     Created: ${itemValue.created?string.short}<br/>
     Modified: ${itemValue.modified?string.short}<br/>

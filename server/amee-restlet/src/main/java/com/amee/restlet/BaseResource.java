@@ -329,15 +329,6 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
     }
 
     /**
-     * Get the current active Environment.
-     *
-     * @return the current active Environment
-     */
-    public Environment getActiveEnvironment() {
-        return (Environment) getRequest().getAttributes().get("activeEnvironment");
-    }
-
-    /**
      * Get the current active ISite.
      *
      * @return the current active ISite
@@ -424,7 +415,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         }
         // Second, default to Environment.
         if (itemsPerPage < 1) {
-            itemsPerPage = getActiveEnvironment().getItemsPerPage();
+            itemsPerPage = Environment.ENVIRONMENT.getItemsPerPage();
         }
         return itemsPerPage;
     }

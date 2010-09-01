@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet id="remove-redundant-environment-rows" author="Diggory Briercliffe">
+        <comment>Remove all rows from all tables where ENVIRONMENT_ID is not 2.</comment>
+        <delete tableName="VALUE_DEFINITION">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+        <delete tableName="ALGORITHM">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+        <delete tableName="GROUPS">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+        <delete tableName="GROUP_PRINCIPAL">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+        <delete tableName="PERMISSION">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+        <delete tableName="USER">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+        <delete tableName="DATA_CATEGORY">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+        <delete tableName="ITEM">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+        <delete tableName="ITEM_DEFINITION">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+        <delete tableName="ITEM_VALUE_DEFINITION">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+        <delete tableName="RETURN_VALUE_DEFINITION">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+        <delete tableName="PROFILE">
+            <where>ENVIRONMENT_ID != 2</where>
+        </delete>
+    </changeSet>
+
+    <changeSet id="drop-all-environment-id-columns" author="Diggory Briercliffe">
+        <comment>Drop all ENVIRONMENT_ID columns.</comment>
+        <dropColumn tableName="VALUE_DEFINITION" columnName="ENVIRONMENT_ID"/>
+        <dropColumn tableName="ALGORITHM" columnName="ENVIRONMENT_ID"/>
+        <dropColumn tableName="GROUPS" columnName="ENVIRONMENT_ID"/>
+        <dropColumn tableName="GROUP_PRINCIPAL" columnName="ENVIRONMENT_ID"/>
+        <dropColumn tableName="PERMISSION" columnName="ENVIRONMENT_ID"/>
+        <dropColumn tableName="USER" columnName="ENVIRONMENT_ID"/>
+        <dropColumn tableName="DATA_CATEGORY" columnName="ENVIRONMENT_ID"/>
+        <dropColumn tableName="ITEM" columnName="ENVIRONMENT_ID"/>
+        <dropColumn tableName="ITEM_DEFINITION" columnName="ENVIRONMENT_ID"/>
+        <dropColumn tableName="ITEM_VALUE_DEFINITION" columnName="ENVIRONMENT_ID"/>
+        <dropColumn tableName="RETURN_VALUE_DEFINITION" columnName="ENVIRONMENT_ID"/>
+        <dropColumn tableName="PROFILE" columnName="ENVIRONMENT_ID"/>
+    </changeSet>
+
+    <changeSet id="switch-permissions-from-environment-to-root-data-category" author="Diggory Briercliffe">
+        <update tableName="PERMISSION">
+            <column name="ENTITY_ID" value="14"/>
+            <column name="ENTITY_UID" value="CD310BEBAC52"/>
+            <column name="ENTITY_TYPE" value="DC"/>
+            <where>ENTITY_TYPE = 'ENV'</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>
