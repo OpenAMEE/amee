@@ -7,7 +7,6 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.data.ItemValueMap;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Cell;
 import com.amee.domain.sheet.Column;
@@ -54,7 +53,6 @@ public class ProfileSheetBuilder implements CacheableFactory {
 
         List<Column> columns;
         Row row;
-        ItemValueMap itemValuesMap;
         ItemValue itemValue;
         ItemDefinition itemDefinition;
         Sheet sheet = null;

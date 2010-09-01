@@ -1,7 +1,7 @@
 package com.amee.restlet;
 
-import com.amee.calculation.service.CalculationException;
 import com.amee.base.utils.ThreadBeanHolder;
+import com.amee.calculation.service.CalculationException;
 import com.amee.domain.*;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;
@@ -287,10 +287,6 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
             // swallow
         }
         return result;
-    }
-
-    public String getParentPath() {
-        return getParentPath(false);
     }
 
     public String getParentPath(boolean goHigher) {

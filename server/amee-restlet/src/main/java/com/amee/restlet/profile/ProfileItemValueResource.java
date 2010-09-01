@@ -20,9 +20,10 @@
 package com.amee.restlet.profile;
 
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.DataCategory;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.ItemValue;
+import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.IItemValueFormAcceptor;
 import com.amee.restlet.profile.acceptor.IItemValueRepresentationAcceptor;
@@ -46,10 +47,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Scope("prototype")
@@ -66,31 +67,42 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     @Autowired
     private ProfileItemValueResourceBuilderFactory builderFactory;
 
+    private DataCategory dataCategory;
+    private ProfileItem profileItem;
     private ItemValue itemValue;
     private IProfileItemValueResourceBuilder builder;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        setDataCategory(request.getAttributes().get("categoryUid").toString());
-        setProfileItem(request.getAttributes().get("itemUid").toString());
+
+        // Obtain DataCategory.
+        dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
+
+        // Obtain ProfileItem.
+        profileItem = profileService.getProfileItem(request.getAttributes().get("itemUid").toString());
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setProfileItem(profileItem);
+
+        // Obtain ItemValue.
         setProfileItemValue(request.getAttributes().get("valuePath").toString());
-        if (getProfileItemValue() != null) {
-            ((RequestContext) ThreadBeanHolder.get("ctx")).setItemValue(getProfileItemValue());
-        }
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setItemValue(getProfileItemValue());
+
+        // Media type sensitive builder.
         setBuilderStrategy();
     }
 
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                getProfileItemValue() != null &&
+                (getProfile() != null) &&
+                (getProfileItemValue() != null) &&
                 !getProfileItemValue().isTrash() &&
-                getProfileItem() != null &&
-                getDataCategory() != null &&
-                getProfileItem().getDataCategory().equals(getDataCategory()) &&
-                getProfileItem().getProfile().equals(getProfile()) &&
-                getProfileItemValue().getItem().equals(getProfileItem()) &&
+                (profileItem != null) &&
+                (dataCategory != null) &&
+                profileItem.getDataCategory().equals(dataCategory) &&
+                profileItem.getProfile().equals(getProfile()) &&
+                getProfileItemValue().getItem().equals(profileItem) &&
                 getProfileItemValue().getEnvironment().equals(getActiveEnvironment());
     }
 
@@ -98,8 +110,8 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
         entities.add(getProfileItemValue());
-        entities.add(getProfileItem());
-        DataCategory dc = getProfileItem().getDataCategory();
+        entities.add(profileItem);
+        DataCategory dc = dataCategory;
         while (dc != null) {
             entities.add(dc);
             dc = dc.getDataCategory();
@@ -148,8 +160,16 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
         successfulPut(getFullPath());
     }
 
+    public String getFullPath() {
+        return "/profiles/" + profileItem.getFullPath() + "/" + itemValue.getDisplayPath();
+    }
+
     public ProfileBrowser getProfileBrowser() {
         return profileBrowser;
+    }
+
+    public ProfileItem getProfileItem() {
+        return profileItem;
     }
 
     public ItemValue getProfileItemValue() {
@@ -157,9 +177,9 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     }
 
     private void setProfileItemValue(String itemValuePath) {
-        if (itemValuePath.isEmpty() || getProfileItem() == null)
+        if (itemValuePath.isEmpty() || profileItem == null)
             return;
-        this.itemValue = getProfileItem().getItemValue(itemValuePath);
+        this.itemValue = profileItem.getItemValue(itemValuePath);
     }
 
     private void setBuilderStrategy() {

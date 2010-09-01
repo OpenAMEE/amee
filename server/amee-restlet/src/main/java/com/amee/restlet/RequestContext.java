@@ -109,34 +109,44 @@ public class RequestContext {
         }
     }
 
-    public void setCategory(DataCategory category) {
-        this.categoryUid = category.getUid();
-        this.label = category.getDisplayName();
-        this.type = category.getObjectType().getName();
+    public void setDataCategory(DataCategory category) {
+        if (category != null) {
+            this.categoryUid = category.getUid();
+            this.label = category.getDisplayName();
+            this.type = category.getObjectType().getName();
+        }
     }
 
-    public void setDataItem(DataItem item) {
-        this.categoryUid = item.getUid();
-        this.label = item.getLabel();
-        this.type = item.getObjectType().getName();
+    public void setDataItem(DataItem dataItem) {
+        if (dataItem != null) {
+            this.categoryUid = dataItem.getUid();
+            this.label = dataItem.getLabel();
+            this.type = dataItem.getObjectType().getName();
+        }
     }
 
-    public void setProfileItem(ProfileItem item) {
-        this.categoryUid = item.getUid();
-        this.label = item.getDisplayName();
-        this.type = item.getObjectType().getName();
+    public void setProfileItem(ProfileItem profileItem) {
+        if (profileItem != null) {
+            this.categoryUid = profileItem.getUid();
+            this.label = profileItem.getDisplayName();
+            this.type = profileItem.getObjectType().getName();
+        }
     }
 
-    public void setItemValue(ItemValue value) {
-        this.categoryUid = value.getUid();
-        this.label = value.getPath();
-        this.type = value.getObjectType().getName();
+    public void setItemValue(ItemValue itemValue) {
+        if (itemValue != null) {
+            this.categoryUid = itemValue.getUid();
+            this.label = itemValue.getPath();
+            this.type = itemValue.getObjectType().getName();
+        }
     }
 
     public void setDrillDown(DataCategory dataCategory) {
-        this.categoryUid = dataCategory.getUid();
-        this.label = dataCategory.getDisplayName();
-        this.type = "DD";
+        if (dataCategory != null) {
+            this.categoryUid = dataCategory.getUid();
+            this.label = dataCategory.getDisplayName();
+            this.type = "DD";
+        }
     }
 
     public void setError(String error) {
