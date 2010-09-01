@@ -1,13 +1,12 @@
-<#assign sectionName = "environments">
+<#assign sectionName = "admin">
 
 <#include '/includes/before_content.ftl'>
 
-<h1>Environment Administration</h1>
+<h1>Administration</h1>
 
-<p><a href='/environments'>Environments</a> /
-   <a href='/environments/${environment.uid}'>${environment.name}</a> /
-   <a href='/environments/${environment.uid}/groups'>Groups</a> /
-   <a href='/environments/${environment.uid}/groups/${group.name}'>${group.name}</a></p>
+<p><a href='/admin'>Admin</a> /
+   <a href='/admin/groups'>Groups</a> /
+   <a href='/admin/groups/${group.name}'>${group.name}</a></p>
 
 <h2>Details</h2>
 
@@ -20,7 +19,7 @@
 <#if canModify()>
     <h2>Update Group</h2>
     <p>
-        <form action='/environments/${environment.uid}/groups/${group.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+        <form action='/admin/groups/${group.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
             Name: <input name='name' value='${group.name}' type='text' size='30'/><br/>
             Description: <textarea name='description' rows='5' cols='60'>${group.description}</textarea><br/><br/>
             <input type='submit' value="Update Group"/><br/>

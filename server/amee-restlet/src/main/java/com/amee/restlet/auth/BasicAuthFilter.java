@@ -4,7 +4,6 @@ import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.LocaleHolder;
 import com.amee.domain.auth.User;
-import com.amee.domain.environment.Environment;
 import com.amee.service.auth.AuthenticationService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -70,7 +69,6 @@ public class BasicAuthFilter extends Guard {
     @Override
     public boolean checkSecret(Request request, String identifier, char[] secret) {
         User sampleUser = new User();
-        sampleUser.setEnvironment((Environment) request.getAttributes().get("activeEnvironment"));
         sampleUser.setUsername(identifier);
         sampleUser.setPasswordInClear(new String(secret));
         User activeUser = authenticationService.authenticate(sampleUser);

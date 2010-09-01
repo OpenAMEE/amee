@@ -58,7 +58,7 @@ public class PermissionResource extends AuthorizeResource implements Serializabl
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
+        entities.add(getRootDataCategory());
         entities.add(permission);
         return entities;
     }

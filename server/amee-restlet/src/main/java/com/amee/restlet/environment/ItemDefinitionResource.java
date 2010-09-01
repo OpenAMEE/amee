@@ -68,7 +68,6 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
     }
 
@@ -80,8 +79,7 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(definitionBrowser.getEnvironment());
+        entities.add(getRootDataCategory());
         entities.add(definitionBrowser.getItemDefinition());
         return entities;
     }
@@ -93,10 +91,9 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(definitionBrowser.getEnvironment());
+        List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions();
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
-        values.put("environment", definitionBrowser.getEnvironment());
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("valueDefinitions", valueDefinitions.isEmpty() ? null : valueDefinitions);
         values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());

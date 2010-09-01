@@ -1,6 +1,6 @@
 package com.amee.admin.restlet.environment.user;
 
-import com.amee.admin.restlet.environment.EnvironmentBrowser;
+import com.amee.admin.restlet.environment.AdminBrowser;
 import com.amee.domain.AMEEEntity;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.GroupService;
@@ -26,31 +26,28 @@ public class UserGroupResource extends AuthorizeResource {
     private GroupService GroupService;
 
     @Autowired
-    private EnvironmentBrowser environmentBrowser;
+    private AdminBrowser adminBrowser;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
-        environmentBrowser.setUserIdentifier(request.getAttributes().get("userUid").toString());
-        environmentBrowser.setGroupUid(request.getAttributes().get("groupUid").toString());
+        adminBrowser.setUserIdentifier(request.getAttributes().get("userUid").toString());
+        adminBrowser.setGroupUid(request.getAttributes().get("groupUid").toString());
     }
 
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (environmentBrowser.getEnvironment() != null) &&
-                (environmentBrowser.getUser() != null) &&
-                (environmentBrowser.getGroupPrincipal() != null);
+                (adminBrowser.getUser() != null) &&
+                (adminBrowser.getGroupPrincipal() != null);
     }
 
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(environmentBrowser.getEnvironment());
-        entities.add(environmentBrowser.getUser());
-        entities.add(environmentBrowser.getGroup());
+        entities.add(getRootDataCategory());
+        entities.add(adminBrowser.getUser());
+        entities.add(adminBrowser.getGroup());
         return entities;
     }
 
@@ -62,18 +59,16 @@ public class UserGroupResource extends AuthorizeResource {
     @Override
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
-        obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
-        obj.put("user", environmentBrowser.getUser().getJSONObject());
-        obj.put("groupPrincipal", environmentBrowser.getGroupPrincipal().getJSONObject());
+        obj.put("user", adminBrowser.getUser().getJSONObject());
+        obj.put("groupPrincipal", adminBrowser.getGroupPrincipal().getJSONObject());
         return obj;
     }
 
     @Override
     public Element getElement(Document document) {
         Element element = document.createElement("UserGroupResource");
-        element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
-        element.appendChild(environmentBrowser.getUser().getIdentityElement(document));
-        element.appendChild(environmentBrowser.getGroupPrincipal().getElement(document));
+        element.appendChild(adminBrowser.getUser().getIdentityElement(document));
+        element.appendChild(adminBrowser.getGroupPrincipal().getElement(document));
         return element;
     }
 
@@ -85,7 +80,7 @@ public class UserGroupResource extends AuthorizeResource {
     @Override
     public void doRemove() {
         log.debug("doRemove");
-        groupService.remove(environmentBrowser.getGroupPrincipal());
+        groupService.remove(adminBrowser.getGroupPrincipal());
         success();
     }
 }

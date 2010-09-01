@@ -1,17 +1,11 @@
 package com.amee.googleds;
 
 import com.amee.base.transaction.TransactionController;
-import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
-import com.amee.domain.data.Item;
-import com.amee.domain.data.ItemValue;
-import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.environment.Environment;
+import com.amee.domain.data.*;
 import com.amee.domain.path.PathItem;
 import com.amee.domain.path.PathItemGroup;
 import com.amee.engine.Engine;
 import com.amee.service.data.DataService;
-import com.amee.service.environment.EnvironmentService;
 import com.amee.service.path.PathItemService;
 import com.google.visualization.datasource.DataSourceServlet;
 import com.google.visualization.datasource.base.TypeMismatchException;
@@ -112,9 +106,6 @@ public class DataCategoryServlet extends DataSourceServlet {
 
     private List<DataItem> getItems(String path) {
 
-        Environment environment = ((EnvironmentService)
-                Engine.getAppContext().getBean("environmentService")).getEnvironmentByName("AMEE");
-
         String[] segmentArray = path.substring(1).split("\\.")[0].split("/");
 
         List<String> segments = new ArrayList<String>(segmentArray.length);
@@ -122,7 +113,7 @@ public class DataCategoryServlet extends DataSourceServlet {
             segments.add(s);
         }
 
-        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
+        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
         PathItem pathItem = pathItemGroup.findBySegments(segments, false);
         DataCategory category = dataService.getDataCategoryByUid(pathItem.getUid());
         if (category.getItemDefinition() != null) {

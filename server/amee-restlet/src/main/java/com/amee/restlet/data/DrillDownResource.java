@@ -28,6 +28,8 @@ import com.amee.domain.sheet.Choices;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.RequestContext;
 import com.amee.service.data.DataBrowser;
+import com.amee.restlet.AMEEResource;
+import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DrillDownService;
 import org.json.JSONArray;
@@ -75,7 +77,6 @@ public class DrillDownResource extends AMEEResource implements Serializable {
             entities.add(dc);
             dc = dc.getDataCategory();
         }
-        entities.add(getActiveEnvironment());
         Collections.reverse(entities);
         return entities;
     }
@@ -83,8 +84,7 @@ public class DrillDownResource extends AMEEResource implements Serializable {
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (dataCategory != null) &&
-                dataCategory.getEnvironment().equals(getActiveEnvironment());
+                (dataCategory != null);
     }
 
     @Override

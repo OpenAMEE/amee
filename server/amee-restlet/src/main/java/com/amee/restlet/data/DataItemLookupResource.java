@@ -52,13 +52,13 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         dataItemUid = request.getResourceRef().getQueryAsForm().getFirstValue("dataItemUid", "");
-        dataItem = dataService.getDataItem(getActiveEnvironment(), dataItemUid);
+        dataItem = dataService.getDataItem(dataItemUid);
     }
 
     @Override
     public List<AMEEEntity> getEntities() {
         List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
+        entities.add(getRootDataCategory());
         if (dataItem != null) {
             entities.addAll(dataItem.getHierarchy());
         }

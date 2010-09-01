@@ -99,9 +99,8 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                dataCategory != null &&
-                !dataCategory.isTrash() &&
-                dataCategory.getEnvironment().equals(getActiveEnvironment());
+                (dataCategory != null) &&
+                !dataCategory.isTrash();
     }
 
     @Override
@@ -112,7 +111,6 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
             entities.add(dc);
             dc = dc.getDataCategory();
         }
-        entities.add(getActiveEnvironment());
         Collections.reverse(entities);
         return entities;
     }
@@ -353,8 +351,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
         // Set Item Definition.
         if (form.getNames().contains("itemDefinitionUid")) {
             ItemDefinition itemDefinition =
-                    definitionService.getItemDefinitionByUid(
-                            newDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
+                    definitionService.getItemDefinitionByUid(form.getFirstValue("itemDefinitionUid"));
             if (itemDefinition != null) {
                 newDataCategory.setItemDefinition(itemDefinition);
             }
@@ -438,7 +435,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
             // Update DataItem.
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItem(getActiveEnvironment(), uid);
+                dataItem = dataService.getDataItem(uid);
                 if (dataItem != null) {
                     acceptDataItem(form, dataItem);
                 }
@@ -501,8 +498,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
         }
         if (form.getNames().contains("itemDefinitionUid")) {
             ItemDefinition itemDefinition =
-                    definitionService.getItemDefinitionByUid(modDataCategory.getEnvironment(),
-                            form.getFirstValue("itemDefinitionUid"));
+                    definitionService.getItemDefinitionByUid(form.getFirstValue("itemDefinitionUid"));
             if (itemDefinition != null) {
                 modDataCategory.setItemDefinition(itemDefinition);
             } else {

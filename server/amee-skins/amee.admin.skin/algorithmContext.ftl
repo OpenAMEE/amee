@@ -1,13 +1,12 @@
-<#assign sectionName = 'environments'>
+<#assign sectionName = 'admin'>
 
 <#include '/includes/before_content.ftl'>
 
-<h1>Environment Administration</h1>
+<h1>Administration</h1>
 
-<p><a href='/environments'>Environments</a> /
-   <a href='/environments/${environment.uid}'>${environment.name}</a> /
-   <a href='/environments/${environment.uid}/algorithmContexts'>Algorithm Contexts</a> /
-   <a href='/environments/${environment.uid}/algorithmContexts/${algorithmContext.uid}'>${algorithmContext.name}</a></p>
+<p><a href='/admin'>Admin</a> /
+   <a href='/admin/algorithmContexts'>Algorithm Contexts</a> /
+   <a href='/admin/algorithmContexts/${algorithmContext.uid}'>${algorithmContext.name}</a></p>
 
 <h2>Algorithm Context Details</h2>
 
@@ -19,7 +18,7 @@
 <#if canModify()>
     <h2>Update Algorithm Context</h2>
     <p>
-        <form action='/environments/${environment.uid}/algorithmContexts/${algorithmContext.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+        <form action='/admin/algorithmContexts/${algorithmContext.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
             Name: <input name='name' value='${algorithmContext.name}' type='text' size='30'/><br/>
             Content: <textarea name='content' rows='15' cols='60'>${algorithmContext.content}</textarea><br/><br/>
             <input type='submit' value='Update'/>
