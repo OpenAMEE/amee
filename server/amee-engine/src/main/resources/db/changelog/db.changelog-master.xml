@@ -7,5 +7,6 @@
 
     <!-- include the changelog for the releases in the correct order -->
     <!--<include relativeToChangelogFile="true" file="db.changelog-1.xml"/>-->
-    <include relativeToChangelogFile="true" file="db.changelog-remove-redundant-environment-rows.xml"/>
+    <include relativeToChangelogFile="true" file="db.changelog-remove-environment.xml"/>
+    
 </databaseChangeLog>
