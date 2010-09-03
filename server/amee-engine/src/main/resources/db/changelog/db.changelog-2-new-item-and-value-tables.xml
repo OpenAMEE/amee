@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
     <!-- New tables -->
-    <changeSet author="david" id="1-1">
+    <changeSet author="david" id="2-1">
         <comment>Add DATA_ITEM table.</comment>
         <createTable tableName="DATA_ITEM">
             <column autoIncrement="true" name="ID" type="BIGINT UNSIGNED">
@@ -44,7 +44,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet author="david" id="1-2">
+    <changeSet author="david" id="2-2">
         <comment>Add PROFILE_ITEM table.</comment>
         <createTable tableName="PROFILE_ITEM">
             <column autoIncrement="true" name="ID" type="BIGINT UNSIGNED">
@@ -88,7 +88,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet author="david" id="1-3">
+    <changeSet author="david" id="2-3">
         <comment>Add PROFILE_ITEM_TEXT_VALUE table.</comment>
         <createTable tableName="PROFILE_ITEM_TEXT_VALUE">
             <column autoIncrement="true" name="ID" type="BIGINT UNSIGNED">
@@ -125,7 +125,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet author="david" id="1-4">
+    <changeSet author="david" id="2-4">
         <comment>Add PROFILE_ITEM_NUMBER_VALUE table.</comment>
         <createTable tableName="PROFILE_ITEM_NUMBER_VALUE">
             <column autoIncrement="true" name="ID" type="BIGINT UNSIGNED">
@@ -168,7 +168,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet author="david" id="1-5">
+    <changeSet author="david" id="2-5">
         <comment>Add DATA_ITEM_TEXT_VALUE table.</comment>
         <createTable tableName="DATA_ITEM_TEXT_VALUE">
             <column autoIncrement="true" name="ID" type="BIGINT UNSIGNED">
@@ -205,7 +205,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet author="david" id="1-6">
+    <changeSet author="david" id="2-6">
         <comment>Add DATA_ITEM_NUMBER_VALUE table.</comment>
         <createTable tableName="DATA_ITEM_NUMBER_VALUE">
             <column autoIncrement="true" name="ID" type="BIGINT UNSIGNED">
@@ -248,7 +248,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet author="david" id="1-7">
+    <changeSet author="david" id="2-7">
         <comment>Add DATA_ITEM_TEXT_VALUE_HISTORY table.</comment>
         <createTable tableName="DATA_ITEM_TEXT_VALUE_HISTORY">
             <column autoIncrement="true" name="ID" type="BIGINT UNSIGNED">
@@ -285,7 +285,7 @@
         </modifySql>
     </changeSet>
 
-    <changeSet author="david" id="1-8">
+    <changeSet author="david" id="2-8">
         <comment>Add DATA_ITEM_NUMBER_VALUE_HISTORY table.</comment>
         <createTable tableName="DATA_ITEM_NUMBER_VALUE_HISTORY">
             <column autoIncrement="true" name="ID" type="BIGINT UNSIGNED">
@@ -329,7 +329,7 @@
     </changeSet>
 
     <!-- Altered tables -->
-    <changeSet author="david" id="1-9">
+    <changeSet author="david" id="2-9">
         <comment>Alter VALUE_DEFINITION.</comment>
 
         <!-- Use sql tag so all changes for a table are executed in one statement. -->
@@ -346,7 +346,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-10">
+    <changeSet author="david" id="2-10">
         <comment>Alter ITEM_DEFINITION. See: OPS-159.</comment>
         <sql>
             ALTER TABLE ITEM_DEFINITION
@@ -356,12 +356,11 @@
             CHANGE DRILL_DOWN DRILL_DOWN VARCHAR(255) NOT NULL DEFAULT '',
             CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
             CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
-            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
-            DROP COLUMN SKIP_RECALCULATION
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1'
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-11">
+    <changeSet author="david" id="2-11">
         <comment>Set NULL UNIT and PER_UNIT to ''</comment>
         <update tableName="ITEM_VALUE_DEFINITION">
             <column name="UNIT" value=""/>
@@ -373,7 +372,7 @@
         </update>
     </changeSet>
 
-    <changeSet author="david" id="1-12">
+    <changeSet author="david" id="2-12">
         <comment>Alter ITEM_VALUE_DEFINITION</comment>
         <sql>
             ALTER TABLE ITEM_VALUE_DEFINITION
@@ -397,7 +396,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-13">
+    <changeSet author="david" id="2-13">
         <comment>Alter DATA_CATEGORY</comment>
         <sql>
             ALTER TABLE DATA_CATEGORY
@@ -417,7 +416,7 @@
 
     <!-- Indexes -->
     <!-- Must use custom sql to work around this MySQL bug: http://bugs.mysql.com/bug.php?id=48875 -->
-    <changeSet author="david" id="1-14">
+    <changeSet author="david" id="2-14">
         <comment>Add indexes to DATA_ITEM</comment>
         <sql>
             ALTER TABLE DATA_ITEM
@@ -427,7 +426,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-15">
+    <changeSet author="david" id="2-15">
         <comment>Add indexes to PROFILE_ITEM</comment>
         <sql>
             ALTER TABLE PROFILE_ITEM
@@ -437,7 +436,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-16">
+    <changeSet author="david" id="2-16">
         <comment>Add indexes to PROFILE_ITEM_TEXT_VALUE</comment>
         <sql>
             ALTER TABLE PROFILE_ITEM_TEXT_VALUE
@@ -446,7 +445,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-17">
+    <changeSet author="david" id="2-17">
         <comment>Add indexes to PROFILE_ITEM_NUMBER_VALUE</comment>
         <sql>
             ALTER TABLE PROFILE_ITEM_NUMBER_VALUE
@@ -455,7 +454,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-18">
+    <changeSet author="david" id="2-18">
         <comment>Add indexes to DATA_ITEM_TEXT_VALUE</comment>
         <sql>
             ALTER TABLE DATA_ITEM_TEXT_VALUE
@@ -464,7 +463,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-19">
+    <changeSet author="david" id="2-19">
         <comment>Add indexes to DATA_ITEM_NUMBER_VALUE</comment>
         <sql>
             ALTER TABLE DATA_ITEM_NUMBER_VALUE
@@ -473,7 +472,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-20">
+    <changeSet author="david" id="2-20">
         <comment>Add indexes to DATA_ITEM_TEXT_VALUE_HISTORY</comment>
         <sql>
             ALTER TABLE DATA_ITEM_TEXT_VALUE_HISTORY
@@ -482,7 +481,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="1-21">
+    <changeSet author="david" id="2-21">
         <comment>Add indexes to DATA_ITEM_NUMBER_VALUE_HISTORY</comment>
         <sql>
             ALTER TABLE DATA_ITEM_NUMBER_VALUE_HISTORY

@@ -6,7 +6,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
     <!-- include the changelog for the releases in the correct order -->
-    <!--<include relativeToChangelogFile="true" file="db.changelog-1.xml"/>-->
-    <include relativeToChangelogFile="true" file="db.changelog-remove-environment.xml"/>
-    
+    <include relativeToChangelogFile="true" file="db.changelog-1-remove-environment.xml"/>
+    <include relativeToChangelogFile="true" file="db.changelog-2-new-item-and-value-tables.xml"/>
+
 </databaseChangeLog>
