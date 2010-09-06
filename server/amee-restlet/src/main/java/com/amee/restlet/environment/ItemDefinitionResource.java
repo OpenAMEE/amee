@@ -20,6 +20,7 @@
 package com.amee.restlet.environment;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.ValueDefinition;
 import com.amee.domain.data.ItemDefinition;
@@ -77,8 +78,8 @@ public class ItemDefinitionResource extends AuthorizeResource implements Seriali
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
         entities.add(definitionBrowser.getItemDefinition());
         return entities;

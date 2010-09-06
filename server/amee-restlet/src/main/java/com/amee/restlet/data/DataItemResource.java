@@ -23,6 +23,7 @@ import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.base.utils.XMLUtils;
 import com.amee.calculation.service.CalculationService;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
@@ -139,7 +140,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
+    public List<IAMEEEntityReference> getEntities() {
         return dataItem.getHierarchy();
     }
 

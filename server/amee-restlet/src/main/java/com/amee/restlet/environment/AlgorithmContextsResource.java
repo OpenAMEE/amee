@@ -1,6 +1,7 @@
 package com.amee.restlet.environment;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.environment.Environment;
 import com.amee.restlet.AuthorizeResource;
@@ -40,8 +41,8 @@ public class AlgorithmContextsResource extends AuthorizeResource implements Seri
     private AlgorithmContext newAlgorithmContext;
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
         return entities;
     }

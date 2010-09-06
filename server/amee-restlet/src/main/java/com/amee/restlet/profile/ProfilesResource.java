@@ -21,6 +21,7 @@ package com.amee.restlet.profile;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatistics;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.PermissionEntry;
@@ -62,8 +63,8 @@ public class ProfilesResource extends AMEEResource implements Serializable {
     private Profile newProfile = null;
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
         return entities;
     }

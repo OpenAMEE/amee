@@ -22,6 +22,7 @@
 package com.amee.restlet.data;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataItem;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
@@ -56,8 +57,8 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
         if (dataItem != null) {
             entities.addAll(dataItem.getHierarchy());

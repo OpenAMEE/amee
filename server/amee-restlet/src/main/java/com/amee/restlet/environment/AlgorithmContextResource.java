@@ -20,6 +20,7 @@
 package com.amee.restlet.environment;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
@@ -70,8 +71,8 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
         entities.add(definitionBrowser.getAlgorithmContext());
         return entities;

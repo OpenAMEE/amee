@@ -2,6 +2,7 @@ package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.AdminBrowser;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.GroupPrincipal;
@@ -46,8 +47,8 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
         entities.add(adminBrowser.getUser());
         return entities;
