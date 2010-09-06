@@ -19,10 +19,7 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.domain.AMEEEntity;
-import com.amee.domain.Pager;
-import com.amee.domain.ValueDefinition;
-import com.amee.domain.ValueType;
+import com.amee.domain.*;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
@@ -68,8 +65,8 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
         return entities;
     }

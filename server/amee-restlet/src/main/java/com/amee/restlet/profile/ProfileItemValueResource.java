@@ -21,6 +21,7 @@ package com.amee.restlet.profile;
 
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.ProfileItem;
@@ -106,8 +107,8 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getProfileItemValue());
         entities.add(profileItem);
         DataCategory dc = dataCategory;

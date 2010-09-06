@@ -21,6 +21,7 @@ package com.amee.restlet.data;
 
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.sheet.Choice;
@@ -70,8 +71,8 @@ public class DrillDownResource extends AMEEResource implements Serializable {
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         DataCategory dc = dataCategory;
         while (dc != null) {
             entities.add(dc);

@@ -21,6 +21,7 @@ package com.amee.restlet.environment;
 
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIVersion;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.restlet.AuthorizeResource;
@@ -82,8 +83,8 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
         entities.add(definitionBrowser.getItemDefinition());
         entities.add(definitionBrowser.getItemValueDefinition());

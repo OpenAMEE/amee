@@ -2,6 +2,7 @@ package com.amee.admin.restlet.environment.group;
 
 import com.amee.admin.restlet.environment.AdminBrowser;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.Group;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.AdminConstants;
@@ -41,8 +42,8 @@ public class GroupResource extends AuthorizeResource {
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
         entities.add(adminBrowser.getGroup());
         return entities;

@@ -29,7 +29,7 @@ package com.amee.restlet.ria;
 //    }
 //
 //    @Override
-//    public List<AMEEEntity> getEntities() {
+//    public List<IAMEEEntityReference> getEntities() {
 //        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
 //        entities.add(dataService.getDataCategoryByUid(pathItem.getUid()));
 //        PathItem parent = pathItem.getParent();

@@ -22,6 +22,8 @@
 package com.amee.restlet;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.PermissionEntry;
@@ -102,7 +104,7 @@ public abstract class AuthorizeResource extends BaseResource {
      */
     public List<AccessSpecification> getGetAccessSpecifications() {
         List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
-        for (AMEEEntity entity : getDistinctEntities()) {
+        for (IAMEEEntityReference entity : getDistinctEntities()) {
             accessSpecifications.add(new AccessSpecification(entity, PermissionEntry.VIEW));
         }
         return accessSpecifications;
@@ -289,16 +291,16 @@ public abstract class AuthorizeResource extends BaseResource {
      *
      * @return list of entities required for authorization
      */
-    public abstract List<AMEEEntity> getEntities();
+    public abstract List<IAMEEEntityReference> getEntities();
 
     /**
      * Returns a de-duped version of the list from getEntities().
      *
      * @return list of entities required for authorization
      */
-    public List<AMEEEntity> getDistinctEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        for (AMEEEntity entity : getEntities()) {
+    public List<IAMEEEntityReference> getDistinctEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        for (IAMEEEntityReference entity : getEntities()) {
             if (!entities.contains(entity)) {
                 entities.add(entity);
             }

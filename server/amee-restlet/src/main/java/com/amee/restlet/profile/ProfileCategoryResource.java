@@ -21,6 +21,7 @@ package com.amee.restlet.profile;
 
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.CO2AmountUnit;
@@ -104,8 +105,8 @@ public class ProfileCategoryResource extends BaseProfileResource {
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         DataCategory dc = dataCategory;
         while (dc != null) {
             entities.add(dc);

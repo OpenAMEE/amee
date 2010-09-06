@@ -20,10 +20,7 @@
 package com.amee.restlet.data;
 
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.domain.AMEEEntity;
-import com.amee.domain.AMEEStatus;
-import com.amee.domain.LocaleConstants;
-import com.amee.domain.ObjectType;
+import com.amee.domain.*;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
@@ -104,8 +101,8 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         DataCategory dc = dataCategory;
         while (dc != null) {
             entities.add(dc);
