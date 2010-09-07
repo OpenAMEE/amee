@@ -21,7 +21,6 @@
  */
 package com.amee.restlet.data;
 
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataItem;
 import com.amee.restlet.AuthorizeResource;
@@ -53,7 +52,7 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         dataItemUid = request.getResourceRef().getQueryAsForm().getFirstValue("dataItemUid", "");
-        dataItem = dataService.getDataItem(dataItemUid);
+        dataItem = dataService.getDataItemByUid(dataItemUid);
     }
 
     @Override

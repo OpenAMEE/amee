@@ -51,7 +51,7 @@ public class CalculationConsumer extends StringRpcMessageConsumer {
             JSONObject outbound = new JSONObject();
             // Get the DataItem.
             String dataItemUid = inbound.getString("dataItemUid");
-            DataItem dataItem = dataService.getDataItem(dataItemUid);
+            DataItem dataItem = dataService.getDataItemByUid(dataItemUid);
             if (dataItem != null) {
                 // Prepare the value choices.
                 Choices userValueChoices = dataSheetService.getUserValueChoices(dataItem, APIVersion.TWO);

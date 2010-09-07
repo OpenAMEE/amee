@@ -1,9 +1,7 @@
 package com.amee.restlet.profile.acceptor;
 
 import com.amee.calculation.service.CalculationService;
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatistics;
-import com.amee.domain.IAMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.AuthorizationContext;
@@ -81,7 +79,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             // new ProfileItem
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItem(uid);
+                dataItem = dataService.getDataItemByUid(uid);
                 if (dataItem != null) {
                     // Is authorized for the DataItem?
                     authorizationContext = getAuthorizationContext(resource, dataItem);
