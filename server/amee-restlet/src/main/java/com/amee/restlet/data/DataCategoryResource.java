@@ -20,7 +20,10 @@
 package com.amee.restlet.data;
 
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.domain.*;
+import com.amee.domain.AMEEStatus;
+import com.amee.domain.IAMEEEntityReference;
+import com.amee.domain.LocaleConstants;
+import com.amee.domain.ObjectType;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
@@ -432,7 +435,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
             // Update DataItem.
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItem(uid);
+                dataItem = dataService.getDataItemByUid(dataCategory, uid);
                 if (dataItem != null) {
                     acceptDataItem(form, dataItem);
                 }

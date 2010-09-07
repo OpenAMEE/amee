@@ -21,7 +21,6 @@ package com.amee.restlet.data;
 
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.base.utils.XMLUtils;
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.data.DataCategory;
@@ -94,7 +93,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
         ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
 
         // Obtain DataItem.
-        dataItem = dataService.getDataItem(request.getAttributes().get("itemPath").toString());
+        dataItem = dataService.getDataItemByIdentifier(dataCategory, request.getAttributes().get("itemPath").toString());
         ((RequestContext) ThreadBeanHolder.get("ctx")).setDataItem(dataItem);
 
         // Obtain ItemValue.
