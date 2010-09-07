@@ -346,8 +346,8 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="2-10">
-        <comment>Alter ITEM_DEFINITION. See: OPS-159.</comment>
+    <changeSet author="david" id="2-10" context="science,stage">
+        <comment>Alter ITEM_DEFINITION (science,stage).</comment>
         <sql>
             ALTER TABLE ITEM_DEFINITION
             CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
@@ -360,7 +360,22 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="2-11">
+    <changeSet author="david" id="2-11" context="live">
+        <comment>Alter ITEM_DEFINITION (live) See: OPS-159.</comment>
+        <sql>
+            ALTER TABLE ITEM_DEFINITION
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE DRILL_DOWN DRILL_DOWN VARCHAR(255) NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            DROP COLUMN SKIP_RECALCULATION
+        </sql>
+    </changeSet>
+
+    <changeSet author="david" id="2-12">
         <comment>Set NULL UNIT and PER_UNIT to ''</comment>
         <update tableName="ITEM_VALUE_DEFINITION">
             <column name="UNIT" value=""/>
@@ -372,7 +387,7 @@
         </update>
     </changeSet>
 
-    <changeSet author="david" id="2-12">
+    <changeSet author="david" id="2-13">
         <comment>Alter ITEM_VALUE_DEFINITION</comment>
         <sql>
             ALTER TABLE ITEM_VALUE_DEFINITION
@@ -396,7 +411,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="2-13">
+    <changeSet author="david" id="2-14">
         <comment>Alter DATA_CATEGORY</comment>
         <sql>
             ALTER TABLE DATA_CATEGORY
@@ -416,7 +431,7 @@
 
     <!-- Indexes -->
     <!-- Must use custom sql to work around this MySQL bug: http://bugs.mysql.com/bug.php?id=48875 -->
-    <changeSet author="david" id="2-14">
+    <changeSet author="david" id="2-15">
         <comment>Add indexes to DATA_ITEM</comment>
         <sql>
             ALTER TABLE DATA_ITEM
@@ -426,7 +441,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="2-15">
+    <changeSet author="david" id="2-16">
         <comment>Add indexes to PROFILE_ITEM</comment>
         <sql>
             ALTER TABLE PROFILE_ITEM
@@ -436,7 +451,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="2-16">
+    <changeSet author="david" id="2-17">
         <comment>Add indexes to PROFILE_ITEM_TEXT_VALUE</comment>
         <sql>
             ALTER TABLE PROFILE_ITEM_TEXT_VALUE
@@ -445,7 +460,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="2-17">
+    <changeSet author="david" id="2-18">
         <comment>Add indexes to PROFILE_ITEM_NUMBER_VALUE</comment>
         <sql>
             ALTER TABLE PROFILE_ITEM_NUMBER_VALUE
@@ -454,7 +469,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="2-18">
+    <changeSet author="david" id="2-19">
         <comment>Add indexes to DATA_ITEM_TEXT_VALUE</comment>
         <sql>
             ALTER TABLE DATA_ITEM_TEXT_VALUE
@@ -463,7 +478,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="2-19">
+    <changeSet author="david" id="2-20">
         <comment>Add indexes to DATA_ITEM_NUMBER_VALUE</comment>
         <sql>
             ALTER TABLE DATA_ITEM_NUMBER_VALUE
@@ -472,7 +487,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="2-20">
+    <changeSet author="david" id="2-21">
         <comment>Add indexes to DATA_ITEM_TEXT_VALUE_HISTORY</comment>
         <sql>
             ALTER TABLE DATA_ITEM_TEXT_VALUE_HISTORY
@@ -481,7 +496,7 @@
         </sql>
     </changeSet>
 
-    <changeSet author="david" id="2-21">
+    <changeSet author="david" id="2-22">
         <comment>Add indexes to DATA_ITEM_NUMBER_VALUE_HISTORY</comment>
         <sql>
             ALTER TABLE DATA_ITEM_NUMBER_VALUE_HISTORY

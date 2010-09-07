@@ -17,6 +17,9 @@
     <property name="db.username" value="amee"/>
     <property name="db.password" value="amee"/>
 
+    <!-- See: http://www.liquibase.org/manual/contexts -->
+    <property name="db.contexts" value="live"/>
+
     <target name="rebuild" depends="clean, package, copy-amee-libs"
             description="Perform a clean build from src."/>
 
@@ -114,6 +117,7 @@
             <arg value="-Dliquibase.url=jdbc:mysql://localhost/${db.name}"/>
             <arg value="-Dliquibase.username=${db.username}"/>
             <arg value="-Dliquibase.password=${db.password}"/>
+            <arg value="-Dliquibase.contexts=${db.contexts}"/>
         </exec>
     </target>
 
@@ -123,6 +127,7 @@
             <arg value="-Dliquibase.url=jdbc:mysql://localhost/${db.name}"/>
             <arg value="-Dliquibase.username=${db.username}"/>
             <arg value="-Dliquibase.password=${db.password}"/>
+            <arg value="-Dliquibase.contexts=${db.contexts}"/>
         </exec>
     </target>
     
