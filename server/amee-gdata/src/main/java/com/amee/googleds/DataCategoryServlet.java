@@ -2,11 +2,8 @@ package com.amee.googleds;
 
 import com.amee.base.transaction.TransactionController;
 import com.amee.domain.data.*;
-import com.amee.domain.path.PathItem;
-import com.amee.domain.path.PathItemGroup;
 import com.amee.engine.Engine;
 import com.amee.service.data.DataService;
-import com.amee.service.path.PathItemService;
 import com.google.visualization.datasource.DataSourceServlet;
 import com.google.visualization.datasource.base.TypeMismatchException;
 import com.google.visualization.datasource.datatable.ColumnDescription;
@@ -25,14 +22,12 @@ public class DataCategoryServlet extends DataSourceServlet {
 
     private TransactionController transactionController;
     private DataService dataService;
-    private PathItemService pathItemService;
 
     @Override
     public void init() throws ServletException {
         super.init();
         transactionController = (TransactionController) Engine.getAppContext().getBean("transactionController");
         dataService = (DataService) Engine.getAppContext().getBean("dataService");
-        pathItemService = (PathItemService) Engine.getAppContext().getBean("pathItemService");
     }
 
     public DataTable generateDataTable(Query query, HttpServletRequest request) {
@@ -105,18 +100,9 @@ public class DataCategoryServlet extends DataSourceServlet {
     }
 
     private List<DataItem> getItems(String path) {
-
-        String[] segmentArray = path.substring(1).split("\\.")[0].split("/");
-
-        List<String> segments = new ArrayList<String>(segmentArray.length);
-        for (String s : segmentArray) {
-            segments.add(s);
-        }
-
-        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
-        PathItem pathItem = pathItemGroup.findBySegments(segments, false);
-        DataCategory category = dataService.getDataCategoryByUid(pathItem.getUid());
-        if (category.getItemDefinition() != null) {
+        path = path.substring(1).split("\\.")[0];
+        DataCategory category = dataService.getDataCategoryByFullPath(path);
+        if ((category != null) && (category.getItemDefinition() != null)) {
             return dataService.getDataItems(category);
         } else {
             return new ArrayList<DataItem>(0);
@@ -134,5 +120,4 @@ public class DataCategoryServlet extends DataSourceServlet {
     protected boolean isRestrictedAccessMode() {
         return false;
     }
-
 }

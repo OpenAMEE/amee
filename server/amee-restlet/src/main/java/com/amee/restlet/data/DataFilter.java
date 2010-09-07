@@ -43,7 +43,7 @@ public class DataFilter extends RewriteFilter {
 
     @Override
     protected int rewrite(Request request, Response response) {
-        log.debug("rewrite() - start data path rewrite ");
+        log.debug("rewrite() Start data path rewrite.");
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
         removeEmptySegmentAtEnd(segments);
@@ -72,7 +72,7 @@ public class DataFilter extends RewriteFilter {
                 }
             }
         }
-        log.debug("rewrite() - end data path rewrite");
+        log.debug("rewrite() End data path rewrite.");
         return CONTINUE;
     }
 
