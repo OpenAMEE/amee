@@ -20,12 +20,9 @@
 package com.amee.restlet.profile;
 
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.domain.path.PathItem;
-import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
 import com.amee.restlet.RequestContext;
-import com.amee.restlet.RewriteFilter;
-import com.amee.service.path.PathItemService;
+import com.amee.restlet.data.DataFilter;
 import com.amee.service.profile.ProfileService;
 import org.restlet.Application;
 import org.restlet.data.Reference;
@@ -36,13 +33,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class ProfileFilter extends RewriteFilter {
+public class ProfileFilter extends DataFilter {
 
     @Autowired
     private ProfileService profileService;
-
-    @Autowired
-    private PathItemService pathItemService;
 
     public ProfileFilter(Application application) {
         super(application);
@@ -51,52 +45,46 @@ public class ProfileFilter extends RewriteFilter {
 
     @Override
     protected int rewrite(Request request, Response response) {
-        log.debug("rewrite() - start profile path rewrite");
+        log.debug("rewrite() Start profile path rewrite.");
         String path = null;
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
         removeEmptySegmentAtEnd(segments);
         RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
         if (!skipRewrite(segments) && segments.get(0).equals("profiles")) {
-            // remove '/profiles'
+            // Remove '/profiles'.
             segments.remove(0);
-            // only continue rewrite if we're looking for a Profile UID
+            // Only continue rewrite if we're looking for a Profile UID.
             if (segments.size() > 0) {
-                // extract Profile UID
+                // Extract Profile UID.
                 String profileUid = segments.remove(0);
-                // handle suffixes
+                // Handle suffixes.
                 String suffix = handleSuffix(segments);
-                // look for Profile matching path
+                // Look for Profile matching path.
                 Profile profile = profileService.getProfile(profileUid);
                 if (profile != null && !profile.isTrash()) {
-                    // we found a Profile. Make available to request scope.
+                    // We found a Profile. Make available to request scope.
                     request.getAttributes().put("profile", profile);
                     ctx.setProfile(profile);
-                    // look for path match
-                    PathItemGroup pathItemGroup = pathItemService.getPathItemGroup();
-                    PathItem pathItem = pathItemGroup.findBySegments(segments, true);
-                    if (pathItem != null) {
-                        // rewrite paths
-                        path = pathItem.getInternalPath();
-                        if (path != null) {
-                            path = "/profiles" + path;
-                            // rewrite paths
-                            request.getAttributes().put("pathItem", pathItem);
-                            request.getAttributes().put("previousResourceRef", reference.toString());
-                            request.getAttributes().put("previousHierachicalPart", reference.getScheme() + ":" + reference.getHierarchicalPart().toString());
-                            reference.setPath(path + suffix);
-                        }
+                    // Rewrite paths.
+                    path = getInternalPath(segments);
+                    if (path != null) {
+                        // Always starts with /profiles.
+                        path = "/profiles" + path;
+                        // Rewrite paths.
+                        request.getAttributes().put("previousResourceRef", reference.toString());
+                        request.getAttributes().put("previousHierachicalPart", reference.getScheme() + ":" + reference.getHierarchicalPart());
+                        reference.setPath(path + suffix);
                     }
                 }
-
+                // If a path wasn't found then we have a 404.
                 if (path == null) {
                     response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
                     return STOP;
                 }
             }
         }
-
-        log.debug("rewrite() - end profile path rewrite");
+        log.debug("rewrite() End profile path rewrite.");
         return CONTINUE;
     }
 
