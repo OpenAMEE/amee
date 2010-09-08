@@ -1,6 +1,6 @@
 <#assign sectionName = "data">
-<#if pathItem??>
-    <#assign basePath = "/data" + pathItem.fullPath>
+<#if node?? && node.fullPath??>
+    <#assign basePath = "/data" + node.fullPath>
 <#else>
     <#assign basePath = "/data">
 </#if>

@@ -14,7 +14,7 @@
 
     function profileItemDeleted() {
         Effect.Fade(this.resourceElem);
-        var profileCategoryResource = new ProfileCategoryResource('${profile.uid}', '${pathItem.fullPath}');
+        var profileCategoryResource = new ProfileCategoryResource('${profile.uid}', '${node.fullPath}');
         profileCategoryResource.loadedCallback = profileCategoryLoaded;
         profileCategoryResource.load();
     }
@@ -34,7 +34,7 @@
     
     // create resource objects
     var drillDown = new DrillDown(
-        "/data${pathItem.fullPath}",
+        "/data${node.fullPath}",
         "1.0",
         "yyyyMMdd");
 
@@ -59,8 +59,7 @@
     Data Category UID: ${dataCategory.uid}<br/>
 </p>
 
-<#assign children = pathItem.findChildrenByType('DC')>
-<#if 0 != children?size>
+<#if 0 != dataCategories?size>
     <h2>Profile Categories</h2>
     <p>
     <table>
@@ -68,11 +67,11 @@
         <th>Path</th>
         <th>Actions</th>
         </tr>
-        <#list children as pi>
+        <#list dataCategories as dc>
         <tr>
-            <td>${pi.name}</td>
+            <td>${dc.name}</td>
             <td>
-                <a href='${basePath}/${pi.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
+                <a href='${basePath}/${dc.displayPath}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
             </td>
         </tr>
         </#list>

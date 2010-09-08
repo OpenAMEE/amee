@@ -224,17 +224,17 @@ var ApiService = Class.create({
         }
 
         if (json.path && apiTrailElement) {
-            var pathItems = json.path.split("/");
+            var segments = json.path.split("/");
 
             // path items
-            for (var i = 0; i < pathItems.length; i++) {
-                var pathItem = pathItems[i];
-                if (pathItem == "") {
+            for (var i = 0; i < segments.length; i++) {
+                var segment = segments[i];
+                if (segment == "") {
                     continue;
                 }
-                linkPath = linkPath + "/" + pathItem;
+                linkPath = linkPath + "/" + segment;
                 apiTrailElement.insert(" / ");
-                apiTrailElement.insert(new Element('a', {href : this.getUrlWithSearch(linkPath)}).update(pathItem));
+                apiTrailElement.insert(new Element('a', {href : this.getUrlWithSearch(linkPath)}).update(segment));
             }
         }
     },
