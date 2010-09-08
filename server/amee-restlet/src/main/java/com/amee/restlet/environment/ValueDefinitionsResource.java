@@ -19,7 +19,10 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.domain.*;
+import com.amee.domain.IAMEEEntityReference;
+import com.amee.domain.Pager;
+import com.amee.domain.ValueDefinition;
+import com.amee.domain.ValueType;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
@@ -139,9 +142,11 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
         log.debug("doAccept()");
         Form form = getForm();
         if ((form.getFirstValue("name") != null) && (form.getFirstValue("valueType") != null)) {
+            String valueType = form.getFirstValue("valueType");
+            valueType = valueType.equalsIgnoreCase("DECIMAL") ? "DOUBLE" : valueType;
             newValueDefinition = new ValueDefinition(
                     form.getFirstValue("name"),
-                    ValueType.valueOf(form.getFirstValue("valueType")));
+                    ValueType.valueOf(valueType));
             definitionService.save(newValueDefinition);
         }
         if (newValueDefinition != null) {

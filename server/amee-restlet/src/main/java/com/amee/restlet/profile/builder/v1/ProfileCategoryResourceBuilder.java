@@ -299,6 +299,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         values.put("profile", profile);
         values.put("dataCategory", dataCategory);
         values.put("node", dataCategory);
+        values.put("dataCategories", dataService.getDataCategories(dataCategory));
         values.put("sheet", sheet);
         if (sheet != null) {
             values.put("totalAmountPerMonth", getTotalAmountPerMonth(sheet));

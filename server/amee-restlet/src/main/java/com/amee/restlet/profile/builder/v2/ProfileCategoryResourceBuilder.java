@@ -308,6 +308,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         values.put("browser", resource.getProfileBrowser());
         values.put("profile", profile);
         values.put("dataCategory", dataCategory);
+        values.put("node", dataCategory);
         return values;
     }
 
@@ -511,7 +512,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     }
 
     private String getFullPath(ProfileItem profileItem) {
-        return "/profiles/" + profileItem.getFullPath();
+        return "/profiles/" + profileItem.getProfile().getDisplayPath() + profileItem.getFullPath();
     }
 }
 

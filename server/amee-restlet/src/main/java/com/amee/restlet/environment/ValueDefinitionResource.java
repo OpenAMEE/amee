@@ -19,7 +19,6 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.ValueDefinition;
 import com.amee.domain.ValueType;
@@ -121,7 +120,9 @@ public class ValueDefinitionResource extends AuthorizeResource implements Serial
             valueDefinition.setDescription(form.getFirstValue("description"));
         }
         if (names.contains("valueType")) {
-            valueDefinition.setValueType(ValueType.valueOf(form.getFirstValue("valueType")));
+            String valueType = form.getFirstValue("valueType");
+            valueType = valueType.equalsIgnoreCase("DECIMAL") ? "DOUBLE" : valueType;
+            valueDefinition.setValueType(ValueType.valueOf(valueType));
         }
         success();
     }
