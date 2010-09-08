@@ -79,11 +79,11 @@
                 </tr>
                 <tr>
                     <td>Unit:</td>
-                    <td colspan="2"><input name='unit' <#if itemValueDefinition.unit??>value='${itemValueDefinition.unit}'</#if> type='text' size='10'/></td>
+                    <td colspan="2"><input name='unit' <#if itemValueDefinition.hasUnit()??>value='${itemValueDefinition.unit}'</#if> type='text' size='10'/></td>
                  </tr>
                 <tr>
                     <td>PerUnit:</td>
-                    <td colspan="2"><input name='perUnit' <#if itemValueDefinition.perUnit??>value='${itemValueDefinition.perUnit}'</#if> type='text' size='10'/></td>
+                    <td colspan="2"><input name='perUnit' <#if itemValueDefinition.hasPerUnit()??>value='${itemValueDefinition.perUnit}'</#if> type='text' size='10'/></td>
                  </tr>
                 <tr>
                     <td>API Version:</td>

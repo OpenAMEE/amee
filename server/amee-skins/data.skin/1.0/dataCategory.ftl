@@ -74,8 +74,8 @@
                 <tr id='Elem_${dc.uid}'>
                     <td>${dc.name}</td>
                     <td>
-                        <#if canViewEntity(dc)><a href='${basePath}${dc.fullPath}'><img src="/images/icons/folder_go.png" title="Go" alt="Go" border="0"/></a>
-                        <#if canDeleteEntity(dc)><input type="image" onClick="deleteDataCategory('${dc.uid}', '${basePath}${dc.fullPath}'); return false;" src="/images/icons/folder_delete.png" title="Delete" alt="Delete" border="0"/></#if></#if>
+                        <#if canViewEntity(dc)><a href='${basePath}/${dc.displayPath}'><img src="/images/icons/folder_go.png" title="Go" alt="Go" border="0"/></a>
+                        <#if canDeleteEntity(dc)><input type="image" onClick="deleteDataCategory('${dc.uid}', '${basePath}/${dc.displayPath}'); return false;" src="/images/icons/folder_delete.png" title="Delete" alt="Delete" border="0"/></#if></#if>
                         <#if allowPermissionEdit><input type="image" onClick="openPermissionEditor('${dc.uid}'); return false;" src="/images/icons/lock_edit.png" title="Edit Permissions" alt="Edit Permissions" border="0"/></#if>
                     </td>
                 </tr>

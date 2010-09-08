@@ -16,7 +16,7 @@
 
     function profileItemDeleted() {
         Effect.Fade(this.resourceElem);
-        var profileCategoryResource = new ProfileCategoryResource('${profile.uid}', '${pathItem.fullPath}');
+        var profileCategoryResource = new ProfileCategoryResource('${profile.uid}', '${node.fullPath}');
         profileCategoryResource.loadedCallback = profileCategoryLoaded;
         profileCategoryResource.load();
     }
@@ -48,7 +48,7 @@
         dataContentElementName: "apiDataCategoryContent",
         apiVersion: '2.0'});
     var drillDown = new DrillDown(
-        "/data${pathItem.fullPath}",
+        "/data${node.fullPath}",
         "2.0",
         "yyyy-MM-dd'T'HH:mm:ssZ");
 
