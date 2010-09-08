@@ -20,7 +20,6 @@
 package com.amee.restlet.profile;
 
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
@@ -161,7 +160,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     }
 
     public String getFullPath() {
-        return "/profiles/" + profileItem.getFullPath() + "/" + itemValue.getDisplayPath();
+        return "/profiles/" + profileItem.getProfile().getDisplayPath() + profileItem.getFullPath() + "/" + itemValue.getDisplayPath();
     }
 
     public ProfileBrowser getProfileBrowser() {
