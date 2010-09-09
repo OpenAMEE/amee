@@ -1,12 +1,12 @@
-<#assign sectionName = "environments">
+<#assign sectionName = "admin">
 <#assign pagerItemsLabel = 'users'>
 <#assign pagerUrl = path + '?search=' + search>
 
 <#include '/includes/before_content.ftl'>
 
 <script type="text/javascript">
-    function deleteUser(environmentUid, userUid) {
-        resourceUrl = '/environments/' + environmentUid + '/users/' + userUid + '?method=delete';
+    function deleteUser(userUid) {
+        resourceUrl = '/admin/users/' + userUid + '?method=delete';
         resourceElem = $('Elem_' + userUid);
         resourceType = 'User';
         var deleteResource = new DeleteResource()
@@ -14,17 +14,16 @@
     }
 </script>
 
-<h1>Environment Administration</h1>
+<h1>Administration</h1>
 
-<p><a href='/environments'>Environments</a> /
-   <a href='/environments/${environment.uid}'>${environment.name}</a> /
-   <a href='/environments/${environment.uid}/users'>Users</a></p>
+<p><a href='/admin'>Admin</a> /
+   <a href='/admin/users'>Users</a></p>
 
 <h2>Users</h2>
 
 <p>
 
-    <form action='/environments/${environment.uid}/users' method='GET'>
+    <form action='/admin/users' method='GET'>
         Search: <input name='search' value='${search}' type='text' size='20'/>&nbsp;<input type='submit' value="Go!"/><br/>
     </form>
 
@@ -47,8 +46,8 @@
                 <td>${u.APIVersion}</td>
                 <td>${u.status}</td>
                 <td>
-                    <a href='/environments/${environment.uid}/users/${u.uid}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
-                    <#if canDeleteEntity(u)><input type="image" onClick="deleteUser('${environment.uid}', '${u.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
+                    <a href='/admin/users/${u.uid}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
+                    <#if canDeleteEntity(u)><input type="image" onClick="deleteUser('${u.uid}'); return false;" src="/images/icons/page_delete.png" title="Delete" alt="Delete" border="0"/></#if>
                 </td>
             </tr>
         </#if>
@@ -66,7 +65,7 @@
 
     <p>
 
-        <form action='/environments/${environment.uid}/users' method='POST' enctype='application/x-www-form-urlencoded'>
+        <form action='/admin/users' method='POST' enctype='application/x-www-form-urlencoded'>
             Groups: clone from <select name="cloneUserUid">
                 <option value="">(Select User)</option>
                 <#list users as u>

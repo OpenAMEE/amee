@@ -22,14 +22,17 @@ package com.amee.restlet.data;
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.base.utils.XMLUtils;
 import com.amee.calculation.service.CalculationService;
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
+import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.platform.science.*;
+import com.amee.restlet.AMEEResource;
 import com.amee.restlet.RequestContext;
+import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.data.DataSheetService;
@@ -62,7 +65,7 @@ import java.util.Set;
 
 @Component
 @Scope("prototype")
-public class DataItemResource extends BaseDataResource implements Serializable {
+public class DataItemResource extends AMEEResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -75,6 +78,11 @@ public class DataItemResource extends BaseDataResource implements Serializable {
     @Autowired
     private CalculationService calculationService;
 
+    @Autowired
+    private DataBrowser dataBrowser;
+
+    private DataCategory dataCategory;
+    private DataItem dataItem;
     private String unit;
     private String perUnit;
     private List<Choice> parameters;
@@ -84,12 +92,17 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
         super.initialise(context, request, response);
 
-        // Obtain DataCategory and DataItem.
-        setDataCategory(request.getAttributes().get("categoryUid").toString());
-        setDataItemByPathOrUid(request.getAttributes().get("itemPath").toString());
+        // Obtain DataCategory.
+        dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
+        dataBrowser.setDataCategory(dataCategory);
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
+
+        // Obtain DataItem.
+        dataItem = dataService.getDataItemByIdentifier(dataCategory, request.getAttributes().get("itemPath").toString());
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataItem(dataItem);
 
         // Must have a DataItem to do anything here.
-        if (getDataItem() != null) {
+        if (dataItem != null) {
 
             // We'll pre-process query parameters here to keep the Data API calculation parameters sane.
             Form query = request.getResourceRef().getQueryAsForm();
@@ -99,7 +112,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             // The resource may receive a startDate parameter that sets the current date in an
             // historical sequence of ItemValues.
             if (StringUtils.isNotBlank(query.getFirstValue("startDate"))) {
-                getDataItem().setEffectiveStartDate(new StartEndDate(query.getFirstValue("startDate")));
+                dataItem.setEffectiveStartDate(new StartEndDate(query.getFirstValue("startDate")));
             }
 
             // Query parameter names, minus startDate, returnUnit and returnPerUnit.
@@ -113,25 +126,21 @@ public class DataItemResource extends BaseDataResource implements Serializable {
             for (String key : names) {
                 parameters.add(new Choice(key, query.getValues(key)));
             }
-
-            // Store DataItem in RequestContext for logging.
-            ((RequestContext) ThreadBeanHolder.get("ctx")).setDataItem(getDataItem());
         }
     }
 
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                getDataItem() != null &&
-                !getDataItem().isTrash() &&
-                getDataCategory() != null &&
-                getDataItem().getDataCategory().equals(getDataCategory()) &&
-                getDataItem().getEnvironment().equals(getActiveEnvironment());
+                (dataCategory != null) &&
+                (dataItem != null) &&
+                dataItem.getDataCategory().equals(dataCategory) &&
+                !dataItem.isTrash();
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        return getDataItem().getHierarchy();
+    public List<IAMEEEntityReference> getEntities() {
+        return dataItem.getHierarchy();
     }
 
     @Override
@@ -141,7 +150,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        DataItem dataItem = getDataItem();
         Choices userValueChoices = dataSheetService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         Amount amount = calculationService.calculate(dataItem, userValueChoices, getAPIVersion()).defaultValueAsAmount();
@@ -157,7 +165,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        DataItem dataItem = getDataItem();
         Choices userValueChoices = dataSheetService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         ReturnValues returnAmounts = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
@@ -165,7 +172,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         JSONObject obj = new JSONObject();
         obj.put("dataItem", dataItem.getJSONObject(true, false));
-        obj.put("path", pathItem.getFullPath());
+        obj.put("path", dataItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
         obj.put("amountPerMonth", amount.convert(kgPerMonth).getValue());
         if (getAPIVersion().isNotVersionOne()) {
@@ -223,7 +230,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
     @Override
     public Element getElement(Document document) {
-        DataItem dataItem = getDataItem();
         Choices userValueChoices = dataSheetService.getUserValueChoices(dataItem, getAPIVersion());
         userValueChoices.merge(parameters);
         ReturnValues returnAmounts = calculationService.calculate(dataItem, userValueChoices, getAPIVersion());
@@ -231,7 +237,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         Element element = document.createElement("DataItemResource");
         element.appendChild(dataItem.getElement(document, true, false));
-        element.appendChild(XMLUtils.getElement(document, "Path", pathItem.getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", dataItem.getFullPath()));
         element.appendChild(userValueChoices.getElement(document));
         element.appendChild(XMLUtils.getElement(document, "AmountPerMonth", amount.convert(kgPerMonth).toString()));
         if (getAPIVersion().isNotVersionOne()) {
@@ -282,7 +288,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         names.remove("startDate");
 
         // The submitted startDate must be on or after the epoch.
-        if (!getDataItem().isWithinLifeTime(startDate)) {
+        if (!dataItem.isWithinLifeTime(startDate)) {
             log.warn("acceptRepresentation() badRequest - Trying to create a DIV before the epoch.");
             badRequest();
             return;
@@ -292,7 +298,7 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         for (String name : names) {
 
             // Fetch the itemValueDefinition.
-            ItemValueDefinition itemValueDefinition = getDataItem().getItemDefinition().getItemValueDefinition(name);
+            ItemValueDefinition itemValueDefinition = dataItem.getItemDefinition().getItemValueDefinition(name);
             if (itemValueDefinition == null) {
                 // The submitted ItemValueDefinition must be in the owning ItemDefinition.
                 log.warn("acceptRepresentation() badRequest - Trying to create a DIV with an IVD not belonging to the DI ID.");
@@ -302,29 +308,29 @@ public class DataItemResource extends BaseDataResource implements Serializable {
 
             // Cannot create new ItemValues for ItemValueDefinitions which are used in the DrillDown for
             // the owning ItemDefinition.
-            if (getDataItem().getItemDefinition().isDrillDownValue(itemValueDefinition)) {
+            if (dataItem.getItemDefinition().isDrillDownValue(itemValueDefinition)) {
                 log.warn("acceptRepresentation() badRequest - Trying to create a DIV that is a DrillDown value.");
                 badRequest();
                 return;
             }
 
             // The new ItemValue must be unique on itemValueDefinitionUid + startDate.
-            if (!getDataItem().isUnique(itemValueDefinition, startDate)) {
+            if (!dataItem.isUnique(itemValueDefinition, startDate)) {
                 log.warn("acceptRepresentation() badRequest - Trying to create a DIV with the same IVD and startDate as an existing DIV.");
                 badRequest();
                 return;
             }
 
             // Create the new ItemValue entity.
-            ItemValue newDataItemValue = new ItemValue(itemValueDefinition, getDataItem(), getForm().getFirstValue(name));
+            ItemValue newDataItemValue = new ItemValue(itemValueDefinition, dataItem, getForm().getFirstValue(name));
             newDataItemValue.setStartDate(startDate);
         }
 
         // Clear caches.
-        dataService.invalidate(getDataItem().getDataCategory());
+        dataService.invalidate(dataItem.getDataCategory());
 
         // Return successful creation of new DataItemValue.
-        successfulPost(getFullPath(), getDataItem().getUid());
+        successfulPost(getFullPath(), dataItem.getUid());
     }
 
     /**
@@ -343,7 +349,6 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         log.debug("doStore()");
 
         Form form = getForm();
-        DataItem dataItem = getDataItem();
         Set<String> names = form.getNames();
 
         // Update 'name' value.
@@ -370,15 +375,18 @@ public class DataItemResource extends BaseDataResource implements Serializable {
         dataService.invalidate(dataItem.getDataCategory());
 
         // Return successful update of DataItem.
-        successfulPut(getParentPath() + "/" + dataItem.getResolvedPath());
+        successfulPut("/data/" + dataItem.getFullPath());
     }
 
     @Override
     public void doRemove() {
         log.debug("doRemove()");
-        DataItem dataItem = getDataItem();
         dataService.invalidate(dataItem.getDataCategory());
         dataService.remove(dataItem);
-        successfulDelete(pathItem.getParent().getFullPath());
+        successfulDelete("/data/" + dataItem.getDataCategory().getFullPath());
+    }
+
+    public String getFullPath() {
+        return "/data" + dataItem.getFullPath();
     }
 }

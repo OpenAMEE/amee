@@ -19,11 +19,12 @@
  */
 package com.amee.restlet.profile;
 
-import com.amee.platform.science.CO2AmountUnit;
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.ProfileItem;
+import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.ProfileCategoryAtomAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileCategoryFormAcceptor;
@@ -75,6 +76,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     @Autowired
     private ProfileCategoryResourceBuilderFactory builderFactory;
 
+    private DataCategory dataCategory;
     private List<ProfileItem> profileItems = new ArrayList<ProfileItem>();
     private IProfileCategoryResourceBuilder builder;
     private boolean recurse = false;
@@ -82,32 +84,36 @@ public class ProfileCategoryResource extends BaseProfileResource {
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        setDataCategory(request.getAttributes().get("categoryUid").toString());
-        if (getDataCategory() != null) {
-            ((RequestContext) ThreadBeanHolder.get("ctx")).setCategory(getDataCategory());
-        }
+
+        // Obtain DataCategory.
+        dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
+
+        // Media type sensitive builder.
         setBuilderStrategy();
+
+        // Evil recursive option.
         recurse = request.getResourceRef().getQueryAsForm().getFirstValue("recurse", "false").equals("true");
     }
 
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                getDataCategory() != null &&
-                !getDataCategory().isTrash() &&
-                getDataCategory().getEnvironment().equals(getActiveEnvironment());
+                (getProfile() != null) &&
+                (dataCategory != null) &&
+                !dataCategory.isTrash();
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        DataCategory dc = getDataCategory();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        DataCategory dc = dataCategory;
         while (dc != null) {
             entities.add(dc);
             dc = dc.getDataCategory();
         }
         entities.add(getProfile());
-        entities.add(getActiveEnvironment());
+        entities.add(getRootDataCategory());
         Collections.reverse(entities);
         return entities;
     }
@@ -186,6 +192,10 @@ public class ProfileCategoryResource extends BaseProfileResource {
         }
     }
 
+    public String getFullPath() {
+        return "/profiles/" + getProfile().getFullPath() + dataCategory.getFullPath();
+    }
+
     protected List<ProfileItem> doAcceptOrStoreProfileItems(Representation entity) throws APIException {
         // Accept the representation according to the MediaType
         MediaType type = entity.getMediaType();
@@ -203,7 +213,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
     @Override
     public boolean allowDelete() {
         // Only allow delete for Profiles (i.e: a request to /profiles/{profileUid}).
-        return super.allowDelete() && (pathItem.getPath().length() == 0);
+        return super.allowDelete() && (dataCategory.getPath().isEmpty());
     }
 
     @Override
@@ -212,6 +222,14 @@ public class ProfileCategoryResource extends BaseProfileResource {
         profileService.clearCaches(getProfile());
         profileService.remove(getProfile());
         successfulDelete("/profiles");
+    }
+
+    public DataCategory getDataCategory() {
+        return dataCategory;
+    }
+
+    public List<DataCategory> getDataCategories() {
+        return dataService.getDataCategories(dataCategory);
     }
 
     public List<ProfileItem> getProfileItems() {

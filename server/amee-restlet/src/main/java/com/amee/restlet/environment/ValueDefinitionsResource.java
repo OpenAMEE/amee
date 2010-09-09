@@ -19,11 +19,10 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.domain.ValueType;
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.Pager;
 import com.amee.domain.ValueDefinition;
-import com.amee.domain.environment.Environment;
+import com.amee.domain.ValueType;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
@@ -66,19 +65,12 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
     }
 
     @Override
-    public boolean isValid() {
-        return super.isValid() && (definitionBrowser.getEnvironment() != null);
-    }
-
-    @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(definitionBrowser.getEnvironment());
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        entities.add(getRootDataCategory());
         return entities;
     }
 
@@ -90,12 +82,10 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
     @Override
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager();
-        Environment environment = definitionBrowser.getEnvironment();
-        List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(environment, pager);
+        List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
-        values.put("environment", environment);
         values.put("valueDefinitions", valueDefinitions);
         values.put("valueTypes", ValueType.getChoices());
         values.put("pager", pager);
@@ -107,8 +97,7 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
         JSONObject obj = new JSONObject();
         if (isGet()) {
             Pager pager = getPager();
-            Environment environment = definitionBrowser.getEnvironment();
-            List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(environment, pager);
+            List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(pager);
             pager.setCurrentPage(getPage());
             JSONArray valueDefinitionsJSONArray = new JSONArray();
             for (ValueDefinition valueDefinition : valueDefinitions) {
@@ -128,8 +117,7 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
         Element element = document.createElement("ValueDefinitionsResource");
         if (isGet()) {
             Pager pager = getPager();
-            Environment environment = definitionBrowser.getEnvironment();
-            List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(environment, pager);
+            List<ValueDefinition> valueDefinitions = definitionService.getValueDefinitions(pager);
             pager.setCurrentPage(getPage());
             Element valueDefinitionsElement = document.createElement("ValueDefinitions");
             for (ValueDefinition valueDefinition : valueDefinitions) {
@@ -154,10 +142,11 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
         log.debug("doAccept()");
         Form form = getForm();
         if ((form.getFirstValue("name") != null) && (form.getFirstValue("valueType") != null)) {
+            String valueType = form.getFirstValue("valueType");
+            valueType = valueType.equalsIgnoreCase("DECIMAL") ? "DOUBLE" : valueType;
             newValueDefinition = new ValueDefinition(
-                    definitionBrowser.getEnvironment(),
                     form.getFirstValue("name"),
-                    ValueType.valueOf(form.getFirstValue("valueType")));
+                    ValueType.valueOf(valueType));
             definitionService.save(newValueDefinition);
         }
         if (newValueDefinition != null) {

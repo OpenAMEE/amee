@@ -1,10 +1,11 @@
 package com.amee.admin.restlet.environment.group;
 
-import com.amee.admin.restlet.environment.EnvironmentBrowser;
+import com.amee.admin.restlet.environment.AdminBrowser;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.Group;
 import com.amee.restlet.AuthorizeResource;
-import com.amee.service.environment.EnvironmentConstants;
+import com.amee.service.environment.AdminConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;
@@ -27,56 +28,51 @@ import java.util.Map;
 public class GroupResource extends AuthorizeResource {
 
     @Autowired
-    private EnvironmentBrowser environmentBrowser;
+    private AdminBrowser adminBrowser;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
-        environmentBrowser.setGroupUid(request.getAttributes().get("groupUid").toString());
+        adminBrowser.setGroupUid(request.getAttributes().get("groupUid").toString());
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (environmentBrowser.getGroup() != null);
+        return super.isValid() && (adminBrowser.getGroup() != null);
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(environmentBrowser.getEnvironment());
-        entities.add(environmentBrowser.getGroup());
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        entities.add(getRootDataCategory());
+        entities.add(adminBrowser.getGroup());
         return entities;
     }
 
     @Override
     public String getTemplatePath() {
-        return EnvironmentConstants.VIEW_GROUP;
+        return AdminConstants.VIEW_GROUP;
     }
 
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
-        values.put("browser", environmentBrowser);
-        values.put("environment", environmentBrowser.getEnvironment());
-        values.put("group", environmentBrowser.getGroup());
+        values.put("browser", adminBrowser);
+        values.put("group", adminBrowser.getGroup());
         return values;
     }
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
-        obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
-        obj.put("group", environmentBrowser.getGroup().getJSONObject());
+        obj.put("group", adminBrowser.getGroup().getJSONObject());
         return obj;
     }
 
     @Override
     public Element getElement(Document document) {
         Element element = document.createElement("GroupResource");
-        element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
-        element.appendChild(environmentBrowser.getGroup().getElement(document));
+        element.appendChild(adminBrowser.getGroup().getElement(document));
         return element;
     }
 
@@ -90,7 +86,7 @@ public class GroupResource extends AuthorizeResource {
     public void doStore(Representation entity) {
         log.debug("put");
         Form form = getForm();
-        Group group = environmentBrowser.getGroup();
+        Group group = adminBrowser.getGroup();
         // update values
         if (form.getNames().contains("name")) {
             group.setName(form.getFirstValue("name"));

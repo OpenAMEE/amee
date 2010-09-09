@@ -20,7 +20,7 @@
 package com.amee.restlet.profile;
 
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.CO2AmountUnit;
@@ -71,41 +71,48 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Autowired
     private ProfileItemResourceBuilderFactory builderFactory;
 
+    private DataCategory dataCategory;
+    private ProfileItem profileItem;
     private IProfileItemResourceBuilder builder;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        setDataCategory(request.getAttributes().get("categoryUid").toString());
-        setProfileItem(request.getAttributes().get("itemUid").toString());
-        if (getProfileItem() != null) {
-            ((RequestContext) ThreadBeanHolder.get("ctx")).setProfileItem(getProfileItem());
-        }
+
+        // Obtain DataCategory.
+        dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
+
+        // Obtain ProfileItem.
+        profileItem = profileService.getProfileItem(request.getAttributes().get("itemUid").toString());
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setProfileItem(profileItem);
+
+        // Media type sensitive builder.
         setBuilderStrategy();
     }
 
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                getProfileItem() != null &&
-                !getProfileItem().isTrash() &&
-                getDataCategory() != null &&
-                getProfileItem().getProfile().equals(getProfile()) &&
-                getProfileItem().getDataCategory().equals(getDataCategory()) &&
-                getProfileItem().getEnvironment().equals(getActiveEnvironment());
+                (getProfile() != null) &&
+                (dataCategory != null) &&
+                (profileItem != null) &&
+                !profileItem.isTrash() &&
+                profileItem.getProfile().equals(getProfile()) &&
+                profileItem.getDataCategory().equals(dataCategory);
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getProfileItem());
-        DataCategory dc = getProfileItem().getDataCategory();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        entities.add(profileItem);
+        DataCategory dc = profileItem.getDataCategory();
         while (dc != null) {
             entities.add(dc);
             dc = dc.getDataCategory();
         }
         entities.add(getProfile());
-        entities.add(getActiveEnvironment());
+        entities.add(getRootDataCategory());
         Collections.reverse(entities);
         return entities;
     }
@@ -162,6 +169,10 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         }
     }
 
+    public String getFullPath() {
+        return "/profiles/" + profileItem.getProfile().getDisplayPath() + profileItem.getFullPath();
+    }
+
     protected List<ProfileItem> doStoreProfileItems(Representation entity) {
         // units are only supported beyond version one
         if (getAPIVersion().isNotVersionOne()) {
@@ -181,14 +192,17 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Override
     public void doRemove() {
         log.debug("doRemove()");
-        ProfileItem profileItem = getProfileItem();
         profileService.remove(profileItem);
         profileService.clearCaches(getProfile());
-        successfulDelete(pathItem.getParent().getFullPath());
+        successfulDelete("/profiles/" + profileItem.getProfile().getFullPath() + "/" + dataCategory.getFullPath());
     }
 
     // TODO: What is this used by? Templates?
     public List<ProfileItem> getProfileItems() {
         return null;
+    }
+
+    public ProfileItem getProfileItem() {
+        return profileItem;
     }
 }

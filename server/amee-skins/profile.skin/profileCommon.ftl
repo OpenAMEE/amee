@@ -1,6 +1,6 @@
 <#assign sectionName = "profiles">
-<#if profile?? && pathItem??>
-    <#assign basePath = "/profiles/" + profile.displayPath + pathItem.fullPath>
+<#if profile?? && node??>
+    <#assign basePath = "/profiles/" + profile.displayPath + node.fullPath>
 <#else>
     <#assign basePath = "/profiles">
 </#if>

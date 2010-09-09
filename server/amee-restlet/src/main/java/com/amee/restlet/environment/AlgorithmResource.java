@@ -20,12 +20,12 @@
 package com.amee.restlet.environment;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.sheet.Choice;
 import com.amee.platform.science.AlgorithmRunner;
-import com.amee.platform.science.CO2Amount;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
@@ -48,11 +48,7 @@ import org.w3c.dom.Element;
 
 import javax.script.ScriptException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Scope("prototype")
@@ -73,7 +69,6 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
         definitionBrowser.setAlgorithmUid(request.getAttributes().get("algorithmUid").toString());
     }
@@ -84,10 +79,9 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(definitionBrowser.getEnvironment());
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        entities.add(getRootDataCategory());
         entities.add(definitionBrowser.getItemDefinition());
         entities.add(definitionBrowser.getAlgorithm());
         return entities;
@@ -102,7 +96,6 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
-        values.put("environment", definitionBrowser.getEnvironment());
         values.put("itemDefinition", definitionBrowser.getItemDefinition());
         values.put("algorithm", definitionBrowser.getAlgorithm());
         values.put("algorithmContexts", definitionBrowser.getAlgorithmContexts());
@@ -160,8 +153,8 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
         // apply calculation
         try {
             algorithmTestWrapper.setAmount(algorithmRunner.evaluate(
-                algorithmTestWrapper.getMockAlgorithm(),
-                algorithmTestWrapper.getValuesMap()).defaultValueAsDouble());
+                    algorithmTestWrapper.getMockAlgorithm(),
+                    algorithmTestWrapper.getValuesMap()).defaultValueAsDouble());
         } catch (ScriptException sc) {
             algorithmTestWrapper.setError(new StringBuffer(sc.getMessage()));
         }
@@ -185,8 +178,7 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
                 algorithm.setAlgorithmContext(null);
             } else {
                 algorithm.setAlgorithmContext(
-                        definitionService.getAlgorithmContextByUid(
-                                definitionBrowser.getEnvironment(), algorithmContextUid));
+                        definitionService.getAlgorithmContextByUid(algorithmContextUid));
             }
         }
         success();
@@ -214,7 +206,6 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
         private Algorithm mockAlgorithm = null;
 
         private Map<String, Object> valuesMap = new HashMap<String, Object>();
-
 
         public AlgorithmTestWrapper() {
             super();
@@ -282,7 +273,6 @@ public class AlgorithmResource extends AuthorizeResource implements Serializable
             this.mockAlgorithm.setContent(content);
             if (!StringUtils.isBlank(contextContent)) {
                 AlgorithmContext algorithmContext = new AlgorithmContext();
-                algorithmContext.setEnvironment(definitionBrowser.getEnvironment());
                 algorithmContext.setContent(contextContent);
                 mockAlgorithm.setAlgorithmContext(algorithmContext);
             }

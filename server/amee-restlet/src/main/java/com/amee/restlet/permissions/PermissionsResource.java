@@ -24,6 +24,7 @@ package com.amee.restlet.permissions;
 import com.amee.base.utils.UidGen;
 import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEEntityReference;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.ObjectType;
 import com.amee.domain.auth.Permission;
 import com.amee.domain.auth.PermissionEntry;
@@ -63,9 +64,9 @@ public class PermissionsResource extends AuthorizeResource {
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        entities.add(getRootDataCategory());
         return entities;
     }
 
@@ -165,7 +166,7 @@ public class PermissionsResource extends AuthorizeResource {
         entityReference.setEntityId(entityReference.getEntity().getId());
 
         // Create Permission.
-        permissionService.persist(new Permission(getActiveEnvironment(), principalReference, entityReference, entries));
+        permissionService.persist(new Permission(principalReference, entityReference, entries));
     }
 
     public AMEEEntityReference getEntityReference(Request request) {

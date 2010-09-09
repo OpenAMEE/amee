@@ -1,7 +1,7 @@
 package com.amee.restlet;
 
-import com.amee.calculation.service.CalculationException;
 import com.amee.base.utils.ThreadBeanHolder;
+import com.amee.calculation.service.CalculationException;
 import com.amee.domain.*;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;
@@ -289,10 +289,6 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         return result;
     }
 
-    public String getParentPath() {
-        return getParentPath(false);
-    }
-
     public String getParentPath(boolean goHigher) {
         String parentPath = "";
         Reference parentRef = getRequest().getResourceRef().getParentRef();
@@ -330,15 +326,6 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
 
     public Element getElement(Document document, boolean detailed) throws ResourceException {
         throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
-    }
-
-    /**
-     * Get the current active Environment.
-     *
-     * @return the current active Environment
-     */
-    public Environment getActiveEnvironment() {
-        return (Environment) getRequest().getAttributes().get("activeEnvironment");
     }
 
     /**
@@ -428,7 +415,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         }
         // Second, default to Environment.
         if (itemsPerPage < 1) {
-            itemsPerPage = getActiveEnvironment().getItemsPerPage();
+            itemsPerPage = Environment.ENVIRONMENT.getItemsPerPage();
         }
         return itemsPerPage;
     }

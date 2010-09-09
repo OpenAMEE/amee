@@ -22,6 +22,7 @@
 package com.amee.restlet.permissions;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.Permission;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.auth.PermissionService;
@@ -56,9 +57,9 @@ public class PermissionResource extends AuthorizeResource implements Serializabl
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        entities.add(getRootDataCategory());
         entities.add(permission);
         return entities;
     }

@@ -1,1 +1,1 @@
-<p><a href='/profiles'>profiles</a> / <a href='/profiles/${profile.displayPath}'>${profile.displayPath}</a><#list pathItem.pathItems as p><#if p.path != ''> / <a href='/profiles/${profile.displayPath}${p.fullPath}'>${p.path}</a></#if></#list></p>
+<p><a href='/profiles'>profiles</a> / <a href='/profiles/${profile.displayPath}'>${profile.displayPath}</a><#list node.hierarchy as entity><#if entity.displayPath != ''> / <a href='/profiles/${profile.displayPath}${entity.fullPath}'>${entity.displayPath}</a></#if></#list></p>

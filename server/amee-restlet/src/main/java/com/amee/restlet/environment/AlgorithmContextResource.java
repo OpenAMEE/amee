@@ -20,6 +20,7 @@
 package com.amee.restlet.environment;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
@@ -60,22 +61,19 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setAlgorithmContextUid(request.getAttributes().get("algorithmContextUid").toString());
     }
 
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (definitionBrowser.getEnvironment() != null) &&
                 (definitionBrowser.getAlgorithmContext() != null);
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(definitionBrowser.getEnvironment());
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        entities.add(getRootDataCategory());
         entities.add(definitionBrowser.getAlgorithmContext());
         return entities;
     }
@@ -89,7 +87,6 @@ public class AlgorithmContextResource extends AuthorizeResource implements Seria
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
-        values.put("environment", definitionBrowser.getEnvironment());
         values.put("algorithmContext", definitionBrowser.getAlgorithmContext());
         return values;
     }

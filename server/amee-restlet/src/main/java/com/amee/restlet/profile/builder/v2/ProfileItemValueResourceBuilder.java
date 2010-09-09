@@ -48,7 +48,7 @@ public class ProfileItemValueResourceBuilder implements IProfileItemValueResourc
         Element element = document.createElement("ProfileItemValueResource");
         itemValue.setBuilder(new ItemValueBuilder(itemValue));
         element.appendChild(itemValue.getElement(document));
-        element.appendChild(XMLUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", resource.getProfileItemValue().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
     }
@@ -90,10 +90,10 @@ public class ProfileItemValueResourceBuilder implements IProfileItemValueResourc
         content.append(resource.getProfileItemValue().getValue().isEmpty() ? "N/A" : resource.getProfileItemValue().getValue());
         if (resource.getProfileItemValue().hasUnit())
             content.append(", unit=");
-            content.append(resource.getProfileItemValue().getUnit());
+        content.append(resource.getProfileItemValue().getUnit());
         if (resource.getProfileItemValue().hasPerUnit())
             content.append(", v=");
-            content.append(resource.getProfileItemValue().getPerUnit());
+        content.append(resource.getProfileItemValue().getPerUnit());
         entry.setContent(content.toString());
 
         Category cat = atomFeed.newItemValueCategory(entry);
@@ -109,7 +109,7 @@ public class ProfileItemValueResourceBuilder implements IProfileItemValueResourc
         ItemValue itemValue = resource.getProfileItemValue();
         itemValue.setBuilder(new ItemValueBuilder(itemValue));
         obj.put("itemValue", itemValue.getJSONObject(true));
-        obj.put("path", resource.getPathItem().getFullPath());
+        obj.put("path", resource.getProfileItemValue().getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
         return obj;
     }

@@ -4,7 +4,6 @@ import com.amee.base.utils.UidGen;
 import com.amee.domain.AMEEStatus;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.User;
-import com.amee.domain.environment.Environment;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +25,13 @@ public class SiteService implements Serializable {
 
     // Users
 
-    public User getUserByUid(Environment environment, String uid) {
+    public User getUserByUid(String uid) {
         User user = null;
-        if ((environment != null) && (uid != null)) {
+        if (uid != null) {
             List<User> users = entityManager.createQuery(
                     "SELECT u FROM User u " +
-                            "WHERE u.environment.id = :environmentId " +
-                            "AND u.uid = :userUid " +
+                            "WHERE u.uid = :userUid " +
                             "AND u.status != :trash")
-                    .setParameter("environmentId", environment.getId())
                     .setParameter("userUid", uid)
                     .setParameter("trash", AMEEStatus.TRASH)
                     .setHint("org.hibernate.cacheable", true)
@@ -47,14 +44,12 @@ public class SiteService implements Serializable {
         return user;
     }
 
-    public User getUserByUsername(Environment environment, String username) {
+    public User getUserByUsername(String username) {
         User user = null;
         List<User> users = entityManager.createQuery(
                 "SELECT u FROM User u " +
-                        "WHERE u.environment.id = :environmentId " +
-                        "AND u.username = :username " +
+                        "WHERE u.username = :username " +
                         "AND u.status != :trash")
-                .setParameter("environmentId", environment.getId())
                 .setParameter("username", username.trim())
                 .setParameter("trash", AMEEStatus.TRASH)
                 .setHint("org.hibernate.cacheable", true)
@@ -66,11 +61,11 @@ public class SiteService implements Serializable {
         return user;
     }
 
-    public List<User> getUsers(Environment environment, Pager pager) {
-        return getUsers(environment, pager, "");
+    public List<User> getUsers(Pager pager) {
+        return getUsers(pager, "");
     }
 
-    public List<User> getUsers(Environment environment, Pager pager, String search) {
+    public List<User> getUsers(Pager pager, String search) {
         // If search is a list of UIDs then switch to UID search instead.
         Set<String> uids = new HashSet<String>();
         for (String uid : search.split(",")) {
@@ -85,12 +80,10 @@ public class SiteService implements Serializable {
         // first count all objects
         String countHql = "SELECT count(u) " +
                 "FROM User u " +
-                "WHERE u.environment.id = :environmentId " +
+                "WHERE u.status != :trash " +
                 (uids.isEmpty() ? "" : "AND u.uid IN (:uids) ") +
-                (StringUtils.isBlank(search) ? "" : "AND u.username LIKE :search ") +
-                "AND u.status != :trash";
+                (StringUtils.isBlank(search) ? "" : "AND u.username LIKE :search ");
         Query countQuery = entityManager.createQuery(countHql);
-        countQuery.setParameter("environmentId", environment.getId());
         if (!uids.isEmpty()) {
             countQuery.setParameter("uids", uids);
         }
@@ -107,13 +100,11 @@ public class SiteService implements Serializable {
         // now get the objects for the current page
         String hql = "SELECT u " +
                 "FROM User u " +
-                "WHERE u.environment.id = :environmentId " +
+                "WHERE u.status != :trash " +
                 (uids.isEmpty() ? "" : "AND u.uid IN (:uids) ") +
                 (StringUtils.isBlank(search) ? "" : "AND u.username LIKE :search ") +
-                "AND u.status != :trash " +
                 "ORDER BY u.username";
         Query query = entityManager.createQuery(hql);
-        query.setParameter("environmentId", environment.getId());
         if (!uids.isEmpty()) {
             query.setParameter("uids", uids);
         }
@@ -132,23 +123,17 @@ public class SiteService implements Serializable {
         return users;
     }
 
-    public List<User> getUsers(Environment environment) {
-        if (environment != null) {
-            List<User> users = entityManager.createQuery(
-                    "SELECT u " +
-                            "FROM User u " +
-                            "WHERE u.environment.id = :environmentId " +
-                            "AND u.status != :trash " +
-                            "ORDER BY u.username")
-                    .setParameter("environmentId", environment.getId())
-                    .setParameter("trash", AMEEStatus.TRASH)
-                    .setHint("org.hibernate.cacheable", true)
-                    .setHint("org.hibernate.cacheRegion", CACHE_REGION)
-                    .getResultList();
-            return users;
-        } else {
-            return null;
-        }
+    public List<User> getUsers() {
+        List<User> users = entityManager.createQuery(
+                "SELECT u " +
+                        "FROM User u " +
+                        "WHERE u.status != :trash " +
+                        "ORDER BY u.username")
+                .setParameter("trash", AMEEStatus.TRASH)
+                .setHint("org.hibernate.cacheable", true)
+                .setHint("org.hibernate.cacheRegion", CACHE_REGION)
+                .getResultList();
+        return users;
     }
 
     public void save(User user) {

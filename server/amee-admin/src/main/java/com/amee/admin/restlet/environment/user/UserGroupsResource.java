@@ -1,13 +1,13 @@
 package com.amee.admin.restlet.environment.user;
 
-import com.amee.admin.restlet.environment.EnvironmentBrowser;
+import com.amee.admin.restlet.environment.AdminBrowser;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.Group;
 import com.amee.domain.auth.GroupPrincipal;
 import com.amee.restlet.AuthorizeResource;
-import com.amee.service.environment.EnvironmentConstants;
-import com.amee.service.environment.GroupService;
+import com.amee.service.environment.AdminConstants;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,41 +30,39 @@ import java.util.*;
 public class UserGroupsResource extends AuthorizeResource implements Serializable {
 
     @Autowired
-    private EnvironmentBrowser environmentBrowser;
+    private AdminBrowser adminBrowser;
 
     private GroupPrincipal newGroupPrincipal;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
-        environmentBrowser.setUserIdentifier(request.getAttributes().get("userUid").toString());
+        adminBrowser.setUserIdentifier(request.getAttributes().get("userUid").toString());
         setPagerSetType(request);
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (environmentBrowser.getEnvironment() != null) && (environmentBrowser.getUser() != null);
+        return super.isValid() && (adminBrowser.getUser() != null);
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(environmentBrowser.getEnvironment());
-        entities.add(environmentBrowser.getUser());
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        entities.add(getRootDataCategory());
+        entities.add(adminBrowser.getUser());
         return entities;
     }
 
     @Override
     public String getTemplatePath() {
-        return EnvironmentConstants.VIEW_USER_GROUPS;
+        return AdminConstants.VIEW_USER_GROUPS;
     }
 
     @Override
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager();
-        List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(environmentBrowser.getUser());
+        List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(adminBrowser.getUser());
         Map<String, GroupPrincipal> groupPrincipalMap = new HashMap<String, GroupPrincipal>();
         Set<Object> pagerSet = new HashSet<Object>();
         for (GroupPrincipal groupPrincipal : groupPrincipals) {
@@ -72,12 +70,11 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
             pagerSet.add(groupPrincipal.getGroup());
         }
         pager.setPagerSet(pagerSet);
-        List<Group> groups = groupService.getGroups(environmentBrowser.getEnvironment(), pager);
+        List<Group> groups = groupService.getGroups(pager);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
-        values.put("browser", environmentBrowser);
-        values.put("environment", environmentBrowser.getEnvironment());
-        values.put("user", environmentBrowser.getUser());
+        values.put("browser", adminBrowser);
+        values.put("user", adminBrowser.getUser());
         values.put("groups", groups);
         values.put("groupPrincipalMap", groupPrincipalMap);
         values.put("pager", pager);
@@ -89,10 +86,9 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
         JSONObject obj = new JSONObject();
         if (isGet()) {
             Pager pager = getPager();
-            List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(environmentBrowser.getUser(), pager);
+            List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(adminBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
-            obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
-            obj.put("user", environmentBrowser.getUser().getJSONObject());
+            obj.put("user", adminBrowser.getUser().getJSONObject());
             JSONArray groupPrincipalsArr = new JSONArray();
             for (GroupPrincipal groupPrincipal : groupPrincipals) {
                 groupPrincipalsArr.put(groupPrincipal.getJSONObject());
@@ -110,10 +106,9 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
         Element element = document.createElement("UserGroupsResource");
         if (isGet()) {
             Pager pager = getPager();
-            List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(environmentBrowser.getUser(), pager);
+            List<GroupPrincipal> groupPrincipals = groupService.getGroupPrincipalsForPrincipal(adminBrowser.getUser(), pager);
             pager.setCurrentPage(getPage());
-            element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
-            element.appendChild(environmentBrowser.getUser().getIdentityElement(document));
+            element.appendChild(adminBrowser.getUser().getIdentityElement(document));
             Element groupPrincipalsElement = document.createElement("GroupPrincipals");
             for (GroupPrincipal groupPrincipal : groupPrincipals) {
                 groupPrincipalsElement.appendChild(groupPrincipal.getElement(document));
@@ -140,10 +135,10 @@ public class UserGroupsResource extends AuthorizeResource implements Serializabl
         String groupUid = form.getFirstValue("groupUid");
         if (groupUid != null) {
             // find the Group
-            Group group = groupService.getGroupByUid(environmentBrowser.getEnvironment(), groupUid);
+            Group group = groupService.getGroupByUid(groupUid);
             if (group != null) {
                 // create new instance
-                newGroupPrincipal = new GroupPrincipal(group, environmentBrowser.getUser());
+                newGroupPrincipal = new GroupPrincipal(group, adminBrowser.getUser());
                 groupService.save(newGroupPrincipal);
             }
         }

@@ -1,18 +1,18 @@
 package com.amee.admin.restlet.environment.user;
 
-import com.amee.admin.restlet.environment.EnvironmentBrowser;
+import com.amee.admin.restlet.environment.AdminBrowser;
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.Pager;
+import com.amee.domain.auth.Group;
 import com.amee.domain.auth.GroupPrincipal;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.UserType;
-import com.amee.domain.auth.Group;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
-import com.amee.service.environment.EnvironmentConstants;
+import com.amee.service.environment.AdminConstants;
 import com.amee.service.environment.SiteService;
-import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +41,7 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     private SiteService siteService;
 
     @Autowired
-    private EnvironmentBrowser environmentBrowser;
+    private AdminBrowser adminBrowser;
 
     private User newUser;
     private String search;
@@ -49,7 +49,6 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        environmentBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         search = request.getResourceRef().getQueryAsForm().getFirstValue("search");
         if (search == null) {
             search = "";
@@ -57,34 +56,27 @@ public class UsersResource extends AuthorizeResource implements Serializable {
     }
 
     @Override
-    public boolean isValid() {
-        return super.isValid() && (environmentBrowser.getEnvironment() != null);
-    }
-
-    @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(environmentBrowser.getEnvironment());
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        entities.add(getRootDataCategory());
         return entities;
     }
 
     @Override
     public String getTemplatePath() {
-        return EnvironmentConstants.VIEW_USERS;
+        return AdminConstants.VIEW_USERS;
     }
 
     @Override
     public Map<String, Object> getTemplateValues() {
         Pager pager = getPager();
-        List<User> users = siteService.getUsers(environmentBrowser.getEnvironment(), pager, search);
+        List<User> users = siteService.getUsers(pager, search);
         pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
-        values.put("browser", environmentBrowser);
-        values.put("environment", environmentBrowser.getEnvironment());
+        values.put("browser", adminBrowser);
         values.put("users", users);
         values.put("pager", pager);
-        values.put("apiVersions", environmentBrowser.getApiVersions());
+        values.put("apiVersions", adminBrowser.getApiVersions());
         values.put("availableLocales", LocaleConstants.AVAILABLE_LOCALES.keySet());
         values.put("search", search);
         return values;
@@ -95,9 +87,8 @@ public class UsersResource extends AuthorizeResource implements Serializable {
         JSONObject obj = new JSONObject();
         if (isGet()) {
             Pager pager = getPager();
-            List<User> users = siteService.getUsers(environmentBrowser.getEnvironment(), pager, search);
+            List<User> users = siteService.getUsers(pager, search);
             pager.setCurrentPage(getPage());
-            obj.put("environment", environmentBrowser.getEnvironment().getJSONObject());
             JSONArray usersArr = new JSONArray();
             for (User user : users) {
                 usersArr.put(user.getJSONObject());
@@ -115,9 +106,8 @@ public class UsersResource extends AuthorizeResource implements Serializable {
         Element element = document.createElement("UsersResource");
         if (isGet()) {
             Pager pager = getPager();
-            List<User> users = siteService.getUsers(environmentBrowser.getEnvironment(), pager, search);
+            List<User> users = siteService.getUsers(pager, search);
             pager.setCurrentPage(getPage());
-            element.appendChild(environmentBrowser.getEnvironment().getIdentityElement(document));
             Element usersElement = document.createElement("Users");
             for (User user : users) {
                 usersElement.appendChild(user.getElement(document));
@@ -145,9 +135,9 @@ public class UsersResource extends AuthorizeResource implements Serializable {
         Form form = getForm();
         // create new instance if submitted
         if (form.getFirstValue("name") != null) {
-            if (siteService.getUserByUsername(environmentBrowser.getEnvironment(), form.getFirstValue("username")) == null) {
+            if (siteService.getUserByUsername(form.getFirstValue("username")) == null) {
                 // create new instance
-                newUser = new User(environmentBrowser.getEnvironment());
+                newUser = new User();
                 newUser.setName(form.getFirstValue("name"));
                 newUser.setUsername(form.getFirstValue("username"));
                 newUser.setPasswordInClear(form.getFirstValue("password"));
@@ -167,13 +157,12 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                     TimeZone timeZone = TimeZone.getTimeZone(form.getFirstValue("timeZone"));
                     newUser.setTimeZone(timeZone);
                 }
-                newUser.setAPIVersion(environmentBrowser.getApiVersion(form.getFirstValue("apiVersion")));
+                newUser.setAPIVersion(adminBrowser.getApiVersion(form.getFirstValue("apiVersion")));
                 if (newUser.getAPIVersion() != null) {
                     siteService.save(newUser);
                     // We can either 'clone' Group membership from an existing User *OR* join specified Groups.
                     // Was a clone User supplied?
-                    cloneUser = siteService.getUserByUid(
-                            environmentBrowser.getEnvironment(), form.getFirstValue("cloneUserUid"));
+                    cloneUser = siteService.getUserByUid(form.getFirstValue("cloneUserUid"));
                     if (cloneUser != null) {
                         // Clone User was supplied.
                         // Clone Group memberships.
@@ -184,11 +173,11 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                     } else {
                         // Clone User was NOT supplied.
                         // Look for requested Groups to join.
-                        if (form.getNames().contains("groups")) {
+                        if (form.getNames().contains("groups") && !(form.getFirstValue("groups") == null)) {
                             groupNames = form.getFirstValue("groups");
                             for (String groupName : groupNames.split(",")) {
                                 groupName = groupName.trim();
-                                group = groupService.getGroupByName(environmentBrowser.getEnvironment(), groupName);
+                                group = groupService.getGroupByName(groupName);
                                 if (group != null) {
                                     newGroupPrincipal = new GroupPrincipal(group, newUser);
                                     groupService.save(newGroupPrincipal);

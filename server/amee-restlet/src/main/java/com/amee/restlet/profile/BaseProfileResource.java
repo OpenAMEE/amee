@@ -1,9 +1,7 @@
 package com.amee.restlet.profile;
 
-import com.amee.domain.path.PathItem;
 import com.amee.domain.profile.MonthDate;
 import com.amee.domain.profile.Profile;
-import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.utils.APIFault;
@@ -17,7 +15,6 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * This file is part of AMEE.
@@ -41,7 +38,6 @@ import java.util.Set;
 public abstract class BaseProfileResource extends AMEEResource {
 
     protected ProfileBrowser profileBrowser;
-    protected ProfileItem profileItem;
     protected Collection<Long> profileDataCategoryIds;
 
     public void initialise(Context context, Request request, Response response) {
@@ -52,16 +48,7 @@ public abstract class BaseProfileResource extends AMEEResource {
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (getProfile() != null) &&
-                getProfile().getEnvironment().equals(getActiveEnvironment());
-    }
-
-    public boolean hasParent() {
-        return pathItem.getParent() != null;
-    }
-
-    public Set<PathItem> getChildrenByType(String type) {
-        return pathItem.getChildrenByType(type);
+                (getProfile() != null);
     }
 
     protected boolean isGET() {
@@ -70,16 +57,6 @@ public abstract class BaseProfileResource extends AMEEResource {
 
     public ProfileBrowser getProfileBrowser() {
         return profileBrowser;
-    }
-
-    protected void setProfileItem(String profileItemUid) {
-        if (profileItemUid.isEmpty())
-            return;
-        this.profileItem = profileService.getProfileItem(profileItemUid);
-    }
-
-    public ProfileItem getProfileItem() {
-        return profileItem;
     }
 
     public Profile getProfile() {
@@ -99,14 +76,6 @@ public abstract class BaseProfileResource extends AMEEResource {
 
     public DataService getDataService() {
         return dataService;
-    }
-
-    public String getFullPath() {
-        if ((getProfile() != null) && (pathItem != null)) {
-            return "/profiles/" + getProfile().getDisplayPath() + pathItem.getFullPath();
-        } else {
-            return "/profiles";
-        }
     }
 
     public boolean validateParameters() {

@@ -32,7 +32,6 @@ import java.util.Map;
 
 public class AMEESpringHost extends SpringHost implements ISite {
 
-    private String environmentName = "";
     private boolean secureAvailable = false;
     private boolean checkRemoteAddress = false;
     private String authCookieDomain = "";
@@ -50,17 +49,6 @@ public class AMEESpringHost extends SpringHost implements ISite {
 
     public String getActiveSkinPath() {
         return getSkinPaths().get(Application.getCurrent());
-    }
-
-    public String getEnvironmentName() {
-        return environmentName;
-    }
-
-    public void setEnvironmentName(String environmentName) {
-        if (environmentName == null) {
-            environmentName = "";
-        }
-        this.environmentName = environmentName;
     }
 
     public boolean isSecureAvailable() {

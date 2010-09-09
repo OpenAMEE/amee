@@ -22,7 +22,6 @@ public class BaseAuthFilter extends BaseFilter {
 
     protected String authenticated(Request request) {
         return authenticationService.isAuthenticated(
-                getActiveEnvironment(),
                 getActiveSite(),
                 getAuthToken(request),
                 request.getClientInfo().getAddress());

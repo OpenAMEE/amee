@@ -44,7 +44,7 @@ public class ProfileItemValueResourceBuilder implements IProfileItemValueResourc
         Element element = document.createElement("ProfileItemValueResource");
         itemValue.setBuilder(new ItemValueBuilder(itemValue));
         element.appendChild(itemValue.getElement(document));
-        element.appendChild(XMLUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", resource.getProfileItemValue().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
     }
@@ -71,7 +71,7 @@ public class ProfileItemValueResourceBuilder implements IProfileItemValueResourc
         ItemValue itemValue = resource.getProfileItemValue();
         itemValue.setBuilder(new ItemValueBuilder(itemValue));
         obj.put("itemValue", itemValue.getJSONObject(true));
-        obj.put("path", resource.getPathItem().getFullPath());
+        obj.put("path", resource.getProfileItemValue().getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
         return obj;
     }

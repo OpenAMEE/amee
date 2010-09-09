@@ -19,9 +19,9 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.domain.ValueType;
-import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.ValueDefinition;
+import com.amee.domain.ValueType;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
@@ -61,7 +61,6 @@ public class ValueDefinitionResource extends AuthorizeResource implements Serial
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
         definitionBrowser.setValueDefinitionUid(request.getAttributes().get("valueDefinitionUid").toString());
     }
 
@@ -71,10 +70,9 @@ public class ValueDefinitionResource extends AuthorizeResource implements Serial
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(definitionBrowser.getEnvironment());
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        entities.add(getRootDataCategory());
         entities.add(definitionBrowser.getValueDefinition());
         return entities;
     }
@@ -88,7 +86,6 @@ public class ValueDefinitionResource extends AuthorizeResource implements Serial
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
-        values.put("environment", definitionBrowser.getEnvironment());
         values.put("valueDefinition", definitionBrowser.getValueDefinition());
         values.put("valueTypes", ValueType.getChoices());
         return values;
@@ -123,7 +120,9 @@ public class ValueDefinitionResource extends AuthorizeResource implements Serial
             valueDefinition.setDescription(form.getFirstValue("description"));
         }
         if (names.contains("valueType")) {
-            valueDefinition.setValueType(ValueType.valueOf(form.getFirstValue("valueType")));
+            String valueType = form.getFirstValue("valueType");
+            valueType = valueType.equalsIgnoreCase("DECIMAL") ? "DOUBLE" : valueType;
+            valueDefinition.setValueType(ValueType.valueOf(valueType));
         }
         success();
     }
