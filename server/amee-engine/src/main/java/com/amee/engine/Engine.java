@@ -1,14 +1,7 @@
 package com.amee.engine;
 
 import com.amee.base.transaction.TransactionController;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -96,6 +89,9 @@ public class Engine implements WrapperListener, Serializable {
             container.start();
 
             // Optionally start the Servlet container.
+            // TODO: Servlets are not currently in use. See:
+            // - https://jira.amee.com/browse/PL-3427
+            // - https://jira.amee.com/browse/PL-40
             String startServletContext = System.getenv("START_SERVLET_CONTEXT");
             if (Boolean.parseBoolean(startServletContext)) {
                 org.mortbay.jetty.Server server = (org.mortbay.jetty.Server) applicationContext.getBean("servletServer");
