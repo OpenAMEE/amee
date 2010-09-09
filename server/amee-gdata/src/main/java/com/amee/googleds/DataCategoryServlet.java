@@ -17,6 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This Servlet is not currently in use and is deprecated. See:
+ * - https://jira.amee.com/browse/PL-3427
+ * - https://jira.amee.com/browse/PL-40
+ */
+@Deprecated
 @SuppressWarnings("serial")
 public class DataCategoryServlet extends DataSourceServlet {
 

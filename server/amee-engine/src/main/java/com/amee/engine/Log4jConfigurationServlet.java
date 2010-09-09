@@ -32,19 +32,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * A servlet used to dynamically adjust package logging levels
  * while an application is running.  NOTE: This servlet is
  * only aware of pre-configured packages and packages that contain objects
  * that have logged at least one message since application startup.
+ * <p/>
+ * This Servlet is not currently in use and is deprecated. See:
+ * - https://jira.amee.com/browse/PL-3427
+ * - https://jira.amee.com/browse/PL-40
  */
+@Deprecated
 public class Log4jConfigurationServlet extends HttpServlet {
     /**
      * The response content type: text/html
