@@ -22,7 +22,7 @@
                 <entry key="auth" value-ref="authSkin"/>
                 <entry key="auth.admin.skin" value-ref="authAdminSkin"/>
                 <entry key="auth.client.skin" value-ref="authClientSkin"/>
-                <entry key="amee.environment.admin.skin" value-ref="ameeEnvironmentAdminSkin"/>
+                <entry key="amee.admin.skin" value-ref="ameeAdminSkin"/>
                 <entry key="data.skin" value-ref="dataSkin"/>
                 <entry key="profile.skin" value-ref="profileSkin"/>
                 <entry key="definitions.skin" value-ref="definitionsSkin"/>
@@ -62,7 +62,7 @@
         </property>
     </bean>
 
-    <!-- TODO: Merge fully with ameeEnvironmentAdminSkin. Do in skins folder too. -->
+    <!-- TODO: Merge fully with ameeAdminSkin. Do in skins folder too. -->
     <bean id="siteAdminSkin" class="com.amee.restlet.site.Skin">
         <property name="path" value="site-admin"/>
         <property name="importedSkins">
@@ -120,8 +120,8 @@
     </bean>
 
     <!-- TODO: Merge fully with siteAdminSkin. Do in skins folder too. -->
-    <bean id="ameeEnvironmentAdminSkin" class="com.amee.restlet.site.Skin">
-        <property name="path" value="amee.environment.admin.skin"/>
+    <bean id="ameeAdminSkin" class="com.amee.restlet.site.Skin">
+        <property name="path" value="amee.admin.skin"/>
         <property name="parent" ref="siteAdminSkin"/>
         <property name="importedSkins">
             <set>

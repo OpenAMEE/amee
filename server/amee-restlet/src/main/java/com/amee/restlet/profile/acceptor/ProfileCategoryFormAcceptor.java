@@ -1,8 +1,8 @@
 package com.amee.restlet.profile.acceptor;
 
 import com.amee.calculation.service.CalculationService;
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatistics;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.PermissionEntry;
@@ -79,7 +79,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             // new ProfileItem
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItem(resource.getActiveEnvironment(), uid);
+                dataItem = dataService.getDataItemByUid(uid);
                 if (dataItem != null) {
                     // Is authorized for the DataItem?
                     authorizationContext = getAuthorizationContext(resource, dataItem);
@@ -124,7 +124,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
     private AuthorizationContext getAuthorizationContext(ProfileCategoryResource resource, DataItem dataItem) {
         AuthorizationContext authorizationContext = new AuthorizationContext();
         authorizationContext.addPrincipals(resource.getPrincipals());
-        for (AMEEEntity entity : dataItem.getHierarchy()) {
+        for (IAMEEEntityReference entity : dataItem.getHierarchy()) {
             authorizationContext.addAccessSpecification(new AccessSpecification(entity, PermissionEntry.VIEW));
         }
         return authorizationContext;

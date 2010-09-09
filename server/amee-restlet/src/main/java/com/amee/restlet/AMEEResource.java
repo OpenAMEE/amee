@@ -1,10 +1,8 @@
 package com.amee.restlet;
 
-import com.amee.domain.data.DataCategory;
-import com.amee.domain.path.PathItem;
+import com.amee.domain.path.Pathable;
 import com.amee.restlet.profile.builder.v2.AtomFeed;
 import com.amee.service.data.DataService;
-import com.amee.service.environment.EnvironmentService;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xerces.dom.DocumentImpl;
@@ -62,17 +60,10 @@ public abstract class AMEEResource extends AuthorizeResource {
     @Autowired
     protected DataService dataService;
 
-    @Autowired
-    protected EnvironmentService environmentService;
-
-    protected PathItem pathItem;
-    protected DataCategory dataCategory;
-
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         initVariants();
-        pathItem = (PathItem) request.getAttributes().get("pathItem");
     }
 
     private void initVariants() {
@@ -200,19 +191,6 @@ public abstract class AMEEResource extends AuthorizeResource {
         };
     }
 
-    public PathItem getPathItem() {
-        return pathItem;
-    }
-
-    protected void setDataCategory(String dataCategoryUid) {
-        if (dataCategoryUid.isEmpty()) return;
-        this.dataCategory = dataService.getDataCategoryByUid(dataCategoryUid);
-    }
-
-    public DataCategory getDataCategory() {
-        return dataCategory;
-    }
-
     //TODO - Implementing here so that subclasses are not required to. Admin client templates will be phased out in time.
     public String getTemplatePath() {
         return null;
@@ -221,8 +199,7 @@ public abstract class AMEEResource extends AuthorizeResource {
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
-        values.put("pathItem", pathItem);
-        values.put("apiVersions", environmentService.getAPIVersions());
+        values.put("apiVersions", dataService.getAPIVersions());
         return values;
     }
 
@@ -273,11 +250,11 @@ public abstract class AMEEResource extends AuthorizeResource {
     /**
      * Produce the appropriate response for a successful POST.
      *
-     * @param parentUri - the URI of the parent resource
-     * @param uid       - the uid of the created resource. This will be used to create the Location URI when a
-     *                  representation has not been requested by the client.
+     * @param parentUri       - the URI of the parent resource
+     * @param lastPathSegment - the last path segment of the created resource. This will be used to create the
+     *                        Location URI when a representation has not been requested by the client.
      */
-    public void successfulPost(String parentUri, String uid) {
+    public void successfulPost(String parentUri, String lastPathSegment) {
         // For web browsers, continue with the same logic from AMEE 1.X.
         if (isStandardWebBrowser()) {
             getResponse().setStatus(Status.REDIRECTION_FOUND);
@@ -291,7 +268,7 @@ public abstract class AMEEResource extends AuthorizeResource {
                 super.handleGet();
             } else {
                 // For single POSTs in API versions >V1.X set the Location and 201 Created header.
-                getResponse().setLocationRef(parentUri + "/" + uid);
+                getResponse().setLocationRef(parentUri + "/" + lastPathSegment);
                 getResponse().setStatus(Status.SUCCESS_CREATED);
             }
         }

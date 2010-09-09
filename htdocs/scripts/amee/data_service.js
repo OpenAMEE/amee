@@ -412,9 +412,6 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         pElement.appendChild(document.createTextNode("Item Definition: " + dataItem.itemDefinition.name));
 
         pElement.insert(new Element("br"));
-        pElement.appendChild(document.createTextNode("Environment: " + dataItem.environment.name));
-
-        pElement.insert(new Element("br"));
         pElement.appendChild(document.createTextNode("UID: " + dataItem.uid));
 
         pElement.insert(new Element("br"));
@@ -560,7 +557,7 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         return updateItemElement;
     },
     getParentPath: function() {
-        var pathItems = this.path.split("/");
+        var segments = this.path.split("/");
         var linkPath = '';
         var rootPath = this.getTrailRootPath();
 
@@ -570,12 +567,12 @@ var DataItemApiService = Class.create(BaseDataApiService, ({
         }
 
         // path items
-        for (var i = 0; i < pathItems.length - 1; i++) {
-            var pathItem = pathItems[i];
-            if (pathItem == "") {
+        for (var i = 0; i < segments.length - 1; i++) {
+            var segment = segments[i];
+            if (segment == "") {
                 continue;
             }
-            linkPath = linkPath + "/" + pathItem;
+            linkPath = linkPath + "/" + segment;
         }
         return linkPath;
     },
@@ -674,9 +671,6 @@ var DataItemValueApiService = Class.create(DataItemApiService, ({
 
         pElement.insert(new Element("br"));
         pElement.appendChild(document.createTextNode("Item: " + itemValue.item.label));
-
-        pElement.insert(new Element("br"));
-        pElement.appendChild(document.createTextNode("Environment: " + itemValue.item.environment.name));
 
         pElement.insert(new Element("br"));
         pElement.appendChild(document.createTextNode("UID: " + itemValue.uid));

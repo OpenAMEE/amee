@@ -46,7 +46,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         ProfileItem profileItem = resource.getProfileItem();
         setProfileItemBuilder(resource, profileItem);
         obj.put("profileItem", profileItem.getJSONObject(true));
-        obj.put("path", resource.getPathItem().getFullPath());
+        obj.put("path", resource.getProfileItem().getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
         return obj;
     }
@@ -57,7 +57,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         setProfileItemBuilder(resource, profileItem);
         Element element = document.createElement("ProfileItemResource");
         element.appendChild(profileItem.getElement(document, true));
-        element.appendChild(XMLUtils.getElement(document, "Path", resource.getPathItem().getFullPath()));
+        element.appendChild(XMLUtils.getElement(document, "Path", resource.getProfileItem().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
     }

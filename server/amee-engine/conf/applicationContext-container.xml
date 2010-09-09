@@ -59,7 +59,6 @@
             </map>
         </property>
         <property name="name" value="AMEE"/>
-        <property name="environmentName" value="AMEE"/>
         <property name="secureAvailable" value="false"/>
         <property name="checkRemoteAddress" value="false"/>
         <property name="authCookieDomain" value=""/>
@@ -86,11 +85,10 @@
             <map>
                 <entry key="" value-ref="defaultApplication"/>
                 <entry key="/auth" value-ref="authApplication"/>
-                <entry key="/environments" value-ref="environmentsApplication"/>
+                <entry key="/admin" value-ref="adminApplication"/>
             </map>
         </property>
         <property name="name" value="AMEE.ADMIN"/>
-        <property name="environmentName" value="Back Environment"/>
         <property name="secureAvailable" value="false"/>
         <property name="checkRemoteAddress" value="false"/>
         <property name="authCookieDomain" value=""/>
@@ -100,7 +98,7 @@
             <map>
                 <entry key-ref="defaultApplication" value="admin-default"/>
                 <entry key-ref="authApplication" value="auth.admin.skin"/>
-                <entry key-ref="environmentsApplication" value="amee.environment.admin.skin"/>
+                <entry key-ref="adminApplication" value="amee.admin.skin"/>
             </map>
         </property>
     </bean>

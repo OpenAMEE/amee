@@ -20,15 +20,15 @@
 package com.amee.restlet.data;
 
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.path.PathItem;
+import com.amee.restlet.AMEEResource;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.data.builder.DataCategoryResourceBuilder;
 import com.amee.restlet.utils.APIFault;
@@ -60,7 +60,7 @@ import java.util.*;
 
 @Component("dataCategoryResource")
 @Scope("prototype")
-public class DataCategoryResource extends BaseDataResource implements Serializable {
+public class DataCategoryResource extends AMEEResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -74,39 +74,43 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     private DefinitionService definitionService;
 
     @Autowired
+    private DataBrowser dataBrowser;
+
+    @Autowired
     private DataCategoryResourceBuilder builder;
 
-    private List<DataCategory> dataCategories;
-    private DataItem dataItem;
-    private List<DataItem> dataItems;
-    private String type = "";
+    private DataCategory dataCategory;
+    private DataCategory modDataCategory;
+    private List<DataCategory> newDataCategories;
+    private DataItem modDataItem;
+    private List<DataItem> newDataItems;
+    private String newObjectType = "";
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        setDataCategory(request.getAttributes().get("categoryUid").toString());
-        if (getDataCategory() != null) {
-            ((RequestContext) ThreadBeanHolder.get("ctx")).setCategory(getDataCategory());
-        }
+
+        // Obtain DataCategory.
+        dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
+        dataBrowser.setDataCategory(dataCategory);
+        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
     }
 
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                getDataCategory() != null &&
-                !getDataCategory().isTrash() &&
-                getDataCategory().getEnvironment().equals(getActiveEnvironment());
+                (dataCategory != null) &&
+                !dataCategory.isTrash();
     }
 
     @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        DataCategory dc = getDataCategory();
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        DataCategory dc = dataCategory;
         while (dc != null) {
             entities.add(dc);
             dc = dc.getDataCategory();
         }
-        entities.add(getActiveEnvironment());
         Collections.reverse(entities);
         return entities;
     }
@@ -149,10 +153,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
         log.debug("doAcceptOrStore()");
 
-        DataCategory thisDataCategory = getDataCategory();
-
-        dataItems = new ArrayList<DataItem>();
-        dataCategories = new ArrayList<DataCategory>();
+        newDataItems = new ArrayList<DataItem>();
+        newDataCategories = new ArrayList<DataCategory>();
 
         MediaType mediaType = entity.getMediaType();
         if (MediaType.APPLICATION_XML.includes(mediaType)) {
@@ -167,18 +169,18 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             }
         }
 
-        if ((dataCategory != null) || (dataItem != null) || !dataCategories.isEmpty() || !dataItems.isEmpty()) {
+        if ((modDataCategory != null) || (modDataItem != null) || !newDataCategories.isEmpty() || !newDataItems.isEmpty()) {
             if (isPost()) {
                 if (isBatchPost()) {
-                    dataService.invalidate(thisDataCategory);
-                    successfulBatchPost();
-                } else if ((dataCategory != null) && type.equalsIgnoreCase(ObjectType.DC.getName())) {
                     dataService.invalidate(dataCategory);
-                    dataService.invalidate(thisDataCategory);
-                    successfulPost(getFullPath(), dataCategory.getPath());
-                } else if ((dataItem != null) && type.equalsIgnoreCase(ObjectType.DI.getName())) {
-                    dataService.invalidate(thisDataCategory);
-                    successfulPost(getFullPath(), dataItem.getUid());
+                    successfulBatchPost();
+                } else if ((modDataCategory != null) && newObjectType.equalsIgnoreCase(ObjectType.DC.getName())) {
+                    dataService.invalidate(modDataCategory);
+                    dataService.invalidate(dataCategory);
+                    successfulPost(getFullPath(), modDataCategory.getPath());
+                } else if ((modDataItem != null) && newObjectType.equalsIgnoreCase(ObjectType.DI.getName())) {
+                    dataService.invalidate(dataCategory);
+                    successfulPost(getFullPath(), modDataItem.getUid());
                 } else {
                     badRequest();
                 }
@@ -193,7 +195,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     protected void acceptJSON(Representation entity) {
         log.debug("acceptJSON()");
         setIsBatchPost(true);
-        DataCategory dataCategory;
+        DataCategory newDataCategory;
         DataItem dataItem;
         Form form;
         String key;
@@ -212,9 +214,9 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                         key = (String) iterator.next();
                         form.add(key, itemJSON.getString(key));
                     }
-                    dataCategory = acceptFormForDataCategory(form);
-                    if (dataCategory != null) {
-                        dataCategories.add(dataCategory);
+                    newDataCategory = acceptFormForDataCategory(form);
+                    if (newDataCategory != null) {
+                        newDataCategories.add(newDataCategory);
                     } else {
                         log.warn("acceptJSON() - Data Category not added/modified");
                         return;
@@ -232,7 +234,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                     }
                     dataItem = acceptFormForDataItem(form);
                     if (dataItem != null) {
-                        dataItems.add(dataItem);
+                        newDataItems.add(dataItem);
                     } else {
                         log.warn("acceptJSON() - Data Item not added/modified");
                         return;
@@ -249,7 +251,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
     protected void acceptXML(Representation entity) {
         log.debug("acceptXML()");
         setIsBatchPost(true);
-        DataCategory dataCategory;
+        DataCategory newDataCategory;
         DataItem dataItem;
         Form form;
         org.dom4j.Element rootElem;
@@ -270,9 +272,9 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                             valueElem = (org.dom4j.Element) o2;
                             form.add(valueElem.getName(), valueElem.getText());
                         }
-                        dataCategory = acceptFormForDataCategory(form);
-                        if (dataCategory != null) {
-                            dataCategories.add(dataCategory);
+                        newDataCategory = acceptFormForDataCategory(form);
+                        if (newDataCategory != null) {
+                            newDataCategories.add(newDataCategory);
                         } else {
                             log.warn("acceptXML() - Data Category not added");
                             return;
@@ -291,7 +293,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                         }
                         dataItem = acceptFormForDataItem(form);
                         if (dataItem != null) {
-                            dataItems.add(dataItem);
+                            newDataItems.add(dataItem);
                         } else {
                             log.warn("acceptXML() - Data Item not added");
                             return;
@@ -310,12 +312,12 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
     protected void acceptFormPost(Form form) {
         log.debug("acceptFormPost()");
-        type = form.getFirstValue("newObjectType");
-        if (type != null) {
-            if (type.equalsIgnoreCase(ObjectType.DC.getName())) {
-                dataCategory = acceptFormForDataCategory(form);
-            } else if (type.equalsIgnoreCase(ObjectType.DI.getName())) {
-                dataItem = acceptFormForDataItem(form);
+        newObjectType = form.getFirstValue("newObjectType");
+        if (newObjectType != null) {
+            if (newObjectType.equalsIgnoreCase(ObjectType.DC.getName())) {
+                modDataCategory = acceptFormForDataCategory(form);
+            } else if (newObjectType.equalsIgnoreCase(ObjectType.DI.getName())) {
+                modDataItem = acceptFormForDataItem(form);
             } else {
                 badRequest();
             }
@@ -343,50 +345,33 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
      */
     protected DataCategory acceptFormForDataCategoryPost(Form form) {
 
-        DataCategory dataCategory = null;
-        DataCategory thisDataCategory;
+        // Create new DataCategory with the current DataCategory as a parent. 
+        DataCategory newDataCategory = new DataCategory(dataCategory);
 
-        thisDataCategory = getDataCategory();
-
-        if (thisDataCategory.getAliasedCategory() == null) {
-            // new DataCategory
-            dataCategory = new DataCategory(thisDataCategory);
-
-            // Is this a sym-link to another DataCategory?
-            if (form.getNames().contains("aliasedTo")) {
-                String aliasedToUid = form.getFirstValue("aliasedTo");
-                DataCategory aliasedTo = dataService.getDataCategoryByUid(aliasedToUid);
-                if (aliasedTo != null) {
-                    dataCategory.setAliasedTo(aliasedTo);
-                } else {
-                    badRequest(APIFault.INVALID_PARAMETERS);
-                    return null;
-                }
-            } else if (form.getNames().contains("itemDefinitionUid")) {
-                ItemDefinition itemDefinition =
-                        definitionService.getItemDefinitionByUid(
-                                thisDataCategory.getEnvironment(), form.getFirstValue("itemDefinitionUid"));
-                if (itemDefinition != null) {
-                    dataCategory.setItemDefinition(itemDefinition);
-                }
+        // Set Item Definition.
+        if (form.getNames().contains("itemDefinitionUid")) {
+            ItemDefinition itemDefinition =
+                    definitionService.getItemDefinitionByUid(form.getFirstValue("itemDefinitionUid"));
+            if (itemDefinition != null) {
+                newDataCategory.setItemDefinition(itemDefinition);
             }
-
-            dataCategory = populateDataCategory(form, dataCategory);
-
-            if (!validDataCategory(dataCategory)) {
-                badRequest();
-                // TODO: Should we set dataCategory to null here?
-            } else if (!isUnique(dataCategory)) {
-                badRequest(APIFault.DUPLICATE_ITEM);
-                dataCategory = null;
-            } else {
-                dataCategory = acceptDataCategory(form, dataCategory);
-            }
-        } else {
-            notAuthorized();
-            // TODO: Should we set dataCategory to null here?
         }
-        return dataCategory;
+
+        // Populate Data Category fields.
+        newDataCategory = populateDataCategory(form, newDataCategory);
+
+        // Validate.
+        if (!validDataCategory(newDataCategory)) {
+            badRequest();
+            // TODO: Should we set dataCategory to null here?
+        } else if (!dataService.isUnique(newDataCategory)) {
+            badRequest(APIFault.DUPLICATE_ITEM);
+            newDataCategory = null;
+        } else {
+            newDataCategory = acceptDataCategory(form, newDataCategory);
+        }
+
+        return newDataCategory;
     }
 
     /**
@@ -396,48 +381,24 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
      * @return
      */
     protected DataCategory acceptFormForDataCategoryPut(Form form) {
-        DataCategory dataCategory = null;
+        DataCategory updatedDataCategory = null;
         String uid = form.getFirstValue("dataCategoryUid");
         if (uid != null) {
-            dataCategory = dataService.getDataCategoryByUid(uid);
-            if (dataCategory != null) {
-                dataCategory = populateDataCategory(form, dataCategory);
-                if (!validDataCategory(dataCategory)) {
+            updatedDataCategory = dataService.getDataCategoryByUid(uid);
+            if (updatedDataCategory != null) {
+                updatedDataCategory = populateDataCategory(form, updatedDataCategory);
+                if (!validDataCategory(updatedDataCategory)) {
                     badRequest();
                 } else {
-                    dataCategory = acceptDataCategory(form, dataCategory);
+                    updatedDataCategory = acceptDataCategory(form, updatedDataCategory);
                 }
             }
         }
-        return dataCategory;
+        return updatedDataCategory;
     }
 
     private boolean validDataCategory(DataCategory dataCategory) {
         return !(StringUtils.isBlank(dataCategory.getName()) || StringUtils.isBlank(dataCategory.getPath()));
-    }
-
-    /**
-     * A unique DataCategory is one with a unique path within its set of un-trashed sibling DataCategories.
-     *
-     * @param dataCategory to check for uniqueness
-     * @return true if the DataCategory is unique
-     */
-    private boolean isUnique(DataCategory dataCategory) {
-        boolean unique = true;
-        for (PathItem sibling : getPathItem().getChildrenByType(ObjectType.DC.getName())) {
-            if (sibling.getPath().equals(dataCategory.getPath())) {
-                DataCategory dc = dataService.getDataCategoryByUid(sibling.getUid());
-                if (dc != null) {
-                    if (!dc.equals(dataCategory) && !dc.isTrash()) {
-                        unique = false;
-                        break;
-                    }
-                } else {
-                    log.warn("isUnique() PathItem for DataCategory without persistent entity: " + sibling.getUid());
-                }
-            }
-        }
-        return unique;
     }
 
     private DataCategory populateDataCategory(Form form, DataCategory dataCategory) {
@@ -458,15 +419,13 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         String uid;
         DataItem dataItem = null;
         ItemDefinition itemDefinition;
-        DataCategory thisDataCategory;
 
-        thisDataCategory = getDataCategory();
         if (getRequest().getMethod().equals(Method.POST)) {
             // New DataItem.
-            itemDefinition = thisDataCategory.getItemDefinition();
+            itemDefinition = dataCategory.getItemDefinition();
             if (itemDefinition != null) {
                 // Create new DataItem, persist it and populate it.
-                dataItem = new DataItem(thisDataCategory, itemDefinition);
+                dataItem = new DataItem(dataCategory, itemDefinition);
                 dataService.persist(dataItem);
                 acceptDataItem(form, dataItem);
             } else {
@@ -476,7 +435,7 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
             // Update DataItem.
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItem(getActiveEnvironment(), uid);
+                dataItem = dataService.getDataItemByUid(dataCategory, uid);
                 if (dataItem != null) {
                     acceptDataItem(form, dataItem);
                 }
@@ -528,38 +487,31 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
 
         log.debug("acceptFormPut()");
 
-        DataCategory thisDataCategory;
-        thisDataCategory = getDataCategory();
+        // We use modDataCategory to see if the Data Category has been updated.
+        modDataCategory = dataCategory;
+
         if (form.getNames().contains("name")) {
-            thisDataCategory.setName(form.getFirstValue("name"));
+            modDataCategory.setName(form.getFirstValue("name"));
         }
         if (form.getNames().contains("path")) {
-            thisDataCategory.setPath(form.getFirstValue("path"));
+            modDataCategory.setPath(form.getFirstValue("path"));
         }
         if (form.getNames().contains("itemDefinitionUid")) {
-
-            // A sym-link category cannot have an itemDefinition
-            if (dataCategory.getAliasedCategory() != null) {
-                badRequest(APIFault.INVALID_PARAMETERS);
-                return;
+            ItemDefinition itemDefinition =
+                    definitionService.getItemDefinitionByUid(form.getFirstValue("itemDefinitionUid"));
+            if (itemDefinition != null) {
+                modDataCategory.setItemDefinition(itemDefinition);
             } else {
-                ItemDefinition itemDefinition =
-                        definitionService.getItemDefinitionByUid(thisDataCategory.getEnvironment(),
-                                form.getFirstValue("itemDefinitionUid"));
-                if (itemDefinition != null) {
-                    thisDataCategory.setItemDefinition(itemDefinition);
-                } else {
-                    thisDataCategory.setItemDefinition(null);
-                }
+                modDataCategory.setItemDefinition(null);
             }
         }
 
         String deprecated = form.getFirstValue("deprecated");
         if (StringUtils.isNotBlank(deprecated)) {
             if (deprecated.equals("true")) {
-                thisDataCategory.setStatus(AMEEStatus.DEPRECATED);
+                modDataCategory.setStatus(AMEEStatus.DEPRECATED);
             } else if (deprecated.equals("false")) {
-                thisDataCategory.setStatus(AMEEStatus.ACTIVE);
+                modDataCategory.setStatus(AMEEStatus.ACTIVE);
             }
         }
 
@@ -576,8 +528,8 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                 // Remove or Update/Create?
                 if (form.getNames().contains("remove_name_" + locale)) {
                     // Remove.
-                    localeService.clearLocaleName(thisDataCategory, locale);
-                    thisDataCategory.onModify();
+                    localeService.clearLocaleName(modDataCategory, locale);
+                    modDataCategory.onModify();
                 } else {
                     // Update or create.
                     String localeNameStr = form.getFirstValue(name);
@@ -587,29 +539,26 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
                         return;
                     }
                     // Do the update or create.
-                    localeService.setLocaleName(thisDataCategory, locale, localeNameStr);
-                    thisDataCategory.onModify();
+                    localeService.setLocaleName(modDataCategory, locale, localeNameStr);
+                    modDataCategory.onModify();
                 }
             }
         }
 
-        dataService.invalidate(thisDataCategory);
+        dataService.invalidate(modDataCategory);
         successfulPut(getFullPath());
-        dataCategory = thisDataCategory;
     }
 
     @Override
     public void doRemove() {
         log.debug("doRemove()");
-        dataService.invalidate(getDataCategory());
-        dataService.remove(getDataCategory());
-        successfulDelete(pathItem.getParent().getFullPath());
+        dataService.invalidate(dataCategory);
+        dataService.remove(dataCategory);
+        successfulDelete("/data/" + dataCategory.getDataCategory().getFullPath());
     }
 
-    // TODO: This is not used in the Java code. Is it used by a template or in a script?
-
-    public DataService getDataService() {
-        return dataService;
+    public String getFullPath() {
+        return "/data" + dataCategory.getFullPath();
     }
 
     public DataBrowser getDataBrowser() {
@@ -620,15 +569,19 @@ public class DataCategoryResource extends BaseDataResource implements Serializab
         return dataCategory;
     }
 
-    public List<DataCategory> getDataCategories() {
-        return dataCategories;
+    public DataCategory getModDataCategory() {
+        return modDataCategory;
     }
 
-    public DataItem getDataItem() {
-        return dataItem;
+    public List<DataCategory> getNewDataCategories() {
+        return newDataCategories;
     }
 
-    public List<DataItem> getDataItems() {
-        return dataItems;
+    public DataItem getModDataItem() {
+        return modDataItem;
+    }
+
+    public List<DataItem> getNewDataItems() {
+        return newDataItems;
     }
 }

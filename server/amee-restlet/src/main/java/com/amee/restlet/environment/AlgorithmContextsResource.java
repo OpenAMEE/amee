@@ -1,7 +1,9 @@
 package com.amee.restlet.environment;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.algorithm.AlgorithmContext;
+import com.amee.domain.environment.Environment;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
@@ -10,11 +12,8 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.Context;
 import org.restlet.data.Form;
 import org.restlet.data.Method;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -42,21 +41,9 @@ public class AlgorithmContextsResource extends AuthorizeResource implements Seri
     private AlgorithmContext newAlgorithmContext;
 
     @Override
-    public void initialise(Context context, Request request, Response response) {
-        super.initialise(context, request, response);
-        definitionBrowser.setEnvironmentUid(request.getAttributes().get("environmentUid").toString());
-    }
-
-    @Override
-    public boolean isValid() {
-        return super.isValid() && (definitionBrowser.getEnvironment() != null);
-    }
-
-    @Override
-    public List<AMEEEntity> getEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        entities.add(getActiveEnvironment());
-        entities.add(definitionBrowser.getEnvironment());
+    public List<IAMEEEntityReference> getEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        entities.add(getRootDataCategory());
         return entities;
     }
 
@@ -69,7 +56,6 @@ public class AlgorithmContextsResource extends AuthorizeResource implements Seri
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
-        values.put("environment", definitionBrowser.getEnvironment());
         values.put("algorithmContexts", definitionBrowser.getAlgorithmContexts());
         return values;
     }
@@ -78,7 +64,7 @@ public class AlgorithmContextsResource extends AuthorizeResource implements Seri
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            obj.put("environment", definitionBrowser.getEnvironment().getIdentityJSONObject());
+            obj.put("environment", Environment.ENVIRONMENT.getIdentityJSONObject());
             JSONArray algorithmContexts = new JSONArray();
             for (AlgorithmContext algorithmContext : definitionBrowser.getAlgorithmContexts()) {
                 algorithmContexts.put(algorithmContext.getJSONObject(false));
@@ -94,7 +80,7 @@ public class AlgorithmContextsResource extends AuthorizeResource implements Seri
     public Element getElement(Document document) {
         Element element = document.createElement("AlgorithmContextsResource");
         if (isGet()) {
-            element.appendChild(definitionBrowser.getEnvironment().getIdentityElement(document));
+            element.appendChild(Environment.ENVIRONMENT.getIdentityElement(document));
             Element algorithmContextsElement = document.createElement("AlgorithmContexts");
             for (AlgorithmContext algorithmContext : definitionBrowser.getAlgorithmContexts()) {
                 algorithmContextsElement.appendChild(algorithmContext.getElement(document, false));
@@ -116,7 +102,7 @@ public class AlgorithmContextsResource extends AuthorizeResource implements Seri
         log.debug("doAccept");
         Form form = getForm();
         if (form.getFirstValue("name") != null) {
-            newAlgorithmContext = new AlgorithmContext(definitionBrowser.getEnvironment());
+            newAlgorithmContext = new AlgorithmContext();
             newAlgorithmContext.setName(form.getFirstValue("name"));
             newAlgorithmContext.setContent(form.getFirstValue("content"));
         }

@@ -4,7 +4,7 @@
 . curl.conf
 
 data="name=AADigA"
-amee_url="environments/5F5887BCF726/itemDefinitions/EACC85C156EA/algorithms"
+amee_url="admin/itemDefinitions/EACC85C156EA/algorithms"
 
 type="xml"
 

@@ -22,10 +22,14 @@
 package com.amee.restlet;
 
 import com.amee.domain.AMEEEntity;
+import com.amee.domain.IAMEEEntity;
+import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.PermissionEntry;
+import com.amee.domain.data.DataCategory;
 import com.amee.service.auth.AuthorizationService;
+import com.amee.service.data.DataService;
 import com.amee.service.environment.GroupService;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
@@ -47,6 +51,9 @@ public abstract class AuthorizeResource extends BaseResource {
 
     @Autowired
     protected GroupService groupService;
+
+    @Autowired
+    protected DataService dataService;
 
     protected AuthorizationContext authorizationContext;
 
@@ -97,7 +104,7 @@ public abstract class AuthorizeResource extends BaseResource {
      */
     public List<AccessSpecification> getGetAccessSpecifications() {
         List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
-        for (AMEEEntity entity : getDistinctEntities()) {
+        for (IAMEEEntityReference entity : getDistinctEntities()) {
             accessSpecifications.add(new AccessSpecification(entity, PermissionEntry.VIEW));
         }
         return accessSpecifications;
@@ -284,16 +291,16 @@ public abstract class AuthorizeResource extends BaseResource {
      *
      * @return list of entities required for authorization
      */
-    public abstract List<AMEEEntity> getEntities();
+    public abstract List<IAMEEEntityReference> getEntities();
 
     /**
      * Returns a de-duped version of the list from getEntities().
      *
      * @return list of entities required for authorization
      */
-    public List<AMEEEntity> getDistinctEntities() {
-        List<AMEEEntity> entities = new ArrayList<AMEEEntity>();
-        for (AMEEEntity entity : getEntities()) {
+    public List<IAMEEEntityReference> getDistinctEntities() {
+        List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
+        for (IAMEEEntityReference entity : getEntities()) {
             if (!entities.contains(entity)) {
                 entities.add(entity);
             }
@@ -316,6 +323,7 @@ public abstract class AuthorizeResource extends BaseResource {
     }
 
     // TODO: What is this used by? Templates?
+
     public AuthorizationContext getAuthorizationContext() {
         return authorizationContext;
     }
@@ -326,5 +334,9 @@ public abstract class AuthorizeResource extends BaseResource {
 
     public void setRequireSuperUser(boolean requireSuperUser) {
         this.requireSuperUser = requireSuperUser;
+    }
+
+    public DataCategory getRootDataCategory() {
+        return dataService.getRootDataCategory();
     }
 }

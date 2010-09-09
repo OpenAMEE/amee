@@ -1,4 +1,4 @@
-<#assign sectionName = 'environments'>
+<#assign sectionName = 'admin'>
 
 <#include '/includes/before_content.ftl'>
 
@@ -16,12 +16,11 @@
     }
 </script>
 
-<h1>Environment Administration</h1>
+<h1>Administration</h1>
 
-<p><a href='/environments'>Environments</a> /
-   <a href='/environments/${environment.uid}'>${environment.name}</a> / 
-   <a href='/environments/${environment.uid}/itemDefinitions'>Item Definitions</a> / 
-   <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}'>${itemDefinition.name}</a></p>
+<p><a href='/admin'>Admin</a> /
+   <a href='/admin/itemDefinitions'>Item Definitions</a> /
+   <a href='/admin/itemDefinitions/${itemDefinition.uid}'>${itemDefinition.name}</a></p>
 
 <h2>Item Definition Details</h2>
 <p>Name: ${itemDefinition.name}<br/>
@@ -31,13 +30,13 @@
 
 <h2>Manage</h2>
 <p>
-  <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/algorithms'>Algorithms</a><br/>
-  <a href='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions'>Item Value Definitions</a><br/>
+  <a href='/admin/itemDefinitions/${itemDefinition.uid}/algorithms'>Algorithms</a><br/>
+  <a href='/admin/itemDefinitions/${itemDefinition.uid}/itemValueDefinitions'>Item Value Definitions</a><br/>
 </p>
 
 <#if canModify()>
     <h2>Update Item Definition</h2>
-    <form id="update" action='/environments/${environment.uid}/itemDefinitions/${itemDefinition.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
+    <form id="update" action='/admin/itemDefinitions/${itemDefinition.uid}?method=put' method='POST' enctype='application/x-www-form-urlencoded'>
         <table>
             <tr>
                 <td>Name:</td>

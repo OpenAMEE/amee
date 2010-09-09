@@ -41,6 +41,10 @@ set.TRAIN_ROUTE_SERVICE_URI=http://railservice.amee.com/route_finder/route_servi
 
 # Start The Servlet Context
 # set.START_SERVLET_CONTEXT=true
+# Servlets are not currently in use. See:
+# - https://jira.amee.com/browse/PL-3427
+# - https://jira.amee.com/browse/PL-40
+
 
 # AJP Port
 set.AJP_PORT=8010

@@ -1,9 +1,6 @@
 package com.amee.service.environment;
 
-public class EnvironmentConstants {
-
-    public final static String VIEW_ENVIRONMENTS = "sites/environments.ftl";
-    public final static String VIEW_ENVIRONMENT = "sites/environment.ftl";
+public class AdminConstants {
 
     public final static String VIEW_GROUPS = "sites/groups.ftl";
     public final static String VIEW_GROUP = "sites/group.ftl";

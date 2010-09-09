@@ -233,9 +233,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="STATUS" type="INT"/>
-            <column defaultValueBoolean="false" name="SKIP_RECALCULATION" type="BIT">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
     </changeSet>
     <changeSet author="david.keen (generated)" id="1282225878470-10">

@@ -51,20 +51,18 @@
 <h1>Data Category</h1>
 
 <#include 'dataTrail.ftl'>
-<#assign children = pathItem.findChildrenByType('DC')>
 
 <h2>Data Category Details</h2>
 <p>Name: ${dataCategory.name}<br/>
    <#if dataCategory.path != ''>Path: ${dataCategory.path}<br/></#if>
    Full Path: ${fullPath}<br/>
    <#if dataCategory.itemDefinition??>Item Definition: ${dataCategory.itemDefinition.name}<br/></#if>
-   Environment: ${dataCategory.environment.name}<br/>
    UID: ${dataCategory.uid}<br/>
    Created: ${dataCategory.created?string.short}<br/>
    Modified: ${dataCategory.modified?string.short}<br/>
 </p>
 
-<#if 0 != children?size>
+<#if 0 != dataCategories?size>
     <h2>Data Categories</h2>
     <p>
         <table>
@@ -72,13 +70,13 @@
                 <th>Path</th>
                 <th>Actions</th>
             </tr>
-            <#list children as pi>
-                <tr id='Elem_${pi.uid}'>
-                    <td>${pi.name}</td>
+            <#list dataCategories as dc>
+                <tr id='Elem_${dc.uid}'>
+                    <td>${dc.name}</td>
                     <td>
-                        <#if canViewEntity(pi)><a href='${basePath}/${pi.path}'><img src="/images/icons/folder_go.png" title="Go" alt="Go" border="0"/></a>
-                        <#if canDeleteEntity(pi)><input type="image" onClick="deleteDataCategory('${pi.uid}', '${basePath}/${pi.path}'); return false;" src="/images/icons/folder_delete.png" title="Delete" alt="Delete" border="0"/></#if></#if>
-                        <#if allowPermissionEdit><input type="image" onClick="openPermissionEditor('${pi.uid}'); return false;" src="/images/icons/lock_edit.png" title="Edit Permissions" alt="Edit Permissions" border="0"/></#if>
+                        <#if canViewEntity(dc)><a href='${basePath}/${dc.displayPath}'><img src="/images/icons/folder_go.png" title="Go" alt="Go" border="0"/></a>
+                        <#if canDeleteEntity(dc)><input type="image" onClick="deleteDataCategory('${dc.uid}', '${basePath}/${dc.displayPath}'); return false;" src="/images/icons/folder_delete.png" title="Delete" alt="Delete" border="0"/></#if></#if>
+                        <#if allowPermissionEdit><input type="image" onClick="openPermissionEditor('${dc.uid}'); return false;" src="/images/icons/lock_edit.png" title="Edit Permissions" alt="Edit Permissions" border="0"/></#if>
                     </td>
                 </tr>
             </#list>

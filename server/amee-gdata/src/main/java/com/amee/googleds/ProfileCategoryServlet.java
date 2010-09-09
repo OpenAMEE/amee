@@ -26,16 +26,11 @@ import com.amee.domain.TimeZoneHolder;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.environment.Environment;
-import com.amee.domain.path.PathItem;
-import com.amee.domain.path.PathItemGroup;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.engine.Engine;
 import com.amee.platform.science.StartEndDate;
 import com.amee.service.data.DataService;
-import com.amee.service.environment.EnvironmentService;
-import com.amee.service.path.PathItemService;
 import com.amee.service.profile.ProfileService;
 import com.google.visualization.datasource.DataSourceServlet;
 import com.google.visualization.datasource.base.TypeMismatchException;
@@ -50,15 +45,21 @@ import org.joda.time.DateTime;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
+/**
+ * This Servlet is not currently in use and is deprecated. See:
+ * - https://jira.amee.com/browse/PL-3427
+ * - https://jira.amee.com/browse/PL-40
+ */
+@Deprecated
 @SuppressWarnings("serial")
 public class ProfileCategoryServlet extends DataSourceServlet {
 
     private TransactionController transactionController;
     private ProfileService profileService;
-    private PathItemService pathItemService;
     private DataService dataService;
 
     @Override
@@ -67,7 +68,6 @@ public class ProfileCategoryServlet extends DataSourceServlet {
         transactionController = (TransactionController) Engine.getAppContext().getBean("transactionController");
         dataService = (DataService) Engine.getAppContext().getBean("dataService");
         profileService = (ProfileService) Engine.getAppContext().getBean("profileService");
-        pathItemService = (PathItemService) Engine.getAppContext().getBean("pathItemService");
     }
 
     public DataTable generateDataTable(Query query, HttpServletRequest request) {
@@ -170,22 +170,12 @@ public class ProfileCategoryServlet extends DataSourceServlet {
     }
 
     private List<ProfileItem> getProfileItems(String path) {
-
-        Environment environment = ((EnvironmentService)
-                Engine.getAppContext().getBean("environmentService")).getEnvironmentByName("AMEE");
-
-        String[] segmentArray = path.substring(1).split("\\.")[0].split("/");
-
-        List<String> segments = new ArrayList<String>(segmentArray.length);
-        for (String s : segmentArray) {
-            segments.add(s);
-        }
+        path = path.substring(1).split("\\.")[0];
+        List<String> segments = new ArrayList<String>(Arrays.asList(path.split("/")));
         String profileUid = segments.remove(0);
-        PathItemGroup pathItemGroup = pathItemService.getPathItemGroup(environment);
-        PathItem pathItem = pathItemGroup.findBySegments(segments, false);
-        DataCategory category = dataService.getDataCategoryByUid(pathItem.getUid());
-        if (category.getItemDefinition() != null) {
-            Profile profile = profileService.getProfile(environment, profileUid);
+        DataCategory category = dataService.getDataCategoryByFullPath(segments);
+        if ((category != null) && (category.getItemDefinition() != null)) {
+            Profile profile = profileService.getProfile(profileUid);
             TimeZone timeZone = TimeZoneHolder.getTimeZone();
             return profileService.getProfileItems(profile, category, StartEndDate.getStartOfMonthDate(timeZone), null);
         } else {
@@ -204,5 +194,4 @@ public class ProfileCategoryServlet extends DataSourceServlet {
     protected boolean isRestrictedAccessMode() {
         return false;
     }
-
 }
