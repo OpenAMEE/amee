@@ -92,12 +92,12 @@ public class Engine implements WrapperListener, Serializable {
             // TODO: Servlets are not currently in use. See:
             // - https://jira.amee.com/browse/PL-3427
             // - https://jira.amee.com/browse/PL-40
-            String startServletContext = System.getenv("START_SERVLET_CONTEXT");
-            if (Boolean.parseBoolean(startServletContext)) {
-                org.mortbay.jetty.Server server = (org.mortbay.jetty.Server) applicationContext.getBean("servletServer");
-                server.start();
-                server.join();
-            }
+            // String startServletContext = System.getenv("START_SERVLET_CONTEXT");
+            // if (Boolean.parseBoolean(startServletContext)) {
+            //     org.mortbay.jetty.Server server = (org.mortbay.jetty.Server) applicationContext.getBean("servletServer");
+            //     server.start();
+            //     server.join();
+            // }
 
             log.info("start() ...Engine started.");
 
