@@ -88,7 +88,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             obj.put("path", resource.getDataCategory().getFullPath());
 
             // add relevant Profile info depending on whether we are at root
-            if (resource.getDataCategory().getPath().isEmpty()) {
+            if (!resource.getDataCategory().getPath().isEmpty()) {
                 obj.put("profile", resource.getProfile().getIdentityJSONObject());
             } else {
                 obj.put("profile", resource.getProfile().getJSONObject());
@@ -167,7 +167,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
             element.appendChild(XMLUtils.getElement(document, "Path", resource.getDataCategory().getFullPath()));
 
             // add relevant Profile info depending on whether we are at root
-            if (resource.getDataCategory().getPath().isEmpty()) {
+            if (!resource.getDataCategory().getPath().isEmpty()) {
                 element.appendChild(resource.getProfile().getIdentityElement(document));
             } else {
                 element.appendChild(resource.getProfile().getElement(document));
