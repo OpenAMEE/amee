@@ -18,9 +18,9 @@
         <amee-base.version>1.0.4</amee-base.version>
         <amee-persist.version>1.0.6</amee-persist.version>
         <amee-messaging.version>1.0.4</amee-messaging.version>
-        <amee-platform-science.version>1.0.10</amee-platform-science.version>
-        <amee-platform-domain.version>1.0.9</amee-platform-domain.version>
-        <amee-platform-service.version>1.0.11</amee-platform-service.version>
+        <amee-platform-science.version>1.0.11-SNAPSHOT</amee-platform-science.version>
+        <amee-platform-domain.version>1.0.10-SNAPSHOT</amee-platform-domain.version>
+        <amee-platform-service.version>1.0.12-SNAPSHOT</amee-platform-service.version>
         <!-- External Versions. -->
         <!-- Note: Keep Restlet, Jetty and servlet-api versions in sync. -->
         <!-- Note: Check Restlet release notes and jetty dependencies. -->
