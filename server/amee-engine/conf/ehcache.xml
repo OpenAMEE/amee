@@ -20,7 +20,7 @@
     Note, in particular, that an LRU cache expiry policy is never appropriate. -->
     <!-- NOTE: maxElementsInMemory should match (or exceed # of tables). -->
     <cache name="org.hibernate.cache.UpdateTimestampsCache"
-           maxElementsInMemory="40"
+           maxElementsInMemory="4000"
            eternal="true"
            overflowToDisk="false">
     </cache>
@@ -111,15 +111,7 @@
 
     <!-- DataCategory -->
     <cache name="com.amee.domain.data.DataCategory"
-           maxElementsInMemory="200"
-           eternal="false"
-           overflowToDisk="false"
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           memoryStoreEvictionPolicy="LFU">
-    </cache>
-    <cache name="com.amee.domain.data.DataCategory.localeNames"
-           maxElementsInMemory="200"
+           maxElementsInMemory="2000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -128,7 +120,7 @@
     </cache>
 
     <!-- Item -->
-    <cache name="com.amee.domain.data.Item"
+    <cache name="com.amee.domain.data.LegacyItem"
            maxElementsInMemory="12500"
            eternal="false"
            overflowToDisk="false"
@@ -136,7 +128,7 @@
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
     </cache>
-    <cache name="com.amee.domain.data.Item.itemValues"
+    <cache name="com.amee.domain.data.LegacyItem.itemValues"
            maxElementsInMemory="57500"
            eternal="false"
            overflowToDisk="false"
@@ -147,7 +139,7 @@
 
     <!-- ItemDefinition -->
     <cache name="com.amee.domain.data.ItemDefinition"
-           maxElementsInMemory="200"
+           maxElementsInMemory="2000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -155,7 +147,7 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
     <cache name="com.amee.domain.data.ItemDefinition.algorithms"
-           maxElementsInMemory="200"
+           maxElementsInMemory="2000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -163,15 +155,15 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
     <cache name="com.amee.domain.data.ItemDefinition.itemValueDefinitions"
-           maxElementsInMemory="200"
+           maxElementsInMemory="2000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
     </cache>
-    <cache name="com.amee.domain.data.ItemDefinition.localeNames"
-           maxElementsInMemory="200"
+    <cache name="com.amee.domain.data.ItemDefinition.returnValueDefinitions"
+           maxElementsInMemory="2000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -180,7 +172,7 @@
     </cache>
 
     <!-- ItemValue -->
-    <cache name="com.amee.domain.data.ItemValue"
+    <cache name="com.amee.domain.data.LegacyItemValue"
            maxElementsInMemory="57500"
            eternal="false"
            overflowToDisk="false"
@@ -188,7 +180,7 @@
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
     </cache>
-    <cache name="com.amee.domain.data.ItemValue.localeValues"
+    <cache name="com.amee.domain.data.LegacyItemValue.localeValues"
            maxElementsInMemory="57500"
            eternal="false"
            overflowToDisk="false"
@@ -214,7 +206,9 @@
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU">
     </cache>
-    <cache name="com.amee.domain.data.ItemValueDefinition.localeNames"
+
+    <!-- ReturnValueDefinition -->
+    <cache name="com.amee.domain.data.ReturnValueDefinition"
            maxElementsInMemory="1000"
            eternal="false"
            overflowToDisk="false"
@@ -256,6 +250,14 @@
     <!-- Tag -->
     <cache name="com.amee.domain.tag.Tag"
            maxElementsInMemory="5000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+    <cache name="com.amee.domain.tag.Tag.entityTags"
+           maxElementsInMemory="10"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
