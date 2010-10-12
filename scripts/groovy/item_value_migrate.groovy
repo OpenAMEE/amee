@@ -45,7 +45,10 @@ def profileItemTextValueSql =
 def profileItemTextValueStatement = sql.connection.prepareStatement(profileItemTextValueSql)
 
 profileItemValues.each { row ->
+
     if (row.VALUE.toString().isDouble()) {
+
+        // Handle numbers
         profileItemNumberValueStatement.with {
             setObject(1, row.ID)
             setObject(2, row.UID)
@@ -68,6 +71,29 @@ profileItemValues.each { row ->
                 numberValueBatchCount = 0
             }
         }
+    } else {
+        
+        // Handle text
+        profileItemTextValueStatement.with {
+            setObject(1, row.ID)
+            setObject(2, row.UID)
+            setObject(3, row.STATUS)
+            setObject(4, row.VALUE)
+            setObject(5, row.CREATED)
+            setObject(6, row.MODIFIED)
+            setObject(7, row.PROFILE_ITEM_ID)
+            setObject(8, row.ITEM_VALUE_DEFINITION_ID)
+
+            addBatch()
+            textValueBatchCount++
+
+            if (textValueBatchCount >= textValueBatch) {
+                // Execute this batch.
+                executeBatch()
+                println "Created ${textValueBatch} PROFILE_ITEM_TEXT_VALUEs in a batch."
+                textValueBatchCount = 0
+            }
+        }
     }
 
 
@@ -79,6 +105,12 @@ if (numberValueBatchCount > 0) {
     println "Created ${numberValueBatchCount} PROFILE_ITEM_NUMBER_VALUEs in a batch."
     numberValueBatchCount = 0
 }
+if (textValueBatchCount > 0) {
+    profileItemTextValueStatement.executeBatch()
+    println "Created ${textValueBatchCount} PROFILE_ITEM_TEXT_VALUEs in a batch."
+    textValueBatchCount = 0
+}
+
 sql.commit()
 
 
