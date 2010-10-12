@@ -114,6 +114,94 @@ if (textValueBatchCount > 0) {
 sql.commit()
 
 
+// Create a view for the data item values
+sql.execute "CREATE OR REPLACE VIEW data_item_values AS " +
+    "SELECT iv.ID, iv.UID, iv.STATUS, iv.VALUE, iv.CREATED, iv.MODIFIED, i.ID as DATA_ITEM_ID, " +
+    "iv.ITEM_VALUE_DEFINITION_ID, iv.UNIT, iv.PER_UNIT FROM ITEM_VALUE AS iv JOIN ITEM i ON iv.ITEM_ID = i.ID WHERE i.TYPE = 'DI'"
+
+def dataItemValues = sql.dataSet('data_item_values')
+
+def dataItemNumberValueSql =
+    "INSERT INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+def dataItemNumberValueStatement = sql.connection.prepareStatement(dataItemNumberValueSql)
+
+def dataItemTextValueSql =
+    "INSERT INTO DATA_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+def dataItemTextValueStatement = sql.connection.prepareStatement(dataItemTextValueSql)
+
+dataItemValues.each { row ->
+
+    if (row.VALUE.toString().isDouble()) {
+
+        // Handle numbers
+        dataItemNumberValueStatement.with {
+            setObject(1, row.ID)
+            setObject(2, row.UID)
+            setObject(3, row.STATUS)
+            setObject(4, row.VALUE)
+            setObject(5, row.CREATED)
+            setObject(6, row.MODIFIED)
+            setObject(7, row.DATA_ITEM_ID)
+            setObject(8, row.ITEM_VALUE_DEFINITION_ID)
+            setObject(9, (row.UNIT ? row.UNIT : ''))
+            setObject(10, (row.PER_UNIT ? row.PER_UNIT : ''))
+
+            addBatch()
+            numberValueBatchCount++
+
+            if (numberValueBatchCount >= numberValueBatch) {
+                // Execute this batch.
+                executeBatch()
+                println "Created ${numberValueBatch} DATA_ITEM_NUMBER_VALUEs in a batch."
+                numberValueBatchCount = 0
+            }
+        }
+    } else {
+
+        // Handle text
+        dataItemTextValueStatement.with {
+            setObject(1, row.ID)
+            setObject(2, row.UID)
+            setObject(3, row.STATUS)
+            setObject(4, row.VALUE)
+            setObject(5, row.CREATED)
+            setObject(6, row.MODIFIED)
+            setObject(7, row.DATA_ITEM_ID)
+            setObject(8, row.ITEM_VALUE_DEFINITION_ID)
+
+            addBatch()
+            textValueBatchCount++
+
+            if (textValueBatchCount >= textValueBatch) {
+                // Execute this batch.
+                executeBatch()
+                println "Created ${textValueBatch} DATA_ITEM_TEXT_VALUEs in a batch."
+                textValueBatchCount = 0
+            }
+        }
+    }
+
+
+}
+
+// Handle remaining Item Values in current batch.
+if (numberValueBatchCount > 0) {
+    dataItemNumberValueStatement.executeBatch()
+    println "Created ${numberValueBatchCount} DATA_ITEM_NUMBER_VALUEs in a batch."
+    numberValueBatchCount = 0
+}
+if (textValueBatchCount > 0) {
+    dataItemTextValueStatement.executeBatch()
+    println "Created ${textValueBatchCount} DATA_ITEM_TEXT_VALUEs in a batch."
+    textValueBatchCount = 0
+}
+
+sql.commit()
+
+
+
 def configureCliBuilder() {
   def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password]')
   cli.h(longOpt: 'help', 'usage information')
