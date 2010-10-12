@@ -34,8 +34,7 @@ def profileItemSql = "INSERT INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 def profileItemStatement = sql.connection.prepareStatement(profileItemSql)
 profileItems.each { row ->
-//    sql.executeInsert("INSERT INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS) VALUES (${it.ID}, ${it.UID}, ${it.NAME}, ${it.CREATED}, ${it.MODIFIED}, ${it.START_DATE}, ${it.END_DATE}, ${it.ITEM_DEFINITION_ID}, ${it.DATA_ITEM_ID}, ${it.PROFILE_ID}, ${it.STATUS})")
-    
+
     profileItemStatement.with {
         setObject(1, row.ID)
         setObject(2, row.UID)
@@ -55,8 +54,8 @@ profileItems.each { row ->
         if (batchCount >= profileItemBatch) {
             // Execute this batch.
             executeBatch();
-            println "Created ${batchCount} PROFILE_ITEMs in a batch.";
-            batchCount = 0;
+            println "Created ${batchCount} PROFILE_ITEMs in a batch."
+            batchCount = 0
         }
     }
 }
@@ -64,7 +63,7 @@ profileItems.each { row ->
 // Handle remaining Item Values in current batch.
 if (batchCount > 0) {
     profileItemStatement.executeBatch()
-    println "Created ${batchCount} PROFILE_ITEMs in a batch.";
+    println "Created ${batchCount} PROFILE_ITEMs in a batch."
     batchCount = 0
 }
 sql.commit()
@@ -75,8 +74,6 @@ def dataItemSql = "INSERT INTO DATA_ITEM (ID, UID, NAME, PATH, CREATED, MODIFIED
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
 def dataItemStatement = sql.connection.prepareStatement(dataItemSql)
 dataItems.each { row ->
-//    sql.executeInsert("""INSERT INTO DATA_ITEM (ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS)
-//        VALUES (${it.ID}, ${it.UID}, ${it.UID}, ${it.NAME}, ${it.PATH}, ${it.CREATED}, ${it.MODIFIED}, ${it.ITEM_DEFINITION_ID}, ${it.DATA_CATEGORY_ID}, ${it.STATUS}""")
 
     dataItemStatement.with {
         setObject(1, row.ID)
@@ -95,7 +92,7 @@ dataItems.each { row ->
         if (batchCount >= dataItemBatch) {
             // Execute this batch.
             executeBatch();
-            println "Created ${batchCount} DATA_ITEMs in a batch.";
+            println "Created ${batchCount} DATA_ITEMs in a batch."
             batchCount = 0;
         }
     }
@@ -104,13 +101,13 @@ dataItems.each { row ->
 // Handle remaining Item Values in current batch.
 if (batchCount > 0) {
     dataItemStatement.executeBatch()
-    println "Created ${batchCount} DATA_ITEMs in a batch.";
+    println "Created ${batchCount} DATA_ITEMs in a batch."
     batchCount = 0
 }
 sql.commit()
 
 
-private def configureCliBuilder() {
+def configureCliBuilder() {
   def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password]')
   cli.h(longOpt: 'help', 'usage information')
   cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "server name (default 'localhost')")
