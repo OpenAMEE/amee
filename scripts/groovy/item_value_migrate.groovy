@@ -53,7 +53,7 @@ profileItemValues.each { row ->
             setObject(1, row.ID)
             setObject(2, row.UID)
             setObject(3, row.STATUS)
-            setObject(4, row.VALUE)
+            setObject(4, Double.parseDouble(row.VALUE))
             setObject(5, row.CREATED)
             setObject(6, row.MODIFIED)
             setObject(7, row.PROFILE_ITEM_ID)
@@ -78,7 +78,14 @@ profileItemValues.each { row ->
             setObject(1, row.ID)
             setObject(2, row.UID)
             setObject(3, row.STATUS)
-            setObject(4, row.VALUE)
+
+            // Truncate any strings > 255
+            value = row.VALUE.toString()
+            if (value.size() > 255) {
+                setObject(4, value[0..254])
+            } else {
+                setObject(4, value)
+            }
             setObject(5, row.CREATED)
             setObject(6, row.MODIFIED)
             setObject(7, row.PROFILE_ITEM_ID)
@@ -131,6 +138,72 @@ def dataItemTextValueSql =
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 def dataItemTextValueStatement = sql.connection.prepareStatement(dataItemTextValueSql)
 
+//def query = "SELECT * FROM data_item_values WHERE ID > ? LIMIT 1000"
+//def maxId = 0
+//def more = true
+//def executeQuery = {
+//    def oldMaxId = maxId
+//    sql.eachRow(query, [maxId]) { row ->
+//
+//        println row.ID
+//
+//        if (row.VALUE.toString().isDouble()) {
+//
+//            // Handle numbers
+//            dataItemNumberValueStatement.with {
+//                setObject(1, row.ID)
+//                setObject(2, row.UID)
+//                setObject(3, row.STATUS)
+//                setObject(4, row.VALUE)
+//                setObject(5, row.CREATED)
+//                setObject(6, row.MODIFIED)
+//                setObject(7, row.DATA_ITEM_ID)
+//                setObject(8, row.ITEM_VALUE_DEFINITION_ID)
+//                setObject(9, (row.UNIT ? row.UNIT : ''))
+//                setObject(10, (row.PER_UNIT ? row.PER_UNIT : ''))
+//
+//                addBatch()
+//                numberValueBatchCount++
+//
+//                if (numberValueBatchCount >= numberValueBatch) {
+//                    // Execute this batch.
+//                    executeBatch()
+//                    println "Created ${numberValueBatch} DATA_ITEM_NUMBER_VALUEs in a batch."
+//                    numberValueBatchCount = 0
+//                }
+//            }
+//        } else {
+//
+//            // Handle text
+//            dataItemTextValueStatement.with {
+//                setObject(1, row.ID)
+//                setObject(2, row.UID)
+//                setObject(3, row.STATUS)
+//                setObject(4, row.VALUE)
+//                setObject(5, row.CREATED)
+//                setObject(6, row.MODIFIED)
+//                setObject(7, row.DATA_ITEM_ID)
+//                setObject(8, row.ITEM_VALUE_DEFINITION_ID)
+//
+//                addBatch()
+//                textValueBatchCount++
+//
+//                if (textValueBatchCount >= textValueBatch) {
+//                    // Execute this batch.
+//                    executeBatch()
+//                    println "Created ${textValueBatch} DATA_ITEM_TEXT_VALUEs in a batch."
+//                    textValueBatchCount = 0
+//                }
+//            }
+//        }
+//
+//        maxId = row.ID
+//    }
+//    more = maxId != oldMaxId
+//}
+//
+//while (more) { executeQuery() }
+
 dataItemValues.each { row ->
 
     if (row.VALUE.toString().isDouble()) {
@@ -140,7 +213,7 @@ dataItemValues.each { row ->
             setObject(1, row.ID)
             setObject(2, row.UID)
             setObject(3, row.STATUS)
-            setObject(4, row.VALUE)
+            setObject(4, Double.parseDouble(row.VALUE))
             setObject(5, row.CREATED)
             setObject(6, row.MODIFIED)
             setObject(7, row.DATA_ITEM_ID)
@@ -165,7 +238,15 @@ dataItemValues.each { row ->
             setObject(1, row.ID)
             setObject(2, row.UID)
             setObject(3, row.STATUS)
-            setObject(4, row.VALUE)
+
+            // Truncate any strings > 255
+            // TODO: log the original string
+            value = row.VALUE.toString()
+            if (value.size() > 255) {
+                setObject(4, value[0..254])
+            } else {
+                setObject(4, value)
+            }
             setObject(5, row.CREATED)
             setObject(6, row.MODIFIED)
             setObject(7, row.DATA_ITEM_ID)
