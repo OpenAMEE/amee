@@ -89,7 +89,8 @@ profileItemValues.each { row ->
                 }
             }
         } catch (NumberFormatException e) {
-            System.err.println "Error parsing PROFILE_ITEM value as double. ID: ${row.ID}, VALUE: ${row.VALUE}. ${e.getMessage()}"
+            System.err.println "Error parsing PROFILE_ITEM value as double. ITEM_VALUE.ID: ${row.ID}, ITEM_VALUE.UID: ${row.UID}, " +
+                "ITEM_VALUE_DEFINITION_ID: ${row.ITEM_VALUE_DEFINITION_ID}, VALUE: '${row.VALUE}'"
         }
     } else {
         
@@ -146,7 +147,7 @@ sql.execute "CREATE OR REPLACE VIEW data_item_values AS " +
     "FROM ITEM_VALUE AS iv JOIN ITEM i ON iv.ITEM_ID = i.ID " +
     "JOIN ITEM_VALUE_DEFINITION ivd ON iv.ITEM_VALUE_DEFINITION_ID = ivd.ID " +
     "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
-    "WHERE i.TYPE = 'DI' LIMIT 10000"
+    "WHERE i.TYPE = 'DI'"
 
 def dataItemValues = sql.dataSet('data_item_values')
 
@@ -190,7 +191,8 @@ dataItemValues.each { row ->
                 }
             }
         } catch (NumberFormatException e) {
-            System.err.println "Error parsing DATA_ITEM value as double. ID: ${row.ID}, VALUE: ${row.VALUE}. ${e.getMessage()}"
+            System.err.println "Error parsing DATA_ITEM value as double. ITEM_VALUE.ID: ${row.ID}, ITEM_VALUE.UID: ${row.UID}, " +
+                "ITEM_VALUE_DEFINITION_ID: ${row.ITEM_VALUE_DEFINITION_ID}, VALUE: '${row.VALUE}'"
         }
     } else {
 
