@@ -142,6 +142,7 @@ if (textValueBatchCount > 0) {
     textValueBatchCount = 0
 }
 
+// Commit the profile item data
 sql.commit()
 
 
@@ -151,7 +152,7 @@ sql.execute "CREATE OR REPLACE VIEW data_item_values AS " +
     "FROM ITEM_VALUE AS iv JOIN ITEM i ON iv.ITEM_ID = i.ID " +
     "JOIN ITEM_VALUE_DEFINITION ivd ON iv.ITEM_VALUE_DEFINITION_ID = ivd.ID " +
     "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
-    "WHERE i.TYPE = 'DI' LIMIT 10000"
+    "WHERE i.TYPE = 'DI'"
 
 def dataItemValues = sql.dataSet('data_item_values')
 
@@ -327,6 +328,7 @@ if (textValueHistoryBatchCount > 0) {
     textValueHistoryBatchCount = 0
 }
 
+// Commit the data item data
 sql.commit()
 
 
