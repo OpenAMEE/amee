@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet id="4-1" author="david">
+        <comment>Alter ALGORITHM.</comment>
+
+        <!-- Use sql tag so all changes for a table are executed in one statement. -->
+        <sql>
+            ALTER TABLE ALGORITHM
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE ITEM_DEFINITION_ID ITEM_DEFINITION_ID INT(11) UNSIGNED NOT NULL,
+            CHANGE ALGORITHM_CONTEXT_ID ALGORITHM_CONTEXT_ID INT(11) UNSIGNED NOT NULL,
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-2" author="david">
+        <comment>Alter API_VERSION.</comment>
+        <sql>
+            ALTER TABLE API_VERSION
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-3" author="david">
+        <comment>Alter DATA_ITEM.</comment>
+        <sql>
+            ALTER TABLE DATA_ITEM
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-4" author="david">
+        <comment>Alter DATA_ITEM_NUMBER_VALUE.</comment>
+        <sql>
+            ALTER TABLE DATA_ITEM_NUMBER_VALUE
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-5" author="david">
+        <comment>Alter DATA_ITEM_NUMBER_VALUE_HISTORY.</comment>
+        <sql>
+            ALTER TABLE DATA_ITEM_NUMBER_VALUE_HISTORY
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-6" author="david">
+        <comment>Alter DATA_ITEM_TEXT_VALUE.</comment>
+        <sql>
+            ALTER TABLE DATA_ITEM_TEXT_VALUE
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-7" author="david">
+        <comment>Alter DATA_ITEM_TEXT_VALUE_HISTORY.</comment>
+        <sql>
+            ALTER TABLE DATA_ITEM_TEXT_VALUE_HISTORY
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-8" author="david">
+        <comment>Alter ENTITY_TAG.</comment>
+        <sql>
+            ALTER TABLE ENTITY_TAG
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            ENTITY_UID ENTITY_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            TAG TAG INT(11) UNSIGNED NOT NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-9" author="david">
+        <comment>Alter GROUPS.</comment>
+        <sql>
+            ALTER TABLE GROUPS
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-10" author="david">
+        <comment>Alter GROUP_PRINCIPAL.</comment>
+        <sql>
+            ALTER TABLE GROUP_PRINCIPAL
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            PRINCIPAL_UID PRINCIPAL_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT ''
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-11" author="david">
+        <comment>Alter ITEM_DEFINITION.</comment>
+        <sql>
+            ALTER TABLE ITEM_DEFINITION
+            CHANGE ID ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-12" author="david">
+        <comment>Alter ITEM_VALUE_DEFINITION_API_VERSION.</comment>
+        <sql>
+            ALTER TABLE ITEM_VALUE_DEFINITION_API_VERSION
+            CHANGE API_VERSION_ID API_VERSION_ID INT(11) UNSIGNED NOT NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-13" author="david">
+        <comment>Alter LOCALE_NAME.</comment>
+        <sql>
+            ALTER TABLE LOCALE_NAME
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            ENTITY_UID ENTITY_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT ''
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-14" author="david">
+        <comment>Alter METADATA.</comment>
+        <sql>
+            ALTER TABLE METADATA
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            ENTITY_UID ENTITY_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT ''
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-15" author="david">
+        <comment>Alter PERMISSION.</comment>
+        <sql>
+            ALTER TABLE PERMISSION
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            ENTITY_UID ENTITY_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            PRINCIPAL_UID PRINCIPAL_UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT ''
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-16" author="david">
+        <comment>Alter PROFILE.</comment>
+        <sql>
+            ALTER TABLE PROFILE
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-17" author="david">
+        <comment>Alter PROFILE_ITEM.</comment>
+        <sql>
+            ALTER TABLE PROFILE_ITEM
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-18" author="david">
+        <comment>Alter PROFILE_ITEM_NUMBER_VALUE.</comment>
+        <sql>
+            ALTER TABLE PROFILE_ITEM_NUMBER_VALUE
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-19" author="david">
+        <comment>Alter PROFILE_ITEM_TEXT_VALUE.</comment>
+        <sql>
+            ALTER TABLE PROFILE_ITEM_TEXT_VALUE
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-20" author="david">
+        <comment>Alter RETURN_VALUE_DEFINITION.</comment>
+        <sql>
+            ALTER TABLE RETURN_VALUE_DEFINITION
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            CHANGE VALUE_DEFINITION_ID VALUE_DEFINITION_ID
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-21" author="david">
+        <comment>Alter TAG.</comment>
+        <sql>
+            ALTER TABLE TAG
+            CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1'
+        </sql>
+    </changeSet>
+
+    <changeSet id="4-22" author="david">
+        <comment>Alter USER.</comment>
+        <sql>
+            ALTER TABLE USER
+            CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+            CHANGE CREATED CREATED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE MODIFIED MODIFIED TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+            CHANGE STATUS STATUS TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+            API_VERSION_ID API_VERSION_ID INT(11) UNSIGNED NOT NULL
+        </sql>
+    </changeSet>
+</databaseChangeLog>
