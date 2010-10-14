@@ -10,4 +10,5 @@
     <include relativeToChangelogFile="true" file="db.changelog-2-new-item-and-value-tables.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-3-divh.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-4-data-types.xml"/>
+    <include relativeToChangelogFile="true" file="db.changelog-5-data-types.xml"/>
 </databaseChangeLog>
