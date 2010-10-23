@@ -44,19 +44,16 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
     public JSONObject getJSONObject(ProfileItemResource resource) throws JSONException {
         JSONObject obj = new JSONObject();
         ProfileItem profileItem = resource.getProfileItem();
-        setProfileItemBuilder(resource, profileItem);
-        obj.put("profileItem", profileItem.getJSONObject(true));
+        obj.put("profileItem", getProfileItemBuilder(resource, profileItem).getJSONObject(true));
         obj.put("path", resource.getProfileItem().getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
         return obj;
     }
 
-
     public Element getElement(ProfileItemResource resource, Document document) {
         ProfileItem profileItem = resource.getProfileItem();
-        setProfileItemBuilder(resource, profileItem);
         Element element = document.createElement("ProfileItemResource");
-        element.appendChild(profileItem.getElement(document, true));
+        element.appendChild(getProfileItemBuilder(resource, profileItem).getElement(document, true));
         element.appendChild(XMLUtils.getElement(document, "Path", resource.getProfileItem().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
@@ -126,11 +123,11 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
 
     }
 
-    private void setProfileItemBuilder(ProfileItemResource resource, ProfileItem pi) {
+    private ProfileItemBuilder getProfileItemBuilder(ProfileItemResource resource, ProfileItem pi) {
         if (resource.getProfileBrowser().requestedCO2InExternalUnit()) {
-            pi.setBuilder(new ProfileItemBuilder(pi, resource.getProfileBrowser().getCo2AmountUnit()));
+            return new ProfileItemBuilder(pi, resource.getProfileBrowser().getCo2AmountUnit());
         } else {
-            pi.setBuilder(new ProfileItemBuilder(pi));
+            return new ProfileItemBuilder(pi);
         }
     }
 }

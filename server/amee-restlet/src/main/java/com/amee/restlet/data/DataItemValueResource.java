@@ -26,6 +26,7 @@ import com.amee.domain.LocaleConstants;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.builder.DataItemBuilder;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.data.builder.v2.ItemValueInListBuilder;
 import com.amee.platform.science.StartEndDate;
@@ -240,38 +241,36 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
+        DataItemBuilder dataItemBuilder = new DataItemBuilder(dataItem);
         JSONObject obj = new JSONObject();
         if (itemValue != null) {
-            itemValue.setBuilder(new ItemValueBuilder(itemValue));
-            obj.put("itemValue", itemValue.getJSONObject());
+            obj.put("itemValue", new ItemValueBuilder(itemValue, dataItemBuilder).getJSONObject());
         } else {
             JSONArray values = new JSONArray();
             for (ItemValue iv : itemValues) {
-                iv.setBuilder(new ItemValueInListBuilder(iv));
-                values.put(iv.getJSONObject(false));
+                values.put(new ItemValueInListBuilder(iv).getJSONObject(false));
             }
             obj.put("itemValues", values);
         }
-        obj.put("dataItem", dataItem.getIdentityJSONObject());
+        obj.put("dataItem", dataItemBuilder.getIdentityJSONObject());
         obj.put("path", dataItem.getFullPath() + "/" + getRequest().getAttributes().get("itemPath").toString());
         return obj;
     }
 
     @Override
     public Element getElement(Document document) {
+        DataItemBuilder dataItemBuilder = new DataItemBuilder(dataItem);
         Element element = document.createElement("DataItemValueResource");
         if (itemValue != null) {
-            itemValue.setBuilder(new ItemValueBuilder(itemValue));
-            element.appendChild(itemValue.getElement(document));
+            element.appendChild(new ItemValueBuilder(itemValue, dataItemBuilder).getElement(document));
         } else {
             Element values = document.createElement("ItemValues");
             for (ItemValue iv : itemValues) {
-                iv.setBuilder(new ItemValueInListBuilder(iv));
-                values.appendChild(iv.getElement(document, false));
+                values.appendChild(new ItemValueInListBuilder(iv).getElement(document, false));
             }
             element.appendChild(values);
         }
-        element.appendChild(dataItem.getIdentityElement(document));
+        element.appendChild(dataItemBuilder.getIdentityElement(document));
         element.appendChild(XMLUtils.getElement(document, "Path", dataItem.getFullPath() + "/" + getRequest().getAttributes().get("itemPath").toString()));
         return element;
     }
