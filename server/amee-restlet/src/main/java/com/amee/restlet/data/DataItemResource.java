@@ -27,6 +27,7 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.builder.DataItemBuilder;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.platform.science.*;
@@ -171,7 +172,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         Amount amount = returnAmounts.defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         JSONObject obj = new JSONObject();
-        obj.put("dataItem", dataItem.getJSONObject(true, false));
+        obj.put("dataItem", new DataItemBuilder(dataItem).getJSONObject(true, false));
         obj.put("path", dataItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
         obj.put("amountPerMonth", amount.convert(kgPerMonth).getValue());
@@ -236,7 +237,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         Amount amount = returnAmounts.defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         Element element = document.createElement("DataItemResource");
-        element.appendChild(dataItem.getElement(document, true, false));
+        element.appendChild(new DataItemBuilder(dataItem).getElement(document, true, false));
         element.appendChild(XMLUtils.getElement(document, "Path", dataItem.getFullPath()));
         element.appendChild(userValueChoices.getElement(document));
         element.appendChild(XMLUtils.getElement(document, "AmountPerMonth", amount.convert(kgPerMonth).toString()));
