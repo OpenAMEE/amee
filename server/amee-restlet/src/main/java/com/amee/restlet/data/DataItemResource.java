@@ -322,9 +322,17 @@ public class DataItemResource extends AMEEResource implements Serializable {
                 return;
             }
 
-            // Create the new ItemValue entity.
-            ItemValue newDataItemValue = new ItemValue(itemValueDefinition, dataItem, getForm().getFirstValue(name));
-            newDataItemValue.setStartDate(startDate);
+            if (startDate.getTime() == 0) {
+                // Normal
+                // We should never get here. checkDataItem should always create the first item value (startDate = EPOCH)
+                log.warn("acceptRepresentation() badRequest - Trying to create another DIV with the startDate as the EPOCH.");
+                badRequest();
+            } else {
+                // History
+                ItemValue newDataItemValue = new ItemValue(itemValueDefinition, dataItem, getForm().getFirstValue(name), true);
+                newDataItemValue.setStartDate(startDate);
+                dataService.persist(newDataItemValue);
+            }
         }
 
         // Clear caches.
