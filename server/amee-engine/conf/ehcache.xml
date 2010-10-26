@@ -319,6 +319,16 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
+    <!-- Nu Drill Down Choices -->
+    <cache name="NuDrillDownChoices"
+           maxElementsInMemory="1000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
     <!-- Data Sheets -->
     <cache name="DataSheets"
            maxElementsInMemory="120"
