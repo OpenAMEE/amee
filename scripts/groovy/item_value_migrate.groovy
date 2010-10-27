@@ -74,7 +74,7 @@ profileItemValues.each { row ->
                 setObject(1, row.ID)
                 setObject(2, row.UID)
                 setObject(3, row.STATUS)
-                setObject(4, Double.parseDouble(row.VALUE))
+                setObject(4, row.VALUE.equals("") || row.VALUE.equals("-") ? null : Double.parseDouble(row.VALUE))
                 setObject(5, row.CREATED)
                 setObject(6, row.MODIFIED)
                 setObject(7, row.PROFILE_ITEM_ID)
@@ -104,11 +104,11 @@ profileItemValues.each { row ->
             setObject(2, row.UID)
             setObject(3, row.STATUS)
 
-            // Truncate any strings > 255
+            // Truncate any strings > 32767
             value = row.VALUE.toString()
-            if (value.size() > 255) {
-                println "Truncating PROFILE_ITEM string value. ID: ${row.ID}, OLD VALUE: ${value}, NEW VALUE: ${value[0..254]}"
-                setObject(4, value[0..254])
+            if (value.size() > 32767) {
+                println "Truncating PROFILE_ITEM string value. ID: ${row.ID}"
+                setObject(4, value[0..32766])
             } else {
                 setObject(4, value)
             }
@@ -191,7 +191,7 @@ dataItemValues.each { row ->
                     setObject(1, row.ID)
                     setObject(2, row.UID)
                     setObject(3, row.STATUS)
-                    setObject(4, Double.parseDouble(row.VALUE))
+                    setObject(4, row.VALUE.equals("") || row.VALUE.equals("-") ? null : Double.parseDouble(row.VALUE))
                     setObject(5, row.CREATED)
                     setObject(6, row.MODIFIED)
                     setObject(7, row.DATA_ITEM_ID)
@@ -216,7 +216,7 @@ dataItemValues.each { row ->
                     setObject(1, row.ID)
                     setObject(2, row.UID)
                     setObject(3, row.STATUS)
-                    setObject(4, Double.parseDouble(row.VALUE))
+                    setObject(4, row.VALUE.equals("") || row.VALUE.equals("-") ? null : Double.parseDouble(row.VALUE))
                     setObject(5, row.CREATED)
                     setObject(6, row.MODIFIED)
                     setObject(7, row.DATA_ITEM_ID)
@@ -249,11 +249,11 @@ dataItemValues.each { row ->
                 setObject(2, row.UID)
                 setObject(3, row.STATUS)
 
-                // Truncate any strings > 255
+                // Truncate any strings > 32767
                 value = row.VALUE.toString()
-                if (value.size() > 255) {
-                    System.err.println "Truncating DATA_ITEM string value. ID: ${row.ID}, OLD VALUE: ${value}, NEW VALUE: ${value[0..254]}"
-                    setObject(4, value[0..254])
+                if (value.size() > 32767) {
+                    System.err.println "Truncating DATA_ITEM string value. ID: ${row.ID}"
+                    setObject(4, value[0..32766])
                 } else {
                     setObject(4, value)
                 }
@@ -278,11 +278,11 @@ dataItemValues.each { row ->
                 setObject(2, row.UID)
                 setObject(3, row.STATUS)
 
-                // Truncate any strings > 255
+                // Truncate any strings > 32767
                 value = row.VALUE.toString()
-                if (value.size() > 255) {
-                    System.err.println "Truncating DATA_ITEM string value. ID: ${row.ID}, OLD VALUE: ${value}, NEW VALUE: ${value[0..254]}"
-                    setObject(4, value[0..254])
+                if (value.size() > 32767) {
+                    System.err.println "Truncating DATA_ITEM string value. ID: ${row.ID}"
+                    setObject(4, value[0..32766])
                 } else {
                     setObject(4, value)
                 }
