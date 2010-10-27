@@ -2,6 +2,7 @@ package com.amee.calculation.service;
 
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.profile.LegacyProfileItem;
 import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.ReturnValue;
@@ -98,31 +99,28 @@ public class ProRataProfileService {
 
                 log.debug("getProfileItems() - ProfileItem: " + pi.getName() + " has PerTime ItemValues.");
 
-                ProfileItem pic = pi.getCopy();
                 for (ItemValue iv : pi.getItemValues()) {
-                    ItemValue ivc = iv.getCopy();
-                    if (ivc.hasPerTimeUnit() && ivc.getItemValueDefinition().isFromProfile() && ivc.getValue().length() > 0) {
-                        pic.addItemValue(getProRatedItemValue(intersect, ivc));
+                    if (iv.hasPerTimeUnit() && iv.getItemValueDefinition().isFromProfile() && iv.getValue().length() > 0) {
+                        iv.setValueOveride(getProRatedItemValue(intersect, iv));
 
                         if (log.isDebugEnabled()) {
                             log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
-                                    ". ItemValue: " + ivc.getName() + " = " + iv.getValue() + " has PerUnit: " + ivc.getPerUnit() +
-                                    ". Pro-rated ItemValue = " + ivc.getValue());
+                                    ". ItemValue: " + iv.getName() + " = " + iv.getValue() + " has PerUnit: " + iv.getPerUnit() +
+                                    ". Pro-rated ItemValue = " + iv.getValue());
                         }
 
                     } else {
-                        log.debug("getProfileItems() - ProfileItem: " + pi.getName() + ". Unchanged ItemValue: " + ivc.getName());
-                        pic.addItemValue(ivc);
+                        log.debug("getProfileItems() - ProfileItem: " + pi.getName() + ". Unchanged ItemValue: " + iv.getName());
                     }
                 }
 
-                calculationService.calculate(pic);
+                calculationService.calculate(pi);
 
                 if (log.isDebugEnabled()) {
-                    log.debug("getProfileItems() - ProfileItem: " + pi.getName() + ". Adding prorated Amounts: " + pic.getAmounts());
+                    log.debug("getProfileItems() - ProfileItem: " + pi.getName() + ". Adding prorated Amounts: " + pi.getAmounts());
                 }
 
-                requestedItems.add(pic);
+                requestedItems.add(pi);
 
             } else if (pi.getEndDate() != null) {
                 // The ProfileItem has no perTime ItemValues and is bounded. In this case, the CO2 value is multiplied by
@@ -131,30 +129,23 @@ public class ProRataProfileService {
                 //TODO - make Item a deep copy (and so inc. ItemValues). Will need to implement equals() in ItemValue
                 //TODO - such that overwriting in the ItemValue collection is handled correctly.
 
-                ProfileItem pic = pi.getCopy();
-
-                //Copy in the ItemValues - needed for later representation generation.
-                for (ItemValue iv : pi.getItemValues()) {
-                    pic.addItemValue(iv.getCopy());
-                }
-
-                long event = getIntervalInMillis(pic.getStartDate(), pic.getEndDate());
+                long event = getIntervalInMillis(pi.getStartDate(), pi.getEndDate());
                 double eventIntersectRatio = intersect.toDurationMillis() / (double) event;
 
                 // For each amount, store the prorated value
-                for (Map.Entry<String, ReturnValue> entry : pic.getAmounts().getReturnValues().entrySet()) {
+                for (Map.Entry<String, ReturnValue> entry : pi.getAmounts().getReturnValues().entrySet()) {
                     ReturnValue value = entry.getValue();
                     double proRatedValue = entry.getValue().toDouble() * eventIntersectRatio;
-                    pic.getAmounts().putValue(value.getType(), value.getUnit(), value.getPerUnit(), proRatedValue);
+                    pi.getAmounts().putValue(value.getType(), value.getUnit(), value.getPerUnit(), proRatedValue);
                 }
 
                 if (log.isDebugEnabled()) {
                     log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
-                            " is bounded (" + getInterval(pic.getStartDate(), pic.getEndDate()) +
+                            " is bounded (" + getInterval(pi.getStartDate(), pi.getEndDate()) +
                             ") and has no PerTime ItemValues.");
-                    log.debug("getProfileItems() - Adding pro-rated Amounts: " + pic.getAmounts());
+                    log.debug("getProfileItems() - Adding pro-rated Amounts: " + pi.getAmounts());
                 }
-                requestedItems.add(pic);
+                requestedItems.add(pi);
 
             } else {
                 // The ProfileItem has no perTime ItemValues and is unbounded. In this case, the ReturnValues are not prorated.

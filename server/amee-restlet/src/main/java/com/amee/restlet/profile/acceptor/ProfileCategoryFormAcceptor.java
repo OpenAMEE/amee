@@ -17,6 +17,7 @@ import com.amee.restlet.utils.APIException;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.auth.AuthorizationService;
 import com.amee.service.data.DataService;
+import com.amee.service.item.ProfileItemService;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,6 +58,9 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
 
     @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private ProfileItemService profileItemService;
 
     @Autowired
     private DataService dataService;
@@ -186,6 +190,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             try {
                 // save ProfileItem
                 profileService.persist(profileItem);
+                profileItemService.clearItemValues();
                 // update item values if supplied
                 for (String name : form.getNames()) {
                     // Find the matching active ItemValue for the prevailing datetime context.
