@@ -9,6 +9,9 @@
  */
 
 import groovy.sql.Sql
+import java.sql.DatabaseMetaData
+import java.sql.ResultSet
+import java.sql.Statement
 
 def numberValueBatch = 1000
 def numberValueBatchCount = 0
@@ -43,6 +46,23 @@ if (opt.p) password = opt.p
 def sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
 sql.connection.autoCommit = false
 
+// Check for scolling.
+DatabaseMetaData dbmd = sql.connection.getMetaData();
+int JDBCVersion = dbmd.getJDBCMajorVersion();
+boolean srs = dbmd.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY);
+if (JDBCVersion > 2 || srs == true) {
+  // println "ResultSet scrolling is supported.";
+} else {
+  println "ResultSet scrolling is NOT supported.";
+  return;
+}
+
+// Get scrollable Statement.
+Statement st = sql.connection.createStatement(
+        ResultSet.TYPE_FORWARD_ONLY,
+        ResultSet.CONCUR_READ_ONLY);
+st.setFetchSize(Integer.MIN_VALUE);
+
 // Create a view for the profile item values
 sql.execute "CREATE OR REPLACE VIEW profile_item_values AS " +
     "SELECT iv.ID, iv.UID, iv.STATUS, iv.VALUE, iv.CREATED, iv.MODIFIED, i.ID as PROFILE_ITEM_ID, iv.ITEM_VALUE_DEFINITION_ID, vd.VALUE_TYPE, iv.UNIT, iv.PER_UNIT " +
@@ -50,8 +70,6 @@ sql.execute "CREATE OR REPLACE VIEW profile_item_values AS " +
     "JOIN ITEM_VALUE_DEFINITION ivd ON iv.ITEM_VALUE_DEFINITION_ID = ivd.ID " +
     "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
     "WHERE i.TYPE = 'PI'"
-
-def profileItemValues = sql.dataSet('profile_item_values')
 
 def profileItemNumberValueSql =
     "INSERT INTO PROFILE_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
@@ -63,24 +81,30 @@ def profileItemTextValueSql =
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 def profileItemTextValueStatement = sql.connection.prepareStatement(profileItemTextValueSql)
 
-profileItemValues.each { row ->
+def rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT FROM profile_item_values")
 
-    if (row.VALUE_TYPE == valueTypes.indexOf("INTEGER") ||
-        row.VALUE_TYPE == valueTypes.indexOf("DECIMAL")) {
+while (rs.next()) {
+    rowValType = rs.getInt("VALUE_TYPE")
+
+    if (rowValType == valueTypes.indexOf("INTEGER") ||
+        rowValType == valueTypes.indexOf("DECIMAL")) {
 
         // Handle numbers
         try {
             profileItemNumberValueStatement.with {
-                setObject(1, row.ID)
-                setObject(2, row.UID)
-                setObject(3, row.STATUS)
-                setObject(4, row.VALUE.equals("") || row.VALUE.equals("-") ? null : Double.parseDouble(row.VALUE))
-                setObject(5, row.CREATED)
-                setObject(6, row.MODIFIED)
-                setObject(7, row.PROFILE_ITEM_ID)
-                setObject(8, row.ITEM_VALUE_DEFINITION_ID)
-                setObject(9, (row.UNIT ? row.UNIT : ''))
-                setObject(10, (row.PER_UNIT ? row.PER_UNIT : ''))
+                setObject(1, rs.getLong("ID"))
+                setObject(2, rs.getString("UID"))
+                setObject(3, rs.getInt("STATUS"))
+                def rowVal = rs.getString("VALUE")
+                setObject(4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
+                setObject(5, rs.getDate("CREATED"))
+                setObject(6, rs.getDate("MODIFIED"))
+                setObject(7, rs.getLong("PROFILE_ITEM_ID"))
+                setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+                def rowUnit = rs.getString("UNIT")
+                setObject(9, (rowUnit ? rowUnit : ''))
+                def perUnit = rs.getString("PER_UNIT")
+                setObject(10, (perUnit ? perUnit : ''))
 
                 addBatch()
                 numberValueBatchCount++
@@ -93,29 +117,29 @@ profileItemValues.each { row ->
                 }
             }
         } catch (NumberFormatException e) {
-            System.err.println "Error parsing PROFILE_ITEM value as double. ITEM_VALUE.ID: ${row.ID}, ITEM_VALUE.UID: ${row.UID}, " +
-                "ITEM_VALUE_DEFINITION_ID: ${row.ITEM_VALUE_DEFINITION_ID}, VALUE: '${row.VALUE}'"
+            System.err.println "Error parsing PROFILE_ITEM value as double. ITEM_VALUE.ID: ${rs.getString('ID')}, ITEM_VALUE.UID: ${rs.getString('UID')}, " +
+                "ITEM_VALUE_DEFINITION_ID: ${rs.getString('ITEM_VALUE_DEFINITION_ID')}, VALUE: '${rs.getString('VALUE')}'"
         }
     } else {
         
         // Handle text
         profileItemTextValueStatement.with {
-            setObject(1, row.ID)
-            setObject(2, row.UID)
-            setObject(3, row.STATUS)
+            setObject(1, rs.getLong("ID"))
+            setObject(2, rs.getString("UID"))
+            setObject(3, rs.getInt("STATUS"))
 
             // Truncate any strings > 32767
-            value = row.VALUE.toString()
+            value = rs.getString("VALUE")
             if (value.size() > 32767) {
-                println "Truncating PROFILE_ITEM string value. ID: ${row.ID}"
+                println "Truncating PROFILE_ITEM string value. ID: ${rs.getString('ID')}"
                 setObject(4, value[0..32766])
             } else {
                 setObject(4, value)
             }
-            setObject(5, row.CREATED)
-            setObject(6, row.MODIFIED)
-            setObject(7, row.PROFILE_ITEM_ID)
-            setObject(8, row.ITEM_VALUE_DEFINITION_ID)
+            setObject(5, rs.getDate("CREATED"))
+            setObject(6, rs.getDate("MODIFIED"))
+            setObject(7, rs.getLong("PROFILE_ITEM_ID"))
+            setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
 
             addBatch()
             textValueBatchCount++
