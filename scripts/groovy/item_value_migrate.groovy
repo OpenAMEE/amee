@@ -41,6 +41,8 @@ def user = "amee"
 if (opt.u) user = opt.u
 def password = "amee"
 if (opt.p) password = opt.p
+def dryRun = false
+if (opt.r) dryRun = true
 
 // Configure DataSource.
 def sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
@@ -114,7 +116,11 @@ while (rs.next()) {
 
                 if (numberValueBatchCount >= numberValueBatch) {
                     // Execute this batch.
-                    executeBatch()
+                    if (dryRun) {
+                        clearBatch()
+                    } else {
+                        executeBatch()                        
+                    }
                     println "Created ${numberValueBatch} PROFILE_ITEM_NUMBER_VALUEs in a batch."
                     numberValueBatchCount = 0
                 }
@@ -149,7 +155,11 @@ while (rs.next()) {
 
             if (textValueBatchCount >= textValueBatch) {
                 // Execute this batch.
-                executeBatch()
+                if (dryRun) {
+                    clearBatch()
+                } else {
+                    executeBatch()
+                }
                 println "Created ${textValueBatch} PROFILE_ITEM_TEXT_VALUEs in a batch."
                 textValueBatchCount = 0
             }
@@ -159,28 +169,38 @@ while (rs.next()) {
 
 // Handle remaining Item Values in current batch.
 if (numberValueBatchCount > 0) {
-    profileItemNumberValueStatement.executeBatch()
+    if (dryRun) {
+        profileItemNumberValueStatement.clearBatch()
+    } else {
+        profileItemNumberValueStatement.executeBatch()
+    }
     println "Created ${numberValueBatchCount} PROFILE_ITEM_NUMBER_VALUEs in a batch."
     numberValueBatchCount = 0
 }
 if (textValueBatchCount > 0) {
-    profileItemTextValueStatement.executeBatch()
+    if (dryRun) {
+        profileItemTextValueStatement.clearBatch()
+    } else {
+        profileItemTextValueStatement.executeBatch()
+    }
     println "Created ${textValueBatchCount} PROFILE_ITEM_TEXT_VALUEs in a batch."
     textValueBatchCount = 0
 }
 
 // Commit the profile item data
-sql.commit()
-sqlInsert.commit()
-
+if (dryRun) {
+    sql.rollback()
+    sqlInsert.rollback()
+} else {
+    sql.commit()
+    sqlInsert.commit()
+}
 
 // Get scrollable Statement.
 st = sql.connection.createStatement(
         ResultSet.TYPE_FORWARD_ONLY,
         ResultSet.CONCUR_READ_ONLY);
 st.setFetchSize(Integer.MIN_VALUE);
-
-
 
 // Create a view for the data item values
 sql.execute "CREATE OR REPLACE VIEW data_item_values AS " +
@@ -189,8 +209,6 @@ sql.execute "CREATE OR REPLACE VIEW data_item_values AS " +
     "JOIN ITEM_VALUE_DEFINITION ivd ON iv.ITEM_VALUE_DEFINITION_ID = ivd.ID " +
     "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
     "WHERE i.TYPE = 'DI'"
-
-//def dataItemValues = sql.dataSet('data_item_values')
 
 def dataItemNumberValueSql =
     "INSERT INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
@@ -246,7 +264,11 @@ while (rs.next()) {
 
                     if (numberValueBatchCount >= numberValueBatch) {
                         // Execute this batch.
-                        executeBatch()
+                        if (dryRun) {
+                            clearBatch()
+                        } else {
+                            executeBatch()
+                        }
                         println "Created ${numberValueBatch} DATA_ITEM_NUMBER_VALUEs in a batch."
                         numberValueBatchCount = 0
                     }
@@ -275,7 +297,11 @@ while (rs.next()) {
 
                     if (numberValueHistoryBatchCount >= numberValueHistoryBatch) {
                         // Execute this batch.
-                        executeBatch()
+                        if (dryRun) {
+                            clearBatch()
+                        } else {
+                            executeBatch()
+                        }
                         println "Created ${numberValueHistoryBatch} DATA_ITEM_NUMBER_VALUE_HISTORYs in a batch."
                         numberValueHistoryBatchCount = 0
                     }
@@ -312,7 +338,11 @@ while (rs.next()) {
 
                 if (textValueBatchCount >= textValueBatch) {
                     // Execute this batch.
-                    executeBatch()
+                    if (dryRun) {
+                        clearBatch()
+                    } else {
+                        executeBatch()
+                    }
                     println "Created ${textValueBatch} DATA_ITEM_TEXT_VALUEs in a batch."
                     textValueBatchCount = 0
                 }
@@ -342,7 +372,11 @@ while (rs.next()) {
 
                 if (textValueHistoryBatchCount >= textValueHistoryBatch) {
                     // Execute this batch.
-                    executeBatch()
+                    if (dryRun) {
+                        clearBatch()
+                    } else {
+                        executeBatch()
+                    }
                     println "Created ${textValueHistoryBatch} DATA_ITEM_TEXT_VALUE_HISTORYs in a batch."
                     textValueHistoryBatchCount = 0
                 }
@@ -353,37 +387,58 @@ while (rs.next()) {
 
 // Handle remaining Item Values in current batch.
 if (numberValueBatchCount > 0) {
-    dataItemNumberValueStatement.executeBatch()
+    if (dryRun) {
+        dataItemNumberValueStatement.clearBatch()
+    } else {
+        dataItemNumberValueStatement.executeBatch()
+    }
     println "Created ${numberValueBatchCount} DATA_ITEM_NUMBER_VALUEs in a batch."
     numberValueBatchCount = 0
 }
 if (textValueBatchCount > 0) {
-    dataItemTextValueStatement.executeBatch()
+    if (dryRun) {
+        dataItemTextValueStatement.clearBatch()
+    } else {
+        dataItemTextValueStatement.executeBatch()
+    }
     println "Created ${textValueBatchCount} DATA_ITEM_TEXT_VALUEs in a batch."
     textValueBatchCount = 0
 }
 if (numberValueHistoryBatchCount > 0) {
-    dataItemNumberValueHistoryStatement.executeBatch()
+    if (dryRun) {
+        dataItemNumberValueHistoryStatement.clearBatch()
+    } else {
+        dataItemNumberValueHistoryStatement.executeBatch()
+    }
     println "Created ${numberValueHistoryBatchCount} DATA_ITEM_NUMBER_VALUE_HISTORYs in a batch."
     numberValueHistoryBatchCount = 0
 }
 if (textValueHistoryBatchCount > 0) {
-    dataItemTextValueHistoryStatement.executeBatch()
+    if (dryRun) {
+        dataItemTextValueHistoryStatement.clearBatch()
+    } else {
+        dataItemTextValueHistoryStatement.executeBatch()
+    }
     println "Created ${textValueHistoryBatchCount} DATA_ITEM_TEXT_VALUE_HISTORYs in a batch."
     textValueHistoryBatchCount = 0
 }
 
 // Commit the data item data
-sql.commit()
-
-
+if (dryRun) {
+    sql.rollback()
+    sqlInsert.rollback()
+} else {
+    sql.commit()
+    sqlInsert.commit()
+}
 
 def configureCliBuilder() {
-  def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password]')
-  cli.h(longOpt: 'help', 'usage information')
-  cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "server name (default 'localhost')")
-  cli.d(argName: 'database', longOpt: 'database', args: 1, required: false, type: GString, "database name (default 'amee')")
-  cli.u(argName: 'user', longOpt: 'user', args: 1, required: false, type: GString, "username (default 'amee')")
-  cli.p(argName: 'password', longOpt: 'password', args: 1, required: false, type: GString, "password (default 'amee')")
-  return cli
+    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password] [-r]')
+    cli.h(longOpt: 'help', 'usage information')
+    cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "server name (default 'localhost')")
+    cli.d(argName: 'database', longOpt: 'database', args: 1, required: false, type: GString, "database name (default 'amee')")
+    cli.u(argName: 'user', longOpt: 'user', args: 1, required: false, type: GString, "username (default 'amee')")
+    cli.p(argName: 'password', longOpt: 'password', args: 1, required: false, type: GString, "password (default 'amee')")
+    cli.r(argName: 'dryrun', longOpt: 'dryrun', args: 0, required: false, type: GString, "dry-run (does not commit data)")
+    return cli
 }
