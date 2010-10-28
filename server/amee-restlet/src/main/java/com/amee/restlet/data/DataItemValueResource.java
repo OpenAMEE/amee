@@ -345,6 +345,9 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
             // Parse the startDate parameter into a Date object.
             Date startDate = new StartEndDate(form.getFirstValue("startDate"));
 
+            // TODO: PL-6577 - Just update the date here? Transaction will rollback.
+
+            // TODO: PL-6577 - Just compare to the EPOCH.
             // Can't amend the startDate of the first ItemValue in a history (startDate == DI.startDate)
             if (itemValue.getStartDate().equals(dataItem.getStartDate())) {
                 log.warn("doStore() badRequest - Trying to update the startDate of the first DIV in a history.");
@@ -352,12 +355,16 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
                 return;
             }
 
+            // TODO: PL-6577 - Shouldn't this be after the epoch?
             // The submitted startDate must be on or after the epoch.
             if (!dataItem.isWithinLifeTime(startDate)) {
                 log.warn("doStore() badRequest - Trying to update a DIV to start before the epoch.");
                 badRequest(APIFault.INVALID_DATE_RANGE);
                 return;
             }
+
+            // TODO: Check that the IV is still unique?
+            // !dataItem.isUnique(itemValueDefinition, startDate)
 
             // Update the startDate field, the parameter was valid.
             itemValue.setStartDate(startDate);

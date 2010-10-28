@@ -292,6 +292,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         StartEndDate startDate = new StartEndDate(getForm().getFirstValue("startDate"));
         names.remove("startDate");
 
+        // TODO: PL-6577 - Shouldn't this be after the epoch?
         // The submitted startDate must be on or after the epoch.
         if (!dataItem.isWithinLifeTime(startDate)) {
             log.warn("acceptRepresentation() badRequest - Trying to create a DIV before the epoch.");
@@ -326,6 +327,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
                 return;
             }
 
+            // TODO: PL-6577 - Is this check needed, given the check above? Can they be merged?
             if (startDate.getTime() == 0) {
                 // Normal
                 // We should never get here. checkDataItem should always create the first item value (startDate = EPOCH)
