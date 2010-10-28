@@ -35,6 +35,7 @@ import com.amee.restlet.RequestContext;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
+import com.amee.service.item.DataItemService;
 import com.amee.service.locale.LocaleService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -65,6 +66,9 @@ import java.util.*;
 public class DataItemValueResource extends AMEEResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private DataItemService dataItemService;
 
     @Autowired
     private LocaleService localeService;
@@ -360,6 +364,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
         }
 
         // Always invalidate the DataCategory caches.
+        dataItemService.clearItemValues();
         dataService.invalidate(dataItem.getDataCategory());
 
         // Update was a success.
@@ -385,6 +390,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
         int remaining = dataItem.getAllItemValues(itemValue.getItemValueDefinition().getPath()).size();
         if (remaining > 1) {
             dataService.remove(itemValue);
+            dataItemService.clearItemValues();
             dataService.invalidate(dataItem.getDataCategory());
             successfulDelete("/data/ " + dataItem.getFullPath());
         } else {

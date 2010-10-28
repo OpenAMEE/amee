@@ -5,6 +5,7 @@ import com.amee.domain.AMEEStatistics;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileItemValueResource;
+import com.amee.service.item.ProfileItemService;
 import com.amee.service.profile.ProfileService;
 import org.restlet.data.Form;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class ProfileItemValueFormAcceptor implements IItemValueFormAcceptor {
     private ProfileService profileService;
 
     @Autowired
+    private ProfileItemService profileItemService;
+
+    @Autowired
     private CalculationService calculationService;
 
     @Autowired
@@ -61,11 +65,11 @@ public class ProfileItemValueFormAcceptor implements IItemValueFormAcceptor {
         }
 
         // calculate, update statistics and clear caches
+        profileItemService.clearItemValues();
         calculationService.calculate(profileItem);
         ameeStatistics.updateProfileItemValue();
         profileService.clearCaches(resource.getProfile());
 
         return profileItemValue;
     }
-
 }

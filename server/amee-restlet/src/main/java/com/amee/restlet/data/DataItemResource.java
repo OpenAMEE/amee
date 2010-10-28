@@ -37,6 +37,7 @@ import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.data.DataSheetService;
+import com.amee.service.item.DataItemService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -72,6 +73,9 @@ public class DataItemResource extends AMEEResource implements Serializable {
 
     @Autowired
     private DataService dataService;
+
+    @Autowired
+    private DataItemService dataItemService;
 
     @Autowired
     private DataSheetService dataSheetService;
@@ -336,6 +340,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         }
 
         // Clear caches.
+        dataItemService.clearItemValues();
         dataService.invalidate(dataItem.getDataCategory());
 
         // Return successful creation of new DataItemValue.
@@ -381,6 +386,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         }
 
         // Clear caches.
+        dataItemService.clearItemValues();
         dataService.invalidate(dataItem.getDataCategory());
 
         // Return successful update of DataItem.
