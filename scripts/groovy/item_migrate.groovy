@@ -20,6 +20,8 @@ def user = "amee"
 if (opt.u) user = opt.u
 def password = "amee"
 if (opt.p) password = opt.p
+def dryRun = false
+if (opt.r) dryRun = true
 
 // Configure DataSource.
 def sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
@@ -53,7 +55,11 @@ profileItems.each { row ->
 
         if (batchCount >= profileItemBatch) {
             // Execute this batch.
-            executeBatch();
+            if (dryRun) {
+                clearBatch()
+            } else {
+                executeBatch()  
+            }
             println "Created ${batchCount} PROFILE_ITEMs in a batch."
             batchCount = 0
         }
@@ -62,11 +68,15 @@ profileItems.each { row ->
 
 // Handle remaining Item Values in current batch.
 if (batchCount > 0) {
-    profileItemStatement.executeBatch()
+    if (!dryRun) profileItemStatement.executeBatch()
     println "Created ${batchCount} PROFILE_ITEMs in a batch."
     batchCount = 0
 }
-sql.commit()
+if (dryRun) {
+    sql.rollback()
+} else {
+    sql.commit()
+}
 
 // Migrate DATA_ITEMs
 def dataItems = itemDataSet.findAll { it.type == 'DI' }
@@ -91,7 +101,11 @@ dataItems.each { row ->
 
         if (batchCount >= dataItemBatch) {
             // Execute this batch.
-            executeBatch();
+            if (dryRun) {
+                clearBatch()
+            } else {
+                executeBatch()
+            }
             println "Created ${batchCount} DATA_ITEMs in a batch."
             batchCount = 0;
         }
@@ -100,19 +114,28 @@ dataItems.each { row ->
 
 // Handle remaining Item Values in current batch.
 if (batchCount > 0) {
-    dataItemStatement.executeBatch()
+    if (dryRun) {
+        dataItemStatement.clearBatch()
+    } else {
+        dataItemStatement.executeBatch()
+    }
     println "Created ${batchCount} DATA_ITEMs in a batch."
     batchCount = 0
 }
-sql.commit()
+if (dryRun) {
+    sql.rollback()
+} else {
+    sql.commit()
+}
 
 
 def configureCliBuilder() {
-  def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password]')
-  cli.h(longOpt: 'help', 'usage information')
-  cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "server name (default 'localhost')")
-  cli.d(argName: 'database', longOpt: 'database', args: 1, required: false, type: GString, "database name (default 'amee')")
-  cli.u(argName: 'user', longOpt: 'user', args: 1, required: false, type: GString, "username (default 'amee')")
-  cli.p(argName: 'password', longOpt: 'password', args: 1, required: false, type: GString, "password (default 'amee')")
-  return cli
+    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password] [-r]')
+    cli.h(longOpt: 'help', 'usage information')
+    cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "server name (default 'localhost')")
+    cli.d(argName: 'database', longOpt: 'database', args: 1, required: false, type: GString, "database name (default 'amee')")
+    cli.u(argName: 'user', longOpt: 'user', args: 1, required: false, type: GString, "username (default 'amee')")
+    cli.p(argName: 'password', longOpt: 'password', args: 1, required: false, type: GString, "password (default 'amee')")
+    cli.r(argName: 'dryrun', longOpt: 'dryrun', args: 0, required: false, type: GString, "dry-run (does not commit data)")
+    return cli
 }
