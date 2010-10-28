@@ -1,4 +1,15 @@
+/*
+ * To redirect stdout and stderr:
+ * groovy item_value_migrate.groovy 1> out.log 2> err.log
+ *
+ * This script requires the MySQL connector. Copy the jar to ~/.groovy/lib/
+ *
+ */
+
 import groovy.sql.Sql
+import java.sql.ResultSet
+import java.sql.Statement
+import java.sql.DatabaseMetaData
 
 def profileItemBatch = 1000
 def dataItemBatch = 1000
@@ -27,28 +38,47 @@ if (opt.r) dryRun = true
 def sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
 sql.connection.autoCommit = false
 
-def itemDataSet = sql.dataSet('ITEM')
+def sqlInsert = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
+sqlInsert.connection.autoCommit = false
+
+// Check for scolling.
+DatabaseMetaData dbmd = sql.connection.getMetaData();
+int JDBCVersion = dbmd.getJDBCMajorVersion();
+boolean srs = dbmd.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY);
+if (JDBCVersion > 2 || srs == true) {
+  // println "ResultSet scrolling is supported.";
+} else {
+  println "ResultSet scrolling is NOT supported.";
+  return;
+}
+
+// Get scrollable Statement.
+Statement st = sql.connection.createStatement(
+        ResultSet.TYPE_FORWARD_ONLY,
+        ResultSet.CONCUR_READ_ONLY);
+st.setFetchSize(Integer.MIN_VALUE);
+
 def batchCount = 0
 
 // Migrate PROFILE_ITEMs
-def profileItems = itemDataSet.findAll { it.type == 'PI' }
 def profileItemSql = "INSERT INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS) " +
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-def profileItemStatement = sql.connection.prepareStatement(profileItemSql)
-profileItems.each { row ->
+def profileItemStatement = sqlInsert.connection.prepareStatement(profileItemSql)
 
+def rs = st.executeQuery("SELECT ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS FROM ITEM WHERE TYPE = 'PI'")
+while (rs.next()) {
     profileItemStatement.with {
-        setObject(1, row.ID)
-        setObject(2, row.UID)
-        setObject(3, row.NAME)
-        setObject(4, row.CREATED)
-        setObject(5, row.MODIFIED)
-        setObject(6, row.START_DATE)
-        setObject(7, row.END_DATE)
-        setObject(8, row.ITEM_DEFINITION_ID)
-        setObject(9, row.DATA_ITEM_ID)
-        setObject(10, row.PROFILE_ID)
-        setObject(11, row.STATUS)
+        setObject(1, rs.getLong("ID"))
+        setObject(2, rs.getString("UID"))
+        setObject(3, rs.getString("NAME"))
+        setObject(4, rs.getDate("CREATED"))
+        setObject(5, rs.getDate("MODIFIED"))
+        setObject(6, rs.getDate("START_DATE"))
+        setObject(7, rs.getDate("END_DATE"))
+        setObject(8, rs.getLong("ITEM_DEFINITION_ID"))
+        setObject(9, rs.getLong("DATA_ITEM_ID"))
+        setObject(10, rs.getLong("PROFILE_ID"))
+        setObject(11, rs.getInt("STATUS"))
 
         addBatch()
         batchCount++
@@ -74,27 +104,34 @@ if (batchCount > 0) {
 }
 if (dryRun) {
     sql.rollback()
+    sqlInsert.rollback()
 } else {
     sql.commit()
+    sqlInsert.commit()
 }
 
 // Migrate DATA_ITEMs
-def dataItems = itemDataSet.findAll { it.type == 'DI' }
+st = sql.connection.createStatement(
+        ResultSet.TYPE_FORWARD_ONLY,
+        ResultSet.CONCUR_READ_ONLY);
+st.setFetchSize(Integer.MIN_VALUE);
+
 def dataItemSql = "INSERT INTO DATA_ITEM (ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS) " +
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-def dataItemStatement = sql.connection.prepareStatement(dataItemSql)
-dataItems.each { row ->
+def dataItemStatement = sqlInsert.connection.prepareStatement(dataItemSql)
 
+rs = st.executeQuery("SELECT ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS FROM ITEM WHERE TYPE = 'DI'")
+while (rs.next()) {
     dataItemStatement.with {
-        setObject(1, row.ID)
-        setObject(2, row.UID)
-        setObject(3, row.NAME)
-        setObject(4, row.PATH)
-        setObject(5, row.CREATED)
-        setObject(6, row.MODIFIED)
-        setObject(7, row.ITEM_DEFINITION_ID)
-        setObject(8, row.DATA_CATEGORY_ID)
-        setObject(9, row.STATUS)
+        setObject(1, rs.getLong("ID"))
+        setObject(2, rs.getString("UID"))
+        setObject(3, rs.getString("NAME"))
+        setObject(4, rs.getString("PATH"))
+        setObject(5, rs.getDate("CREATED"))
+        setObject(6, rs.getDate("MODIFIED"))
+        setObject(7, rs.getLong("ITEM_DEFINITION_ID"))
+        setObject(8, rs.getLong("DATA_CATEGORY_ID"))
+        setObject(9, rs.getInt("STATUS"))
 
         addBatch()
         batchCount++
@@ -124,8 +161,10 @@ if (batchCount > 0) {
 }
 if (dryRun) {
     sql.rollback()
+    sqlInsert.rollback()
 } else {
     sql.commit()
+    sqlInsert.commit()
 }
 
 
