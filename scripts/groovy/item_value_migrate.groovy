@@ -1,6 +1,4 @@
-/* You will probably need to increase the java heap space before running this script:
- * export JAVA_OPTS='-Xmx1G'
- *
+/*
  * To redirect stdout and stderr:
  * groovy item_value_migrate.groovy 1> out.log 2> err.log
  *
