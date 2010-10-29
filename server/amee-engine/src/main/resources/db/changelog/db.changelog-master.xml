@@ -11,4 +11,5 @@
     <include relativeToChangelogFile="true" file="db.changelog-3-divh.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-4-data-types.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-5-drop-environment.xml"/>
+    <include relativeToChangelogFile="true" file="db.changelog-6-fix_item_values.xml"/>
 </databaseChangeLog>
