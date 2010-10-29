@@ -5,7 +5,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
     <changeSet id="6-1" author="david">
-        <comment>Change VALUE_DEFINITION (PL-6472)</comment>
+        <comment>Change VALUE_DEFINITION to text (PL-6472)</comment>
         <update tableName="ITEM_VALUE_DEFINITION">
             <column name="VALUE_DEFINITION_ID" value="17"/>
             <where>ID IN (83, 129)</where>
@@ -13,10 +13,18 @@
     </changeSet>
 
     <changeSet id="6-2" author="david">
-        <comment>Update ITEM VALUE (PL-6472)</comment>
+        <comment>Fix corrupt ITEM VALUE (PL-6472)</comment>
         <update tableName="ITEM_VALUE">
             <column name="VALUE" value="-1.0"/>
             <where>ID=1952098</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="6-3" author="david">
+        <comment>Mark DATA ITEM E55F1E9A9F34 as deleted (PL-6472)</comment>
+        <update tableName="ITEM">
+            <column name="STATUS" value="0"/>
+            <where>ID=1491259</where>
         </update>
     </changeSet>
 </databaseChangeLog>
