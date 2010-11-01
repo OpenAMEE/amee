@@ -106,8 +106,8 @@ while (rs.next()) {
                 setObject(3, rs.getInt("STATUS"))
                 def rowVal = rs.getString("VALUE")
                 setObject(4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
-                setObject(5, rs.getDate("CREATED"))
-                setObject(6, rs.getDate("MODIFIED"))
+                setObject(5, rs.getTimestamp("CREATED"))
+                setObject(6, rs.getTimestamp("MODIFIED"))
                 setObject(7, rs.getLong("PROFILE_ITEM_ID"))
                 setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
                 def rowUnit = rs.getString("UNIT")
@@ -149,8 +149,8 @@ while (rs.next()) {
             } else {
                 setObject(4, value)
             }
-            setObject(5, rs.getDate("CREATED"))
-            setObject(6, rs.getDate("MODIFIED"))
+            setObject(5, rs.getTimestamp("CREATED"))
+            setObject(6, rs.getTimestamp("MODIFIED"))
             setObject(7, rs.getLong("PROFILE_ITEM_ID"))
             setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
 
@@ -245,7 +245,7 @@ while (rs.next()) {
         // Handle numbers
         try {
 
-            if (rs.getDate("START_DATE").toString().equals('1970-01-01 00:00:00.0')) {
+            if (rs.getTimestamp("START_DATE").toString().equals('1970-01-01 00:00:00.0')) {
 
                 // Add to standard table
                 dataItemNumberValueStatement.with {
@@ -254,8 +254,8 @@ while (rs.next()) {
                     setObject(3, rs.getInt("STATUS"))
                     def rowVal = rs.getString("VALUE")
                     setObject(4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
-                    setObject(5, rs.getDate("CREATED"))
-                    setObject(6, rs.getDate("MODIFIED"))
+                    setObject(5, rs.getTimestamp("CREATED"))
+                    setObject(6, rs.getTimestamp("MODIFIED"))
                     setObject(7, rs.getLong("DATA_ITEM_ID"))
                     setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
                     def rowUnit = rs.getString("UNIT")
@@ -286,15 +286,15 @@ while (rs.next()) {
                     setObject(3, rs.getInt("STATUS"))
                     def rowVal = rs.getString("VALUE")
                     setObject(4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
-                    setObject(5, rs.getDate("CREATED"))
-                    setObject(6, rs.getDate("MODIFIED"))
+                    setObject(5, rs.getTimestamp("CREATED"))
+                    setObject(6, rs.getTimestamp("MODIFIED"))
                     setObject(7, rs.getLong("DATA_ITEM_ID"))
                     setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
                     def rowUnit = rs.getString("UNIT")
                     setObject(9, (rowUnit ? rowUnit : ''))
                     def perUnit = rs.getString("PER_UNIT")
                     setObject(10, (perUnit ? perUnit : ''))
-                    setObject(11, rs.getDate("START_DATE"))
+                    setObject(11, rs.getTimestamp("START_DATE"))
 
                     addBatch()
                     numberValueHistoryBatchCount++
@@ -318,7 +318,7 @@ while (rs.next()) {
     } else {
 
         // Handle text
-        if (rs.getDate("START_DATE").toString().equals('1970-01-01 00:00:00.0')) {
+        if (rs.getTimestamp("START_DATE").toString().equals('1970-01-01 00:00:00.0')) {
             dataItemTextValueStatement.with {
                 setObject(1, rs.getLong("ID"))
                 setObject(2, rs.getString("UID"))
@@ -332,8 +332,8 @@ while (rs.next()) {
                 } else {
                     setObject(4, value)
                 }
-                setObject(5, rs.getDate("CREATED"))
-                setObject(6, rs.getDate("MODIFIED"))
+                setObject(5, rs.getTimestamp("CREATED"))
+                setObject(6, rs.getTimestamp("MODIFIED"))
                 setObject(7, rs.getLong("DATA_ITEM_ID"))
                 setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
 
@@ -365,11 +365,11 @@ while (rs.next()) {
                 } else {
                     setObject(4, value)
                 }
-                setObject(5, rs.getDate("CREATED"))
-                setObject(6, rs.getDate("MODIFIED"))
+                setObject(5, rs.getTimestamp("CREATED"))
+                setObject(6, rs.getTimestamp("MODIFIED"))
                 setObject(7, rs.getLong("DATA_ITEM_ID"))
                 setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
-                setObject(9, rs.getDate("START_DATE"))
+                setObject(9, rs.getTimestamp("START_DATE"))
 
                 addBatch()
                 textValueHistoryBatchCount++
