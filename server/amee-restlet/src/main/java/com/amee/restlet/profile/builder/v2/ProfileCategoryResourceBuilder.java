@@ -119,8 +119,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
                 JSONArray jsonProfileItems = new JSONArray();
                 obj.put("profileItems", jsonProfileItems);
                 for (ProfileItem pi : profileItems) {
-                    setProfileItemBuilder(resource.getProfileBrowser(), pi);
-                    jsonProfileItems.put(pi.getJSONObject(false));
+                    jsonProfileItems.put(getProfileItemBuilder(resource.getProfileBrowser(), pi).getJSONObject(false));
                 }
 
                 // pager
@@ -199,8 +198,8 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
                 Element profileItemsElement = document.createElement("ProfileItems");
                 element.appendChild(profileItemsElement);
                 for (ProfileItem pi : profileItems) {
-                    setProfileItemBuilder(resource.getProfileBrowser(), pi);
-                    profileItemsElement.appendChild(pi.getElement(document, false));
+                    profileItemsElement.appendChild(
+                            getProfileItemBuilder(resource.getProfileBrowser(), pi).getElement(document, false));
                 }
 
                 // pager
@@ -293,11 +292,11 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         return totalAmount;
     }
 
-    private void setProfileItemBuilder(ProfileBrowser browser, ProfileItem pi) {
+    private ProfileItemBuilder getProfileItemBuilder(ProfileBrowser browser, ProfileItem pi) {
         if (browser.requestedCO2InExternalUnit()) {
-            pi.setBuilder(new ProfileItemBuilder(pi, browser.getCo2AmountUnit()));
+            return new ProfileItemBuilder(pi, browser.getCo2AmountUnit());
         } else {
-            pi.setBuilder(new ProfileItemBuilder(pi));
+            return new ProfileItemBuilder(pi);
         }
     }
 

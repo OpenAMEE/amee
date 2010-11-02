@@ -40,8 +40,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
     public JSONObject getJSONObject(ProfileItemResource resource) throws JSONException {
         JSONObject obj = new JSONObject();
         ProfileItem profileItem = resource.getProfileItem();
-        setProfileItemBuilder(profileItem);
-        obj.put("profileItem", profileItem.getJSONObject(true));
+        obj.put("profileItem", new ProfileItemBuilder(profileItem).getJSONObject(true));
         obj.put("path", resource.getProfileItem().getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
         return obj;
@@ -49,9 +48,8 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
 
     public Element getElement(ProfileItemResource resource, Document document) {
         ProfileItem profileItem = resource.getProfileItem();
-        setProfileItemBuilder(profileItem);
         Element element = document.createElement("ProfileItemResource");
-        element.appendChild(profileItem.getElement(document, true));
+        element.appendChild(new ProfileItemBuilder(profileItem).getElement(document, true));
         element.appendChild(XMLUtils.getElement(document, "Path", resource.getProfileItem().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
@@ -74,9 +72,5 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
 
     public org.apache.abdera.model.Element getAtomElement(ProfileItemResource resource) {
         throw new UnsupportedOperationException();
-    }
-
-    private void setProfileItemBuilder(ProfileItem pi) {
-        pi.setBuilder(new ProfileItemBuilder(pi));
     }
 }

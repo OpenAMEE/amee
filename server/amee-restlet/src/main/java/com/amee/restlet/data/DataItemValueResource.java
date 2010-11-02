@@ -26,6 +26,7 @@ import com.amee.domain.LocaleConstants;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.builder.DataItemBuilder;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.data.builder.v2.ItemValueInListBuilder;
 import com.amee.platform.science.StartEndDate;
@@ -34,6 +35,7 @@ import com.amee.restlet.RequestContext;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
+import com.amee.service.item.DataItemService;
 import com.amee.service.locale.LocaleService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -64,6 +66,9 @@ import java.util.*;
 public class DataItemValueResource extends AMEEResource implements Serializable {
 
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private DataItemService dataItemService;
 
     @Autowired
     private LocaleService localeService;
@@ -240,38 +245,36 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
+        DataItemBuilder dataItemBuilder = new DataItemBuilder(dataItem);
         JSONObject obj = new JSONObject();
         if (itemValue != null) {
-            itemValue.setBuilder(new ItemValueBuilder(itemValue));
-            obj.put("itemValue", itemValue.getJSONObject());
+            obj.put("itemValue", new ItemValueBuilder(itemValue, dataItemBuilder).getJSONObject());
         } else {
             JSONArray values = new JSONArray();
             for (ItemValue iv : itemValues) {
-                iv.setBuilder(new ItemValueInListBuilder(iv));
-                values.put(iv.getJSONObject(false));
+                values.put(new ItemValueInListBuilder(iv).getJSONObject(false));
             }
             obj.put("itemValues", values);
         }
-        obj.put("dataItem", dataItem.getIdentityJSONObject());
+        obj.put("dataItem", dataItemBuilder.getIdentityJSONObject());
         obj.put("path", dataItem.getFullPath() + "/" + getRequest().getAttributes().get("itemPath").toString());
         return obj;
     }
 
     @Override
     public Element getElement(Document document) {
+        DataItemBuilder dataItemBuilder = new DataItemBuilder(dataItem);
         Element element = document.createElement("DataItemValueResource");
         if (itemValue != null) {
-            itemValue.setBuilder(new ItemValueBuilder(itemValue));
-            element.appendChild(itemValue.getElement(document));
+            element.appendChild(new ItemValueBuilder(itemValue, dataItemBuilder).getElement(document));
         } else {
             Element values = document.createElement("ItemValues");
             for (ItemValue iv : itemValues) {
-                iv.setBuilder(new ItemValueInListBuilder(iv));
-                values.appendChild(iv.getElement(document, false));
+                values.appendChild(new ItemValueInListBuilder(iv).getElement(document, false));
             }
             element.appendChild(values);
         }
-        element.appendChild(dataItem.getIdentityElement(document));
+        element.appendChild(dataItemBuilder.getIdentityElement(document));
         element.appendChild(XMLUtils.getElement(document, "Path", dataItem.getFullPath() + "/" + getRequest().getAttributes().get("itemPath").toString()));
         return element;
     }
@@ -342,6 +345,9 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
             // Parse the startDate parameter into a Date object.
             Date startDate = new StartEndDate(form.getFirstValue("startDate"));
 
+            // TODO: PL-6577 - Just update the date here? Transaction will rollback.
+
+            // TODO: PL-6577 - Just compare to the EPOCH.
             // Can't amend the startDate of the first ItemValue in a history (startDate == DI.startDate)
             if (itemValue.getStartDate().equals(dataItem.getStartDate())) {
                 log.warn("doStore() badRequest - Trying to update the startDate of the first DIV in a history.");
@@ -349,6 +355,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
                 return;
             }
 
+            // TODO: PL-6577 - Shouldn't this be after the epoch?
             // The submitted startDate must be on or after the epoch.
             if (!dataItem.isWithinLifeTime(startDate)) {
                 log.warn("doStore() badRequest - Trying to update a DIV to start before the epoch.");
@@ -356,11 +363,15 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
                 return;
             }
 
+            // TODO: Check that the IV is still unique?
+            // !dataItem.isUnique(itemValueDefinition, startDate)
+
             // Update the startDate field, the parameter was valid.
             itemValue.setStartDate(startDate);
         }
 
         // Always invalidate the DataCategory caches.
+        dataItemService.clearItemValues();
         dataService.invalidate(dataItem.getDataCategory());
 
         // Update was a success.
@@ -386,6 +397,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
         int remaining = dataItem.getAllItemValues(itemValue.getItemValueDefinition().getPath()).size();
         if (remaining > 1) {
             dataService.remove(itemValue);
+            dataItemService.clearItemValues();
             dataService.invalidate(dataItem.getDataCategory());
             successfulDelete("/data/ " + dataItem.getFullPath());
         } else {

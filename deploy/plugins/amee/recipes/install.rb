@@ -1,3 +1,5 @@
+require 'fileutils'
+
 namespace :install do
   
   desc "Package AMEE and install into the SCM"
