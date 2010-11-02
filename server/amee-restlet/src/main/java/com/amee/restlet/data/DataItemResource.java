@@ -27,6 +27,7 @@ import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.builder.DataItemBuilder;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.platform.science.*;
@@ -36,6 +37,7 @@ import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.data.DataSheetService;
+import com.amee.service.item.DataItemService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,6 +73,9 @@ public class DataItemResource extends AMEEResource implements Serializable {
 
     @Autowired
     private DataService dataService;
+
+    @Autowired
+    private DataItemService dataItemService;
 
     @Autowired
     private DataSheetService dataSheetService;
@@ -171,7 +176,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         Amount amount = returnAmounts.defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         JSONObject obj = new JSONObject();
-        obj.put("dataItem", dataItem.getJSONObject(true, false));
+        obj.put("dataItem", new DataItemBuilder(dataItem).getJSONObject(true, false));
         obj.put("path", dataItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
         obj.put("amountPerMonth", amount.convert(kgPerMonth).getValue());
@@ -236,7 +241,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         Amount amount = returnAmounts.defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         Element element = document.createElement("DataItemResource");
-        element.appendChild(dataItem.getElement(document, true, false));
+        element.appendChild(new DataItemBuilder(dataItem).getElement(document, true, false));
         element.appendChild(XMLUtils.getElement(document, "Path", dataItem.getFullPath()));
         element.appendChild(userValueChoices.getElement(document));
         element.appendChild(XMLUtils.getElement(document, "AmountPerMonth", amount.convert(kgPerMonth).toString()));
@@ -287,6 +292,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         StartEndDate startDate = new StartEndDate(getForm().getFirstValue("startDate"));
         names.remove("startDate");
 
+        // TODO: PL-6577 - Shouldn't this be after the epoch?
         // The submitted startDate must be on or after the epoch.
         if (!dataItem.isWithinLifeTime(startDate)) {
             log.warn("acceptRepresentation() badRequest - Trying to create a DIV before the epoch.");
@@ -321,12 +327,22 @@ public class DataItemResource extends AMEEResource implements Serializable {
                 return;
             }
 
-            // Create the new ItemValue entity.
-            ItemValue newDataItemValue = new ItemValue(itemValueDefinition, dataItem, getForm().getFirstValue(name));
-            newDataItemValue.setStartDate(startDate);
+            // TODO: PL-6577 - Is this check needed, given the check above? Can they be merged?
+            if (startDate.getTime() == 0) {
+                // Normal
+                // We should never get here. checkDataItem should always create the first item value (startDate = EPOCH)
+                log.warn("acceptRepresentation() badRequest - Trying to create another DIV with the startDate as the EPOCH.");
+                badRequest();
+            } else {
+                // History
+                ItemValue newDataItemValue = new ItemValue(itemValueDefinition, dataItem, getForm().getFirstValue(name), true);
+                newDataItemValue.setStartDate(startDate);
+                dataService.persist(newDataItemValue);
+            }
         }
 
         // Clear caches.
+        dataItemService.clearItemValues();
         dataService.invalidate(dataItem.getDataCategory());
 
         // Return successful creation of new DataItemValue.
@@ -372,6 +388,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         }
 
         // Clear caches.
+        dataItemService.clearItemValues();
         dataService.invalidate(dataItem.getDataCategory());
 
         // Return successful update of DataItem.

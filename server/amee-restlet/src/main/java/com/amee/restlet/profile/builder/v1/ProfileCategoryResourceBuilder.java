@@ -153,14 +153,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         if (!resource.getProfileItems().isEmpty()) {
             if (resource.getProfileItems().size() == 1) {
                 ProfileItem pi = resource.getProfileItems().get(0);
-                setBuilder(pi);
-                obj.put("profileItem", pi.getJSONObject(true));
+                obj.put("profileItem", new ProfileItemBuilder(pi).getJSONObject(true));
             } else {
                 JSONArray profileItems = new JSONArray();
                 obj.put("profileItems", profileItems);
                 for (ProfileItem pi : resource.getProfileItems()) {
-                    setBuilder(pi);
-                    profileItems.put(pi.getJSONObject(false));
+                    profileItems.put(new ProfileItemBuilder(pi).getJSONObject(false));
                 }
             }
         }
@@ -261,14 +259,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         if (!resource.getProfileItems().isEmpty()) {
             if (resource.getProfileItems().size() == 1) {
                 ProfileItem pi = resource.getProfileItems().get(0);
-                setBuilder(pi);
-                element.appendChild(pi.getElement(document, false));
+                element.appendChild(new ProfileItemBuilder(pi).getElement(document, false));
             } else {
                 org.w3c.dom.Element profileItemsElement = document.createElement("ProfileItems");
                 element.appendChild(profileItemsElement);
                 for (ProfileItem pi : resource.getProfileItems()) {
-                    setBuilder(pi);
-                    profileItemsElement.appendChild(pi.getElement(document, false));
+                    profileItemsElement.appendChild(new ProfileItemBuilder(pi).getElement(document, false));
                 }
             }
         }
@@ -276,10 +272,6 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
     public org.apache.abdera.model.Element getAtomElement(ProfileCategoryResource resource) {
         throw new UnsupportedOperationException();
-    }
-
-    private void setBuilder(ProfileItem pi) {
-        pi.setBuilder(new ProfileItemBuilder(pi));
     }
 
     private Sheet getSheet(ProfileCategoryResource resource, DataCategory dataCategory) {

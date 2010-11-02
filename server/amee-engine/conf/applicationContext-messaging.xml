@@ -50,6 +50,8 @@
         <property name="autoDelete" value="true"/>
     </bean>
 
+    <bean class="com.amee.service.invalidation.InvalidationMessageConsumer"/>
+
     <!--<bean id="calculationExchange" class="com.amee.messaging.config.ExchangeConfig">-->
     <!--<property name="name" value="platform.${MESSAGING_SCOPE}.calculation"/>-->
     <!--<property name="type" value="direct"/>-->

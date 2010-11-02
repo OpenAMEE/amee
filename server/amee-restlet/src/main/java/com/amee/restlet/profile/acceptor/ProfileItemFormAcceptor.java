@@ -3,11 +3,12 @@ package com.amee.restlet.profile.acceptor;
 import com.amee.calculation.service.CalculationService;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.data.ItemValue;
-import com.amee.domain.profile.ProfileItem;
 import com.amee.domain.profile.MonthDate;
+import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.utils.APIFault;
+import com.amee.service.item.ProfileItemService;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -48,6 +49,9 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
     private ProfileService profileService;
 
     @Autowired
+    private ProfileItemService profileItemService;
+
+    @Autowired
     private CalculationService calculationService;
 
     @Autowired
@@ -65,23 +69,17 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
         // Obtain the ProfileItem we'll attempt to update.
         profileItem = resource.getProfileItem();
 
-        // Work on a temporary copy of the ProfileItem.
-        ProfileItem profileItemCopy = profileItem.getCopy();
-
         // Ensure updated ProfileItem does not break rules for ProfileItems.
-        updateProfileItem(resource, profileItemCopy, form);
+        updateProfileItem(resource, profileItem, form);
 
         // Ensure endDate is not before startDate
-        if (profileItemCopy.getEndDate() != null && profileItemCopy.getEndDate().before(profileItemCopy.getStartDate())) {
+        if ((profileItem.getEndDate() != null) && profileItem.getEndDate().before(profileItem.getStartDate())) {
             resource.badRequest(APIFault.INVALID_DATE_RANGE);
             return profileItems;
         }
 
         // ProfileItem must be unique with the Profile.
-        if (profileService.isUnique(profileItemCopy)) {
-
-            // Update persistent ProfileItem
-            updateProfileItem(resource, profileItem, form);
+        if (profileService.isUnique(profileItem)) {
 
             // Update ItemValues if supplied
             for (String name : form.getNames()) {
@@ -102,6 +100,7 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
             log.debug("storeRepresentation() - ProfileItem updated");
 
             // All done. Recalculate, store, update statistics count and clear caches.
+            profileItemService.clearItemValues();
             calculationService.calculate(profileItem);
             profileItems.add(profileItem);
             ameeStatistics.updateProfileItem();

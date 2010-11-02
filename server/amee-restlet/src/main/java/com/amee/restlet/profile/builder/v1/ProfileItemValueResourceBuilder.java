@@ -24,6 +24,7 @@ package com.amee.restlet.profile.builder.v1;
 import com.amee.base.utils.XMLUtils;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v1.ItemValueBuilder;
+import com.amee.domain.profile.builder.v1.ProfileItemBuilder;
 import com.amee.restlet.profile.ProfileItemValueResource;
 import com.amee.restlet.profile.builder.IProfileItemValueResourceBuilder;
 import org.json.JSONException;
@@ -42,8 +43,7 @@ public class ProfileItemValueResourceBuilder implements IProfileItemValueResourc
     public Element getElement(ProfileItemValueResource resource, Document document) {
         ItemValue itemValue = resource.getProfileItemValue();
         Element element = document.createElement("ProfileItemValueResource");
-        itemValue.setBuilder(new ItemValueBuilder(itemValue));
-        element.appendChild(itemValue.getElement(document));
+        element.appendChild(new ItemValueBuilder(itemValue, new ProfileItemBuilder(resource.getProfileItem())).getElement(document));
         element.appendChild(XMLUtils.getElement(document, "Path", resource.getProfileItemValue().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
@@ -69,8 +69,7 @@ public class ProfileItemValueResourceBuilder implements IProfileItemValueResourc
     public JSONObject getJSONObject(ProfileItemValueResource resource) throws JSONException {
         JSONObject obj = new JSONObject();
         ItemValue itemValue = resource.getProfileItemValue();
-        itemValue.setBuilder(new ItemValueBuilder(itemValue));
-        obj.put("itemValue", itemValue.getJSONObject(true));
+        obj.put("itemValue", new ItemValueBuilder(itemValue, new ProfileItemBuilder(resource.getProfileItem())).getJSONObject(true));
         obj.put("path", resource.getProfileItemValue().getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
         return obj;

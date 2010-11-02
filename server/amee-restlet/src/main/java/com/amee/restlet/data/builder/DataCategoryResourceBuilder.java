@@ -5,6 +5,7 @@ import com.amee.domain.LocaleConstants;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
+import com.amee.domain.data.builder.DataItemBuilder;
 import com.amee.domain.sheet.Column;
 import com.amee.domain.sheet.Sheet;
 import com.amee.domain.sheet.SortOrder;
@@ -127,12 +128,12 @@ public class DataCategoryResourceBuilder {
 
             // DataItems
             if (resource.getModDataItem() != null) {
-                obj.put("dataItem", resource.getModDataItem().getJSONObject(true));
+                obj.put("dataItem", new DataItemBuilder(resource.getModDataItem()).getJSONObject(true));
             } else if (resource.getNewDataItems() != null) {
                 JSONArray dataItems = new JSONArray();
                 obj.put("dataItems", dataItems);
                 for (DataItem di : resource.getNewDataItems()) {
-                    dataItems.put(di.getJSONObject(false));
+                    dataItems.put(new DataItemBuilder(di).getJSONObject(false));
                 }
             }
         }
@@ -192,12 +193,12 @@ public class DataCategoryResourceBuilder {
 
             // DataItems
             if (resource.getModDataItem() != null) {
-                element.appendChild(resource.getModDataItem().getElement(document, false));
+                element.appendChild(new DataItemBuilder(resource.getModDataItem()).getElement(document, false));
             } else if (resource.getNewDataItems() != null) {
                 Element dataItemsElement = document.createElement("DataItems");
                 element.appendChild(dataItemsElement);
                 for (DataItem di : resource.getNewDataItems()) {
-                    dataItemsElement.appendChild(di.getElement(document, false));
+                    dataItemsElement.appendChild(new DataItemBuilder(di).getElement(document, false));
                 }
             }
         }
