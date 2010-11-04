@@ -1,10 +1,9 @@
 package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.AdminBrowser;
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.restlet.AuthorizeResource;
-import com.amee.service.environment.GroupService;
+import com.amee.service.auth.GroupService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Context;

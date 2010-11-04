@@ -22,15 +22,14 @@
 package com.amee.restlet;
 
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.IAMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.data.DataCategory;
 import com.amee.service.auth.AuthorizationService;
+import com.amee.service.auth.GroupService;
 import com.amee.service.data.DataService;
-import com.amee.service.environment.GroupService;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.springframework.beans.factory.annotation.Autowired;
