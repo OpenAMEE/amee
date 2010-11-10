@@ -4,9 +4,8 @@
 
 . curl.conf
 
-startDate="2009-08-09T18:00:00%2B0000"
-data="kWhPerYear=200&startDate=${startDate}"
-amee_url="/data/home/appliances/computers/generic/B32624F8CD5F"
+data="newObjectType=DI&subregion=DDDD&massCO2PerEnergy=111&massN2OPerEnergy=222&massCH4PerEnergy=0.1&source=Diggory"
+amee_url="/data/business/energy/us/subregion"
 
 type="xml"
 curl -H "Accept:application/${type}" \
