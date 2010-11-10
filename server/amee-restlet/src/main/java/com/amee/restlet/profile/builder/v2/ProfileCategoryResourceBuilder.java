@@ -2,6 +2,7 @@ package com.amee.restlet.profile.builder.v2;
 
 import com.amee.base.utils.XMLUtils;
 import com.amee.calculation.service.ProRataProfileService;
+import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
@@ -102,9 +103,9 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
             // add Data Categories to children
             JSONArray dataCategories = new JSONArray();
-            for (DataCategory dc : dataService.getDataCategories(resource.getDataCategory())) {
+            for (IDataCategoryReference dc : dataService.getDataCategories(resource.getDataCategory())) {
                 JSONObject dcObj = new JSONObject();
-                dcObj.put("uid", dc.getUid());
+                dcObj.put("uid", dc.getEntityUid());
                 dcObj.put("name", dc.getName());
                 dcObj.put("path", dc.getPath());
                 dataCategories.put(dcObj);
@@ -180,9 +181,9 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
             // add Data Categories
             Element dataCategoriesElement = document.createElement("ProfileCategories");
-            for (DataCategory dc : dataService.getDataCategories(resource.getDataCategory())) {
+            for (IDataCategoryReference dc : dataService.getDataCategories(resource.getDataCategory())) {
                 Element dcElement = document.createElement("DataCategory");
-                dcElement.setAttribute("uid", dc.getUid());
+                dcElement.setAttribute("uid", dc.getEntityUid());
                 dcElement.appendChild(XMLUtils.getElement(document, "Name", dc.getName()));
                 dcElement.appendChild(XMLUtils.getElement(document, "Path", dc.getPath()));
                 dataCategoriesElement.appendChild(dcElement);

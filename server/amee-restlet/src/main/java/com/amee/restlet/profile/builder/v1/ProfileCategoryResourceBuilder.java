@@ -1,6 +1,7 @@
 package com.amee.restlet.profile.builder.v1;
 
 import com.amee.base.utils.XMLUtils;
+import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.Profile;
@@ -84,13 +85,18 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         obj.put("dataCategory", resource.getDataCategory().getIdentityJSONObject());
     }
 
-    protected JSONObject getProfileCategoryJSONObject(ProfileCategoryResource resource, DataCategory dc) throws JSONException {
+    protected JSONObject getProfileCategoryJSONObject(ProfileCategoryResource resource, IDataCategoryReference dc) throws JSONException {
+
+        DataCategory dataCategory = dataService.getDataCategoryByUid(dc.getEntityUid());
+        if (dataCategory == null) {
+            throw new IllegalStateException("Data Category should not be null.");
+        }
 
         JSONObject obj = new JSONObject();
 
         // add path and DataCategory
         obj.put("path", dc.getFullPath());
-        obj.put("dataCategory", dc.getJSONObject());
+        obj.put("dataCategory", dataCategory.getJSONObject());
 
         // only add children if ProfileItems are available
         if (dataService.hasDataCategories(dc, resource.getProfileDataCategoryIds())) {
@@ -100,21 +106,26 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         return obj;
     }
 
-    protected void addProfileCategoryChildren(ProfileCategoryResource resource, JSONObject obj, DataCategory dataCategory) throws JSONException {
+    protected void addProfileCategoryChildren(ProfileCategoryResource resource, JSONObject obj, IDataCategoryReference dataCategory) throws JSONException {
 
         Pager pager = null;
+
+        // Don't allow Ecoinvent Data Categories.
+        if (dataCategory.getFullPath().equalsIgnoreCase("/lca/ecoinvent")) {
+            return;
+        }
 
         // create children JSON
         JSONObject children = new JSONObject();
 
         // add Data Categories to children
         JSONArray dataCategories = new JSONArray();
-        for (DataCategory dc : dataService.getDataCategories(dataCategory)) {
+        for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory)) {
             if (resource.isRecurse()) {
                 dataCategories.put(getProfileCategoryJSONObject(resource, dc));
             } else {
                 JSONObject dcObj = new JSONObject();
-                dcObj.put("uid", dc.getUid());
+                dcObj.put("uid", dc.getEntityUid());
                 dcObj.put("name", dc.getName());
                 dcObj.put("path", dc.getPath());
                 dataCategories.put(dcObj);
@@ -194,13 +205,18 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         element.appendChild(resource.getDataCategory().getIdentityElement(document));
     }
 
-    protected Element getProfileCategoryElement(ProfileCategoryResource resource, Document document, DataCategory dc) {
+    protected Element getProfileCategoryElement(ProfileCategoryResource resource, Document document, IDataCategoryReference dc) {
+
+        DataCategory dataCategory = dataService.getDataCategoryByUid(dc.getEntityUid());
+        if (dataCategory == null) {
+            throw new IllegalStateException("Data Category should not be null.");
+        }
 
         Element element = document.createElement("ProfileCategory");
 
         // add path and DataCategory
         element.appendChild(XMLUtils.getElement(document, "Path", dc.getFullPath()));
-        element.appendChild(dc.getIdentityElement(document));
+        element.appendChild(dataCategory.getIdentityElement(document));
 
         // only add children if ProfileItems are available
         if (dataService.hasDataCategories(dc, resource.getProfileDataCategoryIds())) {
@@ -210,7 +226,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         return element;
     }
 
-    protected void addProfileCategoryChildren(ProfileCategoryResource resource, Document document, Element element, DataCategory dataCategory) {
+    protected void addProfileCategoryChildren(ProfileCategoryResource resource, Document document, Element element, IDataCategoryReference dataCategory) {
 
         Pager pager = null;
 
@@ -220,12 +236,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         // add Data Categories
         Element profileCategoriesElement = document.createElement("ProfileCategories");
-        for (DataCategory dc : dataService.getDataCategories(dataCategory)) {
+        for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory)) {
             if (resource.isRecurse()) {
                 profileCategoriesElement.appendChild(getProfileCategoryElement(resource, document, dc));
             } else {
                 Element dcElement = document.createElement("DataCategory");
-                dcElement.setAttribute("uid", dc.getUid());
+                dcElement.setAttribute("uid", dc.getEntityUid());
                 dcElement.appendChild(XMLUtils.getElement(document, "Name", dc.getName()));
                 dcElement.appendChild(XMLUtils.getElement(document, "Path", dc.getPath()));
                 profileCategoriesElement.appendChild(dcElement);
@@ -274,12 +290,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         throw new UnsupportedOperationException();
     }
 
-    private Sheet getSheet(ProfileCategoryResource resource, DataCategory dataCategory) {
-        return profileService.getSheet(new ProfileSheetBuilder(resource, profileService, dataCategory));
+    private Sheet getSheet(ProfileCategoryResource resource, IDataCategoryReference dataCategory) {
+        return profileService.getSheet(new ProfileSheetBuilder(resource, dataService, profileService, dataCategory));
     }
 
     private Sheet getSheet(ProfileCategoryResource resource) {
-        return profileService.getSheet(new ProfileSheetBuilder(resource, profileService));
+        return profileService.getSheet(new ProfileSheetBuilder(resource, dataService, profileService));
     }
 
     public Map<String, Object> getTemplateValues(ProfileCategoryResource resource) {

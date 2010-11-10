@@ -20,8 +20,8 @@
 package com.amee.restlet.profile;
 
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
+import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.CO2AmountUnit;
@@ -101,6 +101,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
         return super.isValid() &&
                 (getProfile() != null) &&
                 (dataCategory != null) &&
+                !dataCategory.getFullPath().equalsIgnoreCase("/lca/ecoinvent") &&
                 !dataCategory.isTrash();
     }
 
@@ -228,7 +229,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
         return dataCategory;
     }
 
-    public List<DataCategory> getDataCategories() {
+    public List<IDataCategoryReference> getDataCategories() {
         return dataService.getDataCategories(dataCategory);
     }
 
