@@ -64,7 +64,6 @@
         **** Application objects ****
         120 Data Sheets (= Data Categories * 2)
         6,000 Profile Sheets (Profiles * DCs * 2 dates)
-        50 Profile PIGs (= Profiles)
     -->
 
     <!-- **** AMEE - Entities **** -->
@@ -345,9 +344,9 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- Path Item Groups -->
-    <cache name="PIGs"
-           maxElementsInMemory="5"
+    <!-- Profile Sheets -->
+    <cache name="ProfileSheets"
+           maxElementsInMemory="6000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"
@@ -355,9 +354,9 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
-    <!-- Profile Sheets -->
-    <cache name="ProfileSheets"
-           maxElementsInMemory="6000"
+    <!-- Data Categories -->
+    <cache name="DataCategoryChildren"
+           maxElementsInMemory="4000"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="900"

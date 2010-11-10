@@ -1,10 +1,10 @@
 package com.amee.restlet.profile.builder.v1;
 
 import com.amee.domain.APIVersion;
+import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.ValueType;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.profile.ProfileItem;
@@ -14,6 +14,7 @@ import com.amee.domain.sheet.Row;
 import com.amee.domain.sheet.Sheet;
 import com.amee.platform.science.AmountPerUnit;
 import com.amee.restlet.profile.ProfileCategoryResource;
+import com.amee.service.data.DataService;
 import com.amee.service.profile.ProfileService;
 
 import java.text.DateFormat;
@@ -26,8 +27,9 @@ public class ProfileSheetBuilder implements CacheableFactory {
     private static DateFormat DAY_DATE_FMT = new SimpleDateFormat(DAY_DATE);
 
     private ProfileCategoryResource resource;
+    private DataService dataService;
     private ProfileService profileService;
-    private DataCategory dataCategory;
+    private IDataCategoryReference dataCategory;
 
     private ProfileSheetBuilder() {
         super();
@@ -35,18 +37,21 @@ public class ProfileSheetBuilder implements CacheableFactory {
 
     public ProfileSheetBuilder(
             ProfileCategoryResource resource,
+            DataService dataService,
             ProfileService profileService,
-            DataCategory dataCategory) {
+            IDataCategoryReference dataCategory) {
         this();
         this.resource = resource;
+        this.dataService = dataService;
         this.profileService = profileService;
         this.dataCategory = dataCategory;
     }
 
     public ProfileSheetBuilder(
             ProfileCategoryResource resource,
+            DataService dataService,
             ProfileService profileService) {
-        this(resource, profileService, null);
+        this(resource, dataService, profileService, null);
     }
 
     public Object create() {
@@ -54,24 +59,27 @@ public class ProfileSheetBuilder implements CacheableFactory {
         List<Column> columns;
         Row row;
         ItemValue itemValue;
-        ItemDefinition itemDefinition;
         Sheet sheet = null;
-        DataCategory dc = getDataCategory();
+        IDataCategoryReference dataCategoryReference = getDataCategory();
 
         // only create Sheet for DataCategories with ItemDefinitions
-        itemDefinition = dc.getItemDefinition();
-        if (itemDefinition != null) {
+        if (dataCategoryReference.isItemDefinitionPresent()) {
+
+            DataCategory dataCategory = dataService.getDataCategoryByUid(dataCategoryReference.getEntityUid());
+            if (dataCategory == null) {
+                throw new IllegalStateException("DataCategory should not be null.");
+            }
 
             List<ProfileItem> profileItems = profileService.getProfileItems(
                     resource.getProfile(),
-                    dc,
+                    dataCategory,
                     resource.getProfileBrowser().getProfileDate());
 
             // create sheet and columns
             sheet = new Sheet();
             sheet.setKey(getKey());
             sheet.setLabel("ProfileItems");
-            for (ItemValueDefinition itemValueDefinition : itemDefinition.getItemValueDefinitions()) {
+            for (ItemValueDefinition itemValueDefinition : dataCategory.getItemDefinition().getItemValueDefinitions()) {
                 if (itemValueDefinition.isFromProfile() && itemValueDefinition.isValidInAPIVersion(APIVersion.ONE)) {
                     new Column(sheet, itemValueDefinition.getPath(), itemValueDefinition.getName());
                 }
@@ -142,7 +150,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
 
     public String getKey() {
         return "ProfileSheet_" + resource.getProfile().getUid() +
-                "_" + getDataCategory().getUid() +
+                "_" + getDataCategory().getEntityUid() +
                 "_" + resource.getProfileBrowser().getProfileDate().getTime();
     }
 
@@ -155,7 +163,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
      *
      * @return the correct DataCategory
      */
-    protected DataCategory getDataCategory() {
+    protected IDataCategoryReference getDataCategory() {
         if (dataCategory != null) {
             return dataCategory;
         } else {
