@@ -103,7 +103,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
             // add Data Categories to children
             JSONArray dataCategories = new JSONArray();
-            for (IDataCategoryReference dc : dataService.getDataCategories(resource.getDataCategory())) {
+            for (IDataCategoryReference dc : dataService.getDataCategories(resource.getDataCategory()).values()) {
                 JSONObject dcObj = new JSONObject();
                 dcObj.put("uid", dc.getEntityUid());
                 dcObj.put("name", dc.getName());
@@ -181,7 +181,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
             // add Data Categories
             Element dataCategoriesElement = document.createElement("ProfileCategories");
-            for (IDataCategoryReference dc : dataService.getDataCategories(resource.getDataCategory())) {
+            for (IDataCategoryReference dc : dataService.getDataCategories(resource.getDataCategory()).values()) {
                 Element dcElement = document.createElement("DataCategory");
                 dcElement.setAttribute("uid", dc.getEntityUid());
                 dcElement.appendChild(XMLUtils.getElement(document, "Name", dc.getName()));

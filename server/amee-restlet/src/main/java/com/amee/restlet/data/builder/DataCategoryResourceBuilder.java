@@ -74,7 +74,7 @@ public class DataCategoryResourceBuilder {
 
             // add Data Categories to children
             JSONArray dataCategories = new JSONArray();
-            for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory)) {
+            for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory).values()) {
                 JSONObject dcObj = new JSONObject();
                 dcObj.put("uid", dc.getEntityUid());
                 dcObj.put("name", dc.getName());
@@ -160,7 +160,7 @@ public class DataCategoryResourceBuilder {
 
             // add Data Categories
             Element dataCategoriesElement = document.createElement("DataCategories");
-            for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory)) {
+            for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory).values()) {
                 Element dcElement = document.createElement("DataCategory");
                 dcElement.setAttribute("uid", dc.getEntityUid());
                 dcElement.appendChild(XMLUtils.getElement(document, "Name", dc.getName()));
@@ -213,7 +213,7 @@ public class DataCategoryResourceBuilder {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("browser", resource.getDataBrowser());
         values.put("dataCategory", dataCategory);
-        values.put("dataCategories", dataService.getDataCategories(dataCategory));
+        values.put("dataCategories", dataService.getDataCategories(dataCategory).values());
         values.put("itemDefinition", dataCategory.getItemDefinition());
         values.put("user", resource.getActiveUser());
         values.put("itemDefinitions", definitionService.getItemDefinitions());
