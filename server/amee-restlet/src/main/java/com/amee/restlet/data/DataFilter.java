@@ -19,7 +19,7 @@
  */
 package com.amee.restlet.data;
 
-import com.amee.domain.data.DataCategory;
+import com.amee.domain.IDataCategoryReference;
 import com.amee.restlet.RewriteFilter;
 import com.amee.service.data.DataService;
 import org.apache.commons.lang.StringUtils;
@@ -81,8 +81,8 @@ public class DataFilter extends RewriteFilter {
         boolean inDataItem = false;
         boolean inItemValue = false;
         // We always need to start with the root Data Category.
-        DataCategory dataCategory = dataService.getRootDataCategory();
-        path = dataCategory.getUid();
+        IDataCategoryReference dataCategory = dataService.getRootDataCategory();
+        path = dataCategory.getEntityUid();
         // Loop over all path segments and handle each.
         for (String segment : segments) {
             // Are we looking for Data Categories?
@@ -99,7 +99,7 @@ public class DataFilter extends RewriteFilter {
                 dataCategory = dataService.getDataCategoryByPath(dataCategory, segment);
                 if (dataCategory != null) {
                     // We only want the UID of the last Data Category found.
-                    path = dataCategory.getUid();
+                    path = dataCategory.getEntityUid();
                 } else {
                     // This is not a DataCategory - We can assume this is a DataItem.
                     inDataItem = true;
