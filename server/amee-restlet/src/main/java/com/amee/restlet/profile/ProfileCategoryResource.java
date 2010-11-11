@@ -50,10 +50,7 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component("profileCategoryResource")
 @Scope("prototype")
@@ -101,7 +98,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
         return super.isValid() &&
                 (getProfile() != null) &&
                 (dataCategory != null) &&
-                !dataCategory.getFullPath().equalsIgnoreCase("/lca/ecoinvent") &&
+                !dataCategory.getFullPath().startsWith("/lca/ecoinvent") &&
                 !dataCategory.isTrash();
     }
 
@@ -229,8 +226,8 @@ public class ProfileCategoryResource extends BaseProfileResource {
         return dataCategory;
     }
 
-    public List<IDataCategoryReference> getDataCategories() {
-        return dataService.getDataCategories(dataCategory);
+    public Collection<IDataCategoryReference> getDataCategories() {
+        return dataService.getDataCategories(dataCategory).values();
     }
 
     public List<ProfileItem> getProfileItems() {

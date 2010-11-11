@@ -65,11 +65,8 @@ public class ProfileSheetBuilder implements CacheableFactory {
         // only create Sheet for DataCategories with ItemDefinitions
         if (dataCategoryReference.isItemDefinitionPresent()) {
 
-            DataCategory dataCategory = dataService.getDataCategoryByUid(dataCategoryReference.getEntityUid());
-            if (dataCategory == null) {
-                throw new IllegalStateException("DataCategory should not be null.");
-            }
-
+            // Get Data Category and Profile Items.
+            DataCategory dataCategory = dataService.getDataCategory(dataCategoryReference);
             List<ProfileItem> profileItems = profileService.getProfileItems(
                     resource.getProfile(),
                     dataCategory,

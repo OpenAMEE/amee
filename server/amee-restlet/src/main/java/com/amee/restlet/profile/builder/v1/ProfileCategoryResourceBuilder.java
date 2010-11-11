@@ -111,7 +111,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         Pager pager = null;
 
         // Don't allow Ecoinvent Data Categories.
-        if (dataCategory.getFullPath().equalsIgnoreCase("/lca/ecoinvent")) {
+        if (dataCategory.getFullPath().startsWith("/lca/ecoinvent")) {
             return;
         }
 
@@ -120,7 +120,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         // add Data Categories to children
         JSONArray dataCategories = new JSONArray();
-        for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory)) {
+        for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory).values()) {
             if (resource.isRecurse()) {
                 dataCategories.put(getProfileCategoryJSONObject(resource, dc));
             } else {
@@ -236,7 +236,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         // add Data Categories
         Element profileCategoriesElement = document.createElement("ProfileCategories");
-        for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory)) {
+        for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory).values()) {
             if (resource.isRecurse()) {
                 profileCategoriesElement.appendChild(getProfileCategoryElement(resource, document, dc));
             } else {
@@ -307,7 +307,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         values.put("profile", profile);
         values.put("dataCategory", dataCategory);
         values.put("node", dataCategory);
-        values.put("dataCategories", dataService.getDataCategories(dataCategory));
+        values.put("dataCategories", dataService.getDataCategories(dataCategory).values());
         values.put("sheet", sheet);
         if (sheet != null) {
             values.put("totalAmountPerMonth", getTotalAmountPerMonth(sheet));
