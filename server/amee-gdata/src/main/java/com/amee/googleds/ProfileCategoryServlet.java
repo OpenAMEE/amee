@@ -22,8 +22,8 @@
 package com.amee.googleds;
 
 import com.amee.base.transaction.TransactionController;
+import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.TimeZoneHolder;
-import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.profile.Profile;
@@ -173,8 +173,8 @@ public class ProfileCategoryServlet extends DataSourceServlet {
         path = path.substring(1).split("\\.")[0];
         List<String> segments = new ArrayList<String>(Arrays.asList(path.split("/")));
         String profileUid = segments.remove(0);
-        DataCategory category = dataService.getDataCategoryByFullPath(segments);
-        if ((category != null) && (category.getItemDefinition() != null)) {
+        IDataCategoryReference category = dataService.getDataCategoryByFullPath(segments);
+        if ((category != null) && (category.isItemDefinitionPresent())) {
             Profile profile = profileService.getProfile(profileUid);
             TimeZone timeZone = TimeZoneHolder.getTimeZone();
             return profileService.getProfileItems(profile, category, StartEndDate.getStartOfMonthDate(timeZone), null);
