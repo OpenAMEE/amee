@@ -1,7 +1,11 @@
 package com.amee.googleds;
 
 import com.amee.base.transaction.TransactionController;
-import com.amee.domain.data.*;
+import com.amee.domain.IDataCategoryReference;
+import com.amee.domain.data.DataItem;
+import com.amee.domain.data.Item;
+import com.amee.domain.data.ItemValue;
+import com.amee.domain.data.ItemValueDefinition;
 import com.amee.engine.Engine;
 import com.amee.service.data.DataService;
 import com.google.visualization.datasource.DataSourceServlet;
@@ -107,8 +111,8 @@ public class DataCategoryServlet extends DataSourceServlet {
 
     private List<DataItem> getItems(String path) {
         path = path.substring(1).split("\\.")[0];
-        DataCategory category = dataService.getDataCategoryByFullPath(path);
-        if ((category != null) && (category.getItemDefinition() != null)) {
+        IDataCategoryReference category = dataService.getDataCategoryByFullPath(path);
+        if ((category != null) && (category.isItemDefinitionPresent())) {
             return dataService.getDataItems(category);
         } else {
             return new ArrayList<DataItem>(0);
