@@ -41,7 +41,9 @@ import java.util.Map;
 /**
  * An abstract base Resource class providing authentication functionality. Sub-classes
  * must, at least, implement getEntities. Sub-classes are expected to implement doGet, doAccept, doStore,
- * doRemove as required. Other methods can be overriden for further custom behaviour.
+ * doRemove as required. Other methods can be overridden for further custom behaviour.
+ * <p/>
+ * TODO: Most functionality below has been migrated to ResourceAuthorizationService which should be used instead.
  */
 public abstract class AuthorizeResource extends BaseResource {
 
