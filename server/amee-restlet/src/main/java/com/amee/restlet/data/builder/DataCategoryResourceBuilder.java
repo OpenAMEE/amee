@@ -1,6 +1,7 @@
 package com.amee.restlet.data.builder;
 
 import com.amee.base.utils.XMLUtils;
+import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
@@ -73,9 +74,9 @@ public class DataCategoryResourceBuilder {
 
             // add Data Categories to children
             JSONArray dataCategories = new JSONArray();
-            for (DataCategory dc : dataService.getDataCategories(dataCategory)) {
+            for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory).values()) {
                 JSONObject dcObj = new JSONObject();
-                dcObj.put("uid", dc.getUid());
+                dcObj.put("uid", dc.getEntityUid());
                 dcObj.put("name", dc.getName());
                 dcObj.put("path", dc.getPath());
                 dataCategories.put(dcObj);
@@ -159,9 +160,9 @@ public class DataCategoryResourceBuilder {
 
             // add Data Categories
             Element dataCategoriesElement = document.createElement("DataCategories");
-            for (DataCategory dc : dataService.getDataCategories(dataCategory)) {
+            for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory).values()) {
                 Element dcElement = document.createElement("DataCategory");
-                dcElement.setAttribute("uid", dc.getUid());
+                dcElement.setAttribute("uid", dc.getEntityUid());
                 dcElement.appendChild(XMLUtils.getElement(document, "Name", dc.getName()));
                 dcElement.appendChild(XMLUtils.getElement(document, "Path", dc.getPath()));
                 dataCategoriesElement.appendChild(dcElement);
@@ -212,7 +213,7 @@ public class DataCategoryResourceBuilder {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("browser", resource.getDataBrowser());
         values.put("dataCategory", dataCategory);
-        values.put("dataCategories", dataService.getDataCategories(dataCategory));
+        values.put("dataCategories", dataService.getDataCategories(dataCategory).values());
         values.put("itemDefinition", dataCategory.getItemDefinition());
         values.put("user", resource.getActiveUser());
         values.put("itemDefinitions", definitionService.getItemDefinitions());

@@ -22,15 +22,14 @@
 package com.amee.restlet;
 
 import com.amee.domain.AMEEEntity;
-import com.amee.domain.IAMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.data.DataCategory;
 import com.amee.service.auth.AuthorizationService;
+import com.amee.service.auth.GroupService;
 import com.amee.service.data.DataService;
-import com.amee.service.environment.GroupService;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,9 @@ import java.util.Map;
 /**
  * An abstract base Resource class providing authentication functionality. Sub-classes
  * must, at least, implement getEntities. Sub-classes are expected to implement doGet, doAccept, doStore,
- * doRemove as required. Other methods can be overriden for further custom behaviour.
+ * doRemove as required. Other methods can be overridden for further custom behaviour.
+ * <p/>
+ * TODO: Most functionality below has been migrated to ResourceAuthorizationService which should be used instead.
  */
 public abstract class AuthorizeResource extends BaseResource {
 

@@ -1,6 +1,7 @@
 package com.amee.restlet.profile.builder.v2;
 
 import com.amee.domain.APIVersion;
+import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.DataItem;
 import com.amee.domain.data.ItemValue;
@@ -248,7 +249,7 @@ public class AtomFeed {
 
     public void addChildCategories(ExtensibleElement e, ProfileCategoryResource resource) {
         ExtensibleElement categories = e.addExtension(Q_CATEGORIES);
-        for (DataCategory dc : resource.getDataCategories()) {
+        for (IDataCategoryReference dc : resource.getDataCategories()) {
             Element category = factory.newElement(Q_CATEGORY);
             category.setText(dc.getFullPath());
             category.setAttributeValue("href", dc.getFullPath());

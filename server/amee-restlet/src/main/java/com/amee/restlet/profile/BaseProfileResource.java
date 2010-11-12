@@ -15,6 +15,7 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * This file is part of AMEE.
@@ -38,7 +39,7 @@ import java.util.Collection;
 public abstract class BaseProfileResource extends AMEEResource {
 
     protected ProfileBrowser profileBrowser;
-    protected Collection<Long> profileDataCategoryIds;
+    protected Set<Long> profileDataCategoryIds;
 
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
@@ -63,7 +64,7 @@ public abstract class BaseProfileResource extends AMEEResource {
         return (Profile) getRequest().getAttributes().get("profile");
     }
 
-    public Collection<Long> getProfileDataCategoryIds() {
+    public Set<Long> getProfileDataCategoryIds() {
         if (profileDataCategoryIds == null) {
             profileDataCategoryIds = profileService.getProfileDataCategoryIds(getProfile());
         }

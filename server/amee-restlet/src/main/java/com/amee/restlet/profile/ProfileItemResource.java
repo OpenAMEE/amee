@@ -99,7 +99,8 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
                 (profileItem != null) &&
                 !profileItem.isTrash() &&
                 profileItem.getProfile().equals(getProfile()) &&
-                profileItem.getDataCategory().equals(dataCategory);
+                profileItem.getDataCategory().equals(dataCategory) &&
+                !profileItem.getDataCategory().getFullPath().startsWith("/lca/ecoinvent");
     }
 
     @Override
