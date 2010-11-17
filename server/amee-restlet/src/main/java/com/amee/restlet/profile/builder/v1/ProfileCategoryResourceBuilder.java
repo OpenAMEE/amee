@@ -94,12 +94,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         JSONObject obj = new JSONObject();
 
-        // add path and DataCategory
+        // Add path and DataCategory.
         obj.put("path", dc.getFullPath());
         obj.put("dataCategory", dataCategory.getJSONObject());
 
-        // only add children if ProfileItems are available
-        if (dataService.hasDataCategories(dc, resource.getProfileDataCategoryIds())) {
+        // Only add child Data Categories if ProfileItems are available within.
+        if (resource.getProfileDataCategoryIds().contains(dc.getEntityId())) {
             addProfileCategoryChildren(resource, obj, dc);
         }
 
@@ -216,12 +216,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         Element element = document.createElement("ProfileCategory");
 
-        // add path and DataCategory
+        // Add path and DataCategory.
         element.appendChild(XMLUtils.getElement(document, "Path", dc.getFullPath()));
         element.appendChild(dataCategory.getIdentityElement(document));
 
-        // only add children if ProfileItems are available
-        if (dataService.hasDataCategories(dc, resource.getProfileDataCategoryIds())) {
+        // Only add child Data Categories if ProfileItems are available within.
+        if (resource.getProfileDataCategoryIds().contains(dc.getEntityId())) {
             addProfileCategoryChildren(resource, document, element, dc);
         }
 
