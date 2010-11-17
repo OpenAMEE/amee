@@ -121,14 +121,16 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         // add Data Categories to children
         JSONArray dataCategories = new JSONArray();
         for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory).values()) {
-            if (resource.isRecurse()) {
-                dataCategories.put(getProfileCategoryJSONObject(resource, dc));
-            } else {
-                JSONObject dcObj = new JSONObject();
-                dcObj.put("uid", dc.getEntityUid());
-                dcObj.put("name", dc.getName());
-                dcObj.put("path", dc.getPath());
-                dataCategories.put(dcObj);
+            if (!dataCategory.getFullPath().startsWith("/lca/ecoinvent")) {
+                if (resource.isRecurse()) {
+                    dataCategories.put(getProfileCategoryJSONObject(resource, dc));
+                } else {
+                    JSONObject dcObj = new JSONObject();
+                    dcObj.put("uid", dc.getEntityUid());
+                    dcObj.put("name", dc.getName());
+                    dcObj.put("path", dc.getPath());
+                    dataCategories.put(dcObj);
+                }
             }
         }
         children.put("dataCategories", dataCategories);
@@ -237,14 +239,16 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         // add Data Categories
         Element profileCategoriesElement = document.createElement("ProfileCategories");
         for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory).values()) {
-            if (resource.isRecurse()) {
-                profileCategoriesElement.appendChild(getProfileCategoryElement(resource, document, dc));
-            } else {
-                Element dcElement = document.createElement("DataCategory");
-                dcElement.setAttribute("uid", dc.getEntityUid());
-                dcElement.appendChild(XMLUtils.getElement(document, "Name", dc.getName()));
-                dcElement.appendChild(XMLUtils.getElement(document, "Path", dc.getPath()));
-                profileCategoriesElement.appendChild(dcElement);
+            if (!dataCategory.getFullPath().startsWith("/lca/ecoinvent")) {
+                if (resource.isRecurse()) {
+                    profileCategoriesElement.appendChild(getProfileCategoryElement(resource, document, dc));
+                } else {
+                    Element dcElement = document.createElement("DataCategory");
+                    dcElement.setAttribute("uid", dc.getEntityUid());
+                    dcElement.appendChild(XMLUtils.getElement(document, "Name", dc.getName()));
+                    dcElement.appendChild(XMLUtils.getElement(document, "Path", dc.getPath()));
+                    profileCategoriesElement.appendChild(dcElement);
+                }
             }
         }
         childrenElement.appendChild(profileCategoriesElement);
