@@ -94,12 +94,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         JSONObject obj = new JSONObject();
 
-        // add path and DataCategory
+        // Add path and DataCategory.
         obj.put("path", dc.getFullPath());
         obj.put("dataCategory", dataCategory.getJSONObject());
 
-        // only add children if ProfileItems are available
-        if (dataService.hasDataCategories(dc, resource.getProfileDataCategoryIds())) {
+        // Only add child Data Categories if ProfileItems are available within.
+        if (resource.getProfileDataCategoryIds().contains(dc.getEntityId())) {
             addProfileCategoryChildren(resource, obj, dc);
         }
 
@@ -121,14 +121,16 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         // add Data Categories to children
         JSONArray dataCategories = new JSONArray();
         for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory).values()) {
-            if (resource.isRecurse()) {
-                dataCategories.put(getProfileCategoryJSONObject(resource, dc));
-            } else {
-                JSONObject dcObj = new JSONObject();
-                dcObj.put("uid", dc.getEntityUid());
-                dcObj.put("name", dc.getName());
-                dcObj.put("path", dc.getPath());
-                dataCategories.put(dcObj);
+            if (!dataCategory.getFullPath().startsWith("/lca/ecoinvent")) {
+                if (resource.isRecurse()) {
+                    dataCategories.put(getProfileCategoryJSONObject(resource, dc));
+                } else {
+                    JSONObject dcObj = new JSONObject();
+                    dcObj.put("uid", dc.getEntityUid());
+                    dcObj.put("name", dc.getName());
+                    dcObj.put("path", dc.getPath());
+                    dataCategories.put(dcObj);
+                }
             }
         }
         children.put("dataCategories", dataCategories);
@@ -214,12 +216,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         Element element = document.createElement("ProfileCategory");
 
-        // add path and DataCategory
+        // Add path and DataCategory.
         element.appendChild(XMLUtils.getElement(document, "Path", dc.getFullPath()));
         element.appendChild(dataCategory.getIdentityElement(document));
 
-        // only add children if ProfileItems are available
-        if (dataService.hasDataCategories(dc, resource.getProfileDataCategoryIds())) {
+        // Only add child Data Categories if ProfileItems are available within.
+        if (resource.getProfileDataCategoryIds().contains(dc.getEntityId())) {
             addProfileCategoryChildren(resource, document, element, dc);
         }
 
@@ -237,14 +239,16 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         // add Data Categories
         Element profileCategoriesElement = document.createElement("ProfileCategories");
         for (IDataCategoryReference dc : dataService.getDataCategories(dataCategory).values()) {
-            if (resource.isRecurse()) {
-                profileCategoriesElement.appendChild(getProfileCategoryElement(resource, document, dc));
-            } else {
-                Element dcElement = document.createElement("DataCategory");
-                dcElement.setAttribute("uid", dc.getEntityUid());
-                dcElement.appendChild(XMLUtils.getElement(document, "Name", dc.getName()));
-                dcElement.appendChild(XMLUtils.getElement(document, "Path", dc.getPath()));
-                profileCategoriesElement.appendChild(dcElement);
+            if (!dataCategory.getFullPath().startsWith("/lca/ecoinvent")) {
+                if (resource.isRecurse()) {
+                    profileCategoriesElement.appendChild(getProfileCategoryElement(resource, document, dc));
+                } else {
+                    Element dcElement = document.createElement("DataCategory");
+                    dcElement.setAttribute("uid", dc.getEntityUid());
+                    dcElement.appendChild(XMLUtils.getElement(document, "Name", dc.getName()));
+                    dcElement.appendChild(XMLUtils.getElement(document, "Path", dc.getPath()));
+                    profileCategoriesElement.appendChild(dcElement);
+                }
             }
         }
         childrenElement.appendChild(profileCategoriesElement);
