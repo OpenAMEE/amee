@@ -71,7 +71,7 @@
         <tr>
             <td>${dc.name}</td>
             <td>
-                <a href='${basePath}/${dc.displayPath}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
+                <a href='${basePath}/${dc.path}'><img src="/images/icons/page_edit.png" title="Edit" alt="Edit" border="0"/></a>
             </td>
         </tr>
         </#list>
