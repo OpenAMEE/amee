@@ -25,7 +25,19 @@ namespace :amee do
   task :grep_status, roles => :app do
     stream "egrep 'S:500|S:40' #{current_release}/log/wrapper.log"
   end
+  
+  task :munin_symlink do
+    sudo "ln -s #{current_path}/munin/jmx_ /etc/munin/plugins/jmx_amee_data_source"
+    sudo "ln -s #{current_path}/munin/jmx_ /etc/munin/plugins/jmx_amee_profiles"
+    sudo "ln -s #{current_path}/munin/jmx_ /etc/munin/plugins/jmx_java_cpu"
+    sudo "ln -s #{current_path}/munin/jmx_ /etc/munin/plugins/jmx_java_hibernate_entity"
+    sudo "ln -s #{current_path}/munin/jmx_ /etc/munin/plugins/jmx_java_threads"
+    sudo "ln -s #{current_path}/munin/jstat__gccount /etc/munin/plugins/jstat_gccount"
+    sudo "ln -s #{current_path}/munin/jstat__gctime /etc/munin/plugins/jstat_gctime"
+    sudo "ln -s #{current_path}/munin/jstat__heap /etc/munin/plugins/jstat_heap"
+  end
+  
 
-  #after "deploy:setup", "amee:init_d"   
+  after "deploy", "amee:munin_symlink"   
 
 end
