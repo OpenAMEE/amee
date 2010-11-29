@@ -1,0 +1,21 @@
+[platform_stage_*]
+user root
+env.pidfilepath /var/www/apps/amee-stage/shared/pids/amee.stage.pid.java
+env.javahome /usr/lib/jvm/java-6-sun
+env.jmxport 9988
+env.ameeinstance platform_stage
+
+[platform_api_stage_*]
+user root
+env.pidfilepath /var/www/apps/platform-api-stage/shared/pids/platform-api.stage.pid.java
+env.javahome /usr/lib/jvm/java-6-sun
+
+[platform_science_*]
+user root
+env.pidfilepath /var/www/apps/amee-science/shared/pids/amee.science.pid.java
+env.javahome /usr/lib/jvm/java-6-sun
+
+[platform_api_science_*]
+user root
+env.pidfilepath /var/www/apps/platform-api-science/shared/pids/platform-api.science.pid.java
+env.javahome /usr/lib/jvm/java-6-sun
