@@ -24,25 +24,41 @@
 # It can be changed by specifying parameters in  /etc/munin/plugin-conf.d/munin-node
 #
 # [jmx_*]
+# env.jmxport 1616
 # env.jmxurl service:jmx:rmi:///jndi/rmi://localhost:1616/jmxrmi
 # env.jmxuser monitorRole
 # env.jmxpass QED
+# env.ameeinstance platform_stage
 #
 # Read more on JMX configuring at http://java.sun.com/j2se/1.5.0/docs/guide/management/agent.html
 # $Log$
-# 
+#
+
+if [ "$ameeinstance" = "" ]; then
+    AMEE_INSTANCE=""
+else
+    AMEE_INSTANCE=$ameeinstance
+fi
+
 LINK=`readlink $0`
-CONFIGNAME=`basename $0 | sed 's/^jmx_//g'`.conf
+SEDARG=s/^"$AMEE_INSTANCE"_jmx_//g
+CONFIGNAME=`basename $0 | sed $SEDARG`.conf
 RDIR=`dirname $LINK`
 
-if [ "$jmxurl" = "" ]; then
-SERVICE=service:jmx:rmi:///jndi/rmi://localhost:1616/jmxrmi
+if [ "$jmxport" = "" ]; then
+    PORT=1616
 else
-SERVICE="$jmxurl"
+    PORT=$jmxport
+fi
+
+if [ "$jmxurl" = "" ]; then
+    SERVICE=service:jmx:rmi:///jndi/rmi://localhost:$PORT/jmxrmi
+else
+    SERVICE="$jmxurl"
 fi
 
 if [ "$jmxuser" != "" ]; then
-CREDS="--user=$jmxuser --pass=$jmxpass"
+    CREDS="--user=$jmxuser --pass=$jmxpass"
 fi
 
 # checks
@@ -51,6 +67,6 @@ test -z $CONFIGNAME || test -z "$RDIR" && exit 1
 JMXQUERY="java -jar $RDIR/jmxquery.jar --url=$SERVICE $CREDS --conf=$RDIR/$CONFIGNAME"
 
 case $1 in
-        (config)        $JMXQUERY config;;
-        (*)             $JMXQUERY       ;;
+    (config)        $JMXQUERY config;;
+    (*)             $JMXQUERY       ;;
 esac
