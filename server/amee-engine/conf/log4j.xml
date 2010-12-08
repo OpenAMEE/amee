@@ -45,6 +45,13 @@
         </filter>
     </appender>
 
+    <!-- Declare the 'HOPTOAD' HoptoadAppender. -->
+    <appender name="HOPTOAD" class="code.lucamarrocco.hoptoad.HoptoadAppender">
+        <param name="api_key" value="335da09dfa378ed3d5b650becadf0214"/>
+        <param name="env" value="${instance.name}"/>
+        <param name="enabled" value="${amee.hoptoad}"/>
+    </appender>
+
     <!-- Declare the 'TRANSACTIONS_ROLLER' DailyRollingFileAppender. -->
     <appender name="TRANSACTIONS_ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="File" value="/var/www/apps/${app.name}-${instance.name}/shared/log/transactions.log"/>
@@ -147,6 +154,7 @@
         <priority value="${amee.defaultLogLevel}"/>
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="PLATFORM_EMAIL"/>
+        <appender-ref ref="HOPTOAD"/>
     </root>
 
 </log4j:configuration>

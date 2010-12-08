@@ -16,6 +16,7 @@ set.AMEE_INSTANCE_NAME=local
 set.LOG_LEVEL=DEBUG
 set.DEFAULT_LOG_LEVEL=INFO
 set.MAILLOG=true
+set.HOPTOAD=true
 
 # Extra Java Parameters
 wrapper.java.additional.100=-Xdebug
