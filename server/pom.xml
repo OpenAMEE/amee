@@ -44,6 +44,7 @@
         <google-gdata-core.version>1.0</google-gdata-core.version>
         <google-visualization-datasource.version>1.0.2</google-visualization-datasource.version>
         <hibernate-core.version>3.5.1-Final</hibernate-core.version>
+        <hoptoad-notifier.version>1.8</hoptoad-notifier.version>
         <ibm-icu4j.version>4.0.1</ibm-icu4j.version>
         <javacsv.version>2.0</javacsv.version>
         <javax.mail.version>1.4</javax.mail.version>
@@ -254,6 +255,11 @@
             <groupId>net.sf.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>${opencsv.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>code.lucamarrocco</groupId>
+            <artifactId>hoptoad-notifier</artifactId>
+            <version>${hoptoad-notifier.version}</version>
         </dependency>
 
         <!-- Explicit dependency & version here to avoid transitive dependency mess. -->
