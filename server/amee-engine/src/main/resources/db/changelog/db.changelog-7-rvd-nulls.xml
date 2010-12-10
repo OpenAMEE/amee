@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet id="7-1" author="david">
+        <comment>Add not null constraints to RETURN_VALUE_DEFINITION</comment>
+        <addNotNullConstraint tableName="RETURN_VALUE_DEFINITION" columnName="TYPE" defaultNullValue="" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="RETURN_VALUE_DEFINITION" columnName="UNIT" defaultNullValue="" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="RETURN_VALUE_DEFINITION" columnName="PER_UNIT" defaultNullValue="" columnDataType="varchar(255)"/>
+    </changeSet>
+    
+    <changeSet id="7-2" author="david">
+        <comment>Set default values for RETURN_VALUE_DEFINITION</comment>
+        <addDefaultValue tableName="RETURN_VALUE_DEFINITION" columnName="TYPE" defaultValue=""/>
+        <addDefaultValue tableName="RETURN_VALUE_DEFINITION" columnName="UNIT" defaultValue=""/>
+        <addDefaultValue tableName="RETURN_VALUE_DEFINITION" columnName="PER_UNIT" defaultValue=""/>
+    </changeSet>
+</databaseChangeLog>

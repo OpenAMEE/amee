@@ -12,4 +12,5 @@
     <include relativeToChangelogFile="true" file="db.changelog-4-data-types.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-5-drop-environment.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-6-fix_item_values.xml"/>
+    <include relativeToChangelogFile="true" file="db.changelog-7-rvd-nulls.xml"/>
 </databaseChangeLog>
