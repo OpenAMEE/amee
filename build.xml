@@ -17,9 +17,6 @@
     <property name="db.username" value="amee"/>
     <property name="db.password" value="amee"/>
 
-    <!-- See: http://www.liquibase.org/manual/contexts -->
-    <property name="db.contexts" value="live"/>
-
     <target name="rebuild" depends="clean, package, copy-amee-libs"
             description="Perform a clean build from src."/>
 
@@ -112,6 +109,10 @@
     </target>
 
     <target name="update-db" description="Update the database schema to the latest version">
+
+        <!-- See: http://www.liquibase.org/manual/contexts -->
+        <fail unless="db.contexts" message="You must specifiy a database context, eg -Ddb.contexts=live"/>
+
         <exec executable="mvn" dir="server/amee-engine" failonerror="true">
             <arg value="liquibase:update"/>
             <arg value="-Dliquibase.url=jdbc:mysql://localhost/${db.name}"/>
@@ -122,6 +123,10 @@
     </target>
 
     <target name="update-sql" description="Generate the SQL required to update the database schema to the latest version">
+
+        <!-- See: http://www.liquibase.org/manual/contexts -->
+        <fail unless="db.contexts" message="You must specifiy a database context, eg -Ddb.contexts=live"/>
+        
         <exec executable="mvn" dir="server/amee-engine" failonerror="true">
             <arg value="liquibase:updateSQL"/>
             <arg value="-Dliquibase.url=jdbc:mysql://localhost/${db.name}"/>
