@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet id="8-1" author="david">
+        <comment>Update ALGORITHM table charset to utf8</comment>
+
+        <!-- Use custom sql so we have a single ALTER statement. -->
+        <sql>
+            ALTER TABLE ALGORITHM DEFAULT CHARSET=utf8,
+            MODIFY COLUMN NAME CHARACTER SET utf8,
+            MODIFY COLUMN CONTENT CHARACTER SET utf8,
+            MODIFY COLUMN TYPE CHARACTER SET utf8
+        </sql>
+    </changeSet>
+
+    <changeSet id="8-2" author="david">
+        <comment>Update ITEM_VALUE_DEFINITION charset to utf8</comment>
+        <sql>
+            ALTER TABLE ITEM_VALUE_DEFINITION DEFAULT CHARSET=utf8,
+            MODIFY COLUMN NAME CHARACTER SET utf8,
+            MODIFY COLUMN PATH CHARACTER SET utf8,
+            MODIFY COLUMN VALUE CHARACTER SET utf8,
+            MODIFY COLUMN ALLOWED_ROLES CHARACTER SET utf8,
+            MODIFY COLUMN UNIT CHARACTER SET utf8,
+            MODIFY COLUMN PER_UNIT CHARACTER SET utf8
+        </sql>
+    </changeSet>
+
+    <changeSet id="8-3" author="david">
+        <comment>Update PROFILE charset to utf8</comment>
+        <sql>
+            ALTER TABLE ITEM_VALUE_DEFINITION DEFAULT CHARSET=utf8,
+            MODIFY COLUMN NAME CHARACTER SET utf8,
+            MODIFY COLUMN PATH CHARACTER SET utf8
+        </sql>
+    </changeSet>
+
+    <changeSet id="8-4" author="david">
+        <comment>Update ITEM_DEFINITION charset to utf8</comment>
+        <sql>
+            ALTER TABLE ITEM_DEFINITION DEFAULT CHARSET=utf8,
+            MODIFY COLUMN NAME CHARACTER SET utf8,
+            MODIFY COLUMN DRILL_DOWN CHARACTER SET utf8
+        </sql>
+    </changeSet>
+
+    <changeSet id="8-5" author="david">
+        <comment>Update VALUE_DEFINITION charset to utf8</comment>
+        <sql>
+            ALTER TABLE VALUE_DEFINITION DEFAULT CHARSET=utf8,
+            MODIFY COLUMN NAME CHARACTER SET utf8,
+            MODIFY COLUMN DESCRIPTION CHARACTER SET utf8
+        </sql>
+    </changeSet>
+
+    <changeSet id="8-6" author="david">
+        <comment>Update PERMISSION charset to utf8</comment>
+        <sql>
+            ALTER TABLE PERMISSION DEFAULT CHARSET=utf8,
+            MODIFY COLUMN ENTITY_TYPE CHARACTER SET utf8,
+            MODIFY COLUMN PRINCIPAL_TYPE CHARACTER SET utf8,
+            MODIFY COLUMN ENTRIES CHARACTER SET utf8
+        </sql>
+    </changeSet>
+    
+    <changeSet id="8-7" author="david">
+        <comment>Update DATA_CATEGORY charset to utf8</comment>
+        <sql>
+            ALTER TABLE DATA_CATEGORY DEFAULT CHARSET=utf8,
+            MODIFY COLUMN NAME CHARACTER SET utf8,
+            MODIFY COLUMN PATH_TYPE CHARACTER SET utf8,
+            MODIFY COLUMN WIKI_NAME CHARACTER SET utf8
+        </sql>
+    </changeSet>
+
+    <changeSet id="8-8" author="david">
+        <comment>Update USER charset to utf8</comment>
+        <sql>
+            ALTER TABLE USER DEFAULT CHARSET=utf8,
+            MODIFY COLUMN USERNAME CHARACTER SET utf8,
+            MODIFY COLUMN PASSWORD CHARACTER SET utf8,
+            MODIFY COLUMN NAME CHARACTER SET utf8,
+            MODIFY COLUMN EMAIL CHARACTER SET utf8,
+            MODIFY COLUMN LOCALE CHARACTER SET utf8,
+            MODIFY COLUMN TIME_ZONE CHARACTER SET utf8
+        </sql>
+    </changeSet>
+
+    <changeSet id="8-9" author="david">
+        <comment>Update GROUP_PRINCIPAL charset to utf8</comment>
+        <sql>
+            ALTER TABLE GROUP_PRINCIPAL DEFAULT CHARSET=utf8,
+            MODIFY COLUMN PRINCIPAL_TYPE CHARACTER SET utf8
+        </sql>
+    </changeSet>
+
+    <changeSet id="8-10" author="david">
+        <comment>Update GROUPS charset to utf8</comment>
+        <sql>
+            ALTER TABLE GROUPS DEFAULT CHARSET=utf8,
+            MODIFY COLUMN NAME CHARACTER SET utf8,
+            MODIFY COLUMN DESCRIPTION CHARACTER SET utf8
+        </sql>
+    </changeSet>
+
+    <changeSet id="8-11" author="david" context="science">
+        <comment>Recast ITEM_VALUE to latin1 in science database</comment>
+        <sql>
+            ALTER TABLE ITEM_VALUE DEFAULT CHARSET=latin1,
+            CHANGE UID UID CHAR(12) CHARACTER SET latin1,
+            CHANGE VALUE VALUE MEDIUMTEXT CHARACTER SET latin1,
+            CHANGE UNIT VARCHAR(255) CHARACTER SET latin1,
+            CHANGE PER_UNIT VARCHAR(255) CHARACTER SET latin1
+        </sql>
+    </changeSet>
+</databaseChangeLog>
