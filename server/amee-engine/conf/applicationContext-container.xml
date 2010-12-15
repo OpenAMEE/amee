@@ -24,8 +24,8 @@
     </bean>
 
     <bean id="ameeServer" class="org.restlet.ext.spring.SpringServer">
-        <constructor-arg index="0" value="ajp"/>
-        <constructor-arg index="1" value="${AJP_PORT}"/>
+        <constructor-arg index="0" value="${PROTOCOL}"/>
+        <constructor-arg index="1" value="${PORT}"/>
         <property name="parameters">
             <props>
                 <prop key="converter">com.amee.engine.restlet.TransactionServerConverter</prop>
