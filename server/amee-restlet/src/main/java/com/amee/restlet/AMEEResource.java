@@ -253,15 +253,20 @@ public abstract class AMEEResource extends AuthorizeResource {
     /**
      * Produce the appropriate response for a successful POST.
      *
-     * @param parentUri       - the URI of the parent resource
      * @param lastPathSegment - the last path segment of the created resource. This will be used to create the
      *                        Location URI when a representation has not been requested by the client.
      */
-    public void successfulPost(String parentUri, String lastPathSegment) {
+    public void successfulPost(String lastPathSegment) {
+        if (isHttps()) {
+            
+            // Override the protocol if custom SSL header is present.
+            getRequest().getResourceRef().setProtocol(Protocol.HTTPS);
+        }
+
         // For web browsers, continue with the same logic from AMEE 1.X.
         if (isStandardWebBrowser()) {
             getResponse().setStatus(Status.REDIRECTION_FOUND);
-            getResponse().setLocationRef(parentUri);
+            getResponse().setLocationRef(getRequest().getResourceRef().toString());
         } else {
             // Return a representation when the following conditions apply:
             //  (i) API V1.X (backwards compatibility)
@@ -271,7 +276,7 @@ public abstract class AMEEResource extends AuthorizeResource {
                 super.handleGet();
             } else {
                 // For single POSTs in API versions >V1.X set the Location and 201 Created header.
-                getResponse().setLocationRef(parentUri + "/" + lastPathSegment);
+                getResponse().setLocationRef(getRequest().getResourceRef().toString() + "/" + lastPathSegment);
                 getResponse().setStatus(Status.SUCCESS_CREATED);
             }
         }
@@ -301,5 +306,14 @@ public abstract class AMEEResource extends AuthorizeResource {
 
     public void setIsBatchPost(boolean isBatchPost) {
         this.isBatchPost = isBatchPost;
+    }
+
+    /**
+     * This is how we tell if the request came via HTTPS as SSL is termintated at the load balancer.
+     * @return true if the "X-SSL" custom request header is present, otherwise false.
+     */
+    private boolean isHttps() {
+        Form requestHeaders = (Form) getRequest().getAttributes().get("org.restlet.http.headers");
+        return "true".equals(requestHeaders.getFirstValue("X-SSL"));
     }
 }

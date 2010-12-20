@@ -180,7 +180,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
                 if (isBatchPost()) {
                     successfulBatchPost();
                 } else {
-                    successfulPost(getFullPath(), profileItems.get(0).getUid());
+                    successfulPost(profileItems.get(0).getUid());
                 }
             } else {
                 successfulPut(getFullPath());

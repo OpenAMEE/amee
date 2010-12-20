@@ -181,10 +181,10 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
                 } else if ((modDataCategory != null) && newObjectType.equalsIgnoreCase(ObjectType.DC.getName())) {
                     dataService.invalidate(modDataCategory);
                     dataService.invalidate(dataCategory);
-                    successfulPost(getFullPath(), modDataCategory.getPath());
+                    successfulPost(modDataCategory.getPath());
                 } else if ((modDataItem != null) && newObjectType.equalsIgnoreCase(ObjectType.DI.getName())) {
                     dataService.invalidate(dataCategory);
-                    successfulPost(getFullPath(), modDataItem.getUid());
+                    successfulPost(modDataItem.getUid());
                 } else {
                     badRequest();
                 }
