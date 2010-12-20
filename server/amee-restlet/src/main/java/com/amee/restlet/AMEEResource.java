@@ -257,7 +257,7 @@ public abstract class AMEEResource extends AuthorizeResource {
      *                        Location URI when a representation has not been requested by the client.
      */
     public void successfulPost(String lastPathSegment) {
-        if (isHttps()) {
+        if (isSecure()) {
             
             // Override the protocol if the 'secure' server is being used.
             getRequest().getResourceRef().setProtocol(Protocol.HTTPS);
@@ -309,9 +309,9 @@ public abstract class AMEEResource extends AuthorizeResource {
     }
 
     /**
-     * This is how we tell if the request came via HTTPS as SSL is termintated at the load balancer.
+     * This is how we tell if the request came via HTTPS as SSL is terminated at the load balancer.
      */
-    private boolean isHttps() {
+    private boolean isSecure() {
         return getActiveServer().isSecure();
     }
 }
