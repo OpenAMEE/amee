@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
 import org.restlet.Component;
+import org.restlet.Server;
 import org.restlet.VirtualHost;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
@@ -41,6 +42,7 @@ public class SiteFilter extends BaseFilter {
             // globally useful values
             attributes.put("activeSite", site);
             ThreadBeanHolder.set("activeSite", site); // used in FreeMarkerConfigurationFactory
+            attributes.put("activeServer", getServer());
             // continue
             return super.doHandle(request, response);
         }
@@ -78,5 +80,19 @@ public class SiteFilter extends BaseFilter {
         }
 
         return host;
+    }
+
+    private Server getServer() {
+        Server currentServer = null;
+
+        // Use the port of the current request to match.
+        int currentPort = Response.getCurrent().getServerInfo().getPort();
+        for (Server s : ameeContainer.getServers()) {
+            if (s.getPort() == currentPort) {
+                currentServer = s;
+            }
+        }
+
+        return currentServer;
     }
 }

@@ -53,6 +53,7 @@ set.PROTOCOL=http
 
 # PORT
 set.PORT=8080
+set.SECURE_PORT=8090
 
 # Memory Sizing
 wrapper.java.initmemory=512
