@@ -346,7 +346,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         dataService.invalidate(dataItem.getDataCategory());
 
         // Return successful creation of new DataItemValue.
-        successfulPost(getFullPath(), dataItem.getUid());
+        successfulPost(dataItem.getUid());
     }
 
     /**
