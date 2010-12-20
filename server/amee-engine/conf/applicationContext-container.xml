@@ -13,7 +13,12 @@
                 <value>file</value>
             </list>
         </property>
-        <property name="server" ref="ameeServer"/>
+        <property name="serversList">
+            <list>
+                <ref local="ameeServer"/>
+                <ref local="ameeSecureServer"/>
+            </list>
+        </property>
         <property name="hosts">
             <list>
                 <ref local="ameeHost"/>
@@ -23,7 +28,7 @@
         <property name="statusService" ref="engineStatusService"/>
     </bean>
 
-    <bean id="ameeServer" class="org.restlet.ext.spring.SpringServer">
+    <bean id="ameeServer" class="com.amee.restlet.AMEESpringServer">
         <constructor-arg index="0" value="${PROTOCOL}"/>
         <constructor-arg index="1" value="${PORT}"/>
         <property name="parameters">
@@ -40,6 +45,27 @@
                 <!-- advice here: http://jetty.mortbay.org/jetty5/doc/optimization.html (what about Jetty 6?) -->
             </props>
         </property>
+        <property name="secure" value="false"/>
+    </bean>
+
+    <bean id="ameeSecureServer" class="com.amee.restlet.AMEESpringServer">
+        <constructor-arg index="0" value="${PROTOCOL}"/>
+        <constructor-arg index="1" value="${SECURE_PORT}"/>
+        <property name="parameters">
+            <props>
+                <prop key="converter">com.amee.engine.restlet.TransactionServerConverter</prop>
+                <prop key="minThreads">50</prop>
+                <prop key="maxThreads">700</prop>
+                <prop key="threadMaxIdleTimeMs">30000</prop>
+                <prop key="lowThreads">25</prop>
+                <prop key="lowResourceMaxIdleTimeMs">2500</prop>
+                <prop key="acceptorThreads">1</prop>
+                <prop key="acceptQueueSize">0</prop>
+                <!-- more params here: http://www.restlet.org/documentation/1.1/ext/com/noelios/restlet/ext/jetty/JettyServerHelper.html -->
+                <!-- advice here: http://jetty.mortbay.org/jetty5/doc/optimization.html (what about Jetty 6?) -->
+            </props>
+        </property>
+        <property name="secure" value="true"/>
     </bean>
 
     <bean id="ameeHost" class="com.amee.restlet.AMEESpringHost">

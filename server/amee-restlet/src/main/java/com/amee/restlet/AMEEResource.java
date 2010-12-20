@@ -259,7 +259,7 @@ public abstract class AMEEResource extends AuthorizeResource {
     public void successfulPost(String lastPathSegment) {
         if (isHttps()) {
             
-            // Override the protocol if custom SSL header is present.
+            // Override the protocol if the 'secure' server is being used.
             getRequest().getResourceRef().setProtocol(Protocol.HTTPS);
         }
 
@@ -310,10 +310,8 @@ public abstract class AMEEResource extends AuthorizeResource {
 
     /**
      * This is how we tell if the request came via HTTPS as SSL is termintated at the load balancer.
-     * @return true if the "X-SSL" custom request header is present, otherwise false.
      */
     private boolean isHttps() {
-        Form requestHeaders = (Form) getRequest().getAttributes().get("org.restlet.http.headers");
-        return "true".equals(requestHeaders.getFirstValue("X-SSL"));
+        return getActiveServer().isSecure();
     }
 }

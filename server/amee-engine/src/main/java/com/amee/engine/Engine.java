@@ -76,9 +76,12 @@ public class Engine implements WrapperListener, Serializable {
 
         // Configure Restlet server (ajp, http, etc).
         // TODO: try and do this in Spring XML config
-        Server ajpServer = ((Server) applicationContext.getBean("ameeServer"));
-        ajpServer.getContext().getAttributes().put("transactionController", transactionController);
-        ajpServer.getContext().getAttributes().put("springContext", applicationContext);
+        Server server = ((Server) applicationContext.getBean("ameeServer"));
+        server.getContext().getAttributes().put("transactionController", transactionController);
+        server.getContext().getAttributes().put("springContext", applicationContext);
+        Server secureServer = ((Server) applicationContext.getBean("ameeSecureServer"));
+        secureServer.getContext().getAttributes().put("transactionController", transactionController);
+        secureServer.getContext().getAttributes().put("springContext", applicationContext);
 
         // Configure Restlet logging to log on a single line.
         LogService logService = container.getLogService();
