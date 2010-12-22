@@ -41,7 +41,7 @@ public class SiteFilter extends BaseFilter {
             Map<String, Object> attributes = request.getAttributes();
             // globally useful values
             attributes.put("activeSite", site);
-            ThreadBeanHolder.set("activeSite", site); // used in FreeMarkerConfigurationFactory
+            ThreadBeanHolder.set(ISite.class, site); // used in FreeMarkerConfigurationFactory
             attributes.put("activeServer", getServer());
             // continue
             return super.doHandle(request, response);

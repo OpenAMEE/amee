@@ -67,7 +67,7 @@ public class DrillDownResource extends AMEEResource implements Serializable {
         super.initialise(context, request, response);
         dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
         dataBrowser.setDataCategory(dataCategory);
-        ((RequestContext) ThreadBeanHolder.get("ctx")).setDrillDown(dataCategory);
+        (ThreadBeanHolder.get(RequestContext.class)).setDrillDown(dataCategory);
     }
 
     @Override

@@ -78,15 +78,15 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
 
         // Obtain DataCategory.
         dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
-        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
+        (ThreadBeanHolder.get(RequestContext.class)).setDataCategory(dataCategory);
 
         // Obtain ProfileItem.
         profileItem = profileService.getProfileItem(request.getAttributes().get("itemUid").toString());
-        ((RequestContext) ThreadBeanHolder.get("ctx")).setProfileItem(profileItem);
+        (ThreadBeanHolder.get(RequestContext.class)).setProfileItem(profileItem);
 
         // Obtain ItemValue.
         setProfileItemValue(request.getAttributes().get("valuePath").toString());
-        ((RequestContext) ThreadBeanHolder.get("ctx")).setItemValue(getProfileItemValue());
+        (ThreadBeanHolder.get(RequestContext.class)).setItemValue(getProfileItemValue());
 
         // Media type sensitive builder.
         setBuilderStrategy();

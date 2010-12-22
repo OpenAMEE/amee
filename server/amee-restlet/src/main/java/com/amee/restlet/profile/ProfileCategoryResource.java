@@ -84,7 +84,7 @@ public class ProfileCategoryResource extends BaseProfileResource {
 
         // Obtain DataCategory.
         dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
-        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
+        (ThreadBeanHolder.get(RequestContext.class)).setDataCategory(dataCategory);
 
         // Media type sensitive builder.
         setBuilderStrategy();

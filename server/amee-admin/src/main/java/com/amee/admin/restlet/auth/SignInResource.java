@@ -106,7 +106,7 @@ public class SignInResource extends BaseResource implements Serializable {
             if (activeUser != null) {
                 // put active user in context
                 getRequest().getAttributes().put("activeUser", activeUser);
-                ThreadBeanHolder.set("activeUser", activeUser);
+                ThreadBeanHolder.set(User.class, activeUser);
                 // create AuthToken and add to response
                 authToken = authenticationService.generateAuthToken(activeUser, getRequest().getClientInfo().getAddress());
                 AuthUtils.addAuthCookie(getResponse(), authToken);
@@ -126,7 +126,7 @@ public class SignInResource extends BaseResource implements Serializable {
             } else {
                 // clear contexts
                 getRequest().getAttributes().put("activeUser", null);
-                ThreadBeanHolder.set("activeUser", null);
+                ThreadBeanHolder.set(User.class, null);
                 // not signed in
                 AuthUtils.discardAuthCookie(getResponse());
                 // show auth page again

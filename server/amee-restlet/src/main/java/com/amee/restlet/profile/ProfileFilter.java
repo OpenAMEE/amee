@@ -50,7 +50,7 @@ public class ProfileFilter extends DataFilter {
         Reference reference = request.getResourceRef();
         List<String> segments = reference.getSegments();
         removeEmptySegmentAtEnd(segments);
-        RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+        RequestContext ctx = ThreadBeanHolder.get(RequestContext.class);
         if (!skipRewrite(segments) && segments.get(0).equals("profiles")) {
             // Remove '/profiles'.
             segments.remove(0);

@@ -2,6 +2,15 @@ package com.amee.engine.restlet;
 
 import com.amee.base.transaction.TransactionController;
 import com.amee.base.utils.ThreadBeanHolder;
+import com.amee.calculation.service.CalculationService;
+import com.amee.domain.IDataItemService;
+import com.amee.domain.ILocaleService;
+import com.amee.domain.IMetadataService;
+import com.amee.domain.profile.CO2CalculationService;
+import com.amee.service.item.DataItemService;
+import com.amee.service.item.ProfileItemService;
+import com.amee.service.locale.LocaleService;
+import com.amee.service.metadata.MetadataService;
 import com.noelios.restlet.http.HttpRequest;
 import com.noelios.restlet.http.HttpResponse;
 import com.noelios.restlet.http.HttpServerCall;
@@ -24,11 +33,11 @@ public class TransactionServerConverter extends HttpServerConverter {
         // Clear the ThreadBeanHolder at the start of each request.
         ThreadBeanHolder.clear();
         // Store commonly used services.
-        ThreadBeanHolder.set("dataItemService", springContext.getBean("dataItemService"));
-        ThreadBeanHolder.set("profileItemService", springContext.getBean("profileItemService"));
-        ThreadBeanHolder.set("localeService", springContext.getBean("localeService"));
-        ThreadBeanHolder.set("metadataService", springContext.getBean("metadataService"));
-        ThreadBeanHolder.set("calculationService", springContext.getBean("calculationService"));
+        ThreadBeanHolder.set(IDataItemService.class, (IDataItemService) springContext.getBean("dataItemService"));
+        ThreadBeanHolder.set(ProfileItemService.class, (ProfileItemService) springContext.getBean("profileItemService"));
+        ThreadBeanHolder.set(ILocaleService.class, (ILocaleService) springContext.getBean("localeService"));
+        ThreadBeanHolder.set(IMetadataService.class, (IMetadataService) springContext.getBean("metadataService"));
+        ThreadBeanHolder.set(CO2CalculationService.class, (CO2CalculationService) springContext.getBean("calculationService"));
         // Pass request through.
         return super.toRequest(httpCall);
     }

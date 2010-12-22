@@ -40,9 +40,9 @@ public class AuthFilter extends BaseAuthFilter {
             User activeUser = authenticationService.getActiveUser(authToken);
             // add active user to contexts
             request.getAttributes().put("activeUser", activeUser);
-            ThreadBeanHolder.set("activeUser", activeUser);
+            ThreadBeanHolder.set(User.class, activeUser);
             // setup RequestContext
-            RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+            RequestContext ctx = ThreadBeanHolder.get(RequestContext.class);
             ctx.setUser(activeUser);
             ctx.setRequest(request);
 
@@ -51,14 +51,14 @@ public class AuthFilter extends BaseAuthFilter {
             if (StringUtils.isBlank(locale) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                 locale = activeUser.getLocale();
             }
-            LocaleHolder.set(LocaleHolder.KEY, locale);
+            LocaleHolder.set(String.class, locale);
 
             result = accept(request, response, authToken);
         } else {
             // this will only be executed if a guest auth is not found (really?)
             // clear active user from contexts
             request.getAttributes().put("activeUser", null);
-            ThreadBeanHolder.set("activeUser", null);
+            ThreadBeanHolder.set(User.class, null);
             // don't continue
             reject(request, response);
             result = Filter.STOP;

@@ -81,11 +81,11 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
 
         // Obtain DataCategory.
         dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
-        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
+        (ThreadBeanHolder.get(RequestContext.class)).setDataCategory(dataCategory);
 
         // Obtain ProfileItem.
         profileItem = profileService.getProfileItem(request.getAttributes().get("itemUid").toString());
-        ((RequestContext) ThreadBeanHolder.get("ctx")).setProfileItem(profileItem);
+        (ThreadBeanHolder.get(RequestContext.class)).setProfileItem(profileItem);
 
         // Media type sensitive builder.
         setBuilderStrategy();
