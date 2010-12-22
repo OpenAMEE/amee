@@ -27,18 +27,18 @@ public class TransactionFilter extends Filter {
         boolean success = true;
         try {
             // Setup a RequestContext bean bound to this request thread.
-            ThreadBeanHolder.set("ctx", new RequestContext());
+            ThreadBeanHolder.set(RequestContext.class, new RequestContext());
             transactionController.beforeHandle(!request.getMethod().equals(Method.GET));
             return super.doHandle(request, response);
         } catch (Throwable t) {
             success = false;
-            RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+            RequestContext ctx = ThreadBeanHolder.get(RequestContext.class);
             ctx.setError(t.getMessage());
             ctx.error();
             throw new RuntimeException(t);
         } finally {
             // Close off the RequestContext.
-            RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+            RequestContext ctx = ThreadBeanHolder.get(RequestContext.class);
             ctx.setStatus(response.getStatus());
             ctx.record();
             // Handle the end of the transaction.

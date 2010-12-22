@@ -95,15 +95,15 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
         // Obtain DataCategory.
         dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
         dataBrowser.setDataCategory(dataCategory);
-        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
+        (ThreadBeanHolder.get(RequestContext.class)).setDataCategory(dataCategory);
 
         // Obtain DataItem.
         dataItem = dataService.getDataItemByIdentifier(dataCategory, request.getAttributes().get("itemPath").toString());
-        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataItem(dataItem);
+        (ThreadBeanHolder.get(RequestContext.class)).setDataItem(dataItem);
 
         // Obtain ItemValue.
         setDataItemValue(request);
-        ((RequestContext) ThreadBeanHolder.get("ctx")).setItemValue(itemValue);
+        (ThreadBeanHolder.get(RequestContext.class)).setItemValue(itemValue);
     }
 
     /**

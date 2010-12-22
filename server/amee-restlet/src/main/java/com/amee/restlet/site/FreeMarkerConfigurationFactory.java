@@ -96,7 +96,7 @@ public class FreeMarkerConfigurationFactory implements CacheableFactory {
     }
 
     public String getKey() {
-        ISite site = (ISite) ThreadBeanHolder.get("activeSite");
+        ISite site = ThreadBeanHolder.get(ISite.class);
         if ((site != null) && (site.getActiveSkinPath() != null)) {
             return site.getActiveSkinPath();
         } else {

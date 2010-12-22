@@ -74,14 +74,14 @@ public class BasicAuthFilter extends Guard {
         User activeUser = authenticationService.authenticate(sampleUser);
         if (activeUser != null) {
             request.getAttributes().put("activeUser", activeUser);
-            ThreadBeanHolder.set("activeUser", activeUser);
+            ThreadBeanHolder.set(User.class, activeUser);
 
             // Set user or request locale information into the thread
             String locale = request.getResourceRef().getQueryAsForm().getFirstValue("locale");
             if (StringUtils.isBlank(locale) || !LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
                 locale = activeUser.getLocale();
             }
-            LocaleHolder.set(LocaleHolder.KEY, locale);
+            LocaleHolder.set(String.class, locale);
         }
         return activeUser != null;
     }

@@ -253,7 +253,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("path", getRequest().getResourceRef().getPath());
         // values below are mirrored in EngineStatusFilter
-        values.put("activeUser", ThreadBeanHolder.get("activeUser"));
+        values.put("activeUser", ThreadBeanHolder.get(User.class));
         // add request params
         values.put("Parameters", getRequest().getResourceRef().getQueryAsForm().getValuesMap());
         // add enums
@@ -516,7 +516,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
             faultStr = faultStr + " " + message;
         }
 
-        RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+        RequestContext ctx = ThreadBeanHolder.get(RequestContext.class);
         ctx.setError(faultStr);
         getResponse().setStatus(status, faultStr);
         log.warn(ctx.toString());
@@ -533,7 +533,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
             } else {
                 form = getRequest().getResourceRef().getQueryAsForm();
             }
-            RequestContext ctx = (RequestContext) ThreadBeanHolder.get("ctx");
+            RequestContext ctx = ThreadBeanHolder.get(RequestContext.class);
             ctx.setForm(form);
         }
         return form;

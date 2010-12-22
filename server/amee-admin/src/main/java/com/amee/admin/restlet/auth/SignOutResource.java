@@ -38,7 +38,7 @@ public class SignOutResource extends BaseResource implements Serializable {
         AuthUtils.discardAuthCookie(response);
         activeUser = authenticationService.doGuestSignIn();
         request.getAttributes().put("activeUser", activeUser);
-        ThreadBeanHolder.set("activeUser", activeUser);
+        ThreadBeanHolder.set(User.class, activeUser);
     }
 
     @Override

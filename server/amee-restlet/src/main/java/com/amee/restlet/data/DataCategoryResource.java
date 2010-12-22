@@ -97,7 +97,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
         // Obtain DataCategory.
         dataCategory = dataService.getDataCategoryByUid(request.getAttributes().get("categoryUid").toString());
         dataBrowser.setDataCategory(dataCategory);
-        ((RequestContext) ThreadBeanHolder.get("ctx")).setDataCategory(dataCategory);
+        (ThreadBeanHolder.get(RequestContext.class)).setDataCategory(dataCategory);
     }
 
     @Override
