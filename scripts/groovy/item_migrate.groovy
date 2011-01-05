@@ -1,6 +1,6 @@
 /*
  * To redirect stdout and stderr:
- * groovy item_value_migrate.groovy 1> out.log 2> err.log
+ * groovy item_migrate.groovy 1> out.log 2> err.log
  *
  * This script requires the MySQL connector. Copy the jar to ~/.groovy/lib/
  *

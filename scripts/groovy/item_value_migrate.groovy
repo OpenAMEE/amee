@@ -105,6 +105,11 @@ while (rs.next()) {
                 setObject(2, rs.getString("UID"))
                 setObject(3, rs.getInt("STATUS"))
                 def rowVal = rs.getString("VALUE")
+                if (rowVal == 'Infinity' || rowVal == 'NaN') {
+
+                    // Would throw an SQLException if we tried to insert these values.
+                    throw new NumberFormatException()
+                }
                 setObject(4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
                 setObject(5, rs.getTimestamp("CREATED"))
                 setObject(6, rs.getTimestamp("MODIFIED"))
@@ -253,6 +258,9 @@ while (rs.next()) {
                     setObject(2, rs.getString("UID"))
                     setObject(3, rs.getInt("STATUS"))
                     def rowVal = rs.getString("VALUE")
+                    if (rowVal == 'Infinity' || rowVal == 'NaN') {
+                        throw new NumberFormatException()
+                    }
                     setObject(4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
                     setObject(5, rs.getTimestamp("CREATED"))
                     setObject(6, rs.getTimestamp("MODIFIED"))
