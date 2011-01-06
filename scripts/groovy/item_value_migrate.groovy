@@ -7,9 +7,9 @@
  * To generate a report of problem values, use this awk script:
  * awk -F ',' '{ values[$4]++ } END { for(value in values) { print value, values[value] } }' item_value.err 
  *
- * To generate a CSV containing iv.ID, ivd.ID, id.NAME, ivd.NAME, iv.VALUE:
- * awk '{print $8}' item_value.err | tr -d '\n\' | sed 's/,$//' | sed 's/^/Select iv.ID, ivd.ID, id.NAME AS ITEM_NAME, ivd.NAME as VAL_NAME, iv.VALUE from ITEM_VALUE iv join ITEM i on iv.ITEM_ID = i.ID join ITEM_VALUE_DEFINITION ivd on iv.ITEM_VALUE_DEFINITION_ID = ivd.ID join ITEM_DEFINITION id on ivd.ITEM_DEFINITION_ID = id.ID where iv.ID in (/;s/$/) into outfile "\/tmp\/iv.csv" FIELDS TERMINATED BY ",";/' | mysql amee
- *   
+ * To generate a CSV report:
+ * awk '{print $8}' item_value.err | tr -d '\n\' | sed 's/,$//' | sed 's/^/select p.ID as PROFILE_ID, u.NAME as USER_NAME, iv.ID, ivd.ID, ivd.VALUE_DEFINITION_ID, id.NAME AS ITEM_NAME, ivd.NAME as VAL_NAME, iv.VALUE from ITEM_VALUE iv join ITEM i on iv.ITEM_ID = i.ID join ITEM_VALUE_DEFINITION ivd on iv.ITEM_VALUE_DEFINITION_ID = ivd.ID join ITEM_DEFINITION id on ivd.ITEM_DEFINITION_ID = id.ID join PROFILE p on i.PROFILE_ID = p.ID join USER u on p.USER_ID = u.ID where iv.ID in (/;s/$/) into outfile "\/tmp\/iv.csv" FIELDS TERMINATED BY "\t";/' | mysql amee
+ *
  */
 
 import groovy.sql.Sql
