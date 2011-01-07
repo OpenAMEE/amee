@@ -368,7 +368,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
         if (!validDataCategory(newDataCategory)) {
             badRequest();
             // TODO: Should we set dataCategory to null here?
-        } else if (!dataService.isUnique(newDataCategory)) {
+        } else if (!dataService.isDataCategoryUniqueByPath(newDataCategory)) {
             badRequest(APIFault.DUPLICATE_ITEM);
             newDataCategory = null;
         } else {
