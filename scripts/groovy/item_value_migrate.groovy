@@ -230,7 +230,7 @@ def dataItemTextValueSql =
 def dataItemTextValueStatement = sqlInsert.connection.prepareStatement(dataItemTextValueSql)
 
 def dataItemNumberValueHistorySql =
-    "INSERT INTO DATA_ITEM_NUMBER_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, DATA_ITEM_ID, UNIT, PER_UNIT, START_DATE) " +
+    "INSERT INTO DATA_ITEM_NUMBER_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT, START_DATE) " +
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 def dataItemNumberValueHistoryStatement = sqlInsert.connection.prepareStatement(dataItemNumberValueHistorySql)
 
