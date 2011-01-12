@@ -258,7 +258,7 @@ while (rs.next()) {
                     setObject(2, rs.getString("UID"))
                     setObject(3, rs.getInt("STATUS"))
                     def rowVal = rs.getString("VALUE")
-                    if (rowVal == 'Infinity' || rowVal == 'NaN') {
+                    if (Double.parseDouble(rowVal).infinite || Double.parseDouble(rowVal).naN) {
                         throw new NumberFormatException()
                     }
                     setObject(4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
