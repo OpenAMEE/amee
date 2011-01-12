@@ -105,7 +105,7 @@ while (rs.next()) {
                 setObject(2, rs.getString("UID"))
                 setObject(3, rs.getInt("STATUS"))
                 def rowVal = rs.getString("VALUE")
-                if (rowVal == 'Infinity' || rowVal == 'NaN') {
+                if (Double.parseDouble(rowVal).infinite || Double.parseDouble(rowVal).naN) {
 
                     // Would throw an SQLException if we tried to insert these values.
                     throw new NumberFormatException()
