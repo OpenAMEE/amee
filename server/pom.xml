@@ -15,12 +15,12 @@
     <properties>
         <!-- Internal Versions. -->
         <amee.version>2.15.0-DEV</amee.version>
-        <amee-base.version>1.0.6-SNAPSHOT</amee-base.version>
-        <amee-persist.version>1.0.8-SNAPSHOT</amee-persist.version>
-        <amee-messaging.version>1.0.6-SNAPSHOT</amee-messaging.version>
-        <amee-platform-science.version>1.0.12-SNAPSHOT</amee-platform-science.version>
-        <amee-platform-domain.version>1.0.12-SNAPSHOT</amee-platform-domain.version>
-        <amee-platform-service.version>1.0.15-SNAPSHOT</amee-platform-service.version>
+        <amee-base.version>1.0.6</amee-base.version>
+        <amee-persist.version>1.0.8</amee-persist.version>
+        <amee-messaging.version>1.0.6</amee-messaging.version>
+        <amee-platform-science.version>1.0.12</amee-platform-science.version>
+        <amee-platform-domain.version>1.0.12</amee-platform-domain.version>
+        <amee-platform-service.version>1.0.17-SNAPSHOT</amee-platform-service.version>
         <!-- External Versions. -->
         <!-- Note: Keep Restlet, Jetty and servlet-api versions in sync. -->
         <!-- Note: Check Restlet release notes and jetty dependencies. -->
@@ -56,7 +56,6 @@
         <junit.version>4.7</junit.version>
         <log4j.version>1.2.15</log4j.version>
         <log4jdbc.version>4-1.2alpha2</log4jdbc.version>
-        <lucene-core.version>3.0.1</lucene-core.version>
         <mysql-connector-java.version>5.1.10</mysql-connector-java.version>
         <opencsv.version>2.1</opencsv.version>
         <org-json.version>2.0</org-json.version>
