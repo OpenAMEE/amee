@@ -14,4 +14,5 @@
     <include relativeToChangelogFile="true" file="db.changelog-6-fix_item_values.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-7-rvd-nulls.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-8-charsets.xml"/>
+    <include relativeToChangelogFile="true" file="db.changelog-9-drop_aliased_to_id.xml"/>
 </databaseChangeLog>

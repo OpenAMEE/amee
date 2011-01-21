@@ -105,12 +105,19 @@ while (rs.next()) {
                 setObject(2, rs.getString("UID"))
                 setObject(3, rs.getInt("STATUS"))
                 def rowVal = rs.getString("VALUE")
-                if (rowVal == 'Infinity' || rowVal == 'NaN') {
 
-                    // Would throw an SQLException if we tried to insert these values.
+                // Handle empty values
+                if (rowVal == "" || rowVal == "-") {
+                    setObject(4, null)
+                } else if (Double.parseDouble(rowVal).infinite || Double.parseDouble(rowVal).naN) {
+
+                    // Technically a Double but would throw an SQLException if we tried to insert these values.
                     throw new NumberFormatException()
+                } else {
+
+                    // By now the value must be good
+                    setObject(4, Double.parseDouble(rowVal))
                 }
-                setObject(4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
                 setObject(5, rs.getTimestamp("CREATED"))
                 setObject(6, rs.getTimestamp("MODIFIED"))
                 setObject(7, rs.getLong("PROFILE_ITEM_ID"))
@@ -230,7 +237,7 @@ def dataItemTextValueSql =
 def dataItemTextValueStatement = sqlInsert.connection.prepareStatement(dataItemTextValueSql)
 
 def dataItemNumberValueHistorySql =
-    "INSERT INTO DATA_ITEM_NUMBER_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, DATA_ITEM_ID, UNIT, PER_UNIT, START_DATE) " +
+    "INSERT INTO DATA_ITEM_NUMBER_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT, START_DATE) " +
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 def dataItemNumberValueHistoryStatement = sqlInsert.connection.prepareStatement(dataItemNumberValueHistorySql)
 
@@ -258,10 +265,19 @@ while (rs.next()) {
                     setObject(2, rs.getString("UID"))
                     setObject(3, rs.getInt("STATUS"))
                     def rowVal = rs.getString("VALUE")
-                    if (rowVal == 'Infinity' || rowVal == 'NaN') {
+
+                    // Handle empty values
+                    if (rowVal == "" || rowVal == "-") {
+                        setObject(4, null)
+                    } else if (Double.parseDouble(rowVal).infinite || Double.parseDouble(rowVal).naN) {
+
+                        // Technically a Double but would throw an SQLException if we tried to insert these values.
                         throw new NumberFormatException()
+                    } else {
+
+                        // By now the value must be good
+                        setObject(4, Double.parseDouble(rowVal))
                     }
-                    setObject(4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
                     setObject(5, rs.getTimestamp("CREATED"))
                     setObject(6, rs.getTimestamp("MODIFIED"))
                     setObject(7, rs.getLong("DATA_ITEM_ID"))
