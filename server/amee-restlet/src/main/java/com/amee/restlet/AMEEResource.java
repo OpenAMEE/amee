@@ -260,13 +260,13 @@ public abstract class AMEEResource extends AuthorizeResource {
         if (isSecure()) {
             
             // Override the protocol if the 'secure' server is being used.
-            getRequest().getResourceRef().setProtocol(Protocol.HTTPS);
+            getRequest().getOriginalRef().setProtocol(Protocol.HTTPS);
         }
 
         // For web browsers, continue with the same logic from AMEE 1.X.
         if (isStandardWebBrowser()) {
             getResponse().setStatus(Status.REDIRECTION_FOUND);
-            getResponse().setLocationRef(getRequest().getResourceRef().toString());
+            getResponse().setLocationRef(getRequest().getOriginalRef().toString());
         } else {
             // Return a representation when the following conditions apply:
             //  (i) API V1.X (backwards compatibility)
@@ -276,7 +276,7 @@ public abstract class AMEEResource extends AuthorizeResource {
                 super.handleGet();
             } else {
                 // For single POSTs in API versions >V1.X set the Location and 201 Created header.
-                getResponse().setLocationRef(getRequest().getResourceRef().toString() + "/" + lastPathSegment);
+                getResponse().setLocationRef(getRequest().getOriginalRef().toString() + "/" + lastPathSegment);
                 getResponse().setStatus(Status.SUCCESS_CREATED);
             }
         }
