@@ -1,13 +1,14 @@
 #!/bin/bash
 # Calculate the storage space used up by all tables in a given MySQL database
 # Ben Dowling - www.coderholic.com
-database=$1
-username=$2
-password=$3
+host=$1
+database=$2
+username=$3
+password=$4
 
 if [ ${#database} -eq 0 ]
 then
- echo "Usage: $0 <database> [username [password]]"
+ echo "Usage: $0 <host> <database> [username [password]]"
  exit
 fi
 
@@ -16,7 +17,7 @@ if [ "$password" ]
   password="-p$password"
 fi
 
-mysql="mysql -u $username $password $database"
+mysql="mysql -h $host -u $username $password $database"
 
 $mysql -se "USE $database";
 
