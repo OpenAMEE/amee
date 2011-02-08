@@ -4,8 +4,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
-    <changeSet id="9-1" author="david">
-        <comment>Drop DATA_CATEGORY.ALIASED_TO_ID column</comment>
-        <dropColumn tableName="DATA_CATEGORY" columnName="ALIASED_TO_ID"/>
+    <changeSet id="8-1" author="david" context="live">
+        <comment>Change value type to text (PL-10403)</comment>
+        <update tableName="ITEM_VALUE_DEFINITION">
+            <column name="VALUE_DEFINITION_ID" valueNumeric="17"/>
+            <where>ID=432</where>
+        </update>
     </changeSet>
 </databaseChangeLog>
