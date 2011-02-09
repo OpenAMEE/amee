@@ -23,7 +23,7 @@ println "start transaction;"
 
 // Iterate over the file
 file.splitEachLine("\t") { row ->
-    println "update ITEM_VALE set VALUE = ${row[10]} where ID = ${row[2]};"
+    println "update ITEM_VALUE set VALUE = ${row[10]} where ID = ${row[2]};"
 }
 
 // Commit the transaction
