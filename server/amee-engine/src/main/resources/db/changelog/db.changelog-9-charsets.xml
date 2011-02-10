@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
-    <changeSet id="8-1" author="david">
+    <changeSet id="9-1" author="david">
         <comment>Update ALGORITHM table charset to utf8</comment>
 
         <!-- Use custom sql so we have a single ALTER statement. -->
@@ -16,7 +16,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="8-2" author="david">
+    <changeSet id="9-2" author="david">
         <comment>Update ITEM_VALUE_DEFINITION charset to utf8</comment>
         <sql>
             ALTER TABLE ITEM_VALUE_DEFINITION DEFAULT CHARSET=utf8,
@@ -29,7 +29,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="8-3" author="david">
+    <changeSet id="9-3" author="david">
         <comment>Update PROFILE charset to utf8</comment>
         <sql>
             ALTER TABLE PROFILE DEFAULT CHARSET=utf8,
@@ -38,7 +38,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="8-4" author="david">
+    <changeSet id="9-4" author="david">
         <comment>Update ITEM_DEFINITION charset to utf8</comment>
         <sql>
             ALTER TABLE ITEM_DEFINITION DEFAULT CHARSET=utf8,
@@ -47,7 +47,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="8-5" author="david">
+    <changeSet id="9-5" author="david">
         <comment>Update VALUE_DEFINITION charset to utf8</comment>
         <sql>
             ALTER TABLE VALUE_DEFINITION DEFAULT CHARSET=utf8,
@@ -56,7 +56,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="8-6" author="david">
+    <changeSet id="9-6" author="david">
         <comment>Update PERMISSION charset to utf8</comment>
         <sql>
             ALTER TABLE PERMISSION DEFAULT CHARSET=utf8,
@@ -66,7 +66,7 @@
         </sql>
     </changeSet>
     
-    <changeSet id="8-7" author="david">
+    <changeSet id="9-7" author="david">
         <comment>Update DATA_CATEGORY charset to utf8</comment>
         <sql>
             ALTER TABLE DATA_CATEGORY DEFAULT CHARSET=utf8,
@@ -76,7 +76,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="8-8" author="david">
+    <changeSet id="9-8" author="david">
         <comment>Update USER charset to utf8</comment>
         <sql>
             ALTER TABLE USER DEFAULT CHARSET=utf8,
@@ -89,7 +89,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="8-9" author="david">
+    <changeSet id="9-9" author="david">
         <comment>Update GROUP_PRINCIPAL charset to utf8</comment>
         <sql>
             ALTER TABLE GROUP_PRINCIPAL DEFAULT CHARSET=utf8,
@@ -97,7 +97,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="8-10" author="david">
+    <changeSet id="9-10" author="david">
         <comment>Update GROUPS charset to utf8</comment>
         <sql>
             ALTER TABLE GROUPS DEFAULT CHARSET=utf8,
@@ -106,7 +106,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="8-11" author="david" context="science">
+    <changeSet id="9-11" author="david" context="science">
         <comment>Recast ITEM_VALUE to latin1 in science database</comment>
         <sql>
             ALTER TABLE ITEM_VALUE DEFAULT CHARSET=latin1,
