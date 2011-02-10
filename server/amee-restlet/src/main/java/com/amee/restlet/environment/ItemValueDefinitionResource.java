@@ -204,6 +204,7 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
                 itemValueDefinition.removeAPIVersion(apiVersion);
             }
         }
+        definitionService.invalidate(itemValueDefinition.getItemDefinition());
         success();
     }
 
