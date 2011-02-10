@@ -23,7 +23,14 @@ println "start transaction;"
 
 // Iterate over the file
 file.splitEachLine("\t") { row ->
-    println "update ITEM_VALUE set VALUE = ${row[10]} where ID = ${row[2]};"
+    def id = row[2]
+    def value = row[10]
+    if (value == 'NULL') {
+        value = "''";
+    } else {
+        value = "'${value}'"
+    }
+    println "update ITEM_VALUE set VALUE = ${value} where ID = ${id};"
 }
 
 // Commit the transaction
