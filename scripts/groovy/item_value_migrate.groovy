@@ -52,7 +52,7 @@ if (opt.r) dryRun = true
 def sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
 sql.connection.autoCommit = false
 
-def sqlInsert = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
+def sqlInsert = Sql.newInstance("jdbc:mysql://${server}:3306/${database}?rewriteBatchedStatements=true", user, password, "com.mysql.jdbc.Driver")
 sqlInsert.connection.autoCommit = false
 
 // Check for scolling.
