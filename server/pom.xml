@@ -46,7 +46,6 @@
         <hibernate-core.version>3.6.0.Final</hibernate-core.version>
         <hoptoad-notifier.version>1.8</hoptoad-notifier.version>
         <ibm-icu4j.version>4.0.1</ibm-icu4j.version>
-        <javacsv.version>2.0</javacsv.version>
         <javax.mail.version>1.4</javax.mail.version>
         <jetty-jsp.version>2.1-6.0.2</jetty-jsp.version>
         <jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>
