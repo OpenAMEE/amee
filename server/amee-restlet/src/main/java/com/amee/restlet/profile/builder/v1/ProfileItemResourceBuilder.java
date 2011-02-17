@@ -1,13 +1,15 @@
 package com.amee.restlet.profile.builder.v1;
 
 import com.amee.base.utils.XMLUtils;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.domain.profile.builder.v1.ProfileItemBuilder;
 import com.amee.platform.science.AmountPerUnit;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
+import com.amee.service.item.ProfileItemService;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -37,6 +39,9 @@ import java.util.Map;
 @Service("v1ProfileItemResourceBuilder")
 public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
 
+    @Autowired
+    ProfileItemService profileItemService;
+
     public JSONObject getJSONObject(ProfileItemResource resource) throws JSONException {
         JSONObject obj = new JSONObject();
         ProfileItem profileItem = resource.getProfileItem();
@@ -61,7 +66,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         values.put("browser", resource.getProfileBrowser());
         values.put("profile", profileItem.getProfile());
         values.put("profileItem", profileItem);
-        if (!profileItem.isSingleFlight()) {
+        if (!profileItemService.isSingleFlight(profileItem)) {
             values.put("amountPerMonth", profileItem.getAmounts().defaultValueAsAmount().convert(AmountPerUnit.MONTH).getValue());
         } else {
             values.put("amountPerMonth", profileItem.getAmounts().defaultValueAsDouble());

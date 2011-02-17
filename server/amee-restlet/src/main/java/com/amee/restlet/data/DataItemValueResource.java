@@ -24,11 +24,12 @@ import com.amee.base.utils.XMLUtils;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.DataItemBuilder;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
 import com.amee.domain.data.builder.v2.ItemValueInListBuilder;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.HistoryValue;
+import com.amee.domain.item.data.DataItem;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.RequestContext;
@@ -37,6 +38,7 @@ import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.item.DataItemService;
 import com.amee.service.locale.LocaleService;
+import com.amee.service.profile.ProfileService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -80,13 +82,16 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
     private DataItem dataItem;
 
     // Will be null is a sequence of ItemValues is being requested.
-    private ItemValue itemValue;
+    private BaseItemValue itemValue;
 
     // Will be null is a single ItemValue is being requested.
-    private List<ItemValue> itemValues;
+    private List<BaseItemValue> itemValues;
 
     // The request may include a parameter which specifies how to retrieve a historical sequence of ItemValues.
     private int valuesPerPage = 1;
+
+    @Autowired
+    protected ProfileService profileService;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -98,7 +103,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
         (ThreadBeanHolder.get(RequestContext.class)).setDataCategory(dataCategory);
 
         // Obtain DataItem.
-        dataItem = dataService.getDataItemByIdentifier(dataCategory, request.getAttributes().get("itemPath").toString());
+        dataItem = dataItemService.getDataItemByIdentifier(dataCategory, request.getAttributes().get("itemPath").toString());
         (ThreadBeanHolder.get(RequestContext.class)).setDataItem(dataItem);
 
         // Obtain ItemValue.
@@ -140,7 +145,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
      * @param itemValue to validate
      * @return true if the itemValue is valid, otherwise false
      */
-    private boolean isItemValueValid(ItemValue itemValue) {
+    private boolean isItemValueValid(BaseItemValue itemValue) {
         return (itemValue != null) &&
                 !itemValue.isTrash() &&
                 itemValue.getItem().equals(dataItem);
@@ -164,9 +169,9 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
         }
 
         // Validate all ItemValues in the itemValues list and remove any invalid items.
-        itemValues = (List<ItemValue>) CollectionUtils.select(itemValues, new Predicate() {
+        itemValues = (List<BaseItemValue>) CollectionUtils.select(itemValues, new Predicate() {
             public boolean evaluate(Object o) {
-                return isItemValueValid((ItemValue) o);
+                return isItemValueValid((BaseItemValue) o);
             }
         });
 
@@ -237,9 +242,9 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
         // the closest match.
         if (valuesPerPage > 1) {
             // TODO: Implement paging.
-            itemValues = dataItem.getAllItemValues(itemValueIdentifier);
+            itemValues = dataItemService.getAllItemValues(dataItem, itemValueIdentifier);
         } else {
-            itemValue = dataItem.getItemValue(itemValueIdentifier, startDate);
+            itemValue = dataItemService.getItemValue(dataItem, itemValueIdentifier, startDate);
         }
     }
 
@@ -251,7 +256,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
             obj.put("itemValue", new ItemValueBuilder(itemValue, dataItemBuilder).getJSONObject());
         } else {
             JSONArray values = new JSONArray();
-            for (ItemValue iv : itemValues) {
+            for (BaseItemValue iv : itemValues) {
                 values.put(new ItemValueInListBuilder(iv).getJSONObject(false));
             }
             obj.put("itemValues", values);
@@ -269,7 +274,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
             element.appendChild(new ItemValueBuilder(itemValue, dataItemBuilder).getElement(document));
         } else {
             Element values = document.createElement("ItemValues");
-            for (ItemValue iv : itemValues) {
+            for (BaseItemValue iv : itemValues) {
                 values.appendChild(new ItemValueInListBuilder(iv).getElement(document, false));
             }
             element.appendChild(values);
@@ -349,17 +354,9 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
 
             // TODO: PL-6577 - Just compare to the EPOCH.
             // Can't amend the startDate of the first ItemValue in a history (startDate == DI.startDate)
-            if (itemValue.getStartDate().equals(dataItem.getStartDate())) {
+            if (!HistoryValue.class.isAssignableFrom(dataItem.getClass())) {
                 log.warn("doStore() badRequest - Trying to update the startDate of the first DIV in a history.");
                 badRequest(APIFault.INVALID_RESOURCE_MODIFICATION);
-                return;
-            }
-
-            // TODO: PL-6577 - Shouldn't this be after the epoch?
-            // The submitted startDate must be on or after the epoch.
-            if (!dataItem.isWithinLifeTime(startDate)) {
-                log.warn("doStore() badRequest - Trying to update a DIV to start before the epoch.");
-                badRequest(APIFault.INVALID_DATE_RANGE);
                 return;
             }
 
@@ -367,7 +364,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
             // !dataItem.isUnique(itemValueDefinition, startDate)
 
             // Update the startDate field, the parameter was valid.
-            itemValue.setStartDate(startDate);
+            ((HistoryValue)itemValue).setStartDate(startDate);
         }
 
         // Always invalidate the DataCategory caches.
@@ -394,9 +391,9 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
         }
 
         // Attempt to remove a single ItemValue.
-        int remaining = dataItem.getAllItemValues(itemValue.getItemValueDefinition().getPath()).size();
+        int remaining = dataItemService.getAllItemValues(dataItem, itemValue.getItemValueDefinition().getPath()).size();
         if (remaining > 1) {
-            dataService.remove(itemValue);
+            dataItemService.remove(itemValue);
             dataItemService.clearItemValues();
             dataService.invalidate(dataItem.getDataCategory());
             successfulDelete("/data/ " + dataItem.getFullPath());

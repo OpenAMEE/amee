@@ -13,8 +13,8 @@ import org.restlet.Context;
 import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -37,6 +37,9 @@ import java.util.Set;
  * Website http://www.amee.cc
  */
 public abstract class BaseProfileResource extends AMEEResource {
+
+    @Autowired
+    protected ProfileService profileService;
 
     protected ProfileBrowser profileBrowser;
     protected Set<Long> profileDataCategoryIds;

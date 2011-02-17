@@ -7,12 +7,13 @@ import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
 import com.amee.domain.profile.Profile;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
 import com.amee.service.data.DataService;
+import com.amee.service.item.ProfileItemService;
 import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.ProfileService;
 import com.amee.service.profile.SelectByProfileService;
@@ -66,6 +67,9 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
     @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private ProfileItemService profileItemService;
 
     public JSONObject getJSONObject(ProfileCategoryResource resource) throws JSONException {
 
@@ -273,7 +277,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
                     browser.getSelectBy());
 
         } else {
-            return profileService.getProfileItems(
+            return profileItemService.getProfileItems(
                     resource.getProfile(),
                     resource.getDataCategory(),
                     browser.getQueryStartDate(),
@@ -414,7 +418,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
             atomFeed.addAmount(entry, amount, returnUnit.toString());
 
-            atomFeed.addItemValuesWithLinks(entry, profileItem.getItemValues(), profileItem.getUid());
+            atomFeed.addItemValuesWithLinks(entry, profileItemService.getItemValues(profileItem), profileItem.getUid());
 
             HCalendar content = new HCalendar();
 
@@ -502,7 +506,7 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
 
         atomFeed.addAmount(entry, amount, returnUnit.toString());
 
-        atomFeed.addItemValuesWithLinks(entry, profileItem.getItemValues(), profileItem.getUid());
+        atomFeed.addItemValuesWithLinks(entry, profileItemService.getItemValues(profileItem), profileItem.getUid());
 
         Category cat = atomFeed.newItemCategory(entry);
         cat.setTerm(profileItem.getDataItem().getUid());

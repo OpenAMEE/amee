@@ -19,7 +19,6 @@
  */
 package com.amee.restlet.profile;
 
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.AMEEStatistics;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.Pager;
