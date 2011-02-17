@@ -1,6 +1,6 @@
 package com.amee.restlet.profile.acceptor;
 
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.utils.APIException;
 import org.restlet.data.Form;

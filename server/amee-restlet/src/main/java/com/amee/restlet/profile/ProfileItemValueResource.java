@@ -22,13 +22,15 @@ package com.amee.restlet.profile;
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.ItemValue;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.profile.BaseProfileItemValue;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.IItemValueFormAcceptor;
 import com.amee.restlet.profile.acceptor.IItemValueRepresentationAcceptor;
 import com.amee.restlet.profile.builder.IProfileItemValueResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileItemValueResourceBuilderFactory;
+import com.amee.service.item.ProfileItemService;
 import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.ProfileConstants;
 import org.apache.commons.logging.Log;
@@ -67,9 +69,12 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     @Autowired
     private ProfileItemValueResourceBuilderFactory builderFactory;
 
+    @Autowired
+    private ProfileItemService profileItemService;
+
     private DataCategory dataCategory;
     private ProfileItem profileItem;
-    private ItemValue itemValue;
+    private BaseItemValue itemValue;
     private IProfileItemValueResourceBuilder builder;
 
     @Override
@@ -81,7 +86,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
         (ThreadBeanHolder.get(RequestContext.class)).setDataCategory(dataCategory);
 
         // Obtain ProfileItem.
-        profileItem = profileService.getProfileItem(request.getAttributes().get("itemUid").toString());
+        profileItem = profileItemService.getItemByUid(request.getAttributes().get("itemUid").toString());
         (ThreadBeanHolder.get(RequestContext.class)).setProfileItem(profileItem);
 
         // Obtain ItemValue.
@@ -172,14 +177,14 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
         return profileItem;
     }
 
-    public ItemValue getProfileItemValue() {
+    public BaseItemValue getProfileItemValue() {
         return itemValue;
     }
 
     private void setProfileItemValue(String itemValuePath) {
         if (itemValuePath.isEmpty() || profileItem == null)
             return;
-        this.itemValue = profileItem.getItemValue(itemValuePath);
+        this.itemValue = profileItemService.getItemValue(profileItem, itemValuePath);
     }
 
     private void setBuilderStrategy() {

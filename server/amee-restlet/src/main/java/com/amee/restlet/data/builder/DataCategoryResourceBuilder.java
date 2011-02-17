@@ -5,7 +5,7 @@ import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
+import com.amee.domain.item.data.DataItem;
 import com.amee.domain.data.builder.DataItemBuilder;
 import com.amee.domain.sheet.Column;
 import com.amee.domain.sheet.Sheet;

@@ -5,9 +5,9 @@ import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.ValueType;
 import com.amee.domain.cache.CacheableFactory;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.domain.sheet.Cell;
 import com.amee.domain.sheet.Column;
 import com.amee.domain.sheet.Row;
@@ -15,7 +15,8 @@ import com.amee.domain.sheet.Sheet;
 import com.amee.platform.science.AmountPerUnit;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.service.data.DataService;
-import com.amee.service.profile.ProfileService;
+import com.amee.service.item.DataItemService;
+import com.amee.service.item.ProfileItemService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,7 +29,8 @@ public class ProfileSheetBuilder implements CacheableFactory {
 
     private ProfileCategoryResource resource;
     private DataService dataService;
-    private ProfileService profileService;
+    private DataItemService dataItemService;
+    private ProfileItemService profileItemService;
     private IDataCategoryReference dataCategory;
 
     private ProfileSheetBuilder() {
@@ -38,27 +40,30 @@ public class ProfileSheetBuilder implements CacheableFactory {
     public ProfileSheetBuilder(
             ProfileCategoryResource resource,
             DataService dataService,
-            ProfileService profileService,
+            ProfileItemService profileItemService,
+            DataItemService dataItemService,
             IDataCategoryReference dataCategory) {
         this();
         this.resource = resource;
         this.dataService = dataService;
-        this.profileService = profileService;
+        this.profileItemService = profileItemService;
+        this.dataItemService = dataItemService;
         this.dataCategory = dataCategory;
     }
 
     public ProfileSheetBuilder(
             ProfileCategoryResource resource,
             DataService dataService,
-            ProfileService profileService) {
-        this(resource, dataService, profileService, null);
+            ProfileItemService profileItemService,
+            DataItemService dataItemService) {
+        this(resource, dataService, profileItemService, dataItemService, null);
     }
 
     public Object create() {
 
         List<Column> columns;
         Row row;
-        ItemValue itemValue;
+        BaseItemValue itemValue;
         Sheet sheet = null;
         IDataCategoryReference dataCategoryReference = getDataCategory();
 
@@ -67,7 +72,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
 
             // Get Data Category and Profile Items.
             DataCategory dataCategory = dataService.getDataCategory(dataCategoryReference);
-            List<ProfileItem> profileItems = profileService.getProfileItems(
+            List<ProfileItem> profileItems = profileItemService.getProfileItems(
                     resource.getProfile(),
                     dataCategory,
                     resource.getProfileBrowser().getProfileDate());
@@ -99,13 +104,13 @@ public class ProfileSheetBuilder implements CacheableFactory {
                 row = new Row(sheet, profileItem.getUid());
                 row.setLabel("ProfileItem");
                 for (Column column : columns) {
-                    itemValue = profileItem.getItemValue(column.getName());
+                    itemValue = profileItemService.getItemValue(profileItem, column.getName());
                     if (itemValue != null) {
-                        new Cell(column, row, itemValue.getValue(), itemValue.getUid(), itemValue.getItemValueDefinition().getValueDefinition().getValueType());
+                        new Cell(column, row, itemValue.getValueAsString(), itemValue.getUid(), itemValue.getItemValueDefinition().getValueDefinition().getValueType());
                     } else if ("name".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.getName(), ValueType.TEXT);
                     } else if ("amountPerMonth".equalsIgnoreCase(column.getName())) {
-                        if (!profileItem.isSingleFlight()) {
+                        if (!profileItemService.isSingleFlight(profileItem)) {
                             new Cell(column, row, profileItem.getAmounts().defaultValueAsAmount().convert(AmountPerUnit.MONTH), ValueType.DOUBLE);
                         } else {
                             new Cell(column, row, profileItem.getAmounts().defaultValueAsDouble(), ValueType.DOUBLE);
@@ -125,7 +130,7 @@ public class ProfileSheetBuilder implements CacheableFactory {
                     } else if ("dataItemUid".equalsIgnoreCase(column.getName())) {
                         new Cell(column, row, profileItem.getDataItem().getUid(), profileItem.getDataItem().getUid(), ValueType.TEXT);
                     } else if ("dataItemLabel".equalsIgnoreCase(column.getName())) {
-                        new Cell(column, row, profileItem.getDataItem().getLabel(), ValueType.TEXT);
+                        new Cell(column, row, dataItemService.getLabel(profileItem.getDataItem()), ValueType.TEXT);
                     } else {
                         // add empty cell
                         new Cell(column, row);

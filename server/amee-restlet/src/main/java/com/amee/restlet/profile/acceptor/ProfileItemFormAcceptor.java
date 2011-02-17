@@ -2,9 +2,10 @@ package com.amee.restlet.profile.acceptor;
 
 import com.amee.calculation.service.CalculationService;
 import com.amee.domain.AMEEStatistics;
-import com.amee.domain.data.ItemValue;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.NumberValue;
 import com.amee.domain.profile.MonthDate;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.utils.APIFault;
@@ -79,20 +80,20 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
         }
 
         // ProfileItem must be unique with the Profile.
-        if (profileService.isUnique(profileItem)) {
+        if (profileItemService.isUnique(profileItem)) {
 
             // Update ItemValues if supplied
             for (String name : form.getNames()) {
-                ItemValue itemValue = profileItem.getItemValue(name);
+                BaseItemValue itemValue = profileItemService.getItemValue(profileItem, name);
                 if (itemValue != null) {
                     itemValue.setValue(form.getFirstValue(name));
                     if (resource.getAPIVersion().isNotVersionOne()) {
-                        if (itemValue.hasUnit() && form.getNames().contains(name + "Unit")) {
-                            itemValue.setUnit(form.getFirstValue(name + "Unit"));
-                        }
-                        if (itemValue.hasPerUnit() && form.getNames().contains(name + "PerUnit")) {
-                            itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
-                        }
+                        if ((NumberValue.class.isAssignableFrom(itemValue.getClass()) && ((NumberValue)itemValue).hasUnit() && form.getNames().contains(name + "Unit"))) {
+                                ((NumberValue)itemValue).setUnit(form.getFirstValue(name + "Unit"));
+                            }
+                            if ((NumberValue.class.isAssignableFrom(itemValue.getClass()) && ((NumberValue)itemValue).hasPerUnit() && form.getNames().contains(name + "PerUnit"))) {
+                                ((NumberValue)itemValue).setPerUnit(form.getFirstValue(name + "PerUnit"));
+                            }
                     }
                     ameeStatistics.updateProfileItemValue();
                 }

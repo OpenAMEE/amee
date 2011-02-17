@@ -2,9 +2,9 @@ package com.amee.restlet.profile.builder.v2;
 
 import com.amee.domain.APIVersion;
 import com.amee.domain.IDataCategoryReference;
-import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemValue;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.NumberValue;
+import com.amee.domain.item.data.DataItem;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.factory.Factory;
@@ -190,8 +190,8 @@ public class AtomFeed {
         extension.setAttributeValue("unit", unit);
     }
 
-    public void addItemValuesWithLinks(Entry entry, List<ItemValue> itemValues, String parentPath) {
-        for (ItemValue itemValue : itemValues) {
+    public void addItemValuesWithLinks(Entry entry, List<BaseItemValue> itemValues, String parentPath) {
+        for (BaseItemValue itemValue : itemValues) {
             Element extension = entry.addExtension(Q_NAME_ITEM_VALUE);
             addItemValue(extension, itemValue, parentPath);
         }
@@ -203,14 +203,14 @@ public class AtomFeed {
         e.addExtension(dataItemElement);
     }
 
-    public void addItemValue(Element element, ItemValue itemValue) {
+    public void addItemValue(Element element, BaseItemValue itemValue) {
         addItemValue(element, itemValue, null);
     }
 
-    private void addItemValue(Element element, ItemValue itemValue, String parentPath) {
+    private void addItemValue(Element element, BaseItemValue itemValue, String parentPath) {
 
         factory.newExtensionElement(Q_NAME_NAME, element).setText(itemValue.getName());
-        String value = (itemValue.getValue().isEmpty() ? "N/A" : itemValue.getValue());
+        String value = (itemValue.getValueAsString().isEmpty() ? "N/A" : itemValue.getValueAsString());
         factory.newExtensionElement(Q_NAME_VALUE, element).setText(value);
 
         // A non-Null parent path signifies that the ItemValue should include a link element. This would be the case
@@ -223,10 +223,10 @@ public class AtomFeed {
             l.setRel(AMEE_ITEM_VALUE_SCHEME);
         }
 
-        if (itemValue.hasUnit())
-            factory.newExtensionElement(Q_NAME_UNIT, element).setText(itemValue.getUnit().toString());
-        if (itemValue.hasPerUnit())
-            factory.newExtensionElement(Q_NAME_PER_UNIT, element).setText(itemValue.getPerUnit().toString());
+        if (NumberValue.class.isAssignableFrom(itemValue.getClass()) && ((NumberValue)itemValue).hasUnit())
+            factory.newExtensionElement(Q_NAME_UNIT, element).setText(((NumberValue)itemValue).getUnit().toString());
+        if (NumberValue.class.isAssignableFrom(itemValue.getClass()) && ((NumberValue)itemValue).hasPerUnit())
+            factory.newExtensionElement(Q_NAME_PER_UNIT, element).setText(((NumberValue) itemValue).getPerUnit().toString());
     }
 
     public void addLinks(Element element, String href) {

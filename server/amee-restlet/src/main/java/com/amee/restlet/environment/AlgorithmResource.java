@@ -23,7 +23,7 @@ import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.algorithm.AlgorithmContext;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.domain.sheet.Choice;
 import com.amee.platform.science.AlgorithmRunner;
 import com.amee.platform.science.StartEndDate;

@@ -1,17 +1,19 @@
 package com.amee.restlet.profile.builder.v2;
 
 import com.amee.base.utils.XMLUtils;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
+import com.amee.service.item.ProfileItemService;
 import org.apache.abdera.model.Category;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.IRIElement;
 import org.apache.abdera.model.Text;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,6 +42,9 @@ import java.util.Map;
  */
 @Service("v2ProfileItemResourceBuilder")
 public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
+
+    @Autowired
+    ProfileItemService profileItemService;
 
     public JSONObject getJSONObject(ProfileItemResource resource) throws JSONException {
         JSONObject obj = new JSONObject();
@@ -113,7 +118,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
 
         atomFeed.addAmount(entry, amount, returnUnit.toString());
 
-        atomFeed.addItemValuesWithLinks(entry, profileItem.getItemValues(), "");
+        atomFeed.addItemValuesWithLinks(entry, profileItemService.getItemValues(profileItem), "");
 
         Category cat = atomFeed.newItemCategory(entry);
         cat.setTerm(profileItem.getDataItem().getUid());

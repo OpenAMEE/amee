@@ -20,7 +20,6 @@
 package com.amee.restlet.data;
 
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.data.ItemDefinition;
@@ -29,10 +28,9 @@ import com.amee.domain.sheet.Choices;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.RequestContext;
 import com.amee.service.data.DataBrowser;
-import com.amee.restlet.AMEEResource;
-import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DrillDownService;
+import com.amee.service.profile.ProfileService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +59,8 @@ public class DrillDownResource extends AMEEResource implements Serializable {
     private DataBrowser dataBrowser;
 
     private DataCategory dataCategory;
+    @Autowired
+    protected ProfileService profileService;
 
     @Override
     public void initialise(Context context, Request request, Response response) {

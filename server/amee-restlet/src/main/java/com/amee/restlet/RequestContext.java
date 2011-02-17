@@ -23,10 +23,10 @@ package com.amee.restlet;
 
 import com.amee.domain.auth.User;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemValue;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.data.DataItem;
 import com.amee.domain.profile.Profile;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -120,7 +120,7 @@ public class RequestContext {
     public void setDataItem(DataItem dataItem) {
         if (dataItem != null) {
             this.categoryUid = dataItem.getUid();
-            this.label = dataItem.getLabel();
+            this.label = dataItem.getDisplayPath();
             this.type = dataItem.getObjectType().getName();
         }
     }
@@ -133,7 +133,7 @@ public class RequestContext {
         }
     }
 
-    public void setItemValue(ItemValue itemValue) {
+    public void setItemValue(BaseItemValue itemValue) {
         if (itemValue != null) {
             this.categoryUid = itemValue.getUid();
             this.label = itemValue.getPath();

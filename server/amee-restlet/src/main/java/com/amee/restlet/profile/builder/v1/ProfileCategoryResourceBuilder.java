@@ -5,7 +5,7 @@ import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.Profile;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.domain.profile.builder.v1.ProfileItemBuilder;
 import com.amee.domain.sheet.Cell;
 import com.amee.domain.sheet.Row;
@@ -13,6 +13,8 @@ import com.amee.domain.sheet.Sheet;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
 import com.amee.service.data.DataService;
+import com.amee.service.item.DataItemService;
+import com.amee.service.item.ProfileItemService;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,7 +57,13 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     private DataService dataService;
 
     @Autowired
+    private DataItemService dataItemService;
+
+    @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private ProfileItemService profileItemService;
 
     public JSONObject getJSONObject(ProfileCategoryResource resource) throws JSONException {
         JSONObject obj = new JSONObject();
@@ -295,11 +303,11 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     }
 
     private Sheet getSheet(ProfileCategoryResource resource, IDataCategoryReference dataCategory) {
-        return profileService.getSheet(new ProfileSheetBuilder(resource, dataService, profileService, dataCategory));
+        return profileService.getSheet(new ProfileSheetBuilder(resource, dataService, profileItemService, dataItemService, dataCategory));
     }
 
     private Sheet getSheet(ProfileCategoryResource resource) {
-        return profileService.getSheet(new ProfileSheetBuilder(resource, dataService, profileService));
+        return profileService.getSheet(new ProfileSheetBuilder(resource, dataService, profileItemService, dataItemService));
     }
 
     public Map<String, Object> getTemplateValues(ProfileCategoryResource resource) {
