@@ -217,6 +217,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
                 JSONObject noteObj = new JSONObject();
                 noteObj.put("type", note.getType());
                 noteObj.put("value", note.getValue());
+                // TODO: this looks wrong.
                 amounts.put("note", noteObj);
 
                 // Add the note object to the notes array
