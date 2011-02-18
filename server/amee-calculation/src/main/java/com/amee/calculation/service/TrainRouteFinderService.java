@@ -44,6 +44,8 @@ import java.util.Map;
 
 /**
  * A service providing access to the Train Route-finder API.
+ *
+ * TODO: A copy of this is now in amee.platform.service.
  */
 class TrainRouteFinderService implements Service {
 
