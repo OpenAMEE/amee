@@ -276,7 +276,8 @@ public abstract class AMEEResource extends AuthorizeResource {
                 super.handleGet();
             } else {
                 // For single POSTs in API versions >V1.X set the Location and 201 Created header.
-                getResponse().setLocationRef(getRequest().getOriginalRef().toString() + "/" + lastPathSegment);
+                String baseLocation = StringUtils.chomp(getRequest().getOriginalRef().toString(), "/");
+                getResponse().setLocationRef(baseLocation + "/" + lastPathSegment);
                 getResponse().setStatus(Status.SUCCESS_CREATED);
             }
         }
