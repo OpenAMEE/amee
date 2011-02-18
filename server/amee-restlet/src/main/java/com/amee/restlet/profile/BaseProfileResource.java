@@ -55,10 +55,6 @@ public abstract class BaseProfileResource extends AMEEResource {
                 (getProfile() != null);
     }
 
-    protected boolean isGET() {
-        return getRequest().getMethod().equals(Method.GET);
-    }
-
     public ProfileBrowser getProfileBrowser() {
         return profileBrowser;
     }
@@ -106,7 +102,7 @@ public abstract class BaseProfileResource extends AMEEResource {
             if (!validISODateTimeFormats()) {
                 return APIFault.INVALID_DATE_FORMAT;
             }
-            if (isGET()) {
+            if (isGet()) {
                 if (containsProfileDate()) {
                     return APIFault.INVALID_API_PARAMETERS;
                 }
