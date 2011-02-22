@@ -1,11 +1,13 @@
 package com.amee.restlet.profile.builder.v1;
 
 import com.amee.base.utils.XMLUtils;
+import com.amee.domain.IDataItemService;
 import com.amee.domain.item.profile.ProfileItem;
 import com.amee.domain.profile.builder.v1.ProfileItemBuilder;
 import com.amee.platform.science.AmountPerUnit;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
+import com.amee.service.item.DataItemService;
 import com.amee.service.item.ProfileItemService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,12 +42,15 @@ import java.util.Map;
 public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
 
     @Autowired
-    ProfileItemService profileItemService;
+    private ProfileItemService profileItemService;
+
+    @Autowired
+    private DataItemService dataItemService;
 
     public JSONObject getJSONObject(ProfileItemResource resource) throws JSONException {
         JSONObject obj = new JSONObject();
         ProfileItem profileItem = resource.getProfileItem();
-        obj.put("profileItem", new ProfileItemBuilder(profileItem).getJSONObject(true));
+        obj.put("profileItem", new ProfileItemBuilder(profileItem, dataItemService, profileItemService).getJSONObject(true));
         obj.put("path", resource.getProfileItem().getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
         return obj;
@@ -54,7 +59,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
     public Element getElement(ProfileItemResource resource, Document document) {
         ProfileItem profileItem = resource.getProfileItem();
         Element element = document.createElement("ProfileItemResource");
-        element.appendChild(new ProfileItemBuilder(profileItem).getElement(document, true));
+        element.appendChild(new ProfileItemBuilder(profileItem, dataItemService, profileItemService).getElement(document, true));
         element.appendChild(XMLUtils.getElement(document, "Path", resource.getProfileItem().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;

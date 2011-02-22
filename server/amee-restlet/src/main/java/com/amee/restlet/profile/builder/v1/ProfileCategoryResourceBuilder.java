@@ -174,12 +174,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         if (!resource.getProfileItems().isEmpty()) {
             if (resource.getProfileItems().size() == 1) {
                 ProfileItem pi = resource.getProfileItems().get(0);
-                obj.put("profileItem", new ProfileItemBuilder(pi).getJSONObject(true));
+                obj.put("profileItem", new ProfileItemBuilder(pi, dataItemService, profileItemService).getJSONObject(true));
             } else {
                 JSONArray profileItems = new JSONArray();
                 obj.put("profileItems", profileItems);
                 for (ProfileItem pi : resource.getProfileItems()) {
-                    profileItems.put(new ProfileItemBuilder(pi).getJSONObject(false));
+                    profileItems.put(new ProfileItemBuilder(pi, dataItemService, profileItemService).getJSONObject(false));
                 }
             }
         }
@@ -287,12 +287,12 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
         if (!resource.getProfileItems().isEmpty()) {
             if (resource.getProfileItems().size() == 1) {
                 ProfileItem pi = resource.getProfileItems().get(0);
-                element.appendChild(new ProfileItemBuilder(pi).getElement(document, false));
+                element.appendChild(new ProfileItemBuilder(pi, dataItemService, profileItemService).getElement(document, false));
             } else {
                 org.w3c.dom.Element profileItemsElement = document.createElement("ProfileItems");
                 element.appendChild(profileItemsElement);
                 for (ProfileItem pi : resource.getProfileItems()) {
-                    profileItemsElement.appendChild(new ProfileItemBuilder(pi).getElement(document, false));
+                    profileItemsElement.appendChild(new ProfileItemBuilder(pi, dataItemService, profileItemService).getElement(document, false));
                 }
             }
         }

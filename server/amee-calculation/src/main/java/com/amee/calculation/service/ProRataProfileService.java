@@ -20,6 +20,7 @@ import javax.measure.Measure;
 import javax.measure.quantity.Duration;
 import javax.measure.unit.BaseUnit;
 import javax.measure.unit.SI;
+import javax.measure.unit.Unit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -193,7 +194,7 @@ public class ProRataProfileService {
 
         // The ProfileItemNumberValue will always have a time based per unit.
         @SuppressWarnings(value = "unchecked")
-        Measure<Integer, Duration> measure = Measure.valueOf(1, ((BaseUnit <Duration>)itemValue.getPerUnit().toUnit()));
+        Measure<Integer, Duration> measure = Measure.valueOf(1, ((Unit<Duration>)itemValue.getPerUnit().toUnit()));
         
         double perTime = measure.doubleValue(SI.MILLI(SI.SECOND));
         double intersectPerTimeRatio = (interval.toDurationMillis()) / perTime;
