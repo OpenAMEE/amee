@@ -14,6 +14,7 @@ import com.amee.restlet.data.DataCategoryResource;
 import com.amee.service.data.DataService;
 import com.amee.service.data.DataSheetService;
 import com.amee.service.definition.DefinitionService;
+import com.amee.service.item.DataItemService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +50,9 @@ public class DataCategoryResourceBuilder {
 
     @Autowired
     private DataService dataService;
+
+    @Autowired
+    private DataItemService dataItemService;
 
     @Autowired
     private DataSheetService dataSheetService;
@@ -129,12 +133,12 @@ public class DataCategoryResourceBuilder {
 
             // DataItems
             if (resource.getModDataItem() != null) {
-                obj.put("dataItem", new DataItemBuilder(resource.getModDataItem()).getJSONObject(true));
+                obj.put("dataItem", new DataItemBuilder(resource.getModDataItem(), dataItemService).getJSONObject(true));
             } else if (resource.getNewDataItems() != null) {
                 JSONArray dataItems = new JSONArray();
                 obj.put("dataItems", dataItems);
                 for (DataItem di : resource.getNewDataItems()) {
-                    dataItems.put(new DataItemBuilder(di).getJSONObject(false));
+                    dataItems.put(new DataItemBuilder(di, dataItemService).getJSONObject(false));
                 }
             }
         }
@@ -194,12 +198,12 @@ public class DataCategoryResourceBuilder {
 
             // DataItems
             if (resource.getModDataItem() != null) {
-                element.appendChild(new DataItemBuilder(resource.getModDataItem()).getElement(document, false));
+                element.appendChild(new DataItemBuilder(resource.getModDataItem(), dataItemService).getElement(document, false));
             } else if (resource.getNewDataItems() != null) {
                 Element dataItemsElement = document.createElement("DataItems");
                 element.appendChild(dataItemsElement);
                 for (DataItem di : resource.getNewDataItems()) {
-                    dataItemsElement.appendChild(new DataItemBuilder(di).getElement(document, false));
+                    dataItemsElement.appendChild(new DataItemBuilder(di, dataItemService).getElement(document, false));
                 }
             }
         }

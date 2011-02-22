@@ -37,6 +37,7 @@ import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionService;
+import com.amee.service.invalidation.InvalidationService;
 import com.amee.service.item.DataItemService;
 import com.amee.service.locale.LocaleService;
 import com.amee.service.profile.ProfileService;
@@ -92,6 +93,9 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
     private String newObjectType = "";
     @Autowired
     protected ProfileService profileService;
+
+    @Autowired
+    private InvalidationService invalidationService;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -179,14 +183,14 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
         if ((modDataCategory != null) || (modDataItem != null) || !newDataCategories.isEmpty() || !newDataItems.isEmpty()) {
             if (isPost()) {
                 if (isBatchPost()) {
-                    dataService.invalidate(dataCategory);
+                    invalidationService.invalidate(dataCategory);
                     successfulBatchPost();
                 } else if ((modDataCategory != null) && newObjectType.equalsIgnoreCase(ObjectType.DC.getName())) {
-                    dataService.invalidate(modDataCategory);
-                    dataService.invalidate(dataCategory);
+                    invalidationService.invalidate(modDataCategory);
+                    invalidationService.invalidate(dataCategory);
                     successfulPost(modDataCategory.getPath());
                 } else if ((modDataItem != null) && newObjectType.equalsIgnoreCase(ObjectType.DI.getName())) {
-                    dataService.invalidate(dataCategory);
+                    invalidationService.invalidate(dataCategory);
                     successfulPost(modDataItem.getUid());
                 } else {
                     badRequest();
@@ -556,14 +560,14 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
             }
         }
 
-        dataService.invalidate(modDataCategory);
+        invalidationService.invalidate(modDataCategory);
         successfulPut(getFullPath());
     }
 
     @Override
     public void doRemove() {
         log.debug("doRemove()");
-        dataService.invalidate(dataCategory);
+        invalidationService.invalidate(dataCategory);
         dataService.remove(dataCategory);
         successfulDelete("/data/" + dataCategory.getDataCategory().getFullPath());
     }

@@ -36,6 +36,7 @@ import com.amee.restlet.RequestContext;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
+import com.amee.service.invalidation.InvalidationService;
 import com.amee.service.item.DataItemService;
 import com.amee.service.locale.LocaleService;
 import com.amee.service.profile.ProfileService;
@@ -92,6 +93,9 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
 
     @Autowired
     protected ProfileService profileService;
+
+    @Autowired
+    private InvalidationService invalidationService;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -250,14 +254,14 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        DataItemBuilder dataItemBuilder = new DataItemBuilder(dataItem);
+        DataItemBuilder dataItemBuilder = new DataItemBuilder(dataItem, dataItemService);
         JSONObject obj = new JSONObject();
         if (itemValue != null) {
-            obj.put("itemValue", new ItemValueBuilder(itemValue, dataItemBuilder).getJSONObject());
+            obj.put("itemValue", new ItemValueBuilder(itemValue, dataItemBuilder, dataItemService).getJSONObject());
         } else {
             JSONArray values = new JSONArray();
             for (BaseItemValue iv : itemValues) {
-                values.put(new ItemValueInListBuilder(iv).getJSONObject(false));
+                values.put(new ItemValueInListBuilder(iv, dataItemService).getJSONObject(false));
             }
             obj.put("itemValues", values);
         }
@@ -268,14 +272,14 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
 
     @Override
     public Element getElement(Document document) {
-        DataItemBuilder dataItemBuilder = new DataItemBuilder(dataItem);
+        DataItemBuilder dataItemBuilder = new DataItemBuilder(dataItem, dataItemService);
         Element element = document.createElement("DataItemValueResource");
         if (itemValue != null) {
-            element.appendChild(new ItemValueBuilder(itemValue, dataItemBuilder).getElement(document));
+            element.appendChild(new ItemValueBuilder(itemValue, dataItemBuilder, dataItemService).getElement(document));
         } else {
             Element values = document.createElement("ItemValues");
             for (BaseItemValue iv : itemValues) {
-                values.appendChild(new ItemValueInListBuilder(iv).getElement(document, false));
+                values.appendChild(new ItemValueInListBuilder(iv, dataItemService).getElement(document, false));
             }
             element.appendChild(values);
         }
@@ -369,7 +373,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
 
         // Always invalidate the DataCategory caches.
         dataItemService.clearItemValues();
-        dataService.invalidate(dataItem.getDataCategory());
+        invalidationService.invalidate(dataItem.getDataCategory());
 
         // Update was a success.
         successfulPut(getFullPath());
@@ -395,7 +399,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
         if (remaining > 1) {
             dataItemService.remove(itemValue);
             dataItemService.clearItemValues();
-            dataService.invalidate(dataItem.getDataCategory());
+            invalidationService.invalidate(dataItem.getDataCategory());
             successfulDelete("/data/ " + dataItem.getFullPath());
         } else {
             badRequest(APIFault.DELETE_MUST_LEAVE_AT_LEAST_ONE_ITEM_VALUE);

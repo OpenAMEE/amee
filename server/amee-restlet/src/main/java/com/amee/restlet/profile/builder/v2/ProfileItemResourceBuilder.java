@@ -6,6 +6,7 @@ import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
+import com.amee.service.item.DataItemService;
 import com.amee.service.item.ProfileItemService;
 import org.apache.abdera.model.Category;
 import org.apache.abdera.model.Entry;
@@ -45,6 +46,9 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
 
     @Autowired
     ProfileItemService profileItemService;
+
+    @Autowired
+    DataItemService dataItemService;
 
     public JSONObject getJSONObject(ProfileItemResource resource) throws JSONException {
         JSONObject obj = new JSONObject();
@@ -130,9 +134,9 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
 
     private ProfileItemBuilder getProfileItemBuilder(ProfileItemResource resource, ProfileItem pi) {
         if (resource.getProfileBrowser().requestedCO2InExternalUnit()) {
-            return new ProfileItemBuilder(pi, resource.getProfileBrowser().getCo2AmountUnit());
+            return new ProfileItemBuilder(pi, dataItemService, profileItemService, resource.getProfileBrowser().getCo2AmountUnit());
         } else {
-            return new ProfileItemBuilder(pi);
+            return new ProfileItemBuilder(pi, dataItemService, profileItemService);
         }
     }
 }

@@ -40,6 +40,7 @@ import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.data.DataSheetService;
+import com.amee.service.invalidation.InvalidationService;
 import com.amee.service.item.DataItemService;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
@@ -97,6 +98,9 @@ public class DataItemResource extends AMEEResource implements Serializable {
     private List<Choice> parameters;
     @Autowired
     protected ProfileService profileService;
+
+    @Autowired
+    private InvalidationService invalidationService;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -182,7 +186,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         Amount amount = returnAmounts.defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         JSONObject obj = new JSONObject();
-        obj.put("dataItem", new DataItemBuilder(dataItem).getJSONObject(true, false));
+        obj.put("dataItem", new DataItemBuilder(dataItem, dataItemService).getJSONObject(true, false));
         obj.put("path", dataItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
         obj.put("amountPerMonth", amount.convert(kgPerMonth).getValue());
@@ -247,7 +251,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         Amount amount = returnAmounts.defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         Element element = document.createElement("DataItemResource");
-        element.appendChild(new DataItemBuilder(dataItem).getElement(document, true, false));
+        element.appendChild(new DataItemBuilder(dataItem, dataItemService).getElement(document, true, false));
         element.appendChild(XMLUtils.getElement(document, "Path", dataItem.getFullPath()));
         element.appendChild(userValueChoices.getElement(document));
         element.appendChild(XMLUtils.getElement(document, "AmountPerMonth", amount.convert(kgPerMonth).toString()));
@@ -345,7 +349,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
 
         // Clear caches.
         dataItemService.clearItemValues();
-        dataService.invalidate(dataItem.getDataCategory());
+        invalidationService.invalidate(dataItem.getDataCategory());
 
         // Return successful creation of new DataItemValue.
         successfulPost(dataItem.getUid());
@@ -391,7 +395,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
 
         // Clear caches.
         dataItemService.clearItemValues();
-        dataService.invalidate(dataItem.getDataCategory());
+        invalidationService.invalidate(dataItem.getDataCategory());
 
         // Return successful update of DataItem.
         successfulPut("/data/" + dataItem.getFullPath());
@@ -400,7 +404,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
     @Override
     public void doRemove() {
         log.debug("doRemove()");
-        dataService.invalidate(dataItem.getDataCategory());
+        invalidationService.invalidate(dataItem.getDataCategory());
         dataItemService.remove(dataItem);
         successfulDelete("/data/" + dataItem.getDataCategory().getFullPath());
     }
