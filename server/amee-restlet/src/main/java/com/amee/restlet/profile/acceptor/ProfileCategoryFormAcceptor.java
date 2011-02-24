@@ -6,10 +6,11 @@ import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.AccessSpecification;
 import com.amee.domain.auth.AuthorizationContext;
 import com.amee.domain.auth.PermissionEntry;
-import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemValue;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.NumberValue;
+import com.amee.domain.item.data.DataItem;
 import com.amee.domain.profile.MonthDate;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.platform.science.CO2AmountUnit;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.profile.ProfileCategoryResource;
@@ -17,6 +18,7 @@ import com.amee.restlet.utils.APIException;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.auth.AuthorizationService;
 import com.amee.service.data.DataService;
+import com.amee.service.item.DataItemService;
 import com.amee.service.item.ProfileItemService;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
@@ -66,6 +68,9 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
     private DataService dataService;
 
     @Autowired
+    private DataItemService dataItemService;
+
+    @Autowired
     private CalculationService calculationService;
 
     @Autowired
@@ -83,7 +88,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             // new ProfileItem
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItemByUid(uid);
+                dataItem = dataItemService.getItemByUid(uid);
                 if (dataItem != null) {
                     // Is authorized for the DataItem?
                     authorizationContext = getAuthorizationContext(resource, dataItem);
@@ -107,7 +112,7 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
             // update ProfileItem
             uid = form.getFirstValue("profileItemUid");
             if (uid != null) {
-                profileItem = profileService.getProfileItem(uid);
+                profileItem = profileItemService.getItemByUid(uid);
                 if (profileItem != null) {
                     // update existing Profile Item
                     profileItem = acceptProfileItem(resource, form, profileItem);
@@ -186,25 +191,25 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
         profileItem.setName(form.getFirstValue("name"));
 
         // see if equivalent ProfileItem already exists
-        if (profileService.isUnique(profileItem)) {
+        if (profileItemService.isUnique(profileItem)) {
             try {
                 // save ProfileItem
-                profileService.persist(profileItem);
+                profileItemService.persist(profileItem);
                 profileItemService.clearItemValues();
                 // update item values if supplied
                 for (String name : form.getNames()) {
                     // Find the matching active ItemValue for the prevailing datetime context.
-                    ItemValue itemValue = profileItem.getItemValue(name);
+                    BaseItemValue itemValue = profileItemService.getItemValue(profileItem, name);
                     if (itemValue != null) {
                         itemValue.setValue(form.getFirstValue(name));
                         log.debug("acceptProfileItem() - set itemValue " + itemValue.getPath() +
-                                " :  " + itemValue.getValue());
+                                " :  " + itemValue.getValueAsString());
                         if (resource.getAPIVersion().isNotVersionOne()) {
-                            if (itemValue.hasUnit() && form.getNames().contains(name + "Unit")) {
-                                itemValue.setUnit(form.getFirstValue(name + "Unit"));
+                            if ((NumberValue.class.isAssignableFrom(itemValue.getClass()) && ((NumberValue)itemValue).hasUnit() && form.getNames().contains(name + "Unit"))) {
+                                ((NumberValue)itemValue).setUnit(form.getFirstValue(name + "Unit"));
                             }
-                            if (itemValue.hasPerUnit() && form.getNames().contains(name + "PerUnit")) {
-                                itemValue.setPerUnit(form.getFirstValue(name + "PerUnit"));
+                            if ((NumberValue.class.isAssignableFrom(itemValue.getClass()) && ((NumberValue)itemValue).hasPerUnit() && form.getNames().contains(name + "PerUnit"))) {
+                                ((NumberValue)itemValue).setPerUnit(form.getFirstValue(name + "PerUnit"));
                             }
                         }
                         ameeStatistics.updateProfileItemValue();

@@ -22,13 +22,14 @@ package com.amee.restlet.profile;
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.ProfileItemAtomAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileItemFormAcceptor;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileItemResourceBuilderFactory;
+import com.amee.service.item.ProfileItemService;
 import com.amee.service.profile.ProfileConstants;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
@@ -69,6 +70,9 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     private ProfileService profileService;
 
     @Autowired
+    private ProfileItemService profileItemService;
+    
+    @Autowired
     private ProfileItemResourceBuilderFactory builderFactory;
 
     private DataCategory dataCategory;
@@ -84,7 +88,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
         (ThreadBeanHolder.get(RequestContext.class)).setDataCategory(dataCategory);
 
         // Obtain ProfileItem.
-        profileItem = profileService.getProfileItem(request.getAttributes().get("itemUid").toString());
+        profileItem = profileItemService.getItemByUid(request.getAttributes().get("itemUid").toString());
         (ThreadBeanHolder.get(RequestContext.class)).setProfileItem(profileItem);
 
         // Media type sensitive builder.
@@ -193,14 +197,9 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     @Override
     public void doRemove() {
         log.debug("doRemove()");
-        profileService.remove(profileItem);
+        profileItemService.remove(profileItem);
         profileService.clearCaches(getProfile());
         successfulDelete("/profiles/" + profileItem.getProfile().getFullPath() + "/" + dataCategory.getFullPath());
-    }
-
-    // TODO: What is this used by? Templates?
-    public List<ProfileItem> getProfileItems() {
-        return null;
     }
 
     public ProfileItem getProfileItem() {

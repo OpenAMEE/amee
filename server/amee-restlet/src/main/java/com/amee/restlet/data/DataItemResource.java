@@ -24,10 +24,13 @@ import com.amee.base.utils.XMLUtils;
 import com.amee.calculation.service.CalculationService;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
-import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.domain.data.builder.DataItemBuilder;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.data.BaseDataItemValue;
+import com.amee.domain.item.data.DataItem;
+import com.amee.domain.item.data.DataItemNumberValueHistory;
+import com.amee.domain.item.data.DataItemTextValueHistory;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.platform.science.*;
@@ -37,7 +40,9 @@ import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.data.DataSheetService;
+import com.amee.service.invalidation.InvalidationService;
 import com.amee.service.item.DataItemService;
+import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -91,6 +96,11 @@ public class DataItemResource extends AMEEResource implements Serializable {
     private String unit;
     private String perUnit;
     private List<Choice> parameters;
+    @Autowired
+    protected ProfileService profileService;
+
+    @Autowired
+    private InvalidationService invalidationService;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -103,7 +113,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         (ThreadBeanHolder.get(RequestContext.class)).setDataCategory(dataCategory);
 
         // Obtain DataItem.
-        dataItem = dataService.getDataItemByIdentifier(dataCategory, request.getAttributes().get("itemPath").toString());
+        dataItem = dataItemService.getDataItemByIdentifier(dataCategory, request.getAttributes().get("itemPath").toString());
         (ThreadBeanHolder.get(RequestContext.class)).setDataItem(dataItem);
 
         // Must have a DataItem to do anything here.
@@ -176,7 +186,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         Amount amount = returnAmounts.defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         JSONObject obj = new JSONObject();
-        obj.put("dataItem", new DataItemBuilder(dataItem).getJSONObject(true, false));
+        obj.put("dataItem", new DataItemBuilder(dataItem, dataItemService).getJSONObject(true, false));
         obj.put("path", dataItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
         obj.put("amountPerMonth", amount.convert(kgPerMonth).getValue());
@@ -242,7 +252,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
         Amount amount = returnAmounts.defaultValueAsAmount();
         CO2AmountUnit kgPerMonth = new CO2AmountUnit(new AmountUnit(SI.KILOGRAM), new AmountPerUnit(NonSI.MONTH));
         Element element = document.createElement("DataItemResource");
-        element.appendChild(new DataItemBuilder(dataItem).getElement(document, true, false));
+        element.appendChild(new DataItemBuilder(dataItem, dataItemService).getElement(document, true, false));
         element.appendChild(XMLUtils.getElement(document, "Path", dataItem.getFullPath()));
         element.appendChild(userValueChoices.getElement(document));
         element.appendChild(XMLUtils.getElement(document, "AmountPerMonth", amount.convert(kgPerMonth).toString()));
@@ -293,14 +303,6 @@ public class DataItemResource extends AMEEResource implements Serializable {
         StartEndDate startDate = new StartEndDate(getForm().getFirstValue("startDate"));
         names.remove("startDate");
 
-        // TODO: PL-6577 - Shouldn't this be after the epoch?
-        // The submitted startDate must be on or after the epoch.
-        if (!dataItem.isWithinLifeTime(startDate)) {
-            log.warn("acceptRepresentation() badRequest - Trying to create a DIV before the epoch.");
-            badRequest();
-            return;
-        }
-
         // Update named ItemValues.
         for (String name : names) {
 
@@ -322,7 +324,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
             }
 
             // The new ItemValue must be unique on itemValueDefinitionUid + startDate.
-            if (!dataItem.isUnique(itemValueDefinition, startDate)) {
+            if (!dataItemService.isUnique(dataItem, itemValueDefinition, startDate)) {
                 log.warn("acceptRepresentation() badRequest - Trying to create a DIV with the same IVD and startDate as an existing DIV.");
                 badRequest();
                 return;
@@ -336,15 +338,19 @@ public class DataItemResource extends AMEEResource implements Serializable {
                 badRequest();
             } else {
                 // History
-                ItemValue newDataItemValue = new ItemValue(itemValueDefinition, dataItem, getForm().getFirstValue(name), true);
-                newDataItemValue.setStartDate(startDate);
-                dataService.persist(newDataItemValue);
+                BaseDataItemValue newDataItemValue;
+                if (itemValueDefinition.isDouble()) {
+                     newDataItemValue = new DataItemNumberValueHistory(itemValueDefinition, dataItem, Double.parseDouble(getForm().getFirstValue(name)), startDate);
+                } else {
+                    newDataItemValue = new DataItemTextValueHistory(itemValueDefinition, dataItem, getForm().getFirstValue(name), startDate);
+                }
+                dataItemService.persist(newDataItemValue);
             }
         }
 
         // Clear caches.
         dataItemService.clearItemValues();
-        dataService.invalidate(dataItem.getDataCategory());
+        invalidationService.invalidate(dataItem.getDataCategory());
 
         // Return successful creation of new DataItemValue.
         successfulPost(dataItem.getUid());
@@ -356,7 +362,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
      * <p/>
      * When updating ItemValues using the ItemValueDefinition path the appropriate instance will
      * be selected based on the query string startDate parameter. This is only relevant for non drill-down
-     * ItemValues, as only once instance of these is allowed.
+     * ItemValues, as only one instance of these is allowed.
      *
      * @param entity representation
      */
@@ -382,7 +388,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
 
         // Update named ItemValues.
         for (String name : form.getNames()) {
-            ItemValue itemValue = dataItem.getItemValue(name);
+            BaseItemValue itemValue = dataItemService.getItemValue(dataItem, name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
             }
@@ -390,7 +396,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
 
         // Clear caches.
         dataItemService.clearItemValues();
-        dataService.invalidate(dataItem.getDataCategory());
+        invalidationService.invalidate(dataItem.getDataCategory());
 
         // Return successful update of DataItem.
         successfulPut("/data/" + dataItem.getFullPath());
@@ -399,8 +405,8 @@ public class DataItemResource extends AMEEResource implements Serializable {
     @Override
     public void doRemove() {
         log.debug("doRemove()");
-        dataService.invalidate(dataItem.getDataCategory());
-        dataService.remove(dataItem);
+        invalidationService.invalidate(dataItem.getDataCategory());
+        dataItemService.remove(dataItem);
         successfulDelete("/data/" + dataItem.getDataCategory().getFullPath());
     }
 

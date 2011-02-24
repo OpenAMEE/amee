@@ -2,8 +2,9 @@ package com.amee.service.profile;
 
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.profile.Profile;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.platform.science.StartEndDate;
+import com.amee.service.item.ProfileItemService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
@@ -40,6 +41,9 @@ public class SelectByProfileService {
     @Autowired
     ProfileService profileService;
 
+    @Autowired
+    ProfileItemService profileItemService;
+
     public List<ProfileItem> getProfileItems(
             Profile profile,
             DataCategory dataCategory,
@@ -51,7 +55,7 @@ public class SelectByProfileService {
             log.debug("getProfileItems() start");
         }
 
-        List<ProfileItem> profileItems = profileService.getProfileItems(
+        List<ProfileItem> profileItems = profileItemService.getProfileItems(
                 profile, dataCategory, startDate, endDate);
 
         if ("start".equals(selectBy)) {

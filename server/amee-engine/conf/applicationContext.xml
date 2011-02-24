@@ -86,7 +86,7 @@
 
     <!-- DataSheetService -->
     <!-- The eternalPaths below should be kept in sync with those in /bin/warm-up-eternal-categories.sh -->
-    <bean id="dataSheetService" class="com.amee.service.data.DataSheetService">
+    <bean id="dataSheetService" class="com.amee.service.data.DataSheetServiceImpl">
         <property name="eternalPaths">
             <set>
                 <value>/home/heating</value>

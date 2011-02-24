@@ -13,8 +13,8 @@ import org.restlet.Context;
 import org.restlet.data.Method;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -38,6 +38,9 @@ import java.util.Set;
  */
 public abstract class BaseProfileResource extends AMEEResource {
 
+    @Autowired
+    protected ProfileService profileService;
+
     protected ProfileBrowser profileBrowser;
     protected Set<Long> profileDataCategoryIds;
 
@@ -50,10 +53,6 @@ public abstract class BaseProfileResource extends AMEEResource {
     public boolean isValid() {
         return super.isValid() &&
                 (getProfile() != null);
-    }
-
-    protected boolean isGET() {
-        return getRequest().getMethod().equals(Method.GET);
     }
 
     public ProfileBrowser getProfileBrowser() {
@@ -103,7 +102,7 @@ public abstract class BaseProfileResource extends AMEEResource {
             if (!validISODateTimeFormats()) {
                 return APIFault.INVALID_DATE_FORMAT;
             }
-            if (isGET()) {
+            if (isGet()) {
                 if (containsProfileDate()) {
                     return APIFault.INVALID_API_PARAMETERS;
                 }
