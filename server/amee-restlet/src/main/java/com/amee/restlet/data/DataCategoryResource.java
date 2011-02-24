@@ -25,9 +25,9 @@ import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.DataItem;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.data.DataItem;
 import com.amee.domain.data.ItemDefinition;
-import com.amee.domain.data.ItemValue;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.data.builder.DataCategoryResourceBuilder;
@@ -37,8 +37,10 @@ import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionService;
+import com.amee.service.invalidation.InvalidationService;
 import com.amee.service.item.DataItemService;
 import com.amee.service.locale.LocaleService;
+import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -89,6 +91,11 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
     private DataItem modDataItem;
     private List<DataItem> newDataItems;
     private String newObjectType = "";
+    @Autowired
+    protected ProfileService profileService;
+
+    @Autowired
+    private InvalidationService invalidationService;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -176,14 +183,14 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
         if ((modDataCategory != null) || (modDataItem != null) || !newDataCategories.isEmpty() || !newDataItems.isEmpty()) {
             if (isPost()) {
                 if (isBatchPost()) {
-                    dataService.invalidate(dataCategory);
+                    invalidationService.invalidate(dataCategory);
                     successfulBatchPost();
                 } else if ((modDataCategory != null) && newObjectType.equalsIgnoreCase(ObjectType.DC.getName())) {
-                    dataService.invalidate(modDataCategory);
-                    dataService.invalidate(dataCategory);
+                    invalidationService.invalidate(modDataCategory);
+                    invalidationService.invalidate(dataCategory);
                     successfulPost(modDataCategory.getPath());
                 } else if ((modDataItem != null) && newObjectType.equalsIgnoreCase(ObjectType.DI.getName())) {
-                    dataService.invalidate(dataCategory);
+                    invalidationService.invalidate(dataCategory);
                     successfulPost(modDataItem.getUid());
                 } else {
                     badRequest();
@@ -430,7 +437,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
             if (itemDefinition != null) {
                 // Create new DataItem, persist it and populate it.
                 dataItem = new DataItem(dataCategory, itemDefinition);
-                dataService.persist(dataItem);
+                dataItemService.persist(dataItem);
                 acceptDataItem(form, dataItem);
             } else {
                 badRequest();
@@ -439,7 +446,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
             // Update DataItem.
             uid = form.getFirstValue("dataItemUid");
             if (uid != null) {
-                dataItem = dataService.getDataItemByUid(dataCategory, uid);
+                dataItem = dataItemService.getDataItemByUid(dataCategory, uid);
                 if (dataItem != null) {
                     acceptDataItem(form, dataItem);
                 }
@@ -482,7 +489,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
 
         // Update item values if supplied.
         for (String name : form.getNames()) {
-            ItemValue itemValue = dataItem.getItemValue(name);
+            BaseItemValue itemValue = dataItemService.getItemValue(dataItem, name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
             } else {
@@ -553,14 +560,14 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
             }
         }
 
-        dataService.invalidate(modDataCategory);
+        invalidationService.invalidate(modDataCategory);
         successfulPut(getFullPath());
     }
 
     @Override
     public void doRemove() {
         log.debug("doRemove()");
-        dataService.invalidate(dataCategory);
+        invalidationService.invalidate(dataCategory);
         dataService.remove(dataCategory);
         successfulDelete("/data/" + dataCategory.getDataCategory().getFullPath());
     }

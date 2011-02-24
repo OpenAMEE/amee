@@ -1,7 +1,7 @@
 package com.amee.calculation.service;
 
 import com.amee.domain.APIVersion;
-import com.amee.domain.data.DataItem;
+import com.amee.domain.item.data.DataItem;
 import com.amee.domain.sheet.Choice;
 import com.amee.domain.sheet.Choices;
 import com.amee.messaging.StringRpcMessageConsumer;
@@ -10,6 +10,7 @@ import com.amee.messaging.config.QueueConfig;
 import com.amee.platform.science.ReturnValues;
 import com.amee.service.data.DataService;
 import com.amee.service.data.DataSheetService;
+import com.amee.service.item.DataItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -28,6 +29,9 @@ public class CalculationConsumer extends StringRpcMessageConsumer {
 
     @Autowired
     private DataService dataService;
+
+    @Autowired
+    private DataItemService dataItemService;
 
     @Autowired
     private DataSheetService dataSheetService;
@@ -51,7 +55,7 @@ public class CalculationConsumer extends StringRpcMessageConsumer {
             JSONObject outbound = new JSONObject();
             // Get the DataItem.
             String dataItemUid = inbound.getString("dataItemUid");
-            DataItem dataItem = dataService.getDataItemByUid(dataItemUid);
+            DataItem dataItem = dataItemService.getItemByUid(dataItemUid);
             if (dataItem != null) {
                 // Prepare the value choices.
                 Choices userValueChoices = dataSheetService.getUserValueChoices(dataItem, APIVersion.TWO);

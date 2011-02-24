@@ -22,17 +22,21 @@
 package com.amee.restlet.profile.builder.v2;
 
 import com.amee.base.utils.XMLUtils;
-import com.amee.domain.data.ItemValue;
 import com.amee.domain.data.builder.v2.ItemValueBuilder;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.NumberValue;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.restlet.profile.ProfileItemValueResource;
 import com.amee.restlet.profile.builder.IProfileItemValueResourceBuilder;
+import com.amee.service.item.DataItemService;
+import com.amee.service.item.ProfileItemService;
 import org.apache.abdera.model.Category;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.IRIElement;
 import org.apache.abdera.model.Text;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,11 +47,17 @@ import java.util.Map;
 @Service("v2ProfileItemValueResourceBuilder")
 public class ProfileItemValueResourceBuilder implements IProfileItemValueResourceBuilder {
 
+    @Autowired
+    private ProfileItemService profileItemService;
+
+    @Autowired
+    private DataItemService dataItemService;
+
     @Override
     public Element getElement(ProfileItemValueResource resource, Document document) {
-        ItemValue itemValue = resource.getProfileItemValue();
+        BaseItemValue itemValue = resource.getProfileItemValue();
         Element element = document.createElement("ProfileItemValueResource");
-        element.appendChild(new ItemValueBuilder(itemValue, new ProfileItemBuilder(resource.getProfileItem())).getElement(document));
+        element.appendChild(new ItemValueBuilder(itemValue, new ProfileItemBuilder(resource.getProfileItem(), dataItemService, profileItemService), profileItemService).getElement(document));
         element.appendChild(XMLUtils.getElement(document, "Path", resource.getProfileItemValue().getFullPath()));
         element.appendChild(resource.getProfile().getIdentityElement(document));
         return element;
@@ -87,13 +97,13 @@ public class ProfileItemValueResourceBuilder implements IProfileItemValueResourc
 
         StringBuilder content = new StringBuilder(resource.getProfileItemValue().getName());
         content.append("=");
-        content.append(resource.getProfileItemValue().getValue().isEmpty() ? "N/A" : resource.getProfileItemValue().getValue());
-        if (resource.getProfileItemValue().hasUnit())
+        content.append(resource.getProfileItemValue().getValueAsString().isEmpty() ? "N/A" : resource.getProfileItemValue().getValueAsString());
+        if (NumberValue.class.isAssignableFrom(resource.getProfileItemValue().getClass()) && ((NumberValue)resource.getProfileItemValue()).hasUnit())
             content.append(", unit=");
-        content.append(resource.getProfileItemValue().getUnit());
-        if (resource.getProfileItemValue().hasPerUnit())
+        content.append(((NumberValue)resource.getProfileItemValue()).getUnit());
+        if (NumberValue.class.isAssignableFrom(resource.getProfileItemValue().getClass()) && ((NumberValue)resource.getProfileItemValue()).hasPerUnit())
             content.append(", v=");
-        content.append(resource.getProfileItemValue().getPerUnit());
+        content.append(((NumberValue)resource.getProfileItemValue()).getPerUnit());
         entry.setContent(content.toString());
 
         Category cat = atomFeed.newItemValueCategory(entry);
@@ -106,8 +116,8 @@ public class ProfileItemValueResourceBuilder implements IProfileItemValueResourc
     @Override
     public JSONObject getJSONObject(ProfileItemValueResource resource) throws JSONException {
         JSONObject obj = new JSONObject();
-        ItemValue itemValue = resource.getProfileItemValue();
-        obj.put("itemValue", new ItemValueBuilder(itemValue, new ProfileItemBuilder(resource.getProfileItem())).getJSONObject(true));
+        BaseItemValue itemValue = resource.getProfileItemValue();
+        obj.put("itemValue", new ItemValueBuilder(itemValue, new ProfileItemBuilder(resource.getProfileItem(), dataItemService, profileItemService), profileItemService).getJSONObject(true));
         obj.put("path", resource.getProfileItemValue().getFullPath());
         obj.put("profile", resource.getProfile().getIdentityJSONObject());
         return obj;

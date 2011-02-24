@@ -15,12 +15,12 @@
     <properties>
         <!-- Internal Versions. -->
         <amee.version>2.15.0</amee.version>
-        <amee-base.version>1.0.6</amee-base.version>
-        <amee-persist.version>1.0.8</amee-persist.version>
-        <amee-messaging.version>1.0.6</amee-messaging.version>
-        <amee-platform-science.version>1.0.12</amee-platform-science.version>
-        <amee-platform-domain.version>1.0.13</amee-platform-domain.version>
-        <amee-platform-service.version>1.0.17</amee-platform-service.version>
+        <amee-base.version>1.0.7-SNAPSHOT</amee-base.version>
+        <amee-persist.version>1.0.9-SNAPSHOT</amee-persist.version>
+        <amee-messaging.version>1.0.7-SNAPSHOT</amee-messaging.version>
+        <amee-platform-science.version>1.0.13-SNAPSHOT</amee-platform-science.version>
+        <amee-platform-domain.version>2.0.0-SNAPSHOT</amee-platform-domain.version>
+        <amee-platform-service.version>2.0.0-SNAPSHOT</amee-platform-service.version>
         <!-- External Versions. -->
         <!-- Note: Keep Restlet, Jetty and servlet-api versions in sync. -->
         <!-- Note: Check Restlet release notes and jetty dependencies. -->
@@ -46,7 +46,6 @@
         <hibernate-core.version>3.6.0.Final</hibernate-core.version>
         <hoptoad-notifier.version>1.8</hoptoad-notifier.version>
         <ibm-icu4j.version>4.0.1</ibm-icu4j.version>
-        <javacsv.version>2.0</javacsv.version>
         <javax.mail.version>1.4</javax.mail.version>
         <jetty-jsp.version>2.1-6.0.2</jetty-jsp.version>
         <jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>

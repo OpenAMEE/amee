@@ -1,12 +1,14 @@
 package com.amee.calculation.service;
 
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.ItemValue;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.NumberValue;
+import com.amee.domain.item.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItemNumberValue;
 import com.amee.domain.profile.Profile;
-import com.amee.domain.profile.ProfileItem;
 import com.amee.platform.science.ReturnValue;
 import com.amee.platform.science.StartEndDate;
-import com.amee.service.profile.ProfileService;
+import com.amee.service.item.ProfileItemService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -15,14 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.measure.Measure;
+import javax.measure.quantity.Duration;
+import javax.measure.unit.BaseUnit;
 import javax.measure.unit.SI;
+import javax.measure.unit.Unit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
- * A ProfileService which prorates amounts belonging to the {@link com.amee.domain.profile.ProfileItem ProfileItem} instances
+ * A ProfileService which prorates amounts belonging to the {@link com.amee.domain.item.profile.ProfileItem ProfileItem} instances
  * that are returned by the delegated ProfileService.
  * <p/>
  * <p/>
@@ -51,22 +56,29 @@ public class ProRataProfileService {
     private Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private ProfileService profileService;
+    private ProfileItemService profileItemService;
 
     @Autowired
     private CalculationService calculationService;
 
+    /**
+     * Return a List of ProfileItems with their values prorated to account for the selected date range.
+     *
+     * @param profile the Profile to get the prorated ProfileItems for.
+     * @param dataCategory
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @SuppressWarnings(value = "unchecked")
     public List<ProfileItem> getProfileItems(Profile profile, DataCategory dataCategory, StartEndDate startDate, StartEndDate endDate) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("getProfileItems() start");
-        }
+        log.debug("getProfileItems() start");
 
         List<ProfileItem> requestedItems = new ArrayList<ProfileItem>();
         Interval requestInterval = getInterval(startDate, endDate);
 
-        for (ProfileItem pi : profileService.getProfileItems(profile, dataCategory, startDate, endDate)) {
+        for (ProfileItem pi : profileItemService.getProfileItems(profile, dataCategory, startDate, endDate)) {
 
             // Update ProfileItem with start and end dates.
             pi.setEffectiveStartDate(startDate);
@@ -91,28 +103,40 @@ public class ProRataProfileService {
                 log.debug("getProfileItems() - request interval: " + requestInterval + ", intersect:" + intersect);
             }
 
-            if (pi.hasNonZeroPerTimeValues()) {
+            if (profileItemService.hasNonZeroPerTimeValues(pi)) {
 
                 // The ProfileItem has perTime ItemValues. In this case, the ItemValues are multiplied by
                 // the (intersect/PerTime) ratio and the CO2 value recalculated.
 
-                log.debug("getProfileItems() - ProfileItem: " + pi.getName() + " has PerTime ItemValues.");
+                if (log.isDebugEnabled()) {
+                    log.debug("getProfileItems() - ProfileItem: " + pi.getName() + " has PerTime ItemValues.");
+                }
 
-                for (ItemValue iv : pi.getItemValues()) {
-                    if (iv.hasPerTimeUnit() && iv.getItemValueDefinition().isFromProfile() && iv.getValue().length() > 0) {
-                        iv.setValueOverride(getProRatedItemValue(intersect, iv));
+                for (BaseItemValue iv : profileItemService.getItemValues(pi)) {
 
+                    // TODO: Extract method?
+                    if (ProfileItemNumberValue.class.isAssignableFrom(iv.getClass()) &&
+                        profileItemService.isNonZeroPerTimeValue((ProfileItemNumberValue) iv) &&
+                        iv.getItemValueDefinition().isFromProfile()) {
+                        double proratedItemValue = getProRatedItemValue(intersect, (ProfileItemNumberValue)iv);
                         if (log.isDebugEnabled()) {
                             log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
-                                    ". ItemValue: " + iv.getName() + " = " + iv.getValue() + " has PerUnit: " + iv.getPerUnit() +
-                                    ". Pro-rated ItemValue = " + iv.getValue());
+                                ". ItemValue: " + iv.getName() + " = " + iv.getValueAsString() +
+                                " has PerUnit: " + ((ProfileItemNumberValue)iv).getPerUnit() +
+                                ". Pro-rated ItemValue = " + proratedItemValue);
                         }
 
+                        // Set the override value (which will not be persisted)
+                        ((ProfileItemNumberValue)iv).setValueOverride(proratedItemValue);
                     } else {
-                        log.debug("getProfileItems() - ProfileItem: " + pi.getName() + ". Unchanged ItemValue: " + iv.getName());
+                        if (log.isDebugEnabled()) {
+                            log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
+                                ". Unchanged ItemValue: " + iv.getName());
+                        }
                     }
                 }
 
+                // Perform the calculation using the prorated values.
                 calculationService.calculate(pi);
 
                 if (log.isDebugEnabled()) {
@@ -122,6 +146,7 @@ public class ProRataProfileService {
                 requestedItems.add(pi);
 
             } else if (pi.getEndDate() != null) {
+
                 // The ProfileItem has no perTime ItemValues and is bounded. In this case, the CO2 value is multiplied by
                 // the (intersection/item duration) ratio.
 
@@ -131,10 +156,10 @@ public class ProRataProfileService {
                 long event = getIntervalInMillis(pi.getStartDate(), pi.getEndDate());
                 double eventIntersectRatio = intersect.toDurationMillis() / (double) event;
 
-                // For each amount, store the prorated value
+                // Iterate over the return values and for each amount, store the prorated value
                 for (Map.Entry<String, ReturnValue> entry : pi.getAmounts().getReturnValues().entrySet()) {
                     ReturnValue value = entry.getValue();
-                    double proRatedValue = entry.getValue().toDouble() * eventIntersectRatio;
+                    double proRatedValue = value.toDouble() * eventIntersectRatio;
                     pi.getAmounts().putValue(value.getType(), value.getUnit(), value.getPerUnit(), proRatedValue);
                 }
 
@@ -147,6 +172,7 @@ public class ProRataProfileService {
                 requestedItems.add(pi);
 
             } else {
+                
                 // The ProfileItem has no perTime ItemValues and is unbounded. In this case, the ReturnValues are not prorated.
                 if (log.isDebugEnabled()) {
                     log.debug("getProfileItems() - ProfileItem: " + pi.getName() +
@@ -164,15 +190,15 @@ public class ProRataProfileService {
         return requestedItems;
     }
 
-    @SuppressWarnings(value = "unchecked")
-    private ItemValue getProRatedItemValue(Interval interval, ItemValue itemValue) {
-        Measure measure = Measure.valueOf(1, itemValue.getPerUnit().toUnit());
+    private double getProRatedItemValue(Interval interval, NumberValue itemValue) {
+
+        // The ProfileItemNumberValue will always have a time based per unit.
+        @SuppressWarnings(value = "unchecked")
+        Measure<Integer, Duration> measure = Measure.valueOf(1, ((Unit<Duration>)itemValue.getPerUnit().toUnit()));
+        
         double perTime = measure.doubleValue(SI.MILLI(SI.SECOND));
         double intersectPerTimeRatio = (interval.toDurationMillis()) / perTime;
-        double value = Double.parseDouble(itemValue.getValue());
-        value = value * intersectPerTimeRatio;
-        itemValue.setValue(Double.toString(value));
-        return itemValue;
+        return itemValue.getValueAsDouble() * intersectPerTimeRatio;
     }
 
     private Interval getInterval(Date startDate, Date endDate) {

@@ -22,10 +22,10 @@
 package com.amee.restlet.data;
 
 import com.amee.domain.IAMEEEntityReference;
-import com.amee.domain.data.DataItem;
+import com.amee.domain.item.data.DataItem;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
-import com.amee.service.data.DataService;
+import com.amee.service.item.DataItemService;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
@@ -43,7 +43,7 @@ import java.util.Map;
 public class DataItemLookupResource extends AuthorizeResource implements Serializable {
 
     @Autowired
-    private DataService dataService;
+    private DataItemService dataItemService;
 
     private String dataItemUid = "";
     private DataItem dataItem = null;
@@ -52,7 +52,7 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
         dataItemUid = request.getResourceRef().getQueryAsForm().getFirstValue("dataItemUid", "");
-        dataItem = dataService.getDataItemByUid(dataItemUid);
+        dataItem = dataItemService.getItemByUid(dataItemUid);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class DataItemLookupResource extends AuthorizeResource implements Seriali
         if (dataItem != null) {
             values.put("dataItem", dataItem);
             values.put("itemValueDefinitions", dataItem.getItemDefinition().getItemValueDefinitions());
-            values.put("itemValuesMap", dataItem.getItemValuesMap());
+            values.put("itemValuesMap", dataItemService.getItemValuesMap(dataItem));
         }
         return values;
     }

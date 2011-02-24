@@ -23,7 +23,7 @@ import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.data.DataCategory;
-import com.amee.domain.profile.ProfileItem;
+import com.amee.domain.item.profile.ProfileItem;
 import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.ProfileCategoryAtomAcceptor;

@@ -54,9 +54,6 @@ public abstract class AMEEResource extends AuthorizeResource {
     private boolean isBatchPost;
 
     @Autowired
-    protected ProfileService profileService;
-
-    @Autowired
     protected DataService dataService;
 
     @Override
@@ -109,6 +106,7 @@ public abstract class AMEEResource extends AuthorizeResource {
         return representation;
     }
 
+    @Override
     protected Representation getDomRepresentation() throws ResourceException {
 
         // flag to ensure we only do the fetching work once
@@ -147,6 +145,7 @@ public abstract class AMEEResource extends AuthorizeResource {
 
     // TODO: Needs to replace getJsonRepresentation in BaseResource or be merged.
 
+    @Override
     protected Representation getJsonRepresentation() throws ResourceException {
 
         // flag to ensure we only do the fetching work once
