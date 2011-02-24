@@ -61,11 +61,11 @@ st.setFetchSize(Integer.MIN_VALUE);
 def batchCount = 0
 
 // Migrate PROFILE_ITEMs
-def profileItemSql = "INSERT INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS) " +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+def profileItemSql = "INSERT INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 def profileItemStatement = sqlInsert.connection.prepareStatement(profileItemSql)
 
-def rs = st.executeQuery("SELECT ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS FROM ITEM WHERE TYPE = 'PI'")
+def rs = st.executeQuery("SELECT ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID FROM ITEM WHERE TYPE = 'PI'")
 while (rs.next()) {
     profileItemStatement.with {
         setObject(1, rs.getLong("ID"))
