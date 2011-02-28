@@ -147,7 +147,7 @@ public class ValueDefinitionsResource extends AuthorizeResource implements Seria
             newValueDefinition = new ValueDefinition(
                     form.getFirstValue("name"),
                     ValueType.valueOf(valueType));
-            definitionService.save(newValueDefinition);
+            definitionService.persist(newValueDefinition);
         }
         if (newValueDefinition != null) {
             if (isStandardWebBrowser()) {

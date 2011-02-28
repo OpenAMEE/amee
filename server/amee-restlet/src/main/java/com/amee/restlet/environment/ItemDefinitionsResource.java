@@ -140,7 +140,7 @@ public class ItemDefinitionsResource extends AuthorizeResource implements Serial
         Form form = getForm();
         if (form.getFirstValue("name") != null) {
             newItemDefinition = new ItemDefinition(form.getFirstValue("name"));
-            definitionService.save(newItemDefinition);
+            definitionService.persist(newItemDefinition);
         }
         if (newItemDefinition != null) {
             if (isStandardWebBrowser()) {
