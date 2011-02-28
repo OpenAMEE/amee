@@ -144,7 +144,7 @@ public class AlgorithmsResource extends AuthorizeResource implements Serializabl
             String content = form.getFirstValue("content");
             newAlgorithm = new Algorithm(itemDefinition, content);
             newAlgorithm.setName(form.getFirstValue("name"));
-            definitionService.save(newAlgorithm);
+            definitionService.persist(newAlgorithm);
         }
         if (newAlgorithm != null) {
             if (isStandardWebBrowser()) {

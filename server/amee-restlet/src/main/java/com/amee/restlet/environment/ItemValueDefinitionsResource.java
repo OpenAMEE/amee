@@ -172,7 +172,7 @@ public class ItemValueDefinitionsResource extends AuthorizeResource implements S
                     newItemValueDefinition.addAPIVersion(apiVersion);
                 }
             }
-            definitionService.save(newItemValueDefinition);
+            definitionService.persist(newItemValueDefinition);
         }
         if (newItemValueDefinition != null) {
             if (isStandardWebBrowser()) {

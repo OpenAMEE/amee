@@ -108,7 +108,7 @@ public class AlgorithmContextsResource extends AuthorizeResource implements Seri
         }
         if (newAlgorithmContext != null) {
             if (isStandardWebBrowser()) {
-                definitionService.save(newAlgorithmContext);
+                definitionService.persist(newAlgorithmContext);
                 success();
             } else {
                 // return a response for API calls
