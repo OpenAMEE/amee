@@ -194,7 +194,7 @@ public class ProRataProfileService {
 
         // The ProfileItemNumberValue will always have a time based per unit.
         @SuppressWarnings(value = "unchecked")
-        Measure<Integer, Duration> measure = Measure.valueOf(1, ((Unit<Duration>)itemValue.getPerUnit().toUnit()));
+        Measure<Integer, Duration> measure = Measure.valueOf(1, ((Unit<Duration>)itemValue.getPerUnitAsAmountPerUnit().toUnit()));
         
         double perTime = measure.doubleValue(SI.MILLI(SI.SECOND));
         double intersectPerTimeRatio = (interval.toDurationMillis()) / perTime;
