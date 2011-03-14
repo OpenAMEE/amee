@@ -90,12 +90,20 @@
         <property name="eternalPaths">
             <set>
                 <value>/home/heating</value>
-                <value>/home/heating/us</value>
+                <value>/home/appliances/energystar/kitchen/refrigerators</value>
+                <value>/home/appliances/energystar/kitchen/dishwashers</value>
+                <value>/home/appliances/energystar/office/imageEquipment/multiFunctionDevices</value>
+                <value>/home/appliances/energystar/office/computers/notebooksAndTablets</value>
+                <value>/home/appliances/energystar/entertainment/televisionsAndCombinationUnits</value>
                 <value>/transport/plane/generic/airports/all/countries</value>
-                <value>/transport/car/specific</value>
-                <value>/transport/car/specific/us</value>
-                <value>/transport/car/specific/uk</value>
                 <value>/transport/plane/generic/airports/all/codes</value>
+                <value>/transport/car/specific/us</value>
+                <value>/transport/van/specific/uk</value>
+                <value>/transport/train/route/stations/uk</value>
+                <value>/planet/country/uk/aggregate/actonco2/peoplelikeme/home</value>
+                <value>/business/agriculture/livestock/manure/ch4/cattleandswine</value>
+                <value>/business/agriculture/livestock/manure/n2o/cattleandswine</value>
+                <value>/business/agriculture/livestock/manure/n2o/other</value>
                 <value>/business/energy/stationaryCombustion</value>
             </set>
         </property>
