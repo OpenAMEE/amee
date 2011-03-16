@@ -340,11 +340,13 @@ public class DataItemResource extends AMEEResource implements Serializable {
                 // History
                 BaseDataItemValue newDataItemValue;
                 if (itemValueDefinition.isDouble()) {
-                     newDataItemValue = new DataItemNumberValueHistory(itemValueDefinition, dataItem, Double.parseDouble(getForm().getFirstValue(name)), startDate);
+                    newDataItemValue = new DataItemNumberValueHistory(itemValueDefinition, dataItem, Double.parseDouble(getForm().getFirstValue(name)), startDate);
                 } else {
                     newDataItemValue = new DataItemTextValueHistory(itemValueDefinition, dataItem, getForm().getFirstValue(name), startDate);
                 }
                 dataItemService.persist(newDataItemValue);
+                // Mark the DataItem as modified.
+                dataItem.onModify();
             }
         }
 
@@ -371,6 +373,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
 
         log.debug("doStore()");
 
+        boolean modified = false;
         Form form = getForm();
         Set<String> names = form.getNames();
 
@@ -378,12 +381,14 @@ public class DataItemResource extends AMEEResource implements Serializable {
         if (names.contains("name")) {
             dataItem.setName(form.getFirstValue("name"));
             names.remove("name");
+            modified = true;
         }
 
         // Update 'path' value.
         if (names.contains("path")) {
             dataItem.setPath(form.getFirstValue("path"));
             names.remove("path");
+            modified = true;
         }
 
         // Update named ItemValues.
@@ -391,7 +396,13 @@ public class DataItemResource extends AMEEResource implements Serializable {
             BaseItemValue itemValue = dataItemService.getItemValue(dataItem, name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
+                modified = true;
             }
+        }
+
+        // Mark the DataItem as modified.
+        if (modified) {
+            dataItem.onModify();
         }
 
         // Clear caches.

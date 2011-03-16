@@ -25,9 +25,9 @@ import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.ObjectType;
 import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.ItemDefinition;
 import com.amee.domain.item.BaseItemValue;
 import com.amee.domain.item.data.DataItem;
-import com.amee.domain.data.ItemDefinition;
 import com.amee.restlet.AMEEResource;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.data.builder.DataCategoryResourceBuilder;
@@ -473,18 +473,21 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
      */
     protected void acceptDataItem(Form form, DataItem dataItem) {
 
+        boolean modified = false;
         Set<String> names = form.getNames();
 
         // Set 'name' value.
         if (names.contains("name")) {
             dataItem.setName(form.getFirstValue("name"));
             names.remove("name");
+            modified = true;
         }
 
         // Set 'path' value.
         if (names.contains("path")) {
             dataItem.setPath(form.getFirstValue("path"));
             names.remove("path");
+            modified = true;
         }
 
         // Update item values if supplied.
@@ -492,9 +495,15 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
             BaseItemValue itemValue = dataItemService.getItemValue(dataItem, name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
+                modified = true;
             } else {
                 log.warn("acceptDataItem() An ItemValue identifier was specified that does not exist: " + name);
             }
+        }
+
+        // Modified?
+        if (modified) {
+            dataItem.onModify();
         }
     }
 

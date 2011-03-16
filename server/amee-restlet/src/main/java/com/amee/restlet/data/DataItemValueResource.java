@@ -310,6 +310,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
             return;
         }
 
+        boolean modified = false;
         Form form = getForm();
 
         // Update the ItemValue value field if parameter is present.
@@ -332,7 +333,8 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
                 if (form.getNames().contains("remove_value_" + locale)) {
                     // Remove.
                     localeService.clearLocaleName(itemValue, locale);
-                    itemValue.onModify();
+                    // We modified.
+                    modified = true;
                 } else {
                     // Update or create.
                     String localeNameStr = form.getFirstValue(name);
@@ -343,7 +345,8 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
                     }
                     // Do the update or create.
                     localeService.setLocaleName(itemValue, locale, localeNameStr);
-                    itemValue.onModify();
+                    // We modified.
+                    modified = true;
                 }
             }
         }
@@ -368,7 +371,16 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
             // !dataItem.isUnique(itemValueDefinition, startDate)
 
             // Update the startDate field, the parameter was valid.
-            ((HistoryValue)itemValue).setStartDate(startDate);
+            ((HistoryValue) itemValue).setStartDate(startDate);
+
+            // We modified.
+            modified = true;
+        }
+
+        // Mark the ItemValue and DataItem as modified.
+        if (modified) {
+            itemValue.onModify();
+            dataItem.onModify();
         }
 
         // Always invalidate the DataCategory caches.
@@ -398,6 +410,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
         int remaining = dataItemService.getAllItemValues(dataItem, itemValue.getItemValueDefinition().getPath()).size();
         if (remaining > 1) {
             dataItemService.remove(itemValue);
+            dataItem.onModify();
             dataItemService.clearItemValues();
             invalidationService.invalidate(dataItem.getDataCategory());
             successfulDelete("/data/ " + dataItem.getFullPath());
