@@ -19,17 +19,16 @@
  */
 package com.amee.restlet.environment;
 
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.APIVersion;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
+import com.amee.domain.LocaleService;
 import com.amee.domain.data.ItemValueDefinition;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionService;
-import com.amee.service.locale.LocaleService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

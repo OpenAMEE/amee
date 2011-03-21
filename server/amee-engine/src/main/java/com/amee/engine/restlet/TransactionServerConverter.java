@@ -3,9 +3,9 @@ package com.amee.engine.restlet;
 import com.amee.base.transaction.TransactionController;
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.IDataItemService;
-import com.amee.domain.ILocaleService;
-import com.amee.domain.IMetadataService;
 import com.amee.domain.IProfileItemService;
+import com.amee.domain.LocaleService;
+import com.amee.domain.MetadataService;
 import com.amee.domain.profile.CO2CalculationService;
 import com.noelios.restlet.http.HttpRequest;
 import com.noelios.restlet.http.HttpResponse;
@@ -31,8 +31,8 @@ public class TransactionServerConverter extends HttpServerConverter {
         // Store commonly used services.
         ThreadBeanHolder.set(IDataItemService.class, (IDataItemService) springContext.getBean("dataItemService"));
         ThreadBeanHolder.set(IProfileItemService.class, (IProfileItemService) springContext.getBean("profileItemService"));
-        ThreadBeanHolder.set(ILocaleService.class, (ILocaleService) springContext.getBean("localeService"));
-        ThreadBeanHolder.set(IMetadataService.class, (IMetadataService) springContext.getBean("metadataService"));
+        ThreadBeanHolder.set(LocaleService.class, (LocaleService) springContext.getBean("localeService"));
+        ThreadBeanHolder.set(MetadataService.class, (MetadataService) springContext.getBean("metadataService"));
         ThreadBeanHolder.set(CO2CalculationService.class, (CO2CalculationService) springContext.getBean("calculationService"));
         // Pass request through.
         return super.toRequest(httpCall);
