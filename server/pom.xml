@@ -14,7 +14,7 @@
     <!-- Project Properties. -->
     <properties>
         <!-- Internal Versions. -->
-        <amee.version>2.15.0-DEV</amee.version>
+        <amee.version>2.16.0-DEV</amee.version>
         <amee-base.version>1.0.7-SNAPSHOT</amee-base.version>
         <amee-persist.version>1.0.9-SNAPSHOT</amee-persist.version>
         <amee-messaging.version>1.0.7-SNAPSHOT</amee-messaging.version>
