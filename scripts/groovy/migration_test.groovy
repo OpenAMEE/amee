@@ -1,6 +1,12 @@
 import static groovyx.net.http.ContentType.*
 import groovyx.net.http.RESTClient
 
+// This script tests known profile data has been migrated correctly.
+// Before migration create a profile item for the following data item:
+// /data/​business/​energy/​stationaryCombustion/​defra/​energy/drill?fuel=natural%20gas&basis=gross
+// energy = 1000
+// Check the emission amounts below are correct.
+
 /****************************************/
 
 host = 'http://platform-local.amee.com'
