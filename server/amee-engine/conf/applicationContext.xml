@@ -109,4 +109,10 @@
         </property>
     </bean>
 
+    <!-- A functional implementation of LocaleServiceDAO. -->
+    <!--<bean id="localeServiceDAO" class="com.amee.service.locale.LocaleServiceDAOImpl"/>-->
+
+    <!-- A no-op implementation of LocaleServiceDAO. -->
+    <bean id="localeServiceDAO" class="com.amee.service.locale.LocaleServiceDAONoOpImpl"/>
+
 </beans>
