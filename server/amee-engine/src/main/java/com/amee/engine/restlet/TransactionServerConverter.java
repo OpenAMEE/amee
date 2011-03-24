@@ -31,8 +31,8 @@ public class TransactionServerConverter extends HttpServerConverter {
         // Store commonly used services.
         ThreadBeanHolder.set(IDataItemService.class, (IDataItemService) springContext.getBean("dataItemService"));
         ThreadBeanHolder.set(IProfileItemService.class, (IProfileItemService) springContext.getBean("profileItemService"));
-        ThreadBeanHolder.set(LocaleService.class, (LocaleService) springContext.getBean("localeService"));
-        ThreadBeanHolder.set(MetadataService.class, (MetadataService) springContext.getBean("metadataService"));
+        ThreadBeanHolder.set(LocaleService.class, springContext.getBean(LocaleService.class));
+        ThreadBeanHolder.set(MetadataService.class, springContext.getBean(MetadataService.class));
         ThreadBeanHolder.set(CO2CalculationService.class, (CO2CalculationService) springContext.getBean("calculationService"));
         // Pass request through.
         return super.toRequest(httpCall);
