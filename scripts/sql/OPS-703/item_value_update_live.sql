@@ -1490,4 +1490,8 @@ update ITEM_VALUE set VALUE = '' where ID = 1569481290;
 update ITEM_VALUE set VALUE = '' where ID = 1572099778;
 update ITEM_VALUE set VALUE = '' where ID = 1572538426;
 update ITEM_VALUE set VALUE = '' where ID = 1574411914;
+update ITEM_VALUE set VALUE = '' where ID = 1575025930;
+update ITEM_VALUE set VALUE = '' where ID = 1575026202;
+update ITEM_VALUE set VALUE = '' where ID = 1575405206;
+update ITEM_VALUE set VALUE = '' where ID = 1577055322;
 commit;
