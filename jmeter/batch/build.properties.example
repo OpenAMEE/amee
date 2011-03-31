@@ -4,6 +4,8 @@ jmeter.host=local.stage.co2.dgen.net
 jmeter.testplan=batch.jmx
 jmeter.threads=1
 jmeter.loops=1
+# -1 means forever
+#jmeter.loops=-1
 jmeter.rampup=1
 jmeter.timer.deviation=100
 jmeter.timer.offset=300
