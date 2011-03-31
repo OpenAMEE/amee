@@ -79,6 +79,7 @@ while (rs.next()) {
         setObject(9, rs.getLong("DATA_ITEM_ID"))
         setObject(10, rs.getLong("PROFILE_ID"))
         setObject(11, rs.getInt("STATUS"))
+        setObject(12, rs.getLong("DATA_CATEGORY_ID"))
 
         addBatch()
         batchCount++
