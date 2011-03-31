@@ -4,9 +4,10 @@
  *
  * It expects a tab separated value document as input. The following documents were used:
  *
- * STAGE - https://spreadsheets.google.com/a/amee.cc/ccc?key=0AkIZCHjBXlaPdDJDQ1EzLVh1M3dLRVh3aGQyYzl2WVE&hl=en#gid=0
+ * STAGE - https://spreadsheets.google.com/a/amee.cc/ccc?key=0AkIZCHjBXlaPdDJDQ1EzLVh1M3dLRVh3aGQyYzl2WVE#gid=0
  *
- * LIVE - https://spreadsheets0.google.com/a/amee.cc/ccc?hl=en&key=t_LNO1nD8fpAUMnWDadoiug&hl=en#gid=0
+ * LIVE - https://spreadsheets0.google.com/a/amee.cc/ccc?key=t_LNO1nD8fpAUMnWDadoiug#gid=0
+ *      - https://spreadsheets1.google.com/a/amee.cc/ccc?key=tXHfcU-IBiDxHenKnkfmatQ#gid=0
  *
  * See: https://jira.amee.com/browse/PL-10403
  */
