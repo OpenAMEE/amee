@@ -26,8 +26,8 @@
         <!-- Note: Check Restlet release notes and jetty dependencies. -->
         <abdera.version>0.4.0-incubating</abdera.version>
         <ant.version>1.6</ant.version>
-        <apache-httpcomponents-httpclient>4.0.1</apache-httpcomponents-httpclient>
-        <apache-httpcomponents-httpcore>4.0.1</apache-httpcomponents-httpcore>
+        <apache-httpcomponents-httpclient>4.1</apache-httpcomponents-httpclient>
+        <apache-httpcomponents-httpcore>4.1</apache-httpcomponents-httpcore>
         <org-aspectj.version>1.6.8</org-aspectj.version>
         <cglib.version>2.2</cglib.version>
         <commons-cli.version>1.2</commons-cli.version>
@@ -61,7 +61,7 @@
         <quartz.version>1.6.1</quartz.version>
         <restlet.version>1.1.10</restlet.version>
         <slf4j.version>1.5.11</slf4j.version>
-        <spring.version>3.0.2.RELEASE</spring.version>
+        <spring.version>3.0.5.RELEASE</spring.version>
         <wrapper-standard.version>3.5.3</wrapper-standard.version>
         <xerces.version>2.9.1</xerces.version>
         <xml-apis.version>1.3.04</xml-apis.version>
@@ -258,6 +258,12 @@
             <groupId>code.lucamarrocco</groupId>
             <artifactId>hoptoad-notifier</artifactId>
             <version>${hoptoad-notifier.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Explicit dependency & version here to avoid transitive dependency mess. -->
