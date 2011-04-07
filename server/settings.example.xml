@@ -44,7 +44,7 @@
                     <snapshots>
                         <enabled>false</enabled>
                     </snapshots>
-                    <url>https://nexus.amee.com/content/repositories/releases/</url>
+                    <url>https://nexus.amee.com/content/repositories/releases</url>
                 </repository>
                 <repository>
                     <id>snapshots</id>
@@ -55,7 +55,7 @@
                     <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
-                    <url>https://nexus.amee.com/content/repositories/snapshots/</url>
+                    <url>https://nexus.amee.com/content/repositories/snapshots</url>
                 </repository>
             </repositories>
         </profile>
