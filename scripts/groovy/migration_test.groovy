@@ -9,11 +9,11 @@ import groovyx.net.http.RESTClient
 
 /****************************************/
 
-host = 'http://platform-local.amee.com'
-username = 'adminv2'
-password = 'r41n80w'
-profileUid = 'TKR7DIB582UX'
-profileItemUid = 'NBFR4JOL0VUP'
+host = 'http://platform-qa.amee.com'
+username = 'ameetest2'
+password = '8b3pf87m'
+profileUid = 'TSBXNYFLNUD0'
+profileItemUid = 'X7ZHMOEVU6ZF'
 
 /****************************************/
 
