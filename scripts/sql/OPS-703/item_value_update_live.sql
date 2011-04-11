@@ -1495,3 +1495,14 @@ update ITEM_VALUE set VALUE = '' where ID = 1575026202;
 update ITEM_VALUE set VALUE = '' where ID = 1575405206;
 update ITEM_VALUE set VALUE = '' where ID = 1577055322;
 commit;
+
+-- Found on 2011-04-11
+start transaction;
+update ITEM_VALUE set VALUE = '0' where ID = 1578607318;
+update ITEM_VALUE set VALUE = '0' where ID = 1578607682;
+update ITEM_VALUE set VALUE = '0' where ID = 1578608766;
+update ITEM_VALUE set VALUE = '0' where ID = 1578609434;
+update ITEM_VALUE set VALUE = '0' where ID = 1578609682;
+update ITEM_VALUE set VALUE = '' where ID = 1578663998;
+update ITEM_VALUE set VALUE = '' where ID = 1580320782;
+commit;
