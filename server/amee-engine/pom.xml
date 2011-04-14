@@ -173,8 +173,8 @@
         </dependency>
         <dependency>
             <groupId>log4jdbc</groupId>
-            <artifactId>log4jdbc</artifactId>
-            <version>${log4jdbc.version}</version>
+            <artifactId>log4jdbc4</artifactId>
+            <version>${log4jdbc4.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
