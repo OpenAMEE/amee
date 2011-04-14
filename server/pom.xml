@@ -21,54 +21,57 @@
         <amee-platform-science.version>1.0.13</amee-platform-science.version>
         <amee-platform-domain.version>2.0.2</amee-platform-domain.version>
         <amee-platform-service.version>2.0.2</amee-platform-service.version>
+
         <!-- External Versions. -->
         <!-- Note: Keep Restlet, Jetty and servlet-api versions in sync. -->
         <!-- Note: Check Restlet release notes and jetty dependencies. -->
         <abdera.version>0.4.0-incubating</abdera.version>
         <ant.version>1.6</ant.version>
-        <apache-httpcomponents-httpclient>4.1</apache-httpcomponents-httpclient>
+        <apache-httpcomponents-httpclient>4.1.1</apache-httpcomponents-httpclient>
         <apache-httpcomponents-httpcore>4.1</apache-httpcomponents-httpcore>
-        <org-aspectj.version>1.6.8</org-aspectj.version>
+        <org-aspectj.version>1.6.10</org-aspectj.version>
         <cglib.version>2.2</cglib.version>
         <commons-cli.version>1.2</commons-cli.version>
-        <commons-codec.version>1.3</commons-codec.version>
-        <commons-collections.version>3.2</commons-collections.version>
+        <commons-codec.version>1.5</commons-codec.version>
+        <commons-collections.version>3.2.1</commons-collections.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
-        <commons-io.version>1.4</commons-io.version>
-        <commons-lang.version>2.5</commons-lang.version>
+        <commons-io.version>2.0.1</commons-io.version>
+        <commons-lang.version>2.6</commons-lang.version>
         <commons-logging.version>1.1.1</commons-logging.version>
         <dom4j.version>1.6.1</dom4j.version>
         <ehcache.version>1.6.2</ehcache.version>
         <google-collections.version>1.0-rc5</google-collections.version>
         <google-gdata-core.version>1.0</google-gdata-core.version>
         <google-visualization-datasource.version>1.0.2</google-visualization-datasource.version>
-        <hibernate-core.version>3.6.0.Final</hibernate-core.version>
+        <hibernate-core.version>3.6.3.Final</hibernate-core.version>
         <hoptoad-notifier.version>1.8</hoptoad-notifier.version>
         <ibm-icu4j.version>4.0.1</ibm-icu4j.version>
         <javax.mail.version>1.4</javax.mail.version>
         <jetty-jsp.version>2.1-6.0.2</jetty-jsp.version>
-        <jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>
-        <jetty.version>6.1.15</jetty.version>
-        <joda-time.version>1.6</joda-time.version>
+        <jetty-servlet-api.version>2.5-20110124</jetty-servlet-api.version>
+        <jetty.version>6.1.26</jetty.version>
+        <joda-time.version>1.6.2</joda-time.version>
         <jscience.version>4.3.1</jscience.version>
-        <junit.version>4.7</junit.version>
-        <log4j.version>1.2.15</log4j.version>
-        <log4jdbc.version>4-1.2alpha2</log4jdbc.version>
-        <mysql-connector-java.version>5.1.10</mysql-connector-java.version>
+        <junit.version>4.8.2</junit.version>
+        <log4j.version>1.2.16</log4j.version>
+        <log4jdbc4.version>1.2beta2</log4jdbc4.version>
+        <mysql-connector-java.version>5.1.15</mysql-connector-java.version>
         <opencsv.version>2.1</opencsv.version>
         <org-json.version>2.0</org-json.version>
         <quartz.version>1.6.1</quartz.version>
         <restlet.version>1.1.10</restlet.version>
-        <slf4j.version>1.5.11</slf4j.version>
+        <slf4j.version>1.6.1</slf4j.version>
         <spring.version>3.0.5.RELEASE</spring.version>
         <wrapper-standard.version>3.5.3</wrapper-standard.version>
-        <xerces.version>2.9.1</xerces.version>
-        <xml-apis.version>1.3.04</xml-apis.version>
+        <xerces.version>2.11.0</xerces.version>
+        <xml-apis.version>2.11.0</xml-apis.version>
+
         <!-- Paths. -->
         <amee.home>/var/www/apps/amee-local</amee.home>
         <amee.current>${amee.home}/current</amee.current>
         <amee.current.lib>${amee.current}/lib</amee.current.lib>
+
         <!-- Other. -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
