@@ -17,4 +17,5 @@
     <include relativeToChangelogFile="true" file="db.changelog-9-charsets.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-10-drop_aliased_to_id.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-11-units.xml"/>
+    <include relativeToChangelogFile="true" file="db.changelog-12-remove-unused-columns.xml"/>
 </databaseChangeLog>
