@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <!-- New tables -->
+    <changeSet id="11-1" author="david">
+        <comment>Add UNIT table.</comment>
+        <createTable tableName="UNIT">
+            <column name="ID" autoIncrement="true" type="INT UNSIGNED">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="CHAR(12)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="UID"/>
+            </column>
+            <column name="UNIT_TYPE_ID" type="INT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INTERNAL_SYMBOL" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EXTERNAL_SYMBOL" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="CREATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="MODIFIED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="STATUS" type="TINYINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+        </modifySql>
+        <modifySql dbms="mysql">
+            <replace replace="`UID` CHAR(12) NOT NULL"
+                     with="UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"/>
+            <replace replace="`CREATED` DATETIME" with="`CREATED` TIMESTAMP"/>
+            <replace replace="`MODIFIED` DATETIME" with="`MODIFIED` TIMESTAMP"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet id="11-2" author="david">
+        <comment>Add UNIT_TYPE table</comment>
+        <createTable tableName="UNIT_TYPE">
+            <column name="ID" autoIncrement="true" type="INT UNSIGNED">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UID" type="CHAR(12)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="UID"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="NAME_KEY"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="CREATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="0000-00-00 00:00:00" name="MODIFIED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="STATUS" type="TINYINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+        </modifySql>
+        <modifySql dbms="mysql">
+            <replace replace="`UID` CHAR(12) NOT NULL"
+                     with="UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL"/>
+            <replace replace="`CREATED` DATETIME" with="`CREATED` TIMESTAMP"/>
+            <replace replace="`MODIFIED` DATETIME" with="`MODIFIED` TIMESTAMP"/>
+        </modifySql>
+    </changeSet>
+
+    <!-- Indexes -->
+    <!-- Must use custom sql to work around this MySQL bug: http://bugs.mysql.com/bug.php?id=48875 -->
+    <changeSet id="11-3" author="david">
+        <comment>Add indexes to UNIT</comment>
+        <sql>
+            ALTER TABLE UNIT
+            ADD INDEX UNIT_TYPE_ID_KEY (UNIT_TYPE_ID),
+            ADD INDEX INTERNAL_SYMBOL_KEY (INTERNAL_SYMBOL)
+        </sql>
+    </changeSet>
+</databaseChangeLog>
