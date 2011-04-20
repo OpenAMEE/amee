@@ -108,15 +108,6 @@
                         </select>
                     </td>
                 </tr>
-                <tr>
-                    <td>Treat as timeseries:</td>
-                    <td>
-                        <select name='forceTimeSeries'>
-                            <option value='false'<#if !itemValueDefinition.forceTimeSeries> selected</#if>>No</option>
-                            <option value='true'<#if itemValueDefinition.forceTimeSeries> selected</#if>>Yes</option>
-                        </select>
-                    </td>
-                </tr>
             </table>
             <input type='submit' value='Update'/>
         </form>

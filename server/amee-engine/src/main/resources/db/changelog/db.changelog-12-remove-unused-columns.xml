@@ -10,4 +10,11 @@
         <!-- Use sql tag so all changes for a table are executed in one statement. -->
         <sql>ALTER TABLE PROFILE DROP COLUMN `NAME`, DROP COLUMN `PATH`</sql>
     </changeSet>
+
+    <changeSet id="12-2" author="david">
+        <comment>Drop FORCE_TIMESERIES from ITEM_VALUE_DEFINITION table.</comment>
+        
+        <!-- Use sql tag so all changes for a table are executed in one statement. -->
+        <sql>ALTER TABLE ITEM_VALUE_DEFINITION DROP COLUMN `FORCE_TIMESERIES`, DROP COLUMN `ALLOWED_ROLES`</sql>
+    </changeSet>
 </databaseChangeLog>
