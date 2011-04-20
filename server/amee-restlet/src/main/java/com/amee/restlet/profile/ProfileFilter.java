@@ -60,8 +60,8 @@ public class ProfileFilter extends DataFilter {
                 String profileUid = segments.remove(0);
                 // Handle suffixes.
                 String suffix = handleSuffix(segments);
-                // Look for Profile matching path.
-                Profile profile = profileService.getProfile(profileUid);
+                // Look for Profile matching UID.
+                Profile profile = profileService.getProfileByUid(profileUid);
                 if (profile != null && !profile.isTrash()) {
                     // We found a Profile. Make available to request scope.
                     request.getAttributes().put("profile", profile);
