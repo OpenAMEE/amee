@@ -74,10 +74,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Allowed roles:</td>
-                    <td colspan="2"><input name='allowedRoles' <#if itemValueDefinition.allowedRoles??>value='${itemValueDefinition.allowedRoles}'</#if> type='text' size='30'/></td>
-                </tr>
-                <tr>
                     <td>Unit:</td>
                     <td colspan="2"><input name='unit' <#if itemValueDefinition.hasUnit()??>value='${itemValueDefinition.unit}'</#if> type='text' size='10'/></td>
                  </tr>
