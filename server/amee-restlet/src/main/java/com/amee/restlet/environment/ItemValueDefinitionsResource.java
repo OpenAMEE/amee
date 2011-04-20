@@ -158,7 +158,6 @@ public class ItemValueDefinitionsResource extends AuthorizeResource implements S
             newItemValueDefinition.setChoices(form.getFirstValue("choices"));
             newItemValueDefinition.setFromData(Boolean.valueOf(form.getFirstValue("fromData")));
             newItemValueDefinition.setFromProfile(Boolean.valueOf(form.getFirstValue("fromProfile")));
-            newItemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
             newItemValueDefinition.setUnit(form.getFirstValue("unit"));
             newItemValueDefinition.setPerUnit(form.getFirstValue("perUnit"));
             if (form.getFirstValue("aliasedTo") != null) {

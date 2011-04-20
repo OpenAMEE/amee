@@ -60,7 +60,6 @@
                 Choices: <input name='choices' type='text' size='50'/> (comma delimited name=value pairs)<br/>
                 Get value from admin? <select name='fromData'><option value='false'>No</option><option value='true'>Yes</option></select><br/>
                 Get value from user? <select name='fromProfile'><option value='false'>No</option><option value='true'>Yes</option></select><br/>
-                Allowed roles: <input name='allowedRoles' type='text' size='50'/><br/>
                 Unit: <input name='unit' type='text' size='10'/><br/>
                 PerUnit: <input name='perUnit' type='text' size='10'/><br/>
                 API Version: <#list apiVersions as v>

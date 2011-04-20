@@ -182,9 +182,6 @@ public class ItemValueDefinitionResource extends AuthorizeResource implements Se
         if (names.contains("fromData")) {
             itemValueDefinition.setFromData(Boolean.valueOf(form.getFirstValue("fromData")));
         }
-        if (names.contains("allowedRoles")) {
-            itemValueDefinition.setAllowedRoles(form.getFirstValue("allowedRoles"));
-        }
         if (names.contains("aliasedTo")) {
             itemValueDefinition.setAliasedTo(definitionService.getItemValueDefinitionByUid(form.getFirstValue("aliasedTo")));
         }
