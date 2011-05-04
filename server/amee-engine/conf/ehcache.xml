@@ -306,6 +306,25 @@
            memoryStoreEvictionPolicy="LFU">
     </cache>
 
+    <!-- Units -->
+    <cache name="com.amee.domain.unit.AMEEUnit"
+           maxElementsInMemory="1000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
+    <cache name="com.amee.domain.unit.AMEEUnitType"
+           maxElementsInMemory="500"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+
     <!-- **** AMEE - Queries **** -->
 
     <!-- DataServiceDAO -->
