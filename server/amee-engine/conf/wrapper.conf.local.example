@@ -26,6 +26,9 @@ wrapper.java.additional.103=-Dcom.sun.management.jmxremote.authenticate=false
 wrapper.java.additional.104=-Dcom.sun.management.jmxremote.ssl=false
 wrapper.java.additional.105=-XX:+PrintGCDetails
 
+# Ping timeout value (seconds). Increase if load is causing wrapper to think app has hung.
+wrapper.ping.timeout=30
+
 # Database
 set.DB_USERNAME=amee
 set.DB_PSWD=HhGCXdfbU2xA6i
@@ -60,7 +63,6 @@ wrapper.java.initmemory=512
 wrapper.java.maxmemory=2048
 
 # The license.
-#encoding=UTF-8
 wrapper.license.type=DEV
 wrapper.license.id=201007090031
 wrapper.license.licensee=AMEE UK (INTERNAL TESTING LICENSE)
