@@ -1,13 +1,14 @@
 /*
- * To redirect stdout and stderr:
- * groovy item_value_migrate.groovy 1> out.log 2> err.log
+ * A script to migrate data from the ITEM_VALUE table to the DATA_ITEM_*_VALUE and PROFILE_ITEM_*_VALUE tables.
+ *
+ * To redirect stdout and stderr: groovy item_value_migrate.groovy 1> out.log 2> err.log
  *
  * This script requires the MySQL connector. Copy the jar to ~/.groovy/lib/
  *
  * To generate a report of problem values, use this awk script:
  * awk -F ',' '{ values[$4]++ } END { for(value in values) { print value, values[value] } }' item_value.err 
  *
- * To generate a CSV report:
+ * To generate a CSV report from the above:
  * awk '{print $8}' item_value.err | tr -d '\n\' | sed 's/,$//' | sed 's/^/select p.ID as PROFILE_ID, u.NAME as USER_NAME, iv.ID, ivd.ID, ivd.VALUE_DEFINITION_ID, id.NAME AS ITEM_NAME, ivd.NAME as VAL_NAME, iv.VALUE from ITEM_VALUE iv join ITEM i on iv.ITEM_ID = i.ID join ITEM_VALUE_DEFINITION ivd on iv.ITEM_VALUE_DEFINITION_ID = ivd.ID join ITEM_DEFINITION id on ivd.ITEM_DEFINITION_ID = id.ID join PROFILE p on i.PROFILE_ID = p.ID join USER u on p.USER_ID = u.ID where iv.ID in (/;s/$/) into outfile "\/tmp\/iv.csv" FIELDS TERMINATED BY "\t";/' | mysql amee
  *
  */
@@ -37,16 +38,14 @@ if (opt.h) {
 }
 
 // Database options.
-def server = "localhost"
-if (opt.s) server = opt.s
-def database = "amee"
-if (opt.d) database = opt.d
-def user = "amee"
-if (opt.u) user = opt.u
-def password = "amee"
-if (opt.p) password = opt.p
-def dryRun = false
-if (opt.r) dryRun = true
+def server = opt.s ?: "localhost"
+def database = opt.d ?: "amee"
+def user = opt.u ?: "amee"
+def password = opt.p ?: "amee"
+def dryRun = opt.r ?: false
+def from = opt.f ?: "1970-01-01 00:00:00"
+
+println "Migrating data with modified date >= ${from}"
 
 // Configure DataSource.
 def sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
@@ -90,7 +89,7 @@ def profileItemTextValueSql =
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 def profileItemTextValueStatement = sqlInsert.connection.prepareStatement(profileItemTextValueSql)
 
-def rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT FROM profile_item_values")
+def rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT FROM profile_item_values WHERE MODIFIED >= ${from}")
 
 while (rs.next()) {
     rowValType = rs.getInt("VALUE_TYPE")
@@ -246,7 +245,7 @@ def dataItemTextValueHistorySql =
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
 def dataItemTextValueHistoryStatement = sqlInsert.connection.prepareStatement(dataItemTextValueHistorySql)
 
-rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT, START_DATE FROM data_item_values")
+rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT, START_DATE FROM data_item_values WHERE MODIFIED >= ${from}")
 
 while (rs.next()) {
     rowValType = rs.getInt("VALUE_TYPE")
@@ -468,5 +467,6 @@ def configureCliBuilder() {
     cli.u(argName: 'user', longOpt: 'user', args: 1, required: false, type: GString, "username (default 'amee')")
     cli.p(argName: 'password', longOpt: 'password', args: 1, required: false, type: GString, "password (default 'amee')")
     cli.r(argName: 'dryrun', longOpt: 'dryrun', args: 0, required: false, type: GString, "dry-run (does not commit data)")
+    cli.f(argName: 'from', longOpt: 'from', args: 1, required: false, type: GString, "select data from this date (default 1970-01-01 00:00:00")
     return cli
 }
