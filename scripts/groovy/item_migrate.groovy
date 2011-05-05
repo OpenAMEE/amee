@@ -1,6 +1,7 @@
 /*
- * To redirect stdout and stderr:
- * groovy item_migrate.groovy 1> out.log 2> err.log
+ * A script to migrate date from the ITEM table to the new PROFILE_ITEM and DATA_ITEM tables.
+ *
+ * To redirect stdout and stderr: groovy item_migrate.groovy 1> out.log 2> err.log
  *
  * This script requires the MySQL connector. Copy the jar to ~/.groovy/lib/
  *
@@ -23,16 +24,14 @@ if (opt.h) {
 }
 
 // Database options.
-def server = "localhost"
-if (opt.s) server = opt.s
-def database = "amee"
-if (opt.d) database = opt.d
-def user = "amee"
-if (opt.u) user = opt.u
-def password = "amee"
-if (opt.p) password = opt.p
-def dryRun = false
-if (opt.r) dryRun = true
+def server = opt.s ?: "localhost"
+def database = opt.d ?: "amee"
+def user = opt.u ?: "amee"
+def password = opt.p ?: "amee"
+def dryRun = opt.r ?: false
+def from = opt.f ?: "1970-01-01 00:00:00"
+
+println "Migrating data with modified date >= ${from}"
 
 // Configure DataSource.
 def sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
@@ -41,7 +40,7 @@ sql.connection.autoCommit = false
 def sqlInsert = Sql.newInstance("jdbc:mysql://${server}:3306/${database}?rewriteBatchedStatements=true", user, password, "com.mysql.jdbc.Driver")
 sqlInsert.connection.autoCommit = false
 
-// Check for scolling.
+// Check for scrolling.
 DatabaseMetaData dbmd = sql.connection.getMetaData();
 int JDBCVersion = dbmd.getJDBCMajorVersion();
 boolean srs = dbmd.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY);
@@ -65,7 +64,7 @@ def profileItemSql = "INSERT INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 def profileItemStatement = sqlInsert.connection.prepareStatement(profileItemSql)
 
-def rs = st.executeQuery("SELECT ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID FROM ITEM WHERE TYPE = 'PI'")
+def rs = st.executeQuery("SELECT ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID FROM ITEM WHERE TYPE = 'PI' AND MODIFIED >= ${from}")
 while (rs.next()) {
     profileItemStatement.with {
         setObject(1, rs.getLong("ID"))
@@ -121,7 +120,7 @@ def dataItemSql = "INSERT INTO DATA_ITEM (ID, UID, NAME, PATH, CREATED, MODIFIED
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
 def dataItemStatement = sqlInsert.connection.prepareStatement(dataItemSql)
 
-rs = st.executeQuery("SELECT ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS FROM ITEM WHERE TYPE = 'DI'")
+rs = st.executeQuery("SELECT ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS FROM ITEM WHERE TYPE = 'DI' AND MODIFIED >= ${from}")
 while (rs.next()) {
     dataItemStatement.with {
         setObject(1, rs.getLong("ID"))
@@ -170,12 +169,13 @@ if (dryRun) {
 
 
 def configureCliBuilder() {
-    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password] [-r]')
+    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password] [-r] [-f 2011-05-25 10:00:00]')
     cli.h(longOpt: 'help', 'usage information')
     cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "server name (default 'localhost')")
     cli.d(argName: 'database', longOpt: 'database', args: 1, required: false, type: GString, "database name (default 'amee')")
     cli.u(argName: 'user', longOpt: 'user', args: 1, required: false, type: GString, "username (default 'amee')")
     cli.p(argName: 'password', longOpt: 'password', args: 1, required: false, type: GString, "password (default 'amee')")
     cli.r(argName: 'dryrun', longOpt: 'dryrun', args: 0, required: false, type: GString, "dry-run (does not commit data)")
+    cli.f(argName: 'from', longOpt: 'from', args: 1, required: false, type: GString, "select data from this date (default 1970-01-01 00:00:00")
     return cli
 }
