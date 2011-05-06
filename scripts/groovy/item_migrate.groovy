@@ -31,6 +31,9 @@ def password = opt.p ?: "amee"
 def dryRun = opt.r ?: false
 def from = opt.f ?: "1970-01-01 00:00:00"
 
+// Should we use REPLACE INTO?
+def replace = opt.f ? true : false
+
 println "Migrating data with modified date >= ${from}"
 
 // Configure DataSource.
@@ -60,8 +63,15 @@ st.setFetchSize(Integer.MIN_VALUE);
 def batchCount = 0
 
 // Migrate PROFILE_ITEMs
-def profileItemSql = "INSERT INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID) " +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+def profileItemSql
+if (replace) {
+    profileItemSql = "REPLACE INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+} else {
+    profileItemSql = "INSERT INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+}
+
 def profileItemStatement = sqlInsert.connection.prepareStatement(profileItemSql)
 
 def rs = st.executeQuery("SELECT ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID FROM ITEM WHERE TYPE = 'PI' AND MODIFIED >= ${from}")
@@ -116,8 +126,15 @@ st = sql.connection.createStatement(
         ResultSet.CONCUR_READ_ONLY);
 st.setFetchSize(Integer.MIN_VALUE);
 
-def dataItemSql = "INSERT INTO DATA_ITEM (ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS) " +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+def dataItemSql
+if (replace) {
+    dataItemSql = "REPLACE INTO DATA_ITEM (ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+} else {
+    dataItemSql = "INSERT INTO DATA_ITEM (ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+}
+
 def dataItemStatement = sqlInsert.connection.prepareStatement(dataItemSql)
 
 rs = st.executeQuery("SELECT ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS FROM ITEM WHERE TYPE = 'DI' AND MODIFIED >= ${from}")

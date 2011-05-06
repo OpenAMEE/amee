@@ -45,6 +45,9 @@ def password = opt.p ?: "amee"
 def dryRun = opt.r ?: false
 def from = opt.f ?: "1970-01-01 00:00:00"
 
+// Should we use REPLACE INTO?
+def replace = opt.f ? true : false
+
 println "Migrating data with modified date >= ${from}"
 
 // Configure DataSource.
@@ -79,14 +82,28 @@ sql.execute "CREATE OR REPLACE VIEW profile_item_values AS " +
     "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
     "WHERE i.TYPE = 'PI'"
 
-def profileItemNumberValueSql =
-    "INSERT INTO PROFILE_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+def profileItemNumberValueSql
+if (replace) {
+    profileItemNumberValueSql =
+        "REPLACE INTO PROFILE_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+} else {
+    profileItemNumberValueSql =
+        "INSERT INTO PROFILE_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+}
 def profileItemNumberValueStatement = sqlInsert.connection.prepareStatement(profileItemNumberValueSql)
 
-def profileItemTextValueSql =
-    "INSERT INTO PROFILE_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+def profileItemTextValueSql
+if (replace) {
+    profileItemTextValueSql =
+        "REPLACE INTO PROFILE_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+} else {
+    profileItemTextValueSql =
+        "INSERT INTO PROFILE_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+}
 def profileItemTextValueStatement = sqlInsert.connection.prepareStatement(profileItemTextValueSql)
 
 def rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT FROM profile_item_values WHERE MODIFIED >= ${from}")
@@ -225,24 +242,52 @@ sql.execute "CREATE OR REPLACE VIEW data_item_values AS " +
     "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
     "WHERE i.TYPE = 'DI'"
 
-def dataItemNumberValueSql =
-    "INSERT INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+def dataItemNumberValueSql
+if (replace) {
+    dataItemNumberValueSql =
+        "REPLACE INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+} else {
+    dataItemNumberValueSql =
+        "INSERT INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+}
 def dataItemNumberValueStatement = sqlInsert.connection.prepareStatement(dataItemNumberValueSql)
 
-def dataItemTextValueSql =
-    "INSERT INTO DATA_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+def dataItemTextValueSql
+if (replace) {
+    dataItemTextValueSql =
+        "REPLACE INTO DATA_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+} else {
+    dataItemTextValueSql =
+        "INSERT INTO DATA_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+}
 def dataItemTextValueStatement = sqlInsert.connection.prepareStatement(dataItemTextValueSql)
 
-def dataItemNumberValueHistorySql =
-    "INSERT INTO DATA_ITEM_NUMBER_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT, START_DATE) " +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+def dataItemNumberValueHistorySql
+if (replace) {
+    dataItemNumberValueHistorySql =
+        "REPLACE INTO DATA_ITEM_NUMBER_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT, START_DATE) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+} else {
+    dataItemNumberValueHistorySql =
+        "INSERT INTO DATA_ITEM_NUMBER_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT, START_DATE) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+}
 def dataItemNumberValueHistoryStatement = sqlInsert.connection.prepareStatement(dataItemNumberValueHistorySql)
 
-def dataItemTextValueHistorySql =
-    "INSERT INTO DATA_ITEM_TEXT_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, START_DATE) " +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+def dataItemTextValueHistorySql
+if (replace) {
+    dataItemTextValueHistorySql =
+        "REPLACE INTO DATA_ITEM_TEXT_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, START_DATE) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+} else {
+    dataItemTextValueHistorySql =
+        "INSERT INTO DATA_ITEM_TEXT_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, START_DATE) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+}
 def dataItemTextValueHistoryStatement = sqlInsert.connection.prepareStatement(dataItemTextValueHistorySql)
 
 rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT, START_DATE FROM data_item_values WHERE MODIFIED >= ${from}")
