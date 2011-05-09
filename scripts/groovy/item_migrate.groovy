@@ -25,22 +25,26 @@ if (opt.h) {
 
 // Database options.
 def server = opt.s ?: "localhost"
+def target = opt.t ?: "localhost"
 def database = opt.d ?: "amee"
-def user = opt.u ?: "amee"
-def password = opt.p ?: "amee"
+def userRead = opt.ur ?: "amee"
+def passwordRead = opt.pr ?: "amee"
+def userWrite = opt.uw ?: "amee"
+def passwordWrite = opt.pw ?: "amee"
 def dryRun = opt.r ?: false
 def from = opt.f ?: "1970-01-01 00:00:00"
 
 // Should we use REPLACE INTO?
 def replace = opt.f ? true : false
 
-println "Migrating data with modified date >= ${from}"
+log "Migrating data with modified date >= ${from}"
 
-// Configure DataSource.
-def sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
+// Configure reader DataSource.
+def sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", userRead, passwordRead, "com.mysql.jdbc.Driver")
 sql.connection.autoCommit = false
 
-def sqlInsert = Sql.newInstance("jdbc:mysql://${server}:3306/${database}?rewriteBatchedStatements=true", user, password, "com.mysql.jdbc.Driver")
+// Configure writer DataSource.
+def sqlInsert = Sql.newInstance("jdbc:mysql://${target}:3306/${database}?rewriteBatchedStatements=true", userWrite, passwordWrite, "com.mysql.jdbc.Driver")
 sqlInsert.connection.autoCommit = false
 
 // Check for scrolling.
@@ -50,7 +54,7 @@ boolean srs = dbmd.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY);
 if (JDBCVersion > 2 || srs == true) {
   // println "ResultSet scrolling is supported.";
 } else {
-  println "ResultSet scrolling is NOT supported.";
+  logError "ResultSet scrolling is NOT supported.";
   return;
 }
 
@@ -100,7 +104,7 @@ while (rs.next()) {
             } else {
                 executeBatch()  
             }
-            println "Created ${batchCount} PROFILE_ITEMs in a batch."
+            log "Created ${batchCount} PROFILE_ITEMs in a batch."
             batchCount = 0
         }
     }
@@ -109,7 +113,7 @@ while (rs.next()) {
 // Handle remaining Item Values in current batch.
 if (batchCount > 0) {
     if (!dryRun) profileItemStatement.executeBatch()
-    println "Created ${batchCount} PROFILE_ITEMs in a batch."
+    log "Created ${batchCount} PROFILE_ITEMs in a batch."
     batchCount = 0
 }
 if (dryRun) {
@@ -160,7 +164,7 @@ while (rs.next()) {
             } else {
                 executeBatch()
             }
-            println "Created ${batchCount} DATA_ITEMs in a batch."
+            log "Created ${batchCount} DATA_ITEMs in a batch."
             batchCount = 0;
         }
     }
@@ -173,7 +177,7 @@ if (batchCount > 0) {
     } else {
         dataItemStatement.executeBatch()
     }
-    println "Created ${batchCount} DATA_ITEMs in a batch."
+    log "Created ${batchCount} DATA_ITEMs in a batch."
     batchCount = 0
 }
 if (dryRun) {
@@ -186,13 +190,24 @@ if (dryRun) {
 
 
 def configureCliBuilder() {
-    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password] [-r] [-f 2011-05-25 10:00:00]')
+    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-t target] [-d database] [-ur user] [-pr password] [-uw user] [-pw password] [-r] [-f date]')
     cli.h(longOpt: 'help', 'usage information')
-    cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "server name (default 'localhost')")
+    cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "source server name (default 'localhost')")
+    cli.t(argName: 'target', longOpt: 'target', args: 1, required: false, type: GString, "target server name (default 'localhost')")
     cli.d(argName: 'database', longOpt: 'database', args: 1, required: false, type: GString, "database name (default 'amee')")
-    cli.u(argName: 'user', longOpt: 'user', args: 1, required: false, type: GString, "username (default 'amee')")
-    cli.p(argName: 'password', longOpt: 'password', args: 1, required: false, type: GString, "password (default 'amee')")
+    cli.ur(argName: 'user-read', longOpt: 'user-read', args: 1, required: false, type: GString, "reader username (default 'amee')")
+    cli.pr(argName: 'password-read', longOpt: 'password-read', args: 1, required: false, type: GString, "reader password (default 'amee')")
+    cli.uw(argName: 'user-write', longOpt: 'user-write', args: 1, required: false, type: GString, "writer username (default 'amee')")
+    cli.pw(argName: 'password-write', longOpt: 'password-write', args: 1, required: false, type: GString, "writer password (default 'amee')")
     cli.r(argName: 'dryrun', longOpt: 'dryrun', args: 0, required: false, type: GString, "dry-run (does not commit data)")
     cli.f(argName: 'from', longOpt: 'from', args: 1, required: false, type: GString, "select data from this date (default 1970-01-01 00:00:00")
     return cli
+}
+
+def log(message) {
+    println new Date().toString() + ' ' + message
+}
+
+def logError(message) {
+    System.err.println new Date().toString() + ' ' + message
 }
