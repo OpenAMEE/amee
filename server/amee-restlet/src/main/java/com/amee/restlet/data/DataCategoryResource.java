@@ -486,8 +486,12 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
             modified = true;
         }
 
+        if (names.contains("newObjectType")) {
+            names.remove("newObjectType");
+        }
+
         // Update item values if supplied.
-        for (String name : form.getNames()) {
+        for (String name : names) {
             BaseItemValue itemValue = dataItemService.getItemValue(dataItem, name);
             if (itemValue != null) {
                 itemValue.setValue(form.getFirstValue(name));
