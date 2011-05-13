@@ -110,7 +110,7 @@ if (replace) {
 }
 def profileItemTextValueStatement = sqlInsert.connection.prepareStatement(profileItemTextValueSql)
 
-def rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT FROM profile_item_values WHERE MODIFIED >= '${from}'")
+def rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT FROM profile_item_values WHERE MODIFIED >= '${from}' ORDER BY ID")
 
 while (rs.next()) {
     rowValType = rs.getInt("VALUE_TYPE")
@@ -294,7 +294,7 @@ if (replace) {
 }
 def dataItemTextValueHistoryStatement = sqlInsert.connection.prepareStatement(dataItemTextValueHistorySql)
 
-rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT, START_DATE FROM data_item_values WHERE MODIFIED >= '${from}'")
+rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT, START_DATE FROM data_item_values WHERE MODIFIED >= '${from}' ORDER BY ID")
 
 while (rs.next()) {
     rowValType = rs.getInt("VALUE_TYPE")
