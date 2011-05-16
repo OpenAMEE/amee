@@ -18,6 +18,9 @@ import java.sql.DatabaseMetaData
 import java.sql.ResultSet
 import java.sql.Statement
 
+@Grab(group='net.sf.opencsv', module='opencsv', version='2.0')
+import au.com.bytecode.opencsv.CSVWriter;
+
 def numberValueBatch = 1000
 def numberValueBatchCount = 0
 def textValueBatch = 1000
@@ -35,6 +38,24 @@ def opt = cli.parse(args)
 if (opt.h) {
     cli.usage()
     return
+}
+
+// CSV support.
+writeToCSV = opt.c ?: false
+batchObjects = []
+profileItemNumberValueWriter = null
+profileItemTextValueWriter = null
+dataItemNumberValueWriter = null
+dataItemNumberValueHistoryWriter = null
+dataItemTextValueWriter = null
+dataItemTextValueHistoryWriter = null
+if (writeToCSV) {
+  profileItemNumberValueWriter = new CSVWriter(new FileWriter("PROFILE_ITEM_NUMBER_VALUE.txt"), ",".charAt(0),  "\"".charAt(0));
+  profileItemTextValueWriter = new CSVWriter(new FileWriter("PROFILE_ITEM_TEXT_VALUE.txt"), ",".charAt(0),  "\"".charAt(0));
+  dataItemNumberValueWriter = new CSVWriter(new FileWriter("DATA_ITEM_NUMBER_VALUE.txt"), ",".charAt(0),  "\"".charAt(0));
+  dataItemNumberValueHistoryWriter = new CSVWriter(new FileWriter("DATA_ITEM_NUMBER_VALUE_HISTORY.txt"), ",".charAt(0),  "\"".charAt(0));
+  dataItemTextValueWriter = new CSVWriter(new FileWriter("DATA_ITEM_TEXT_VALUE.txt"), ",".charAt(0),  "\"".charAt(0));
+  dataItemTextValueHistoryWriter = new CSVWriter(new FileWriter("DATA_ITEM_TEXT_VALUE_HISTORY.txt"), ",".charAt(0),  "\"".charAt(0));
 }
 
 // Database options.
@@ -123,46 +144,44 @@ while (rs.next()) {
 
         // Handle numbers
         try {
-            profileItemNumberValueStatement.with {
-                setObject(1, rs.getLong("ID"))
-                setObject(2, rs.getString("UID"))
-                setObject(3, rs.getInt("STATUS"))
-                def rowVal = rs.getString("VALUE")
+            setBatchObject(profileItemNumberValueStatement, 1, rs.getLong("ID"))
+            setBatchObject(profileItemNumberValueStatement, 2, rs.getString("UID"))
+            setBatchObject(profileItemNumberValueStatement, 3, rs.getInt("STATUS"))
+            def rowVal = rs.getString("VALUE")
 
-                // Handle empty values
-                if (rowVal == "" || rowVal == "-") {
-                    setObject(4, null)
-                } else if (Double.parseDouble(rowVal).infinite || Double.parseDouble(rowVal).naN) {
+            // Handle empty values
+            if (rowVal == "" || rowVal == "-") {
+                setBatchObject(profileItemNumberValueStatement, 4, null)
+            } else if (Double.parseDouble(rowVal).infinite || Double.parseDouble(rowVal).naN) {
 
-                    // Technically a Double but would throw an SQLException if we tried to insert these values.
-                    throw new NumberFormatException()
+                // Technically a Double but would throw an SQLException if we tried to insert these values.
+                throw new NumberFormatException()
+            } else {
+
+                // By now the value must be good
+                setBatchObject(profileItemNumberValueStatement, 4, Double.parseDouble(rowVal))
+            }
+            setBatchObject(profileItemNumberValueStatement, 5, rs.getTimestamp("CREATED"))
+            setBatchObject(profileItemNumberValueStatement, 6, rs.getTimestamp("MODIFIED"))
+            setBatchObject(profileItemNumberValueStatement, 7, rs.getLong("PROFILE_ITEM_ID"))
+            setBatchObject(profileItemNumberValueStatement, 8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+            def rowUnit = rs.getString("UNIT")
+            setBatchObject(profileItemNumberValueStatement, 9, (rowUnit ? rowUnit : ''))
+            def perUnit = rs.getString("PER_UNIT")
+            setBatchObject(profileItemNumberValueStatement, 10, (perUnit ? perUnit : ''))
+
+            addBatch(profileItemNumberValueStatement, profileItemNumberValueWriter)
+            numberValueBatchCount++
+
+            if (numberValueBatchCount >= numberValueBatch) {
+                // Execute this batch.
+                if (dryRun) {
+                    profileItemNumberValueStatement.clearBatch()
                 } else {
-
-                    // By now the value must be good
-                    setObject(4, Double.parseDouble(rowVal))
+                    executeBatch(profileItemNumberValueStatement)
                 }
-                setObject(5, rs.getTimestamp("CREATED"))
-                setObject(6, rs.getTimestamp("MODIFIED"))
-                setObject(7, rs.getLong("PROFILE_ITEM_ID"))
-                setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
-                def rowUnit = rs.getString("UNIT")
-                setObject(9, (rowUnit ? rowUnit : ''))
-                def perUnit = rs.getString("PER_UNIT")
-                setObject(10, (perUnit ? perUnit : ''))
-
-                addBatch()
-                numberValueBatchCount++
-
-                if (numberValueBatchCount >= numberValueBatch) {
-                    // Execute this batch.
-                    if (dryRun) {
-                        clearBatch()
-                    } else {
-                        executeBatch()                        
-                    }
-                    log "Created ${numberValueBatch} PROFILE_ITEM_NUMBER_VALUEs in a batch."
-                    numberValueBatchCount = 0
-                }
+                log "Created ${numberValueBatch} PROFILE_ITEM_NUMBER_VALUEs in a batch."
+                numberValueBatchCount = 0
             }
         } catch (NumberFormatException e) {
             logError "Error parsing PROFILE_ITEM value as double. ITEM_VALUE.ID: ${rs.getString('ID')}, ITEM_VALUE.UID: ${rs.getString('UID')}, " +
@@ -171,37 +190,35 @@ while (rs.next()) {
     } else {
         
         // Handle text
-        profileItemTextValueStatement.with {
-            setObject(1, rs.getLong("ID"))
-            setObject(2, rs.getString("UID"))
-            setObject(3, rs.getInt("STATUS"))
+        setBatchObject(profileItemTextValueStatement, 1, rs.getLong("ID"))
+        setBatchObject(profileItemTextValueStatement, 2, rs.getString("UID"))
+        setBatchObject(profileItemTextValueStatement, 3, rs.getInt("STATUS"))
 
-            // Truncate any strings > 32767
-            value = rs.getString("VALUE")
-            if (value.size() > 32767) {
-                logError "Truncating PROFILE_ITEM string value. ID: ${rs.getString('ID')}"
-                setObject(4, value[0..32766])
+        // Truncate any strings > 32767
+        value = rs.getString("VALUE")
+        if (value.size() > 32767) {
+            logError "Truncating PROFILE_ITEM string value. ID: ${rs.getString('ID')}"
+            setBatchObject(profileItemTextValueStatement, 4, value[0..32766])
+        } else {
+            setBatchObject(profileItemTextValueStatement, 4, value)
+        }
+        setBatchObject(profileItemTextValueStatement, 5, rs.getTimestamp("CREATED"))
+        setBatchObject(profileItemTextValueStatement, 6, rs.getTimestamp("MODIFIED"))
+        setBatchObject(profileItemTextValueStatement, 7, rs.getLong("PROFILE_ITEM_ID"))
+        setBatchObject(profileItemTextValueStatement, 8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+
+        addBatch(profileItemTextValueStatement, profileItemTextValueWriter)
+        textValueBatchCount++
+
+        if (textValueBatchCount >= textValueBatch) {
+            // Execute this batch.
+            if (dryRun) {
+                profileItemTextValueStatement.clearBatch()
             } else {
-                setObject(4, value)
+                executeBatch(profileItemTextValueStatement)
             }
-            setObject(5, rs.getTimestamp("CREATED"))
-            setObject(6, rs.getTimestamp("MODIFIED"))
-            setObject(7, rs.getLong("PROFILE_ITEM_ID"))
-            setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
-
-            addBatch()
-            textValueBatchCount++
-
-            if (textValueBatchCount >= textValueBatch) {
-                // Execute this batch.
-                if (dryRun) {
-                    clearBatch()
-                } else {
-                    executeBatch()
-                }
-                log "Created ${textValueBatch} PROFILE_ITEM_TEXT_VALUEs in a batch."
-                textValueBatchCount = 0
-            }
+            log "Created ${textValueBatch} PROFILE_ITEM_TEXT_VALUEs in a batch."
+            textValueBatchCount = 0
         }
     }
 }
@@ -231,8 +248,7 @@ if (dryRun) {
     sql.rollback()
     sqlInsert.rollback()
 } else {
-    sql.commit()
-    sqlInsert.commit()
+    commit()
 }
 
 // Get scrollable Statement.
@@ -318,79 +334,75 @@ while (rs.next()) {
             if (rs.getTimestamp("START_DATE").toString().equals('1970-01-01 00:00:00.0')) {
 
                 // Add to standard table
-                dataItemNumberValueStatement.with {
-                    setObject(1, rs.getLong("ID"))
-                    setObject(2, rs.getString("UID"))
-                    setObject(3, rs.getInt("STATUS"))
-                    def rowVal = rs.getString("VALUE")
+                setBatchObject(dataItemNumberValueStatement, 1, rs.getLong("ID"))
+                setBatchObject(dataItemNumberValueStatement, 2, rs.getString("UID"))
+                setBatchObject(dataItemNumberValueStatement, 3, rs.getInt("STATUS"))
+                def rowVal = rs.getString("VALUE")
 
-                    // Handle empty values
-                    if (rowVal == "" || rowVal == "-") {
-                        setObject(4, null)
-                    } else if (Double.parseDouble(rowVal).infinite || Double.parseDouble(rowVal).naN) {
+                // Handle empty values
+                if (rowVal == "" || rowVal == "-") {
+                    setBatchObject(dataItemNumberValueStatement, 4, null)
+                } else if (Double.parseDouble(rowVal).infinite || Double.parseDouble(rowVal).naN) {
 
-                        // Technically a Double but would throw an SQLException if we tried to insert these values.
-                        throw new NumberFormatException()
+                    // Technically a Double but would throw an SQLException if we tried to insert these values.
+                    throw new NumberFormatException()
+                } else {
+
+                    // By now the value must be good
+                    setBatchObject(dataItemNumberValueStatement, 4, Double.parseDouble(rowVal))
+                }
+                setBatchObject(dataItemNumberValueStatement, 5, rs.getTimestamp("CREATED"))
+                setBatchObject(dataItemNumberValueStatement, 6, rs.getTimestamp("MODIFIED"))
+                setBatchObject(dataItemNumberValueStatement, 7, rs.getLong("DATA_ITEM_ID"))
+                setBatchObject(dataItemNumberValueStatement, 8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+                def rowUnit = rs.getString("UNIT")
+                setBatchObject(dataItemNumberValueStatement, 9, (rowUnit ? rowUnit : ''))
+                def perUnit = rs.getString("PER_UNIT")
+                setBatchObject(dataItemNumberValueStatement, 10, (perUnit ? perUnit : ''))
+
+                addBatch(dataItemNumberValueStatement, dataItemNumberValueWriter)
+                numberValueBatchCount++
+
+                if (numberValueBatchCount >= numberValueBatch) {
+                    // Execute this batch.
+                    if (dryRun) {
+                        dataItemNumberValueStatement.clearBatch()
                     } else {
-
-                        // By now the value must be good
-                        setObject(4, Double.parseDouble(rowVal))
+                        executeBatch(dataItemNumberValueStatement)
                     }
-                    setObject(5, rs.getTimestamp("CREATED"))
-                    setObject(6, rs.getTimestamp("MODIFIED"))
-                    setObject(7, rs.getLong("DATA_ITEM_ID"))
-                    setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
-                    def rowUnit = rs.getString("UNIT")
-                    setObject(9, (rowUnit ? rowUnit : ''))
-                    def perUnit = rs.getString("PER_UNIT")
-                    setObject(10, (perUnit ? perUnit : ''))
-
-                    addBatch()
-                    numberValueBatchCount++
-
-                    if (numberValueBatchCount >= numberValueBatch) {
-                        // Execute this batch.
-                        if (dryRun) {
-                            clearBatch()
-                        } else {
-                            executeBatch()
-                        }
-                        log "Created ${numberValueBatch} DATA_ITEM_NUMBER_VALUEs in a batch."
-                        numberValueBatchCount = 0
-                    }
+                    log "Created ${numberValueBatch} DATA_ITEM_NUMBER_VALUEs in a batch."
+                    numberValueBatchCount = 0
                 }
             } else {
 
                 // Add to history table
-                dataItemNumberValueHistoryStatement.with {
-                    setObject(1, rs.getLong("ID"))
-                    setObject(2, rs.getString("UID"))
-                    setObject(3, rs.getInt("STATUS"))
-                    def rowVal = rs.getString("VALUE")
-                    setObject(4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
-                    setObject(5, rs.getTimestamp("CREATED"))
-                    setObject(6, rs.getTimestamp("MODIFIED"))
-                    setObject(7, rs.getLong("DATA_ITEM_ID"))
-                    setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
-                    def rowUnit = rs.getString("UNIT")
-                    setObject(9, (rowUnit ? rowUnit : ''))
-                    def perUnit = rs.getString("PER_UNIT")
-                    setObject(10, (perUnit ? perUnit : ''))
-                    setObject(11, rs.getTimestamp("START_DATE"))
+                setBatchObject(dataItemNumberValueHistoryStatement, 1, rs.getLong("ID"))
+                setBatchObject(dataItemNumberValueHistoryStatement, 2, rs.getString("UID"))
+                setBatchObject(dataItemNumberValueHistoryStatement, 3, rs.getInt("STATUS"))
+                def rowVal = rs.getString("VALUE")
+                setBatchObject(dataItemNumberValueHistoryStatement, 4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
+                setBatchObject(dataItemNumberValueHistoryStatement, 5, rs.getTimestamp("CREATED"))
+                setBatchObject(dataItemNumberValueHistoryStatement, 6, rs.getTimestamp("MODIFIED"))
+                setBatchObject(dataItemNumberValueHistoryStatement, 7, rs.getLong("DATA_ITEM_ID"))
+                setBatchObject(dataItemNumberValueHistoryStatement, 8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+                def rowUnit = rs.getString("UNIT")
+                setBatchObject(dataItemNumberValueHistoryStatement, 9, (rowUnit ? rowUnit : ''))
+                def perUnit = rs.getString("PER_UNIT")
+                setBatchObject(dataItemNumberValueHistoryStatement, 10, (perUnit ? perUnit : ''))
+                setBatchObject(dataItemNumberValueHistoryStatement, 11, rs.getTimestamp("START_DATE"))
 
-                    addBatch()
-                    numberValueHistoryBatchCount++
+                addBatch(dataItemNumberValueHistoryStatement, dataItemNumberValueHistoryWriter)
+                numberValueHistoryBatchCount++
 
-                    if (numberValueHistoryBatchCount >= numberValueHistoryBatch) {
-                        // Execute this batch.
-                        if (dryRun) {
-                            clearBatch()
-                        } else {
-                            executeBatch()
-                        }
-                        log "Created ${numberValueHistoryBatch} DATA_ITEM_NUMBER_VALUE_HISTORYs in a batch."
-                        numberValueHistoryBatchCount = 0
+                if (numberValueHistoryBatchCount >= numberValueHistoryBatch) {
+                    // Execute this batch.
+                    if (dryRun) {
+                        dataItemNumberValueHistoryStatement.clearBatch()
+                    } else {
+                        executeBatch(dataItemNumberValueHistoryStatement)
                     }
+                    log "Created ${numberValueHistoryBatch} DATA_ITEM_NUMBER_VALUE_HISTORYs in a batch."
+                    numberValueHistoryBatchCount = 0
                 }
             }
         } catch (NumberFormatException e) {
@@ -401,71 +413,67 @@ while (rs.next()) {
 
         // Handle text
         if (rs.getTimestamp("START_DATE").toString().equals('1970-01-01 00:00:00.0')) {
-            dataItemTextValueStatement.with {
-                setObject(1, rs.getLong("ID"))
-                setObject(2, rs.getString("UID"))
-                setObject(3, rs.getInt("STATUS"))
+            setBatchObject(dataItemTextValueStatement, 1, rs.getLong("ID"))
+            setBatchObject(dataItemTextValueStatement, 2, rs.getString("UID"))
+            setBatchObject(dataItemTextValueStatement, 3, rs.getInt("STATUS"))
 
-                // Truncate any strings > 32767
-                value = rs.getString("VALUE")
-                if (value.size() > 32767) {
-                    logError "Truncating DATA_ITEM string value. ID: ${rs.getLong("ID")}"
-                    setObject(4, value[0..32766])
+            // Truncate any strings > 32767
+            value = rs.getString("VALUE")
+            if (value.size() > 32767) {
+                logError "Truncating DATA_ITEM string value. ID: ${rs.getLong("ID")}"
+                setBatchObject(dataItemTextValueStatement, 4, value[0..32766])
+            } else {
+                setBatchObject(dataItemTextValueStatement, 4, value)
+            }
+            setBatchObject(dataItemTextValueStatement, 5, rs.getTimestamp("CREATED"))
+            setBatchObject(dataItemTextValueStatement, 6, rs.getTimestamp("MODIFIED"))
+            setBatchObject(dataItemTextValueStatement, 7, rs.getLong("DATA_ITEM_ID"))
+            setBatchObject(dataItemTextValueStatement, 8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+
+            addBatch(dataItemTextValueStatement, dataItemTextValueWriter)
+            textValueBatchCount++
+
+            if (textValueBatchCount >= textValueBatch) {
+                // Execute this batch.
+                if (dryRun) {
+                    dataItemTextValueStatement.clearBatch()
                 } else {
-                    setObject(4, value)
+                    executeBatch(dataItemTextValueStatement)
                 }
-                setObject(5, rs.getTimestamp("CREATED"))
-                setObject(6, rs.getTimestamp("MODIFIED"))
-                setObject(7, rs.getLong("DATA_ITEM_ID"))
-                setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
-
-                addBatch()
-                textValueBatchCount++
-
-                if (textValueBatchCount >= textValueBatch) {
-                    // Execute this batch.
-                    if (dryRun) {
-                        clearBatch()
-                    } else {
-                        executeBatch()
-                    }
-                    log "Created ${textValueBatch} DATA_ITEM_TEXT_VALUEs in a batch."
-                    textValueBatchCount = 0
-                }
+                log "Created ${textValueBatch} DATA_ITEM_TEXT_VALUEs in a batch."
+                textValueBatchCount = 0
             }
         } else {
-            dataItemTextValueHistoryStatement.with {
-                setObject(1, rs.getLong("ID"))
-                setObject(2, rs.getString("UID"))
-                setObject(3, rs.getInt("STATUS"))
+            setBatchObject(dataItemTextValueHistoryStatement, 1, rs.getLong("ID"))
+            setBatchObject(dataItemTextValueHistoryStatement, 2, rs.getString("UID"))
+            setBatchObject(dataItemTextValueHistoryStatement, 3, rs.getInt("STATUS"))
 
-                // Truncate any strings > 32767
-                value = rs.getString("VALUE")
-                if (value.size() > 32767) {
-                    logError "Truncating DATA_ITEM string value. ID: ${rs.getLong("ID")}"
-                    setObject(4, value[0..32766])
+            // Truncate any strings > 32767
+            value = rs.getString("VALUE")
+            if (value.size() > 32767) {
+                logError "Truncating DATA_ITEM string value. ID: ${rs.getLong("ID")}"
+                setBatchObject(dataItemTextValueHistoryStatement, 4, value[0..32766])
+            } else {
+                setBatchObject(dataItemTextValueHistoryStatement, 4, value)
+            }
+            setBatchObject(dataItemTextValueHistoryStatement, 5, rs.getTimestamp("CREATED"))
+            setBatchObject(dataItemTextValueHistoryStatement, 6, rs.getTimestamp("MODIFIED"))
+            setBatchObject(dataItemTextValueHistoryStatement, 7, rs.getLong("DATA_ITEM_ID"))
+            setBatchObject(dataItemTextValueHistoryStatement, 8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+            setBatchObject(dataItemTextValueHistoryStatement, 9, rs.getTimestamp("START_DATE"))
+
+            addBatch(dataItemTextValueHistoryStatement, dataItemTextValueHistoryWriter)
+            textValueHistoryBatchCount++
+
+            if (textValueHistoryBatchCount >= textValueHistoryBatch) {
+                // Execute this batch.
+                if (dryRun) {
+                    dataItemTextValueHistoryStatement.clearBatch()
                 } else {
-                    setObject(4, value)
+                    executeBatch(dataItemTextValueHistoryStatement)
                 }
-                setObject(5, rs.getTimestamp("CREATED"))
-                setObject(6, rs.getTimestamp("MODIFIED"))
-                setObject(7, rs.getLong("DATA_ITEM_ID"))
-                setObject(8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
-                setObject(9, rs.getTimestamp("START_DATE"))
-
-                addBatch()
-                textValueHistoryBatchCount++
-
-                if (textValueHistoryBatchCount >= textValueHistoryBatch) {
-                    // Execute this batch.
-                    if (dryRun) {
-                        clearBatch()
-                    } else {
-                        executeBatch()
-                    }
-                    log "Created ${textValueHistoryBatch} DATA_ITEM_TEXT_VALUE_HISTORYs in a batch."
-                    textValueHistoryBatchCount = 0
-                }
+                log "Created ${textValueHistoryBatch} DATA_ITEM_TEXT_VALUE_HISTORYs in a batch."
+                textValueHistoryBatchCount = 0
             }
         }
     }
@@ -518,8 +526,18 @@ if (dryRun) {
     sqlInsert.commit()
 }
 
+// Close CSV files.
+if (writeToCSV) {
+    profileItemNumberValueWriter.close();
+    profileItemTextValueWriter.close();
+    dataItemNumberValueWriter.close();
+    dataItemNumberValueHistoryWriter.close();
+    dataItemTextValueWriter.close();
+    dataItemTextValueHistoryWriter.close();
+}
+
 def configureCliBuilder() {
-    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-t target] [-d database] [-ur user] [-pr password] [-uw user] [-pw password] [-r] [-f date]')
+    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-t target] [-d database] [-ur user] [-pr password] [-uw user] [-pw password] [-f date] [-r] [-c]')
     cli.h(longOpt: 'help', 'usage information')
     cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "server name (default 'localhost')")
     cli.t(argName: 'target', longOpt: 'target', args: 1, required: false, type: GString, "target server name (default 'localhost')")
@@ -530,6 +548,7 @@ def configureCliBuilder() {
     cli.pw(argName: 'password-write', longOpt: 'password-write', args: 1, required: false, type: GString, "writer password (default 'amee')")
     cli.r(argName: 'dryrun', longOpt: 'dryrun', args: 0, required: false, type: GString, "dry-run (does not commit data)")
     cli.f(argName: 'from', longOpt: 'from', args: 1, required: false, type: GString, "select data from this date (default 1970-01-01 00:00:00")
+    cli.c(argName: 'csv', longOpt: 'csv', args: 0, required: false, type: GString, "write to csv (does not commit data)")
     return cli
 }
 
@@ -539,4 +558,49 @@ def log(message) {
 
 def logError(message) {
     System.err.println new Date().toString() + ' ' + message
+}
+
+def commit() {
+    if (!writeToCSV) {
+        sql.commit()
+        sqlInsert.commit()
+    } else {
+        profileItemNumberValueWriter.flush()
+        profileItemTextValueWriter.flush()
+    }
+}
+
+def executeBatch(statement) {
+    if (!writeToCSV) {
+        statement.executeBatch()
+    }
+}
+
+def addBatch(statement, writer) {
+    if (!writeToCSV) {
+        statement.addBatch()
+    } else {
+        writer.writeNext(toStringArray(batchObjects))
+        batchObjects = []
+    }
+}
+
+def setBatchObject(statement, index, object) {
+    if (!writeToCSV) {
+        statement.setObject(index, object)
+    } else {
+        batchObjects.add(object.toString())
+    }
+}
+
+def String[] toStringArray(List params) {
+    List<String> results = new ArrayList<String>()
+    params.each { object ->
+        if (object != null) {
+            results.add(object.toString())
+        } else {
+            results.add("\\N")
+        }
+    }
+    return results.toArray(new String[0])
 }
