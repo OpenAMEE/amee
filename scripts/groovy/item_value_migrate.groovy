@@ -186,6 +186,7 @@ while (rs.next()) {
         } catch (NumberFormatException e) {
             logError "Error parsing PROFILE_ITEM value as double. ITEM_VALUE.ID: ${rs.getString('ID')}, ITEM_VALUE.UID: ${rs.getString('UID')}, " +
                 "ITEM_VALUE_DEFINITION_ID: ${rs.getString('ITEM_VALUE_DEFINITION_ID')}, VALUE: '${rs.getString('VALUE')}'"
+            batchObjects = []
         }
     } else {
         
@@ -408,6 +409,7 @@ while (rs.next()) {
         } catch (NumberFormatException e) {
             logError "Error parsing DATA_ITEM value as double. ITEM_VALUE.ID: ${rs.getLong("ID")}, ITEM_VALUE.UID: ${rs.getString("UID")}, " +
                 "ITEM_VALUE_DEFINITION_ID: ${rs.getLong("ITEM_VALUE_DEFINITION_ID")}, VALUE: '${rs.getString("VALUE")}'"
+            batchObjects = []
         }
     } else {
 
@@ -567,6 +569,10 @@ def commit() {
     } else {
         profileItemNumberValueWriter.flush()
         profileItemTextValueWriter.flush()
+        dataItemNumberValueWriter.flush()
+        dataItemNumberValueHistoryWriter.flush()
+        dataItemTextValueWriter.flush()
+        dataItemTextValueHistoryWriter.flush()
     }
 }
 
@@ -589,7 +595,11 @@ def setBatchObject(statement, index, object) {
     if (!writeToCSV) {
         statement.setObject(index, object)
     } else {
-        batchObjects.add(object.toString())
+        if (object != null) {
+            batchObjects.add(object.toString())
+        } else {
+            batchObjects.add(object)
+        }
     }
 }
 
