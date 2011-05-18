@@ -9,7 +9,7 @@
  * awk -F ',' '{ values[$4]++ } END { for(value in values) { print value, values[value] } }' item_value.err 
  *
  * To generate a CSV report from the above:
- * awk '{print $8}' item_value.err | tr -d '\n\' | sed 's/,$//' | sed 's/^/select p.ID as PROFILE_ID, u.NAME as USER_NAME, iv.ID, ivd.ID, ivd.VALUE_DEFINITION_ID, id.NAME AS ITEM_NAME, ivd.NAME as VAL_NAME, iv.VALUE from ITEM_VALUE iv join ITEM i on iv.ITEM_ID = i.ID join ITEM_VALUE_DEFINITION ivd on iv.ITEM_VALUE_DEFINITION_ID = ivd.ID join ITEM_DEFINITION id on ivd.ITEM_DEFINITION_ID = id.ID join PROFILE p on i.PROFILE_ID = p.ID join USER u on p.USER_ID = u.ID where iv.ID in (/;s/$/) into outfile "\/tmp\/iv.csv" FIELDS TERMINATED BY "\t";/' | mysql amee
+ * awk '{print $14}' item_value.err | tr -d '\n\' | sed 's/,$//' | sed 's/^/select p.ID as PROFILE_ID, u.NAME as USER_NAME, iv.ID, ivd.ID, ivd.VALUE_DEFINITION_ID, id.NAME AS ITEM_NAME, ivd.NAME as VAL_NAME, iv.VALUE from ITEM_VALUE iv join ITEM i on iv.ITEM_ID = i.ID join ITEM_VALUE_DEFINITION ivd on iv.ITEM_VALUE_DEFINITION_ID = ivd.ID join ITEM_DEFINITION id on ivd.ITEM_DEFINITION_ID = id.ID join PROFILE p on i.PROFILE_ID = p.ID join USER u on p.USER_ID = u.ID where iv.ID in (/;s/$/) into outfile "\/tmp\/iv.csv" FIELDS TERMINATED BY "\t";/' | mysql amee
  *
  */
 
@@ -321,7 +321,7 @@ if (replace) {
 }
 def dataItemTextValueHistoryStatement = sqlInsert.connection.prepareStatement(dataItemTextValueHistorySql)
 
-rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT, START_DATE FROM data_item_values WHERE MODIFIED >= '${from}'")
+rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, DATA_ITEM_ID, VALUE_TYPE, UNIT, PER_UNIT, START_DATE FROM data_item_values WHERE MODIFIED >= '${from}'")
 
 while (rs.next()) {
     rowValType = rs.getInt("VALUE_TYPE")
