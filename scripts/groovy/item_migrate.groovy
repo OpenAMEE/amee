@@ -25,26 +25,20 @@ if (opt.h) {
 
 // Database options.
 def server = opt.s ?: "localhost"
-def target = opt.t ?: "localhost"
 def database = opt.d ?: "amee"
-def userRead = opt.ur ?: "amee"
-def passwordRead = opt.pr ?: "amee"
-def userWrite = opt.uw ?: "amee"
-def passwordWrite = opt.pw ?: "amee"
+def user = opt.u ?: "amee"
+def password = opt.p ?: "amee"
 def dryRun = opt.r ?: false
-def from = opt.f ?: "1970-01-01 00:00:00"
 
-// Should we use REPLACE INTO?
-def replace = opt.f ? true : false
+log "Started item migration."
+start = System.currentTimeMillis()
 
-log "Migrating data with modified date >= ${from}"
-
-// Configure reader DataSource.
-def sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", userRead, passwordRead, "com.mysql.jdbc.Driver")
+// Configure select DataSource.
+sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
 sql.connection.autoCommit = false
 
-// Configure writer DataSource.
-def sqlInsert = Sql.newInstance("jdbc:mysql://${target}:3306/${database}?rewriteBatchedStatements=true", userWrite, passwordWrite, "com.mysql.jdbc.Driver")
+// Configure insert DataSource.
+sqlInsert = Sql.newInstance("jdbc:mysql://${server}:3306/${database}?rewriteBatchedStatements=true", user, password, "com.mysql.jdbc.Driver")
 sqlInsert.connection.autoCommit = false
 
 // Check for scrolling.
@@ -67,20 +61,11 @@ st.setFetchSize(Integer.MIN_VALUE);
 def batchCount = 0
 
 // Migrate PROFILE_ITEMs
-def profileItemSql
-if (replace) {
-    profileItemSql = "INSERT INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-        "ON DUPLICATE KEY UPDATE NAME=VALUES(NAME), MODIFIED=VALUES(MODIFIED), START_DATE=VALUES(START_DATE), END_DATE=VALUES(END_DATE), " +
-        "ITEM_DEFINITION_ID=VALUES(ITEM_DEFINITION_ID), DATA_ITEM_ID=VALUES(DATA_ITEM_ID), PROFILE_ID=VALUES(PROFILE_ID), STATUS=VALUES(STATUS), DATA_CATEGORY_ID=VALUES(DATA_CATEGORY_ID)"
-} else {
-    profileItemSql = "INSERT INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID) " +
+def profileItemSql = "INSERT INTO PROFILE_ITEM (ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-}
-
 def profileItemStatement = sqlInsert.connection.prepareStatement(profileItemSql)
 
-def rs = st.executeQuery("SELECT ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID FROM ITEM WHERE TYPE = 'PI' AND MODIFIED >= '${from}'")
+def rs = st.executeQuery("SELECT ID, UID, NAME, CREATED, MODIFIED, START_DATE, END_DATE, ITEM_DEFINITION_ID, DATA_ITEM_ID, PROFILE_ID, STATUS, DATA_CATEGORY_ID FROM ITEM WHERE TYPE = 'PI'")
 while (rs.next()) {
     profileItemStatement.with {
         setObject(1, rs.getLong("ID"))
@@ -132,20 +117,11 @@ st = sql.connection.createStatement(
         ResultSet.CONCUR_READ_ONLY);
 st.setFetchSize(Integer.MIN_VALUE);
 
-def dataItemSql
-if (replace) {
-    dataItemSql = "INSERT INTO DATA_ITEM (ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-        "ON DUPLICATE KEY UPDATE NAME=VALUES(NAME), PATH=VALUES(PATH), MODIFIED=VALUES(MODIFIED), " +
-        "ITEM_DEFINITION_ID=VALUES(ITEM_DEFINITION_ID), DATA_CATEGORY_ID=VALUES(DATA_CATEGORY_ID), STATUS=VALUES(STATUS)"
-} else {
-    dataItemSql = "INSERT INTO DATA_ITEM (ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS) " +
+def dataItemSql = "INSERT INTO DATA_ITEM (ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-}
-
 def dataItemStatement = sqlInsert.connection.prepareStatement(dataItemSql)
 
-rs = st.executeQuery("SELECT ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS FROM ITEM WHERE TYPE = 'DI' AND MODIFIED >= '${from}'")
+rs = st.executeQuery("SELECT ID, UID, NAME, PATH, CREATED, MODIFIED, ITEM_DEFINITION_ID, DATA_CATEGORY_ID, STATUS FROM ITEM WHERE TYPE = 'DI'")
 while (rs.next()) {
     dataItemStatement.with {
         setObject(1, rs.getLong("ID"))
@@ -194,17 +170,13 @@ if (dryRun) {
 
 
 def configureCliBuilder() {
-    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-t target] [-d database] [-ur user] [-pr password] [-uw user] [-pw password] [-r] [-f date]')
+    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password] [-r]')
     cli.h(longOpt: 'help', 'usage information')
-    cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "source server name (default 'localhost')")
-    cli.t(argName: 'target', longOpt: 'target', args: 1, required: false, type: GString, "target server name (default 'localhost')")
+    cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "server name (default 'localhost')")
     cli.d(argName: 'database', longOpt: 'database', args: 1, required: false, type: GString, "database name (default 'amee')")
-    cli.ur(argName: 'user-read', longOpt: 'user-read', args: 1, required: false, type: GString, "reader username (default 'amee')")
-    cli.pr(argName: 'password-read', longOpt: 'password-read', args: 1, required: false, type: GString, "reader password (default 'amee')")
-    cli.uw(argName: 'user-write', longOpt: 'user-write', args: 1, required: false, type: GString, "writer username (default 'amee')")
-    cli.pw(argName: 'password-write', longOpt: 'password-write', args: 1, required: false, type: GString, "writer password (default 'amee')")
+    cli.u(argName: 'user', longOpt: 'user', args: 1, required: false, type: GString, "username (default 'amee')")
+    cli.p(argName: 'password', longOpt: 'password', args: 1, required: false, type: GString, "password (default 'amee')")
     cli.r(argName: 'dryrun', longOpt: 'dryrun', args: 0, required: false, type: GString, "dry-run (does not commit data)")
-    cli.f(argName: 'from', longOpt: 'from', args: 1, required: false, type: GString, "select data from this date (default 1970-01-01 00:00:00")
     return cli
 }
 

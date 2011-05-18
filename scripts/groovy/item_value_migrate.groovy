@@ -60,36 +60,30 @@ if (writeToCSV) {
 
 // Database options.
 def server = opt.s ?: "localhost"
-def target = opt.t ?: "localhost"
 def database = opt.d ?: "amee"
-def userRead = opt.ur ?: "amee"
-def passwordRead = opt.pr ?: "amee"
-def userWrite = opt.uw ?: "amee"
-def passwordWrite = opt.pw ?: "amee"
+def user = opt.u ?: "amee"
+def password = opt.p ?: "amee"
 def dryRun = opt.r ?: false
-def from = opt.f ?: "1970-01-01 00:00:00"
 
-// Should we use REPLACE INTO?
-def replace = opt.f ? true : false
+log "Started item value migration."
+start = System.currentTimeMillis()
 
-log "Migrating data with modified date >= ${from}"
-
-// Configure reader DataSource.
-def sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", userRead, passwordRead, "com.mysql.jdbc.Driver")
+// Configure select DataSource.
+sql = Sql.newInstance("jdbc:mysql://${server}:3306/${database}", user, password, "com.mysql.jdbc.Driver")
 sql.connection.autoCommit = false
 
-// Configure writer DataSource.
-def sqlInsert = Sql.newInstance("jdbc:mysql://${target}:3306/${database}?rewriteBatchedStatements=true", userWrite, passwordWrite, "com.mysql.jdbc.Driver")
+// Configure insert DataSource.
+sqlInsert = Sql.newInstance("jdbc:mysql://${server}:3306/${database}?rewriteBatchedStatements=true", user, password, "com.mysql.jdbc.Driver")
 sqlInsert.connection.autoCommit = false
 
-// Check for scolling.
+// Check for scrolling.
 DatabaseMetaData dbmd = sql.connection.getMetaData();
 int JDBCVersion = dbmd.getJDBCMajorVersion();
 boolean srs = dbmd.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY);
 if (JDBCVersion > 2 || srs == true) {
   // println "ResultSet scrolling is supported.";
 } else {
-  log "ResultSet scrolling is NOT supported.";
+  logError "ResultSet scrolling is NOT supported.";
   return;
 }
 
@@ -107,34 +101,17 @@ sql.execute "CREATE OR REPLACE VIEW profile_item_values AS " +
     "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
     "WHERE i.TYPE = 'PI'"
 
-def profileItemNumberValueSql
-if (replace) {
-    profileItemNumberValueSql =
-        "INSERT INTO PROFILE_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-        "ON DUPLCATE KEY UPDATE STATUS=VALUES(STATUS), VALUE=VALUES(VALUE), MODIFIED=VALUES(MODIFIED), PROFILE_ITEM_ID=VALUES(PROFILE_ITEM_ID), " +
-        "ITEM_VALUE_DEFINITION_ID=VALUES(ITEM_VALUE_DEFINITION_ID), UNIT=VALUES(UNIT), PER_UNIT=VALUES(PER_UNIT)"
-} else {
-    profileItemNumberValueSql =
+def profileItemNumberValueSql =
         "INSERT INTO PROFILE_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-}
 def profileItemNumberValueStatement = sqlInsert.connection.prepareStatement(profileItemNumberValueSql)
 
-def profileItemTextValueSql
-if (replace) {
-    profileItemTextValueSql =
-        "INSERT INTO PROFILE_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
-        "ON DUPLICATE KEY UPDATE STATUS=VALUES(STATUS), VALUE=VALUES(VALUE), MODIFIED=VALUES(MODIFIED), PROFILE_ITEM_ID=VALUES(PROFILE_ITEM_ID), ITEM_VALUE_DEFINITION_ID=VALUES(ITEM_VALUE_DEFINITION_ID)"
-} else {
-    profileItemTextValueSql =
+def profileItemTextValueSql =
         "INSERT INTO PROFILE_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-}
 def profileItemTextValueStatement = sqlInsert.connection.prepareStatement(profileItemTextValueSql)
 
-def rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT FROM profile_item_values WHERE MODIFIED >= '${from}'")
+def rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, VALUE_TYPE, UNIT, PER_UNIT FROM profile_item_values")
 
 while (rs.next()) {
     rowValType = rs.getInt("VALUE_TYPE")
@@ -266,62 +243,27 @@ sql.execute "CREATE OR REPLACE VIEW data_item_values AS " +
     "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
     "WHERE i.TYPE = 'DI'"
 
-def dataItemNumberValueSql
-if (replace) {
-    dataItemNumberValueSql =
-        "INSERT INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-        "ON DUPLICATE KEY UPDATE STATUS=VALUES(STATUS), VALUE=VALUES(VALUE), MODIFIED=VALUES(MODIFIED), DATA_ITEM_ID=VALUES(DATA_ITEM_ID), " +
-        "ITEM_VALUE_DEFINITION_ID=VALUES(ITEM_VALUE_DEFINITION_ID), UNIT=VALUES(UNIT), PER_UNIT=VALUES(PER_UNIT)"
-} else {
-    dataItemNumberValueSql =
+def dataItemNumberValueSql =
         "INSERT INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-}
 def dataItemNumberValueStatement = sqlInsert.connection.prepareStatement(dataItemNumberValueSql)
 
-def dataItemTextValueSql
-if (replace) {
-    dataItemTextValueSql =
-        "INSERT INTO DATA_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
-        "ON DUPLICATE KEY UPDATE STATUS=VALUES(STATUS), VALUE=VALUES(VALUE), MODIFIED=VALUES(MODIFIED), DATA_ITEM_ID=VALUES(DATA_ITEM_ID), ITEM_VALUE_DEFINITION_ID=VALUES(ITEM_VALUE_DEFINITION_ID)"
-} else {
-    dataItemTextValueSql =
+def dataItemTextValueSql =
         "INSERT INTO DATA_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-}
 def dataItemTextValueStatement = sqlInsert.connection.prepareStatement(dataItemTextValueSql)
 
-def dataItemNumberValueHistorySql
-if (replace) {
-    dataItemNumberValueHistorySql =
-        "INSERT INTO DATA_ITEM_NUMBER_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT, START_DATE) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-        "ON DUPLICATE KEY UPDATE STATUS=VALUES(STATUS), VALUE=VALUES(VALUE), MODIFIED=VALUES(MODIFIED), DATA_ITEM_ID=VALUES(DATA_ITEM_ID), " +
-        "ITEM_VALUE_DEFINITION_ID=VALUES(ITEM_VALUE_DEFINITION_ID), UNIT=VALUES(UNIT), PER_UNIT=VALUES(PER_UNIT), START_DATE=VALUES(START_DATE)"
-} else {
-    dataItemNumberValueHistorySql =
+def dataItemNumberValueHistorySql =
         "INSERT INTO DATA_ITEM_NUMBER_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT, START_DATE) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-}
 def dataItemNumberValueHistoryStatement = sqlInsert.connection.prepareStatement(dataItemNumberValueHistorySql)
 
-def dataItemTextValueHistorySql
-if (replace) {
-    dataItemTextValueHistorySql =
-        "INSERT INTO DATA_ITEM_TEXT_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, START_DATE) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-        "ON DUPLICATE KEY UPDATE STATUS=VALUES(STATUS), VALUE=VALUES(VALUE), MODIFIED=VALUES(MODIFIED), DATA_ITEM_ID=VALUES(DATA_ITEM_ID), " +
-        "ITEM_VALUE_DEFINITION_ID=VALUES(ITEM_VALUE_DEFINITION_ID), START_DATE=VALUES(START_DATE)"
-} else {
-    dataItemTextValueHistorySql =
+def dataItemTextValueHistorySql =
         "INSERT INTO DATA_ITEM_TEXT_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, START_DATE) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-}
 def dataItemTextValueHistoryStatement = sqlInsert.connection.prepareStatement(dataItemTextValueHistorySql)
 
-rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, DATA_ITEM_ID, VALUE_TYPE, UNIT, PER_UNIT, START_DATE FROM data_item_values WHERE MODIFIED >= '${from}'")
+rs = st.executeQuery("SELECT ID, UID, STATUS, VALUE, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, DATA_ITEM_ID, VALUE_TYPE, UNIT, PER_UNIT, START_DATE FROM data_item_values")
 
 while (rs.next()) {
     rowValType = rs.getInt("VALUE_TYPE")
@@ -530,26 +472,24 @@ if (dryRun) {
 
 // Close CSV files.
 if (writeToCSV) {
-    profileItemNumberValueWriter.close();
-    profileItemTextValueWriter.close();
-    dataItemNumberValueWriter.close();
-    dataItemNumberValueHistoryWriter.close();
-    dataItemTextValueWriter.close();
-    dataItemTextValueHistoryWriter.close();
+    profileItemNumberValueWriter.close()
+    profileItemTextValueWriter.close()
+    dataItemNumberValueWriter.close()
+    dataItemNumberValueHistoryWriter.close()
+    dataItemTextValueWriter.close()
+    dataItemTextValueHistoryWriter.close()
 }
 
+log "Finished item value migration. Took ${(System.currentTimeMillis() - start * 1000) / 60} minutes."
+
 def configureCliBuilder() {
-    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-t target] [-d database] [-ur user] [-pr password] [-uw user] [-pw password] [-f date] [-r] [-c]')
+    def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password] [-r] [-c]')
     cli.h(longOpt: 'help', 'usage information')
     cli.s(argName: 'servername', longOpt: 'server', args: 1, required: false, type: GString, "server name (default 'localhost')")
-    cli.t(argName: 'target', longOpt: 'target', args: 1, required: false, type: GString, "target server name (default 'localhost')")
     cli.d(argName: 'database', longOpt: 'database', args: 1, required: false, type: GString, "database name (default 'amee')")
-    cli.ur(argName: 'user-read', longOpt: 'user-read', args: 1, required: false, type: GString, "reader username (default 'amee')")
-    cli.pr(argName: 'password-read', longOpt: 'password-read', args: 1, required: false, type: GString, "reader password (default 'amee')")
-    cli.uw(argName: 'user-write', longOpt: 'user-write', args: 1, required: false, type: GString, "writer username (default 'amee')")
-    cli.pw(argName: 'password-write', longOpt: 'password-write', args: 1, required: false, type: GString, "writer password (default 'amee')")
+    cli.u(argName: 'user', longOpt: 'user', args: 1, required: false, type: GString, "username (default 'amee')")
+    cli.p(argName: 'password', longOpt: 'password', args: 1, required: false, type: GString, "password (default 'amee')")
     cli.r(argName: 'dryrun', longOpt: 'dryrun', args: 0, required: false, type: GString, "dry-run (does not commit data)")
-    cli.f(argName: 'from', longOpt: 'from', args: 1, required: false, type: GString, "select data from this date (default 1970-01-01 00:00:00")
     cli.c(argName: 'csv', longOpt: 'csv', args: 0, required: false, type: GString, "write to csv (does not commit data)")
     return cli
 }
