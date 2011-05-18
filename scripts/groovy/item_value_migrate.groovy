@@ -94,6 +94,7 @@ Statement st = sql.connection.createStatement(
 st.setFetchSize(Integer.MIN_VALUE);
 
 // Create a view for the profile item values
+log "Creating profile_item_values view..."
 sql.execute "CREATE OR REPLACE VIEW profile_item_values AS " +
     "SELECT iv.ID, iv.UID, iv.STATUS, iv.VALUE, iv.CREATED, iv.MODIFIED, i.ID as PROFILE_ITEM_ID, iv.ITEM_VALUE_DEFINITION_ID, vd.VALUE_TYPE, iv.UNIT, iv.PER_UNIT " +
     "FROM ITEM_VALUE AS iv JOIN ITEM i ON iv.ITEM_ID = i.ID " +
@@ -236,6 +237,7 @@ st = sql.connection.createStatement(
 st.setFetchSize(Integer.MIN_VALUE);
 
 // Create a view for the data item values
+log "Creating data_item_values view..."
 sql.execute "CREATE OR REPLACE VIEW data_item_values AS " +
     "SELECT iv.ID, iv.UID, iv.STATUS, iv.VALUE, iv.CREATED, iv.MODIFIED, i.ID as DATA_ITEM_ID, iv.ITEM_VALUE_DEFINITION_ID, vd.VALUE_TYPE, iv.UNIT, iv.PER_UNIT, iv.START_DATE " +
     "FROM ITEM_VALUE AS iv JOIN ITEM i ON iv.ITEM_ID = i.ID " +
