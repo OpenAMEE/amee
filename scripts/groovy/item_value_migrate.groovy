@@ -246,22 +246,22 @@ sql.execute "CREATE OR REPLACE VIEW data_item_values AS " +
     "WHERE i.TYPE = 'DI'"
 
 def dataItemNumberValueSql =
-        "INSERT INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
+        "INSERT INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, DATA_ITEM_ID, UNIT, PER_UNIT) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 def dataItemNumberValueStatement = sqlInsert.connection.prepareStatement(dataItemNumberValueSql)
 
 def dataItemTextValueSql =
-        "INSERT INTO DATA_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID) " +
+        "INSERT INTO DATA_ITEM_TEXT_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, DATA_ITEM_ID) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 def dataItemTextValueStatement = sqlInsert.connection.prepareStatement(dataItemTextValueSql)
 
 def dataItemNumberValueHistorySql =
-        "INSERT INTO DATA_ITEM_NUMBER_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT, START_DATE) " +
+        "INSERT INTO DATA_ITEM_NUMBER_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, DATA_ITEM_ID, UNIT, PER_UNIT, START_DATE) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 def dataItemNumberValueHistoryStatement = sqlInsert.connection.prepareStatement(dataItemNumberValueHistorySql)
 
 def dataItemTextValueHistorySql =
-        "INSERT INTO DATA_ITEM_TEXT_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, DATA_ITEM_ID, ITEM_VALUE_DEFINITION_ID, START_DATE) " +
+        "INSERT INTO DATA_ITEM_TEXT_VALUE_HISTORY (ID, UID, STATUS, VALUE, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, DATA_ITEM_ID, START_DATE) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
 def dataItemTextValueHistoryStatement = sqlInsert.connection.prepareStatement(dataItemTextValueHistorySql)
 
@@ -298,8 +298,8 @@ while (rs.next()) {
                 }
                 setBatchObject(dataItemNumberValueStatement, 5, rs.getTimestamp("CREATED"))
                 setBatchObject(dataItemNumberValueStatement, 6, rs.getTimestamp("MODIFIED"))
-                setBatchObject(dataItemNumberValueStatement, 7, rs.getLong("DATA_ITEM_ID"))
-                setBatchObject(dataItemNumberValueStatement, 8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+                setBatchObject(dataItemNumberValueStatement, 7, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+                setBatchObject(dataItemNumberValueStatement, 8, rs.getLong("DATA_ITEM_ID"))
                 def rowUnit = rs.getString("UNIT")
                 setBatchObject(dataItemNumberValueStatement, 9, (rowUnit ? rowUnit : ''))
                 def perUnit = rs.getString("PER_UNIT")
@@ -328,8 +328,8 @@ while (rs.next()) {
                 setBatchObject(dataItemNumberValueHistoryStatement, 4, rowVal == "" || rowVal == "-" ? null : Double.parseDouble(rowVal))
                 setBatchObject(dataItemNumberValueHistoryStatement, 5, rs.getTimestamp("CREATED"))
                 setBatchObject(dataItemNumberValueHistoryStatement, 6, rs.getTimestamp("MODIFIED"))
-                setBatchObject(dataItemNumberValueHistoryStatement, 7, rs.getLong("DATA_ITEM_ID"))
-                setBatchObject(dataItemNumberValueHistoryStatement, 8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+                setBatchObject(dataItemNumberValueHistoryStatement, 7, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+                setBatchObject(dataItemNumberValueHistoryStatement, 8, rs.getLong("DATA_ITEM_ID"))
                 def rowUnit = rs.getString("UNIT")
                 setBatchObject(dataItemNumberValueHistoryStatement, 9, (rowUnit ? rowUnit : ''))
                 def perUnit = rs.getString("PER_UNIT")
@@ -373,8 +373,8 @@ while (rs.next()) {
             }
             setBatchObject(dataItemTextValueStatement, 5, rs.getTimestamp("CREATED"))
             setBatchObject(dataItemTextValueStatement, 6, rs.getTimestamp("MODIFIED"))
-            setBatchObject(dataItemTextValueStatement, 7, rs.getLong("DATA_ITEM_ID"))
-            setBatchObject(dataItemTextValueStatement, 8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+            setBatchObject(dataItemTextValueStatement, 7, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+            setBatchObject(dataItemTextValueStatement, 8, rs.getLong("DATA_ITEM_ID"))
 
             addBatch(dataItemTextValueStatement, dataItemTextValueWriter)
             textValueBatchCount++
@@ -404,8 +404,8 @@ while (rs.next()) {
             }
             setBatchObject(dataItemTextValueHistoryStatement, 5, rs.getTimestamp("CREATED"))
             setBatchObject(dataItemTextValueHistoryStatement, 6, rs.getTimestamp("MODIFIED"))
-            setBatchObject(dataItemTextValueHistoryStatement, 7, rs.getLong("DATA_ITEM_ID"))
-            setBatchObject(dataItemTextValueHistoryStatement, 8, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+            setBatchObject(dataItemTextValueHistoryStatement, 7, rs.getLong("ITEM_VALUE_DEFINITION_ID"))
+            setBatchObject(dataItemTextValueHistoryStatement, 8, rs.getLong("DATA_ITEM_ID"))
             setBatchObject(dataItemTextValueHistoryStatement, 9, rs.getTimestamp("START_DATE"))
 
             addBatch(dataItemTextValueHistoryStatement, dataItemTextValueHistoryWriter)
