@@ -168,7 +168,7 @@ if (dryRun) {
     sqlInsert.commit()
 }
 
-log "Finished item migration. Took ${(System.currentTimeMillis() - start * 1000) / 60} minutes."
+log "Finished item migration. Took ${(System.currentTimeMillis() - start) / 1000 / 60} minutes."
 
 
 def configureCliBuilder() {
