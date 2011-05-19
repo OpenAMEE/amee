@@ -482,7 +482,7 @@ if (writeToCSV) {
     dataItemTextValueHistoryWriter.close()
 }
 
-log "Finished item value migration. Took ${(System.currentTimeMillis() - start * 1000) / 60} minutes."
+log "Finished item value migration. Took ${(System.currentTimeMillis() - start) / 1000 / 60} minutes."
 
 def configureCliBuilder() {
     def cli = new CliBuilder(usage: 'groovy item_migrate.groovy [-h] [-s server] [-d database] [-u user] [-p password] [-r] [-c]')
