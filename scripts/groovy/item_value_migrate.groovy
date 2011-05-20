@@ -93,14 +93,14 @@ Statement st = sql.connection.createStatement(
         ResultSet.CONCUR_READ_ONLY);
 st.setFetchSize(Integer.MIN_VALUE);
 
-// Create a view for the profile item values
-log "Creating profile_item_values view..."
-sql.execute "CREATE OR REPLACE VIEW profile_item_values AS " +
-    "SELECT iv.ID, iv.UID, iv.STATUS, iv.VALUE, iv.CREATED, iv.MODIFIED, i.ID as PROFILE_ITEM_ID, iv.ITEM_VALUE_DEFINITION_ID, vd.VALUE_TYPE, iv.UNIT, iv.PER_UNIT " +
-    "FROM ITEM_VALUE AS iv JOIN ITEM i ON iv.ITEM_ID = i.ID " +
-    "JOIN ITEM_VALUE_DEFINITION ivd ON iv.ITEM_VALUE_DEFINITION_ID = ivd.ID " +
-    "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
-    "WHERE i.TYPE = 'PI'"
+// Create a view for the profile item values (commented as we do this manually now)
+//log "Creating profile_item_values view..."
+//sql.execute "CREATE OR REPLACE VIEW profile_item_values AS " +
+//    "SELECT iv.ID, iv.UID, iv.STATUS, iv.VALUE, iv.CREATED, iv.MODIFIED, i.ID as PROFILE_ITEM_ID, iv.ITEM_VALUE_DEFINITION_ID, vd.VALUE_TYPE, iv.UNIT, iv.PER_UNIT " +
+//    "FROM ITEM_VALUE AS iv JOIN ITEM i ON iv.ITEM_ID = i.ID " +
+//    "JOIN ITEM_VALUE_DEFINITION ivd ON iv.ITEM_VALUE_DEFINITION_ID = ivd.ID " +
+//    "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
+//    "WHERE i.TYPE = 'PI'"
 
 def profileItemNumberValueSql =
         "INSERT INTO PROFILE_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, PROFILE_ITEM_ID, ITEM_VALUE_DEFINITION_ID, UNIT, PER_UNIT) " +
@@ -236,14 +236,14 @@ st = sql.connection.createStatement(
         ResultSet.CONCUR_READ_ONLY);
 st.setFetchSize(Integer.MIN_VALUE);
 
-// Create a view for the data item values
-log "Creating data_item_values view..."
-sql.execute "CREATE OR REPLACE VIEW data_item_values AS " +
-    "SELECT iv.ID, iv.UID, iv.STATUS, iv.VALUE, iv.CREATED, iv.MODIFIED, i.ID as DATA_ITEM_ID, iv.ITEM_VALUE_DEFINITION_ID, vd.VALUE_TYPE, iv.UNIT, iv.PER_UNIT, iv.START_DATE " +
-    "FROM ITEM_VALUE AS iv JOIN ITEM i ON iv.ITEM_ID = i.ID " +
-    "JOIN ITEM_VALUE_DEFINITION ivd ON iv.ITEM_VALUE_DEFINITION_ID = ivd.ID " +
-    "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
-    "WHERE i.TYPE = 'DI'"
+// Create a view for the data item values (commented as we do this manually now)
+//log "Creating data_item_values view..."
+//sql.execute "CREATE OR REPLACE VIEW data_item_values AS " +
+//    "SELECT iv.ID, iv.UID, iv.STATUS, iv.VALUE, iv.CREATED, iv.MODIFIED, i.ID as DATA_ITEM_ID, iv.ITEM_VALUE_DEFINITION_ID, vd.VALUE_TYPE, iv.UNIT, iv.PER_UNIT, iv.START_DATE " +
+//    "FROM ITEM_VALUE AS iv JOIN ITEM i ON iv.ITEM_ID = i.ID " +
+//    "JOIN ITEM_VALUE_DEFINITION ivd ON iv.ITEM_VALUE_DEFINITION_ID = ivd.ID " +
+//    "JOIN VALUE_DEFINITION vd on ivd.VALUE_DEFINITION_ID = vd.ID " +
+//    "WHERE i.TYPE = 'DI'"
 
 def dataItemNumberValueSql =
         "INSERT INTO DATA_ITEM_NUMBER_VALUE (ID, UID, STATUS, VALUE, CREATED, MODIFIED, ITEM_VALUE_DEFINITION_ID, DATA_ITEM_ID, UNIT, PER_UNIT) " +
