@@ -1546,3 +1546,12 @@ update ITEM_VALUE set VALUE = '' WHERE ID = 1590239947;
 update ITEM_VALUE set VALUE = '' WHERE ID = 1590240207;
 update ITEM_VALUE set VALUE = '' WHERE ID = 1590727383;
 commit;
+
+-- Found on 2011-05-31
+start transaction;
+update ITEM_VALUE set VALUE = '' WHERE ID = 1592299563;
+update ITEM_VALUE set VALUE = '' WHERE ID = 1592858919;
+update ITEM_VALUE set VALUE = '' WHERE ID = 1593113131;
+update ITEM_VALUE set VALUE = '' WHERE ID = 1593445459;
+update ITEM_VALUE set VALUE = '' WHERE ID = 1593445583;
+commit;
