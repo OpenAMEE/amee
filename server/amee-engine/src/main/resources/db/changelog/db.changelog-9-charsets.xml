@@ -105,15 +105,4 @@
             MODIFY COLUMN DESCRIPTION TEXT CHARACTER SET utf8 NOT NULL
         </sql>
     </changeSet>
-
-    <changeSet id="9-11" author="david" context="science">
-        <comment>Recast ITEM_VALUE to latin1 in science database</comment>
-        <sql>
-            ALTER TABLE ITEM_VALUE DEFAULT CHARSET=latin1,
-            CHANGE UID UID CHAR(12) CHARACTER SET latin1 NOT NULL,
-            CHANGE VALUE VALUE MEDIUMTEXT CHARACTER SET latin1,
-            CHANGE UNIT UNIT VARCHAR(255) CHARACTER SET latin1 DEFAULT NULL,
-            CHANGE PER_UNIT PER_UNIT VARCHAR(255) CHARACTER SET latin1 DEFAULT NULL
-        </sql>
-    </changeSet>
 </databaseChangeLog>

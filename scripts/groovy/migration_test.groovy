@@ -12,8 +12,8 @@ import groovyx.net.http.RESTClient
 host = 'http://platform-qa.amee.com'
 username = 'ameetest2'
 password = '8b3pf87m'
-profileUid = 'TSBXNYFLNUD0'
-profileItemUid = 'X7ZHMOEVU6ZF'
+profileUid = 'MGPLTFZ5MKPZ'
+profileItemUid = '5QTFURDN3IWN'
 
 /****************************************/
 
