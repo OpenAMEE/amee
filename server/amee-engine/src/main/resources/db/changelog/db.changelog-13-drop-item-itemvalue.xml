@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet id="13-1" author="david">
+        <comment>Drop archived ITEM_BAK table</comment>
+        <dropTable tableName="ITEM_BAK"/>
+    </changeSet>
+
+    <changeSet id="13-2" author="david">
+        <comment>Drop archived ITEM_VALUE_BAK table</comment>
+        <dropTable tableName="ITEM_VALUE_BAK"/>
+    </changeSet>
+    
+    <changeSet id="13-3" author="david">
+        <comment>Drop data_item_values view</comment>
+        <dropView viewName="data_item_values"/>
+    </changeSet>
+
+    <changeSet id="13-4" author="david">
+        <comment>Drop profile_item_values view</comment>
+        <dropView viewName="profile_item_values"/>
+    </changeSet>
+
+    <changeSet id="13-5" author="david">
+        <comment>Drop ITEM table</comment>
+        <dropTable tableName="ITEM"/>
+    </changeSet>
+
+    <changeSet id="13-6" author="david">
+        <comment>Drop ITEM_VALUE table</comment>
+        <dropTable tableName="ITEM_VALUE"/>
+    </changeSet>
+</databaseChangeLog>
