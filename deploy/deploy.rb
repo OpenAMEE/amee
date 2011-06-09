@@ -29,8 +29,10 @@ set :use_sudo, false
 set :user, "amee"
 
 # Source code and build locations
-set :src_dir, "/Development/AMEE/amee.platform/project/amee"
-set :package_dir, "/Development/AMEE/amee.platform/project/amee.deploy"
+raise "PLATFORM_SRC_DIR - #{ENV['PLATFORM_SRC_DIR']} does not exist" unless File.exists?(ENV['PLATFORM_SRC_DIR'])
+raise "PLATFORM_PKG_DIR - #{ENV['PLATFORM_PKG_DIR']} does not exist" unless File.exists?(ENV['PLATFORM_PKG_DIR'])
+set :src_dir, ENV['PLATFORM_SRC_DIR']
+set :package_dir, ENV['PLATFORM_PKG_DIR']
 
 # Pick tag to deploy.
 set :branch do
