@@ -67,6 +67,12 @@
         <xerces.version>2.11.0</xerces.version>
         <xml-apis.version>2.11.0</xml-apis.version>
 
+        <!-- Plugin versions -->
+        <liquibase-plugin.version>1.9.5.0</liquibase-plugin.version>
+        <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>2.1</maven-dependency-plugin.version>
+        <maven-javadoc-plugin.version>2.5</maven-javadoc-plugin.version>
+
         <!-- Paths. -->
         <amee.home>/var/www/apps/amee-local</amee.home>
         <amee.current>${amee.home}/current</amee.current>
@@ -153,27 +159,39 @@
         </dependencies>
     </dependencyManagement>
 
-    <!-- Build Plugins. -->
     <build>
-
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
                     <configuration>
                         <source>1.6</source>
                         <target>1.6</target>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-plugin</artifactId>
+                    <version>${liquibase-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
         <plugins>
-
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.5</version>
                 <configuration>
                     <reportOutputDirectory>/var/www/qa</reportOutputDirectory>
                     <destDir>apidocs</destDir>
@@ -211,10 +229,7 @@
                     </execution>
                 </executions>
             </plugin>
-
-
         </plugins>
-
     </build>
 
     <!-- Dependencies. -->
