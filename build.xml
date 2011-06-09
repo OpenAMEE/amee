@@ -82,6 +82,8 @@
     <target name="cap-install" depends="rebuild" description="Create a new release and deploy to git.">
         <fail unless="tag" message="You must specify a tag, eg -Dtag=2.10.5" />
         <exec executable="cap" dir="${basedir}" failonerror="true">
+            <env key="PLATFORM_SRC_DIR" value="${amee.devel.home}" />
+            <env key="PLATFORM_PKG_DIR" value="${amee.package.dir}" />
             <arg value="install"/>
             <arg value="TAG=${tag}"/>
         </exec>
