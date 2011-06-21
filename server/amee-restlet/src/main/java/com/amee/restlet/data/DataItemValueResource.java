@@ -357,11 +357,8 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
             // Parse the startDate parameter into a Date object.
             Date startDate = new StartEndDate(form.getFirstValue("startDate"));
 
-            // TODO: PL-6577 - Just update the date here? Transaction will rollback.
-
-            // TODO: PL-6577 - Just compare to the EPOCH.
             // Can't amend the startDate of the first ItemValue in a history (startDate == DI.startDate)
-            if (!HistoryValue.class.isAssignableFrom(dataItem.getClass())) {
+            if (!HistoryValue.class.isAssignableFrom(itemValue.getClass())) {
                 log.warn("doStore() badRequest - Trying to update the startDate of the first DIV in a history.");
                 badRequest(APIFault.INVALID_RESOURCE_MODIFICATION);
                 return;
