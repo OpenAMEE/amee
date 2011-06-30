@@ -16,6 +16,7 @@
     <property name="db.name" value="amee"/>
     <property name="db.username" value="amee"/>
     <property name="db.password" value="amee"/>
+    <property name="mvn.executable" value="/opt/local/bin/mvn"/>
 
     <target name="rebuild" depends="clean, package, copy-amee-libs"
             description="Perform a clean build from src."/>
@@ -24,7 +25,7 @@
 
     <target name="clean" description="Clean the deployment lib and target directories.">
         <!-- Clean the amee target dirs. -->
-        <exec executable="mvn" dir="server" failonerror="true">
+        <exec executable="${mvn.executable}" dir="server" failonerror="true">
             <!--arg value="-o"/-->
             <arg value="clean"/>
         </exec>
@@ -35,7 +36,7 @@
     </target>
 
     <target name="package" description="Run the mvn package goal.">
-        <exec executable="mvn" dir="server" failonerror="true">
+        <exec executable="${mvn.executable}" dir="server" failonerror="true">
             <!--arg value="-o"/-->
             <arg value="package"/>
         </exec>
@@ -115,7 +116,7 @@
         <!-- See: http://www.liquibase.org/manual/contexts -->
         <fail unless="db.contexts" message="You must specifiy a database context, eg -Ddb.contexts=live"/>
 
-        <exec executable="mvn" dir="server/amee-engine" failonerror="true">
+        <exec executable="${mvn.executable}" dir="server/amee-engine" failonerror="true">
             <arg value="liquibase:update"/>
             <arg value="-Dliquibase.url=jdbc:mysql://localhost/${db.name}"/>
             <arg value="-Dliquibase.username=${db.username}"/>
@@ -129,7 +130,7 @@
         <!-- See: http://www.liquibase.org/manual/contexts -->
         <fail unless="db.contexts" message="You must specifiy a database context, eg -Ddb.contexts=live"/>
         
-        <exec executable="mvn" dir="server/amee-engine" failonerror="true">
+        <exec executable="${mvn.executable}" dir="server/amee-engine" failonerror="true">
             <arg value="liquibase:updateSQL"/>
             <arg value="-Dliquibase.url=jdbc:mysql://localhost/${db.name}"/>
             <arg value="-Dliquibase.username=${db.username}"/>
