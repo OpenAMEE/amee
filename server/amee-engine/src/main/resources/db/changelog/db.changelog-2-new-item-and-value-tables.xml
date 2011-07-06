@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <!-- New tables -->
     <changeSet author="david" id="2-1">
@@ -36,7 +37,7 @@
             </column>
         </createTable>
         <modifySql dbms="mysql">
-             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+            <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
         </modifySql>
         <modifySql>
             <replace replace="`UID` CHAR(12) DEFAULT '' NOT NULL"
@@ -80,7 +81,7 @@
             </column>
         </createTable>
         <modifySql dbms="mysql">
-             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+            <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
         </modifySql>
         <modifySql>
             <replace replace="`UID` CHAR(12) DEFAULT '' NOT NULL"
@@ -117,7 +118,7 @@
             </column>
         </createTable>
         <modifySql dbms="mysql">
-             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+            <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
         </modifySql>
         <modifySql>
             <replace replace="`UID` CHAR(12) DEFAULT '' NOT NULL"
@@ -160,7 +161,7 @@
             </column>
         </createTable>
         <modifySql dbms="mysql">
-             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+            <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
         </modifySql>
         <modifySql>
             <replace replace="`UID` CHAR(12) DEFAULT '' NOT NULL"
@@ -197,7 +198,7 @@
             </column>
         </createTable>
         <modifySql dbms="mysql">
-             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+            <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
         </modifySql>
         <modifySql>
             <replace replace="`UID` CHAR(12) DEFAULT '' NOT NULL"
@@ -240,7 +241,7 @@
             </column>
         </createTable>
         <modifySql dbms="mysql">
-             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+            <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
         </modifySql>
         <modifySql>
             <replace replace="`UID` CHAR(12) DEFAULT '' NOT NULL"
@@ -277,7 +278,7 @@
             </column>
         </createTable>
         <modifySql dbms="mysql">
-             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+            <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
         </modifySql>
         <modifySql>
             <replace replace="`UID` CHAR(12) DEFAULT '' NOT NULL"
@@ -320,7 +321,7 @@
             </column>
         </createTable>
         <modifySql dbms="mysql">
-             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+            <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
         </modifySql>
         <modifySql>
             <replace replace="`UID` CHAR(12) DEFAULT '' NOT NULL"
@@ -334,7 +335,7 @@
 
         <!-- Use sql tag so all changes for a table are executed in one statement. -->
         <sql>
-            ALTER TABLE VALUE_DEFINITION 
+            ALTER TABLE VALUE_DEFINITION
             CHANGE ID ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
             CHANGE UID UID CHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
             CHANGE NAME NAME VARCHAR(255) NOT NULL DEFAULT '',

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
-                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet id="13-1" author="david">
         <comment>Drop archived ITEM_BAK table</comment>
@@ -13,7 +13,7 @@
         <comment>Drop archived ITEM_VALUE_BAK table</comment>
         <dropTable tableName="ITEM_VALUE_BAK"/>
     </changeSet>
-    
+
     <changeSet id="13-3" author="david">
         <comment>Drop data_item_values view</comment>
         <dropView viewName="data_item_values"/>
