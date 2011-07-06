@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
-                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet id="12-1" author="david">
         <comment>Drop NAME and PATH from PROFILE table.</comment>
@@ -13,7 +13,7 @@
 
     <changeSet id="12-2" author="david">
         <comment>Drop FORCE_TIMESERIES from ITEM_VALUE_DEFINITION table.</comment>
-        
+
         <!-- Use sql tag so all changes for a table are executed in one statement. -->
         <sql>ALTER TABLE ITEM_VALUE_DEFINITION DROP COLUMN `FORCE_TIMESERIES`, DROP COLUMN `ALLOWED_ROLES`</sql>
     </changeSet>

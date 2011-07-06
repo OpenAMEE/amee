@@ -17,7 +17,7 @@
         <plugins>
             <plugin>
                 <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-plugin</artifactId>
+                <artifactId>liquibase-maven-plugin</artifactId>
                 <configuration>
                     <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
                     <driver>com.mysql.jdbc.Driver</driver>
