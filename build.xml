@@ -18,9 +18,6 @@
     <property name="db.password" value="amee"/>
     <property name="mvn.executable" value="/opt/local/bin/mvn"/>
 
-    <!-- To deploy from a branch other than stable, pass -Dbranch=mybranch" -->
-    <property name="branch" value="stable"/>
-
     <target name="rebuild" depends="clean, package, copy-amee-libs"
             description="Perform a clean build from src."/>
 
@@ -85,13 +82,11 @@
 
     <target name="cap-install" depends="rebuild" description="Create a new release and deploy to git.">
         <fail unless="tag" message="You must specify a tag, eg -Dtag=2.10.5" />
-        <echo message="Installing tag ${tag} from branch ${branch}"/>
         <exec executable="cap" dir="${basedir}" failonerror="true">
             <env key="PLATFORM_SRC_DIR" value="${amee.devel.home}" />
             <env key="PLATFORM_PKG_DIR" value="${amee.package.dir}" />
-            <env key="TAG" value="${tag}"/>
-            <env key="BRANCH" value="${branch}"/>
             <arg value="install"/>
+            <arg value="TAG=${tag}"/>
         </exec>
     </target>
 

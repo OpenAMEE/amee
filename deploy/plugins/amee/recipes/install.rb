@@ -37,15 +37,9 @@ namespace :install do
   
   task :prepare do
     # Switch the the correct branch and update from origin
-    @branch = ENV['BRANCH']
-    unless @branch
-      puts "You must specify a branch for this release using BRANCH=name"
-      exit
-    end
-    
     @pwd = Dir.pwd
     Dir.chdir(package_dir)
-    `git checkout #{@branch}`
+    `git checkout master`
     `git fetch`
     
     # Remove the previous install artifacts
