@@ -18,7 +18,7 @@
     <property name="db.password" value="amee"/>
     <property name="mvn.executable" value="/opt/local/bin/mvn"/>
 
-    <!-- To deploy from a branch other than stable, pass -Dbranch=mybranch"
+    <!-- To deploy from a branch other than stable, pass -Dbranch=mybranch" -->
     <property name="branch" value="stable"/>
 
     <target name="rebuild" depends="clean, package, copy-amee-libs"
