@@ -71,6 +71,7 @@ public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
         values.put("browser", resource.getProfileBrowser());
         values.put("profile", profileItem.getProfile());
         values.put("profileItem", profileItem);
+        values.put("profileItemValues", profileItemService.getItemValues(profileItem));
         if (!profileItemService.isSingleFlight(profileItem)) {
             values.put("amountPerMonth", profileItem.getAmounts().defaultValueAsAmount().convert(AmountPerUnit.MONTH).getValue());
         } else {

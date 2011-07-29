@@ -50,8 +50,12 @@
                 <option value='false'<#if !profileItem.end> selected</#if>>No</option>
             </select></td>
         </tr>
-        <#if 0 != profileItem.itemValues?size>
-            <#list profileItem.itemValues as iv>
+        <#--
+            In this current form it is not possible to add profile item values through the web interface as they won't be listed.
+            This only affects v1 accounts using the web interface, ie, I don't think it's worth fixing.
+        -->
+        <#if 0 != profileItemValues?size>
+            <#list profileItemValues as iv>
             <tr>
                 <td><a href='${basePath}/${iv.displayPath}'>${iv.displayName}</a></td>
                 <td>
