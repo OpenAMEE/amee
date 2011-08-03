@@ -25,6 +25,7 @@ public class TransactionServerConverter extends HttpServerConverter {
         transactionController = (TransactionController) context.getAttributes().get("transactionController");
     }
 
+    @Override
     public HttpRequest toRequest(HttpServerCall httpCall) {
         // Clear the ThreadBeanHolder at the start of each request.
         ThreadBeanHolder.clear();
@@ -38,6 +39,7 @@ public class TransactionServerConverter extends HttpServerConverter {
         return super.toRequest(httpCall);
     }
 
+    @Override
     public void commit(HttpResponse response) {
         // Commit the response.
         super.commit(response);
