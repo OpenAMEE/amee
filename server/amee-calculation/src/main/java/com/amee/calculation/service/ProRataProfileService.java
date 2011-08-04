@@ -8,7 +8,7 @@ import com.amee.domain.item.profile.ProfileItemNumberValue;
 import com.amee.domain.profile.Profile;
 import com.amee.platform.science.ReturnValue;
 import com.amee.platform.science.StartEndDate;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.ProfileItemServiceImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.measure.Measure;
 import javax.measure.quantity.Duration;
-import javax.measure.unit.BaseUnit;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class ProRataProfileService {
     private Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private ProfileItemService profileItemService;
+    private ProfileItemServiceImpl profileItemService;
 
     @Autowired
     private CalculationService calculationService;

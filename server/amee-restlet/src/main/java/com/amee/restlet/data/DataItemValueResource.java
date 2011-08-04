@@ -38,7 +38,7 @@ import com.amee.restlet.utils.APIFault;
 import com.amee.service.data.DataBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.invalidation.InvalidationService;
-import com.amee.service.item.DataItemService;
+import com.amee.service.item.DataItemServiceImpl;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -71,7 +71,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private DataItemService dataItemService;
+    private DataItemServiceImpl dataItemService;
 
     @Autowired
     private LocaleService localeService;

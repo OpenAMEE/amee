@@ -3,7 +3,6 @@ package com.amee.restlet.profile.builder.v2;
 import com.amee.base.utils.XMLUtils;
 import com.amee.calculation.service.ProRataProfileService;
 import com.amee.domain.IDataCategoryReference;
-import com.amee.domain.IDataItemService;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
@@ -14,8 +13,8 @@ import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
 import com.amee.service.data.DataService;
-import com.amee.service.item.DataItemService;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.DataItemServiceImpl;
+import com.amee.service.item.ProfileItemServiceImpl;
 import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.ProfileService;
 import com.amee.service.profile.SelectByProfileService;
@@ -71,10 +70,10 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     private ProfileService profileService;
 
     @Autowired
-    private ProfileItemService profileItemService;
+    private ProfileItemServiceImpl profileItemService;
 
     @Autowired
-    private DataItemService dataItemService;
+    private DataItemServiceImpl dataItemService;
 
     public JSONObject getJSONObject(ProfileCategoryResource resource) throws JSONException {
 

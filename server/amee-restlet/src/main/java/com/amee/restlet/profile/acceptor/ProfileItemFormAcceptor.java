@@ -9,7 +9,7 @@ import com.amee.domain.item.profile.ProfileItem;
 import com.amee.platform.science.StartEndDate;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.utils.APIFault;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.ProfileItemServiceImpl;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -50,7 +50,7 @@ public class ProfileItemFormAcceptor implements IProfileItemFormAcceptor {
     private ProfileService profileService;
 
     @Autowired
-    private ProfileItemService profileItemService;
+    private ProfileItemServiceImpl profileItemService;
 
     @Autowired
     private CalculationService calculationService;

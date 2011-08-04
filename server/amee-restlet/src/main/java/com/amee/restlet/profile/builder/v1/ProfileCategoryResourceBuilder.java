@@ -13,8 +13,8 @@ import com.amee.domain.sheet.Sheet;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.restlet.profile.builder.IProfileCategoryResourceBuilder;
 import com.amee.service.data.DataService;
-import com.amee.service.item.DataItemService;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.DataItemServiceImpl;
+import com.amee.service.item.ProfileItemServiceImpl;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,13 +57,13 @@ public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceB
     private DataService dataService;
 
     @Autowired
-    private DataItemService dataItemService;
+    private DataItemServiceImpl dataItemService;
 
     @Autowired
     private ProfileService profileService;
 
     @Autowired
-    private ProfileItemService profileItemService;
+    private ProfileItemServiceImpl profileItemService;
 
     public JSONObject getJSONObject(ProfileCategoryResource resource) throws JSONException {
         JSONObject obj = new JSONObject();

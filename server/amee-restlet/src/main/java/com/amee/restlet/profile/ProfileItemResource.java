@@ -29,7 +29,7 @@ import com.amee.restlet.profile.acceptor.ProfileItemAtomAcceptor;
 import com.amee.restlet.profile.acceptor.ProfileItemFormAcceptor;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileItemResourceBuilderFactory;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.ProfileItemServiceImpl;
 import com.amee.service.profile.ProfileConstants;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
@@ -70,7 +70,7 @@ public class ProfileItemResource extends BaseProfileResource implements Serializ
     private ProfileService profileService;
 
     @Autowired
-    private ProfileItemService profileItemService;
+    private ProfileItemServiceImpl profileItemService;
     
     @Autowired
     private ProfileItemResourceBuilderFactory builderFactory;

@@ -18,8 +18,8 @@ import com.amee.restlet.utils.APIException;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.auth.AuthorizationService;
 import com.amee.service.data.DataService;
-import com.amee.service.item.DataItemService;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.DataItemServiceImpl;
+import com.amee.service.item.ProfileItemServiceImpl;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,13 +62,13 @@ public class ProfileCategoryFormAcceptor implements IProfileCategoryFormAcceptor
     private ProfileService profileService;
 
     @Autowired
-    private ProfileItemService profileItemService;
+    private ProfileItemServiceImpl profileItemService;
 
     @Autowired
     private DataService dataService;
 
     @Autowired
-    private DataItemService dataItemService;
+    private DataItemServiceImpl dataItemService;
 
     @Autowired
     private CalculationService calculationService;

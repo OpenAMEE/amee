@@ -27,8 +27,8 @@ import com.amee.domain.item.BaseItemValue;
 import com.amee.domain.profile.builder.v1.ProfileItemBuilder;
 import com.amee.restlet.profile.ProfileItemValueResource;
 import com.amee.restlet.profile.builder.IProfileItemValueResourceBuilder;
-import com.amee.service.item.DataItemService;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.DataItemServiceImpl;
+import com.amee.service.item.ProfileItemServiceImpl;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +43,10 @@ import java.util.Map;
 public class ProfileItemValueResourceBuilder implements IProfileItemValueResourceBuilder {
 
     @Autowired
-    private ProfileItemService profileItemService;
+    private ProfileItemServiceImpl profileItemService;
 
     @Autowired
-    private DataItemService dataItemService;
+    private DataItemServiceImpl dataItemService;
 
     @Override
     public Element getElement(ProfileItemValueResource resource, Document document) {
