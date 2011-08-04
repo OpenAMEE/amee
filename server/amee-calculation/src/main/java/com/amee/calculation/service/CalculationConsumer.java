@@ -10,7 +10,7 @@ import com.amee.messaging.config.QueueConfig;
 import com.amee.platform.science.ReturnValues;
 import com.amee.service.data.DataService;
 import com.amee.service.data.DataSheetService;
-import com.amee.service.item.DataItemService;
+import com.amee.service.item.DataItemServiceImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -31,7 +31,7 @@ public class CalculationConsumer extends StringRpcMessageConsumer {
     private DataService dataService;
 
     @Autowired
-    private DataItemService dataItemService;
+    private DataItemServiceImpl dataItemService;
 
     @Autowired
     private DataSheetService dataSheetService;

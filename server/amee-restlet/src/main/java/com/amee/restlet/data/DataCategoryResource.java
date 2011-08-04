@@ -35,7 +35,7 @@ import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.definition.DefinitionService;
 import com.amee.service.invalidation.InvalidationService;
-import com.amee.service.item.DataItemService;
+import com.amee.service.item.DataItemServiceImpl;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -70,7 +70,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
     private DataService dataService;
 
     @Autowired
-    private DataItemService dataItemService;
+    private DataItemServiceImpl dataItemService;
 
     @Autowired
     private DefinitionService definitionService;

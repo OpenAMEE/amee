@@ -6,7 +6,7 @@ import com.amee.domain.item.BaseItemValue;
 import com.amee.domain.item.NumberValue;
 import com.amee.domain.item.profile.ProfileItem;
 import com.amee.restlet.profile.ProfileItemValueResource;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.ProfileItemServiceImpl;
 import com.amee.service.profile.ProfileService;
 import org.restlet.data.Form;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class ProfileItemValueFormAcceptor implements IItemValueFormAcceptor {
     private ProfileService profileService;
 
     @Autowired
-    private ProfileItemService profileItemService;
+    private ProfileItemServiceImpl profileItemService;
 
     @Autowired
     private CalculationService calculationService;

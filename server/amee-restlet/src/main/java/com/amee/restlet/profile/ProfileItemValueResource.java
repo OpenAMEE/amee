@@ -23,14 +23,13 @@ import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.item.BaseItemValue;
-import com.amee.domain.item.profile.BaseProfileItemValue;
 import com.amee.domain.item.profile.ProfileItem;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.IItemValueFormAcceptor;
 import com.amee.restlet.profile.acceptor.IItemValueRepresentationAcceptor;
 import com.amee.restlet.profile.builder.IProfileItemValueResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileItemValueResourceBuilderFactory;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.ProfileItemServiceImpl;
 import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.ProfileConstants;
 import org.apache.commons.logging.Log;
@@ -70,7 +69,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     private ProfileItemValueResourceBuilderFactory builderFactory;
 
     @Autowired
-    private ProfileItemService profileItemService;
+    private ProfileItemServiceImpl profileItemService;
 
     private DataCategory dataCategory;
     private ProfileItem profileItem;

@@ -25,7 +25,7 @@ import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.item.data.DataItem;
 import com.amee.restlet.AuthorizeResource;
 import com.amee.service.data.DataConstants;
-import com.amee.service.item.DataItemService;
+import com.amee.service.item.DataItemServiceImpl;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
@@ -43,7 +43,7 @@ import java.util.Map;
 public class DataItemLookupResource extends AuthorizeResource implements Serializable {
 
     @Autowired
-    private DataItemService dataItemService;
+    private DataItemServiceImpl dataItemService;
 
     private String dataItemUid = "";
     private DataItem dataItem = null;

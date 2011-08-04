@@ -6,8 +6,8 @@ import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.profile.ProfileItemResource;
 import com.amee.restlet.profile.builder.IProfileItemResourceBuilder;
-import com.amee.service.item.DataItemService;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.DataItemServiceImpl;
+import com.amee.service.item.ProfileItemServiceImpl;
 import org.apache.abdera.model.Category;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.IRIElement;
@@ -45,10 +45,10 @@ import java.util.Map;
 public class ProfileItemResourceBuilder implements IProfileItemResourceBuilder {
 
     @Autowired
-    ProfileItemService profileItemService;
+    ProfileItemServiceImpl profileItemService;
 
     @Autowired
-    DataItemService dataItemService;
+    DataItemServiceImpl dataItemService;
 
     public JSONObject getJSONObject(ProfileItemResource resource) throws JSONException {
         JSONObject obj = new JSONObject();
