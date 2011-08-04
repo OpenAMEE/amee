@@ -2,8 +2,9 @@ package com.amee.engine.restlet;
 
 import com.amee.base.transaction.TransactionController;
 import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.domain.*;
 import com.amee.domain.DataItemService;
+import com.amee.domain.LocaleService;
+import com.amee.domain.MetadataService;
 import com.amee.domain.ProfileItemService;
 import com.amee.domain.profile.CO2CalculationService;
 import com.noelios.restlet.http.HttpRequest;
