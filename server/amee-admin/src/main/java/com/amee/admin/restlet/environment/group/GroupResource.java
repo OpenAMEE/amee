@@ -1,7 +1,6 @@
 package com.amee.admin.restlet.environment.group;
 
 import com.amee.admin.restlet.environment.AdminBrowser;
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.Group;
 import com.amee.restlet.AuthorizeResource;

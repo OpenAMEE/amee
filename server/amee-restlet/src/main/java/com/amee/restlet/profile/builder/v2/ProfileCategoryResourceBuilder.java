@@ -6,8 +6,8 @@ import com.amee.domain.IDataCategoryReference;
 import com.amee.domain.Pager;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.environment.Environment;
-import com.amee.domain.profile.Profile;
 import com.amee.domain.item.profile.ProfileItem;
+import com.amee.domain.profile.Profile;
 import com.amee.domain.profile.builder.v2.ProfileItemBuilder;
 import com.amee.platform.science.CO2AmountUnit;
 import com.amee.restlet.profile.ProfileCategoryResource;
@@ -33,25 +33,6 @@ import org.w3c.dom.Element;
 
 import java.util.*;
 
-/**
- * This file is part of AMEE.
- * <p/>
- * AMEE is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * <p/>
- * AMEE is free software and is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * <p/>
- * Created by http://www.dgen.net.
- * Website http://www.amee.cc
- */
 @Service("v2ProfileCategoryResourceBuilder")
 public class ProfileCategoryResourceBuilder implements IProfileCategoryResourceBuilder {
 
