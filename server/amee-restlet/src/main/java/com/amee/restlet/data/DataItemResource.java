@@ -324,7 +324,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
             }
 
             // The new ItemValue must be unique on itemValueDefinitionUid + startDate.
-            if (!dataItemService.isUnique(dataItem, itemValueDefinition, startDate)) {
+            if (!dataItemService.isItemValueUnique(dataItem, itemValueDefinition, startDate)) {
                 log.warn("acceptRepresentation() badRequest - Trying to create a DIV with the same IVD and startDate as an existing DIV.");
                 badRequest();
                 return;

@@ -365,7 +365,7 @@ public class DataItemValueResource extends AMEEResource implements Serializable 
             }
 
             // TODO: Check that the IV is still unique?
-            // !dataItem.isUnique(itemValueDefinition, startDate)
+            // !dataItem.isItemValueUnique(itemValueDefinition, startDate)
 
             // Update the startDate field, the parameter was valid.
             ((HistoryValue) itemValue).setStartDate(startDate);
