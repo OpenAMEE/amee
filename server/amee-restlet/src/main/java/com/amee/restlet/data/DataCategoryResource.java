@@ -170,13 +170,20 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
                     invalidationService.invalidate(dataCategory);
                     successfulPost(modDataItem.getUid());
                 } else {
-                    badRequest();
+
+                    // Check if we have already set an error status.
+                    if (getResponse().getStatus().equals(Status.SUCCESS_OK)) {
+                        badRequest();
+                    }
                 }
             } else {
                 successfulPut(getFullPath());
             }
         } else {
-            badRequest();
+            // Check if we have already set an error status.
+            if (getResponse().getStatus().equals(Status.SUCCESS_OK)) {
+                badRequest();
+            }
         }
     }
 
@@ -416,6 +423,14 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
                 dataItem = new DataItem(dataCategory, itemDefinition);
                 dataItemService.persist(dataItem);
                 acceptDataItem(form, dataItem);
+
+                // Check for duplicate.
+                if (dataItemService.equivalentDataItemExists(dataItem)) {
+
+                    // The dataItem transaction will be rolled back.
+                    dataItem = null;
+                    badRequest(APIFault.DUPLICATE_ITEM);
+                }
             } else {
                 badRequest();
             }
@@ -426,6 +441,14 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
                 dataItem = dataItemService.getDataItemByUid(dataCategory, uid);
                 if (dataItem != null) {
                     acceptDataItem(form, dataItem);
+                }
+
+                // Check for duplicate.
+                if (dataItemService.equivalentDataItemExists(dataItem)) {
+
+                    // The dataItem transaction will be rolled back.
+                    dataItem = null;
+                    badRequest(APIFault.DUPLICATE_ITEM);
                 }
             }
         }
