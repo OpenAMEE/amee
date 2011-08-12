@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @Scope("prototype")
@@ -106,9 +108,10 @@ public class UserResource extends AuthorizeResource {
             user.setName(form.getFirstValue("name"));
         }
         if (form.getNames().contains("username")) {
-            if (form.getFirstValue("username").equalsIgnoreCase(user.getUsername())
-                    || siteService.getUserByUsername(form.getFirstValue("username")) == null) {
-                user.setUsername(form.getFirstValue("username"));
+            String username = form.getFirstValue("username");
+            if ((username.equalsIgnoreCase(user.getUsername()) || siteService.getUserByUsername(username) == null)
+                && Pattern.matches("[A-Za-z][A-Za-z0-9_]+", username)) {
+                    user.setUsername(username);
             } else {
                 ok = false;
             }
