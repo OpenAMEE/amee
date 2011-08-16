@@ -1,7 +1,6 @@
 package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.AdminBrowser;
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.Pager;
@@ -32,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 @Component
 @Scope("prototype")
@@ -139,59 +139,66 @@ public class UsersResource extends AuthorizeResource implements Serializable {
                 // create new instance
                 newUser = new User();
                 newUser.setName(form.getFirstValue("name"));
-                newUser.setUsername(form.getFirstValue("username"));
-                newUser.setPasswordInClear(form.getFirstValue("password"));
-                newUser.setEmail(form.getFirstValue("email"));
-                if (form.getFirstValue("superUser") != null) {
-                    newUser.setType(UserType.SUPER);
-                } else {
-                    newUser.setType(UserType.STANDARD);
-                }
-                if (form.getNames().contains("locale")) {
-                    String locale = form.getFirstValue("locale");
-                    if (LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
-                        newUser.setLocale(locale);
-                    }
-                }
-                if (form.getNames().contains("timeZone")) {
-                    TimeZone timeZone = TimeZone.getTimeZone(form.getFirstValue("timeZone"));
-                    newUser.setTimeZone(timeZone);
-                }
-                newUser.setAPIVersion(adminBrowser.getApiVersion(form.getFirstValue("apiVersion")));
-                if (newUser.getAPIVersion() != null) {
-                    siteService.save(newUser);
-                    // We can either 'clone' Group membership from an existing User *OR* join specified Groups.
-                    // Was a clone User supplied?
-                    cloneUser = siteService.getUserByUid(form.getFirstValue("cloneUserUid"));
-                    if (cloneUser != null) {
-                        // Clone User was supplied.
-                        // Clone Group memberships.
-                        for (GroupPrincipal groupPrincipal : groupService.getGroupPrincipalsForPrincipal(cloneUser)) {
-                            newGroupPrincipal = new GroupPrincipal(groupPrincipal.getGroup(), newUser);
-                            groupService.save(newGroupPrincipal);
-                        }
+
+                if (Pattern.matches("[A-Za-z][A-Za-z0-9_]+", form.getFirstValue("username"))) {
+                    newUser.setUsername(form.getFirstValue("username"));
+                    newUser.setPasswordInClear(form.getFirstValue("password"));
+                    newUser.setEmail(form.getFirstValue("email"));
+                    if (form.getFirstValue("superUser") != null) {
+                        newUser.setType(UserType.SUPER);
                     } else {
-                        // Clone User was NOT supplied.
-                        // Look for requested Groups to join.
-                        if (form.getNames().contains("groups") && !(form.getFirstValue("groups") == null)) {
-                            groupNames = form.getFirstValue("groups");
-                            for (String groupName : groupNames.split(",")) {
-                                groupName = groupName.trim();
-                                group = groupService.getGroupByName(groupName);
-                                if (group != null) {
-                                    newGroupPrincipal = new GroupPrincipal(group, newUser);
-                                    groupService.save(newGroupPrincipal);
-                                } else {
-                                    log.warn("Unable to find requested Group: '" + groupName + "'");
-                                    badRequest(APIFault.INVALID_PARAMETERS);
-                                    newUser = null;
+                        newUser.setType(UserType.STANDARD);
+                    }
+                    if (form.getNames().contains("locale")) {
+                        String locale = form.getFirstValue("locale");
+                        if (LocaleConstants.AVAILABLE_LOCALES.containsKey(locale)) {
+                            newUser.setLocale(locale);
+                        }
+                    }
+                    if (form.getNames().contains("timeZone")) {
+                        TimeZone timeZone = TimeZone.getTimeZone(form.getFirstValue("timeZone"));
+                        newUser.setTimeZone(timeZone);
+                    }
+                    newUser.setAPIVersion(adminBrowser.getApiVersion(form.getFirstValue("apiVersion")));
+                    if (newUser.getAPIVersion() != null) {
+                        siteService.save(newUser);
+                        // We can either 'clone' Group membership from an existing User *OR* join specified Groups.
+                        // Was a clone User supplied?
+                        cloneUser = siteService.getUserByUid(form.getFirstValue("cloneUserUid"));
+                        if (cloneUser != null) {
+                            // Clone User was supplied.
+                            // Clone Group memberships.
+                            for (GroupPrincipal groupPrincipal : groupService.getGroupPrincipalsForPrincipal(cloneUser)) {
+                                newGroupPrincipal = new GroupPrincipal(groupPrincipal.getGroup(), newUser);
+                                groupService.save(newGroupPrincipal);
+                            }
+                        } else {
+                            // Clone User was NOT supplied.
+                            // Look for requested Groups to join.
+                            if (form.getNames().contains("groups") && !(form.getFirstValue("groups") == null)) {
+                                groupNames = form.getFirstValue("groups");
+                                for (String groupName : groupNames.split(",")) {
+                                    groupName = groupName.trim();
+                                    group = groupService.getGroupByName(groupName);
+                                    if (group != null) {
+                                        newGroupPrincipal = new GroupPrincipal(group, newUser);
+                                        groupService.save(newGroupPrincipal);
+                                    } else {
+                                        log.warn("Unable to find requested Group: '" + groupName + "'");
+                                        badRequest(APIFault.INVALID_PARAMETERS);
+                                        newUser = null;
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        log.warn("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
+                        badRequest(APIFault.INVALID_PARAMETERS);
+                        newUser = null;
                     }
                 } else {
-                    log.warn("Unable to find api version '" + form.getFirstValue("apiVersion") + "'");
-                    badRequest(APIFault.INVALID_PARAMETERS);
+                    log.warn("Invalid username. Username must be: /[A-Za-z][A-Za-z0-9_]+/. Was: " + form.getFirstValue("username"));
+                    badRequest();
                     newUser = null;
                 }
             } else {

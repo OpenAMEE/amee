@@ -1,7 +1,7 @@
 package com.amee.restlet.site;
 
-import freemarker.template.Configuration;
 import com.amee.domain.cache.CacheHelper;
+import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

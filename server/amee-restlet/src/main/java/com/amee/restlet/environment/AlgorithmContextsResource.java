@@ -1,6 +1,5 @@
 package com.amee.restlet.environment;
 
-import com.amee.domain.AMEEEntity;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.environment.Environment;
