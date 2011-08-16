@@ -15,8 +15,8 @@ import com.amee.domain.sheet.Sheet;
 import com.amee.platform.science.AmountPerUnit;
 import com.amee.restlet.profile.ProfileCategoryResource;
 import com.amee.service.data.DataService;
-import com.amee.service.item.DataItemService;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.DataItemServiceImpl;
+import com.amee.service.item.ProfileItemServiceImpl;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,8 +29,8 @@ public class ProfileSheetBuilder implements CacheableFactory {
 
     private ProfileCategoryResource resource;
     private DataService dataService;
-    private DataItemService dataItemService;
-    private ProfileItemService profileItemService;
+    private DataItemServiceImpl dataItemService;
+    private ProfileItemServiceImpl profileItemService;
     private IDataCategoryReference dataCategory;
 
     private ProfileSheetBuilder() {
@@ -40,8 +40,8 @@ public class ProfileSheetBuilder implements CacheableFactory {
     public ProfileSheetBuilder(
             ProfileCategoryResource resource,
             DataService dataService,
-            ProfileItemService profileItemService,
-            DataItemService dataItemService,
+            ProfileItemServiceImpl profileItemService,
+            DataItemServiceImpl dataItemService,
             IDataCategoryReference dataCategory) {
         this();
         this.resource = resource;
@@ -54,8 +54,8 @@ public class ProfileSheetBuilder implements CacheableFactory {
     public ProfileSheetBuilder(
             ProfileCategoryResource resource,
             DataService dataService,
-            ProfileItemService profileItemService,
-            DataItemService dataItemService) {
+            ProfileItemServiceImpl profileItemService,
+            DataItemServiceImpl dataItemService) {
         this(resource, dataService, profileItemService, dataItemService, null);
     }
 

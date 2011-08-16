@@ -1,22 +1,3 @@
-/**
- * This file is part of AMEE.
- *
- * AMEE is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * AMEE is free software and is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Created by http://www.dgen.net.
- * Website http://www.amee.cc
- */
 package com.amee.restlet.data;
 
 import com.amee.base.utils.ThreadBeanHolder;
@@ -41,7 +22,7 @@ import com.amee.service.data.DataConstants;
 import com.amee.service.data.DataService;
 import com.amee.service.data.DataSheetService;
 import com.amee.service.invalidation.InvalidationService;
-import com.amee.service.item.DataItemService;
+import com.amee.service.item.DataItemServiceImpl;
 import com.amee.service.profile.ProfileService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -80,7 +61,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
     private DataService dataService;
 
     @Autowired
-    private DataItemService dataItemService;
+    private DataItemServiceImpl dataItemService;
 
     @Autowired
     private DataSheetService dataSheetService;
@@ -324,7 +305,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
             }
 
             // The new ItemValue must be unique on itemValueDefinitionUid + startDate.
-            if (!dataItemService.isUnique(dataItem, itemValueDefinition, startDate)) {
+            if (!dataItemService.isItemValueUnique(dataItem, itemValueDefinition, startDate)) {
                 log.warn("acceptRepresentation() badRequest - Trying to create a DIV with the same IVD and startDate as an existing DIV.");
                 badRequest();
                 return;

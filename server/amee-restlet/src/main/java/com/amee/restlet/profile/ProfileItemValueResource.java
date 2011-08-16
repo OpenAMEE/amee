@@ -1,36 +1,16 @@
-/**
- * This file is part of AMEE.
- *
- * AMEE is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * AMEE is free software and is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Created by http://www.dgen.net.
- * Website http://www.amee.cc
- */
 package com.amee.restlet.profile;
 
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.item.BaseItemValue;
-import com.amee.domain.item.profile.BaseProfileItemValue;
 import com.amee.domain.item.profile.ProfileItem;
 import com.amee.restlet.RequestContext;
 import com.amee.restlet.profile.acceptor.IItemValueFormAcceptor;
 import com.amee.restlet.profile.acceptor.IItemValueRepresentationAcceptor;
 import com.amee.restlet.profile.builder.IProfileItemValueResourceBuilder;
 import com.amee.restlet.profile.builder.ProfileItemValueResourceBuilderFactory;
-import com.amee.service.item.ProfileItemService;
+import com.amee.service.item.ProfileItemServiceImpl;
 import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.ProfileConstants;
 import org.apache.commons.logging.Log;
@@ -70,7 +50,7 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
     private ProfileItemValueResourceBuilderFactory builderFactory;
 
     @Autowired
-    private ProfileItemService profileItemService;
+    private ProfileItemServiceImpl profileItemService;
 
     private DataCategory dataCategory;
     private ProfileItem profileItem;
