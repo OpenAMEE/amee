@@ -6,9 +6,11 @@ import org.restlet.Application;
 import org.restlet.Filter;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Status;
 
 /**
- * A filter to restrict access to the users of type {@link com.amee.domain.auth.UserType#SUPER}
+ * A filter to restrict access to the users of type {@link com.amee.domain.auth.UserType#SUPER}.
+ * All other user types will receive a 403 Forbidden response.
  */
 public class SuperUserFilter extends BaseAuthFilter {
 
@@ -26,7 +28,7 @@ public class SuperUserFilter extends BaseAuthFilter {
         if (getActiveUser() != null && getActiveUser().isSuperUser()) {
             return super.doHandle(request, response);
         } else {
-            reject(request, response);
+            response.setStatus(Status.CLIENT_ERROR_FORBIDDEN);
             return Filter.STOP;
         }
     }
