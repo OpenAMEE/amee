@@ -79,7 +79,6 @@ public class ProfileCategoryResource extends BaseProfileResource {
         return super.isValid() &&
                 (getProfile() != null) &&
                 (dataCategory != null) &&
-                !dataCategory.getFullPath().startsWith("/lca/ecoinvent") &&
                 !dataCategory.isTrash();
     }
 
