@@ -87,7 +87,6 @@ public class ProfileItemValueResource extends BaseProfileResource implements Ser
                 (dataCategory != null) &&
                 profileItem.getProfile().equals(getProfile()) &&
                 profileItem.getDataCategory().equals(dataCategory) &&
-                !profileItem.getDataCategory().getFullPath().startsWith("/lca/ecoinvent") &&
                 getProfileItemValue().getItem().equals(profileItem);
     }
 
