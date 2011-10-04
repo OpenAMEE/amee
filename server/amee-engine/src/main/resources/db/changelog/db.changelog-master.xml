@@ -19,4 +19,5 @@
     <include relativeToChangelogFile="true" file="db.changelog-12-remove-unused-columns.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-13-drop-item-itemvalue.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-14-ecospold-units.xml"/>
+    <include relativeToChangelogFile="true" file="db.changelog-15-fix-principal-uid.xml"/>
 </databaseChangeLog>
