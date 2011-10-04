@@ -1,8 +1,8 @@
 package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.AdminBrowser;
+import com.amee.admin.restlet.environment.AdminResource;
 import com.amee.domain.IAMEEEntityReference;
-import com.amee.restlet.AuthorizeResource;
 import com.amee.service.auth.GroupService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Component
 @Scope("prototype")
-public class UserGroupResource extends AuthorizeResource {
+public class UserGroupResource extends AdminResource {
 
     @Autowired
     private GroupService GroupService;
