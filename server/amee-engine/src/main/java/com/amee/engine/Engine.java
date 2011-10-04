@@ -1,5 +1,6 @@
 package com.amee.engine;
 
+import com.amee.base.engine.JavaLoggingToCommonsLoggingRedirector;
 import com.amee.base.transaction.TransactionController;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang.StringUtils;
@@ -52,6 +53,9 @@ public class Engine implements WrapperListener, Serializable {
 
     public Integer start(String[] args) {
 
+        // Redirect JDK logging to Commons Logging
+        JavaLoggingToCommonsLoggingRedirector.activate();
+        
         parseOptions(args);
 
         log.info("start() Starting Engine...");

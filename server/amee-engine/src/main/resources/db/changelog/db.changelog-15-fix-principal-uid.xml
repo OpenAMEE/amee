@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="15-1" author="david">
+        <comment>Update the PRINCIPAL_UID for root user.</comment>
+        <update tableName="PERMISSION">
+            <column name="PRINCIPAL_UID" value="055B67044E95"/>
+            <where>PRINCIPAL_ID = 4 and PRINCIPAL_TYPE = 'USR'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

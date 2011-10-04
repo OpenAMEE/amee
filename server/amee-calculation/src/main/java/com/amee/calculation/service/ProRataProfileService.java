@@ -180,9 +180,15 @@ public class ProRataProfileService {
         return itemValue.getValueAsDouble() * intersectPerTimeRatio;
     }
 
+    // endDate may be null. See: com.amee.service.BaseBrowser.getQueryEndDate().
     private Interval getInterval(Date startDate, Date endDate) {
         DateTime start = new DateTime(startDate.getTime());
-        DateTime end = new DateTime(endDate.getTime());
+        DateTime end;
+        if (endDate != null) {
+             end = new DateTime(endDate.getTime());
+        } else {
+            end = new DateTime();
+        }
         return new Interval(start, end);
     }
 
