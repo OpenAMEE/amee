@@ -33,12 +33,6 @@
                                             <bean class="com.amee.restlet.auth.AuthFilter">
                                                 <constructor-arg index="0" ref="adminApplication"/>
                                                 <property name="next" ref="adminRouter"/>
-                                                <!--<property name="next">-->
-                                                    <!--<bean class="com.amee.restlet.auth.SuperUserFilter">-->
-                                                        <!--<constructor-arg index="0" ref="adminApplication"/>-->
-                                                        <!--<property name="next" ref="adminRouter"/>-->
-                                                    <!--</bean>-->
-                                                <!--</property>-->
                                             </bean>
                                         </property>
                                     </bean>
