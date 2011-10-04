@@ -31,6 +31,8 @@ public class AdminResource extends AuthorizeResource implements Serializable {
     public List<AccessSpecification> getGetAccessSpecifications() {
         List<AccessSpecification> accessSpecifications = new ArrayList<AccessSpecification>();
         for (IAMEEEntityReference entity : getDistinctEntities()) {
+
+            // Require the ADMIN permission.
             accessSpecifications.add(new AccessSpecification(entity, PermissionEntry.ADMIN));
         }
         return accessSpecifications;

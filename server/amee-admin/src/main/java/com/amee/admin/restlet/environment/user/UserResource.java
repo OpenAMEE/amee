@@ -1,10 +1,10 @@
 package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.AdminBrowser;
+import com.amee.admin.restlet.environment.AdminResource;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.auth.User;
-import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.AdminConstants;
 import com.amee.service.environment.SiteService;
 import org.json.JSONException;
@@ -26,12 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
 @Scope("prototype")
-public class UserResource extends AuthorizeResource {
+public class UserResource extends AdminResource {
 
     @PersistenceContext
     private EntityManager entityManager;

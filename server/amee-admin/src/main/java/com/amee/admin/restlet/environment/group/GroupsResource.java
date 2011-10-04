@@ -1,10 +1,10 @@
 package com.amee.admin.restlet.environment.group;
 
 import com.amee.admin.restlet.environment.AdminBrowser;
+import com.amee.admin.restlet.environment.AdminResource;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.Group;
-import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.AdminConstants;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,14 +17,13 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class GroupsResource extends AuthorizeResource implements Serializable {
+public class GroupsResource extends AdminResource {
 
     @Autowired
     private AdminBrowser adminBrowser;
