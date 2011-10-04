@@ -1,9 +1,8 @@
-package com.amee.restlet.environment;
+package com.amee.admin.restlet.environment;
 
 import com.amee.domain.IAMEEEntityReference;
-import com.amee.domain.ValueDefinition;
-import com.amee.domain.ValueType;
-import com.amee.restlet.AuthorizeResource;
+import com.amee.domain.algorithm.AlgorithmContext;
+import com.amee.restlet.environment.DefinitionBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +27,7 @@ import java.util.Set;
 
 @Component
 @Scope("prototype")
-public class ValueDefinitionResource extends AuthorizeResource implements Serializable {
+public class AlgorithmContextResource extends AdminResource {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -42,68 +40,61 @@ public class ValueDefinitionResource extends AuthorizeResource implements Serial
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
-        definitionBrowser.setValueDefinitionUid(request.getAttributes().get("valueDefinitionUid").toString());
+        definitionBrowser.setAlgorithmContextUid(request.getAttributes().get("algorithmContextUid").toString());
     }
 
     @Override
     public boolean isValid() {
-        return super.isValid() && (definitionBrowser.getValueDefinitionUid() != null);
+        return super.isValid() &&
+                (definitionBrowser.getAlgorithmContext() != null);
     }
 
     @Override
     public List<IAMEEEntityReference> getEntities() {
         List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
-        entities.add(definitionBrowser.getValueDefinition());
+        entities.add(definitionBrowser.getAlgorithmContext());
         return entities;
     }
 
     @Override
     public String getTemplatePath() {
-        return DataConstants.VIEW_VALUE_DEFINITION;
+        return DataConstants.VIEW_ALGORITHM_CONTEXT;
     }
 
     @Override
     public Map<String, Object> getTemplateValues() {
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
-        values.put("valueDefinition", definitionBrowser.getValueDefinition());
-        values.put("valueTypes", ValueType.getChoices());
+        values.put("algorithmContext", definitionBrowser.getAlgorithmContext());
         return values;
     }
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
-        obj.put("valueDefinition", definitionBrowser.getValueDefinition().getJSONObject());
-        obj.put("valueTypes", ValueType.getJSONObject());
+        obj.put("algorithmContextResource", definitionBrowser.getAlgorithmContext().getJSONObject());
         return obj;
     }
 
     @Override
     public Element getElement(Document document) {
-        Element element = document.createElement("ValueDefinitionResource");
-        element.appendChild(definitionBrowser.getValueDefinition().getElement(document));
-        element.appendChild(ValueType.getElement(document));
+        Element element = document.createElement("algorithmContextResource");
+        element.appendChild(definitionBrowser.getAlgorithmContext().getElement(document));
         return element;
     }
 
     @Override
     public void doStore(Representation entity) {
-        log.debug("doStore()");
-        ValueDefinition valueDefinition = definitionBrowser.getValueDefinition();
+        log.debug("doStore");
+        AlgorithmContext algorithmContext = definitionBrowser.getAlgorithmContext();
         Form form = getForm();
         Set<String> names = form.getNames();
         if (names.contains("name")) {
-            valueDefinition.setName(form.getFirstValue("name"));
+            algorithmContext.setName(form.getFirstValue("name"));
         }
-        if (names.contains("description")) {
-            valueDefinition.setDescription(form.getFirstValue("description"));
-        }
-        if (names.contains("valueType")) {
-            String valueType = form.getFirstValue("valueType");
-            valueType = valueType.equalsIgnoreCase("DECIMAL") ? "DOUBLE" : valueType;
-            valueDefinition.setValueType(ValueType.valueOf(valueType));
+        if (names.contains("content")) {
+            algorithmContext.setContent(form.getFirstValue("content"));
         }
         success();
     }
@@ -111,8 +102,7 @@ public class ValueDefinitionResource extends AuthorizeResource implements Serial
     @Override
     public void doRemove() {
         log.debug("doRemove");
-        ValueDefinition valueDefinition = definitionBrowser.getValueDefinition();
-        definitionService.remove(valueDefinition);
+        definitionService.remove(definitionBrowser.getAlgorithmContext());
         success();
     }
 }
