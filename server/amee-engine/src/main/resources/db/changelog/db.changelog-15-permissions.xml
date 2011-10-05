@@ -5,10 +5,18 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet id="15-1" author="david">
-        <comment>Update the PRINCIPAL_UID for root user.</comment>
+        <comment>Fix the PRINCIPAL_UID for root user.</comment>
         <update tableName="PERMISSION">
             <column name="PRINCIPAL_UID" value="055B67044E95"/>
             <where>PRINCIPAL_ID = 4 and PRINCIPAL_TYPE = 'USR'</where>
+        </update>
+    </changeSet>
+    
+    <changeSet id="15-2" author="david">
+        <comment>Add ADMIN permission entry to Administrators group.</comment>
+        <update tableName="PERMISSION">
+            <column name="ENTRIES" value='{"e":[{"v":"v"},{"v":"v", "s":"2"},{"v":"c"},{"v":"c.pr"},{"v":"m"},{"v":"d"},{"v":"a"}]}'/>
+            <where>PRINCIPAL_ID = 4 and PRINCIPAL_TYPE = 'GRP'</where>
         </update>
     </changeSet>
 </databaseChangeLog>

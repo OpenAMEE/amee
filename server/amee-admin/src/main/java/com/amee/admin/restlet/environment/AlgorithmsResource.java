@@ -1,9 +1,10 @@
-package com.amee.restlet.environment;
+package com.amee.admin.restlet.environment;
 
 import com.amee.domain.IAMEEEntityReference;
-import com.amee.domain.Pager;
+import com.amee.domain.algorithm.Algorithm;
 import com.amee.domain.data.ItemDefinition;
-import com.amee.restlet.AuthorizeResource;
+import com.amee.domain.environment.Environment;
+import com.amee.restlet.environment.DefinitionBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
@@ -23,14 +24,13 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class ItemDefinitionsResource extends AuthorizeResource implements Serializable {
+public class AlgorithmsResource extends AdminResource {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -40,34 +40,38 @@ public class ItemDefinitionsResource extends AuthorizeResource implements Serial
     @Autowired
     private DefinitionBrowser definitionBrowser;
 
-    private ItemDefinition newItemDefinition;
+    private Algorithm newAlgorithm;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
         super.initialise(context, request, response);
+        definitionBrowser.setItemDefinitionUid(request.getAttributes().get("itemDefinitionUid").toString());
+    }
+
+    @Override
+    public boolean isValid() {
+        return super.isValid() && (definitionBrowser.getItemDefinition() != null);
     }
 
     @Override
     public List<IAMEEEntityReference> getEntities() {
         List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
+        entities.add(definitionBrowser.getItemDefinition());
         return entities;
     }
 
     @Override
     public String getTemplatePath() {
-        return DataConstants.VIEW_ITEM_DEFINITIONS;
+        return DataConstants.VIEW_ALGORITHMS;
     }
 
     @Override
     public Map<String, Object> getTemplateValues() {
-        Pager pager = getPager();
-        List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(pager);
-        pager.setCurrentPage(getPage());
         Map<String, Object> values = super.getTemplateValues();
         values.put("browser", definitionBrowser);
-        values.put("itemDefinitions", itemDefinitions);
-        values.put("pager", pager);
+        values.put("itemDefinition", definitionBrowser.getItemDefinition());
+        values.put("algorithms", definitionBrowser.getItemDefinition().getAlgorithms());
         return values;
     }
 
@@ -75,36 +79,32 @@ public class ItemDefinitionsResource extends AuthorizeResource implements Serial
     public JSONObject getJSONObject() throws JSONException {
         JSONObject obj = new JSONObject();
         if (isGet()) {
-            Pager pager = getPager();
-            List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(pager);
-            pager.setCurrentPage(getPage());
-            JSONArray itemDefinitionsJSONArray = new JSONArray();
-            for (ItemDefinition itemDefinition : itemDefinitions) {
-                itemDefinitionsJSONArray.put(itemDefinition.getJSONObject(false));
+            obj.put("environment", Environment.ENVIRONMENT.getIdentityJSONObject());
+            obj.put("itemDefinition", definitionBrowser.getItemDefinition().getIdentityJSONObject());
+            JSONArray algorithms = new JSONArray();
+            for (Algorithm algorithm : definitionBrowser.getItemDefinition().getAlgorithms()) {
+                algorithms.put(algorithm.getJSONObject(false));
             }
-            obj.put("itemDefinitions", itemDefinitionsJSONArray);
-            obj.put("pager", pager.getJSONObject());
+            obj.put("algorithms", algorithms);
         } else if (getRequest().getMethod().equals(Method.POST)) {
-            obj.put("itemDefinition", newItemDefinition.getJSONObject());
+            obj.put("algorithm", newAlgorithm.getJSONObject());
         }
         return obj;
     }
 
     @Override
     public Element getElement(Document document) {
-        Element element = document.createElement("ItemDefinitionsResource");
+        Element element = document.createElement("AlgorithmsResource");
         if (isGet()) {
-            Pager pager = getPager();
-            List<ItemDefinition> itemDefinitions = definitionService.getItemDefinitions(pager);
-            pager.setCurrentPage(getPage());
-            Element itemDefinitionsElement = document.createElement("ItemDefinitions");
-            for (ItemDefinition itemDefinition : itemDefinitions) {
-                itemDefinitionsElement.appendChild(itemDefinition.getElement(document, false));
+            element.appendChild(Environment.ENVIRONMENT.getIdentityElement(document));
+            element.appendChild(definitionBrowser.getItemDefinition().getIdentityElement(document));
+            Element algorithmsElement = document.createElement("Algorithms");
+            for (Algorithm algorithm : definitionBrowser.getItemDefinition().getAlgorithms()) {
+                algorithmsElement.appendChild(algorithm.getElement(document, false));
             }
-            element.appendChild(itemDefinitionsElement);
-            element.appendChild(pager.getElement(document));
+            element.appendChild(algorithmsElement);
         } else if (getRequest().getMethod().equals(Method.POST)) {
-            element.appendChild(newItemDefinition.getElement(document));
+            element.appendChild(newAlgorithm.getElement(document));
         }
         return element;
     }
@@ -119,10 +119,13 @@ public class ItemDefinitionsResource extends AuthorizeResource implements Serial
         log.debug("doAccept()");
         Form form = getForm();
         if (form.getFirstValue("name") != null) {
-            newItemDefinition = new ItemDefinition(form.getFirstValue("name"));
-            definitionService.persist(newItemDefinition);
+            ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
+            String content = form.getFirstValue("content");
+            newAlgorithm = new Algorithm(itemDefinition, content);
+            newAlgorithm.setName(form.getFirstValue("name"));
+            definitionService.persist(newAlgorithm);
         }
-        if (newItemDefinition != null) {
+        if (newAlgorithm != null) {
             if (isStandardWebBrowser()) {
                 success();
             } else {
