@@ -11,13 +11,13 @@
     <#assign logoTitle = "AMEE">
 </#if>
 <#if !logoImageUrl??>
-    <#assign logoImageUrl = "/clients/demo/images/jmLogo.gif">
+    <#assign logoImageUrl = "/images/AMEElogo2011_Green.png">
 </#if>
 <#if !logoImageWidth??>
-    <#assign logoImageWidth = "150">
+    <#assign logoImageWidth = "147">
 </#if>
 <#if !logoImageHeight??>
-    <#assign logoImageHeight = "40">
+    <#assign logoImageHeight = "60">
 </#if>
 <!-- start top -->
 <div id="head" class="clearfix">

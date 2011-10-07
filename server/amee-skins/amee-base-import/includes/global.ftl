@@ -1,7 +1,7 @@
 <#if !pageTitle??>
   <#assign pageTitle = "AMEE">
 </#if>
-<#assign logo = false>
+<#assign logo = true>
 <#assign supportDetails = false>
 <#assign footerCopy = "">
 
