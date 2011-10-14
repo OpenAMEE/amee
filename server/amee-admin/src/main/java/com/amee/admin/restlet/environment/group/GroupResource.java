@@ -1,9 +1,9 @@
 package com.amee.admin.restlet.environment.group;
 
 import com.amee.admin.restlet.environment.AdminBrowser;
+import com.amee.admin.restlet.environment.AdminResource;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.auth.Group;
-import com.amee.restlet.AuthorizeResource;
 import com.amee.service.environment.AdminConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class GroupResource extends AuthorizeResource {
+public class GroupResource extends AdminResource {
 
     @Autowired
     private AdminBrowser adminBrowser;

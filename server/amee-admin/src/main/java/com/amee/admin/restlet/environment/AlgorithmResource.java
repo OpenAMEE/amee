@@ -1,4 +1,4 @@
-package com.amee.restlet.environment;
+package com.amee.admin.restlet.environment;
 
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.algorithm.Algorithm;
@@ -7,7 +7,7 @@ import com.amee.domain.item.profile.ProfileItem;
 import com.amee.domain.sheet.Choice;
 import com.amee.platform.science.AlgorithmRunner;
 import com.amee.platform.science.StartEndDate;
-import com.amee.restlet.AuthorizeResource;
+import com.amee.restlet.environment.DefinitionBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import org.apache.commons.lang.StringUtils;
@@ -27,12 +27,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.script.ScriptException;
-import java.io.Serializable;
 import java.util.*;
 
 @Component
 @Scope("prototype")
-public class AlgorithmResource extends AuthorizeResource implements Serializable {
+public class AlgorithmResource extends AdminResource {
 
     private final Log log = LogFactory.getLog(getClass());
 

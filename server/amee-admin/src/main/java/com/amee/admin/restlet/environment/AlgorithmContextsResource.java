@@ -1,9 +1,9 @@
-package com.amee.restlet.environment;
+package com.amee.admin.restlet.environment;
 
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.algorithm.AlgorithmContext;
 import com.amee.domain.environment.Environment;
-import com.amee.restlet.AuthorizeResource;
+import com.amee.restlet.environment.DefinitionBrowser;
 import com.amee.service.data.DataConstants;
 import com.amee.service.definition.DefinitionService;
 import org.apache.commons.logging.Log;
@@ -20,14 +20,13 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @Scope("prototype")
-public class AlgorithmContextsResource extends AuthorizeResource implements Serializable {
+public class AlgorithmContextsResource extends AdminResource {
 
     private final Log log = LogFactory.getLog(getClass());
 

@@ -1,6 +1,7 @@
 package com.amee.admin.restlet.environment.user;
 
 import com.amee.admin.restlet.environment.AdminBrowser;
+import com.amee.admin.restlet.environment.AdminResource;
 import com.amee.domain.IAMEEEntityReference;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.Pager;
@@ -8,7 +9,6 @@ import com.amee.domain.auth.Group;
 import com.amee.domain.auth.GroupPrincipal;
 import com.amee.domain.auth.User;
 import com.amee.domain.auth.UserType;
-import com.amee.restlet.AuthorizeResource;
 import com.amee.restlet.utils.APIFault;
 import com.amee.service.environment.AdminConstants;
 import com.amee.service.environment.SiteService;
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ import java.util.regex.Pattern;
 
 @Component
 @Scope("prototype")
-public class UsersResource extends AuthorizeResource implements Serializable {
+public class UsersResource extends AdminResource {
 
     @Autowired
     private SiteService siteService;

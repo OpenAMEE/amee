@@ -4,6 +4,7 @@ import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.domain.LocaleConstants;
 import com.amee.domain.LocaleHolder;
 import com.amee.domain.auth.User;
+import com.amee.restlet.RequestContext;
 import com.amee.service.auth.AuthenticationService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -54,6 +55,11 @@ public class BasicAuthFilter extends Guard {
         if (activeUser != null) {
             request.getAttributes().put("activeUser", activeUser);
             ThreadBeanHolder.set(User.class, activeUser);
+
+            // setup RequestContext
+            RequestContext ctx = ThreadBeanHolder.get(RequestContext.class);
+            ctx.setUser(activeUser);
+            ctx.setRequest(request);
 
             // Set user or request locale information into the thread
             String locale = request.getResourceRef().getQueryAsForm().getFirstValue("locale");
