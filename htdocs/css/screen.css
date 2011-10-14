@@ -45,7 +45,7 @@ body {
 #mastHead {
     margin-left: 130px;
     text-align: right;
-    height: 50px
+    height: 70px
 }
 
 #topNav {
@@ -162,6 +162,11 @@ body {
     width: 19.5%;
     float: right;
     padding: 0 0.4% 0 0;
+}
+
+#deprecated {
+    background-color: #DDDDDD;
+    padding: 5px;
 }
 
 #footer {
