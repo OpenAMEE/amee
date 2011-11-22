@@ -271,12 +271,16 @@
             <groupId>code.lucamarrocco</groupId>
             <artifactId>hoptoad-notifier</artifactId>
             <version>${hoptoad-notifier.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-lang</groupId>
-                    <artifactId>commons-lang</artifactId>
-                </exclusion>
-            </exclusions>
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>commons-lang</groupId>-->
+                    <!--<artifactId>commons-lang</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>log4j</artifactId>-->
+                    <!--<groupId>log4j</groupId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
         </dependency>
 
         <!-- Explicit dependency & version here to avoid transitive dependency mess. -->
