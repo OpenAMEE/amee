@@ -137,9 +137,10 @@ public class ProRataProfileService {
 
                 // Iterate over the return values and for each amount, store the prorated value
                 for (Map.Entry<String, ReturnValue> entry : pi.getAmounts().getReturnValues().entrySet()) {
+                    String type = entry.getKey();
                     ReturnValue value = entry.getValue();
-                    double proRatedValue = value.toDouble() * eventIntersectRatio;
-                    pi.getAmounts().putValue(value.getType(), value.getUnit(), value.getPerUnit(), proRatedValue);
+                    double proRatedValue = value.getValue() * eventIntersectRatio;
+                    pi.getAmounts().putValue(type, value.getUnit(), value.getPerUnit(), proRatedValue);
                 }
 
                 if (log.isDebugEnabled()) {
