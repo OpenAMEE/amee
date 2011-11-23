@@ -1,5 +1,6 @@
 package com.amee.calculation.service;
 
+import com.amee.domain.ProfileItemService;
 import com.amee.domain.data.DataCategory;
 import com.amee.domain.item.BaseItemValue;
 import com.amee.domain.item.NumberValue;
@@ -8,7 +9,6 @@ import com.amee.domain.item.profile.ProfileItemNumberValue;
 import com.amee.domain.profile.Profile;
 import com.amee.platform.science.ReturnValue;
 import com.amee.platform.science.StartEndDate;
-import com.amee.service.item.ProfileItemServiceImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -35,7 +35,7 @@ public class ProRataProfileService {
     private Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private ProfileItemServiceImpl profileItemService;
+    private ProfileItemService profileItemService;
 
     @Autowired
     private CalculationService calculationService;
