@@ -29,24 +29,6 @@ public class BasicAuthFilter extends Guard {
     }
 
     @Override
-    public int doHandle(Request request, Response response) {
-        boolean challengePresent;
-        try {
-            challengePresent = request.getChallengeResponse() != null;
-        } catch (IllegalArgumentException e) {
-            log.warn("Caught IllegalArgumentException: " + e.getMessage(), e);
-            response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-            return STOP;
-        }
-        if (challengePresent) {
-            return super.doHandle(request, response);
-        } else {
-            getNext().handle(request, response);
-            return CONTINUE;
-        }
-    }
-
-    @Override
     public boolean checkSecret(Request request, String identifier, char[] secret) {
         User sampleUser = new User();
         sampleUser.setUsername(identifier);
