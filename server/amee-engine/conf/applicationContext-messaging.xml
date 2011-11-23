@@ -78,4 +78,7 @@
     <!--<bean class="com.amee.messaging.resource.RequestWrapperMessageConsumer"/>-->
     <!--<bean class="com.amee.messaging.resource.RequestWrapperMessageConsumer"/>-->
 
+    <!-- Simple TaskExecutor that fires up a new thread for each task. -->
+    <bean id="invalidationTaskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor"/>
+
 </beans>
