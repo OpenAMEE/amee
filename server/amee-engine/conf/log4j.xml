@@ -45,11 +45,11 @@
         </filter>
     </appender>
 
-    <!-- Declare the 'HOPTOAD' HoptoadAppender. -->
-    <appender name="HOPTOAD" class="code.lucamarrocco.hoptoad.HoptoadAppender">
+    <!-- Declare the 'AIRBRAKE' HoptoadAppender. -->
+    <appender name="AIRBRAKE" class="hoptoad.HoptoadAppender">
         <param name="api_key" value="335da09dfa378ed3d5b650becadf0214"/>
         <param name="env" value="${instance.name}"/>
-        <param name="enabled" value="${amee.hoptoad}"/>
+        <param name="enabled" value="${amee.airbrake}"/>
     </appender>
 
     <!-- Declare the 'TRANSACTIONS_ROLLER' DailyRollingFileAppender. -->
@@ -154,7 +154,7 @@
         <priority value="${amee.defaultLogLevel}"/>
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="PLATFORM_EMAIL"/>
-        <appender-ref ref="HOPTOAD"/>
+        <appender-ref ref="AIRBRAKE"/>
     </root>
 
 </log4j:configuration>
