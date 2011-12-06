@@ -45,7 +45,7 @@
         <google-gdata-core.version>1.0</google-gdata-core.version>
         <google-visualization-datasource.version>1.0.2</google-visualization-datasource.version>
         <hibernate-core.version>3.6.3.Final</hibernate-core.version>
-        <hoptoad-notifier.version>1.8</hoptoad-notifier.version>
+        <hoptoad-notifier.version>1.9</hoptoad-notifier.version>
         <ibm-icu4j.version>4.0.1</ibm-icu4j.version>
         <javax.mail.version>1.4</javax.mail.version>
         <jetty-jsp.version>2.1-6.0.2</jetty-jsp.version>
@@ -267,21 +267,6 @@
             <artifactId>opencsv</artifactId>
             <version>${opencsv.version}</version>
         </dependency>
-        <dependency>
-            <groupId>code.lucamarrocco</groupId>
-            <artifactId>hoptoad-notifier</artifactId>
-            <version>${hoptoad-notifier.version}</version>
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>commons-lang</groupId>-->
-                    <!--<artifactId>commons-lang</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<artifactId>log4j</artifactId>-->
-                    <!--<groupId>log4j</groupId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        </dependency>
 
         <!-- Explicit dependency & version here to avoid transitive dependency mess. -->
         <dependency>
@@ -304,6 +289,15 @@
             <artifactId>commons-collections</artifactId>
             <version>${commons-collections.version}</version>
             <!-- Weirdly conflicted by: amee-platform-science -->
+        </dependency>
+
+        <!-- Runtime dependencies. -->
+        <!-- Airbrake. Was Hoptoad. -->
+        <dependency>
+            <groupId>hoptoad</groupId>
+            <artifactId>hoptoad-java-notifier</artifactId>
+            <version>${hoptoad-notifier.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Test Dependencies. -->
