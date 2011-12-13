@@ -5,4 +5,4 @@ amee.devel.home=/Users/david.keen/code/AMEE/amee
 amee.package.dir=/Users/david.keen/code/AMEE/amee.deploy
 
 # Path to the location of your mvn executable
-mvn.executable=/opt/local/bin/mvn
+#mvn.executable=/opt/local/bin/mvn
