@@ -1,11 +1,22 @@
 package com.amee.service.environment;
 
+import com.amee.base.transaction.AMEETransaction;
 import com.amee.base.utils.UidGen;
 import com.amee.domain.AMEEStatus;
+import com.amee.domain.ObjectType;
 import com.amee.domain.Pager;
 import com.amee.domain.auth.User;
+import com.amee.service.invalidation.InvalidationMessage;
+import com.amee.service.invalidation.InvalidationService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,12 +27,36 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class SiteService implements Serializable {
+public class SiteService implements ApplicationListener<InvalidationMessage>, Serializable {
 
     private static final String CACHE_REGION = "query.siteService";
 
+    private final Log log = LogFactory.getLog(getClass());
+
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private InvalidationService invalidationService;
+
+    /**
+     * Handles invalidation messages for users. This will clear the local cache.
+     *
+     * @param invalidationMessage the message received.
+     */
+    @Override
+    @AMEETransaction
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public void onApplicationEvent(InvalidationMessage invalidationMessage) {
+        if ((invalidationMessage.isLocal() || invalidationMessage.isFromOtherInstance()) &&
+            invalidationMessage.getObjectType().equals(ObjectType.USR)) {
+            log.trace("onApplicationEvent() Handling InvalidationMessage.");
+            User user = getUserByUid(invalidationMessage.getEntityUid());
+            if (user != null) {
+                clearCaches(user);
+            }
+        }
+    }
 
     // Users
 
@@ -142,5 +177,25 @@ public class SiteService implements Serializable {
 
     public void remove(User user) {
         user.setStatus(AMEEStatus.TRASH);
+    }
+
+    /**
+     * Invalidates a User. This will send an invalidation message via the InvalidationService.
+     *
+     * @param user the User to invalidate.
+     */
+    public void invalidate(User user) {
+        log.info("invalidate() user: " + user.getUid());
+        invalidationService.add(user);
+    }
+
+    /**
+     * Clears local caches.
+     *
+     * @param user the User to clear from the cache.
+     */
+    public void clearCaches(User user) {
+        log.info("clearCaches() user: " + user.getUid());
+        ((Session) entityManager.getDelegate()).getSessionFactory().getCache().evictEntity(User.class, user.getId());
     }
 }
