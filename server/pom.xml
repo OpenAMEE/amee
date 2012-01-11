@@ -154,6 +154,32 @@
     </dependencyManagement>
 
     <build>
+        <pluginManagement>
+            <plugins>
+
+                <!-- Liquibase schema management configuration -->
+                <!-- Plugin is enabled only in amee-engine module -->
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>${liquibase-maven-plugin.version}</version>
+                    <configuration>
+                        <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
+                        <driver>com.mysql.jdbc.Driver</driver>
+                        <verbose>true</verbose>
+                        <dropFirst>false</dropFirst>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>${mysql-connector-java.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
 
              <!-- Override default source and target setting of 1.5 -->
@@ -212,11 +238,14 @@
                 </executions>
             </plugin>
 
-            <!-- Liquibase schema management -->
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-                <version>${liquibase-maven-plugin.version}</version>
+
+                <!-- Skip running liquibase in child modules. Overriden in amee-engine. -->
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>
