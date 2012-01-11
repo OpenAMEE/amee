@@ -16,7 +16,7 @@
     <property name="db.name" value="amee"/>
     <property name="db.username" value="amee"/>
     <property name="db.password" value="amee"/>
-    <property name="mvn.executable" value="/opt/local/bin/mvn"/>
+    <property name="mvn.executable" value="/usr/bin/mvn"/>
 
     <target name="rebuild" depends="clean, package, copy-amee-libs"
             description="Perform a clean build from src."/>

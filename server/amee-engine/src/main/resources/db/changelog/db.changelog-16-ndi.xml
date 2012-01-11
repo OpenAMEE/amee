@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="16-1" author="david">
+        <comment>Change object type references from 'NDI' to 'DI'.</comment>
+        <update tableName="METADATA">
+            <column name="ENTITY_TYPE" value="DI"/>
+            <where>ENTITY_TYPE = 'NDI'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

@@ -147,6 +147,7 @@ public class UserResource extends AdminResource {
                 TimeZone timeZone = TimeZone.getTimeZone(form.getFirstValue("timeZone"));
                 user.setTimeZone(timeZone);
             }
+            siteService.invalidate(user);
             success();
         } else {
             badRequest();
