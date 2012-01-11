@@ -142,11 +142,6 @@
             </dependency>
             <dependency>
                 <groupId>com.amee</groupId>
-                <artifactId>amee-gdata</artifactId>
-                <version>${amee.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.amee</groupId>
                 <artifactId>amee-restlet</artifactId>
                 <version>${amee.version}</version>
             </dependency>
