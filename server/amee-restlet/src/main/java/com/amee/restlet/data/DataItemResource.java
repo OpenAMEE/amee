@@ -184,15 +184,25 @@ public class DataItemResource extends AMEEResource implements Serializable {
             // Create an array of amount objects
             JSONArray amountArray = new JSONArray();
             for (Map.Entry<String, ReturnValue> entry : returnAmounts.getReturnValues().entrySet()) {
+                String type = entry.getKey();
+                ReturnValue returnValue = entry.getValue();
 
                 // Create an Amount object
                 JSONObject multiAmountObj = new JSONObject();
-                multiAmountObj.put("value", entry.getValue().getValue());
-                multiAmountObj.put("type", entry.getKey());
-                multiAmountObj.put("unit", entry.getValue().getUnit());
-                multiAmountObj.put("perUnit", entry.getValue().getPerUnit());
-                if (entry.getKey().equals(returnAmounts.getDefaultType())) {
+                multiAmountObj.put("type", type);
+                multiAmountObj.put("unit", returnValue != null ? returnValue.getUnit() : "");
+                multiAmountObj.put("perUnit", returnValue != null ? returnValue.getPerUnit() : "");
+                if (type.equals(returnAmounts.getDefaultType())) {
                     multiAmountObj.put("default", "true");
+                }
+                if (returnValue == null) {
+                    multiAmountObj.put("value", JSONObject.NULL);
+                } else if (Double.isInfinite(returnValue.getValue())) {
+                    multiAmountObj.put("value", "Infinity");
+                } else if (Double.isNaN(returnValue.getValue())) {
+                    multiAmountObj.put("value", "NaN");
+                } else {
+                    multiAmountObj.put("value", returnValue.getValue());
                 }
 
                 // Add the object to the amounts array
@@ -247,14 +257,17 @@ public class DataItemResource extends AMEEResource implements Serializable {
             // Multiple return values
             Element amounts = document.createElement("Amounts");
             for (Map.Entry<String, ReturnValue> entry : returnAmounts.getReturnValues().entrySet()) {
+                String type = entry.getKey();
+                ReturnValue returnValue = entry.getValue();
+
                 Element multiAmount = document.createElement("Amount");
-                multiAmount.setAttribute("type", entry.getKey());
-                multiAmount.setAttribute("unit", entry.getValue().getUnit());
-                multiAmount.setAttribute("perUnit", entry.getValue().getPerUnit());
-                if (entry.getKey().equals(returnAmounts.getDefaultType())) {
+                multiAmount.setAttribute("type", type);
+                multiAmount.setAttribute("unit", returnValue != null ? returnValue.getUnit() : "");
+                multiAmount.setAttribute("perUnit", returnValue != null ? returnValue.getPerUnit() : "");
+                if (type.equals(returnAmounts.getDefaultType())) {
                     multiAmount.setAttribute("default", "true");
                 }
-                multiAmount.setTextContent(entry.getValue().getValue() + "");
+                multiAmount.setTextContent(returnValue != null ? returnValue.getValue() + "" : "");
                 amounts.appendChild(multiAmount);
             }
             for (Note note : returnAmounts.getNotes()) {
