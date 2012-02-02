@@ -425,7 +425,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
                 acceptDataItem(form, dataItem);
 
                 // Check for duplicate.
-                if (dataItemService.equivalentDataItemExists(dataItem)) {
+                if (!dataItemService.isUnique(dataItem)) {
 
                     // The dataItem transaction will be rolled back.
                     dataItem = null;
@@ -444,7 +444,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
                 }
 
                 // Check for duplicate.
-                if (dataItemService.equivalentDataItemExists(dataItem)) {
+                if (!dataItemService.isUnique(dataItem)) {
 
                     // The dataItem transaction will be rolled back.
                     dataItem = null;
