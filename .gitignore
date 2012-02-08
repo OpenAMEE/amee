@@ -20,3 +20,7 @@ wrapper.conf.local
 
 .idea/
 *.iml
+
+*.classpath
+*.project
+*.settings
