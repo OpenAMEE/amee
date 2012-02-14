@@ -242,7 +242,7 @@
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
 
-                <!-- Skip running liquibase in child modules. Overridden in amee-engine. -->
+                <!-- Skip running liquibase in child modules. Overriden in amee-engine. -->
                 <configuration>
                     <skip>true</skip>
                 </configuration>
