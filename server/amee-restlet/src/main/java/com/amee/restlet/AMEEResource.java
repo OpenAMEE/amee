@@ -140,7 +140,7 @@ public abstract class AMEEResource extends AuthorizeResource {
                     try {
                         fetched.set(true);
                         JSONObject obj = getJSONObject();
-                        if (!getAPIVersion().isVersionOne()) {
+                        if (getAPIVersion().isNotVersionOne()) {
                             obj.put("apiVersion", getAPIVersion().toString());
                         }
                         setText(obj.toString());
