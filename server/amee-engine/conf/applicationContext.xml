@@ -115,4 +115,7 @@
     <!-- A no-op implementation of LocaleServiceDAO. -->
     <bean id="localeServiceDAO" class="com.amee.service.locale.LocaleServiceDAONoOpImpl"/>
 
+    <!-- Drill Down service is SQL backed in v2 -->
+    <bean id="drillDownService" class="com.amee.service.data.SqlDrillDownService"/>
+
 </beans>

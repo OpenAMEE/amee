@@ -9,14 +9,14 @@ set.JDK_HOME=%JAVA_HOME%
 wrapper.java.library.path.1=%LIB_HOME%/wrapper/macosx-universal-64
 
 # AMEE_SERVER_NAME
-set.AMEE_SERVER_NAME=localhost
+set.AMEE_SERVER_NAME=platform-local.amee.com
 set.AMEE_INSTANCE_NAME=local
 
 # Log levels
 set.LOG_LEVEL=DEBUG
 set.DEFAULT_LOG_LEVEL=INFO
-set.MAILLOG=true
-set.AIRBRAKE=true
+set.MAILLOG=false
+set.AIRBRAKE=false
 
 # Extra Java Parameters
 wrapper.java.additional.100=-Xdebug
@@ -28,7 +28,7 @@ wrapper.java.additional.105=-XX:+PrintGCDetails
 
 # Database
 set.DB_USERNAME=amee
-set.DB_PSWD=HhGCXdfbU2xA6i
+set.DB_PSWD=amee
 set.DB_HOST=localhost
 set.DB_NAME=amee
 set.DB_DRIVER=net.sf.log4jdbc.DriverSpy
