@@ -21,4 +21,5 @@
     <include relativeToChangelogFile="true" file="db.changelog-14-ecospold-units.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-15-permissions.xml"/>
     <include relativeToChangelogFile="true" file="db.changelog-16-ndi.xml"/>
+    <include relativeToChangelogFile="true" file="db.changelog-17-rvd-add-name-column.xml"/>
 </databaseChangeLog>
