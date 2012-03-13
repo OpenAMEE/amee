@@ -32,7 +32,10 @@ public class CalculationClient {
 
     public static void main(String[] args) {
         try {
-            connection = new ConnectionFactory().newConnection("127.0.0.1", AMQP.PROTOCOL.PORT);
+        	ConnectionFactory connectionFactory = new ConnectionFactory();
+        	connectionFactory.setHost("127.0.0.1");
+        	connectionFactory.setPort(AMQP.PROTOCOL.PORT);
+            connection = connectionFactory.newConnection();
 
             outbound = new JSONObject();
             outbound.put("dataItemUid", "7F0D7F6AE66D");
