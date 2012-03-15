@@ -22,7 +22,7 @@
         </property>
     </bean>
 
-    <bean class="com.rabbitmq.client.ConnectionParameters">
+    <bean class="com.rabbitmq.client.ConnectionFactory">
         <property name="username" value="${RABBIT_MQ_USERNAME}"/>
         <property name="password" value="${RABBIT_MQ_PASSWORD}"/>
         <property name="virtualHost" value="/"/>
