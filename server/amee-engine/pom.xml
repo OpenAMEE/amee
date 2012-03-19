@@ -1,6 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <name>amee-engine</name>
@@ -22,6 +21,148 @@
                 <configuration>
                     <skip>false</skip>
                 </configuration>
+            </plugin>
+
+            <!-- Compile Groovy code -->
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>${gmaven-plugin.version}</version>
+
+                <!-- Use groovy 1.7 -->
+                <configuration>
+                    <providerSelection>1.7</providerSelection>
+                    <source />
+                </configuration>
+
+                <!-- Override default groovy-all version -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>${groovy.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateStubs</goal>
+                            <goal>compile</goal>
+                            <goal>generateTestStubs</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Exclude the integration tests from surefire -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <parallel>methods</parallel>
+                    <excludes>
+                        <exclude>**/*IT*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- Integration tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <configuration>
+                    <forkMode>perTest</forkMode>
+                    <argLine>-javaagent:${amee.current.lib}/spring-instrument-${spring.version}.jar</argLine>
+                    
+                    <environmentVariables>
+                        <!-- HSQLDB -->
+                        <DB_URL_PREFIX>jdbc</DB_URL_PREFIX>
+                        <DB_URL>hsqldb:mem:amee_test</DB_URL>
+                        <DB_DRIVER>org.hsqldb.jdbcDriver</DB_DRIVER>
+                        <DB_USERNAME>sa</DB_USERNAME>
+                        <DB_PSWD>NULL</DB_PSWD>
+                        <VALIDATION_QUERY>SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS</VALIDATION_QUERY>
+
+                        <!-- RabbitMQ -->
+                        <MESSAGING_RUN_SLEEP>1000</MESSAGING_RUN_SLEEP>
+                        <RABBIT_MQ_ADDRESS>127.0.0.1</RABBIT_MQ_ADDRESS>
+                        <RABBIT_MQ_PORT>5672</RABBIT_MQ_PORT>
+                        <RABBIT_MQ_USERNAME>guest</RABBIT_MQ_USERNAME>
+                        <RABBIT_MQ_PASSWORD>guest</RABBIT_MQ_PASSWORD>
+                        <MESSAGING_SCOPE>live</MESSAGING_SCOPE>
+
+                        <!-- AMEE platform -->
+                        <AMEE_APP_NAME>platform-api</AMEE_APP_NAME>
+                        <AMEE_SERVER_NAME>localhost</AMEE_SERVER_NAME>
+                        <AMEE_INSTANCE_NAME>test</AMEE_INSTANCE_NAME>
+                        <HOST_NAME>localhost</HOST_NAME>
+                        <HOST_NAME.ADMIN>admin-localhost</HOST_NAME.ADMIN>
+                        <PROTOCOL>http</PROTOCOL>
+                        <PORT>8888</PORT>
+                        <SECURE_PORT>8889</SECURE_PORT>
+
+                        <CONF_HOME>${basedir}/conf</CONF_HOME>
+                        <AMEE_HOME>${basedir}</AMEE_HOME>
+                        <CURRENT_HOME>${basedir}/current</CURRENT_HOME>
+                        <AUTO_START_SCHEDULER>false</AUTO_START_SCHEDULER>
+                        <CACHE_SERVICE_CLASS>com.amee.base.cache.EhCacheCacheService</CACHE_SERVICE_CLASS>
+                        <CACHE_MANAGER_CLASS>org.springframework.cache.ehcache.EhCacheManagerFactoryBean</CACHE_MANAGER_CLASS>
+                        <AMEE_TIME_ZONE>UTC</AMEE_TIME_ZONE>
+                        <TRAIN_ROUTE_SERVICE_URI>http://railservice.amee.com/route_finder/route_service.php</TRAIN_ROUTE_SERVICE_URI>
+                    </environmentVariables>
+
+                    <systemPropertyVariables>
+                        <!-- Hibernate -->
+                        <amee.cacheProviderClass>net.sf.ehcache.hibernate.SingletonEhCacheProvider</amee.cacheProviderClass>
+                        <amee.useQueryCache>false</amee.useQueryCache>
+                        <amee.useSecondLevelCache>false</amee.useSecondLevelCache>
+                        <amee.hibernateDialect>org.hibernate.dialect.HSQLDialect</amee.hibernateDialect>
+
+                        <!-- Set this to create to automatically create schema. Required for
+                            hsqldb:mem. -->
+                        <hibernate.hbm2ddl.auto>create-drop</hibernate.hbm2ddl.auto>
+
+                        <log4j.configuration>test-log4j.xml</log4j.configuration>
+                        <sun.lang.ClassLoader.allowArraySyntax>true</sun.lang.ClassLoader.allowArraySyntax>
+                        <java.awt.headless>true</java.awt.headless>
+                        <amee.logLevel>DEBUG</amee.logLevel>
+                        <amee.defaultLogLevel>WARN</amee.defaultLogLevel>
+                        <server.name>localhost</server.name>
+                        <amee.keyFile>${basedir}/src/test/resources/crypto/amee.key</amee.keyFile>
+                        <amee.saltFile>${basedir}/src/test/resources/crypto/amee.salt</amee.saltFile>
+                        <amee.masterIndex>true</amee.masterIndex>
+                        <amee.clearIndex>true</amee.clearIndex>
+                        <amee.checkDataCategories>true</amee.checkDataCategories>
+                        <amee.indexDataCategories>true</amee.indexDataCategories>
+                        <amee.indexDataItems>true</amee.indexDataItems>
+                        <amee.indexCheckSearcherOnCommit>true</amee.indexCheckSearcherOnCommit>
+                        <!-- Set this to 0 to disable timeouts when debugging (default is 15) -->
+                        <amee.resourceDefaultTimeout>15</amee.resourceDefaultTimeout>
+                    </systemPropertyVariables>
+
+                    <additionalClasspathElements>
+                        <element>${basedir}/src/main/resources</element>
+                        <element>${basedir}/conf</element>
+                    </additionalClasspathElements>
+                </configuration>
+                
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -87,6 +228,34 @@
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty-util</artifactId>
             <version>${jetty.version}</version>
+        </dependency>
+
+        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>org.codehaus.groovy.modules.http-builder</groupId>
+            <artifactId>http-builder</artifactId>
+            <version>${http-builder.version}</version>
+            <scope>test</scope>
+
+            <!-- See: INFRA-767, INFRA-787 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>${hsqldb.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Runtime Dependencies. -->
@@ -188,5 +357,60 @@
         </dependency>
 
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>skip-eclipse-unsupported-mojos</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.eclipse.m2e</groupId>
+                            <artifactId>lifecycle-mapping</artifactId>
+                            <version>1.0.0</version>
+                            <configuration>
+                                <lifecycleMappingMetadata>
+                                    <pluginExecutions>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>org.apache.maven.plugins</groupId>
+                                                <artifactId>maven-dependency-plugin</artifactId>
+                                                <versionRange>[1.0,)</versionRange>
+                                                <goals>
+                                                    <goal>copy-dependencies</goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <ignore />
+                                            </action>
+                                        </pluginExecution>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>org.codehaus.gmaven</groupId>
+                                                <artifactId>gmaven-plugin</artifactId>
+                                                <versionRange>[1.0,)</versionRange>
+                                                <goals>
+                                                    <goal>compile</goal>
+                                                    <goal>generateStubs</goal>
+                                                    <goal>generateTestStubs</goal>
+                                                    <goal>testCompile</goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <execute />
+                                            </action>
+                                        </pluginExecution>
+                                    </pluginExecutions>
+                                </lifecycleMappingMetadata>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
