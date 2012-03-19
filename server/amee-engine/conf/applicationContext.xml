@@ -51,7 +51,7 @@
     <bean id="ameeDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${DB_DRIVER}"/>
         <property name="url"
-                  value="${DB_URL_PREFIX}:mysql://${DB_HOST}:3306/${DB_NAME}?autoReconnect=true&amp;autoReconnectForPools=true&amp;useCompression=false"/>
+                  value="${DB_URL_PREFIX}:${DB_URL}"/>
         <property name="username" value="${DB_USERNAME}"/>
         <property name="password" value="${DB_PSWD}"/>
         <property name="initialSize" value="10"/>
@@ -59,7 +59,7 @@
         <property name="maxIdle" value="50"/>
         <property name="minIdle" value="10"/>
         <property name="maxWait" value="-1"/>
-        <property name="validationQuery" value="SELECT 1 FROM DUAL"/>
+        <property name="validationQuery" value="${VALIDATION_QUERY}"/>
         <property name="testOnBorrow" value="true"/>
         <property name="testOnReturn" value="true"/>
         <property name="testWhileIdle" value="true"/>
