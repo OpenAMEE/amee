@@ -11,53 +11,6 @@ import static org.restlet.data.Status.SUCCESS_OK
 import org.junit.Test
 
 class DataCategoryIT extends BaseApiTest {
-    
-    // NOTE: Keep these lists up to date if you add new categories to import.sql.
-    
-    static def categoryNames = [
-        'Root', 'Home', 'Appliances', 'Computers', 'Generic', 'Cooking', 'Entertainment', 'Generic', 'Kitchen', 'Generic',
-        'Business', 'Energy', 'Electricity', 'US', 'Subregion', 'Waste',
-        'Benchmark', 'CO2 Benchmark', 'CO2 Benchmark Two', 'CO2 Benchmark Child',
-        'Embodied', 'Clm',
-        'ICE Building Materials LCA', 'V2', 'Inventory of Carbon & Energy methodology for materials by mass',
-        'Integration', 'Api', 'Item history test', 'Item history dimless test',
-        'LCA', 'Ecoinvent', 'chemicals', 'inorganics', 'chlorine, gaseous, diaphragm cell, at plant', 'chlorine, gaseous, diaphragm cell, at plant',
-        'Grid',
-        'Transport', 'Plane', 'Specific', 'Military', 'Ipcc']
-
-    static def categoryNamesExcEcoinvent = [
-        'Root', 'Home', 'Appliances', 'Computers', 'Generic', 'Cooking', 'Entertainment', 'Generic', 'Kitchen', 'Generic',
-        'Business', 'Energy', 'Electricity', 'US', 'Subregion', 'Waste',
-        'Benchmark', 'CO2 Benchmark', 'CO2 Benchmark Two', 'CO2 Benchmark Child',
-        'Embodied', 'Clm',
-        'ICE Building Materials LCA', 'V2', 'Inventory of Carbon & Energy methodology for materials by mass',
-        'Integration', 'Api', 'Item history test', 'Item history dimless test',
-        'LCA',
-        'Grid',
-        'Transport', 'Plane', 'Specific', 'Military', 'Ipcc']
-
-    static def categoryWikiNames = [
-        'Root', 'Home', 'Appliances', 'Computers', 'Computers_generic', 'Cooking', 'Entertainment', 'Entertainment_generic', 'Kitchen', 'Kitchen_generic',
-        'Business', 'Business_energy', 'Electricity_by_Country', 'Energy_US', 'US_Egrid', 'Waste',
-        'Benchmarking', 'CO2_Benchmark', 'CO2_Benchmark_Two', 'CO2_Benchmark_Child',
-        'Embodied', 'CLM_food_life_cycle_database',
-        'ICE_Building_Materials_LCA', 'ICE_v2', 'ICE_v2_by_mass',
-        'Integration', 'Api', 'Item_history_test', 'Item_history_dimless_test',
-        'LCA', 'Ecoinvent', 'Ecoinvent_chemicals', 'Ecoinvent_chemicals_inorganics', 'Ecoinvent_chemicals_inorganics_chlorine_gaseous_diaphragm_cell_at_plant', 'Ecoinvent_chemicals_inorganics_chlorine_gaseous_diaphragm_cell_at_plant_UPR_RER_kg',
-        'Greenhouse_Gas_Protocol_international_electricity',
-        'Transport', 'Plane', 'Specific_plane_transport', 'Specific_military_aircraft', 'IPCC_military_aircraft',
-        'Transport_fuel']
-
-    static def categoryWikiNamesExcEcoinvent = [
-        'Root', 'Home', 'Appliances', 'Computers', 'Computers_generic', 'Cooking', 'Entertainment', 'Entertainment_generic', 'Kitchen', 'Kitchen_generic',
-        'Business', 'Business_energy', 'Electricity_by_Country', 'Energy_US', 'US_Egrid', 'Waste',
-        'Benchmarking', 'CO2_Benchmark', 'CO2_Benchmark_Two', 'CO2_Benchmark_Child',
-        'Embodied', 'CLM_food_life_cycle_database',
-        'ICE_Building_Materials_LCA', 'ICE_v2', 'ICE_v2_by_mass',
-        'Integration', 'Api', 'Item_history_test', 'Item_history_dimless_test',
-        'LCA',
-        'Greenhouse_Gas_Protocol_international_electricity',
-        'Transport', 'Plane', 'Specific_plane_transport', 'Specific_military_aircraft', 'IPCC_military_aircraft']
 
     @Test
     void getRootDataCategoryJson() {
@@ -104,6 +57,18 @@ class DataCategoryIT extends BaseApiTest {
         assert SUCCESS_OK.code == responseGet.status
         assert responseGet.data.dataCategory.name == 'Test Name'
         
+        // Ensure we cannot make a duplicate
+        responsePost = client.post(
+            path: "/data/transport/plane",
+            body: [
+                    newObjectType: 'DC',
+                    itemDefinitionUid: '311B6D2F0363',
+                    path: 'testPath',
+                    name: 'Test Name'],
+            requestContentType: URLENC,
+            contentType: JSON)
+        assert CLIENT_ERROR_BAD_REQUEST.code == responsePost.status 
+        
         // Update the DataCategory
         def responsePut = client.put(
             path: "/data/transport/plane/testPath",
@@ -130,6 +95,51 @@ class DataCategoryIT extends BaseApiTest {
             path: "/data/transport/plane/testPath",
             contentType: JSON)
         assert CLIENT_ERROR_NOT_FOUND.code == responseGet.status
+    }   
+    
+    /**
+     * Tests that Data Items are correctly included in the JSON response and behave 
+     * appropriately with pagination
+     */
+    @Test
+    void getPaginatedDataItemsJson() {
+        // Get a DataCategory
+        def responseGet = client.get(
+            path: "/data/business/energy/electricity",
+            query: ['itemsPerPage': 10],
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseGet.status
+        assert responseGet.data.children.dataItems.rows.size() == 10
+        
+        responseGet = client.get(
+            path: "/data/business/energy/electricity",
+            query: ['itemsPerPage': 2],
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseGet.status
+        assert responseGet.data.children.dataItems.rows.size() == 2
     }
     
+    /**
+    * Tests that Data Items are correctly included in the XML response and behave
+    * appropriately with pagination
+    */
+   @Test
+   void getPaginatedDataItemsXML() {
+       // Get a DataCategory
+       def responseGet = client.get(
+           path: "/data/business/energy/electricity",
+           query: ['itemsPerPage': 10],
+           contentType: XML)
+       assert SUCCESS_OK.code == responseGet.status
+       def allItems = responseGet.data.DataCategoryResource.Children.DataItems.DataItem
+       assert allItems.size() == 10
+       
+       responseGet = client.get(
+           path: "/data/business/energy/electricity",
+           query: ['itemsPerPage': 2],
+           contentType: XML)
+       assert SUCCESS_OK.code == responseGet.status
+       allItems = responseGet.data.DataCategoryResource.Children.DataItems.DataItem
+       assert allItems.size() == 2
+   }
 }
