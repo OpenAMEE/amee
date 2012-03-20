@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context-3.0.xsd
@@ -14,75 +11,76 @@
                            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
     <!-- Placeholder property configuration -->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" />
 
     <!-- Annotations and other stuff -->
-    <context:load-time-weaver/>
-    <context:spring-configured/>
-    <context:annotation-config/>
-    <context:component-scan base-package="com"/>
-    <tx:annotation-driven mode="aspectj"/>
-    <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
-    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+    <context:load-time-weaver />
+    <context:spring-configured />
+    <context:annotation-config />
+    <context:component-scan base-package="com" />
+    <tx:annotation-driven mode="aspectj" />
+    <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
 
+    <!-- An aspect to support the perf4j @Profiled annotation. -->
+    <bean id="timingAspect" class="org.perf4j.log4j.aop.TimingAspect" />
     <!-- Enable request scope - NOT IN USE (steve@amee.com - 08/09/09) -->
-    <!--<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">-->
-    <!--<property name="scopes">-->
-    <!--<map>-->
-    <!--<entry key="event">-->
-    <!--<bean class="com.amee.engine.spring.RestletRequestScope"/>-->
-    <!--</entry>-->
-    <!--</map>-->
-    <!--</property>-->
-    <!--</bean>-->
+    <!--<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer"> -->
+    <!--<property name="scopes"> -->
+    <!--<map> -->
+    <!--<entry key="event"> -->
+    <!--<bean class="com.amee.engine.spring.RestletRequestScope"/> -->
+    <!--</entry> -->
+    <!--</map> -->
+    <!--</property> -->
+    <!--</bean> -->
 
     <!-- EHCache -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:ehcache.xml"/>
-        <property name="shared" value="true"/>
+        <property name="configLocation" value="classpath:ehcache.xml" />
+        <property name="shared" value="true" />
     </bean>
 
     <!-- TransactionController Implementation. -->
-    <bean id="transactionController" class="com.amee.persist.TransactionControllerImpl"/>
+    <bean id="transactionController" class="com.amee.persist.TransactionControllerImpl" />
 
     <!-- DataSource, em/tx configuration -->
     <!-- See: http://commons.apache.org/dbcp/configuration.html -->
     <!-- See: http://dev.mysql.com/doc/refman/5.1/en/connector-j-reference-configuration-properties.html -->
     <bean id="ameeDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${DB_DRIVER}"/>
-        <property name="url"
-                  value="${DB_URL_PREFIX}:${DB_URL}"/>
-        <property name="username" value="${DB_USERNAME}"/>
-        <property name="password" value="${DB_PSWD}"/>
-        <property name="initialSize" value="10"/>
-        <property name="maxActive" value="250"/>
-        <property name="maxIdle" value="50"/>
-        <property name="minIdle" value="10"/>
-        <property name="maxWait" value="-1"/>
-        <property name="validationQuery" value="${VALIDATION_QUERY}"/>
-        <property name="testOnBorrow" value="true"/>
-        <property name="testOnReturn" value="true"/>
-        <property name="testWhileIdle" value="true"/>
-        <property name="removeAbandoned" value="true"/>
-        <property name="removeAbandonedTimeout" value="300"/>
-        <property name="minEvictableIdleTimeMillis" value="240000"/>
-        <property name="timeBetweenEvictionRunsMillis" value="1000"/>
-        <property name="defaultAutoCommit" value="false"/>
+        <property name="driverClassName" value="${DB_DRIVER}" />
+        <property name="url" value="${DB_URL_PREFIX}:${DB_URL}" />
+        <property name="username" value="${DB_USERNAME}" />
+        <property name="password" value="${DB_PSWD}" />
+        <property name="initialSize" value="10" />
+        <property name="maxActive" value="250" />
+        <property name="maxIdle" value="50" />
+        <property name="minIdle" value="10" />
+        <property name="maxWait" value="-1" />
+        <property name="validationQuery" value="${VALIDATION_QUERY}" />
+        <property name="testOnBorrow" value="true" />
+        <property name="testOnReturn" value="true" />
+        <property name="testWhileIdle" value="true" />
+        <property name="removeAbandoned" value="true" />
+        <property name="removeAbandonedTimeout" value="300" />
+        <property name="minEvictableIdleTimeMillis" value="240000" />
+        <property name="timeBetweenEvictionRunsMillis" value="1000" />
+        <property name="defaultAutoCommit" value="false" />
     </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="ameeDataSource"/>
+        <property name="dataSource" ref="ameeDataSource" />
         <property name="loadTimeWeaver">
-            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
         </property>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
-        <property name="dataSource" ref="ameeDataSource"/>
-        <property name="jpaDialect" ref="jpaDialect"/>
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <property name="dataSource" ref="ameeDataSource" />
+        <property name="jpaDialect" ref="jpaDialect" />
     </bean>
-    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
 
     <!-- DataSheetService -->
     <!-- The eternalPaths below should be kept in sync with those in /bin/warm-up-eternal-categories.sh -->
@@ -110,12 +108,12 @@
     </bean>
 
     <!-- A functional implementation of LocaleServiceDAO. -->
-    <!--<bean id="localeServiceDAO" class="com.amee.service.locale.LocaleServiceDAOImpl"/>-->
+    <!--<bean id="localeServiceDAO" class="com.amee.service.locale.LocaleServiceDAOImpl"/> -->
 
     <!-- A no-op implementation of LocaleServiceDAO. -->
-    <bean id="localeServiceDAO" class="com.amee.service.locale.LocaleServiceDAONoOpImpl"/>
+    <bean id="localeServiceDAO" class="com.amee.service.locale.LocaleServiceDAONoOpImpl" />
 
     <!-- Drill Down service is SQL backed in v2 -->
-    <bean id="drillDownService" class="com.amee.service.data.SqlDrillDownService"/>
+    <bean id="drillDownService" class="com.amee.service.data.SqlDrillDownService" />
 
 </beans>
