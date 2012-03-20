@@ -7,6 +7,7 @@ import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST
 import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND
 import static org.restlet.data.Status.SUCCESS_CREATED
 import static org.restlet.data.Status.SUCCESS_OK
+import groovyx.net.http.HttpResponseException
 
 import org.junit.Test
 
@@ -17,6 +18,8 @@ class ItemDefinitionIT extends BaseApiTest {
      */
     @Test
     void getItemDefinitionListJson() {
+        setAdminUser()
+        
         // Get ItemDefinition list
         def responseGet = client.get(
             path: "/definitions/itemDefinitions",
@@ -30,16 +33,23 @@ class ItemDefinitionIT extends BaseApiTest {
      */
     @Test
     void getItemDefinitionListXML() {
+        setAdminUser()
+        
         // Get ItemDefinition list
         def responseGet = client.get(
             path: "/definitions/itemDefinitions",
             contentType: XML)
         assert SUCCESS_OK.code == responseGet.status
-        assert responseGet.data.ItemDefinitions.size() > 0
+        assert responseGet.data.ItemDefinitionsResource.ItemDefinitions.ItemDefinition.size() > 0
     }
     
+    /**
+     * Test getting a paginated list of item defintions as JSON
+     */
     @Test
     void getPaginatedItemDefinitionListJson() {
+        setAdminUser()
+        
         // Get ItemDefinition list
         def responseGet = client.get(
             path: "/definitions/itemDefinitions",
@@ -54,6 +64,28 @@ class ItemDefinitionIT extends BaseApiTest {
             contentType: JSON)
         assert SUCCESS_OK.code == responseGet.status
         assert responseGet.data.itemDefinitions.size() == 2
+    }
+   
+    /**
+     * Test getting a paginated list of item definitions as XML
+     */
+    void getPaginatedItemDefinitionListXML() {
+        setAdminUser()
+        
+        // Get ItemDefinition list
+        def responseGet = client.get(
+            path: "/definitions/itemDefinitions",
+            query: ['itemsPerPage': 10],
+            contentType: XML)
+        assert SUCCESS_OK.code == responseGet.status
+        assert responseGet.data.ItemDefinitionsResource.ItemDefinitions.ItemDefinition.size() == 10
+        
+        responseGet = client.get(
+            path: "/definitions/itemDefinitions",
+            query: ['itemsPerPage': 2],
+            contentType: XML)
+        assert SUCCESS_OK.code == responseGet.status
+        assert responseGet.data.ItemDefinitionsResource.ItemDefinitions.ItemDefinition.size() == 2
     }
     
     /**
@@ -77,7 +109,7 @@ class ItemDefinitionIT extends BaseApiTest {
 
         // Get the new ItemDefinition
         def responseGet = client.get(
-            path: "definitions/itemDefinitions/" + uid,
+            path: "/definitions/itemDefinitions/" + uid,
             contentType: JSON)
         assert SUCCESS_OK.code == responseGet.status
         assert 'application/json' == responseGet.contentType
@@ -96,7 +128,7 @@ class ItemDefinitionIT extends BaseApiTest {
 
         // Check the update worked
         responseGet = client.get(
-            path: "definitions/itemDefinitions/" + uid,
+            path: "/definitions/itemDefinitions/" + uid,
             contentType: JSON)
         assert SUCCESS_OK.code == responseGet.status
         assert "New name" == responseGet.data.itemDefinition.name
@@ -106,10 +138,14 @@ class ItemDefinitionIT extends BaseApiTest {
         assert SUCCESS_OK.code == responseDelete.status
 
         // Check it's been deleted
-        responseGet = client.get(
-            path: "definitions/itemDefinitions/" + uid,
-            contentType: JSON)
-        assert CLIENT_ERROR_NOT_FOUND.code == responseGet.status
+        try{
+            responseGet = client.get(
+                path: "/definitions/itemDefinitions/" + uid,
+                contentType: JSON)
+            fail "Should have thrown an exception"
+        }catch(HttpResponseException e){
+            assert CLIENT_ERROR_NOT_FOUND.code == e.response.status
+        }
     }
     
     /**
@@ -130,12 +166,16 @@ class ItemDefinitionIT extends BaseApiTest {
         assert uid == responseGet.data.itemDefinition.uid 
         
         // Update with invalid locale name
-        def responsePut = client.put(
-            path: "definitions/itemDefinitions/" + uid,
-            body: ['name_zz': 'New name'],
-            requestContentType: URLENC,
-            contentType: JSON)
-        assert CLIENT_ERROR_BAD_REQUEST.code == responsePut.status
+        try{
+            def responsePut = client.put(
+                path: "/definitions/itemDefinitions/" + uid,
+                body: ['name_zz': 'New name'],
+                requestContentType: URLENC,
+                contentType: JSON)
+            fail "Should have thrown an exception"
+        }catch(HttpResponseException e){
+            assert CLIENT_ERROR_BAD_REQUEST.code == e.response.status
+        }
         
         // Check no modifications were made
         responseGet = client.get(
