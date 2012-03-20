@@ -37,12 +37,12 @@
                 <prop key="minThreads">50</prop>
                 <prop key="maxThreads">700</prop>
                 <prop key="threadMaxIdleTimeMs">30000</prop>
+                <prop key="ioMaxIdleTimeMs">30000</prop>
                 <prop key="lowThreads">25</prop>
                 <prop key="lowResourceMaxIdleTimeMs">2500</prop>
                 <prop key="acceptorThreads">1</prop>
                 <prop key="acceptQueueSize">0</prop>
                 <!-- more params here: http://www.restlet.org/documentation/1.1/ext/com/noelios/restlet/ext/jetty/JettyServerHelper.html -->
-                <!-- advice here: http://jetty.mortbay.org/jetty5/doc/optimization.html (what about Jetty 6?) -->
             </props>
         </property>
         <property name="secure" value="false"/>

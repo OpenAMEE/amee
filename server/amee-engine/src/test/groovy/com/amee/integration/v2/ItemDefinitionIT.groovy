@@ -38,6 +38,24 @@ class ItemDefinitionIT extends BaseApiTest {
         assert responseGet.data.ItemDefinitions.size() > 0
     }
     
+    @Test
+    void getPaginatedItemDefinitionListJson() {
+        // Get ItemDefinition list
+        def responseGet = client.get(
+            path: "/definitions/itemDefinitions",
+            query: ['itemsPerPage': 10],
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseGet.status
+        assert responseGet.data.itemDefinitions.size() == 10
+        
+        responseGet = client.get(
+            path: "/definitions/itemDefinitions",
+            query: ['itemsPerPage': 2],
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseGet.status
+        assert responseGet.data.itemDefinitions.size() == 2
+    }
+    
     /**
      * Test creating, updating and deleting an item definition.  Confirms that the
      * operations are successful by performing the appropriate GET request after each
@@ -58,7 +76,7 @@ class ItemDefinitionIT extends BaseApiTest {
         assert uid != null
 
         // Get the new ItemDefinition
-        responseGet = client.get(
+        def responseGet = client.get(
             path: "definitions/itemDefinitions/" + uid,
             contentType: JSON)
         assert SUCCESS_OK.code == responseGet.status
