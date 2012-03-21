@@ -3,6 +3,7 @@ package com.amee.integration.v2
 import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.ContentType.URLENC
 import static groovyx.net.http.ContentType.XML
+import static org.junit.Assert.assertEquals
 import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST
 import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND
 import static org.restlet.data.Status.SUCCESS_CREATED
@@ -49,9 +50,7 @@ class DataItemIT extends BaseApiTest {
             path: "/data/business/energy/electricity/" + uid,
             contentType: JSON)
         assert SUCCESS_OK.code == responseGet.status
-        assert "New Name" == responseGet.data.dataItem.name
-
-        
+        assert "New Name" == responseGet.data.dataItem.name        
 
         // Delete the data item
         def responseDelete = client.delete(
@@ -153,7 +152,7 @@ class DataItemIT extends BaseApiTest {
             contentType: JSON)
         assert SUCCESS_OK.code == responseGet.status
         assert responseGet.data.amount.unit == "kg/year"
-        assert responseGet.data.amount.value == 20
+        assertEquals responseGet.data.amount.value, 20, 0.00001
     }
     
     @Test
@@ -169,7 +168,7 @@ class DataItemIT extends BaseApiTest {
             contentType: XML)
         assert SUCCESS_OK.code == responseGet.status
         assert responseGet.data.DataItemResource.Amount.@unit.text() == "kg/year"
-        assert responseGet.data.DataItemResource.Amount.text() == "20.0"
+        assert responseGet.data.DataItemResource.Amount.text().startsWith("20.0")
     }
     
     @Test
@@ -185,7 +184,7 @@ class DataItemIT extends BaseApiTest {
             contentType: JSON)
         assert SUCCESS_OK.code == responseGet.status
         assert responseGet.data.amount.unit == "lb/month"
-        assert responseGet.data.amount.value == 36.74371036414626
+        assertEquals responseGet.data.amount.value, 36.74371036414626, 0.00001
     }
     
     @Test
@@ -201,7 +200,7 @@ class DataItemIT extends BaseApiTest {
             contentType: XML)
         assert SUCCESS_OK.code == responseGet.status
         assert responseGet.data.DataItemResource.Amount.@unit.text() == "lb/month"
-        assert responseGet.data.DataItemResource.Amount.text() == "36.74371036414626"
+        assert responseGet.data.DataItemResource.Amount.text().startsWith("36.74371")
     }
-    
+
 }
