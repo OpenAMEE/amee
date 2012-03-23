@@ -4,6 +4,7 @@ import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.ContentType.URLENC
 import static groovyx.net.http.ContentType.XML
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.fail
 import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST
 import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND
 import static org.restlet.data.Status.SUCCESS_CREATED
@@ -52,6 +53,30 @@ class DataItemValueIT extends BaseApiTest {
         assert responseGet.data.DataItemValueResource.ItemValue.Path.text() == 'massCO2PerEnergy'
         assert responseGet.data.DataItemValueResource.ItemValue.Value.text() == '0.81999'
         assert responseGet.data.DataItemValueResource.ItemValue.ItemValueDefinition.ValueDefinition.ValueType.text() == 'DECIMAL'
+    }
+    
+    @Test
+    void invalidUpdateStartDateJson() {
+        setAdminUser()
+        
+        def responseGet = client.get(
+            path: "/data/business/energy/electricity/grid/585E708CB4BE/massCO2PerEnergy",
+            query: [startDate: '1980-11-18T18:32:00Z'],
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseGet.status
+        def firstDataItemValueUid = responseGet.data.itemValue.uid
+        
+        // Check the startDate of the first Data Item Value cannot be updated
+        try{
+            def responsePut = client.put(
+                path: "/data/business/energy/electricity/grid/585E708CB4BE/" + firstDataItemValueUid,
+                body: [startDate: '1998-01-01T00:00:00:00Z'],
+                requestContentType: URLENC,
+                contentType: JSON)
+            fail 'Should have thrown an exception'
+        }catch(HttpResponseException e){
+            assert CLIENT_ERROR_BAD_REQUEST.code == e.response.status
+        }
     }
     
     /**
@@ -381,6 +406,11 @@ class DataItemValueIT extends BaseApiTest {
     
     /**
     * Tests that a data series can be created and edited and that it responds correctly.
+    * The "first" data item value is the row in data_item_number_value that corresponds 
+    * to this data item; the data series is represented by entries in 
+    * data_item_number_value_history, which each have a start_date in the database to 
+    * indicate when they are valid from.  The first data item value has no such start date,
+    * and as such it is not permitted to update that start date.
     */
    @Test
    void dataItemSeriesXML() {
@@ -428,6 +458,12 @@ class DataItemValueIT extends BaseApiTest {
        
        // Check the history items are all available
        def responseGet = client.get(
+           path: "/data/business/energy/electricity/" + uid + "/massCO2PerEnergy",
+           query: [startDate: '1999-01-01T12:00:00Z'],
+           contentType: XML)
+       assert SUCCESS_OK.code == responseGet.status
+       
+       responseGet = client.get(
            path: "/data/business/energy/electricity/" + uid + "/massCO2PerEnergy",
            query: [startDate: '2000-01-01T12:00:00Z'],
            contentType: XML)
