@@ -24,3 +24,4 @@ wrapper.conf.local
 *.classpath
 *.project
 *.settings
+*.externalToolBuilders
