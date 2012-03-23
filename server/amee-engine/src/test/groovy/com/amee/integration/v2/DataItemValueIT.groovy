@@ -23,6 +23,38 @@ class DataItemValueIT extends BaseApiTest {
     ]
 
     /**
+     * Test that the various properties of a Data Item Value are correct in the JSON response
+     */
+    @Test
+    void getDataItemValueJson() {
+        def responseGet = client.get(
+            path: "/data/business/energy/electricity/grid/585E708CB4BE/massCO2PerEnergy",
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseGet.status
+        assert responseGet.data.itemValue.uid == '289CCD5394AC'
+        assert responseGet.data.itemValue.name == 'Mass CO2 per Energy'
+        assert responseGet.data.itemValue.path == 'massCO2PerEnergy'
+        assert responseGet.data.itemValue.value == '0.81999'
+        assert responseGet.data.itemValue.itemValueDefinition.valueDefinition.valueType == 'DECIMAL'   
+    }
+    
+    /**
+    * Test that the various properties of a Data Item Value are correct in the XML response
+    */
+    @Test
+    void getDataItemValueXML() {
+        def responseGet = client.get(
+            path: "/data/business/energy/electricity/grid/585E708CB4BE/massCO2PerEnergy",
+            contentType: XML)
+        assert SUCCESS_OK.code == responseGet.status
+        assert responseGet.data.DataItemValueResource.ItemValue.@uid.text() == '289CCD5394AC'
+        assert responseGet.data.DataItemValueResource.ItemValue.Name.text() == 'Mass CO2 per Energy'
+        assert responseGet.data.DataItemValueResource.ItemValue.Path.text() == 'massCO2PerEnergy'
+        assert responseGet.data.DataItemValueResource.ItemValue.Value.text() == '0.81999'
+        assert responseGet.data.DataItemValueResource.ItemValue.ItemValueDefinition.ValueDefinition.ValueType.text() == 'DECIMAL'
+    }
+    
+    /**
      * Test creating a DataItem and check that DataItemValue defaults and specified values
      * are created correctly, and that history items can be created and deleted correctly.
      */
