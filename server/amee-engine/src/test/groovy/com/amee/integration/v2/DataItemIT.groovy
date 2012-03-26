@@ -4,6 +4,7 @@ import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.ContentType.URLENC
 import static groovyx.net.http.ContentType.XML
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.fail
 import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST
 import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND
 import static org.restlet.data.Status.SUCCESS_CREATED
@@ -110,9 +111,9 @@ class DataItemIT extends BaseApiTest {
         def responseGet = client.get(
             path: "/data/business/energy/electricity/963A90C107FA",
             query: [
-                "energyPerTime": 100, 
-                "responsibleArea": 100, 
-                "totalArea": 100],
+                energyPerTime: 100, 
+                responsibleArea: 100, 
+                totalArea: 100],
             contentType: JSON)
         assert SUCCESS_OK.code == responseGet.status
         assert "/business/energy/electricity/963A90C107FA" == responseGet.data.path
