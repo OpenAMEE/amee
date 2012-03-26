@@ -134,5 +134,38 @@ class ProfileItemIT extends BaseApiTest {
         }
     }
     
+    @Test
+    void getProfileItemCustomUnitsJson() {
+        // Create new profile item
+        def responsePost = client.post(
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity",
+            body: [
+                dataItemUid: '963A90C107FA',
+                energyPerTime: 100,
+                energyPerTimeUnit: 'J',
+                energyPerTimePerUnit: 'month',
+                responsibleArea: 100,
+                totalArea: 100],
+            requestContentType: URLENC,
+            contentType: JSON)
+        assert SUCCESS_CREATED.code == responsePost.status
+        def uid = responsePost.headers['Location'].value.split("/")[8]
+        
+        // Get the new profile item
+        def responseGet = client.get(
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
+            query: [
+                returnUnit: 'lb',
+                returnPerUnit: 'month'],
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseGet.status
+        
+        def energyConsumptionItem = responseGet.data.profileItem.itemValues.find{ it.path == 'energyPerTime' }
+        assert energyConsumptionItem.unit == 'J'
+        assert energyConsumptionItem.perUnit == 'month'
+        assert responseGet.data.profileItem.amount.unit == 'lb/month'        
+        assert responseGet.data.profileItem.amount.value != 200
+    }
+    
 
 }
