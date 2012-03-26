@@ -3,7 +3,6 @@ package com.amee.integration.v2
 import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.ContentType.URLENC
 import static groovyx.net.http.ContentType.XML
-import static org.junit.Assert.assertEquals
 import static org.junit.Assert.fail
 import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST
 import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND
