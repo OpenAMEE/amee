@@ -7,6 +7,7 @@ import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST
 import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND
 import static org.restlet.data.Status.SUCCESS_CREATED
 import static org.restlet.data.Status.SUCCESS_OK
+import groovyx.net.http.HttpResponseException
 
 import org.junit.Test
 
@@ -58,16 +59,20 @@ class DataCategoryIT extends BaseApiTest {
         assert responseGet.data.dataCategory.name == 'Test Name'
         
         // Ensure we cannot make a duplicate
-        responsePost = client.post(
-            path: "/data/transport/plane",
-            body: [
-                    newObjectType: 'DC',
-                    itemDefinitionUid: '311B6D2F0363',
-                    path: 'testPath',
-                    name: 'Test Name'],
-            requestContentType: URLENC,
-            contentType: JSON)
-        assert CLIENT_ERROR_BAD_REQUEST.code == responsePost.status 
+        try{
+            responsePost = client.post(
+                path: "/data/transport/plane",
+                body: [
+                        newObjectType: 'DC',
+                        itemDefinitionUid: '311B6D2F0363',
+                        path: 'testPath',
+                        name: 'Test Name'],
+                requestContentType: URLENC,
+                contentType: JSON)
+            fail "Should have thrown an exception"
+        }catch(HttpResponseException e) {
+            assert CLIENT_ERROR_BAD_REQUEST.code == e.response.status  
+        }
         
         // Update the DataCategory
         def responsePut = client.put(
@@ -91,10 +96,14 @@ class DataCategoryIT extends BaseApiTest {
         assert SUCCESS_OK.code == responseGet.status
         
         // Check the new DataCategory was deleted
-        responseGet = client.get(
-            path: "/data/transport/plane/testPath",
-            contentType: JSON)
-        assert CLIENT_ERROR_NOT_FOUND.code == responseGet.status
+        try{
+            responseGet = client.get(
+                path: "/data/transport/plane/testPath",
+                contentType: JSON)
+            fail "Should have thrown an exception"
+        }catch(HttpResponseException e) {
+            assert CLIENT_ERROR_NOT_FOUND.code == e.response.status
+        }
     }   
     
     /**
@@ -125,7 +134,6 @@ class DataCategoryIT extends BaseApiTest {
     */
    @Test
    void getPaginatedDataItemsXML() {
-       // Get a DataCategory
        def responseGet = client.get(
            path: "/data/business/energy/electricity",
            query: ['itemsPerPage': 10],
