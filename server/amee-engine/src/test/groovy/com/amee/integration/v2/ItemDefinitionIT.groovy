@@ -3,6 +3,7 @@ package com.amee.integration.v2
 import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.ContentType.URLENC
 import static groovyx.net.http.ContentType.XML
+import static org.junit.Assert.fail
 import static org.restlet.data.Status.CLIENT_ERROR_BAD_REQUEST
 import static org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND
 import static org.restlet.data.Status.SUCCESS_CREATED
@@ -120,7 +121,7 @@ class ItemDefinitionIT extends BaseApiTest {
 
         // Update it
         def responsePut = client.put(
-            path: "definitions/itemDefinitions/" + uid,
+            path: "/definitions/itemDefinitions/" + uid,
             body: ['name': 'New name'],
             requestContentType: URLENC,
             contentType: JSON)
@@ -134,7 +135,9 @@ class ItemDefinitionIT extends BaseApiTest {
         assert "New name" == responseGet.data.itemDefinition.name
 
         // Delete it
-        def responseDelete = client.delete(path: "definitions/itemDefinitions/" + uid)
+        def responseDelete = client.delete(
+            path: "/definitions/itemDefinitions/" + uid,
+            contentType: JSON)
         assert SUCCESS_OK.code == responseDelete.status
 
         // Check it's been deleted
@@ -182,6 +185,5 @@ class ItemDefinitionIT extends BaseApiTest {
             path: "/definitions/itemDefinitions/" + uid,
             contentType: JSON)
         assert SUCCESS_OK.code == responseGet.status
-        //TODO figure out how to get locale-specific data
     }
 }
