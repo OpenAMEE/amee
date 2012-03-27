@@ -101,8 +101,8 @@
                         <HOST_NAME>localhost</HOST_NAME>
                         <HOST_NAME.ADMIN>admin-localhost</HOST_NAME.ADMIN>
                         <PROTOCOL>http</PROTOCOL>
-                        <PORT>8888</PORT>
-                        <SECURE_PORT>8889</SECURE_PORT>
+                        <PORT>8890</PORT>
+                        <SECURE_PORT>8891</SECURE_PORT>
 
                         <CONF_HOME>${basedir}/conf</CONF_HOME>
                         <AMEE_HOME>${basedir}</AMEE_HOME>
