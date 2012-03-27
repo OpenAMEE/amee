@@ -75,7 +75,7 @@
                 <version>${maven-failsafe-plugin.version}</version>
                 <configuration>
                     <forkMode>perTest</forkMode>
-                    <argLine>-javaagent:${amee.current.lib}/spring-instrument-${spring.version}.jar</argLine>
+                    <argLine>-javaagent:${project.build.directory}/dependency/spring-instrument-${spring.version}.jar</argLine>
                     
                     <environmentVariables>
                         <!-- HSQLDB -->
