@@ -46,6 +46,7 @@
         <copy todir="${amee.current.lib}" flatten="true">
             <fileset dir=".">
                 <include name="**/amee-*.jar"/>
+                <include name="**/dependency/*.jar"/>
             </fileset>
         </copy>
     </target>
