@@ -226,20 +226,6 @@
                             <excludeScope>provided</excludeScope>
                         </configuration>
                     </execution>
-
-                    <!-- Copy all dependencies to local runtime directory, ready for local execution. -->
-                    <execution>
-                        <id>copy-dependencies-other-local</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeScope>runtime</includeScope>
-                            <excludeScope>provided</excludeScope>
-                            <outputDirectory>${amee.current.lib}</outputDirectory>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
 
