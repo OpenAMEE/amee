@@ -1,14 +1,10 @@
 package com.amee.admin.restlet.environment;
 
-import com.amee.domain.IAMEEEntityReference;
-import com.amee.domain.LocaleConstants;
-import com.amee.domain.LocaleService;
-import com.amee.domain.ValueDefinition;
-import com.amee.domain.data.ItemDefinition;
-import com.amee.restlet.environment.DefinitionBrowser;
-import com.amee.restlet.utils.APIFault;
-import com.amee.service.data.DataConstants;
-import com.amee.service.definition.DefinitionService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,10 +21,15 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.amee.domain.IAMEEEntityReference;
+import com.amee.domain.LocaleConstants;
+import com.amee.domain.LocaleService;
+import com.amee.domain.ValueDefinition;
+import com.amee.domain.data.ItemDefinition;
+import com.amee.restlet.environment.DefinitionBrowser;
+import com.amee.restlet.utils.APIFault;
+import com.amee.service.data.DataConstants;
+import com.amee.service.definition.DefinitionService;
 
 @Component
 @Scope("prototype")
@@ -60,7 +61,10 @@ public class ItemDefinitionResource extends AdminResource {
     public List<IAMEEEntityReference> getEntities() {
         List<IAMEEEntityReference> entities = new ArrayList<IAMEEEntityReference>();
         entities.add(getRootDataCategory());
-        entities.add(definitionBrowser.getItemDefinition());
+        ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
+        if(itemDefinition != null){
+            entities.add(itemDefinition);
+        }
         return entities;
     }
 
