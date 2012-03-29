@@ -86,8 +86,12 @@ public class ItemDefinitionResource extends AdminResource {
 
     @Override
     public JSONObject getJSONObject() throws JSONException {
-        JSONObject obj = new JSONObject();
-        obj.put("itemDefinition", definitionBrowser.getItemDefinition().getJSONObject());
+        JSONObject obj = null;
+        ItemDefinition itemDefinition = definitionBrowser.getItemDefinition();
+        if(itemDefinition != null) {
+            obj = new JSONObject();
+            obj.put("itemDefinition", itemDefinition.getJSONObject());
+        }
         return obj;
     }
 
