@@ -1,8 +1,51 @@
 package com.amee.restlet;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.xerces.dom.DocumentImpl;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.Context;
+import org.restlet.data.CharacterSet;
+import org.restlet.data.Form;
+import org.restlet.data.MediaType;
+import org.restlet.data.Method;
+import org.restlet.data.Reference;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
+import org.restlet.data.Status;
+import org.restlet.ext.freemarker.TemplateRepresentation;
+import org.restlet.ext.json.JsonRepresentation;
+import org.restlet.resource.DomRepresentation;
+import org.restlet.resource.Representation;
+import org.restlet.resource.Resource;
+import org.restlet.resource.ResourceException;
+import org.restlet.resource.Variant;
+import org.restlet.resource.WriterRepresentation;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.util.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.amee.base.utils.ThreadBeanHolder;
 import com.amee.calculation.service.CalculationException;
-import com.amee.domain.*;
+import com.amee.domain.AMEEEntityReference;
+import com.amee.domain.AMEEStatus;
+import com.amee.domain.APIVersion;
+import com.amee.domain.ObjectType;
+import com.amee.domain.Pager;
+import com.amee.domain.PagerSetType;
 import com.amee.domain.auth.PermissionEntry;
 import com.amee.domain.auth.User;
 import com.amee.domain.environment.Environment;
@@ -12,35 +55,11 @@ import com.amee.restlet.site.FreeMarkerConfigurationService;
 import com.amee.restlet.utils.APIFault;
 import com.amee.restlet.utils.HeaderUtils;
 import com.amee.restlet.utils.MediaTypeUtils;
+
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.xerces.dom.DocumentImpl;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.Context;
-import org.restlet.data.*;
-import org.restlet.ext.freemarker.TemplateRepresentation;
-import org.restlet.ext.json.JsonRepresentation;
-import org.restlet.resource.*;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.util.StringUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * An abstract base class for all Resource implementations in this application.
@@ -56,6 +75,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
     private PagerSetType pagerSetType = PagerSetType.ALL;
     protected BeanFactory beanFactory;
 
+    @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         initialise(context, request, response);
@@ -215,7 +235,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
 
     protected Representation getJsonRepresentation() throws ResourceException {
         try {
-            return new JsonRepresentation(getJSONObject());
+            return getJSONObject() != null ? new JsonRepresentation(getJSONObject()) : null;
         } catch (JSONException e) {
             log.error("Caught JSONException: " + e.getMessage());
             // TODO: return an error message as JSON
@@ -236,6 +256,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
     protected Representation getAtomRepresentation() throws ResourceException {
         final org.apache.abdera.model.Element atomElement = getAtomElement();
         return new WriterRepresentation(MediaType.APPLICATION_ATOM_XML) {
+            @Override
             public void write(Writer writer) throws IOException {
                 atomElement.writeTo(writer);
             }
@@ -571,6 +592,7 @@ public abstract class BaseResource extends Resource implements BeanFactoryAware 
         return getResponse().getStatus().isError();
     }
 
+    @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
     }
