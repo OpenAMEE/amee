@@ -12,7 +12,7 @@ import groovyx.net.http.HttpResponseException
 import org.junit.Test
 
 class ProfileIT extends BaseApiTest {
-
+    
     @Test
     void getProfileListJson() {
         def responseGet = client.get(
@@ -33,7 +33,7 @@ class ProfileIT extends BaseApiTest {
     
     @Test
     void createDeleteProfileJson() {
-        // Create a new profile item
+        // Create a new profile
         def responsePost = client.post(
             path: "/profiles",
             body: [ profile: "true" ],
@@ -43,13 +43,13 @@ class ProfileIT extends BaseApiTest {
         assert config.api.standard.user == responsePost.data.profile.user.username
         def uid = responsePost.data.profile.uid
         
-        // Check the new profile item can be retrieved
+        // Check the new profile can be retrieved
         def responseGet = client.get(
             path: "/profiles/" + uid,
             contentType: JSON)
         assert SUCCESS_OK.code == responseGet.status
         
-        // Delete the profile item
+        // Delete the profile
         def responseDelete = client.delete(
             path: "/profiles/" + uid,
             contentType: JSON)
@@ -68,7 +68,7 @@ class ProfileIT extends BaseApiTest {
     
     @Test
     void createDeleteProfileXML() {
-        // Create a new profile item
+        // Create a new profile
         def responsePost = client.post(
             path: "/profiles",
             body: [ profile: "true" ],
@@ -78,13 +78,13 @@ class ProfileIT extends BaseApiTest {
         assert config.api.standard.user == responsePost.data.ProfilesResource.Profile.User.Username.text()
         def uid = responsePost.data.ProfilesResource.Profile.@uid
 
-        // Check the new profile item can be retrieved
+        // Check the new profile can be retrieved
         def responseGet = client.get(
             path: "/profiles/" + uid,
             contentType: XML)
         assert SUCCESS_OK.code == responseGet.status
         
-        // Delete the profile item
+        // Delete the profile
         def responseDelete = client.delete(
             path: "/profiles/" + uid,
             contentType: XML)
@@ -117,7 +117,5 @@ class ProfileIT extends BaseApiTest {
             contentType: XML)
         assert SUCCESS_OK.code == responseGet.status
         assert responseGet.data.ProfileCategoryResource.ProfileCategories.DataCategory.size() > 0
-    }
-    
-    
+    }   
 }
