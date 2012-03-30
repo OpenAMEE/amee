@@ -65,7 +65,7 @@ class ProfileItemIT extends BaseApiTest {
         def responseDelete = client.delete(
             path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
             contentType: JSON)
-        assert SUCCESS_OK.code == responseGet.status
+        assert SUCCESS_OK.code == responseDelete.status
 
         // Check profile item was deleted
         try{
@@ -104,6 +104,13 @@ class ProfileItemIT extends BaseApiTest {
         }catch(HttpResponseException e){
             assert CLIENT_ERROR_FORBIDDEN.code == e.response.status
         }
+        
+        // Delete the profile item
+        setStandardUser()
+        def responseDelete = client.delete(
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseDelete.status
     }
 
     @Test
@@ -132,6 +139,13 @@ class ProfileItemIT extends BaseApiTest {
         }catch(HttpResponseException e){
             assert CLIENT_ERROR_FORBIDDEN.code == e.response.status
         }
+        
+        // Delete the profile item
+        setStandardUser()
+        def responseDelete = client.delete(
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
+            contentType: XML)
+        assert SUCCESS_OK.code == responseDelete.status
     }
     
     @Test
@@ -165,6 +179,12 @@ class ProfileItemIT extends BaseApiTest {
         assert energyConsumptionItem.perUnit == 'month'
         assert responseGet.data.profileItem.amount.unit == 'lb/month'        
         assert responseGet.data.profileItem.amount.value != 200
+        
+        // Delete the profile item
+        def responseDelete = client.delete(
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseDelete.status
     }
     
     @Test
@@ -205,11 +225,11 @@ class ProfileItemIT extends BaseApiTest {
             requestContentType: URLENC,
             contentType: JSON)
         assert SUCCESS_CREATED.code == responsePost.status
-        uid = responsePost.headers['Location'].value.split("/")[8]
+        def uid2 = responsePost.headers['Location'].value.split("/")[8]
         
         // Get the new profile item
         responseGet = client.get(
-            path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid2,
             contentType: JSON)
         assert SUCCESS_OK.code == responseGet.status
         
@@ -230,6 +250,39 @@ class ProfileItemIT extends BaseApiTest {
             fail "Should have thrown an exception"
         }catch(HttpResponseException e) {
             assert CLIENT_ERROR_BAD_REQUEST.code == e.response.status
-        }        
+        }   
+        
+        // Delete the profile items
+        def responseDelete = client.delete(
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseDelete.status
+        responseDelete = client.delete(
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid2,
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseDelete.status
     }
+    
+    @Test
+    void createProfileItemDodgyCharactersJson() {
+        def responsePost, responseDelete, uid
+        for (s in ["£", "'", "%", "&", "<>"]) {
+            // Create a new profile item with a dodgy character
+            responsePost = client.post(
+                path: "/profiles/UCP4SKANF6CS/business/energy/electricity",
+                body: [
+                    dataItemUid: '963A90C107FA',
+                    name: 'test ${s}'],
+                requestContentType: URLENC,
+                contentType: JSON)
+            assert SUCCESS_CREATED.code == responsePost.status
+            uid = responsePost.headers['Location'].value.split("/")[8]
+                
+            // Delete the profile item
+            responseDelete = client.delete(
+                path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
+                contentType: JSON)
+            assert SUCCESS_OK.code == responseDelete.status
+        }
+    }    
 }
