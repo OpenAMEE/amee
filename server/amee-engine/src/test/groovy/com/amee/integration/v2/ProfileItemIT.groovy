@@ -167,5 +167,69 @@ class ProfileItemIT extends BaseApiTest {
         assert responseGet.data.profileItem.amount.value != 200
     }
     
-
+    @Test
+    void timeResolutionCreateProfileItemJson() {
+        // Create new profile item
+        def responsePost = client.post(
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity",
+            body: [
+                dataItemUid: '963A90C107FA',
+                energyPerTime: 100,
+                responsibleArea: 100,
+                totalArea: 100,
+                startDate: "2012-11-18T18:32:50Z"],
+            requestContentType: URLENC,
+            contentType: JSON)
+        assert SUCCESS_CREATED.code == responsePost.status
+        def uid = responsePost.headers['Location'].value.split("/")[8]
+        
+        // Get the new profile item
+        def responseGet = client.get(
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseGet.status
+        
+        // Times should get rounded down to the minute
+        def startDate = responseGet.data.profileItem.startDate
+        assert startDate == "2012-11-18T18:32:00Z"
+        
+        // Create a new profile item that starts 1 minute later
+        responsePost = client.post(
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity",
+            body: [
+                dataItemUid: '963A90C107FA',
+                energyPerTime: 100,
+                responsibleArea: 100,
+                totalArea: 100,
+                startDate: "2012-11-18T18:33:00Z"],
+            requestContentType: URLENC,
+            contentType: JSON)
+        assert SUCCESS_CREATED.code == responsePost.status
+        uid = responsePost.headers['Location'].value.split("/")[8]
+        
+        // Get the new profile item
+        responseGet = client.get(
+            path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseGet.status
+        
+        assert startDate != responseGet.data.profileItem.startDate
+        
+        // Should not be able to create a profile item within a minute
+        try{
+            responsePost = client.post(
+                path: "/profiles/UCP4SKANF6CS/business/energy/electricity",
+                body: [
+                    dataItemUid: '963A90C107FA',
+                    energyPerTime: 100,
+                    responsibleArea: 100,
+                    totalArea: 100,
+                    startDate: "2012-11-18T18:32:30Z"],
+                requestContentType: URLENC,
+                contentType: JSON)
+            fail "Should have thrown an exception"
+        }catch(HttpResponseException e) {
+            assert CLIENT_ERROR_BAD_REQUEST.code == e.response.status
+        }        
+    }
 }
