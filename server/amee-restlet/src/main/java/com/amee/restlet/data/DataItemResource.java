@@ -1,29 +1,14 @@
 package com.amee.restlet.data;
 
-import com.amee.base.utils.ThreadBeanHolder;
-import com.amee.base.utils.XMLUtils;
-import com.amee.calculation.service.CalculationService;
-import com.amee.domain.IAMEEEntityReference;
-import com.amee.domain.data.DataCategory;
-import com.amee.domain.data.ItemValueDefinition;
-import com.amee.domain.data.builder.DataItemBuilder;
-import com.amee.domain.item.BaseItemValue;
-import com.amee.domain.item.data.BaseDataItemValue;
-import com.amee.domain.item.data.DataItem;
-import com.amee.domain.item.data.DataItemNumberValueHistory;
-import com.amee.domain.item.data.DataItemTextValueHistory;
-import com.amee.domain.sheet.Choice;
-import com.amee.domain.sheet.Choices;
-import com.amee.platform.science.*;
-import com.amee.restlet.AMEEResource;
-import com.amee.restlet.RequestContext;
-import com.amee.service.data.DataBrowser;
-import com.amee.service.data.DataConstants;
-import com.amee.service.data.DataService;
-import com.amee.service.data.DataSheetService;
-import com.amee.service.invalidation.InvalidationService;
-import com.amee.service.item.DataItemServiceImpl;
-import com.amee.service.profile.ProfileService;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,13 +26,37 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.measure.unit.NonSI;
-import javax.measure.unit.SI;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.amee.base.utils.ThreadBeanHolder;
+import com.amee.base.utils.XMLUtils;
+import com.amee.calculation.service.CalculationService;
+import com.amee.domain.IAMEEEntityReference;
+import com.amee.domain.data.DataCategory;
+import com.amee.domain.data.ItemValueDefinition;
+import com.amee.domain.data.builder.DataItemBuilder;
+import com.amee.domain.item.BaseItemValue;
+import com.amee.domain.item.data.BaseDataItemValue;
+import com.amee.domain.item.data.DataItem;
+import com.amee.domain.item.data.DataItemNumberValueHistory;
+import com.amee.domain.item.data.DataItemTextValueHistory;
+import com.amee.domain.sheet.Choice;
+import com.amee.domain.sheet.Choices;
+import com.amee.platform.science.Amount;
+import com.amee.platform.science.AmountPerUnit;
+import com.amee.platform.science.AmountUnit;
+import com.amee.platform.science.CO2AmountUnit;
+import com.amee.platform.science.Note;
+import com.amee.platform.science.ReturnValue;
+import com.amee.platform.science.ReturnValues;
+import com.amee.platform.science.StartEndDate;
+import com.amee.restlet.AMEEResource;
+import com.amee.restlet.RequestContext;
+import com.amee.service.data.DataBrowser;
+import com.amee.service.data.DataConstants;
+import com.amee.service.data.DataService;
+import com.amee.service.data.DataSheetService;
+import com.amee.service.invalidation.InvalidationService;
+import com.amee.service.item.DataItemServiceImpl;
+import com.amee.service.profile.ProfileService;
 
 //TODO - move to builder model
 
@@ -128,10 +137,10 @@ public class DataItemResource extends AMEEResource implements Serializable {
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                (dataCategory != null) &&
-                (dataItem != null) &&
-                dataItem.getDataCategory().equals(dataCategory) &&
-                !dataItem.isTrash();
+            (dataCategory != null) &&
+            (dataItem != null) &&
+            dataItem.getDataCategory().equals(dataCategory) &&
+            !dataItem.isTrash();
     }
 
     @Override
@@ -170,11 +179,29 @@ public class DataItemResource extends AMEEResource implements Serializable {
         obj.put("dataItem", new DataItemBuilder(dataItem, dataItemService).getJSONObject(true, false));
         obj.put("path", dataItem.getFullPath());
         obj.put("userValueChoices", userValueChoices.getJSONObject());
-        obj.put("amountPerMonth", amount.convert(kgPerMonth).getValue());
+
+        double doubleValue = amount.convert(kgPerMonth).getValue();
+        if (Double.isInfinite(doubleValue)) {
+            obj.put("amountPerMonth", "Infinity");
+        } else if (Double.isNaN(doubleValue)) {
+            obj.put("amountPerMonth", "NaN");
+        } else {
+            obj.put("amountPerMonth", doubleValue);
+        }
+
         if (getAPIVersion().isNotVersionOne()) {
             CO2AmountUnit returnUnit = new CO2AmountUnit(unit, perUnit);
             JSONObject amountObj = new JSONObject();
-            amountObj.put("value", amount.convert(returnUnit).getValue());
+
+            doubleValue = amount.convert(returnUnit).getValue();
+            if (Double.isInfinite(doubleValue)) {
+                amountObj.put("value", "Infinity");
+            } else if (Double.isNaN(doubleValue)) {
+                amountObj.put("value", "NaN");
+            } else {
+                amountObj.put("value", doubleValue);
+            }
+
             amountObj.put("unit", returnUnit);
             obj.put("amount", amountObj);
 
@@ -283,7 +310,7 @@ public class DataItemResource extends AMEEResource implements Serializable {
 
     /**
      * Create ItemValues based on POSTed parameters.
-     *
+     * 
      * @param entity representation
      */
     @Override
@@ -356,10 +383,9 @@ public class DataItemResource extends AMEEResource implements Serializable {
      * Update the DataItem and contained ItemValues based on PUT parameters. ItemValues can be identified
      * by their ItemValueDefinition path or their specific UID.
      * <p/>
-     * When updating ItemValues using the ItemValueDefinition path the appropriate instance will
-     * be selected based on the query string startDate parameter. This is only relevant for non drill-down
-     * ItemValues, as only one instance of these is allowed.
-     *
+     * When updating ItemValues using the ItemValueDefinition path the appropriate instance will be selected based on the query string startDate parameter. This
+     * is only relevant for non drill-down ItemValues, as only one instance of these is allowed.
+     * 
      * @param entity representation
      */
     @Override
