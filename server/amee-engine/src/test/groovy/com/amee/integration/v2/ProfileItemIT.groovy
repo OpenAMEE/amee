@@ -265,18 +265,27 @@ class ProfileItemIT extends BaseApiTest {
     
     @Test
     void createProfileItemDodgyCharactersJson() {
-        def responsePost, responseDelete, uid
+        def responsePost, responseGet, responseDelete, dodgyName, uid
         for (s in ["£", "'", "%", "&", "<>"]) {
+            dodgyName = 'test ${s}'
+            
             // Create a new profile item with a dodgy character
             responsePost = client.post(
                 path: "/profiles/UCP4SKANF6CS/business/energy/electricity",
                 body: [
                     dataItemUid: '963A90C107FA',
-                    name: 'test ${s}'],
+                    name: dodgyName],
                 requestContentType: URLENC,
                 contentType: JSON)
             assert SUCCESS_CREATED.code == responsePost.status
             uid = responsePost.headers['Location'].value.split("/")[8]
+            
+            // Check it can be retrieved ok
+            responseGet = client.get(
+                path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
+                contentType: JSON)
+            assert SUCCESS_OK.code == responseGet.status
+            assert responseGet.data.profileItem.name == dodgyName
                 
             // Delete the profile item
             responseDelete = client.delete(
