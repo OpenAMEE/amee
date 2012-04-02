@@ -115,4 +115,27 @@ abstract class BaseApiTest {
             length > 0 ? list[0..length - 1].join() : ''
         }
     }
+    
+    /**
+    * Returns true if contains infinity and NaN amounts.
+    * NB: This only works for json data.
+    *
+    * @param amounts    the amounts element from the response
+    * @return           <code>true</code> if both Infinity and NaN results are present in the specified <code>amounts</code>,
+    *                   <code>false</code> otherwise
+    */
+   boolean hasInfinityAndNan(amounts) {
+       def hasInfinity = false
+       def hasNan = false
+
+       amounts.each {
+           if (it.type == 'infinity' && it.value == 'Infinity') {
+               hasInfinity = true
+           }
+           if (it.type == 'nan' && it.value == 'NaN') {
+               hasNan = true
+           }
+       }
+       return hasInfinity && hasNan
+   }
 }

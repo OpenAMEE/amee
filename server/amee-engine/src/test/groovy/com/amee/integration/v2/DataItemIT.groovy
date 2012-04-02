@@ -203,5 +203,20 @@ class DataItemIT extends BaseApiTest {
         assert responseGet.data.DataItemResource.Amount.@unit.text() == "lb/month"
         assert responseGet.data.DataItemResource.Amount.text().startsWith("36.74371")
     }
+    
+    /**
+     * Test for non-finite values in calculations, specifically Infinity and NaN.
+     */
+    @Test
+    void getDataItemCalculationInfinityAndNanJson() {
+        def responseGet = client.get(
+            path: "/data/home/appliances/computers/generic/651B5AE27940",
+            contentType: JSON)
+        assert SUCCESS_OK.code == responseGet.status
+        
+        def amounts = responseGet.data.amounts.amount
+        assert amounts.size() == 2
+        assert hasInfinityAndNan(amounts) == true
+    }
 
 }
