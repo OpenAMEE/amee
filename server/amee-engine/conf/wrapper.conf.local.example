@@ -61,18 +61,17 @@ set.SECURE_PORT=8090
 wrapper.java.initmemory=512
 wrapper.java.maxmemory=2048
 
-# The license.
-#encoding=UTF-8
-wrapper.license.type=DEV
-wrapper.license.id=201007090031
-wrapper.license.licensee=AMEE UK (INTERNAL TESTING LICENSE)
-wrapper.license.dev_application=AMEE Classic
-wrapper.license.features=64bit, test
-wrapper.license.upgrade_term.begin_date=2010-07-08
-wrapper.license.upgrade_term.end_date=2010-10-08
-wrapper.license.lease_term.begin_date=2010-07-08
-wrapper.license.lease_term.end_date=2010-10-08
-wrapper.license.key.1=9b00-c65f-3cef-295e
-wrapper.license.key.2=f082-36dd-64fb-3d55
-wrapper.license.key.3=c232-8a6f-1761-82c0
-wrapper.license.key.4=f8bc-13fb-e148-472e
+# The license (not required for community wrapper version).
+#wrapper.license.type=DEV
+#wrapper.license.id=201007090031
+#wrapper.license.licensee=AMEE UK (INTERNAL TESTING LICENSE)
+#wrapper.license.dev_application=AMEE Classic
+#wrapper.license.features=64bit, test
+#wrapper.license.upgrade_term.begin_date=2010-07-08
+#wrapper.license.upgrade_term.end_date=2010-10-08
+#wrapper.license.lease_term.begin_date=2010-07-08
+#wrapper.license.lease_term.end_date=2010-10-08
+#wrapper.license.key.1=9b00-c65f-3cef-295e
+#wrapper.license.key.2=f082-36dd-64fb-3d55
+#wrapper.license.key.3=c232-8a6f-1761-82c0
+#wrapper.license.key.4=f8bc-13fb-e148-472e
