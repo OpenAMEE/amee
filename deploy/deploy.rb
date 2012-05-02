@@ -10,6 +10,9 @@ set :application, "amee"
 # Where Capistrano should get the deployable artifacts
 set :repository,  "git@github.com:AMEE/amee.deploy.git"
 
+# Keep a local cache on deployment servers
+set :deploy_via, :remote_cache
+
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
