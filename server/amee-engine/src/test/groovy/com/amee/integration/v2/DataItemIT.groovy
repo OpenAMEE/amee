@@ -13,11 +13,13 @@ import groovyx.net.http.HttpResponseException
 
 import org.junit.Test
 
-class DataItemIT extends BaseApiTest {
+import com.amee.integration.BaseApiTestV2
+
+class DataItemIT extends BaseApiTestV2 {
 
     @Test
     void createUpdateDeleteDataItemJson() {
-        setAdminUser()
+        setAdminUserV2()
 
         // Create a data item
         def responsePost = client.post(
@@ -72,7 +74,7 @@ class DataItemIT extends BaseApiTest {
 
     @Test
     void createDuplicateDataItemJson() {
-        setAdminUser()
+        setAdminUserV2()
         
         // Create a data item
         def responsePost = client.post(

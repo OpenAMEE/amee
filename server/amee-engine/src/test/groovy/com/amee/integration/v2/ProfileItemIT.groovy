@@ -14,7 +14,9 @@ import groovyx.net.http.HttpResponseException
 
 import org.junit.Test
 
-class ProfileItemIT extends BaseApiTest {
+import com.amee.integration.BaseApiTestV2
+
+class ProfileItemIT extends BaseApiTestV2 {
 
     @Test
     void createUpdateDeleteProfileItemJson() {
@@ -81,7 +83,7 @@ class ProfileItemIT extends BaseApiTest {
     @Test
     void getProfileItemUnauthorisedJson() {
         // Create profile item as standard user
-        setStandardUser()
+        setStandardUserV2()
         def responsePost = client.post(
             path: "/profiles/UCP4SKANF6CS/business/energy/electricity",
             body: [
@@ -106,7 +108,7 @@ class ProfileItemIT extends BaseApiTest {
         }
         
         // Delete the profile item
-        setStandardUser()
+        setStandardUserV2()
         def responseDelete = client.delete(
             path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
             contentType: JSON)
@@ -116,7 +118,7 @@ class ProfileItemIT extends BaseApiTest {
     @Test
     void getProfileItemUnauthorisedXML() {
         // Create profile item as standard user
-        setStandardUser()
+        setStandardUserV2()
         def responsePost = client.post(
             path: "/profiles/UCP4SKANF6CS/business/energy/electricity",
             body: [
@@ -141,7 +143,7 @@ class ProfileItemIT extends BaseApiTest {
         }
         
         // Delete the profile item
-        setStandardUser()
+        setStandardUserV2()
         def responseDelete = client.delete(
             path: "/profiles/UCP4SKANF6CS/business/energy/electricity/" + uid,
             contentType: XML)

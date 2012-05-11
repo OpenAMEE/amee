@@ -1,4 +1,4 @@
-package com.amee.integration.v2
+package com.amee.integration.v1
 
 import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.ContentType.URLENC
@@ -12,9 +12,9 @@ import groovyx.net.http.HttpResponseException
 
 import org.junit.Test
 
-import com.amee.integration.BaseApiTestV2
+import com.amee.integration.BaseApiTestV1
 
-class DataItemValueIT extends BaseApiTestV2 {
+class DataItemValueIT extends BaseApiTestV1 {
 
     def paths = [
         "country",
@@ -58,7 +58,7 @@ class DataItemValueIT extends BaseApiTestV2 {
     
     @Test
     void invalidUpdateStartDateJson() {
-        setAdminUserV2()
+        setAdminUserV1()
         
         def responseGet = client.get(
             path: "/data/business/energy/electricity/grid/585E708CB4BE/massCO2PerEnergy",
@@ -86,7 +86,7 @@ class DataItemValueIT extends BaseApiTestV2 {
      */
     @Test
     void createUpdateDataItemValueJson() {
-        setAdminUserV2()
+        setAdminUserV1()
 
         // Create a new DataItem
         def responsePost = client.post(
@@ -96,9 +96,8 @@ class DataItemValueIT extends BaseApiTestV2 {
                 country: "Test Country"],
             requestContentType: URLENC,
             contentType: JSON)
-        assert SUCCESS_CREATED.code == responsePost.status
-        def location = responsePost.headers['Location'].value
-        def uid = location.split("/")[7]
+        assert SUCCESS_OK.code == responsePost.status
+        def uid = responsePost.data.dataItem.uid
 
         // Check default Data Item Values were created
         def responseGet = client.get(
@@ -122,7 +121,7 @@ class DataItemValueIT extends BaseApiTestV2 {
                 startDate: '2000-01-01T00:00:00Z'],
             requestContentType: URLENC,
             contentType: JSON)
-        assert SUCCESS_CREATED.code == responsePost.status
+        assert SUCCESS_OK.code == responsePost.status
         
         // Check new history item was created
         responseGet = client.get(
@@ -194,7 +193,7 @@ class DataItemValueIT extends BaseApiTestV2 {
     */
    @Test
    void createUpdateDataItemValueXML() {
-       setAdminUserV2()
+       setAdminUserV1()
 
        // Create a new DataItem
        def responsePost = client.post(
@@ -204,9 +203,8 @@ class DataItemValueIT extends BaseApiTestV2 {
                country: "Test Country"],
            requestContentType: URLENC,
            contentType: XML)
-       assert SUCCESS_CREATED.code == responsePost.status
-       def location = responsePost.headers['Location'].value
-       def uid = location.split("/")[7]
+       assert SUCCESS_OK.code == responsePost.status
+       def uid = responsePost.data.DataCategoryResource.DataItem.Name.text()
 
        // Check default Data Item Values were created
        def responseGet = client.get(
@@ -230,7 +228,7 @@ class DataItemValueIT extends BaseApiTestV2 {
                startDate: '2000-01-01T00:00:00Z'],
            requestContentType: URLENC,
            contentType: XML)
-       assert SUCCESS_CREATED.code == responsePost.status
+       assert SUCCESS_OK.code == responsePost.status
        
        // Check new history item was created
        responseGet = client.get(
@@ -301,7 +299,7 @@ class DataItemValueIT extends BaseApiTestV2 {
      */
     @Test
     void dataItemSeriesJson() {
-        setAdminUserV2()
+        setAdminUserV1()
         
         // Create a new DataItem
         def responsePost = client.post(
@@ -311,9 +309,8 @@ class DataItemValueIT extends BaseApiTestV2 {
                 country: "Test Country"],
             requestContentType: URLENC,
             contentType: JSON)
-        assert SUCCESS_CREATED.code == responsePost.status
-        def location = responsePost.headers['Location'].value
-        def uid = location.split("/")[7]
+        assert SUCCESS_OK.code == responsePost.status
+        def uid = responsePost.data.dataItem.uid
         
         // Create a data series with a new value each day
         responsePost = client.post(
@@ -323,7 +320,7 @@ class DataItemValueIT extends BaseApiTestV2 {
                 startDate: '2000-01-01T00:00:00Z'],
             requestContentType: URLENC,
             contentType: JSON)
-        assert SUCCESS_CREATED.code == responsePost.status
+        assert SUCCESS_OK.code == responsePost.status
         
         responsePost = client.post(
             path: "/data/business/energy/electricity/" + uid,
@@ -332,7 +329,7 @@ class DataItemValueIT extends BaseApiTestV2 {
                 startDate: '2000-01-02T00:00:00Z'],
             requestContentType: URLENC,
             contentType: JSON)
-        assert SUCCESS_CREATED.code == responsePost.status
+        assert SUCCESS_OK.code == responsePost.status
         
         responsePost = client.post(
             path: "/data/business/energy/electricity/" + uid,
@@ -341,7 +338,7 @@ class DataItemValueIT extends BaseApiTestV2 {
                 startDate: '2000-01-03T00:00:00Z'],
             requestContentType: URLENC,
             contentType: JSON)
-        assert SUCCESS_CREATED.code == responsePost.status
+        assert SUCCESS_OK.code == responsePost.status
         
         // Check the history items are all available
         def responseGet = client.get(
@@ -415,7 +412,7 @@ class DataItemValueIT extends BaseApiTestV2 {
     */
    @Test
    void dataItemSeriesXML() {
-       setAdminUserV2()
+       setAdminUserV1()
        
        // Create a new DataItem
        def responsePost = client.post(
@@ -425,9 +422,8 @@ class DataItemValueIT extends BaseApiTestV2 {
                country: "Test Country"],
            requestContentType: URLENC,
            contentType: XML)
-       assert SUCCESS_CREATED.code == responsePost.status
-       def location = responsePost.headers['Location'].value
-       def uid = location.split("/")[7]
+       assert SUCCESS_OK.code == responsePost.status
+       def uid = responsePost.data.DataCategoryResource.DataItem.@uid
        
        // Create a data series with a new value each day
        responsePost = client.post(
@@ -437,7 +433,7 @@ class DataItemValueIT extends BaseApiTestV2 {
                startDate: '2000-01-01T00:00:00Z'],
            requestContentType: URLENC,
            contentType: XML)
-       assert SUCCESS_CREATED.code == responsePost.status
+       assert SUCCESS_OK.code == responsePost.status
        
        responsePost = client.post(
            path: "/data/business/energy/electricity/" + uid,
@@ -446,7 +442,7 @@ class DataItemValueIT extends BaseApiTestV2 {
                startDate: '2000-01-02T00:00:00Z'],
            requestContentType: URLENC,
            contentType: XML)
-       assert SUCCESS_CREATED.code == responsePost.status
+       assert SUCCESS_OK.code == responsePost.status
        
        responsePost = client.post(
            path: "/data/business/energy/electricity/" + uid,
@@ -455,7 +451,7 @@ class DataItemValueIT extends BaseApiTestV2 {
                startDate: '2000-01-03T00:00:00Z'],
            requestContentType: URLENC,
            contentType: XML)
-       assert SUCCESS_CREATED.code == responsePost.status
+       assert SUCCESS_OK.code == responsePost.status
        
        // Check the history items are all available
        def responseGet = client.get(

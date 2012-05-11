@@ -12,14 +12,16 @@ import groovyx.net.http.HttpResponseException
 
 import org.junit.Test
 
-class ItemDefinitionIT extends BaseApiTest {
+import com.amee.integration.BaseApiTestV2
+
+class ItemDefinitionIT extends BaseApiTestV2 {
 
     /**
      * Test getting the root list of item definitions as JSON
      */
     @Test
     void getItemDefinitionListJson() {
-        setAdminUser()
+        setAdminUserV2()
         
         // Get ItemDefinition list
         def responseGet = client.get(
@@ -34,7 +36,7 @@ class ItemDefinitionIT extends BaseApiTest {
      */
     @Test
     void getItemDefinitionListXML() {
-        setAdminUser()
+        setAdminUserV2()
         
         // Get ItemDefinition list
         def responseGet = client.get(
@@ -49,7 +51,7 @@ class ItemDefinitionIT extends BaseApiTest {
      */
     @Test
     void getPaginatedItemDefinitionListJson() {
-        setAdminUser()
+        setAdminUserV2()
         
         // Get ItemDefinition list
         def responseGet = client.get(
@@ -71,7 +73,7 @@ class ItemDefinitionIT extends BaseApiTest {
      * Test getting a paginated list of item definitions as XML
      */
     void getPaginatedItemDefinitionListXML() {
-        setAdminUser()
+        setAdminUserV2()
         
         // Get ItemDefinition list
         def responseGet = client.get(
@@ -96,7 +98,7 @@ class ItemDefinitionIT extends BaseApiTest {
      */
     @Test
     void createUpdateDeleteItemDefinition() {
-        setAdminUser()
+        setAdminUserV2()
 
         // Create new ItemDefinition
         def responsePost = client.post(
@@ -157,7 +159,7 @@ class ItemDefinitionIT extends BaseApiTest {
      */
     @Test
     void invalidUpdateItemDefinition() {
-        setAdminUser()
+        setAdminUserV2()
         
         def uid = '11D3548466F2'
         

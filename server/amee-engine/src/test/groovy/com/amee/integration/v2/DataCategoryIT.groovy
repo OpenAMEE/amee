@@ -11,7 +11,9 @@ import groovyx.net.http.HttpResponseException
 
 import org.junit.Test
 
-class DataCategoryIT extends BaseApiTest {
+import com.amee.integration.BaseApiTestV2
+
+class DataCategoryIT extends BaseApiTestV2 {
 
     @Test
     void getRootDataCategoryJson() {
@@ -37,7 +39,7 @@ class DataCategoryIT extends BaseApiTest {
     
     @Test
     void createUpdateDeleteCategory() {
-        setAdminUser()
+        setAdminUserV2()
         
         // Create a DataCategory.
         def responsePost = client.post(
