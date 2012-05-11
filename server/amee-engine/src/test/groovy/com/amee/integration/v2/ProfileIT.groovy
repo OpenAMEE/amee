@@ -11,7 +11,9 @@ import groovyx.net.http.HttpResponseException
 
 import org.junit.Test
 
-class ProfileIT extends BaseApiTest {
+import com.amee.integration.BaseApiTestV2
+
+class ProfileIT extends BaseApiTestV2 {
     
     @Test
     void getProfileListJson() {
@@ -40,7 +42,7 @@ class ProfileIT extends BaseApiTest {
             requestContentType: URLENC,
             contentType: JSON)
         assert SUCCESS_OK.code == responsePost.status
-        assert config.api.standard.user == responsePost.data.profile.user.username
+        assert config.api.standard.v2.user == responsePost.data.profile.user.username
         def uid = responsePost.data.profile.uid
         
         // Check the new profile can be retrieved
@@ -75,7 +77,7 @@ class ProfileIT extends BaseApiTest {
             requestContentType: URLENC,
             contentType: XML)
         assert SUCCESS_OK.code == responsePost.status
-        assert config.api.standard.user == responsePost.data.ProfilesResource.Profile.User.Username.text()
+        assert config.api.standard.v2.user == responsePost.data.ProfilesResource.Profile.User.Username.text()
         def uid = responsePost.data.ProfilesResource.Profile.@uid
 
         // Check the new profile can be retrieved

@@ -1,4 +1,4 @@
-package com.amee.integration.v2
+package com.amee.integration
 
 import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.ContentType.URLENC
@@ -71,21 +71,30 @@ abstract class BaseApiTest {
 
         // Accept JSON by default
         client.contentType = JSON
-
-        // Set standard user as default.
-        setStandardUser()
     }
 
-    def setStandardUser() {
-        client.auth.basic config.api.standard.user, config.api.standard.password
+    def setStandardUserV1() {
+        client.auth.basic config.api.standard.v1.user, config.api.standard.v1.password
+        def auth = 'Basic ' + (config.api.standard.v1.user + ':' + config.api.standard.v1.password).bytes.encodeBase64().toString()
+        client.headers.Authorization = auth
+    }
+    
+    def setStandardUserV2() {
+        client.auth.basic config.api.standard.v2.user, config.api.standard.v2.password
         // Can't use the built-in RESTClient auth handling as we don't send the WWW-Authenticate header in v2
-        def auth = 'Basic ' + (config.api.standard.user + ':' + config.api.standard.password).bytes.encodeBase64().toString()
+        def auth = 'Basic ' + (config.api.standard.v2.user + ':' + config.api.standard.v2.password).bytes.encodeBase64().toString()
         client.headers.Authorization = auth
     }
 
-    def setAdminUser() {
-        client.auth.basic config.api.admin.user, config.api.admin.password
-        def auth = 'Basic ' + (config.api.admin.user + ':' + config.api.admin.password).bytes.encodeBase64().toString()
+    def setAdminUserV1() {
+        client.auth.basic config.api.admin.v1.user, config.api.admin.v1.password
+        def auth = 'Basic ' + (config.api.admin.v1.user + ':' + config.api.admin.v1.password).bytes.encodeBase64().toString()
+        client.headers.Authorization = auth
+    }
+    
+    def setAdminUserV2() {
+        client.auth.basic config.api.admin.v2.user, config.api.admin.v2.password
+        def auth = 'Basic ' + (config.api.admin.v2.user + ':' + config.api.admin.v2.password).bytes.encodeBase64().toString()
         client.headers.Authorization = auth
     }
 
