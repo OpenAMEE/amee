@@ -6,6 +6,8 @@
 
         <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
+
+            <!-- MDC values are set in LogFilter. -->
             <pattern>[%date] [%-5level] [%thread] [%property{server.name}] [%mdc{ipAddress}] [%mdc{userUid}] [%logger{32}] %msg%n</pattern>
         </encoder>
     </appender>
@@ -156,10 +158,6 @@
 
     <logger name="transactions" level="INFO" additivity="false">
         <appender-ref ref="TRANSACTIONS_ROLLER"/>
-    </logger>
-
-    <logger name="search" level="INFO" additivity="false">
-        <appender-ref ref="SEARCH_ROLLER"/>
     </logger>
 
     <logger name="science" level="INFO" additivity="false">
