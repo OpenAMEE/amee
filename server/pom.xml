@@ -36,7 +36,6 @@
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>2.0.1</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <commons-logging.version>1.1.1</commons-logging.version>
         <dom4j.version>1.6.1</dom4j.version>
         <ehcache.version>1.6.2</ehcache.version>
         <gmaven-runtime-1.7.version>1.3</gmaven-runtime-1.7.version>
@@ -49,6 +48,7 @@
         <hsqldb.version>2.2.8</hsqldb.version>
         <http-builder.version>0.5.1</http-builder.version>
         <ibm-icu4j.version>4.0.1</ibm-icu4j.version>
+        <janino.version>2.5.10</janino.version>
         <javax.mail.version>1.4</javax.mail.version>
         <jetty-jsp.version>2.1-6.0.2</jetty-jsp.version>
         <jetty-servlet-api.version>2.5-20110124</jetty-servlet-api.version>
@@ -56,8 +56,8 @@
         <joda-time.version>1.6.2</joda-time.version>
         <jscience.version>4.3.1</jscience.version>
         <junit.version>4.8.2</junit.version>
-        <log4j.version>1.2.16</log4j.version>
-        <log4jdbc4.version>1.2beta2</log4jdbc4.version>
+        <log4jdbc4.version>1.2</log4jdbc4.version>
+        <logback-classic.version>1.0.2</logback-classic.version>
         <mysql-connector-java.version>5.1.16</mysql-connector-java.version>
         <opencsv.version>2.1</opencsv.version>
         <org-json.version>2.0</org-json.version>
@@ -260,20 +260,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>${commons-logging.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -298,6 +288,25 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>
+
+        <!-- Commons logging bridge required for spring -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>${janino.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>

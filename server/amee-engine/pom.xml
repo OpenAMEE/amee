@@ -125,7 +125,6 @@
                             hsqldb:mem. -->
                         <hibernate.hbm2ddl.auto>create-drop</hibernate.hbm2ddl.auto>
 
-                        <log4j.configuration>test-log4j.xml</log4j.configuration>
                         <sun.lang.ClassLoader.allowArraySyntax>true</sun.lang.ClassLoader.allowArraySyntax>
                         <java.awt.headless>true</java.awt.headless>
                         <amee.logLevel>DEBUG</amee.logLevel>
