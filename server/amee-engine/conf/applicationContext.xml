@@ -23,7 +23,7 @@
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
 
     <!-- An aspect to support the perf4j @Profiled annotation. -->
-    <bean id="timingAspect" class="org.perf4j.log4j.aop.TimingAspect" />
+    <bean id="timingAspect" class="org.perf4j.slf4j.aop.TimingAspect" />
     <!-- Enable request scope - NOT IN USE (steve@amee.com - 08/09/09) -->
     <!--<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer"> -->
     <!--<property name="scopes"> -->
