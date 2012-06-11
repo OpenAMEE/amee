@@ -52,11 +52,11 @@
 
     <!-- Declare the 'TRANSACTIONS_ROLLER' Daily RollingFileAppender. -->
     <appender name="TRANSACTIONS_ROLLER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/var/www/apps/${app.name}-${instance.name}/shared/log/transactions.log"</file>
+        <file>/var/www/apps/${app.name}-${instance.name}/shared/log/transactions.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 
             <!-- daily rollover -->
-            <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/var/www/apps/${app.name}-${instance.name}/shared/log/transactions.log.%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
 
         <encoder>
@@ -76,7 +76,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 
             <!-- daily rollover -->
-            <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/var/www/apps/${app.name}-${instance.name}/shared/log/science.log.%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
 
         <encoder>
@@ -95,7 +95,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 
             <!-- daily rollover -->
-            <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/var/www/apps/${app.name}-${instance.name}/shared/log/performance.log.%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
 
         <encoder>
