@@ -44,7 +44,7 @@
         <google-visualization-datasource.version>1.0.2</google-visualization-datasource.version>
         <groovy.version>1.7.10</groovy.version>
         <hibernate-core.version>3.6.3.Final</hibernate-core.version>
-        <hoptoad-notifier.version>1.9</hoptoad-notifier.version>
+        <airbrake-notifier.version>2.0-SNAPSHOT</airbrake-notifier.version>
         <hsqldb.version>2.2.8</hsqldb.version>
         <http-builder.version>0.5.1</http-builder.version>
         <ibm-icu4j.version>4.0.1</ibm-icu4j.version>
@@ -319,8 +319,8 @@
         <!-- Airbrake. Was Hoptoad. -->
         <dependency>
             <groupId>hoptoad</groupId>
-            <artifactId>hoptoad-java-notifier</artifactId>
-            <version>${hoptoad-notifier.version}</version>
+            <artifactId>airbrake-logback-notifier</artifactId>
+            <version>${airbrake-notifier.version}</version>
             <scope>runtime</scope>
         </dependency>
 
