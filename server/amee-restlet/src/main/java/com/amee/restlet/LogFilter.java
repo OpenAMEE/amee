@@ -1,12 +1,16 @@
 package com.amee.restlet;
 
 import com.amee.domain.auth.User;
-import org.apache.log4j.MDC;
+import org.slf4j.MDC;
 import org.restlet.Application;
 import org.restlet.Filter;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 
+/**
+ * Adds the client IP address and user UID for the current request to the MDC.
+ * See: http://logback.qos.ch/manual/mdc.html
+ */
 public class LogFilter extends Filter {
 
     public LogFilter() {
