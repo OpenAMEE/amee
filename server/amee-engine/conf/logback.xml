@@ -52,11 +52,11 @@
 
     <!-- Declare the 'TRANSACTIONS_ROLLER' Daily RollingFileAppender. -->
     <appender name="TRANSACTIONS_ROLLER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/var/www/apps/${app.name}-${instance.name}/shared/log/transactions.log</file>
+        <file>${amee.logDir}/transactions.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 
             <!-- daily rollover -->
-            <fileNamePattern>/var/www/apps/${app.name}-${instance.name}/shared/log/transactions.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${amee.logDir}/transactions.log.%d{yyyy-MM-dd}</fileNamePattern>
         </rollingPolicy>
 
         <encoder>
@@ -71,12 +71,12 @@
 
     <!-- Declare the 'SCIENCE_ROLLER' Daily RollingFileAppender. -->
     <appender name="SCIENCE_ROLLER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/var/www/apps/${app.name}-${instance.name}/shared/log/science.log</file>
+        <file>${amee.logDir}/science.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 
             <!-- daily rollover -->
-            <fileNamePattern>/var/www/apps/${app.name}-${instance.name}/shared/log/science.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${amee.logDir}/science.log.%d{yyyy-MM-dd}</fileNamePattern>
         </rollingPolicy>
 
         <encoder>
@@ -91,11 +91,11 @@
 
     <!-- Declare the 'PERFORMANCE_ROLLER' DailyRollingFileAppender. -->
     <appender name="PERFORMANCE_ROLLER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/var/www/apps/${app.name}-${instance.name}/shared/log/performance.log</file>
+        <file>${amee.logDir}/performance.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 
             <!-- daily rollover -->
-            <fileNamePattern>/var/www/apps/${app.name}-${instance.name}/shared/log/performance.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${amee.logDir}.%d{yyyy-MM-dd}</fileNamePattern>
         </rollingPolicy>
 
         <encoder>
