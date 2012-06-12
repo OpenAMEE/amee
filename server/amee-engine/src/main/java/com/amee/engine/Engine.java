@@ -3,7 +3,7 @@ package com.amee.engine;
 import com.amee.base.engine.JavaLoggingToSlf4jRedirector;
 import com.amee.base.transaction.TransactionController;
 import org.apache.commons.cli.*;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTimeZone;

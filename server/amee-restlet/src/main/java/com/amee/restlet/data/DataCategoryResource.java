@@ -18,7 +18,7 @@ import com.amee.service.definition.DefinitionService;
 import com.amee.service.invalidation.InvalidationService;
 import com.amee.service.item.DataItemServiceImpl;
 import com.amee.service.profile.ProfileService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;

@@ -6,7 +6,7 @@ import com.amee.domain.LocaleHolder;
 import com.amee.domain.auth.User;
 import com.amee.restlet.RequestContext;
 import com.amee.service.auth.AuthenticationService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Application;
