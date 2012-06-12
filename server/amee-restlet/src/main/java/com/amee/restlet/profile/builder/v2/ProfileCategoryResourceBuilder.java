@@ -19,7 +19,7 @@ import com.amee.service.profile.ProfileBrowser;
 import com.amee.service.profile.ProfileService;
 import com.amee.service.profile.SelectByProfileService;
 import org.apache.abdera.ext.history.FeedPagingHelper;
-import org.apache.abdera.ext.opensearch.OpenSearchExtensionFactory;
+import org.apache.abdera.ext.opensearch.model.OpenSearchExtensionFactory;
 import org.apache.abdera.model.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
