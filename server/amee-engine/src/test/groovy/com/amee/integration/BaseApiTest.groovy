@@ -1,15 +1,13 @@
 package com.amee.integration
 
-import static groovyx.net.http.ContentType.JSON
-import static groovyx.net.http.ContentType.URLENC
-import static org.junit.Assert.*
 import groovyx.net.http.RESTClient
-
 import org.joda.time.DateTimeZone
 import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
 import org.springframework.context.support.ClassPathXmlApplicationContext
+
+import static groovyx.net.http.ContentType.JSON
 
 /**
  * A base class for API integration tests.
