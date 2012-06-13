@@ -41,11 +41,12 @@
         <hibernate-core.version>3.6.9.Final</hibernate-core.version>
         <airbrake-notifier.version>2.0</airbrake-notifier.version>
         <hsqldb.version>2.2.8</hsqldb.version>
-        <http-builder.version>0.5.2</http-builder.version>
+        <http-builder.version>0.5.1</http-builder.version>
         <janino.version>2.5.10</janino.version>
         <javax.mail.version>1.4.5</javax.mail.version>
         <jetty-servlet-api.version>2.5.20110712</jetty-servlet-api.version>
         <jetty.version>6.1.26</jetty.version>
+        <joda-convert.version>1.2</joda-convert.version>
         <joda-time.version>2.1</joda-time.version>
         <jscience.version>4.3.1</jscience.version>
         <junit.version>4.10</junit.version>
@@ -282,7 +283,14 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${commons-collections.version}</version>
+            <!-- Weirdly conflicted by: amee-platform-science -->
+        </dependency>
 
+        <!-- Runtime dependencies. -->
         <!-- Commons logging bridge required for spring -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -301,14 +309,7 @@
             <artifactId>janino</artifactId>
             <version>${janino.version}</version>
         </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>${commons-collections.version}</version>
-            <!-- Weirdly conflicted by: amee-platform-science -->
-        </dependency>
 
-        <!-- Runtime dependencies. -->
         <!-- Airbrake. Was Hoptoad. -->
         <dependency>
             <groupId>hoptoad</groupId>
@@ -316,6 +317,16 @@
             <version>${airbrake-notifier.version}</version>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- Annotations used by jodatime. AspectJ complains if this is not available. -->
+        <!-- http://joda-time.sourceforge.net/upgradeto210.html -->
+        <dependency>
+            <groupId>org.joda</groupId>
+            <artifactId>joda-convert</artifactId>
+            <version>${joda-convert.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
 
         <!-- Test Dependencies. -->
         <dependency>
