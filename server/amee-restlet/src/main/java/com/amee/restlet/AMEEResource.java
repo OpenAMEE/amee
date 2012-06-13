@@ -79,7 +79,7 @@ public abstract class AMEEResource extends AuthorizeResource {
 
         if (representation != null) {
             representation.setCharacterSet(CharacterSet.UTF_8);
-            DateTime expire = new DateTime().minus(Period.days(1));
+            DateTime expire = DateTime.now().minus(Period.days(1));
             representation.setExpirationDate(expire.toDate());
             representation.setModificationDate(new Date());
         }
