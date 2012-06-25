@@ -6,7 +6,7 @@ import com.amee.domain.auth.User;
 import com.amee.restlet.BaseResource;
 import com.amee.restlet.auth.AuthUtils;
 import com.amee.service.auth.AuthenticationService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.data.*;

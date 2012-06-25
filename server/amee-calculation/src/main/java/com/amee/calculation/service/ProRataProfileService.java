@@ -188,7 +188,7 @@ public class ProRataProfileService {
         if (endDate != null) {
              end = new DateTime(endDate.getTime());
         } else {
-            end = new DateTime();
+            end = DateTime.now();
         }
         return new Interval(start, end);
     }

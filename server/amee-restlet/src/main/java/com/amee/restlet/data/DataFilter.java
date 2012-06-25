@@ -3,7 +3,7 @@ package com.amee.restlet.data;
 import com.amee.domain.IDataCategoryReference;
 import com.amee.restlet.RewriteFilter;
 import com.amee.service.data.DataService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.restlet.Application;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;

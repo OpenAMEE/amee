@@ -2,7 +2,7 @@ package com.amee.restlet;
 
 import com.amee.restlet.profile.builder.v2.AtomFeed;
 import com.amee.service.data.DataService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.xerces.dom.DocumentImpl;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -79,7 +79,7 @@ public abstract class AMEEResource extends AuthorizeResource {
 
         if (representation != null) {
             representation.setCharacterSet(CharacterSet.UTF_8);
-            DateTime expire = new DateTime().minus(Period.days(1));
+            DateTime expire = DateTime.now().minus(Period.days(1));
             representation.setExpirationDate(expire.toDate());
             representation.setModificationDate(new Date());
         }

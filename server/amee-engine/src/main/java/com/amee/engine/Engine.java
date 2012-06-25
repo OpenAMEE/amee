@@ -1,9 +1,9 @@
 package com.amee.engine;
 
-import com.amee.base.engine.JavaLoggingToCommonsLoggingRedirector;
+import com.amee.base.engine.JavaLoggingToSlf4jRedirector;
 import com.amee.base.transaction.TransactionController;
 import org.apache.commons.cli.*;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTimeZone;
@@ -54,7 +54,8 @@ public class Engine implements WrapperListener, Serializable {
     public Integer start(String[] args) {
 
         // Redirect JDK logging to Commons Logging
-        JavaLoggingToCommonsLoggingRedirector.activate();
+        // TODO: Should we use jul-to-slf4j? http://www.slf4j.org/legacy.html (http://stackoverflow.com/a/9117188)
+        JavaLoggingToSlf4jRedirector.activate();
         
         parseOptions(args);
 

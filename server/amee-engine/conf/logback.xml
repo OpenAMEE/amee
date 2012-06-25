@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+    <!-- Declare the 'CONSOLE' ConsoleAppender. -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+
+            <!-- MDC values are set in LogFilter. -->
+            <pattern>[%date] [%-5level] [%thread] [%property{server.name}] [%mdc{ipAddress}] [%mdc{userUid}] [%logger{32}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Declare the 'PLATFORM_EMAIL' SMTPAppender. -->
+    <appender name="PLATFORM_EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+        <smtpHost>localhost</smtpHost>
+        <from>platform.issues@amee.cc</from>
+        <to>platform.issues@amee.cc</to>
+        <subject>AMEE Platform Issue - %c %m</subject>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%date %-5level %logger{35} - %message%n</pattern>
+        </layout>
+
+        <!-- Only send the triggering event in the email -->
+        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTrackerImpl">
+            <bufferSize>1</bufferSize>
+        </cyclicBufferTracker>
+
+        <!-- Only log if level is >= ERROR and amee.maillog property is true -->
+        <evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+            <expression>
+                return "true".equals(System.getProperty("amee.maillog")) &amp;&amp;
+                event.getLevel().levelInt >= ch.qos.logback.classic.Level.ERROR_INT;
+            </expression>
+        </evaluator>
+    </appender>
+
+    <!-- Declare the 'AIRBRAKE' HoptoadAppender. -->
+    <appender name="AIRBRAKE" class="hoptoad.HoptoadAppender">
+        <apiKey>335da09dfa378ed3d5b650becadf0214</apiKey>
+        <env>${instance.name}</env>
+        <enabled>${amee.airbrake}</enabled>
+
+        <!-- Only log on ERROR or higher -->
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnErrorEvaluator"/>
+            <OnMismatch>DENY</OnMismatch>
+            <OnMatch>NEUTRAL</OnMatch>
+        </filter>
+    </appender>
+
+    <!-- Declare the 'TRANSACTIONS_ROLLER' Daily RollingFileAppender. -->
+    <appender name="TRANSACTIONS_ROLLER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${amee.logDir}/transactions.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+
+            <!-- daily rollover -->
+            <fileNamePattern>${amee.logDir}/transactions.log.%d{yyyy-MM-dd}</fileNamePattern>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy:MM:dd:HH:mm:ss:SSS}|%m%n</pattern>
+        </encoder>
+
+        <!-- deny all events with a level below INFO, that is TRACE, DEBUG -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- Declare the 'SCIENCE_ROLLER' Daily RollingFileAppender. -->
+    <appender name="SCIENCE_ROLLER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${amee.logDir}/science.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+
+            <!-- daily rollover -->
+            <fileNamePattern>${amee.logDir}/science.log.%d{yyyy-MM-dd}</fileNamePattern>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>[%date] [%-5level] [%thread] [%property{server.name}] [%mdc{ipAddress}] [%mdc{userUid}] %msg%n</pattern>
+        </encoder>
+
+        <!-- deny all events with a level below INFO, that is TRACE, DEBUG -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- Declare the 'PERFORMANCE_ROLLER' DailyRollingFileAppender. -->
+    <appender name="PERFORMANCE_ROLLER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${amee.logDir}/performance.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+
+            <!-- daily rollover -->
+            <fileNamePattern>${amee.logDir}.%d{yyyy-MM-dd}</fileNamePattern>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy:MM:dd:HH:mm:ss:SSS}|%m%n</pattern>
+        </encoder>
+
+        <!-- deny all events with a level below INFO, that is TRACE, DEBUG -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- ############### Perf4J ################# -->
+
+    <!--
+       This AsyncCoalescingStatisticsAppender groups StopWatch log messages
+       into GroupedTimingStatistics messages which it sends on the
+       file appender defined below
+    -->
+    <appender name="CoalescingStatistics"
+              class="org.perf4j.logback.AsyncCoalescingStatisticsAppender">
+        <!--
+          The TimeSlice option is used to determine the time window for which
+          all received StopWatch logs are aggregated to create a single
+          GroupedTimingStatistics log. Here we set it to 60 seconds, overriding
+          the default of 30000 ms
+        -->
+        <timeSlice>60000</timeSlice>
+        <appender-ref ref="PERFORMANCE_ROLLER"/>
+    </appender>
+
+    <!-- Loggers -->
+    <!--
+      The Perf4J logger. Note that org.perf4j.TimingLogger is the value of the
+      org.perf4j.StopWatch.DEFAULT_LOGGER_NAME constant. Also, note that
+      additivity is set to false, which is usually what is desired - this means
+      that timing statements will only be sent to this logger and NOT to
+      upstream loggers.
+    -->
+    <logger name="org.perf4j.TimingLogger" level="INFO" additivity="false">
+        <appender-ref ref="CoalescingStatistics"/>
+    </logger>
+
+    <!-- ############### log4jdbc ################### -->
+    <!-- See: http://code.google.com/p/log4jdbc/ -->
+
+    <logger name="jdbc.sqlonly" level="ERROR"/>
+
+    <logger name="jdbc.sqltiming" level="ERROR"/>
+
+    <logger name="jdbc.audit" level="ERROR"/>
+
+    <logger name="jdbc.resultset" level="ERROR"/>
+
+    <logger name="jdbc.connection" level="ERROR"/>
+
+    <!-- ############### AMEE ################### -->
+
+    <logger name="com.amee" level="${amee.logLevel}"/>
+
+    <logger name="transactions" level="INFO" additivity="false">
+        <appender-ref ref="TRANSACTIONS_ROLLER"/>
+    </logger>
+
+    <logger name="science" level="INFO" additivity="false">
+        <appender-ref ref="SCIENCE_ROLLER"/>
+    </logger>
+
+    <!-- The root logger -->
+    <root level="${amee.defaultLogLevel}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="PLATFORM_EMAIL"/>
+        <appender-ref ref="AIRBRAKE"/>
+    </root>
+</configuration>

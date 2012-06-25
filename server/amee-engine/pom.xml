@@ -125,7 +125,6 @@
                             hsqldb:mem. -->
                         <hibernate.hbm2ddl.auto>create-drop</hibernate.hbm2ddl.auto>
 
-                        <log4j.configuration>test-log4j.xml</log4j.configuration>
                         <sun.lang.ClassLoader.allowArraySyntax>true</sun.lang.ClassLoader.allowArraySyntax>
                         <java.awt.headless>true</java.awt.headless>
                         <amee.logLevel>DEBUG</amee.logLevel>
@@ -303,12 +302,6 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
             <scope>runtime</scope>
@@ -338,7 +331,7 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.opensymphony.quartz</groupId>
+            <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
             <version>${quartz.version}</version>
             <scope>runtime</scope>

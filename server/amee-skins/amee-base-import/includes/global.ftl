@@ -60,6 +60,8 @@
         <#assign r = r + 'MODIFY'>
     <#elseif pe.value == 'd'>
         <#assign r = r + 'DELETE'>
+    <#elseif pe.value == 'a'>
+        <#assign r = r + 'ADMIN'>
     <#else>
         <#assign r = r + pe.value?upper_case>
     </#if>

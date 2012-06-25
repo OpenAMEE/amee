@@ -13,7 +13,7 @@
     <properties>
         <!-- Internal Versions. -->
         <amee.version>2.22.0-DEV</amee.version>
-        <amee-base.version>1.2.1-SNAPSHOT</amee-base.version>
+        <amee-base.version>1.3.2-SNAPSHOT</amee-base.version>
         <amee-persist.version>1.0.15-SNAPSHOT</amee-persist.version>
         <amee-messaging.version>1.0.13-SNAPSHOT</amee-messaging.version>
         <amee-platform-science.version>1.5.1-SNAPSHOT</amee-platform-science.version>
@@ -23,60 +23,54 @@
         <!-- External Versions. -->
         <!-- Note: Keep Restlet, Jetty and servlet-api versions in sync. -->
         <!-- Note: Check Restlet release notes and jetty dependencies. -->
-        <abdera.version>0.4.0-incubating</abdera.version>
-        <ant.version>1.6</ant.version>
-        <apache-httpcomponents-httpclient>4.1.1</apache-httpcomponents-httpclient>
-        <apache-httpcomponents-httpcore>4.1</apache-httpcomponents-httpcore>
-        <org-aspectj.version>1.6.10</org-aspectj.version>
-        <cglib.version>2.2</cglib.version>
+        <abdera.version>1.1.2</abdera.version>
+        <apache-httpcomponents-httpclient>4.2</apache-httpcomponents-httpclient>
+        <apache-httpcomponents-httpcore>4.2</apache-httpcomponents-httpcore>
+        <org-aspectj.version>1.6.12</org-aspectj.version>
+        <cglib.version>2.2.2</cglib.version>
         <commons-cli.version>1.2</commons-cli.version>
-        <commons-codec.version>1.5</commons-codec.version>
+        <commons-codec.version>1.6</commons-codec.version>
         <commons-collections.version>3.2.1</commons-collections.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
-        <commons-fileupload.version>1.2.1</commons-fileupload.version>
-        <commons-io.version>2.0.1</commons-io.version>
-        <commons-lang.version>2.6</commons-lang.version>
-        <commons-logging.version>1.1.1</commons-logging.version>
+        <commons-fileupload.version>1.2.2</commons-fileupload.version>
+        <commons-io.version>2.3</commons-io.version>
+        <commons-lang.version>3.1</commons-lang.version>
         <dom4j.version>1.6.1</dom4j.version>
-        <ehcache.version>1.6.2</ehcache.version>
-        <gmaven-runtime-1.7.version>1.3</gmaven-runtime-1.7.version>
-        <google-collections.version>1.0-rc5</google-collections.version>
-        <google-gdata-core.version>1.0</google-gdata-core.version>
-        <google-visualization-datasource.version>1.0.2</google-visualization-datasource.version>
-        <groovy.version>1.7.10</groovy.version>
-        <hibernate-core.version>3.6.3.Final</hibernate-core.version>
-        <hoptoad-notifier.version>1.9</hoptoad-notifier.version>
+        <ehcache.version>2.5.2</ehcache.version>
+        <groovy.version>1.8.6</groovy.version>
+        <hibernate-core.version>3.6.9.Final</hibernate-core.version>
+        <airbrake-notifier.version>2.0</airbrake-notifier.version>
         <hsqldb.version>2.2.8</hsqldb.version>
         <http-builder.version>0.5.1</http-builder.version>
-        <ibm-icu4j.version>4.0.1</ibm-icu4j.version>
-        <javax.mail.version>1.4</javax.mail.version>
-        <jetty-jsp.version>2.1-6.0.2</jetty-jsp.version>
-        <jetty-servlet-api.version>2.5-20110124</jetty-servlet-api.version>
+        <janino.version>2.5.10</janino.version>
+        <javax.mail.version>1.4.5</javax.mail.version>
+        <jetty-servlet-api.version>2.5.20110712</jetty-servlet-api.version>
         <jetty.version>6.1.26</jetty.version>
-        <joda-time.version>1.6.2</joda-time.version>
+        <joda-convert.version>1.2</joda-convert.version>
+        <joda-time.version>2.1</joda-time.version>
         <jscience.version>4.3.1</jscience.version>
-        <junit.version>4.8.2</junit.version>
-        <log4j.version>1.2.16</log4j.version>
-        <log4jdbc4.version>1.2beta2</log4jdbc4.version>
-        <mysql-connector-java.version>5.1.16</mysql-connector-java.version>
-        <opencsv.version>2.1</opencsv.version>
+        <junit.version>4.10</junit.version>
+        <log4jdbc4.version>1.2</log4jdbc4.version>
+        <logback-classic.version>1.0.6</logback-classic.version>
+        <mysql-connector-java.version>5.1.20</mysql-connector-java.version>
+        <opencsv.version>2.3</opencsv.version>
         <org-json.version>2.0</org-json.version>
-        <quartz.version>1.6.1</quartz.version>
+        <quartz.version>2.1.5</quartz.version>
         <restlet.version>1.1.10</restlet.version>
-        <slf4j.version>1.6.1</slf4j.version>
-        <spring.version>3.0.5.RELEASE</spring.version>
+        <slf4j.version>1.6.6</slf4j.version>
+        <spring.version>3.1.1.RELEASE</spring.version>
         <wrapper-standard.version>3.5.7</wrapper-standard.version>
         <xerces.version>2.11.0</xerces.version>
         <xml-apis.version>2.11.0</xml-apis.version>
 
         <!-- Plugin versions -->
-        <gmaven-plugin.version>1.3</gmaven-plugin.version>
-        <liquibase-maven-plugin.version>2.0.1</liquibase-maven-plugin.version>
-        <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
-        <maven-dependency-plugin.version>2.1</maven-dependency-plugin.version>
-        <maven-failsafe-plugin.version>2.8.1</maven-failsafe-plugin.version>
-        <maven-javadoc-plugin.version>2.5</maven-javadoc-plugin.version>
-        <maven-surefire-plugin.version>2.8</maven-surefire-plugin.version>
+        <gmaven-plugin.version>1.4</gmaven-plugin.version>
+        <liquibase-maven-plugin.version>2.0.5</liquibase-maven-plugin.version>
+        <maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>2.4</maven-dependency-plugin.version>
+        <maven-failsafe-plugin.version>2.12</maven-failsafe-plugin.version>
+        <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
+        <maven-surefire-plugin.version>2.12</maven-surefire-plugin.version>
 
         <!-- Paths. -->
         <amee.home>/var/www/apps/amee-local</amee.home>
@@ -260,20 +254,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>${commons-logging.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -307,13 +291,42 @@
         </dependency>
 
         <!-- Runtime dependencies. -->
+        <!-- Commons logging bridge required for spring -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>${janino.version}</version>
+        </dependency>
+
         <!-- Airbrake. Was Hoptoad. -->
         <dependency>
             <groupId>hoptoad</groupId>
-            <artifactId>hoptoad-java-notifier</artifactId>
-            <version>${hoptoad-notifier.version}</version>
+            <artifactId>airbrake-logback-notifier</artifactId>
+            <version>${airbrake-notifier.version}</version>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- Annotations used by jodatime. AspectJ complains if this is not available. -->
+        <!-- http://joda-time.sourceforge.net/upgradeto210.html -->
+        <dependency>
+            <groupId>org.joda</groupId>
+            <artifactId>joda-convert</artifactId>
+            <version>${joda-convert.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
 
         <!-- Test Dependencies. -->
         <dependency>
