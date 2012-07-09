@@ -25,3 +25,4 @@ wrapper.conf.local
 *.project
 *.settings
 *.externalToolBuilders
+.groovy
