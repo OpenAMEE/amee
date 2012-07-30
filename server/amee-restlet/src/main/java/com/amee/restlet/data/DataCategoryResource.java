@@ -29,6 +29,7 @@ import org.restlet.Context;
 import org.restlet.data.*;
 import org.restlet.resource.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -62,17 +63,21 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
     @Autowired
     private DataCategoryResourceBuilder builder;
 
+    @Autowired
+    protected ProfileService profileService;
+
+    @Autowired
+    private InvalidationService invalidationService;
+
+    // Should we check for duplicates when creating data items? See: https://jira.amee.com/browse/PL-11636
+    private boolean duplicateDataItemCheck = true;
+
     private DataCategory dataCategory;
     private DataCategory modDataCategory;
     private List<DataCategory> newDataCategories;
     private DataItem modDataItem;
     private List<DataItem> newDataItems;
     private String newObjectType = "";
-    @Autowired
-    protected ProfileService profileService;
-
-    @Autowired
-    private InvalidationService invalidationService;
 
     @Override
     public void initialise(Context context, Request request, Response response) {
@@ -425,7 +430,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
                 acceptDataItem(form, dataItem);
 
                 // Check for duplicate.
-                if (!dataItemService.isUnique(dataItem)) {
+                if (duplicateDataItemCheck && !dataItemService.isUnique(dataItem)) {
 
                     // The dataItem transaction will be rolled back.
                     dataItem = null;
@@ -444,7 +449,7 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
                 }
 
                 // Check for duplicate.
-                if (!dataItemService.isUnique(dataItem)) {
+                if (duplicateDataItemCheck && !dataItemService.isUnique(dataItem)) {
 
                     // The dataItem transaction will be rolled back.
                     dataItem = null;
@@ -611,5 +616,10 @@ public class DataCategoryResource extends AMEEResource implements Serializable {
 
     public List<DataItem> getNewDataItems() {
         return newDataItems;
+    }
+
+    @Value("#{ systemProperties['amee.checkDuplicateDataItems'] }")
+    public void setDuplicateDataItemCheck(boolean checkDuplicates) {
+        this.duplicateDataItemCheck = checkDuplicates;
     }
 }
