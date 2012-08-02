@@ -112,6 +112,7 @@
                         <CACHE_MANAGER_CLASS>org.springframework.cache.ehcache.EhCacheManagerFactoryBean</CACHE_MANAGER_CLASS>
                         <AMEE_TIME_ZONE>UTC</AMEE_TIME_ZONE>
                         <TRAIN_ROUTE_SERVICE_URI>http://railservice.amee.com/route_finder/route_service.php</TRAIN_ROUTE_SERVICE_URI>
+                        <CHECK_DUPLICATE_DATA_ITEMS>true</CHECK_DUPLICATE_DATA_ITEMS>
                     </environmentVariables>
 
                     <systemPropertyVariables>
