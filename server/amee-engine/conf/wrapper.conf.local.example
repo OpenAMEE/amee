@@ -29,6 +29,17 @@ wrapper.java.additional.103=-Dcom.sun.management.jmxremote.authenticate=false
 wrapper.java.additional.104=-Dcom.sun.management.jmxremote.ssl=false
 wrapper.java.additional.105=-XX:+PrintGCDetails
 
+# Ping timeout value (seconds). Increase if load is causing wrapper to think app has hung.
+#wrapper.ping.timeout=30
+
+# Messaging
+set.RABBIT_MQ_ADDRESS=127.0.0.1
+set.RABBIT_MQ_PORT=5672
+set.RABBIT_MQ_USERNAME=guest
+set.RABBIT_MQ_PASSWORD=guest
+set.MESSAGING_RUN_SLEEP=30000
+set.MESSAGING_SCOPE=live
+
 # Database
 set.DB_USERNAME=amee
 set.DB_PSWD=amee
@@ -51,7 +62,6 @@ set.TRAIN_ROUTE_SERVICE_URI=http://railservice.amee.com/route_finder/route_servi
 # Servlets are not currently in use. See:
 # - https://jira.amee.com/browse/PL-3427
 # - https://jira.amee.com/browse/PL-40
-
 
 # PROTOCOL
 set.PROTOCOL=http
