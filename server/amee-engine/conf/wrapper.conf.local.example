@@ -18,6 +18,9 @@ set.DEFAULT_LOG_LEVEL=INFO
 set.MAILLOG=false
 set.AIRBRAKE=false
 
+# Duplicate data item checking
+set.CHECK_DUPLICATE_DATA_ITEMS=true
+
 # Extra Java Parameters
 wrapper.java.additional.100=-Xdebug
 wrapper.java.additional.101=-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
