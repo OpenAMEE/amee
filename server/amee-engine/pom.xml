@@ -112,7 +112,6 @@
                         <CACHE_MANAGER_CLASS>org.springframework.cache.ehcache.EhCacheManagerFactoryBean</CACHE_MANAGER_CLASS>
                         <AMEE_TIME_ZONE>UTC</AMEE_TIME_ZONE>
                         <TRAIN_ROUTE_SERVICE_URI>http://railservice.amee.com/route_finder/route_service.php</TRAIN_ROUTE_SERVICE_URI>
-                        <CHECK_DUPLICATE_DATA_ITEMS>true</CHECK_DUPLICATE_DATA_ITEMS>
                     </environmentVariables>
 
                     <systemPropertyVariables>
@@ -133,14 +132,9 @@
                         <server.name>localhost</server.name>
                         <amee.keyFile>${basedir}/src/test/resources/crypto/amee.key</amee.keyFile>
                         <amee.saltFile>${basedir}/src/test/resources/crypto/amee.salt</amee.saltFile>
-                        <amee.masterIndex>true</amee.masterIndex>
-                        <amee.clearIndex>true</amee.clearIndex>
-                        <amee.checkDataCategories>true</amee.checkDataCategories>
                         <amee.indexDataCategories>true</amee.indexDataCategories>
                         <amee.indexDataItems>true</amee.indexDataItems>
-                        <amee.indexCheckSearcherOnCommit>true</amee.indexCheckSearcherOnCommit>
-                        <!-- Set this to 0 to disable timeouts when debugging (default is 15) -->
-                        <amee.resourceDefaultTimeout>15</amee.resourceDefaultTimeout>
+                        <amee.checkDuplicateDataItems>true</amee.checkDuplicateDataItems>
                     </systemPropertyVariables>
 
                     <additionalClasspathElements>
