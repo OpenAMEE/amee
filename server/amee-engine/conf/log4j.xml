@@ -54,7 +54,7 @@
 
     <!-- Declare the 'TRANSACTIONS_ROLLER' DailyRollingFileAppender. -->
     <appender name="TRANSACTIONS_ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="/var/www/apps/${app.name}-${instance.name}/shared/log/transactions.log"/>
+        <param name="File" value="${amee.logDir}/transactions.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <param name="Append" value="true"/>
         <param name="Threshold" value="INFO"/>
@@ -65,7 +65,7 @@
 
     <!-- Declare the 'SCIENCE_ROLLER' DailyRollingFileAppender. -->
     <appender name="SCIENCE_ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="/var/www/apps/${app.name}-${instance.name}/shared/log/science.log"/>
+        <param name="File" value="${amee.logDir}/science.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <param name="Append" value="true"/>
         <param name="Threshold" value="INFO"/>
@@ -77,7 +77,7 @@
 
     <!-- Declare the 'PERFORMANCE_ROLLER' DailyRollingFileAppender. -->
     <appender name="PERFORMANCE_ROLLER" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="/var/www/apps/${app.name}-${instance.name}/shared/log/performance.log"/>
+        <param name="File" value="${amee.logDir}/performance.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <param name="Append" value="true"/>
         <param name="Threshold" value="INFO"/>
