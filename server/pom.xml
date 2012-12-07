@@ -74,7 +74,7 @@
         <maven-javadoc-plugin.version>2.5</maven-javadoc-plugin.version>
 
         <!-- Paths. -->
-        <amee.home>/var/www/apps/amee-local</amee.home>
+        <amee.home>/var/www/apps/amee-local.amee.com</amee.home>
         <amee.current>${amee.home}/current</amee.current>
         <amee.current.lib>${amee.current}/lib</amee.current.lib>
 
