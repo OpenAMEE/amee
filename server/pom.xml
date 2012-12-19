@@ -14,7 +14,7 @@
     <!-- Project Properties. -->
     <properties>
         <!-- Internal Versions. -->
-        <amee.version>2.21.2</amee.version>
+        <amee.version>2.21.3-DEV</amee.version>
         <amee-base.version>1.2.0</amee-base.version>
         <amee-persist.version>1.0.14</amee-persist.version>
         <amee-messaging.version>1.0.12</amee-messaging.version>
@@ -74,7 +74,7 @@
         <maven-javadoc-plugin.version>2.5</maven-javadoc-plugin.version>
 
         <!-- Paths. -->
-        <amee.home>/var/www/apps/amee-local</amee.home>
+        <amee.home>/var/www/apps/amee-local.amee.com</amee.home>
         <amee.current>${amee.home}/current</amee.current>
         <amee.current.lib>${amee.current}/lib</amee.current.lib>
 

@@ -9,7 +9,7 @@ set.JDK_HOME=%JAVA_HOME%
 wrapper.java.library.path.1=%LIB_HOME%/wrapper/macosx-universal-64
 
 # AMEE_SERVER_NAME
-set.AMEE_SERVER_NAME=platform-local.amee.com
+set.AMEE_SERVER_NAME=localhost
 set.AMEE_INSTANCE_NAME=local
 
 # Log levels
@@ -62,18 +62,3 @@ set.SECURE_PORT=8090
 wrapper.java.initmemory=512
 wrapper.java.maxmemory=2048
 
-# The license.
-#encoding=UTF-8
-wrapper.license.type=DEV
-wrapper.license.id=201007090031
-wrapper.license.licensee=AMEE UK (INTERNAL TESTING LICENSE)
-wrapper.license.dev_application=AMEE Classic
-wrapper.license.features=64bit, test
-wrapper.license.upgrade_term.begin_date=2010-07-08
-wrapper.license.upgrade_term.end_date=2010-10-08
-wrapper.license.lease_term.begin_date=2010-07-08
-wrapper.license.lease_term.end_date=2010-10-08
-wrapper.license.key.1=9b00-c65f-3cef-295e
-wrapper.license.key.2=f082-36dd-64fb-3d55
-wrapper.license.key.3=c232-8a6f-1761-82c0
-wrapper.license.key.4=f8bc-13fb-e148-472e

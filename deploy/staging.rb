@@ -1,6 +1,5 @@
 # The hosts where are are deploying 
-role :app, "app5.amee.com"
-role :db,  "app5.amee.com", :primary => true
+role :app, "ec2-204-236-242-253.compute-1.amazonaws.com"
 
-set :application, "amee-stage"
+set :application, "amee-staging.amee.com"
 set :deploy_to, "/var/www/apps/#{application}"
