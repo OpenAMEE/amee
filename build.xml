@@ -6,7 +6,7 @@
     <property file="build.properties"/>
     <property name="amee.appName" value="amee"/>
     <property name="amee.instanceName" value="local"/>
-    <property name="amee.home" value="/var/www/apps/${amee.appName}-${amee.instanceName}" description="The root of the AMEE deployment layout."/>
+    <property name="amee.home" value="/var/www/apps/${amee.appName}-${amee.instanceName}.amee.com" description="The root of the AMEE deployment layout."/>
     <property name="amee.current" value="${amee.home}/current" description="The root of the current AMEE package"/>
     <property name="amee.current.lib" value="${amee.current}/lib" description="The location of the AMEE libs and dependencies."/>
     <property name="amee.shared" value="${amee.home}/shared" description="The location of the AMEE shared config."/>

@@ -9,7 +9,7 @@ set.JDK_HOME=%JAVA_HOME%
 wrapper.java.library.path.1=%LIB_HOME%/wrapper/macosx-universal-64
 
 # AMEE_SERVER_NAME
-set.AMEE_SERVER_NAME=platform-local.amee.com
+set.AMEE_SERVER_NAME=localhost
 set.AMEE_INSTANCE_NAME=local
 
 # Log levels
