@@ -72,6 +72,10 @@ end
 # Add keys to ssh-agent for agent forwarding
 case RbConfig::CONFIG['host_os']
   when /darwin/
+    before "deploy:setup" do
+      `ssh-add`
+    end
+
     before "deploy:update" do
       `ssh-add`
     end
